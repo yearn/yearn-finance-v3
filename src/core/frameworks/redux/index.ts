@@ -14,3 +14,7 @@ export const getStore = () => {
 
   return store;
 };
+
+export type Store = ReturnType<typeof getStore>;
+export type RootState = ReturnType<Store['getState']>;
+export type AppDispatch = Store['dispatch'];
