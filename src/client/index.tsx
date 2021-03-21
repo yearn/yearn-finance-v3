@@ -1,13 +1,16 @@
 import { Provider } from 'react-redux';
 
 import { getStore } from '@frameworks/redux';
+import { Themable } from '@containers';
 
 const store = getStore();
 
 export const App = () => {
   return (
     <Provider store={store}>
-      <div>Yearn Finance v3</div>
+      <Themable>
+        <div>Yearn Finance v3</div>
+      </Themable>
     </Provider>
   );
 };
