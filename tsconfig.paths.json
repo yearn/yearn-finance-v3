@@ -12,6 +12,8 @@
       "@components/*": ["client/components/*"],
       "@containers": ["client/containers"],
       "@containers/*": ["client/containers/*"],
+      "@hooks": ["client/hooks"],
+      "@hooks/*": ["client/hooks/*"],
       "@i18n": ["client/i18n"],
       "@i18n/*": ["client/i18n/*"],
       "@routes": ["client/routes"],
