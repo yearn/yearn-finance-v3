@@ -24,6 +24,7 @@
       "@config/*": ["config/*"],
       "@core": ["core"],
       "@core/*": ["core/*"],
+      "@container": ["core/container"],
       "@frameworks/*": ["core/frameworks/*"],
       "@providers/*": ["core/providers/*"],
       "@store": ["core/store"],

@@ -1,11 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { BlocknativeWalletImpl } from '@frameworks/blocknative';
 import { ThunkAPI, AppDispatch } from '@frameworks/redux';
-import { getConfig } from '@config';
-import { WalletState, Wallet, Theme } from '@types';
-
-export let wallet: Wallet;
+import { WalletState, Theme, RootState, DIContainer } from '@types';
 
 const getSubscriptions = (dispatch: AppDispatch) => ({
   wallet: (wallet: any) => dispatch(walletChange(wallet.name)),
@@ -18,12 +14,12 @@ export const walletSelect = createAsyncThunk<
   boolean,
   string | undefined,
   ThunkAPI
->('wallet/walletSelect', async (walletName, { dispatch, getState }) => {
-  const { ETHEREUM_NETWORK } = getConfig();
+>('wallet/walletSelect', async (walletName, { dispatch, getState, extra }) => {
+  const { wallet, config } = extra;
+  const { ETHEREUM_NETWORK } = config;
   const { theme } = getState();
 
-  if (!wallet) {
-    wallet = new BlocknativeWalletImpl();
+  if (!wallet.isCreated) {
     const subscriptions = getSubscriptions(dispatch);
     wallet.create(ETHEREUM_NETWORK, subscriptions, theme.current);
   }
@@ -32,8 +28,13 @@ export const walletSelect = createAsyncThunk<
   return isConnected;
 });
 
-export const changeWalletTheme = (theme: Theme) => async () => {
-  if (wallet && wallet.changeTheme) {
+export const changeWalletTheme = (theme: Theme) => async (
+  dispatch: AppDispatch,
+  getState: () => RootState,
+  container: DIContainer
+) => {
+  const { wallet } = container;
+  if (wallet.isCreated && wallet.changeTheme) {
     wallet.changeTheme(theme);
   }
 };
