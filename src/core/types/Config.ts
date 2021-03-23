@@ -16,4 +16,6 @@ export interface Env {
 export interface Constants {
   ETHEREUM_ADDRESS: EthereumAddress;
   MAX_UINT256: Wei;
+  WEB3_PROVIDER_HTTPS: string;
+  WEB3_PROVIDER_WSS: string;
 }

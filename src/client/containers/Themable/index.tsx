@@ -5,7 +5,7 @@ import { useAppSelector } from '@hooks';
 import { getTheme } from '@themes';
 
 export const Themable: FC = ({ children }) => {
-  const selectedTheme = useAppSelector(({ theme }) => theme);
-  const theme = getTheme(selectedTheme.current);
+  const currentTheme = useAppSelector(({ theme }) => theme.current);
+  const theme = getTheme(currentTheme);
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 };
