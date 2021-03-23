@@ -18,3 +18,7 @@ export const getStore = () => {
 export type Store = ReturnType<typeof getStore>;
 export type RootState = ReturnType<Store['getState']>;
 export type AppDispatch = Store['dispatch'];
+export interface ThunkAPI {
+  dispatch: AppDispatch;
+  state: RootState;
+}
