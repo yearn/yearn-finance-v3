@@ -1,11 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
+import { save, load } from 'redux-localstorage-simple';
 
 import rootReducer from '@store/modules';
 import { isDev } from '@utils';
 import { DIContainer } from '@types';
 
 export const getStore = (extraArgument?: any) => {
+  const persistConfig = {
+    namespace: 'yearn',
+    states: ['theme', 'wallet.name'],
+  };
   const logger = createLogger({ collapsed: true });
   const middlewareOptions = {
     thunk: {
@@ -14,11 +19,16 @@ export const getStore = (extraArgument?: any) => {
   };
   const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) =>
-      isDev()
-        ? getDefaultMiddleware(middlewareOptions).concat(logger)
-        : getDefaultMiddleware(middlewareOptions),
+    middleware: (getDefaultMiddleware) => {
+      let middleware = getDefaultMiddleware(middlewareOptions);
+      middleware.push(save(persistConfig));
+      if (isDev()) {
+        middleware.push(logger);
+      }
+      return middleware;
+    },
     devTools: isDev(),
+    preloadedState: load(persistConfig),
   });
 
   return store;
