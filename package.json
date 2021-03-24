@@ -39,6 +39,7 @@
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "redux-localstorage-simple": "^2.4.0",
     "redux-logger": "^3.0.6",
     "styled-components": "^5.2.1",
     "styled-system": "^5.1.5",

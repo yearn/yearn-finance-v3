@@ -1,5 +1,4 @@
 import { Theme } from './Settings';
-import { Wallet } from './Wallet';
 
 export interface RootState {
   app: AppState;
@@ -10,6 +9,8 @@ export interface RootState {
 
 export interface AppState {
   isInitialized: boolean;
+  isLoading: boolean;
+  error: string | undefined;
 }
 
 export interface RouteState {
