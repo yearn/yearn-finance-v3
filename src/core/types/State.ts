@@ -4,6 +4,7 @@ export interface RootState {
   app: AppState;
   route: RouteState;
   theme: ThemeState;
+  vaults: VaultsState;
   wallet: WalletState;
 }
 
@@ -19,6 +20,12 @@ export interface RouteState {
 
 export interface ThemeState {
   current: Theme;
+}
+
+export interface VaultsState {
+  supported: any[];
+  isLoading: boolean;
+  error: string | undefined;
 }
 
 export interface WalletState {

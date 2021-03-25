@@ -15,7 +15,8 @@ export const walletSelect = createAsyncThunk<
   string | undefined,
   ThunkAPI
 >('wallet/walletSelect', async (walletName, { dispatch, getState, extra }) => {
-  const { wallet, config } = extra;
+  const { context, config } = extra;
+  const { wallet } = context;
   const { ETHEREUM_NETWORK } = config;
   const { theme } = getState();
 
@@ -33,7 +34,7 @@ export const changeWalletTheme = (theme: Theme) => async (
   getState: () => RootState,
   container: DIContainer
 ) => {
-  const { wallet } = container;
+  const { wallet } = container.context;
   if (wallet.isCreated && wallet.changeTheme) {
     wallet.changeTheme(theme);
   }
