@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 
 import { Container } from '@container';
 import { getStore } from '@frameworks/redux';
+import { ContextProvider } from '@context';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
 
@@ -19,10 +20,12 @@ const store = getStore(container);
 export const App = () => {
   return (
     <Provider store={store}>
-      <Themable>
-        <GlobalStyle />
-        <Routes />
-      </Themable>
+      <ContextProvider context={container.context}>
+        <Themable>
+          <GlobalStyle />
+          <Routes />
+        </Themable>
+      </ContextProvider>
     </Provider>
   );
 };
