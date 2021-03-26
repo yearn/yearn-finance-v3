@@ -18,9 +18,9 @@ const appReducer = createReducer(initialState, (builder) => {
       state.isInitialized = true;
       state.isLoading = false;
     })
-    .addCase(initApp.rejected, (state, action) => {
+    .addCase(initApp.rejected, (state, { error }) => {
       state.isLoading = false;
-      state.error = action.error.message;
+      state.error = error.message;
     });
 });
 

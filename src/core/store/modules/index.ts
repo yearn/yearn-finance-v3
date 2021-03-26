@@ -1,7 +1,5 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit';
 
-import themeReducer, { changeTheme } from './theme';
-import vaultsReducer, { getVaults } from './vaults';
 import walletReducer, { walletSelect, changeWalletTheme } from './wallet';
 import { RootState } from '@types';
 
@@ -10,6 +8,12 @@ import { initApp } from '../app/app.actions';
 
 import routeReducer from '../route/route.reducer';
 import { changeRoute } from '../route/route.actions';
+
+import themeReducer from '../theme/theme.reducer';
+import { changeTheme } from '../theme/theme.actions';
+
+import vaultsReducer from '../vaults/vaults.reducer';
+import { getVaults } from '../vaults/vaults.actions';
 
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
