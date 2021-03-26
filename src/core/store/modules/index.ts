@@ -1,6 +1,5 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit';
 
-import walletReducer, { walletSelect, changeWalletTheme } from './wallet';
 import { RootState } from '@types';
 
 import appReducer from '../app/app.reducer';
@@ -14,6 +13,9 @@ import { changeTheme } from '../theme/theme.actions';
 
 import vaultsReducer from '../vaults/vaults.reducer';
 import { getVaults } from '../vaults/vaults.actions';
+
+import walletReducer from '../wallet/wallet.reducer';
+import { walletSelect, changeWalletTheme } from '../wallet/wallet.actions';
 
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
