@@ -25,16 +25,11 @@ export const getEthersDefaultProvider = (
   return ethers.getDefaultProvider(toEthersNetwork(network), options);
 };
 
-export const getEthersProvider = (
-  provider: ethers.providers.ExternalProvider
-) => {
+export const getEthersProvider = (provider: ethers.providers.ExternalProvider) => {
   return new ethers.providers.Web3Provider(provider);
 };
 
-export const signMessage = (
-  provider: ethers.providers.ExternalProvider,
-  message: string
-) => {
+export const signMessage = (provider: ethers.providers.ExternalProvider, message: string) => {
   return getEthersProvider(provider).getSigner().signMessage(message);
 };
 
@@ -50,17 +45,10 @@ export const getSigner = (provider: ethers.providers.ExternalProvider) => {
   return getEthersProvider(provider).getSigner();
 };
 
-export const getUncheckedSigner = (
-  provider: ethers.providers.ExternalProvider
-) => {
+export const getUncheckedSigner = (provider: ethers.providers.ExternalProvider) => {
   return getEthersProvider(provider).getUncheckedSigner();
 };
 
-export const {
-  formatEther,
-  formatUnits,
-  parseEther,
-  parseUnits,
-} = ethers.utils;
+export const { formatEther, formatUnits, parseEther, parseUnits } = ethers.utils;
 
 export const { BigNumber } = ethers;

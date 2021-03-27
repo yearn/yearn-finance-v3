@@ -40,18 +40,9 @@ export class BlocknativeWalletImpl implements Wallet {
     return this.onboard?.walletCheck() ?? Promise.resolve(false);
   }
 
-  public create(
-    ethereumNetwork: EthereumNetwork,
-    subscriptions: Subscriptions,
-    theme?: Theme
-  ): boolean {
+  public create(ethereumNetwork: EthereumNetwork, subscriptions: Subscriptions, theme?: Theme): boolean {
     const networkId = getNetworkId(ethereumNetwork);
-    const {
-      BLOCKNATIVE_KEY,
-      FORTMATIC_KEY,
-      PORTIS_KEY,
-      WEB3_PROVIDER_HTTPS,
-    } = getConfig();
+    const { BLOCKNATIVE_KEY, FORTMATIC_KEY, PORTIS_KEY, WEB3_PROVIDER_HTTPS } = getConfig();
 
     const rpcUrl = WEB3_PROVIDER_HTTPS;
 

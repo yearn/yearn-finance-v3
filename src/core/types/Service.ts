@@ -9,5 +9,4 @@ export interface GetSupportedVaultsServiceResult {
   tokenAddress: EthereumAddress;
 }
 
-export interface GetSupportedVaultsService
-  extends Service<void, GetSupportedVaultsServiceResult[]> {}
+export interface GetSupportedVaultsService extends Service<void, GetSupportedVaultsServiceResult[]> {}
