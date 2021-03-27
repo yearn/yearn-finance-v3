@@ -5,18 +5,12 @@ interface WalletAddressProps {
   onClick: () => void;
 }
 
-export const ConnectWalletButton = ({
-  address,
-  onClick,
-}: WalletAddressProps) => {
+export const ConnectWalletButton = ({ address, onClick }: WalletAddressProps) => {
   if (!address) {
-    return <button onClick={onClick}>Connect</button>;
+    return <button onClick={onClick}>Connect asd sadasdasdasdaaasaaaaaasda =asdads aasdasdas</button>;
   }
 
-  const maskedAddress =
-    address.substring(0, 6) +
-    '...' +
-    address.substring(address.length - 4, address.length);
+  const maskedAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length);
 
   return (
     <button onClick={onClick}>
