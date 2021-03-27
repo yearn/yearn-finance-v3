@@ -3,12 +3,7 @@ import * as awilix from 'awilix';
 import { BlocknativeWalletImpl } from '@frameworks/blocknative';
 import { GetSupportedVaults } from '@services';
 import { getConfig } from '@config';
-import {
-  DIContainer,
-  ContextContainer,
-  ServiceContainer,
-  ConfigContainer,
-} from '@types';
+import { DIContainer, ContextContainer, ServiceContainer, ConfigContainer } from '@types';
 
 export class Container implements DIContainer {
   private container: awilix.AwilixContainer;
