@@ -10,24 +10,23 @@ const getSubscriptions = (dispatch: AppDispatch) => ({
   balance: (balance: string) => dispatch(balanceChange(balance)),
 });
 
-export const walletSelect = createAsyncThunk<
-  boolean,
-  string | undefined,
-  ThunkAPI
->('wallet/walletSelect', async (walletName, { dispatch, getState, extra }) => {
-  const { context, config } = extra;
-  const { wallet } = context;
-  const { ETHEREUM_NETWORK } = config;
-  const { theme } = getState();
+export const walletSelect = createAsyncThunk<boolean, string | undefined, ThunkAPI>(
+  'wallet/walletSelect',
+  async (walletName, { dispatch, getState, extra }) => {
+    const { context, config } = extra;
+    const { wallet } = context;
+    const { ETHEREUM_NETWORK } = config;
+    const { theme } = getState();
 
-  if (!wallet.isCreated) {
-    const subscriptions = getSubscriptions(dispatch);
-    wallet.create(ETHEREUM_NETWORK, subscriptions, theme.current);
+    if (!wallet.isCreated) {
+      const subscriptions = getSubscriptions(dispatch);
+      wallet.create(ETHEREUM_NETWORK, subscriptions, theme.current);
+    }
+
+    const isConnected = await wallet.connect({ name: walletName });
+    return isConnected;
   }
-
-  const isConnected = await wallet.connect({ name: walletName });
-  return isConnected;
-});
+);
 
 export const changeWalletTheme = (theme: Theme) => async (
   dispatch: AppDispatch,
@@ -84,10 +83,5 @@ const walletSlice = createSlice({
   },
 });
 
-export const {
-  walletChange,
-  addressChange,
-  networkChange,
-  balanceChange,
-} = walletSlice.actions;
+export const { walletChange, addressChange, networkChange, balanceChange } = walletSlice.actions;
 export default walletSlice.reducer;

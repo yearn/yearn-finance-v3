@@ -8,9 +8,6 @@ interface AppContextProviderProps {
   context: ContextContainer;
 }
 
-export const ContextProvider: FC<AppContextProviderProps> = ({
-  children,
-  context,
-}) => {
+export const ContextProvider: FC<AppContextProviderProps> = ({ children, context }) => {
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
 };

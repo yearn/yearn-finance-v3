@@ -8,17 +8,9 @@ interface AppMenuProps {
 
 export const AppMenu = ({ walletAddress, onWalletClick }: AppMenuProps) => {
   return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
-    >
+    <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
       <Text textColor="primary">Yearn</Text>
-      <ConnectWalletButton
-        address={walletAddress}
-        onClick={() => onWalletClick && onWalletClick()}
-      />
+      <ConnectWalletButton address={walletAddress} onClick={() => onWalletClick && onWalletClick()} />
     </Box>
   );
 };
