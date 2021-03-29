@@ -4,4 +4,6 @@ export * from './Ethereum';
 export * from './Service';
 export * from './Settings';
 export * from './State';
+export * from './Token';
+export * from './Vault';
 export * from './Wallet';
