@@ -26,11 +26,4 @@ const rootReducer: Reducer<RootState> = combineReducers({
 });
 
 export default rootReducer;
-export {
-  initApp,
-  changeRoute,
-  changeTheme,
-  getVaults,
-  walletSelect,
-  changeWalletTheme,
-};
+export { initApp, changeRoute, changeTheme, getVaults, walletSelect, changeWalletTheme };
