@@ -16,7 +16,7 @@ export const Layout: FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    dispatch(changeRoute(location.pathname));
+    dispatch(changeRoute({ path: location.pathname }));
   }, [location]);
 
   return (
