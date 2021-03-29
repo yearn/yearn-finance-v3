@@ -1,8 +1,4 @@
-import {
-  GetSupportedVaultsService,
-  GetSupportedVaultsServiceResult,
-  Wallet,
-} from '@types';
+import { GetSupportedVaultsService, GetSupportedVaultsServiceResult, Wallet } from '@types';
 
 export class GetSupportedVaults implements GetSupportedVaultsService {
   private wallet: Wallet;

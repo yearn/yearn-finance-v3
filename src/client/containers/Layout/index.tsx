@@ -9,9 +9,7 @@ import { Box } from '@components/common';
 export const Layout: FC = ({ children }) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const selectedAddress = useAppSelector(
-    ({ wallet }) => wallet.selectedAddress
-  );
+  const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
 
   useEffect(() => {
     dispatch(initApp());
@@ -23,10 +21,7 @@ export const Layout: FC = ({ children }) => {
 
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
-      <AppMenu
-        walletAddress={selectedAddress ?? undefined}
-        onWalletClick={() => dispatch(walletSelect())}
-      />
+      <AppMenu walletAddress={selectedAddress ?? undefined} onWalletClick={() => dispatch(walletSelect())} />
       {children}
     </Box>
   );
