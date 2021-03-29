@@ -1,4 +1,6 @@
 import { Theme } from './Settings';
+import { Status } from './Status';
+import { VaultData } from './Vault';
 
 export interface RootState {
   app: AppState;
@@ -23,9 +25,12 @@ export interface ThemeState {
 }
 
 export interface VaultsState {
-  supported: any[];
-  isLoading: boolean;
-  error: string | undefined;
+  saveVaultsAddreses: string[];
+  vaultsMap: { [address: string]: VaultData };
+  statusMap: {
+    initiateSaveVaults: Status;
+    getVaults: Status;
+  };
 }
 
 export interface WalletState {

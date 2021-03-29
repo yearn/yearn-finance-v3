@@ -1,26 +1,37 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { VaultsState } from '@types';
-import { getVaults } from './vaults.actions';
+import { getVaults, initiateSaveVaults } from './vaults.actions';
 
 const initialState: VaultsState = {
-  supported: [],
-  isLoading: false,
-  error: undefined,
+  saveVaultsAddreses: [],
+  vaultsMap: {},
+  statusMap: {
+    initiateSaveVaults: { loading: false, error: null },
+    getVaults: { loading: false, error: null },
+  },
 };
 
 const vaultsReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(getVaults.pending, (state) => {
-      state.isLoading = true;
-      state.error = undefined;
+    .addCase(initiateSaveVaults.pending, (state) => {
+      state.statusMap.initiateSaveVaults = { loading: true };
     })
-    .addCase(getVaults.fulfilled, (state, { payload: { supportedVaults } }) => {
-      state.supported = supportedVaults;
-      state.isLoading = false;
+    .addCase(initiateSaveVaults.fulfilled, (state) => {
+      state.statusMap.initiateSaveVaults = {};
+    })
+    .addCase(initiateSaveVaults.rejected, (state, { error }) => {
+      state.statusMap.initiateSaveVaults = { error: error.message };
+    })
+    .addCase(getVaults.pending, (state) => {
+      state.statusMap.getVaults = { loading: true };
+    })
+    .addCase(getVaults.fulfilled, (state, { payload: { vaultsMap, vaultsAddreses } }) => {
+      state.saveVaultsAddreses = vaultsAddreses;
+      state.vaultsMap = { ...state.vaultsMap, ...vaultsMap };
+      state.statusMap.getVaults = {};
     })
     .addCase(getVaults.rejected, (state, { error }) => {
-      state.isLoading = false;
-      state.error = error.message;
+      state.statusMap.getVaults = { error: error.message };
     });
 });
 
