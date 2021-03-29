@@ -1,14 +1,26 @@
-import { GetSupportedVaultsService, GetSupportedVaultsServiceResult, Wallet } from '@types';
+import { Yearn } from '@yfi/sdk';
+import { providers } from 'ethers';
+
+import { getConfig } from '@config';
+import { GetSupportedVaultsService, VaultData } from '@types';
 
 export class GetSupportedVaults implements GetSupportedVaultsService {
-  private wallet: Wallet;
+  public async execute(): Promise<VaultData[]> {
+    const { FANTOM_PROVIDER_HTTPS } = getConfig();
+    const provider = new providers.JsonRpcProvider(FANTOM_PROVIDER_HTTPS);
+    const yearn = new Yearn(250, provider);
+    const vaults = await yearn.vaults.get();
+    const vaultData: VaultData[] = vaults.map((vault) => ({
+      address: vault.id,
+      name: vault.name,
+      version: vault.version,
+      typeId: vault.typeId,
+      balance: vault.balance?.toString() ?? '0',
+      balanceUsdc: vault.balanceUsdc?.toString() ?? '0',
+      token: vault.token.id,
+      apyData: undefined,
+    }));
 
-  public constructor({ wallet }: { wallet: Wallet }) {
-    this.wallet = wallet;
-  }
-
-  public async execute(): Promise<GetSupportedVaultsServiceResult[]> {
-    console.log('Dependency Injection of wallet instance:', this.wallet.name);
-    throw Error('GetSupportedVaults service not implemented');
+    return vaultData;
   }
 }
