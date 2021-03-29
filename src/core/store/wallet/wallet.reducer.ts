@@ -1,12 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { WalletState } from '@types';
-import {
-  addressChange,
-  balanceChange,
-  networkChange,
-  walletChange,
-  walletSelect,
-} from './wallet.actions';
+import { addressChange, balanceChange, networkChange, walletChange, walletSelect } from './wallet.actions';
 
 const initialState: WalletState = {
   selectedAddress: undefined,
