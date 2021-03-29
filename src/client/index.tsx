@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
 
@@ -6,6 +7,7 @@ import { getStore } from '@frameworks/redux';
 import { ContextProvider } from '@context';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
+import '@i18n';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -23,7 +25,9 @@ export const App = () => {
       <ContextProvider context={container.context}>
         <Themable>
           <GlobalStyle />
-          <Routes />
+          <Suspense fallback={null}>
+            <Routes />
+          </Suspense>
         </Themable>
       </ContextProvider>
     </Provider>
