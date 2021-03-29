@@ -1,5 +1,5 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { AppDispatch, ThunkAPI } from '../../frameworks/redux';
+import { AppDispatch, ThunkAPI } from '../../../frameworks/redux';
 import { Theme, RootState, DIContainer } from '@types';
 
 export const walletChange = createAction<{ walletName: string }>('wallet/walletChange');

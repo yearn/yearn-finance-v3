@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { ThunkAPI } from '../../frameworks/redux';
+import { ThunkAPI } from '../../../frameworks/redux';
 import { walletSelect } from '@store';
 
 export const initApp = createAsyncThunk<void, string | undefined, ThunkAPI>(

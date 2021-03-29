@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkAPI } from '../../frameworks/redux';
-import { GetSupportedVaultsServiceResult } from '../../types';
+import { ThunkAPI } from '../../../frameworks/redux';
+import { GetSupportedVaultsServiceResult } from '@types';
 
 export const getVaults = createAsyncThunk<
   { supportedVaults: GetSupportedVaultsServiceResult[] },
