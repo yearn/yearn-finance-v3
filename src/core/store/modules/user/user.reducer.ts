@@ -16,8 +16,9 @@ const userReducer = createReducer(initialState, (builder) => {
     .addCase(getUserVaultsData.pending, (state) => {
       state.statusMap.getUserVaults = { loading: true };
     })
-    .addCase(getUserVaultsData.fulfilled, (state, { payload: { userVaultsMap } }) => {
+    .addCase(getUserVaultsData.fulfilled, (state, { payload: { userVaultsMap, userTokensMap } }) => {
       state.userVaultsMap = userVaultsMap;
+      state.userTokensMap = userTokensMap; // this should be removed when sdk.getTokens() ready.
       state.statusMap.getUserVaults = {};
     })
     .addCase(getUserVaultsData.rejected, (state, { error }) => {
