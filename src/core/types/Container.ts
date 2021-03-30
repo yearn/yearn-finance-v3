@@ -1,5 +1,11 @@
-import { Wallet, Config, GetSupportedVaultsService, Web3Provider } from '@types';
-import { GetUserVaultsService } from './Service';
+import {
+  Wallet,
+  Config,
+  GetSupportedVaultsService,
+  Web3Provider,
+  GetSupportedTokensService,
+  GetUserVaultsService,
+} from '@types';
 
 export interface DIContainer {
   context: ContextContainer;
@@ -14,6 +20,7 @@ export interface ContextContainer {
 export interface ServiceContainer {
   getSupportedVaults: GetSupportedVaultsService;
   getUserVaults: GetUserVaultsService;
+  getSupportedTokens: GetSupportedTokensService;
 }
 
 export interface ConfigContainer extends Config {}

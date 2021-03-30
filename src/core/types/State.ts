@@ -1,8 +1,6 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { UserTokenData } from './UserToken';
-import { UserVaultData } from './UserVault';
-import { VaultData } from './Vault';
+import { TokenData, UserTokenData, UserVaultData, VaultData } from '@types';
 
 export interface RootState {
   app: AppState;
@@ -11,6 +9,7 @@ export interface RootState {
   vaults: VaultsState;
   wallet: WalletState;
   user: UserState;
+  tokens: TokensState;
 }
 
 export interface AppState {
@@ -50,5 +49,12 @@ export interface UserState {
   userTokensMap: { [address: string]: UserTokenData };
   statusMap: {
     getUserVaults: Status;
+  };
+}
+export interface TokensState {
+  tokensAddresses: string[];
+  tokensMap: { [address: string]: TokenData };
+  statusMap: {
+    getTokens: Status;
   };
 }

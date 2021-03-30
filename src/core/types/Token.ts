@@ -1,9 +1,9 @@
 import { EthereumAddress } from '@types';
 
-export interface Token {
+export interface TokenData {
   address: EthereumAddress;
   name: string;
   symbol: string;
-  decimals: number;
+  decimals: string;
   icon: string;
 }
