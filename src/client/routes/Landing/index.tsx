@@ -2,7 +2,7 @@ import { useAppDispatch, useAppTranslation } from '@hooks';
 import { Box } from '@components/common';
 import { initiateSaveVaults, getTokens } from '@store';
 
-export const Home = () => {
+export const Landing = () => {
   const dispatch = useAppDispatch();
   const { t } = useAppTranslation('common');
   function getVaults() {

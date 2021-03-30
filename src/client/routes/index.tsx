@@ -1,19 +1,23 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { Layout } from '@containers';
-import { Home } from './Home';
-import { Page404 } from './404';
+
+// import { Page404 } from './404';
+import { Save } from './Save';
+import { Landing } from './Landing';
 
 export const Routes = () => {
   return (
     <Router>
       <Layout>
         <Switch>
-          <Route exact path="/">
-            <Home />
+          <Route exact path="/save">
+            <Save />
+          </Route>
+          <Route path="/">
+            <Landing />
           </Route>
           <Route path="*">
-            <Page404 />
+            <Redirect to="/" />
           </Route>
         </Switch>
       </Layout>
