@@ -1,30 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export interface Sidemenu {
   open: boolean;
   disabled: boolean;
   toggle: () => void;
 }
+export interface InitialSidemenuProps {
+  opened?: boolean;
+}
 
-export const useSideMenu = (initialValue = false) => {
-  const [showSidebar, setShowSidebar] = useState(initialValue);
+export const useSideMenu = ({ opened = false }: InitialSidemenuProps) => {
+  const [showSidebar, setShowSidebar] = useState(opened);
 
   const isOpen = showSidebar;
+  const isDisabled = showSidebar;
   const toggle = () => setShowSidebar((currentState) => !currentState);
   const close = () => setShowSidebar(false);
   const open = () => setShowSidebar(true);
 
-  // const sideMenu = React.useContext(SideMenuContext);
-  // const { enable, disable, close } = sideMenu;
-
-  // useEffect(() => {
-  //   enable();
-
-  //   return () => {
-  //     disable();
-  //     close();
-  //   };
-  // }, []);
-
-  return { isOpen, toggle, open, close };
+  return { isOpen, isDisabled, toggle, open, close };
 };

@@ -12,7 +12,7 @@ interface NavigationProps {
 const StyledNavigation = styled.nav``;
 
 export const Navigation = ({ walletAddress, onWalletClick }: NavigationProps) => {
-  const { isOpen, toggle } = useSideMenu(false);
+  const { isOpen, toggle } = useSideMenu({ opened: false });
   return (
     <StyledNavigation>
       <button onClick={toggle}>Toggle Sidemenu</button>
