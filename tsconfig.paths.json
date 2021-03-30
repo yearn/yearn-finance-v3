@@ -21,6 +21,8 @@
       "@routes/*": ["client/routes/*"],
       "@themes": ["client/themes"],
       "@themes/*": ["client/themes/*"],
+      "@css": ["client/themes/css"],
+      "@css/*": ["client/themes/css/*"],
       "@config": ["config"],
       "@config/*": ["config/*"],
       "@core": ["core"],

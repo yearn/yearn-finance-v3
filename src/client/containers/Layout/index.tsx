@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 import { initApp, changeRoute, walletSelect } from '@store';
 import { useAppDispatch, useAppSelector } from '@hooks';
-import { AppMenu } from '@components/app';
+import { Navigation } from '@components/app';
 import { Box } from '@components/common';
 
 export const Layout: FC = ({ children }) => {
@@ -20,8 +20,8 @@ export const Layout: FC = ({ children }) => {
   }, [location]);
 
   return (
-    <Box display="flex" flexDirection="column" minHeight="100vh">
-      <AppMenu walletAddress={selectedAddress ?? undefined} onWalletClick={() => dispatch(walletSelect())} />
+    <Box display="flex" flexDirection="column" minHeight="100%">
+      <Navigation walletAddress={selectedAddress ?? undefined} onWalletClick={() => dispatch(walletSelect())} />
       {children}
     </Box>
   );

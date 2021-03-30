@@ -10,9 +10,30 @@ import { Themable } from '@containers';
 import '@i18n';
 
 const GlobalStyle = createGlobalStyle`
-  body {
+  html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
+  }
+
+  html {
+    font-size: 62.5%;
+  }
+
+  *, *::after, *::before {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: ${(props) => props.theme.colors.shade90};
+    color: ${(props) => props.theme.colors.shade0};
+    font-size: 1.6rem;
+    overflow: hidden;
+    overflow-y: scroll;
+  }
+
+  #root {
+    height: 100%;
   }
 `;
 
