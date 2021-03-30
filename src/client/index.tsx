@@ -20,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 62.5%;
   }
 
-  *, *::after, *::before {
+  * {
     box-sizing: border-box;
   }
 
