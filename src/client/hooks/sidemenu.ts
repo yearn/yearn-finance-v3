@@ -6,20 +6,25 @@ export interface Sidemenu {
   toggle: () => void;
 }
 
-export const useSideMenu = () => {
-  const [showSidebar, setShowSidebar] = useState(true);
+export const useSideMenu = (initialValue = false) => {
+  const [showSidebar, setShowSidebar] = useState(initialValue);
 
-  const sideMenu = React.useContext(SideMenuContext);
-  const { enable, disable, close } = sideMenu;
+  const isOpen = showSidebar;
+  const toggle = () => setShowSidebar((currentState) => !currentState);
+  const close = () => setShowSidebar(false);
+  const open = () => setShowSidebar(true);
 
-  React.useEffect(() => {
-    enable();
+  // const sideMenu = React.useContext(SideMenuContext);
+  // const { enable, disable, close } = sideMenu;
 
-    return () => {
-      disable();
-      close();
-    };
-  }, []);
+  // useEffect(() => {
+  //   enable();
 
-  return sideMenu;
+  //   return () => {
+  //     disable();
+  //     close();
+  //   };
+  // }, []);
+
+  return { isOpen, toggle, open, close };
 };

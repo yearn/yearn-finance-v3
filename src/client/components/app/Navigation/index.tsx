@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { useSideMenu } from '@hooks';
 import { Navbar } from './Navbar';
 import { Sidemenu } from './Sidemenu';
 
@@ -11,10 +12,11 @@ interface NavigationProps {
 const StyledNavigation = styled.nav``;
 
 export const Navigation = ({ walletAddress, onWalletClick }: NavigationProps) => {
-  const open = true;
+  const { isOpen, toggle } = useSideMenu(false);
   return (
     <StyledNavigation>
-      <Sidemenu walletAddress={walletAddress} onWalletClick={() => onWalletClick && onWalletClick()} open={open} />
+      <button onClick={toggle}>Toggle Sidemenu</button>
+      <Sidemenu walletAddress={walletAddress} onWalletClick={() => onWalletClick && onWalletClick()} open={isOpen} />
       <Navbar walletAddress={walletAddress} onWalletClick={() => onWalletClick && onWalletClick()} />
     </StyledNavigation>
   );
