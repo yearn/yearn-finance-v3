@@ -18,14 +18,27 @@ import { selectSaveVaults } from './vaults/vaults.selectors';
 import walletReducer from './wallet/wallet.reducer';
 import { walletSelect, changeWalletTheme } from './wallet/wallet.actions';
 
+import userReducer from './user/user.reducer';
+import { getUserVaultsData } from './user/user.actions';
+
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
   route: routeReducer,
   theme: themeReducer,
   vaults: vaultsReducer,
   wallet: walletReducer,
+  user: userReducer,
 });
 
 export default rootReducer;
-export { initApp, initiateSaveVaults, changeRoute, changeTheme, getVaults, walletSelect, changeWalletTheme };
+export {
+  initApp,
+  initiateSaveVaults,
+  changeRoute,
+  changeTheme,
+  getVaults,
+  walletSelect,
+  changeWalletTheme,
+  getUserVaultsData,
+};
 export { selectSaveVaults };

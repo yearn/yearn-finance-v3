@@ -1,5 +1,7 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
+import { UserTokenData } from './UserToken';
+import { UserVaultData } from './UserVault';
 import { VaultData } from './Vault';
 
 export interface RootState {
@@ -8,6 +10,7 @@ export interface RootState {
   theme: ThemeState;
   vaults: VaultsState;
   wallet: WalletState;
+  user: UserState;
 }
 
 export interface AppState {
@@ -41,4 +44,11 @@ export interface WalletState {
   isConnected: boolean;
   isLoading: boolean;
   error: string | undefined;
+}
+export interface UserState {
+  userVaultsMap: { [address: string]: UserVaultData };
+  userTokensMap: { [address: string]: UserTokenData };
+  statusMap: {
+    getUserVaults: Status;
+  };
 }

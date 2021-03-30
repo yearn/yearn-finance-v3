@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '../../../frameworks/redux';
 import { VaultData } from '@types';
+import { getUserVaultsData } from '@store';
 
 export const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',
@@ -8,7 +9,8 @@ export const initiateSaveVaults = createAsyncThunk<void, string | undefined, Thu
     const { isConnected } = getState().wallet;
     const actionsList: Promise<any>[] = [dispatch(getVaults())];
     if (isConnected) {
-      // actionsList.push([dispatch(getUserVaultsData()), dispatch(getUserTokensData())]);
+      actionsList.push(dispatch(getUserVaultsData()));
+      // actionsList.push(dispatch(getUserVaultsData()), dispatch(getUserTokensData()));
     }
 
     await Promise.all(actionsList);

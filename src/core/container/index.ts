@@ -2,7 +2,7 @@ import * as awilix from 'awilix';
 
 import { BlocknativeWalletImpl } from '@frameworks/blocknative';
 import { EthersWeb3ProviderImpl } from '@frameworks/ethers';
-import { GetSupportedVaults } from '@services';
+import { GetSupportedVaults, GetUserVaults } from '@services';
 import { getConfig } from '@config';
 import { DIContainer, ContextContainer, ServiceContainer, ConfigContainer } from '@types';
 
@@ -29,6 +29,7 @@ export class Container implements DIContainer {
   private registerServices() {
     this.container.register({
       getSupportedVaults: awilix.asClass(GetSupportedVaults),
+      getUserVaults: awilix.asClass(GetUserVaults),
     });
   }
 
@@ -48,6 +49,7 @@ export class Container implements DIContainer {
   get services(): ServiceContainer {
     return {
       getSupportedVaults: this.container.cradle.getSupportedVaults,
+      getUserVaults: this.container.cradle.getUserVaults,
     };
   }
 
