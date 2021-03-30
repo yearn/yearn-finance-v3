@@ -1,6 +1,7 @@
 import * as awilix from 'awilix';
 
 import { BlocknativeWalletImpl } from '@frameworks/blocknative';
+import { EthersWeb3ProviderImpl } from '@frameworks/ethers';
 import { GetSupportedVaults } from '@services';
 import { getConfig } from '@config';
 import { DIContainer, ContextContainer, ServiceContainer, ConfigContainer } from '@types';
@@ -21,6 +22,7 @@ export class Container implements DIContainer {
   private registerContext() {
     this.container.register({
       wallet: awilix.asClass(BlocknativeWalletImpl).singleton(),
+      web3Provider: awilix.asClass(EthersWeb3ProviderImpl).singleton(),
     });
   }
 
@@ -39,6 +41,7 @@ export class Container implements DIContainer {
   get context(): ContextContainer {
     return {
       wallet: this.container.cradle.wallet,
+      web3Provider: this.container.cradle.web3Provider,
     };
   }
 

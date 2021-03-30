@@ -7,3 +7,4 @@ export * from './State';
 export * from './Token';
 export * from './Vault';
 export * from './Wallet';
+export * from './Web3Provider';

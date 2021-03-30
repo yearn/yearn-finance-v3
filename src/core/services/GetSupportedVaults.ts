@@ -1,13 +1,16 @@
 import { Yearn } from '@yfi/sdk';
-import { providers } from 'ethers';
 
-import { getConfig } from '@config';
-import { GetSupportedVaultsService, VaultData } from '@types';
+import { GetSupportedVaultsService, VaultData, Web3Provider } from '@types';
 
 export class GetSupportedVaults implements GetSupportedVaultsService {
+  private web3Provider: Web3Provider;
+
+  constructor({ web3Provider }: { web3Provider: Web3Provider }) {
+    this.web3Provider = web3Provider;
+  }
+
   public async execute(): Promise<VaultData[]> {
-    const { FANTOM_PROVIDER_HTTPS } = getConfig();
-    const provider = new providers.JsonRpcProvider(FANTOM_PROVIDER_HTTPS);
+    const provider = this.web3Provider.getInstanceOf('fantom');
     const yearn = new Yearn(250, provider);
     const vaults = await yearn.vaults.get();
     const vaultData: VaultData[] = vaults.map((vault) => ({
