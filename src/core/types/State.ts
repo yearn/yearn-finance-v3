@@ -1,6 +1,7 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
 import { TokenData, UserTokenData, UserVaultData, VaultData } from '@types';
+import { EthereumAddress } from './Ethereum';
 
 export interface RootState {
   app: AppState;
@@ -29,6 +30,7 @@ export interface ThemeState {
 export interface VaultsState {
   saveVaultsAddreses: string[];
   vaultsMap: { [address: string]: VaultData };
+  selectedVaultAddress: EthereumAddress | undefined;
   statusMap: {
     initiateSaveVaults: Status;
     getVaults: Status;

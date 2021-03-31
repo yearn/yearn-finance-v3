@@ -1,7 +1,9 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '../../../frameworks/redux';
 import { VaultData } from '@types';
 import { getUserVaultsData } from '@store';
+
+export const setSelectedVaultAddress = createAction<{ vaultAddress: string }>('vaults/setSelectedVaultAddress');
 
 export const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',

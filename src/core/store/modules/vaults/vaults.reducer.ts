@@ -1,10 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { VaultsState } from '@types';
-import { getVaults, initiateSaveVaults } from './vaults.actions';
+import { getVaults, initiateSaveVaults, setSelectedVaultAddress } from './vaults.actions';
 
 const initialState: VaultsState = {
   saveVaultsAddreses: [],
   vaultsMap: {},
+  selectedVaultAddress: undefined,
   statusMap: {
     initiateSaveVaults: { loading: false, error: null },
     getVaults: { loading: false, error: null },
@@ -32,6 +33,9 @@ const vaultsReducer = createReducer(initialState, (builder) => {
     })
     .addCase(getVaults.rejected, (state, { error }) => {
       state.statusMap.getVaults = { error: error.message };
+    })
+    .addCase(setSelectedVaultAddress, (state, { payload: { vaultAddress } }) => {
+      state.selectedVaultAddress = vaultAddress;
     });
 });
 

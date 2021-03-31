@@ -5,6 +5,7 @@ const selectVaultsState = (state: RootState) => state.vaults;
 const selectUserVaultsMap = (state: RootState) => state.user.userVaultsMap;
 const selectUserTokensMap = (state: RootState) => state.user.userTokensMap;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
+const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVaultAddress;
 
 export const selectSaveVaults = createSelector(
   [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap],
@@ -38,5 +39,16 @@ export const selectSaveVaults = createSelector(
       };
     });
     return vaults;
+  }
+);
+
+export const selectSelectedVault = createSelector(
+  [selectSaveVaults, selectSelectedVaultAddress],
+  (vaults, selectedVaultAddress): Vault | undefined => {
+    if (!selectedVaultAddress) {
+      return undefined;
+    }
+    const selectedVault = vaults.find((vault) => vault.address === selectedVaultAddress);
+    return selectedVault;
   }
 );
