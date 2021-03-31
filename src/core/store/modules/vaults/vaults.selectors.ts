@@ -1,11 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState, Vault } from '@types';
+import { RootState, Vault, VaultActionsStatusMap } from '@types';
+import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 const selectVaultsState = (state: RootState) => state.vaults;
 const selectUserVaultsMap = (state: RootState) => state.user.userVaultsMap;
 const selectUserTokensMap = (state: RootState) => state.user.userTokensMap;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVaultAddress;
+const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMap.vaultsActionsStatusMap;
 
 export const selectSaveVaults = createSelector(
   [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap],
@@ -50,5 +52,12 @@ export const selectSelectedVault = createSelector(
     }
     const selectedVault = vaults.find((vault) => vault.address === selectedVaultAddress);
     return selectedVault;
+  }
+);
+
+export const selectSelectedVaultActionsStatusMap = createSelector(
+  [selectVaultsActionsStatusMap, selectSelectedVaultAddress],
+  (vaultsActionsStatusMap, selectedVaultAddress): VaultActionsStatusMap => {
+    return selectedVaultAddress ? vaultsActionsStatusMap[selectedVaultAddress] : initialVaultActionsStatusMap;
   }
 );

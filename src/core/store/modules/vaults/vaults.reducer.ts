@@ -9,7 +9,7 @@ import {
   withdrawVault,
 } from './vaults.actions';
 
-const initialVaultActionsStatusMap = {
+export const initialVaultActionsStatusMap = {
   approve: initialStatus,
   deposit: initialStatus,
   withdraw: initialStatus,
