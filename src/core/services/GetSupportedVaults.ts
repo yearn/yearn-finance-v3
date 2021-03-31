@@ -1,4 +1,4 @@
-import { Yearn } from '@yfi/sdk';
+import { Yearn, Metadata } from '@yfi/sdk';
 
 import { GetSupportedVaultsService, VaultData, Web3Provider } from '@types';
 
@@ -22,6 +22,7 @@ export class GetSupportedVaults implements GetSupportedVaultsService {
       balanceUsdc: vault.balanceUsdc?.toString() ?? '0',
       token: vault.token.id,
       apyData: undefined,
+      depositLimit: (vault.metadata as Metadata['VAULT_V2']).depositLimit?.toString() ?? '0',
     }));
 
     return vaultData;
