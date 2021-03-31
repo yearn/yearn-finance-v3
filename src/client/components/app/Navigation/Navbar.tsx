@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import useWindowDimensions from '@hooks/windowDimensions';
 
-import { ConnectWalletButton } from '@components/app/ConnectWalletButton';
+import { ConnectWalletButton } from '@components/app';
 
 interface NavbarProps {
   walletAddress?: string;
