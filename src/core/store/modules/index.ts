@@ -12,7 +12,14 @@ import themeReducer from './theme/theme.reducer';
 import { changeTheme } from './theme/theme.actions';
 
 import vaultsReducer from './vaults/vaults.reducer';
-import { getVaults, initiateSaveVaults, setSelectedVaultAddress } from './vaults/vaults.actions';
+import {
+  getVaults,
+  initiateSaveVaults,
+  setSelectedVaultAddress,
+  depositVault,
+  approveVault,
+  withdrawVault,
+} from './vaults/vaults.actions';
 import { selectSaveVaults, selectSelectedVault } from './vaults/vaults.selectors';
 
 import walletReducer from './wallet/wallet.reducer';
@@ -46,5 +53,8 @@ export {
   getUserVaultsData,
   getTokens,
   setSelectedVaultAddress,
+  depositVault,
+  approveVault,
+  withdrawVault,
 };
 export { selectSaveVaults, selectSelectedVault };

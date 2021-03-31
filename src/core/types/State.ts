@@ -27,6 +27,11 @@ export interface ThemeState {
   current: Theme;
 }
 
+export interface VaultActionsStatusMap {
+  approve: Status;
+  deposit: Status;
+  withdraw: Status;
+}
 export interface VaultsState {
   saveVaultsAddreses: string[];
   vaultsMap: { [address: string]: VaultData };
@@ -34,6 +39,7 @@ export interface VaultsState {
   statusMap: {
     initiateSaveVaults: Status;
     getVaults: Status;
+    vaultsActionsStatusMap: { [vaultAddress: string]: VaultActionsStatusMap };
   };
 }
 
