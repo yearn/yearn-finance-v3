@@ -8,6 +8,9 @@ const defaultTheme: DefaultTheme = {
     shade40: '#3F424A',
     shade90: '#22252E',
     shade100: '#00070E',
+
+    surface: '#292D39',
+    onSurface: '#fff',
   },
   contrasts: {
     primary: '#FFFFFF',

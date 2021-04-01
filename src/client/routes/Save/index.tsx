@@ -1,5 +1,6 @@
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { Box } from '@components/common';
+import { AssetCard } from '@components/app';
+import { Box, List } from '@components/common';
 import {
   getTokens,
   initiateSaveVaults,
@@ -13,6 +14,7 @@ import {
 import { Vault } from '../../../core/types';
 import { useEffect } from 'react';
 import BigNumber from 'bignumber.js';
+import { weiToUnits, formatAmount } from '@src/utils';
 
 export const Save = () => {
   // const { t } = useAppTranslation('common');
@@ -31,6 +33,22 @@ export const Save = () => {
       </div>
     );
   });
+
+  const vaultList = (
+    <List
+      Component={AssetCard}
+      items={vaults.map((vault) => ({
+        key: vault.address,
+        icon: `https://raw.githack.com/iearn-finance/yearn-assets/master/icons/tokens/0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE/logo-128.png`,
+        name: vault.name,
+        balance: formatAmount(weiToUnits(vault.vaultBalance, 18), 2),
+        earning: '',
+        onClick: () => selectVault(vault),
+      }))}
+      width={1}
+      px={80}
+    />
+  );
 
   function getVaults() {
     dispatch(initiateSaveVaults());
@@ -55,6 +73,7 @@ export const Save = () => {
     // TODO REMOVE
     console.log({ vaults });
   }, [vaults]);
+
   return (
     <Box center flex={1}>
       Save things
@@ -68,6 +87,7 @@ export const Save = () => {
           deposit limit: {selectedVault.depositLimit}
         </div>
       )}
+      {vaultList}
     </Box>
   );
 };

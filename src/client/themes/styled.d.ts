@@ -9,6 +9,9 @@ declare module 'styled-components' {
       shade40: string;
       shade90: string;
       shade100: string;
+
+      surface: string;
+      onSurface: string;
     };
     contrasts: {
       primary: string;
