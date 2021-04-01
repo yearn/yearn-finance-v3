@@ -35,6 +35,13 @@ const GlobalStyle = createGlobalStyle`
   #root {
     height: 100%;
   }
+
+  [disabled],
+  .disabled {
+    opacity: 0.7;
+    cursor: default;
+    pointer-events: none;
+  }
 `;
 
 const container = new Container();

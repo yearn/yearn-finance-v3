@@ -19,6 +19,7 @@ const StyledSidemenu = styled.nav<{ open: boolean }>`
   width: 40rem;
   max-width: 100%;
   transition: transform 0.3s ease-in-out;
+  z-index: ${(props) => props.theme.zindex.sidemenu};
 
   transform: ${({ open }) => (open ? 'translateX(0)' : 'translateX(100%)')};
 `;

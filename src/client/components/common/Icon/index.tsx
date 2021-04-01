@@ -12,6 +12,9 @@ export interface IconProps extends Omit<StyledSystemProps, 'height' | 'width'> {
 }
 
 const StyledImage = styled.img<StyledSystemProps>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   ${styledSystem}
 `;
