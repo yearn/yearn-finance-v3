@@ -5,6 +5,7 @@ const defaultTheme: DefaultTheme = {
     primary: '#0075FF',
 
     shade0: '#FFFFFF',
+    shade20: '#A7A8AC',
     shade40: '#3F424A',
     shade90: '#22252E',
     shade100: '#00070E',
@@ -13,6 +14,7 @@ const defaultTheme: DefaultTheme = {
     primary: '#FFFFFF',
 
     shade0: '#000',
+    shade20: '#000',
     shade40: '#FFF',
     shade90: '#FFF',
     shade100: '#FFF',

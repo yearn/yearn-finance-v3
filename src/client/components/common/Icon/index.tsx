@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import HamburguerIcon from '@assets/icons/hamburguer.svg';
+import DeleteIcon from '@assets/icons/delete.svg';
 import { styledSystem, StyledSystemProps } from '../styledSystem';
 
 export interface IconProps extends Omit<StyledSystemProps, 'height' | 'width'> {
@@ -22,3 +23,4 @@ const StyledImage = styled.img<StyledSystemProps>`
 export const Icon: FC<IconProps> = (props) => <StyledImage {...props} />;
 
 export { HamburguerIcon };
+export { DeleteIcon };

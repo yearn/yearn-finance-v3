@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { NavSideMenuContext } from '@context';
 
 import { ConnectWalletButton } from '@components/app/ConnectWalletButton';
-import { Sidemenu, Icon, HamburguerIcon } from '@components/common';
+import { Sidemenu, Icon, DeleteIcon } from '@components/common';
 
 interface SidemenuProps {
   walletAddress?: string;
@@ -27,6 +27,13 @@ const SidemenuHeader = styled.div`
   padding: 0 ${(props) => props.theme.navbar.padding};
 `;
 
+const SidemenuContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0 ${(props) => props.theme.navbar.padding};
+  padding-top: 1rem;
+`;
+
 const StyledMenuButton = styled.div`
   padding: 1rem;
   margin-right: -1rem;
@@ -46,16 +53,18 @@ export const NavSidemenu = ({ walletAddress, onWalletClick, open }: SidemenuProp
       <SidemenuHeader>
         Yearn logo
         <StyledMenuButton onClick={toggle}>
-          <Icon src={HamburguerIcon} height="24" />
+          <Icon src={DeleteIcon} height="24" />
         </StyledMenuButton>
       </SidemenuHeader>
 
-      <ConnectWalletButton address={walletAddress} onClick={() => onWalletClick && onWalletClick()} />
-      <LinkList>test</LinkList>
-      <LinkList>test</LinkList>
-      <LinkList>test</LinkList>
-      <LinkList>test</LinkList>
-      <LinkList>test</LinkList>
+      <SidemenuContent>
+        <ConnectWalletButton address={walletAddress} onClick={() => onWalletClick && onWalletClick()} />
+        <LinkList>test</LinkList>
+        <LinkList>test</LinkList>
+        <LinkList>test</LinkList>
+        <LinkList>test</LinkList>
+        <LinkList>test</LinkList>
+      </SidemenuContent>
     </StyledSidemenu>
   );
 };

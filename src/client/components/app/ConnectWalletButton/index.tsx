@@ -9,6 +9,10 @@ interface WalletAddressProps {
 
 const StyledButton = styled(Button)`
   font-size: 1.4rem;
+  &.outline {
+    border-color: ${(props) => props.theme.colors.shade20};
+    color: ${(props) => props.theme.colors.shade20};
+  }
 `;
 
 export const ConnectWalletButton = ({ address, onClick }: WalletAddressProps) => {
