@@ -1,16 +1,15 @@
 import { Yearn } from '@yfi/sdk';
 
-import { GetUserVaultsService, Web3Provider } from '@types';
-import { UserVaultData } from '../types/UserVault';
+import { UserService, Web3Provider, UserVaultData, EthereumAddress } from '@types';
 
-export class GetUserVaults implements GetUserVaultsService {
+export class UserServiceImpl implements UserService {
   private web3Provider: Web3Provider;
 
   constructor({ web3Provider }: { web3Provider: Web3Provider }) {
     this.web3Provider = web3Provider;
   }
 
-  public async execute(userAddress: string): Promise<UserVaultData[]> {
+  public async getUserVaultsData({ userAddress }: { userAddress: EthereumAddress }): Promise<UserVaultData[]> {
     const provider = this.web3Provider.getInstanceOf('fantom');
     const yearn = new Yearn(250, provider);
     const userVaults = await yearn.vaults.getPositionsOf(userAddress);

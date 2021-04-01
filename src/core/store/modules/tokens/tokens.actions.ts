@@ -7,8 +7,8 @@ export const getTokens = createAsyncThunk<
   string | undefined,
   ThunkAPI
 >('tokens/getTokens', async (_arg, { extra }) => {
-  const { getSupportedTokens } = extra.services;
-  const tokensData: TokenData[] = await getSupportedTokens.execute();
+  const { tokenService } = extra.services;
+  const tokensData: TokenData[] = await tokenService.getSupportedTokens();
   const tokensMap: { [address: string]: TokenData } = {};
   const tokensAddresses: string[] = [];
   tokensData.forEach((token) => {

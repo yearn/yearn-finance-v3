@@ -1,15 +1,15 @@
 import { Yearn, Metadata } from '@yfi/sdk';
 
-import { GetSupportedVaultsService, VaultData, Web3Provider } from '@types';
+import { VaultService, VaultData, Web3Provider } from '@types';
 
-export class GetSupportedVaults implements GetSupportedVaultsService {
+export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;
 
   constructor({ web3Provider }: { web3Provider: Web3Provider }) {
     this.web3Provider = web3Provider;
   }
 
-  public async execute(): Promise<VaultData[]> {
+  public async getSupportedVaults(): Promise<VaultData[]> {
     const provider = this.web3Provider.getInstanceOf('fantom');
     const yearn = new Yearn(250, provider);
     const vaults = await yearn.vaults.get();

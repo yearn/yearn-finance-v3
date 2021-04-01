@@ -1,15 +1,15 @@
 import { Yearn } from '@yfi/sdk';
 
-import { GetSupportedTokensService, TokenData, Web3Provider } from '@types';
+import { TokenService, TokenData, Web3Provider } from '@types';
 
-export class GetSupportedTokens implements GetSupportedTokensService {
+export class TokenServiceImpl implements TokenService {
   private web3Provider: Web3Provider;
 
   constructor({ web3Provider }: { web3Provider: Web3Provider }) {
     this.web3Provider = web3Provider;
   }
 
-  public async execute(): Promise<TokenData[]> {
+  public async getSupportedTokens(): Promise<TokenData[]> {
     const provider = this.web3Provider.getInstanceOf('fantom');
     const yearn = new Yearn(250, provider);
     const tokens = await yearn.vaults.getTokens();

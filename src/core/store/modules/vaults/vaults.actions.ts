@@ -25,8 +25,8 @@ export const getVaults = createAsyncThunk<
   string | undefined,
   ThunkAPI
 >('vaults/getVaults', async (_arg, { extra }) => {
-  const { getSupportedVaults } = extra.services;
-  const supportedVaults = await getSupportedVaults.execute();
+  const { vaultService } = extra.services;
+  const supportedVaults = await vaultService.getSupportedVaults();
   const vaultsMap: { [address: string]: VaultData } = {};
   const vaultsAddreses: string[] = [];
   supportedVaults.forEach((vault) => {

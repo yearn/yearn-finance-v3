@@ -1,3 +1,3 @@
-export * from './GetSupportedVaults';
-export * from './GetUserVaults';
-export * from './GetSupportedTokens';
+export * from './TokenService';
+export * from './UserService';
+export * from './VaultService';
