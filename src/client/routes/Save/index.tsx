@@ -5,7 +5,6 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { AssetCard, Blade } from '@components/app';
 import { Box, List } from '@components/common';
 import {
-  getTokens,
   initiateSaveVaults,
   selectSaveVaults,
   setSelectedVaultAddress,
@@ -22,6 +21,7 @@ export const Save = () => {
   // const { t } = useAppTranslation('common');
   const { isOpen, toggle } = useContext(BladeContext);
   const dispatch = useAppDispatch();
+  const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
   const selectedVault = useAppSelector(selectSelectedVault);
   const vaults = useAppSelector(selectSaveVaults);
   const vaultsComponent = vaults.map((vault: Vault) => {
@@ -53,35 +53,28 @@ export const Save = () => {
     />
   );
 
-  function getVaults() {
-    dispatch(initiateSaveVaults());
-  }
-  function initTokens() {
-    dispatch(getTokens());
-  }
-  function selectVault(vault: Vault) {
-    dispatch(setSelectedVaultAddress({ vaultAddress: vault.address }));
-  }
-  function approve(vaultAddress: string) {
-    dispatch(approveVault({ vaultAddress }));
-  }
-  function deposit(vaultAddress: string, amount: number) {
+  const getVaults = () => dispatch(initiateSaveVaults());
+  const selectVault = (vault: Vault) => dispatch(setSelectedVaultAddress({ vaultAddress: vault.address }));
+  const approve = (vaultAddress: string) => dispatch(approveVault({ vaultAddress }));
+  const deposit = (vaultAddress: string, amount: number) =>
     dispatch(depositVault({ vaultAddress, amount: new BigNumber(amount) }));
-  }
-  function withdraw(vaultAddress: string, amount: number) {
+  const withdraw = (vaultAddress: string, amount: number) =>
     dispatch(withdrawVault({ vaultAddress, amount: new BigNumber(amount) }));
-  }
 
   useEffect(() => {
-    // TODO REMOVE
-    console.log({ vaults });
-  }, [vaults]);
+    getVaults();
+  }, []);
+
+  useEffect(() => {
+    if (selectedAddress) {
+      // TODO: FETCH USER DATA
+      console.log(`Fetch data for ${selectedAddress}`);
+    }
+  }, [selectedAddress]);
 
   return (
     <Box center flex={1}>
       <Blade open={isOpen}></Blade>
-      <button onClick={getVaults}>init vaults</button>
-      <button onClick={initTokens}>get tokens</button>
       <button onClick={toggle}>open Blade</button>
       {vaultsComponent}
       selected vault:
