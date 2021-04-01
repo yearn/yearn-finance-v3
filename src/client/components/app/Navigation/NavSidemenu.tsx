@@ -5,7 +5,7 @@ import { NavSideMenuContext } from '@context';
 import { ConnectWalletButton } from '@components/app/ConnectWalletButton';
 import { Sidemenu, Icon, DeleteIcon } from '@components/common';
 
-interface SidemenuProps {
+interface NavSidemenuProps {
   walletAddress?: string;
   onWalletClick?: () => void;
   open: boolean;
@@ -45,7 +45,7 @@ const LinkList = styled.nav`
   flex-direction: column;
 `;
 
-export const NavSidemenu = ({ walletAddress, onWalletClick, open }: SidemenuProps) => {
+export const NavSidemenu = ({ walletAddress, onWalletClick, open }: NavSidemenuProps) => {
   const { toggle } = useContext(NavSideMenuContext);
 
   return (
