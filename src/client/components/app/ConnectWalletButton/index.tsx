@@ -1,10 +1,15 @@
 import { useAppTranslation } from '@hooks';
-import { Text } from '@components/common';
+import { Button, Text } from '@components/common';
+import styled from 'styled-components';
 
 interface WalletAddressProps {
   address?: string;
   onClick: () => void;
 }
+
+const StyledButton = styled(Button)`
+  font-size: 1.4rem;
+`;
 
 export const ConnectWalletButton = ({ address, onClick }: WalletAddressProps) => {
   const { t } = useAppTranslation('common');
@@ -16,8 +21,8 @@ export const ConnectWalletButton = ({ address, onClick }: WalletAddressProps) =>
   const maskedAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length);
 
   return (
-    <button onClick={onClick}>
-      <Text textColor="primary">{maskedAddress}</Text>
-    </button>
+    <StyledButton onClick={() => onClick && onClick()} className="outline">
+      <Text>{maskedAddress}</Text>
+    </StyledButton>
   );
 };
