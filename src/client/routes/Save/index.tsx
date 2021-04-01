@@ -14,11 +14,12 @@ import { Vault } from '@types';
 import { BladeContext } from '@context';
 import BigNumber from 'bignumber.js';
 
+import { Blade } from '@components/app';
 import { Box } from '@components/common';
 
 export const Save = () => {
   // const { t } = useAppTranslation('common');
-  const { toggle } = useContext(BladeContext);
+  const { isOpen, toggle } = useContext(BladeContext);
   const dispatch = useAppDispatch();
   const selectedVault = useAppSelector(selectSelectedVault);
   const vaults = useAppSelector(selectSaveVaults);
@@ -60,7 +61,7 @@ export const Save = () => {
   }, [vaults]);
   return (
     <Box center flex={1}>
-      Save things
+      <Blade open={isOpen}></Blade>
       <button onClick={getVaults}>init vaults</button>
       <button onClick={initTokens}>get tokens</button>
       <button onClick={toggle}>open Blade</button>

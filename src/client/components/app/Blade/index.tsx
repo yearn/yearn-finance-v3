@@ -15,7 +15,6 @@ const StyledBlade = styled(Sidemenu)<{ open: boolean }>`
   background-color: ${(props) => props.theme.colors.shade40};
   width: 40rem;
   max-width: 100%;
-  z-index: ${(props) => props.theme.zindex.navSidemenu};
 `;
 
 const BladeHeader = styled.div`
@@ -39,7 +38,7 @@ const StyledMenuButton = styled.div`
   flex-shrink: 0;
 `;
 
-export const NavSidemenu = ({ walletAddress, onWalletClick, open }: SidemenuProps) => {
+export const Blade = ({ walletAddress, onWalletClick, open }: SidemenuProps) => {
   const { toggle } = useContext(BladeContext);
 
   return (
