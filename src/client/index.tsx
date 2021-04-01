@@ -4,7 +4,7 @@ import { createGlobalStyle } from 'styled-components';
 
 import { Container } from '@container';
 import { getStore } from '@frameworks/redux';
-import { AppContextProvider, BladeContextProvider, SideMenuContextProvider } from '@context';
+import { AppContextProvider, BladeContextProvider, NavSideMenuContextProvider } from '@context';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
 import '@i18n';
@@ -42,6 +42,10 @@ const GlobalStyle = createGlobalStyle`
     cursor: default;
     pointer-events: none;
   }
+
+  .bn-onboard-modal {
+    z-index: ${(props) => props.theme.zindex.onboardModal}
+  }
 `;
 
 const container = new Container();
@@ -51,7 +55,7 @@ export const App = () => {
   return (
     <Provider store={store}>
       <AppContextProvider context={container.context}>
-        <SideMenuContextProvider>
+        <NavSideMenuContextProvider>
           <BladeContextProvider>
             <Themable>
               <GlobalStyle />
@@ -60,7 +64,7 @@ export const App = () => {
               </Suspense>
             </Themable>
           </BladeContextProvider>
-        </SideMenuContextProvider>
+        </NavSideMenuContextProvider>
       </AppContextProvider>
     </Provider>
   );

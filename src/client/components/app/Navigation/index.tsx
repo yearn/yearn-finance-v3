@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
 
-import { SideMenuContext } from '@context';
+import { NavSideMenuContext } from '@context';
 import { Navbar } from './Navbar';
-import { Sidemenu } from './Sidemenu';
+import { NavSidemenu } from './NavSidemenu';
 
 interface NavigationProps {
   walletAddress?: string;
@@ -13,10 +13,10 @@ interface NavigationProps {
 const StyledNavigation = styled.nav``;
 
 export const Navigation = ({ walletAddress, onWalletClick }: NavigationProps) => {
-  const { isOpen, toggle } = useContext(SideMenuContext);
+  const { isOpen, toggle } = useContext(NavSideMenuContext);
   return (
     <StyledNavigation>
-      <Sidemenu walletAddress={walletAddress} onWalletClick={() => onWalletClick && onWalletClick()} open={isOpen} />
+      <NavSidemenu walletAddress={walletAddress} onWalletClick={() => onWalletClick && onWalletClick()} open={isOpen} />
       <Navbar
         walletAddress={walletAddress}
         onWalletClick={() => onWalletClick && onWalletClick()}

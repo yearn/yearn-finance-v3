@@ -1,5 +1,8 @@
+import { useContext, useEffect } from 'react';
+import BigNumber from 'bignumber.js';
+
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { AssetCard } from '@components/app';
+import { AssetCard, Blade } from '@components/app';
 import { Box, List } from '@components/common';
 import {
   getTokens,
@@ -11,13 +14,13 @@ import {
   approveVault,
   withdrawVault,
 } from '@store';
-import { Vault } from '../../../core/types';
-import { useEffect } from 'react';
-import BigNumber from 'bignumber.js';
+import { Vault } from '@types';
+import { BladeContext } from '@context';
 import { weiToUnits, formatAmount } from '@src/utils';
 
 export const Save = () => {
   // const { t } = useAppTranslation('common');
+  const { isOpen, toggle } = useContext(BladeContext);
   const dispatch = useAppDispatch();
   const selectedVault = useAppSelector(selectSelectedVault);
   const vaults = useAppSelector(selectSaveVaults);
@@ -76,9 +79,10 @@ export const Save = () => {
 
   return (
     <Box center flex={1}>
-      Save things
+      <Blade open={isOpen}></Blade>
       <button onClick={getVaults}>init vaults</button>
       <button onClick={initTokens}>get tokens</button>
+      <button onClick={toggle}>open Blade</button>
       {vaultsComponent}
       selected vault:
       {selectedVault && (

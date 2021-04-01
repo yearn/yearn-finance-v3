@@ -17,10 +17,15 @@ const StyledButton = styled.button`
   border: 2px solid transparent;
   border-radius: 2.3rem;
   background: ${(props) => props.theme.colors.primary};
-  color: ${(props) => props.theme.contrasts.primary};
   cursor: pointer;
   user-select: none;
   font-size: 1.6rem;
+
+  &,
+  a,
+  span {
+    color: ${(props) => props.theme.contrasts.primary};
+  }
 
   &:focus {
     outline: none;
