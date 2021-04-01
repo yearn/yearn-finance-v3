@@ -19,9 +19,14 @@ declare module 'styled-components' {
       shade100: string;
     };
     mobile: number;
-    navbarHeight: string;
+    navbar: {
+      padding: string;
+      height: string;
+    };
     zindex: {
       sidemenu: number;
+      navSidemenu: number;
+      onboardModal: number;
     };
   }
 }

@@ -18,9 +18,14 @@ const defaultTheme: DefaultTheme = {
     shade100: '#FFF',
   },
   mobile: 720,
-  navbarHeight: '6.6rem',
+  navbar: {
+    padding: '2rem',
+    height: '6.6rem',
+  },
   zindex: {
-    sidemenu: 1000,
+    sidemenu: 500,
+    navSidemenu: 1000,
+    onboardModal: 1100,
   },
 };
 

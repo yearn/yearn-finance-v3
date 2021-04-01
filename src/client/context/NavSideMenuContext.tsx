@@ -10,12 +10,14 @@ const initialState = {
   close: () => {},
 };
 
-export const SideMenuContext = createContext(initialState);
+export const NavSideMenuContext = createContext(initialState);
 
-export const SideMenuContextProvider: FC = ({ children }) => {
+export const NavSideMenuContextProvider: FC = ({ children }) => {
   const { isOpen, isDisabled, toggle, open, close } = useToggler({ opened: false });
 
   return (
-    <SideMenuContext.Provider value={{ isOpen, isDisabled, toggle, open, close }}>{children}</SideMenuContext.Provider>
+    <NavSideMenuContext.Provider value={{ isOpen, isDisabled, toggle, open, close }}>
+      {children}
+    </NavSideMenuContext.Provider>
   );
 };

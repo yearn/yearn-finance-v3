@@ -15,6 +15,7 @@ const StyledMenuButton = styled.div`
   padding: 1rem;
   margin-right: -1rem;
   margin-left: 2rem;
+  flex-shrink: 0;
 `;
 const StyledNavbarActions = styled.div`
   display: flex;
@@ -27,9 +28,9 @@ const StyledNavbar = styled.nav`
   display: flex;
   align-items: center;
   background-color: ${(props) => props.theme.colors.shade90};
-  height: ${(props) => props.theme.navbarHeight};
+  height: ${(props) => props.theme.navbar.height};
   border-bottom: 1px solid ${(props) => props.theme.colors.shade40};
-  padding: 0 2rem;
+  padding: 0 ${(props) => props.theme.navbar.padding};
 `;
 
 export const Navbar = ({ className, walletAddress, onWalletClick, toggleSidemenu }: NavbarProps) => {
