@@ -11,7 +11,7 @@ export class GetSupportedTokens implements GetSupportedTokensService {
 
   public async execute(): Promise<TokenData[]> {
     const provider = this.web3Provider.getInstanceOf('fantom');
-    const yearn = new Yearn(250, provider);
+    const yearn = new Yearn(250, { provider });
     const tokens = await yearn.vaults.getTokens();
     const tokensData: TokenData[] = tokens.map((token) => ({
       address: token.id,

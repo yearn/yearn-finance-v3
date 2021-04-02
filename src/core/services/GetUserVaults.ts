@@ -12,7 +12,7 @@ export class GetUserVaults implements GetUserVaultsService {
 
   public async execute(userAddress: string): Promise<UserVaultData[]> {
     const provider = this.web3Provider.getInstanceOf('fantom');
-    const yearn = new Yearn(250, provider);
+    const yearn = new Yearn(250, { provider });
     const userVaults = await yearn.vaults.getPositionsOf(userAddress);
     const userVaultsData: UserVaultData[] = userVaults.map((vault) => {
       const allowancesMap: any = {};

@@ -11,7 +11,7 @@ export class GetSupportedVaults implements GetSupportedVaultsService {
 
   public async execute(): Promise<VaultData[]> {
     const provider = this.web3Provider.getInstanceOf('fantom');
-    const yearn = new Yearn(250, provider);
+    const yearn = new Yearn(250, { provider });
     const vaults = await yearn.vaults.get();
     const vaultData: VaultData[] = vaults.map((vault) => ({
       address: vault.id,
