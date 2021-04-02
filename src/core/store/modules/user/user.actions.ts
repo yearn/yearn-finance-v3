@@ -5,7 +5,7 @@ import { UserVaultData } from '../../../types/UserVault';
 
 export const getUserVaultsData = createAsyncThunk<
   { userVaultsMap: { [address: string]: UserVaultData }; userTokensMap: { [address: string]: UserTokenData } },
-  string | undefined,
+  void,
   ThunkAPI
 >('user/getUserVaultsData', async (_arg, { extra, getState }) => {
   const { services } = extra;

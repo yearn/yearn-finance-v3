@@ -1,6 +1,8 @@
 import { EthereumAddress } from '@types';
 import { Token } from './Token';
 
+export type VaultType = 'v1' | 'v2';
+
 export interface VaultData {
   address: EthereumAddress;
   name: string;

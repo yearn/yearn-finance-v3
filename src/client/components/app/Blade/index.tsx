@@ -1,5 +1,9 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
+import BigNumber from 'bignumber.js';
+
+import { selectSelectedVault, depositVault, approveVault, withdrawVault } from '@store';
+import { useAppSelector, useAppDispatch } from '@hooks';
 import { BladeContext } from '@context';
 
 import { Sidemenu, Icon, DeleteIcon, Button } from '@components/common';
@@ -39,7 +43,17 @@ const StyledMenuButton = styled.div`
 `;
 
 export const Blade = ({ walletAddress, onWalletClick, open }: SidemenuProps) => {
+  const dispatch = useAppDispatch();
+  const selectedVault = useAppSelector(selectSelectedVault);
   const { toggle } = useContext(BladeContext);
+  const [depositAmount, setDepositAmount] = useState('0');
+  const [withdrawAmount, setWithdrawAmount] = useState('0');
+
+  const approve = (vaultAddress: string) => dispatch(approveVault({ vaultAddress }));
+  const deposit = (vaultAddress: string, amount: string) =>
+    dispatch(depositVault({ vaultAddress, amount: new BigNumber(amount) }));
+  const withdraw = (vaultAddress: string, amount: string) =>
+    dispatch(withdrawVault({ vaultAddress, amount: new BigNumber(amount) }));
 
   return (
     <StyledBlade open={open}>
@@ -51,13 +65,14 @@ export const Blade = ({ walletAddress, onWalletClick, open }: SidemenuProps) => 
 
       <BladeContent>
         <div>
-          <input type="number" />
-          <Button>Deposit</Button>
-          <Button>Approve</Button>
+          <div>{selectedVault?.name}</div>
+          <input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
+          <Button onClick={() => approve(selectedVault?.address!)}>Approve</Button>
+          <Button onClick={() => deposit(selectedVault?.address!, depositAmount)}>Deposit</Button>
         </div>
         <div>
-          <input type="number" />
-          <Button>Withdraw</Button>
+          <input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
+          <Button onClick={() => withdraw(selectedVault?.address!, withdrawAmount)}>Withdraw</Button>
         </div>
       </BladeContent>
     </StyledBlade>
