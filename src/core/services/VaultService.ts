@@ -1,4 +1,4 @@
-import { Yearn, Metadata } from '@yfi/sdk';
+import { Yearn, Metadata, Apy } from '@yfi/sdk';
 import BigNumber from 'bignumber.js';
 
 import { getContract, formatUnits } from '@frameworks/ethers';
@@ -27,18 +27,21 @@ export class VaultServiceImpl implements VaultService {
     const provider = this.web3Provider.getInstanceOf('fantom');
     const yearn = new Yearn(250, { provider });
     const vaults = await yearn.vaults.get();
-    const vaultData: VaultData[] = vaults.map((vault) => ({
-      address: vault.id,
-      name: vault.name,
-      version: vault.version,
-      typeId: vault.typeId,
-      balance: vault.balance?.toString() ?? '0',
-      balanceUsdc: vault.balanceUsdc?.toString() ?? '0',
-      token: vault.token.id,
-      apyData: undefined,
-      depositLimit: (vault.metadata as Metadata['VAULT_V2']).depositLimit?.toString() ?? '0',
-    }));
-
+    const vaultDataPromise = vaults.map(async (vault) => {
+      // const apy: Apy = await yearn.vaults.apy(vault.id);
+      return {
+        address: vault.id,
+        name: vault.name,
+        version: vault.version,
+        typeId: vault.typeId,
+        balance: vault.balance?.toString() ?? '0',
+        balanceUsdc: vault.balanceUsdc?.toString() ?? '0',
+        token: vault.token.id,
+        apyData: undefined, // apy.recommended.toString(),
+        depositLimit: (vault.metadata as Metadata['VAULT_V2']).depositLimit?.toString() ?? '0',
+      };
+    });
+    const vaultData = Promise.all(vaultDataPromise);
     return vaultData;
   }
 
