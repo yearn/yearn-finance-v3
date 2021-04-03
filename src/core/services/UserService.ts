@@ -12,15 +12,14 @@ export class UserServiceImpl implements UserService {
   public async getUserVaultsData({ userAddress }: { userAddress: EthereumAddress }): Promise<UserVaultData[]> {
     const provider = this.web3Provider.getInstanceOf('fantom');
     const yearn = new Yearn(250, { provider });
-    const userVaults = await yearn.vaults.getPositionsOf(userAddress);
+    const userVaults = await yearn.vaults.positionsOf(userAddress);
     const userVaultsData: UserVaultData[] = userVaults.map((vault) => {
       const allowancesMap: any = {};
-      // TODO use commented code when 'allowances' property is added to SDK.
-      // vault.allowances.forEach((allowance: any) => {
-      //   allowancesMap[allowance.spender] = allowance.allowance?.toString() ?? '0';
-      // });
+      vault.allowances.forEach((allowance) => {
+        allowancesMap[allowance.spender] = allowance.allowance?.toString() ?? '0';
+      });
       const tokenAllowancesMap: any = {};
-      vault.tokenPosition.allowances.forEach((allowance: any) => {
+      vault.tokenPosition.allowances.forEach((allowance) => {
         tokenAllowancesMap[allowance.spender] = allowance.allowance?.toString() ?? '0';
       });
 

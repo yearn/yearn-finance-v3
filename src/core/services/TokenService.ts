@@ -12,7 +12,7 @@ export class TokenServiceImpl implements TokenService {
   public async getSupportedTokens(): Promise<TokenData[]> {
     const provider = this.web3Provider.getInstanceOf('fantom');
     const yearn = new Yearn(250, { provider });
-    const tokens = await yearn.vaults.getTokens();
+    const tokens = await yearn.vaults.tokens();
     const tokensData: TokenData[] = tokens.map((token) => ({
       address: token.id,
       name: token.name,

@@ -3120,7 +3120,7 @@
 
 "@yfi/sdk@yearn/yearn-sdk#build":
   version "0.0.18"
-  resolved "https://codeload.github.com/yearn/yearn-sdk/tar.gz/b8e7703698b91cc82d81af8990e3e94cb1d57fd0"
+  resolved "https://codeload.github.com/yearn/yearn-sdk/tar.gz/17594f6b0ee0525327f321a9e5f8f596187dbe6f"
   dependencies:
     cross-fetch "^3.1.3-alpha.6"
     events "^3.3.0"
