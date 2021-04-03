@@ -30,10 +30,21 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1.6rem;
     overflow: hidden;
     overflow-y: scroll;
+    font-family: ${(props) => props.theme.globalFont};
   }
 
   #root {
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    width: 100%;
+  }
+
+  a {
+    text-decoration: none;
+    &:visited {
+      color: inherit;
+    }
   }
 
   [disabled],

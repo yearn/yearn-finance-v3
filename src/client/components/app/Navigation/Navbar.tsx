@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import useWindowDimensions from '@hooks/windowDimensions';
 
 import { ConnectWalletButton } from '@components/app';
-import { Icon, HamburguerIcon } from '@components/common';
+import { Icon, HamburguerIcon, Logo } from '@components/common';
 
 interface NavbarProps {
   className?: string;
@@ -16,6 +16,10 @@ const StyledMenuButton = styled.div`
   margin-right: -1rem;
   margin-left: 2rem;
   flex-shrink: 0;
+  cursor: pointer;
+  img {
+    height: 1.8rem;
+  }
 `;
 const StyledNavbarActions = styled.div`
   display: flex;
@@ -25,6 +29,10 @@ const StyledNavbarActions = styled.div`
 `;
 
 const StyledNavbar = styled.nav`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   background-color: ${(props) => props.theme.colors.shade90};
@@ -38,18 +46,26 @@ export const Navbar = ({ className, walletAddress, onWalletClick, toggleSidemenu
   const { isMobile } = useWindowDimensions();
 
   let mobileButton;
+  let connectWalletButton;
   if ((isMobile && sidemenuOnlyMobile) || !sidemenuOnlyMobile) {
     mobileButton = (
       <StyledMenuButton onClick={toggleSidemenu}>
-        <Icon src={HamburguerIcon} height="24" />
+        <Icon src={HamburguerIcon} />
       </StyledMenuButton>
+    );
+  }
+  if (!isMobile) {
+    connectWalletButton = (
+      <ConnectWalletButton address={walletAddress} onClick={() => onWalletClick && onWalletClick()} />
     );
   }
 
   return (
     <StyledNavbar className={className}>
+      <Logo full />
+
       <StyledNavbarActions>
-        <ConnectWalletButton address={walletAddress} onClick={() => onWalletClick && onWalletClick()} />
+        {connectWalletButton}
         {mobileButton}
       </StyledNavbarActions>
     </StyledNavbar>

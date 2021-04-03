@@ -13,14 +13,14 @@ interface NavigationProps {
 const StyledNavigation = styled.nav``;
 
 export const Navigation = ({ walletAddress, onWalletClick }: NavigationProps) => {
-  const { isOpen, toggle } = useContext(NavSideMenuContext);
+  const { isOpen, toggle: toggleNavSidemenu } = useContext(NavSideMenuContext);
   return (
     <StyledNavigation>
       <NavSidemenu walletAddress={walletAddress} onWalletClick={() => onWalletClick && onWalletClick()} open={isOpen} />
       <Navbar
         walletAddress={walletAddress}
         onWalletClick={() => onWalletClick && onWalletClick()}
-        toggleSidemenu={toggle}
+        toggleSidemenu={toggleNavSidemenu}
       />
     </StyledNavigation>
   );

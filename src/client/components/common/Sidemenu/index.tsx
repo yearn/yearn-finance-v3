@@ -6,7 +6,7 @@ interface SidemenuProps {
 }
 
 const StyledSidemenu = styled.div<{ open: boolean }>`
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: column;
   top: 0;
@@ -17,7 +17,7 @@ const StyledSidemenu = styled.div<{ open: boolean }>`
   transition: transform 0.3s ease-in-out;
   z-index: ${(props) => props.theme.zindex.sidemenu};
 
-  transform: ${({ open }) => (open ? 'translateX(0)' : 'translateX(100%)')};
+  transform: ${({ open }) => (open ? 'translate3d(0, 0, 0)' : 'translate3d(100%, 0, 0)')};
 `;
 
 export const Sidemenu: FC<SidemenuProps> = ({ open, children, ...props }) => (

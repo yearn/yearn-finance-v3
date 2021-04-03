@@ -8,17 +8,12 @@ import { BladeContext } from '@context';
 
 import { Sidemenu, Icon, DeleteIcon, Button } from '@components/common';
 
-interface SidemenuProps {
-  walletAddress?: string;
-  onWalletClick?: () => void;
-  open: boolean;
-}
-
-const StyledBlade = styled(Sidemenu)<{ open: boolean }>`
-  background: red;
-  background-color: ${(props) => props.theme.colors.shade40};
+const StyledBlade = styled(Sidemenu)`
   width: 40rem;
   max-width: 100%;
+  background-color: ${(props) => props.theme.blade.background};
+  mix-blend-mode: normal;
+  backdrop-filter: blur(${(props) => props.theme.blade.blur});
 `;
 
 const BladeHeader = styled.div`
@@ -40,12 +35,16 @@ const StyledMenuButton = styled.div`
   padding: 1rem;
   margin-right: -1rem;
   flex-shrink: 0;
+  cursor: pointer;
+  img {
+    height: 1.8rem;
+  }
 `;
 
-export const Blade = ({ walletAddress, onWalletClick, open }: SidemenuProps) => {
+export const Blade = () => {
   const dispatch = useAppDispatch();
   const selectedVault = useAppSelector(selectSelectedVault);
-  const { toggle } = useContext(BladeContext);
+  const { isOpen, toggle } = useContext(BladeContext);
   const [depositAmount, setDepositAmount] = useState('0');
   const [withdrawAmount, setWithdrawAmount] = useState('0');
 
@@ -56,7 +55,7 @@ export const Blade = ({ walletAddress, onWalletClick, open }: SidemenuProps) => 
     dispatch(withdrawVault({ vaultAddress, amount: new BigNumber(amount) }));
 
   return (
-    <StyledBlade open={open}>
+    <StyledBlade open={isOpen}>
       <BladeHeader>
         <StyledMenuButton onClick={toggle}>
           <Icon src={DeleteIcon} height="24" />

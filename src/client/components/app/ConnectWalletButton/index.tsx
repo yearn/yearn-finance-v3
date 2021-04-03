@@ -1,6 +1,6 @@
+import styled from 'styled-components';
 import { useAppTranslation } from '@hooks';
 import { Button, Text } from '@components/common';
-import styled from 'styled-components';
 
 interface WalletAddressProps {
   address?: string;
@@ -17,16 +17,17 @@ const StyledButton = styled(Button)`
 
 export const ConnectWalletButton = ({ address, onClick }: WalletAddressProps) => {
   const { t } = useAppTranslation('common');
+  let buttonMessage;
 
   if (!address) {
-    return <button onClick={onClick}>{t('button.connect')}</button>;
+    buttonMessage = t('commons.connect-button.connect');
+  } else {
+    buttonMessage = address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length);
   }
-
-  const maskedAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length);
 
   return (
     <StyledButton onClick={() => onClick && onClick()} className="outline">
-      <Text>{maskedAddress}</Text>
+      <Text>{buttonMessage}</Text>
     </StyledButton>
   );
 };

@@ -1,7 +1,14 @@
 {
   "language": "es",
   "title": "Bienvenido a Yearn Finance v3",
-  "button": {
-    "connect": "Conectar"
+
+  "navigation": {
+    "home": "Inicio",
+    "save": "Save"
+  },
+  "commons": {
+    "connect-button": {
+      "connect": "Conectar"
+    }
   }
 }
