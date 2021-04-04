@@ -28,7 +28,7 @@ export class VaultServiceImpl implements VaultService {
     const yearn = new Yearn(250, { provider });
     const vaults = await yearn.vaults.get();
     const vaultDataPromise = vaults.map(async (vault) => {
-      // const apy: Apy = await yearn.vaults.apy(vault.id);
+      const apy = await yearn.vaults.apy(vault.id);
       return {
         address: vault.id,
         name: vault.name,
@@ -37,7 +37,7 @@ export class VaultServiceImpl implements VaultService {
         balance: vault.balance?.toString() ?? '0',
         balanceUsdc: vault.balanceUsdc?.toString() ?? '0',
         token: vault.token.id,
-        apyData: undefined, // apy.recommended.toString(),
+        apyData: apy ? apy.recommended.toString() : '0',
         depositLimit: (vault.metadata as Metadata['VAULT_V2']).depositLimit?.toString() ?? '0',
       };
     });
