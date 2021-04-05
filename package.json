@@ -31,7 +31,7 @@
     "craco-alias": "^2.2.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
-    "ethers": "^5.0.32",
+    "ethers": "^5.1.0",
     "husky": "^5.1.3",
     "i18next": "^20.1.0",
     "i18next-browser-languagedetector": "^6.1.0",
@@ -53,6 +53,9 @@
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
+    "@ethersproject/address": "^5.1.0",
+    "@ethersproject/contracts": "^5.1.0",
+    "@ethersproject/providers": "^5.1.0",
     "@yfi/sdk": "yearn/yearn-sdk#build"
   },
   "eslintConfig": {
