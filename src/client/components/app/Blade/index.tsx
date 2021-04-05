@@ -68,6 +68,8 @@ const ActionCardTitle = styled.div`
 `;
 
 const ActionCardWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
 `;
 
@@ -79,6 +81,7 @@ const ActionCard = styled.div`
   border-radius: 1.5rem;
   padding: 1.4rem 1.5rem;
   grid-gap: 1rem;
+  flex: 1;
 `;
 
 const ActionButton = styled(Button)`
@@ -86,6 +89,16 @@ const ActionButton = styled(Button)`
   &.outline {
     border-color: ${(props) => props.theme.colors.shade20};
     color: ${(props) => props.theme.colors.shade20};
+  }
+`;
+
+const AvailableBalance = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .balance {
+    color: ${({ theme }) => theme.colors.shade0};
   }
 `;
 
@@ -137,6 +150,11 @@ export const Blade = () => {
           <ActionCardWrapper>
             <ActionCardTitle>Deposit tokenName</ActionCardTitle>
             <ActionCard>
+              <span className="t-body">WALLET BALANCE</span>
+              <AvailableBalance>
+                <span className="t-body">AVAILABLE</span>
+                <strong className="t-body balance">{selectedVault?.token.balance}</strong>
+              </AvailableBalance>
               <input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
               {approveButton}
               <ActionButton
@@ -152,6 +170,11 @@ export const Blade = () => {
           <ActionCardWrapper>
             <ActionCardTitle>Withdraw tokenName</ActionCardTitle>
             <ActionCard>
+              <span className="t-body">SAFE BALANCE</span>
+              <AvailableBalance>
+                <span className="t-body">AVAILABLE</span>
+                <strong className="t-body balance">{selectedVault?.userDeposited}</strong>
+              </AvailableBalance>
               <input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
               <ActionButton
                 className="outline"
