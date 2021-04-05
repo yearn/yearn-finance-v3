@@ -20,7 +20,12 @@ import {
   approveVault,
   withdrawVault,
 } from './vaults/vaults.actions';
-import { selectSaveVaults, selectSelectedVault, selectSelectedVaultActionsStatusMap } from './vaults/vaults.selectors';
+import {
+  selectSaveVaults,
+  selectSelectedVault,
+  selectSelectedVaultActionsStatusMap,
+  selectSaveVaultsGeneralStatus,
+} from './vaults/vaults.selectors';
 
 import walletReducer from './wallet/wallet.reducer';
 import { walletSelect, changeWalletTheme } from './wallet/wallet.actions';
@@ -58,4 +63,4 @@ export {
   withdrawVault,
   setUserTokenData,
 };
-export { selectSaveVaults, selectSelectedVault, selectSelectedVaultActionsStatusMap };
+export { selectSaveVaults, selectSelectedVault, selectSelectedVaultActionsStatusMap, selectSaveVaultsGeneralStatus };

@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState, Vault, VaultActionsStatusMap } from '@types';
+import { RootState, Status, Vault, VaultActionsStatusMap } from '@types';
 import BigNumber from 'bignumber.js';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
 
@@ -9,6 +9,7 @@ const selectUserTokensMap = (state: RootState) => state.user.userTokensMap;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVaultAddress;
 const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMap.vaultsActionsStatusMap;
+const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 
 export const selectSaveVaults = createSelector(
   [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap],
@@ -44,6 +45,15 @@ export const selectSaveVaults = createSelector(
       };
     });
     return vaults;
+  }
+);
+
+export const selectSaveVaultsGeneralStatus = createSelector(
+  [selectVaultsStatusMap],
+  (statusMap): Status => {
+    const loading = statusMap.getVaults.loading || statusMap.initiateSaveVaults.loading;
+    const error = statusMap.getVaults.error || statusMap.initiateSaveVaults.error;
+    return { loading, error };
   }
 );
 
