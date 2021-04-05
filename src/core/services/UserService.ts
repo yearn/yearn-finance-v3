@@ -10,8 +10,8 @@ export class UserServiceImpl implements UserService {
   }
 
   public async getUserVaultsData({ userAddress }: { userAddress: EthereumAddress }): Promise<UserVaultData[]> {
-    const provider = this.web3Provider.getInstanceOf('fantom');
-    const yearn = new Yearn(250, { provider });
+    const provider = this.web3Provider.getInstanceOf('default');
+    const yearn = new Yearn(1, { provider });
     const userVaults = await yearn.vaults.positionsOf(userAddress);
     const userVaultsData: UserVaultData[] = userVaults.map((vault) => {
       const allowancesMap: any = {};

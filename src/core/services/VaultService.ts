@@ -1,7 +1,8 @@
-import { Yearn, Metadata, Apy } from '@yfi/sdk';
-import BigNumber from 'bignumber.js';
+import { Yearn, Metadata } from '@yfi/sdk';
+// import BigNumber from 'bignumber.js';
+// import { ethers } from 'ethers';
 
-import { getContract, formatUnits } from '@frameworks/ethers';
+import { getContract } from '@frameworks/ethers';
 import {
   VaultService,
   VaultData,
@@ -12,6 +13,7 @@ import {
   WithdrawProps,
 } from '@types';
 import yVaultAbi from './contracts/yVault.json';
+// import v2VaultAbi from './contracts/v2Vault.json';
 import erc20Abi from './contracts/erc20.json';
 
 export class VaultServiceImpl implements VaultService {
@@ -24,8 +26,8 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async getSupportedVaults(): Promise<VaultData[]> {
-    const provider = this.web3Provider.getInstanceOf('fantom');
-    const yearn = new Yearn(250, { provider });
+    const provider = this.web3Provider.getInstanceOf('default');
+    const yearn = new Yearn(1, { provider });
     const vaults = await yearn.vaults.get();
     const vaultDataPromise = vaults.map(async (vault) => {
       const apy = await yearn.vaults.apy(vault.id);
@@ -74,8 +76,9 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async withdraw(props: WithdrawProps): Promise<void> {
-    const { tokenAddress, vaultAddress, amount, vaultType } = props;
+    const { vaultAddress, amount } = props;
     const signer = this.web3Provider.getSigner();
+    // const fantomProvider = this.web3Provider.getInstanceOf('default');
     const vaultContract = getContract(vaultAddress, yVaultAbi, signer);
 
     // withdrawAll ??
@@ -86,14 +89,15 @@ export class VaultServiceImpl implements VaultService {
     //   console.log('Receipt: ', receipt);
     // }
 
-    const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
-    const decimals = vaultType === 'v1' ? 18 : await erc20Contract.decimals();
-    const pricePerShare =
-      vaultType === 'v1' ? await vaultContract.getPricePerFullShare() : await vaultContract.pricePerShare();
-    const sharePrice = formatUnits(pricePerShare, decimals);
-    const amountOfShares = new BigNumber(amount).dividedBy(sharePrice).decimalPlaces(0).toFixed(0);
+    // const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
+    // const decimals = await erc20Contract.decimals();
+    // const pricePerShare =
+    //   vaultType === 'v1' ? await vaultContract.getPricePerFullShare() : await vaultContract.pricePerShare();
+    // const sharePrice = formatUnits(pricePerShare, decimals);
+    // const amountOfShares = new BigNumber(amount).dividedBy(sharePrice).decimalPlaces(0).toFixed(0);
 
-    const transaction = await vaultContract.withdraw(amountOfShares);
+    // TODO: pass sharePrice in props and add above calcs
+    const transaction = await vaultContract.withdraw(amount);
     console.log('Transaction: ', transaction);
     const receipt = await transaction.wait(1);
     console.log('Receipt: ', receipt);
