@@ -9,7 +9,7 @@ export const setSelectedVaultAddress = createAction<{ vaultAddress: string }>('v
 export const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',
   async (_arg, { dispatch }) => {
-    dispatch(getVaults());
+    await dispatch(getVaults());
   }
 );
 
