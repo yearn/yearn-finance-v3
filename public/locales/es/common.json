@@ -16,7 +16,7 @@
     "save": "Save"
   },
   "save": {
-    "vaults-headers": {
+    "assets-headers": {
       "asset": "Asset",
       "balance": "Balance"
     }

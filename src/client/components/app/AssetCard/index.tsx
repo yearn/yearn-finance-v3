@@ -11,6 +11,7 @@ const StyledCard = styled(Card)<{ className: string }>`
   border: 1px solid ${({ theme }) => theme.saveAsset.cardBorder};
   padding-left: var(--vaults-padding);
   padding-right: var(--vaults-padding);
+  cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
 
   &.selected {
     background-color: ${({ theme }) => theme.saveAsset.cardBackgroundSelected};

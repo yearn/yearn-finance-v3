@@ -77,8 +77,8 @@ export const Save = () => {
     assetList = (
       <AssetList>
         <AssetsHeaders>
-          <span>{t('commons.save.vaults-headers.asset')}</span>
-          <span>{t('commons.save.vaults-headers.balance')}</span>
+          <span>{t('save.assets-headers.asset')}</span>
+          <span>{t('save.assets-headers.balance')}</span>
         </AssetsHeaders>
         <List
           Component={AssetCard}
