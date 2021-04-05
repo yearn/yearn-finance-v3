@@ -86,7 +86,7 @@ export const Save = () => {
             key: vault.address,
             icon: `https://raw.githack.com/iearn-finance/yearn-assets/master/icons/tokens/${vault.token.address}/logo-128.png`,
             name: vault.name,
-            balance: formatAmount(weiToUnits(vault.vaultBalance, 18), 2),
+            balance: formatAmount(weiToUnits(vault.vaultBalance, parseInt(vault.token.decimals)), 2),
             earning: '',
             onClick: () => selectVault(vault),
           }))}
