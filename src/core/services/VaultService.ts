@@ -2,6 +2,7 @@ import { Yearn, Metadata } from '@yfi/sdk';
 // import BigNumber from 'bignumber.js';
 // import { ethers } from 'ethers';
 
+import { notify } from '@frameworks/blocknative';
 import { getContract } from '@frameworks/ethers';
 import {
   VaultService,
@@ -53,6 +54,7 @@ export class VaultServiceImpl implements VaultService {
     const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
     const transaction = await erc20Contract.approve(vaultAddress, amount);
     console.log('Transaction: ', transaction);
+    notify.hash(transaction.hash);
     const receipt = await transaction.wait(1);
     console.log('Receipt: ', receipt);
   }
@@ -65,11 +67,13 @@ export class VaultServiceImpl implements VaultService {
     if (tokenAddress === ETHEREUM_ADDRESS) {
       const transaction = await vaultContract.depositETH(amount);
       console.log('Transaction: ', transaction);
+      notify.hash(transaction.hash);
       const receipt = await transaction.wait(1);
       console.log('Receipt: ', receipt);
     } else {
       const transaction = await vaultContract.deposit(amount);
       console.log('Transaction: ', transaction);
+      notify.hash(transaction.hash);
       const receipt = await transaction.wait(1);
       console.log('Receipt: ', receipt);
     }
@@ -99,6 +103,7 @@ export class VaultServiceImpl implements VaultService {
     // TODO: pass sharePrice in props and add above calcs
     const transaction = await vaultContract.withdraw(amount);
     console.log('Transaction: ', transaction);
+    notify.hash(transaction.hash);
     const receipt = await transaction.wait(1);
     console.log('Receipt: ', receipt);
   }
