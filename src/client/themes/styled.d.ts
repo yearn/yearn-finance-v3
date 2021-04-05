@@ -4,6 +4,7 @@ declare module 'styled-components' {
     colors: {
       primary: string;
       card: string;
+      error: string;
 
       shade0: string;
       shade20: string;
@@ -14,6 +15,7 @@ declare module 'styled-components' {
     contrasts: {
       primary: string;
       card: string;
+      error: string;
 
       shade0: string;
       shade20: string;

@@ -37,7 +37,7 @@ const SaveInfo = styled.div`
   width: 40rem;
 `;
 
-const VaultsList = styled.div`
+const AssetList = styled.div`
   --vaults-columns: 1fr 12rem;
   --vaults-padding: 1.1rem;
 
@@ -48,10 +48,19 @@ const VaultsList = styled.div`
   flex: 1;
 `;
 
-const VaultsHeaders = styled.div`
+const AssetsHeaders = styled.div`
   display: grid;
   grid-template-columns: var(--vaults-columns);
   padding: var(--vaults-padding);
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: ${({ theme }) => theme.colors.error};
 `;
 
 export const Save = () => {
@@ -62,15 +71,15 @@ export const Save = () => {
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
   const generalVaultsStatus = useAppSelector(selectSaveVaultsGeneralStatus);
   const vaults = useAppSelector(selectSaveVaults);
-  let vaultList;
+  let assetList;
 
-  if (vaults.length && !generalVaultsStatus.error) {
-    vaultList = (
-      <VaultsList>
-        <VaultsHeaders>
+  if (!generalVaultsStatus.loading && !generalVaultsStatus.error) {
+    assetList = (
+      <AssetList>
+        <AssetsHeaders>
           <span>{t('commons.save.vaults-headers.asset')}</span>
           <span>{t('commons.save.vaults-headers.balance')}</span>
-        </VaultsHeaders>
+        </AssetsHeaders>
         <List
           Component={AssetCard}
           items={vaults.map((vault) => ({
@@ -83,13 +92,23 @@ export const Save = () => {
           }))}
           width={1}
         />
-      </VaultsList>
+      </AssetList>
+    );
+  } else if (generalVaultsStatus.loading) {
+    assetList = (
+      <AssetList>
+        <SpinnerLoading flex="1" />
+      </AssetList>
     );
   } else {
-    vaultList = (
-      <VaultsList>
-        <SpinnerLoading flex="1" />
-      </VaultsList>
+    assetList = (
+      <AssetList>
+        <ErrorMessage>
+          {t('errors.default')}
+          <br />
+          {generalVaultsStatus.error}
+        </ErrorMessage>
+      </AssetList>
     );
   }
 
@@ -124,7 +143,7 @@ export const Save = () => {
     <SaveView>
       <Blade></Blade>
       <SaveContent>
-        {vaultList}
+        {assetList}
         {saveInfo}
       </SaveContent>
     </SaveView>

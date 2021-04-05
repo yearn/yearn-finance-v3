@@ -7,6 +7,9 @@
       "connect": "Connect"
     }
   },
+  "errors": {
+    "default": "There was an unexpected error"
+  },
 
   "navigation": {
     "home": "Home",
