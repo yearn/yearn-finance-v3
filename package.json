@@ -27,6 +27,7 @@
     "@types/styled-system": "^5.1.10",
     "awilix": "^4.3.3",
     "bignumber.js": "^9.0.1",
+    "bnc-notify": "^1.5.1",
     "bnc-onboard": "^1.20.0",
     "craco-alias": "^2.2.0",
     "eslint-config-prettier": "^8.1.0",

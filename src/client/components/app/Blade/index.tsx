@@ -2,7 +2,13 @@ import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 
-import { selectSelectedVault, depositVault, approveVault, withdrawVault } from '@store';
+import {
+  selectSelectedVault,
+  depositVault,
+  approveVault,
+  withdrawVault,
+  selectSelectedVaultActionsStatusMap,
+} from '@store';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { BladeContext } from '@context';
 
@@ -44,6 +50,8 @@ const StyledMenuButton = styled.div`
 export const Blade = () => {
   const dispatch = useAppDispatch();
   const selectedVault = useAppSelector(selectSelectedVault);
+  const selectedVaultActionsStatusMap = useAppSelector(selectSelectedVaultActionsStatusMap);
+  const { approve: approveStatus, deposit: depositStatus, withdraw: withdrawStatus } = selectedVaultActionsStatusMap;
   const { isOpen, toggle } = useContext(BladeContext);
   const [depositAmount, setDepositAmount] = useState('0');
   const [withdrawAmount, setWithdrawAmount] = useState('0');
@@ -57,7 +65,11 @@ export const Blade = () => {
   let approveButton;
 
   if (!selectedVault?.approved) {
-    approveButton = <Button onClick={() => approve(selectedVault?.address!)}>Approve</Button>;
+    approveButton = (
+      <Button onClick={() => approve(selectedVault?.address!)} disabled={approveStatus.loading}>
+        {approveStatus.loading ? 'Loading...' : 'Approve'}
+      </Button>
+    );
   }
 
   return (
@@ -73,11 +85,15 @@ export const Blade = () => {
           <div>{selectedVault?.name}</div>
           <input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
           {approveButton}
-          <Button onClick={() => deposit(selectedVault?.address!, depositAmount)}>Deposit</Button>
+          <Button onClick={() => deposit(selectedVault?.address!, depositAmount)} disabled={depositStatus.loading}>
+            {depositStatus.loading ? 'Loading...' : 'Deposit'}
+          </Button>
         </div>
         <div>
           <input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
-          <Button onClick={() => withdraw(selectedVault?.address!, withdrawAmount)}>Withdraw</Button>
+          <Button onClick={() => withdraw(selectedVault?.address!, withdrawAmount)} disabled={withdrawStatus.loading}>
+            {withdrawStatus.loading ? 'Loading...' : 'Withdraw'}
+          </Button>
         </div>
       </BladeContent>
     </StyledBlade>
