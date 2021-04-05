@@ -7,7 +7,8 @@
     "dev": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "upgrade-sdk": "yarn add yearn/yearn-sdk#build"
   },
   "dependencies": {
     "@craco/craco": "^6.1.1",
