@@ -8,6 +8,7 @@ const StyledSpinnerLoading = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.1rem;
   ${styledSystem}
 `;
 
@@ -25,7 +26,7 @@ const StyledLoader = styled.div`
     color: #ffffff;
     text-indent: -9999em;
     position: relative;
-    font-size: 1.1rem;
+    font-size: 1em;
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);

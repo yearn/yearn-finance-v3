@@ -13,6 +13,7 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { BladeContext } from '@context';
 
 import { Sidemenu, Icon, DeleteIcon, Button } from '@components/common';
+import { SpinnerLoading } from '../../common/SpinnerLoading';
 
 const StyledBlade = styled(Sidemenu)`
   width: 63.5rem;
@@ -102,6 +103,11 @@ const AvailableBalance = styled.div`
   }
 `;
 
+const StyledSpinnerLoading = styled(SpinnerLoading)`
+  font-size: 0.3rem;
+  margin-right: 1.1rem;
+`;
+
 export const Blade = () => {
   const dispatch = useAppDispatch();
   const selectedVault = useAppSelector(selectSelectedVault);
@@ -126,7 +132,7 @@ export const Blade = () => {
         onClick={() => approve(selectedVault?.address!)}
         disabled={approveStatus.loading}
       >
-        {approveStatus.loading ? 'Loading...' : 'Approve'}
+        {approveStatus.loading && <StyledSpinnerLoading />} Approve
       </ActionButton>
     );
   }
@@ -162,7 +168,7 @@ export const Blade = () => {
                 onClick={() => deposit(selectedVault?.address!, depositAmount)}
                 disabled={depositStatus.loading}
               >
-                {depositStatus.loading ? 'Loading...' : 'Deposit'}
+                {depositStatus.loading && <StyledSpinnerLoading />} Deposit
               </ActionButton>
             </ActionCard>
           </ActionCardWrapper>
@@ -181,7 +187,7 @@ export const Blade = () => {
                 onClick={() => withdraw(selectedVault?.address!, withdrawAmount)}
                 disabled={withdrawStatus.loading}
               >
-                {withdrawStatus.loading ? 'Loading...' : 'Withdraw'}
+                {withdrawStatus.loading && <StyledSpinnerLoading />} Withdraw
               </ActionButton>
             </ActionCard>
           </ActionCardWrapper>
