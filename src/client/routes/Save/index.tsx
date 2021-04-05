@@ -1,13 +1,20 @@
 import { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppTranslation } from '@hooks';
 import { AssetCard, Blade } from '@components/app';
-import { Box, List } from '@components/common';
-import { initiateSaveVaults, selectSaveVaults, setSelectedVaultAddress, getUserVaultsData } from '@store';
+import { List } from '@components/common';
+import {
+  initiateSaveVaults,
+  selectSaveVaults,
+  setSelectedVaultAddress,
+  getUserVaultsData,
+  selectSaveVaultsGeneralStatus,
+} from '@store';
 import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
 import { weiToUnits, formatAmount } from '@src/utils';
+import { SpinnerLoading } from '../../components/common/SpinnerLoading';
 
 const SaveView = styled.div`
   display: flex;
@@ -41,40 +48,51 @@ const VaultsList = styled.div`
   flex: 1;
 `;
 
-const VaultsHeader = styled.div`
+const VaultsHeaders = styled.div`
   display: grid;
   grid-template-columns: var(--vaults-columns);
   padding: var(--vaults-padding);
 `;
 
 export const Save = () => {
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation('common');
   const { close: closeNavSidemenu } = useContext(NavSideMenuContext);
   const { open: openBlade } = useContext(BladeContext);
   const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
+  const generalVaultsStatus = useAppSelector(selectSaveVaultsGeneralStatus);
   const vaults = useAppSelector(selectSaveVaults);
+  let vaultList;
 
-  const vaultList = (
-    <VaultsList>
-      <VaultsHeader>
-        <span>Col</span>
-        <span>Col2</span>
-      </VaultsHeader>
-      <List
-        Component={AssetCard}
-        items={vaults.map((vault) => ({
-          key: vault.address,
-          icon: `https://raw.githack.com/iearn-finance/yearn-assets/master/icons/tokens/0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE/logo-128.png`,
-          name: vault.name,
-          balance: formatAmount(weiToUnits(vault.vaultBalance, 18), 2),
-          earning: '',
-          onClick: () => selectVault(vault),
-        }))}
-        width={1}
-      />
-    </VaultsList>
-  );
+  if (vaults.length && !generalVaultsStatus.error) {
+    vaultList = (
+      <VaultsList>
+        <VaultsHeaders>
+          <span>{t('commons.save.vaults-headers.asset')}</span>
+          <span>{t('commons.save.vaults-headers.balance')}</span>
+        </VaultsHeaders>
+        <List
+          Component={AssetCard}
+          items={vaults.map((vault) => ({
+            key: vault.address,
+            icon: `https://raw.githack.com/iearn-finance/yearn-assets/master/icons/tokens/0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE/logo-128.png`,
+            name: vault.name,
+            balance: formatAmount(weiToUnits(vault.vaultBalance, 18), 2),
+            earning: '',
+            onClick: () => selectVault(vault),
+          }))}
+          width={1}
+        />
+      </VaultsList>
+    );
+  } else {
+    vaultList = (
+      <VaultsList>
+        <SpinnerLoading flex="1" />
+      </VaultsList>
+    );
+  }
+
   const saveInfo = (
     <SaveInfo>
       <h3>SAVE</h3>
