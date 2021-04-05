@@ -5,9 +5,9 @@ export const Page404 = () => {
 
   return (
     <div>
-      <h3>
+      <span>
         Page <code>{path}</code> not found
-      </h3>
+      </span>
     </div>
   );
 };

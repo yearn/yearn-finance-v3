@@ -8,6 +8,7 @@ const defaultTheme: DefaultTheme = {
 
     shade0: '#FFFFFF',
     shade20: '#A7A8AC',
+    shade30: '#696D78',
     shade40: '#3F424A',
     shade90: '#22252E',
     shade100: '#00070E',
@@ -18,7 +19,8 @@ const defaultTheme: DefaultTheme = {
     error: '#FFF',
 
     shade0: '#000',
-    shade20: '#000',
+    shade20: '#FFF',
+    shade30: '#FFF',
     shade40: '#FFF',
     shade90: '#FFF',
     shade100: '#FFF',

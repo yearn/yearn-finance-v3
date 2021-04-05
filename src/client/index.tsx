@@ -40,6 +40,44 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
   }
 
+  h1, h2, h3, h4 {
+    margin: 0;
+    font-weight: 400;
+  }
+
+  h1 {
+    font-size: 11.7rem;
+  }
+  h2 {
+    font-size: 4.8rem;
+  }
+  h3 {
+    font-size: 3.8rem;
+  }
+  h4 {
+    font-size: 2.6rem;
+  }
+  .t-subtitle {
+    font-size: 1.8rem;
+    font-weight: 400;
+  }
+  .t-body {
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
+  .t-body-light {
+    font-size: 1.4rem;
+    font-weight: 300;
+  }
+  .t-captions {
+    font-size: 1.8rem;
+    font-weight: 500;
+  }
+  .t-captions2 {
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+
   a {
     text-decoration: none;
     &:visited {
