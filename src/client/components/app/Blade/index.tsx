@@ -54,6 +54,12 @@ export const Blade = () => {
   const withdraw = (vaultAddress: string, amount: string) =>
     dispatch(withdrawVault({ vaultAddress, amount: new BigNumber(amount) }));
 
+  let approveButton;
+
+  if (!selectedVault?.approved) {
+    approveButton = <Button onClick={() => approve(selectedVault?.address!)}>Approve</Button>;
+  }
+
   return (
     <StyledBlade open={isOpen}>
       <BladeHeader>
@@ -66,7 +72,7 @@ export const Blade = () => {
         <div>
           <div>{selectedVault?.name}</div>
           <input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
-          <Button onClick={() => approve(selectedVault?.address!)}>Approve</Button>
+          {approveButton}
           <Button onClick={() => deposit(selectedVault?.address!, depositAmount)}>Deposit</Button>
         </div>
         <div>
