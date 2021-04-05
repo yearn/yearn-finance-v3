@@ -148,7 +148,7 @@ export const Blade = () => {
       <BladeContent>
         <ActionList>
           <ActionCardWrapper>
-            <ActionCardTitle>Deposit tokenName</ActionCardTitle>
+            <ActionCardTitle>Deposit {selectedVault?.token.symbol}</ActionCardTitle>
             <ActionCard>
               <span className="t-body">WALLET BALANCE</span>
               <AvailableBalance>
@@ -168,7 +168,7 @@ export const Blade = () => {
           </ActionCardWrapper>
 
           <ActionCardWrapper>
-            <ActionCardTitle>Withdraw tokenName</ActionCardTitle>
+            <ActionCardTitle>Withdraw {selectedVault?.token.symbol}</ActionCardTitle>
             <ActionCard>
               <span className="t-body">SAFE BALANCE</span>
               <AvailableBalance>
