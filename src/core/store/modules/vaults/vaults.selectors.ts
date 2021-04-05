@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState, Vault, VaultActionsStatusMap } from '@types';
+import BigNumber from 'bignumber.js';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 const selectVaultsState = (state: RootState) => state.vaults;
@@ -18,6 +19,7 @@ export const selectSaveVaults = createSelector(
       const tokenData = tokensMap[vaultData.token];
       const userVaultData = userVaultsMap[address];
       const userTokenData = userTokensMap[vaultData.token];
+      const currentAllowance: string = userTokenData?.allowancesMap[address] ?? '0';
       return {
         address: vaultData.address,
         name: vaultData.name,
@@ -28,6 +30,7 @@ export const selectSaveVaults = createSelector(
         userDeposited: userVaultData?.depositedBalance ?? '0',
         userDepositedUsdc: userVaultData?.depositedBalanceUsdc ?? '0',
         allowancesMap: userVaultData?.allowancesMap ?? {},
+        approved: new BigNumber(currentAllowance).gt(0),
         token: {
           address: tokenData?.address,
           name: tokenData?.name,
@@ -36,7 +39,7 @@ export const selectSaveVaults = createSelector(
           icon: tokenData?.icon,
           balance: userTokenData?.balance ?? '0',
           balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-          allowancesMap: userTokenData?.allowancesMap ?? '0',
+          allowancesMap: userTokenData?.allowancesMap ?? {},
         },
       };
     });

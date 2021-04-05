@@ -24,5 +24,6 @@ export interface Vault {
   userDeposited: string;
   userDepositedUsdc: string;
   allowancesMap: { [vaultAddress: string]: string };
+  approved: boolean;
   token: Token;
 }

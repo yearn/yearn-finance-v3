@@ -1,7 +1,9 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '../../../frameworks/redux';
 import { UserTokenData } from '../../../types/UserToken';
 import { UserVaultData } from '../../../types/UserVault';
+
+export const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('user/setUserTokenData');
 
 export const getUserVaultsData = createAsyncThunk<
   { userVaultsMap: { [address: string]: UserVaultData }; userTokensMap: { [address: string]: UserTokenData } },

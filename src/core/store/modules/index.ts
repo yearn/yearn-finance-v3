@@ -26,7 +26,7 @@ import walletReducer from './wallet/wallet.reducer';
 import { walletSelect, changeWalletTheme } from './wallet/wallet.actions';
 
 import userReducer from './user/user.reducer';
-import { getUserVaultsData } from './user/user.actions';
+import { getUserVaultsData, setUserTokenData } from './user/user.actions';
 
 import tokensReducer from './tokens/tokens.reducer';
 import { getTokens } from './tokens/tokens.actions';
@@ -56,5 +56,6 @@ export {
   depositVault,
   approveVault,
   withdrawVault,
+  setUserTokenData,
 };
 export { selectSaveVaults, selectSelectedVault, selectSelectedVaultActionsStatusMap };
