@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppTranslation } from '@hooks';
 import { AssetCard, Blade } from '@components/app';
 import { List } from '@components/common';
 import { initiateSaveVaults, selectSaveVaults, setSelectedVaultAddress, getUserVaultsData } from '@store';
@@ -42,14 +42,14 @@ const VaultsList = styled.div`
   flex: 1;
 `;
 
-const VaultsHeader = styled.div`
+const VaultsHeaders = styled.div`
   display: grid;
   grid-template-columns: var(--vaults-columns);
   padding: var(--vaults-padding);
 `;
 
 export const Save = () => {
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation('common');
   const { close: closeNavSidemenu } = useContext(NavSideMenuContext);
   const { open: openBlade } = useContext(BladeContext);
   const dispatch = useAppDispatch();
@@ -60,10 +60,10 @@ export const Save = () => {
   if (vaults.length) {
     vaultList = (
       <VaultsList>
-        <VaultsHeader>
-          <span>Col</span>
-          <span>Col2</span>
-        </VaultsHeader>
+        <VaultsHeaders>
+          <span>{t('commons.save.vaults-headers.asset')}</span>
+          <span>{t('commons.save.vaults-headers.balance')}</span>
+        </VaultsHeaders>
         <List
           Component={AssetCard}
           items={vaults.map((vault) => ({
