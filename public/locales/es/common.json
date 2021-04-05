@@ -2,13 +2,20 @@
   "language": "es",
   "title": "Bienvenido a Yearn Finance v3",
 
+  "commons": {
+    "connect-button": {
+      "connect": "Conectar"
+    }
+  },
+
   "navigation": {
     "home": "Inicio",
     "save": "Save"
   },
-  "commons": {
-    "connect-button": {
-      "connect": "Conectar"
+  "save": {
+    "vaults-headers": {
+      "asset": "Asset",
+      "balance": "Balance"
     }
   }
 }
