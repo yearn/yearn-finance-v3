@@ -9,6 +9,12 @@ import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
 import { weiToUnits, formatAmount } from '@src/utils';
 
+const SaveView = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const SaveContent = styled.div`
   display: flex;
   max-width: ${({ theme }) => theme.globalMaxWidth};
@@ -97,12 +103,12 @@ export const Save = () => {
   }, [selectedAddress]);
 
   return (
-    <Box flex={1}>
+    <SaveView>
       <Blade></Blade>
       <SaveContent>
         {vaultList}
         {saveInfo}
       </SaveContent>
-    </Box>
+    </SaveView>
   );
 };
