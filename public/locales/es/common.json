@@ -7,6 +7,9 @@
       "connect": "Conectar"
     }
   },
+  "errors": {
+    "default": "Hubo un error inesperado"
+  },
 
   "navigation": {
     "home": "Inicio",

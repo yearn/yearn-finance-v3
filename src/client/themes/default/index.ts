@@ -4,6 +4,7 @@ const defaultTheme: DefaultTheme = {
   colors: {
     primary: '#0075FF',
     card: '#292D39',
+    error: 'red',
 
     shade0: '#FFFFFF',
     shade20: '#A7A8AC',
@@ -14,6 +15,7 @@ const defaultTheme: DefaultTheme = {
   contrasts: {
     primary: '#FFF',
     card: '#FFF',
+    error: '#FFF',
 
     shade0: '#000',
     shade20: '#000',
