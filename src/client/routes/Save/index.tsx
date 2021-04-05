@@ -3,11 +3,12 @@ import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { AssetCard, Blade } from '@components/app';
-import { Box, List } from '@components/common';
+import { List } from '@components/common';
 import { initiateSaveVaults, selectSaveVaults, setSelectedVaultAddress, getUserVaultsData } from '@store';
 import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
 import { weiToUnits, formatAmount } from '@src/utils';
+import { SpinnerLoading } from '../../components/common/SpinnerLoading';
 
 const SaveView = styled.div`
   display: flex;
@@ -54,27 +55,37 @@ export const Save = () => {
   const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
   const vaults = useAppSelector(selectSaveVaults);
+  let vaultList;
 
-  const vaultList = (
-    <VaultsList>
-      <VaultsHeader>
-        <span>Col</span>
-        <span>Col2</span>
-      </VaultsHeader>
-      <List
-        Component={AssetCard}
-        items={vaults.map((vault) => ({
-          key: vault.address,
-          icon: `https://raw.githack.com/iearn-finance/yearn-assets/master/icons/tokens/0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE/logo-128.png`,
-          name: vault.name,
-          balance: formatAmount(weiToUnits(vault.vaultBalance, 18), 2),
-          earning: '',
-          onClick: () => selectVault(vault),
-        }))}
-        width={1}
-      />
-    </VaultsList>
-  );
+  if (vaults.length) {
+    vaultList = (
+      <VaultsList>
+        <VaultsHeader>
+          <span>Col</span>
+          <span>Col2</span>
+        </VaultsHeader>
+        <List
+          Component={AssetCard}
+          items={vaults.map((vault) => ({
+            key: vault.address,
+            icon: `https://raw.githack.com/iearn-finance/yearn-assets/master/icons/tokens/0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE/logo-128.png`,
+            name: vault.name,
+            balance: formatAmount(weiToUnits(vault.vaultBalance, 18), 2),
+            earning: '',
+            onClick: () => selectVault(vault),
+          }))}
+          width={1}
+        />
+      </VaultsList>
+    );
+  } else {
+    vaultList = (
+      <VaultsList>
+        <SpinnerLoading flex="1" />
+      </VaultsList>
+    );
+  }
+
   const saveInfo = (
     <SaveInfo>
       <h3>SAVE</h3>
