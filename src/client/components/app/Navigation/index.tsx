@@ -1,8 +1,9 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
 
-import { useSideMenu } from '@hooks';
+import { NavSideMenuContext } from '@context';
 import { Navbar } from './Navbar';
-import { Sidemenu } from './Sidemenu';
+import { NavSidemenu } from './NavSidemenu';
 
 interface NavigationProps {
   walletAddress?: string;
@@ -12,12 +13,15 @@ interface NavigationProps {
 const StyledNavigation = styled.nav``;
 
 export const Navigation = ({ walletAddress, onWalletClick }: NavigationProps) => {
-  const { isOpen, toggle } = useSideMenu({ opened: false });
+  const { isOpen, toggle: toggleNavSidemenu } = useContext(NavSideMenuContext);
   return (
     <StyledNavigation>
-      <button onClick={toggle}>Toggle Sidemenu</button>
-      <Sidemenu walletAddress={walletAddress} onWalletClick={() => onWalletClick && onWalletClick()} open={isOpen} />
-      <Navbar walletAddress={walletAddress} onWalletClick={() => onWalletClick && onWalletClick()} />
+      <NavSidemenu walletAddress={walletAddress} onWalletClick={() => onWalletClick && onWalletClick()} open={isOpen} />
+      <Navbar
+        walletAddress={walletAddress}
+        onWalletClick={() => onWalletClick && onWalletClick()}
+        toggleSidemenu={toggleNavSidemenu}
+      />
     </StyledNavigation>
   );
 };

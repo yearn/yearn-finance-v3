@@ -1,4 +1,7 @@
 import { Theme } from './Settings';
+import { Status } from './Status';
+import { TokenData, UserTokenData, UserVaultData, VaultData } from '@types';
+import { EthereumAddress } from './Ethereum';
 
 export interface RootState {
   app: AppState;
@@ -6,6 +9,8 @@ export interface RootState {
   theme: ThemeState;
   vaults: VaultsState;
   wallet: WalletState;
+  user: UserState;
+  tokens: TokensState;
 }
 
 export interface AppState {
@@ -22,10 +27,20 @@ export interface ThemeState {
   current: Theme;
 }
 
+export interface VaultActionsStatusMap {
+  approve: Status;
+  deposit: Status;
+  withdraw: Status;
+}
 export interface VaultsState {
-  supported: any[];
-  isLoading: boolean;
-  error: string | undefined;
+  saveVaultsAddreses: string[];
+  vaultsMap: { [address: string]: VaultData };
+  selectedVaultAddress: EthereumAddress | undefined;
+  statusMap: {
+    initiateSaveVaults: Status;
+    getVaults: Status;
+    vaultsActionsStatusMap: { [vaultAddress: string]: VaultActionsStatusMap };
+  };
 }
 
 export interface WalletState {
@@ -36,4 +51,18 @@ export interface WalletState {
   isConnected: boolean;
   isLoading: boolean;
   error: string | undefined;
+}
+export interface UserState {
+  userVaultsMap: { [address: string]: UserVaultData };
+  userTokensMap: { [address: string]: UserTokenData };
+  statusMap: {
+    getUserVaults: Status;
+  };
+}
+export interface TokensState {
+  tokensAddresses: string[];
+  tokensMap: { [address: string]: TokenData };
+  statusMap: {
+    getTokens: Status;
+  };
 }

@@ -1,7 +1,42 @@
-import { VaultData } from '@types';
+import { VaultData, TokenData, UserVaultData, EthereumAddress, Wei, VaultType } from '@types';
 
-export interface Service<T1, T2> {
-  execute(props?: T1): T2 | Promise<T2>;
+export interface UserService {
+  getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
+  // getUserTokensData:
 }
 
-export interface GetSupportedVaultsService extends Service<void, VaultData[]> {}
+export interface VaultService {
+  getSupportedVaults: () => Promise<VaultData[]>;
+  approveDeposit: (props: ApproveDepositProps) => Promise<void>;
+  deposit: (props: DepositProps) => Promise<void>;
+  withdraw: (props: WithdrawProps) => Promise<void>;
+  // approveZapIn:
+  // zapIn:
+  // zapOut:
+  // approveMigrate:
+  // migrate:
+}
+
+export interface TokenService {
+  getSupportedTokens: () => Promise<TokenData[]>;
+  // getTokenRates:
+}
+
+export interface DepositProps {
+  tokenAddress: EthereumAddress;
+  vaultAddress: EthereumAddress;
+  amount: Wei;
+}
+
+export interface WithdrawProps {
+  tokenAddress: EthereumAddress;
+  vaultAddress: EthereumAddress;
+  amount: Wei;
+  vaultType: VaultType;
+}
+
+export interface ApproveDepositProps {
+  tokenAddress: EthereumAddress;
+  vaultAddress: EthereumAddress;
+  amount: Wei;
+}
