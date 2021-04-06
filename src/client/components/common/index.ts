@@ -5,4 +5,5 @@ export * from './Icon';
 export * from './List';
 export * from './Logo';
 export * from './Sidemenu';
+export * from './SpinnerLoading';
 export * from './Text';

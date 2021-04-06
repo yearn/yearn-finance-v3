@@ -42,6 +42,7 @@ export class VaultServiceImpl implements VaultService {
         token: vault.token.id,
         apyData: apy ? apy.recommended.toString() : '0',
         depositLimit: (vault.metadata as Metadata['VAULT_V2']).depositLimit?.toString() ?? '0',
+        pricePerShare: vault.metadata.pricePerShare.toString(),
       };
     });
     const vaultData = Promise.all(vaultDataPromise);
@@ -80,9 +81,8 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async withdraw(props: WithdrawProps): Promise<void> {
-    const { vaultAddress, amount } = props;
+    const { vaultAddress, amountOfShares } = props;
     const signer = this.web3Provider.getSigner();
-    // const fantomProvider = this.web3Provider.getInstanceOf('default');
     const vaultContract = getContract(vaultAddress, yVaultAbi, signer);
 
     // withdrawAll ??
@@ -93,15 +93,7 @@ export class VaultServiceImpl implements VaultService {
     //   console.log('Receipt: ', receipt);
     // }
 
-    // const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
-    // const decimals = await erc20Contract.decimals();
-    // const pricePerShare =
-    //   vaultType === 'v1' ? await vaultContract.getPricePerFullShare() : await vaultContract.pricePerShare();
-    // const sharePrice = formatUnits(pricePerShare, decimals);
-    // const amountOfShares = new BigNumber(amount).dividedBy(sharePrice).decimalPlaces(0).toFixed(0);
-
-    // TODO: pass sharePrice in props and add above calcs
-    const transaction = await vaultContract.withdraw(amount);
+    const transaction = await vaultContract.withdraw(amountOfShares);
     console.log('Transaction: ', transaction);
     notify.hash(transaction.hash);
     const receipt = await transaction.wait(1);
