@@ -8,6 +8,7 @@ import {
   approveVault,
   withdrawVault,
   selectSelectedVaultActionsStatusMap,
+  selectWalletIsConnected,
 } from '@store';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { BladeContext } from '@context';
@@ -112,6 +113,7 @@ export const Blade = () => {
   const dispatch = useAppDispatch();
   const selectedVault = useAppSelector(selectSelectedVault);
   const selectedVaultActionsStatusMap = useAppSelector(selectSelectedVaultActionsStatusMap);
+  const walletIsConnected = useAppSelector(selectWalletIsConnected);
   const { approve: approveStatus, deposit: depositStatus, withdraw: withdrawStatus } = selectedVaultActionsStatusMap;
   const { isOpen, toggle } = useContext(BladeContext);
   const [depositAmount, setDepositAmount] = useState('0');
@@ -130,7 +132,7 @@ export const Blade = () => {
       <ActionButton
         className="outline"
         onClick={() => approve(selectedVault?.address!)}
-        disabled={approveStatus.loading}
+        disabled={approveStatus.loading || !walletIsConnected}
       >
         {approveStatus.loading && <StyledSpinnerLoading />} Approve
       </ActionButton>
@@ -166,7 +168,7 @@ export const Blade = () => {
               <ActionButton
                 className="outline"
                 onClick={() => deposit(selectedVault?.address!, depositAmount)}
-                disabled={depositStatus.loading}
+                disabled={depositStatus.loading || !walletIsConnected}
               >
                 {depositStatus.loading && <StyledSpinnerLoading />} Deposit
               </ActionButton>
@@ -185,7 +187,7 @@ export const Blade = () => {
               <ActionButton
                 className="outline"
                 onClick={() => withdraw(selectedVault?.address!, withdrawAmount)}
-                disabled={withdrawStatus.loading}
+                disabled={withdrawStatus.loading || !walletIsConnected}
               >
                 {withdrawStatus.loading && <StyledSpinnerLoading />} Withdraw
               </ActionButton>
