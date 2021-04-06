@@ -1,7 +1,25 @@
 {
   "language": "en",
-  "title": "Welcome to Yearn Finance v3",
-  "button": {
-    "connect": "Connect"
+  "title": "Growth Protocol",
+  "subtitle": "Yearn finance is a gateway to DeFi products. Simple intuitive and decentralized solutions accessible to anyone.",
+
+  "commons": {
+    "connect-button": {
+      "connect": "Connect"
+    }
+  },
+  "errors": {
+    "default": "There was an unexpected error"
+  },
+
+  "navigation": {
+    "home": "Home",
+    "save": "Save"
+  },
+  "save": {
+    "assets-headers": {
+      "asset": "Asset",
+      "balance": "Asset Balance"
+    }
   }
 }

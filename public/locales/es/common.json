@@ -1,7 +1,25 @@
 {
   "language": "es",
-  "title": "Bienvenido a Yearn Finance v3",
-  "button": {
-    "connect": "Conectar"
+  "title": "Protocolo de Crecimiento",
+  "subtitle": "Yearn Finance es una puerta de entrada a los productos DeFi. Soluciones simples, intuitivas y descentralizadas accesibles para cualquier persona.",
+
+  "commons": {
+    "connect-button": {
+      "connect": "Conectar"
+    }
+  },
+  "errors": {
+    "default": "Hubo un error inesperado"
+  },
+
+  "navigation": {
+    "home": "Inicio",
+    "save": "Save"
+  },
+  "save": {
+    "assets-headers": {
+      "asset": "Asset",
+      "balance": "Balance"
+    }
   }
 }

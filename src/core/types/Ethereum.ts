@@ -5,3 +5,5 @@ export type Symbol = string;
 export type EthereumAddress = string;
 
 export type Wei = string;
+
+export type RpcUrl = string;

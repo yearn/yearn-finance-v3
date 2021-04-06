@@ -86,12 +86,7 @@ export class BlocknativeWalletImpl implements Wallet {
       { walletName: 'meetone' },
     ];
 
-    const walletCheck = [
-      { checkName: 'derivationPath' },
-      { checkName: 'connect' },
-      { checkName: 'accounts' },
-      { checkName: 'network' },
-    ];
+    const walletCheck = [{ checkName: 'derivationPath' }, { checkName: 'connect' }, { checkName: 'accounts' }];
 
     this.onboard = Onboard({
       networkId,
