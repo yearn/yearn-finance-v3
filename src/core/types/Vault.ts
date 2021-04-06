@@ -13,6 +13,7 @@ export interface VaultData {
   token: EthereumAddress;
   apyData: any;
   depositLimit: string;
+  pricePerShare: string;
 }
 export interface Vault {
   address: EthereumAddress;
