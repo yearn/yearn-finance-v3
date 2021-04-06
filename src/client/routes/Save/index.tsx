@@ -22,19 +22,29 @@ const SaveView = styled.div`
   align-items: center;
 `;
 
-const SaveContent = styled.div`
+const DefaultPageContent = styled.div`
   display: flex;
   max-width: ${({ theme }) => theme.globalMaxWidth};
   width: 100%;
   grid-gap: 2.8rem;
   padding: 0 4rem;
   margin-top: 2.1rem;
+  padding-bottom: 4rem;
+
+  flex-wrap: wrap;
 `;
 
 const SaveInfo = styled.div`
   display: flex;
   flex-direction: column;
   width: 40rem;
+
+  h3 {
+    margin-top: 1.6rem;
+  }
+  .t-body-light {
+    margin-top: 0.7rem;
+  }
 `;
 
 const AssetList = styled.div`
@@ -46,6 +56,7 @@ const AssetList = styled.div`
   width: 100%;
   padding: 2rem 0;
   flex: 1;
+  min-width: 39rem;
 `;
 
 const AssetsHeaders = styled.div`
@@ -114,9 +125,9 @@ export const Save = () => {
 
   const saveInfo = (
     <SaveInfo>
-      <h3>SAVE</h3>
-      <h1>Deep-dive, deposit</h1>
-      <span>
+      <span className="t-captions">SAVE</span>
+      <h3>Deep-dive, deposit</h3>
+      <span className="t-body-light">
         something will be written here that hints at what usrs can do with these lists. from ways of customising the
         view, shortcuts, click throughs and how these lists can lead to customised transactions... more to follow.{' '}
       </span>
@@ -142,10 +153,10 @@ export const Save = () => {
   return (
     <SaveView>
       <Blade></Blade>
-      <SaveContent>
+      <DefaultPageContent>
         {assetList}
         {saveInfo}
-      </SaveContent>
+      </DefaultPageContent>
     </SaveView>
   );
 };

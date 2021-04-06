@@ -65,8 +65,6 @@ export const NavSidemenu = ({ walletAddress, onWalletClick, open }: NavSidemenuP
   const { t } = useAppTranslation('common');
   const { toggle, close } = useContext(NavSideMenuContext);
 
-  console.log(t('navigation'));
-
   return (
     <StyledSidemenu open={open}>
       <SidemenuHeader>
