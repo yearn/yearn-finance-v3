@@ -13,7 +13,7 @@ import {
 } from '@store';
 import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
-import { weiToUnits, formatAmount } from '@src/utils';
+import { weiToUnits, formatAmount, formatPercent } from '@src/utils';
 import { SpinnerLoading } from '../../components/common/SpinnerLoading';
 
 const SaveView = styled.div`
@@ -48,7 +48,7 @@ const SaveInfo = styled.div`
 `;
 
 const AssetList = styled.div`
-  --vaults-columns: 1fr 12rem;
+  --vaults-columns: 1fr 1fr 12rem;
   --vaults-padding: 1.1rem;
 
   display: flex;
@@ -90,6 +90,7 @@ export const Save = () => {
         <AssetsHeaders>
           <span>{t('save.assets-headers.asset')}</span>
           <span>{t('save.assets-headers.balance')}</span>
+          <span>{t('save.assets-headers.earning')}</span>
         </AssetsHeaders>
         <List
           Component={AssetCard}
@@ -98,7 +99,7 @@ export const Save = () => {
             icon: `https://raw.githack.com/iearn-finance/yearn-assets/master/icons/tokens/${vault.token.address}/logo-128.png`,
             name: vault.name,
             balance: formatAmount(weiToUnits(vault.vaultBalance, parseInt(vault.token.decimals)), 2),
-            earning: '',
+            earning: formatPercent(vault.apyData, 0),
             onClick: () => selectVault(vault),
           }))}
           width={1}

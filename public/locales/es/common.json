@@ -19,7 +19,8 @@
   "save": {
     "assets-headers": {
       "asset": "Asset",
-      "balance": "Balance"
+      "balance": "Balance",
+      "earning": "Rendimiento"
     }
   }
 }

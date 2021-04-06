@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import styled, { ThemeContext } from 'styled-components';
+import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 
 import {
@@ -12,9 +12,8 @@ import {
 } from '@store';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { BladeContext } from '@context';
-
-import { Sidemenu, Icon, DeleteIcon, Button } from '@components/common';
-import { SpinnerLoading } from '../../common/SpinnerLoading';
+import { Sidemenu, Icon, DeleteIcon, Button, SpinnerLoading } from '@components/common';
+import { weiToUnits, formatAmount } from '@src/utils';
 
 const StyledBlade = styled(Sidemenu)`
   width: 63.5rem;
@@ -161,7 +160,12 @@ export const Blade = () => {
               <span className="t-body">WALLET BALANCE</span>
               <AvailableBalance>
                 <span className="t-body">AVAILABLE</span>
-                <strong className="t-body balance">{selectedVault?.token.balance}</strong>
+                <strong className="t-body balance">
+                  {formatAmount(
+                    weiToUnits(selectedVault?.token.balance ?? '0', parseInt(selectedVault?.token.decimals ?? '0')),
+                    2
+                  )}
+                </strong>
               </AvailableBalance>
               <input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
               {approveButton}
@@ -181,7 +185,12 @@ export const Blade = () => {
               <span className="t-body">SAFE BALANCE</span>
               <AvailableBalance>
                 <span className="t-body">AVAILABLE</span>
-                <strong className="t-body balance">{selectedVault?.userDeposited}</strong>
+                <strong className="t-body balance">
+                  {formatAmount(
+                    weiToUnits(selectedVault?.userDeposited ?? '0', parseInt(selectedVault?.userDeposited ?? '0')),
+                    2
+                  )}
+                </strong>
               </AvailableBalance>
               <input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
               <ActionButton

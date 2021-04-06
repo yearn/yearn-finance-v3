@@ -3,6 +3,7 @@ import { ThunkAPI } from '../../../frameworks/redux';
 import { VaultData } from '@types';
 import BigNumber from 'bignumber.js';
 import { setUserTokenData, getUserVaultsData } from '@store';
+import { formatUnits } from '@frameworks/ethers';
 
 export const setSelectedVaultAddress = createAction<{ vaultAddress: string }>('vaults/setSelectedVaultAddress');
 
@@ -92,8 +93,8 @@ export const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amou
     const tokenData = getState().tokens.tokensMap[vaultData.token];
     // const userVaultData = getState().user.userVaultsMap[vaultAddress];
     const decimals = new BigNumber(tokenData.decimals);
-    const ONE_UNIT = new BigNumber(10).pow(decimals);
-    amount = amount.multipliedBy(ONE_UNIT);
+    // const ONE_UNIT = new BigNumber(10).pow(decimals);
+    // amount = amount.multipliedBy(ONE_UNIT);
     // if (amount.lte(0)) {
     //   throw new Error('INVALID AMOUNT');
     // }
@@ -101,12 +102,14 @@ export const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amou
     //   throw new Error('INSUFICIENT FUNDS');
     // }
 
+    const sharePrice = formatUnits(vaultData.pricePerShare, decimals.toNumber());
+    const amountOfShares = new BigNumber(amount).dividedBy(sharePrice).decimalPlaces(0).toFixed(0);
+
     const { vaultService } = services;
     await vaultService.withdraw({
       tokenAddress: vaultData.token,
       vaultAddress,
-      amount: amount.toFixed(0),
-      vaultType: vaultData.typeId === 'v1Vault' ? 'v1' : 'v2',
+      amountOfShares,
     });
     dispatch(getUserVaultsData());
     // dispatch(getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.

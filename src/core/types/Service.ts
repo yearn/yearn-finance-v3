@@ -31,8 +31,7 @@ export interface DepositProps {
 export interface WithdrawProps {
   tokenAddress: EthereumAddress;
   vaultAddress: EthereumAddress;
-  amount: Wei;
-  vaultType: VaultType;
+  amountOfShares: Wei;
 }
 
 export interface ApproveDepositProps {
