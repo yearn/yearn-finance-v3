@@ -12,14 +12,7 @@ import themeReducer from './theme/theme.reducer';
 import { ThemeActions } from './theme/theme.actions';
 
 import vaultsReducer from './vaults/vaults.reducer';
-import {
-  getVaults,
-  initiateSaveVaults,
-  setSelectedVaultAddress,
-  depositVault,
-  approveVault,
-  withdrawVault,
-} from './vaults/vaults.actions';
+import { VaultsActions } from './vaults/vaults.actions';
 import {
   selectSaveVaults,
   selectSelectedVault,
@@ -51,17 +44,12 @@ export default rootReducer;
 export {
   UserActions,
   AppActions,
-  initiateSaveVaults,
+  VaultsActions,
   RouteActions,
   ThemeActions,
-  getVaults,
   walletSelect,
   changeWalletTheme,
   TokensActions,
-  setSelectedVaultAddress,
-  depositVault,
-  approveVault,
-  withdrawVault,
 };
 export {
   selectSaveVaults,

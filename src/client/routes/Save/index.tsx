@@ -4,13 +4,7 @@ import styled from 'styled-components';
 import { useAppSelector, useAppDispatch, useAppTranslation } from '@hooks';
 import { AssetCard, Blade } from '@components/app';
 import { List } from '@components/common';
-import {
-  initiateSaveVaults,
-  selectSaveVaults,
-  setSelectedVaultAddress,
-  selectSaveVaultsGeneralStatus,
-  UserActions,
-} from '@store';
+import { VaultsActions, selectSaveVaults, selectSaveVaultsGeneralStatus, UserActions } from '@store';
 import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
 import { weiToUnits, formatAmount, formatPercent } from '@src/utils';
@@ -136,13 +130,13 @@ export const Save = () => {
   );
 
   const selectVault = (vault: Vault) => {
-    dispatch(setSelectedVaultAddress({ vaultAddress: vault.address }));
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: vault.address }));
     closeNavSidemenu();
     openBlade();
   };
 
   useEffect(() => {
-    dispatch(initiateSaveVaults());
+    dispatch(VaultsActions.initiateSaveVaults());
   }, []);
 
   useEffect(() => {

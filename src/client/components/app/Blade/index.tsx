@@ -4,9 +4,7 @@ import BigNumber from 'bignumber.js';
 
 import {
   selectSelectedVault,
-  depositVault,
-  approveVault,
-  withdrawVault,
+  VaultsActions,
   selectSelectedVaultActionsStatusMap,
   selectWalletIsConnected,
 } from '@store';
@@ -118,11 +116,11 @@ export const Blade = () => {
   const [depositAmount, setDepositAmount] = useState('0');
   const [withdrawAmount, setWithdrawAmount] = useState('0');
 
-  const approve = (vaultAddress: string) => dispatch(approveVault({ vaultAddress }));
+  const approve = (vaultAddress: string) => dispatch(VaultsActions.approveVault({ vaultAddress }));
   const deposit = (vaultAddress: string, amount: string) =>
-    dispatch(depositVault({ vaultAddress, amount: new BigNumber(amount) }));
+    dispatch(VaultsActions.depositVault({ vaultAddress, amount: new BigNumber(amount) }));
   const withdraw = (vaultAddress: string, amount: string) =>
-    dispatch(withdrawVault({ vaultAddress, amount: new BigNumber(amount) }));
+    dispatch(VaultsActions.withdrawVault({ vaultAddress, amount: new BigNumber(amount) }));
 
   let approveButton;
 
