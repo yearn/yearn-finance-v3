@@ -9,7 +9,7 @@ import routeReducer from './route/route.reducer';
 import { RouteActions } from './route/route.actions';
 
 import themeReducer from './theme/theme.reducer';
-import { changeTheme } from './theme/theme.actions';
+import { ThemeActions } from './theme/theme.actions';
 
 import vaultsReducer from './vaults/vaults.reducer';
 import {
@@ -53,7 +53,7 @@ export {
   AppActions,
   initiateSaveVaults,
   RouteActions,
-  changeTheme,
+  ThemeActions,
   getVaults,
   walletSelect,
   changeWalletTheme,
