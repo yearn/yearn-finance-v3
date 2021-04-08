@@ -35,7 +35,7 @@ import userReducer from './user/user.reducer';
 import { UserActions } from './user/user.actions';
 
 import tokensReducer from './tokens/tokens.reducer';
-import { getTokens } from './tokens/tokens.actions';
+import { TokensActions } from './tokens/tokens.actions';
 
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
@@ -57,7 +57,7 @@ export {
   getVaults,
   walletSelect,
   changeWalletTheme,
-  getTokens,
+  TokensActions,
   setSelectedVaultAddress,
   depositVault,
   approveVault,

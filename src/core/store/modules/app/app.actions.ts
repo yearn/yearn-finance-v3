@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { walletSelect, getTokens } from '@store';
+import { walletSelect, TokensActions } from '@store';
 
 export const AppActions = {
   initApp: createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_arg, { dispatch, getState }) => {
@@ -9,6 +9,6 @@ export const AppActions = {
     if (wallet.name) {
       dispatch(walletSelect(wallet.name));
     }
-    dispatch(getTokens());
+    dispatch(TokensActions.getTokens());
   }),
 };
