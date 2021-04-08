@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { initApp, changeRoute, walletSelect } from '@store';
+import { AppActions, changeRoute, walletSelect } from '@store';
 import { useAppDispatch, useAppSelector } from '@hooks';
 import { Navigation } from '@components/app';
 import { Box } from '@components/common';
@@ -21,7 +21,7 @@ export const Layout: FC = ({ children }) => {
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
 
   useEffect(() => {
-    dispatch(initApp());
+    dispatch(AppActions.initApp());
   }, []);
 
   useEffect(() => {

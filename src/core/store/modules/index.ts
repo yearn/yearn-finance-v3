@@ -3,7 +3,7 @@ import { combineReducers, Reducer } from '@reduxjs/toolkit';
 import { RootState } from '@types';
 
 import appReducer from './app/app.reducer';
-import { initApp } from './app/app.actions';
+import { AppActions } from './app/app.actions';
 
 import routeReducer from './route/route.reducer';
 import { changeRoute } from './route/route.actions';
@@ -50,7 +50,7 @@ const rootReducer: Reducer<RootState> = combineReducers({
 export default rootReducer;
 export {
   UserActions,
-  initApp,
+  AppActions,
   initiateSaveVaults,
   changeRoute,
   changeTheme,

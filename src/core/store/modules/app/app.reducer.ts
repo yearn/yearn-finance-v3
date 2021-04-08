@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { AppState } from '@types';
-import { initApp } from './app.actions';
+import { AppActions } from './app.actions';
 
 const initialState: AppState = {
   isInitialized: false,
@@ -10,15 +10,15 @@ const initialState: AppState = {
 
 const appReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(initApp.pending, (state) => {
+    .addCase(AppActions.initApp.pending, (state) => {
       state.isLoading = true;
       state.error = undefined;
     })
-    .addCase(initApp.fulfilled, (state) => {
+    .addCase(AppActions.initApp.fulfilled, (state) => {
       state.isInitialized = true;
       state.isLoading = false;
     })
-    .addCase(initApp.rejected, (state, { error }) => {
+    .addCase(AppActions.initApp.rejected, (state, { error }) => {
       state.isLoading = false;
       state.error = error.message;
     });
