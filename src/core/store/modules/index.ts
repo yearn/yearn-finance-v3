@@ -6,7 +6,7 @@ import appReducer from './app/app.reducer';
 import { AppActions } from './app/app.actions';
 
 import routeReducer from './route/route.reducer';
-import { changeRoute } from './route/route.actions';
+import { RouteActions } from './route/route.actions';
 
 import themeReducer from './theme/theme.reducer';
 import { changeTheme } from './theme/theme.actions';
@@ -52,7 +52,7 @@ export {
   UserActions,
   AppActions,
   initiateSaveVaults,
-  changeRoute,
+  RouteActions,
   changeTheme,
   getVaults,
   walletSelect,
