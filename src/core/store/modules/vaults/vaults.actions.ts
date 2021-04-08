@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '../../../frameworks/redux';
 import { VaultData } from '@types';
 import BigNumber from 'bignumber.js';
-import { setUserTokenData, getUserVaultsData } from '@store';
+import { UserActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';
 
 export const setSelectedVaultAddress = createAction<{ vaultAddress: string }>('vaults/setSelectedVaultAddress');
@@ -42,7 +42,7 @@ export const approveVault = createAsyncThunk<void, { vaultAddress: string }, Thu
     }
 
     const { vaultService } = services;
-    await vaultService.approveDeposit({ tokenAddress: vaultData.token, vaultAddress, amount: config.MAX_UINT256 });
+    // await vaultService.approveDeposit({ tokenAddress: vaultData.token, vaultAddress, amount: config.MAX_UINT256 });
 
     const newUserTokendata = {
       ...userTokenData,
@@ -51,7 +51,8 @@ export const approveVault = createAsyncThunk<void, { vaultAddress: string }, Thu
         [vaultAddress]: config.MAX_UINT256,
       },
     };
-    dispatch(setUserTokenData({ userTokenData: newUserTokendata }));
+    dispatch(UserActions.setUserTokenData({ userTokenData: newUserTokendata }));
+    // dispatch(setUserTokenData({ userTokenData: newUserTokendata }));
   }
 );
 
@@ -79,8 +80,8 @@ export const depositVault = createAsyncThunk<void, { vaultAddress: string; amoun
 
     const { vaultService } = services;
     await vaultService.deposit({ tokenAddress: vaultData.token, vaultAddress, amount: amount.toFixed(0) });
-    dispatch(getUserVaultsData());
-    // dispatch(getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
+    dispatch(UserActions.getUserVaultsData());
+    // dispatch(UserActions.getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
   }
 );
@@ -111,8 +112,8 @@ export const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amou
       vaultAddress,
       amountOfShares,
     });
-    dispatch(getUserVaultsData());
-    // dispatch(getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
+    dispatch(UserActions.getUserVaultsData());
+    // dispatch(UserActions.getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
   }
 );

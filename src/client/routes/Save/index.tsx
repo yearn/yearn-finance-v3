@@ -8,8 +8,8 @@ import {
   initiateSaveVaults,
   selectSaveVaults,
   setSelectedVaultAddress,
-  getUserVaultsData,
   selectSaveVaultsGeneralStatus,
+  UserActions,
 } from '@store';
 import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
@@ -147,7 +147,7 @@ export const Save = () => {
 
   useEffect(() => {
     if (selectedAddress) {
-      dispatch(getUserVaultsData());
+      dispatch(UserActions.getUserVaultsData());
     }
   }, [selectedAddress]);
 
