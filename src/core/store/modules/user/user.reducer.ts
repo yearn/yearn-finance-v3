@@ -25,9 +25,6 @@ const userReducer = createReducer(initialState, (builder) => {
       state.statusMap.getUserVaults = { error: error.message };
     })
     .addCase(UserActions.setUserTokenData, (state, { payload: { userTokenData } }) => {
-      console.log({ UserActions });
-      console.log({ stuff: { ...UserActions } });
-
       state.userTokensMap[userTokenData.address] = userTokenData;
     });
 });

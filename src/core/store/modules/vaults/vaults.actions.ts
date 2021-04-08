@@ -42,7 +42,7 @@ export const approveVault = createAsyncThunk<void, { vaultAddress: string }, Thu
     }
 
     const { vaultService } = services;
-    // await vaultService.approveDeposit({ tokenAddress: vaultData.token, vaultAddress, amount: config.MAX_UINT256 });
+    await vaultService.approveDeposit({ tokenAddress: vaultData.token, vaultAddress, amount: config.MAX_UINT256 });
 
     const newUserTokendata = {
       ...userTokenData,
@@ -52,7 +52,6 @@ export const approveVault = createAsyncThunk<void, { vaultAddress: string }, Thu
       },
     };
     dispatch(UserActions.setUserTokenData({ userTokenData: newUserTokendata }));
-    // dispatch(setUserTokenData({ userTokenData: newUserTokendata }));
   }
 );
 
