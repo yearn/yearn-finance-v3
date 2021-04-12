@@ -8,17 +8,19 @@ const initialState: AppState = {
   error: undefined,
 };
 
+const { initApp } = AppActions;
+
 const appReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(AppActions.initApp.pending, (state) => {
+    .addCase(initApp.pending, (state) => {
       state.isLoading = true;
       state.error = undefined;
     })
-    .addCase(AppActions.initApp.fulfilled, (state) => {
+    .addCase(initApp.fulfilled, (state) => {
       state.isInitialized = true;
       state.isLoading = false;
     })
-    .addCase(AppActions.initApp.rejected, (state, { error }) => {
+    .addCase(initApp.rejected, (state, { error }) => {
       state.isLoading = false;
       state.error = error.message;
     });

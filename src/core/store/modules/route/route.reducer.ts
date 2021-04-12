@@ -6,8 +6,10 @@ const initialState: RouteState = {
   path: undefined,
 };
 
+const { changeRoute } = RouteActions;
+
 const routeReducer = createReducer(initialState, (builder) => {
-  builder.addCase(RouteActions.changeRoute, (state, { payload: { path } }) => {
+  builder.addCase(changeRoute, (state, { payload: { path } }) => {
     state.path = path;
   });
 });

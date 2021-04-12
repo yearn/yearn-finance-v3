@@ -6,8 +6,10 @@ const initialState: ThemeState = {
   current: 'default',
 };
 
+const { changeTheme } = ThemeActions;
+
 const themeReducer = createReducer(initialState, (builder) => {
-  builder.addCase(ThemeActions.changeTheme, (state, { payload: { theme } }) => {
+  builder.addCase(changeTheme, (state, { payload: { theme } }) => {
     state.current = theme;
   });
 });

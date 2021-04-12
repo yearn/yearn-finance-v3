@@ -11,17 +11,19 @@ const initialState: TokensState = {
   },
 };
 
+const { getTokens } = TokensActions;
+
 const tokensReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(TokensActions.getTokens.pending, (state) => {
+    .addCase(getTokens.pending, (state) => {
       state.statusMap.getTokens = { loading: true };
     })
-    .addCase(TokensActions.getTokens.fulfilled, (state, { payload: { tokensMap, tokensAddresses } }) => {
+    .addCase(getTokens.fulfilled, (state, { payload: { tokensMap, tokensAddresses } }) => {
       state.tokensMap = tokensMap;
       state.tokensAddresses = tokensAddresses;
       state.statusMap.getTokens = {};
     })
-    .addCase(TokensActions.getTokens.rejected, (state, { error }) => {
+    .addCase(getTokens.rejected, (state, { error }) => {
       state.statusMap.getTokens = { error: error.message };
     });
 });

@@ -12,29 +12,31 @@ const initialState: WalletState = {
   error: undefined,
 };
 
+const { addressChange, balanceChange, networkChange, walletChange, walletSelect } = WalletActions;
+
 const walletReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(WalletActions.walletChange, (state, { payload: { walletName } }) => {
+    .addCase(walletChange, (state, { payload: { walletName } }) => {
       state.name = walletName;
     })
-    .addCase(WalletActions.addressChange, (state, { payload: { address } }) => {
+    .addCase(addressChange, (state, { payload: { address } }) => {
       state.selectedAddress = address;
     })
-    .addCase(WalletActions.networkChange, (state, { payload: { network } }) => {
+    .addCase(networkChange, (state, { payload: { network } }) => {
       state.networkVersion = network;
     })
-    .addCase(WalletActions.balanceChange, (state, { payload: { balance } }) => {
+    .addCase(balanceChange, (state, { payload: { balance } }) => {
       state.balance = balance;
     })
-    .addCase(WalletActions.walletSelect.pending, (state) => {
+    .addCase(walletSelect.pending, (state) => {
       state.isLoading = true;
       state.error = undefined;
     })
-    .addCase(WalletActions.walletSelect.fulfilled, (state, { payload: { isConnected } }) => {
+    .addCase(walletSelect.fulfilled, (state, { payload: { isConnected } }) => {
       state.isConnected = isConnected;
       state.isLoading = false;
     })
-    .addCase(WalletActions.walletSelect.rejected, (state, { error }) => {
+    .addCase(walletSelect.rejected, (state, { error }) => {
       state.isLoading = false;
       state.error = error.message;
     });

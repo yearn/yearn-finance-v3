@@ -11,20 +11,22 @@ const initialState: UserState = {
   },
 };
 
+const { getUserVaultsData, setUserTokenData } = UserActions;
+
 const userReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(UserActions.getUserVaultsData.pending, (state) => {
+    .addCase(getUserVaultsData.pending, (state) => {
       state.statusMap.getUserVaults = { loading: true };
     })
-    .addCase(UserActions.getUserVaultsData.fulfilled, (state, { payload: { userVaultsMap, userTokensMap } }) => {
+    .addCase(getUserVaultsData.fulfilled, (state, { payload: { userVaultsMap, userTokensMap } }) => {
       state.userVaultsMap = { ...state.userVaultsMap, ...userVaultsMap };
       state.userTokensMap = { ...state.userTokensMap, ...userTokensMap }; // this should be removed when sdk.getTokens() ready.
       state.statusMap.getUserVaults = {};
     })
-    .addCase(UserActions.getUserVaultsData.rejected, (state, { error }) => {
+    .addCase(getUserVaultsData.rejected, (state, { error }) => {
       state.statusMap.getUserVaults = { error: error.message };
     })
-    .addCase(UserActions.setUserTokenData, (state, { payload: { userTokenData } }) => {
+    .addCase(setUserTokenData, (state, { payload: { userTokenData } }) => {
       state.userTokensMap[userTokenData.address] = userTokenData;
     });
 });
