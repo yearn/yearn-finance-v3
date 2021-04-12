@@ -17,7 +17,7 @@ import { VaultsSelectors } from './vaults/vaults.selectors';
 
 import walletReducer from './wallet/wallet.reducer';
 import { WalletActions } from './wallet/wallet.actions';
-import { selectWallet, selectWalletIsConnected } from './wallet/wallet.selectors';
+import { WalletSelectors } from './wallet/wallet.selectors';
 
 import userReducer from './user/user.reducer';
 import { UserActions } from './user/user.actions';
@@ -36,5 +36,9 @@ const rootReducer: Reducer<RootState> = combineReducers({
 });
 
 export default rootReducer;
+
+// Actions
 export { UserActions, AppActions, VaultsActions, RouteActions, ThemeActions, WalletActions, TokensActions };
-export { VaultsSelectors, selectWallet, selectWalletIsConnected };
+
+// Selectors
+export { VaultsSelectors, WalletSelectors };
