@@ -2,12 +2,7 @@ import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 
-import {
-  selectSelectedVault,
-  VaultsActions,
-  selectSelectedVaultActionsStatusMap,
-  selectWalletIsConnected,
-} from '@store';
+import { VaultsSelectors, VaultsActions, selectWalletIsConnected } from '@store';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { BladeContext } from '@context';
 import { Sidemenu, Icon, DeleteIcon, Button, SpinnerLoading } from '@components/common';
@@ -108,8 +103,8 @@ const StyledSpinnerLoading = styled(SpinnerLoading)`
 
 export const Blade = () => {
   const dispatch = useAppDispatch();
-  const selectedVault = useAppSelector(selectSelectedVault);
-  const selectedVaultActionsStatusMap = useAppSelector(selectSelectedVaultActionsStatusMap);
+  const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
+  const selectedVaultActionsStatusMap = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
   const walletIsConnected = useAppSelector(selectWalletIsConnected);
   const { approve: approveStatus, deposit: depositStatus, withdraw: withdrawStatus } = selectedVaultActionsStatusMap;
   const { isOpen, toggle } = useContext(BladeContext);

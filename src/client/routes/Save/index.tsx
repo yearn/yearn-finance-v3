@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useAppSelector, useAppDispatch, useAppTranslation } from '@hooks';
 import { AssetCard, Blade } from '@components/app';
 import { List } from '@components/common';
-import { VaultsActions, selectSaveVaults, selectSaveVaultsGeneralStatus, UserActions } from '@store';
+import { VaultsActions, VaultsSelectors, UserActions } from '@store';
 import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
 import { weiToUnits, formatAmount, formatPercent } from '@src/utils';
@@ -74,8 +74,8 @@ export const Save = () => {
   const { open: openBlade } = useContext(BladeContext);
   const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
-  const generalVaultsStatus = useAppSelector(selectSaveVaultsGeneralStatus);
-  const vaults = useAppSelector(selectSaveVaults);
+  const generalVaultsStatus = useAppSelector(VaultsSelectors.selectSaveVaultsGeneralStatus);
+  const vaults = useAppSelector(VaultsSelectors.selectSaveVaults);
   let assetList;
 
   if (!generalVaultsStatus.loading && !generalVaultsStatus.error) {
