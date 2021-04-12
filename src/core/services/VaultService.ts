@@ -1,4 +1,3 @@
-import { Yearn, Metadata } from '@yfi/sdk';
 // import BigNumber from 'bignumber.js';
 // import { ethers } from 'ethers';
 
@@ -8,6 +7,7 @@ import {
   VaultService,
   VaultData,
   Web3Provider,
+  YearnSdk,
   Config,
   ApproveDepositProps,
   DepositProps,
@@ -19,29 +19,30 @@ import erc20Abi from './contracts/erc20.json';
 
 export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;
+  private yearnSdk: YearnSdk;
   private config: Config;
 
-  constructor({ web3Provider, config }: { web3Provider: Web3Provider; config: Config }) {
+  constructor({ web3Provider, yearnSdk, config }: { web3Provider: Web3Provider; yearnSdk: YearnSdk; config: Config }) {
     this.web3Provider = web3Provider;
+    this.yearnSdk = yearnSdk;
     this.config = config;
   }
 
   public async getSupportedVaults(): Promise<VaultData[]> {
-    const provider = this.web3Provider.getInstanceOf('default');
-    const yearn = new Yearn(1, { provider });
+    const yearn = this.yearnSdk;
     const vaults = await yearn.vaults.get();
     const vaultDataPromise = vaults.map(async (vault) => {
       const apy = await yearn.vaults.apy(vault.id);
       return {
-        address: vault.id,
+        address: vault.id.toLowerCase(),
         name: vault.name,
         version: vault.version,
         typeId: vault.typeId,
-        balance: vault.balance?.toString() ?? '0',
-        balanceUsdc: vault.balanceUsdc?.toString() ?? '0',
-        token: vault.token.id,
+        balance: vault.underlyingTokenBalance.amount?.toString() ?? '0',
+        balanceUsdc: vault.underlyingTokenBalance.amountUsdc?.toString() ?? '0',
+        token: vault.token.id.toLowerCase(),
         apyData: apy ? apy.recommended.toString() : '0',
-        depositLimit: (vault.metadata as Metadata['VAULT_V2']).depositLimit?.toString() ?? '0',
+        depositLimit: vault.typeId === 'v2Vault' ? vault.metadata.depositLimit?.toString() : '0',
         pricePerShare: vault.metadata.pricePerShare.toString(),
       };
     });

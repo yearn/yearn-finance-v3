@@ -8,9 +8,10 @@ export class EthersWeb3ProviderImpl implements AppWeb3Provider {
   private instances: Map<ProviderType, Provider> = new Map<ProviderType, Provider>();
 
   constructor() {
-    const { FANTOM_PROVIDER_HTTPS, WEB3_PROVIDER_HTTPS } = getConfig();
+    const { FANTOM_PROVIDER_HTTPS, WEB3_PROVIDER_HTTPS, LOCAL_PROVIDER_HTTPS } = getConfig();
     this.register('default', getEthersDefaultProvider(WEB3_PROVIDER_HTTPS));
     this.register('fantom', getEthersDefaultProvider(FANTOM_PROVIDER_HTTPS));
+    this.register('local', getEthersDefaultProvider(LOCAL_PROVIDER_HTTPS));
   }
 
   public getInstanceOf(type: ProviderType): Provider {

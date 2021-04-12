@@ -1,23 +1,20 @@
-import { Yearn } from '@yfi/sdk';
-
-import { TokenService, TokenData, Web3Provider } from '@types';
+import { TokenService, TokenData, YearnSdk } from '@types';
 
 export class TokenServiceImpl implements TokenService {
-  private web3Provider: Web3Provider;
+  private yearnSdk: YearnSdk;
 
-  constructor({ web3Provider }: { web3Provider: Web3Provider }) {
-    this.web3Provider = web3Provider;
+  constructor({ yearnSdk }: { yearnSdk: YearnSdk }) {
+    this.yearnSdk = yearnSdk;
   }
 
   public async getSupportedTokens(): Promise<TokenData[]> {
-    const provider = this.web3Provider.getInstanceOf('default');
-    const yearn = new Yearn(1, { provider });
-    const tokens = await yearn.vaults.tokens();
+    const yearn = this.yearnSdk;
+    const tokens = await yearn.tokens.supported();
     const tokensData: TokenData[] = tokens.map((token) => ({
-      address: token.id,
+      address: token.id.toLowerCase(),
       name: token.name,
-      symbol: token.symbol?.toString() ?? '0',
-      decimals: token.decimals?.toString(),
+      symbol: token.symbol,
+      decimals: token.decimals.toString(),
       icon: 'MOCK', // TODO DEHARDCODE waiting for SDK TO ADD PROPERTY
     }));
 
