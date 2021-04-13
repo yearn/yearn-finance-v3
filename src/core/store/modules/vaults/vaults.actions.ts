@@ -2,19 +2,19 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '../../../frameworks/redux';
 import { VaultData } from '@types';
 import BigNumber from 'bignumber.js';
-import { setUserTokenData, getUserVaultsData } from '@store';
+import { UserActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';
 
-export const setSelectedVaultAddress = createAction<{ vaultAddress: string }>('vaults/setSelectedVaultAddress');
+const setSelectedVaultAddress = createAction<{ vaultAddress: string }>('vaults/setSelectedVaultAddress');
 
-export const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
+const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',
   async (_arg, { dispatch }) => {
     await dispatch(getVaults());
   }
 );
 
-export const getVaults = createAsyncThunk<
+const getVaults = createAsyncThunk<
   { vaultsMap: { [address: string]: VaultData }; vaultsAddreses: string[] },
   string | undefined,
   ThunkAPI
@@ -30,7 +30,7 @@ export const getVaults = createAsyncThunk<
   return { vaultsMap, vaultsAddreses };
 });
 
-export const approveVault = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
+const approveVault = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
   'vaults/approveVault',
   async ({ vaultAddress }, { extra, getState, dispatch }) => {
     const { services, config } = extra;
@@ -51,11 +51,11 @@ export const approveVault = createAsyncThunk<void, { vaultAddress: string }, Thu
         [vaultAddress]: config.MAX_UINT256,
       },
     };
-    dispatch(setUserTokenData({ userTokenData: newUserTokendata }));
+    dispatch(UserActions.setUserTokenData({ userTokenData: newUserTokendata }));
   }
 );
 
-export const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigNumber }, ThunkAPI>(
+const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigNumber }, ThunkAPI>(
   'vaults/depositVault',
   async ({ vaultAddress, amount }, { extra, getState, dispatch }) => {
     const { services } = extra;
@@ -79,13 +79,13 @@ export const depositVault = createAsyncThunk<void, { vaultAddress: string; amoun
 
     const { vaultService } = services;
     await vaultService.deposit({ tokenAddress: vaultData.token, vaultAddress, amount: amount.toFixed(0) });
-    dispatch(getUserVaultsData());
-    // dispatch(getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
+    dispatch(UserActions.getUserVaultsData());
+    // dispatch(UserActions.getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
   }
 );
 
-export const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: BigNumber }, ThunkAPI>(
+const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: BigNumber }, ThunkAPI>(
   'vaults/withdrawVault',
   async ({ vaultAddress, amount }, { extra, getState, dispatch }) => {
     const { services } = extra;
@@ -111,8 +111,17 @@ export const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amou
       vaultAddress,
       amountOfShares,
     });
-    dispatch(getUserVaultsData());
-    // dispatch(getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
+    dispatch(UserActions.getUserVaultsData());
+    // dispatch(UserActions.getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
   }
 );
+
+export const VaultsActions = {
+  setSelectedVaultAddress,
+  initiateSaveVaults,
+  getVaults,
+  approveVault,
+  depositVault,
+  withdrawVault,
+};
