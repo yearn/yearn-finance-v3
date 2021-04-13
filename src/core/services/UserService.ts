@@ -22,13 +22,13 @@ export class UserServiceImpl implements UserService {
 
       return {
         address: vault.assetId.toLowerCase(),
-        depositedBalance: vault.accountTokenBalance.amount.toString() ?? '0',
-        depositedBalanceUsdc: vault.accountTokenBalance.amountUsdc.toString() ?? '0',
+        depositedBalance: vault.accountTokenBalance.amount.toString(),
+        depositedBalanceUsdc: vault.accountTokenBalance.amountUsdc.toString(),
         allowancesMap: allowancesMap,
         tokenPosition: {
           address: vault.tokenId.toLowerCase(),
-          balance: vault.underlyingTokenBalance.amount?.toString() ?? '0',
-          balanceUsdc: vault.underlyingTokenBalance.amountUsdc?.toString() ?? '0',
+          balance: vault.underlyingTokenBalance.amount.toString(),
+          balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
           allowancesMap: tokenAllowancesMap,
         },
       };

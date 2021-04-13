@@ -3,10 +3,10 @@ import { AppDispatch, ThunkAPI } from '@frameworks/redux';
 import { getEthersProvider } from '@frameworks/ethers';
 import { Theme, RootState, DIContainer, Subscriptions } from '@types';
 
-export const walletChange = createAction<{ walletName: string }>('wallet/walletChange');
-export const addressChange = createAction<{ address: string }>('wallet/addressChange');
-export const networkChange = createAction<{ network: number }>('wallet/networkChange');
-export const balanceChange = createAction<{ balance: string }>('wallet/balanceChange');
+const walletChange = createAction<{ walletName: string }>('wallet/walletChange');
+const addressChange = createAction<{ address: string }>('wallet/addressChange');
+const networkChange = createAction<{ network: number }>('wallet/networkChange');
+const balanceChange = createAction<{ balance: string }>('wallet/balanceChange');
 
 const getSubscriptions = (dispatch: AppDispatch, customSubscriptions?: Subscriptions) => ({
   wallet: (wallet: any) => {
@@ -27,7 +27,7 @@ const getSubscriptions = (dispatch: AppDispatch, customSubscriptions?: Subscript
   },
 });
 
-export const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefined, ThunkAPI>(
+const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefined, ThunkAPI>(
   'wallet/walletSelect',
   async (walletName, { dispatch, getState, extra }) => {
     const { context, config } = extra;
@@ -47,7 +47,7 @@ export const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | 
   }
 );
 
-export const changeWalletTheme = (theme: Theme) => async (
+const changeWalletTheme = (theme: Theme) => async (
   dispatch: AppDispatch,
   getState: () => RootState,
   container: DIContainer
@@ -56,4 +56,13 @@ export const changeWalletTheme = (theme: Theme) => async (
   if (wallet.isCreated && wallet.changeTheme) {
     wallet.changeTheme(theme);
   }
+};
+
+export const WalletActions = {
+  walletChange,
+  addressChange,
+  networkChange,
+  balanceChange,
+  walletSelect,
+  changeWalletTheme,
 };

@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { UserState } from '@types';
 import { initialStatus } from '../../../types/Status';
-import { getUserVaultsData, setUserTokenData } from './user.actions';
+import { UserActions } from './user.actions';
 
 const initialState: UserState = {
   userVaultsMap: {},
@@ -10,6 +10,8 @@ const initialState: UserState = {
     getUserVaults: { ...initialStatus },
   },
 };
+
+const { getUserVaultsData, setUserTokenData } = UserActions;
 
 const userReducer = createReducer(initialState, (builder) => {
   builder

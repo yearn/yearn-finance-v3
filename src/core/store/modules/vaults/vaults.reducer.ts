@@ -1,13 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { initialStatus, VaultsState } from '@types';
-import {
-  approveVault,
-  depositVault,
-  getVaults,
-  initiateSaveVaults,
-  setSelectedVaultAddress,
-  withdrawVault,
-} from './vaults.actions';
+import { VaultsActions } from './vaults.actions';
 
 export const initialVaultActionsStatusMap = {
   approve: initialStatus,
@@ -25,6 +18,15 @@ const initialState: VaultsState = {
     vaultsActionsStatusMap: {},
   },
 };
+
+const {
+  approveVault,
+  depositVault,
+  getVaults,
+  initiateSaveVaults,
+  setSelectedVaultAddress,
+  withdrawVault,
+} = VaultsActions;
 
 const vaultsReducer = createReducer(initialState, (builder) => {
   builder

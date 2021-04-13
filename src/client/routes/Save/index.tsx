@@ -4,16 +4,10 @@ import styled from 'styled-components';
 import { useAppSelector, useAppDispatch, useAppTranslation } from '@hooks';
 import { AssetCard, Blade } from '@components/app';
 import { List } from '@components/common';
-import {
-  initiateSaveVaults,
-  selectSaveVaults,
-  setSelectedVaultAddress,
-  getUserVaultsData,
-  selectSaveVaultsGeneralStatus,
-} from '@store';
+import { VaultsActions, VaultsSelectors, UserActions } from '@store';
 import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
-import { weiToUnits, formatAmount, formatPercent } from '@src/utils';
+import { formatPercent, humanizeAmount } from '@src/utils';
 import { SpinnerLoading } from '../../components/common/SpinnerLoading';
 
 const SaveView = styled.div`
@@ -80,8 +74,8 @@ export const Save = () => {
   const { open: openBlade } = useContext(BladeContext);
   const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
-  const generalVaultsStatus = useAppSelector(selectSaveVaultsGeneralStatus);
-  const vaults = useAppSelector(selectSaveVaults);
+  const generalVaultsStatus = useAppSelector(VaultsSelectors.selectSaveVaultsGeneralStatus);
+  const vaults = useAppSelector(VaultsSelectors.selectSaveVaults);
   let assetList;
 
   if (!generalVaultsStatus.loading && !generalVaultsStatus.error) {
@@ -98,7 +92,7 @@ export const Save = () => {
             key: vault.address,
             icon: `https://raw.githack.com/iearn-finance/yearn-assets/master/icons/tokens/${vault.token.address}/logo-128.png`,
             name: vault.name,
-            balance: formatAmount(weiToUnits(vault.vaultBalance, parseInt(vault.token.decimals ?? 18)), 2),
+            balance: humanizeAmount(vault.vaultBalance, parseInt(vault.token.decimals), 2),
             earning: formatPercent(vault.apyData, 0),
             onClick: () => selectVault(vault),
           }))}
@@ -136,18 +130,18 @@ export const Save = () => {
   );
 
   const selectVault = (vault: Vault) => {
-    dispatch(setSelectedVaultAddress({ vaultAddress: vault.address }));
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: vault.address }));
     closeNavSidemenu();
     openBlade();
   };
 
   useEffect(() => {
-    dispatch(initiateSaveVaults());
+    dispatch(VaultsActions.initiateSaveVaults());
   }, []);
 
   useEffect(() => {
     if (selectedAddress) {
-      dispatch(getUserVaultsData());
+      dispatch(UserActions.getUserVaultsData());
     }
   }, [selectedAddress]);
 

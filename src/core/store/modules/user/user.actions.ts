@@ -3,9 +3,9 @@ import { ThunkAPI } from '../../../frameworks/redux';
 import { UserTokenData } from '../../../types/UserToken';
 import { UserVaultData } from '../../../types/UserVault';
 
-export const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('user/setUserTokenData');
+const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('user/setUserTokenData');
 
-export const getUserVaultsData = createAsyncThunk<
+const getUserVaultsData = createAsyncThunk<
   { userVaultsMap: { [address: string]: UserVaultData }; userTokensMap: { [address: string]: UserTokenData } },
   void,
   ThunkAPI
@@ -24,3 +24,8 @@ export const getUserVaultsData = createAsyncThunk<
   });
   return { userVaultsMap, userTokensMap };
 });
+
+export const UserActions = {
+  setUserTokenData,
+  getUserVaultsData,
+};

@@ -2,18 +2,11 @@ import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 
-import {
-  selectSelectedVault,
-  depositVault,
-  approveVault,
-  withdrawVault,
-  selectSelectedVaultActionsStatusMap,
-  selectWalletIsConnected,
-} from '@store';
+import { VaultsSelectors, VaultsActions, WalletSelectors } from '@store';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { BladeContext } from '@context';
 import { Sidemenu, Icon, DeleteIcon, Button, SpinnerLoading } from '@components/common';
-import { weiToUnits, formatAmount } from '@src/utils';
+import { humanizeAmount } from '@src/utils';
 
 const StyledBlade = styled(Sidemenu)`
   width: 63.5rem;
@@ -110,19 +103,19 @@ const StyledSpinnerLoading = styled(SpinnerLoading)`
 
 export const Blade = () => {
   const dispatch = useAppDispatch();
-  const selectedVault = useAppSelector(selectSelectedVault);
-  const selectedVaultActionsStatusMap = useAppSelector(selectSelectedVaultActionsStatusMap);
-  const walletIsConnected = useAppSelector(selectWalletIsConnected);
+  const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
+  const selectedVaultActionsStatusMap = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { approve: approveStatus, deposit: depositStatus, withdraw: withdrawStatus } = selectedVaultActionsStatusMap;
   const { isOpen, toggle } = useContext(BladeContext);
   const [depositAmount, setDepositAmount] = useState('0');
   const [withdrawAmount, setWithdrawAmount] = useState('0');
 
-  const approve = (vaultAddress: string) => dispatch(approveVault({ vaultAddress }));
+  const approve = (vaultAddress: string) => dispatch(VaultsActions.approveVault({ vaultAddress }));
   const deposit = (vaultAddress: string, amount: string) =>
-    dispatch(depositVault({ vaultAddress, amount: new BigNumber(amount) }));
+    dispatch(VaultsActions.depositVault({ vaultAddress, amount: new BigNumber(amount) }));
   const withdraw = (vaultAddress: string, amount: string) =>
-    dispatch(withdrawVault({ vaultAddress, amount: new BigNumber(amount) }));
+    dispatch(VaultsActions.withdrawVault({ vaultAddress, amount: new BigNumber(amount) }));
 
   let approveButton;
 
@@ -138,13 +131,17 @@ export const Blade = () => {
     );
   }
 
+  if (!selectedVault) {
+    return null;
+  }
+
   return (
     <StyledBlade open={isOpen}>
       <StyledMenuButton onClick={toggle}>
         <Icon src={DeleteIcon} />
       </StyledMenuButton>
       <BladeHeader>
-        <h3>{selectedVault?.name}</h3>
+        <h3>{selectedVault.name}</h3>
         <span className="t-body-light">New to this vault? Learn all you need to know</span>
         <AssetDescription className="t-body-light">
           This SAFE holds multi-collateral DAI. Other assets may be used, however these will be swapped in transit and
@@ -155,23 +152,20 @@ export const Blade = () => {
       <BladeContent>
         <ActionList>
           <ActionCardWrapper>
-            <ActionCardTitle>Deposit {selectedVault?.token.symbol}</ActionCardTitle>
+            <ActionCardTitle>Deposit {selectedVault.token.symbol}</ActionCardTitle>
             <ActionCard>
               <span className="t-body">WALLET BALANCE</span>
               <AvailableBalance>
                 <span className="t-body">AVAILABLE</span>
                 <strong className="t-body balance">
-                  {formatAmount(
-                    weiToUnits(selectedVault?.token.balance ?? '0', parseInt(selectedVault?.token.decimals ?? '0')),
-                    2
-                  )}
+                  {humanizeAmount(selectedVault.token.balance, parseInt(selectedVault.token.decimals), 2)}
                 </strong>
               </AvailableBalance>
               <input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
               {approveButton}
               <ActionButton
                 className="outline"
-                onClick={() => deposit(selectedVault?.address!, depositAmount)}
+                onClick={() => deposit(selectedVault.address!, depositAmount)}
                 disabled={depositStatus.loading || !walletIsConnected}
               >
                 {depositStatus.loading && <StyledSpinnerLoading />} Deposit
@@ -180,22 +174,19 @@ export const Blade = () => {
           </ActionCardWrapper>
 
           <ActionCardWrapper>
-            <ActionCardTitle>Withdraw {selectedVault?.token.symbol}</ActionCardTitle>
+            <ActionCardTitle>Withdraw {selectedVault.token.symbol}</ActionCardTitle>
             <ActionCard>
               <span className="t-body">SAFE BALANCE</span>
               <AvailableBalance>
                 <span className="t-body">AVAILABLE</span>
                 <strong className="t-body balance">
-                  {formatAmount(
-                    weiToUnits(selectedVault?.userDeposited ?? '0', parseInt(selectedVault?.userDeposited ?? '0')),
-                    2
-                  )}
+                  {humanizeAmount(selectedVault.userDeposited, parseInt(selectedVault.token.decimals), 2)}
                 </strong>
               </AvailableBalance>
               <input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
               <ActionButton
                 className="outline"
-                onClick={() => withdraw(selectedVault?.address!, withdrawAmount)}
+                onClick={() => withdraw(selectedVault.address!, withdrawAmount)}
                 disabled={withdrawStatus.loading || !walletIsConnected}
               >
                 {withdrawStatus.loading && <StyledSpinnerLoading />} Withdraw
