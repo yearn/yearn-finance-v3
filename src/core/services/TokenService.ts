@@ -16,8 +16,8 @@ export class TokenServiceImpl implements TokenService {
     const tokensData: TokenData[] = tokens.map((token) => ({
       address: token.id,
       name: token.name,
-      symbol: token.symbol?.toString() ?? '0',
-      decimals: token.decimals?.toString(),
+      symbol: token.symbol.toString(),
+      decimals: token.decimals.toString(),
       icon: 'MOCK', // TODO DEHARDCODE waiting for SDK TO ADD PROPERTY
     }));
 
