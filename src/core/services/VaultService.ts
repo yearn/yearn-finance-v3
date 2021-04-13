@@ -37,11 +37,11 @@ export class VaultServiceImpl implements VaultService {
         name: vault.name,
         version: vault.version,
         typeId: vault.typeId,
-        balance: vault.balance?.toString() ?? '0',
-        balanceUsdc: vault.balanceUsdc?.toString() ?? '0',
+        balance: vault.balance.toString(),
+        balanceUsdc: vault.balanceUsdc?.toString() ?? '0', // fixed on xgambitox branch. Remove when merged
         token: vault.token.id,
         apyData: apy ? apy.recommended.toString() : '0',
-        depositLimit: (vault.metadata as Metadata['VAULT_V2']).depositLimit?.toString() ?? '0',
+        depositLimit: (vault.metadata as Metadata['VAULT_V2']).depositLimit.toString(),
         pricePerShare: vault.metadata.pricePerShare.toString(),
       };
     });
