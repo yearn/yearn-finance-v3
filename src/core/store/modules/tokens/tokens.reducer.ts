@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { TokensState } from '@types';
 import { initialStatus } from '../../../types/Status';
-import { getTokens } from './tokens.actions';
+import { TokensActions } from './tokens.actions';
 
 const initialState: TokensState = {
   tokensAddresses: [],
@@ -10,6 +10,8 @@ const initialState: TokensState = {
     getTokens: { ...initialStatus },
   },
 };
+
+const { getTokens } = TokensActions;
 
 const tokensReducer = createReducer(initialState, (builder) => {
   builder

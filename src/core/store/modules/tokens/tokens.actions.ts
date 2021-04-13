@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '../../../frameworks/redux';
 import { TokenData } from '@types';
 
-export const getTokens = createAsyncThunk<
+const getTokens = createAsyncThunk<
   { tokensMap: { [address: string]: TokenData }; tokensAddresses: string[] },
   string | undefined,
   ThunkAPI
@@ -17,3 +17,7 @@ export const getTokens = createAsyncThunk<
   });
   return { tokensMap, tokensAddresses };
 });
+
+export const TokensActions = {
+  getTokens,
+};

@@ -1,10 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ThemeState } from '@types';
-import { changeTheme } from './theme.actions';
+import { ThemeActions } from './theme.actions';
 
 const initialState: ThemeState = {
   current: 'default',
 };
+
+const { changeTheme } = ThemeActions;
 
 const themeReducer = createReducer(initialState, (builder) => {
   builder.addCase(changeTheme, (state, { payload: { theme } }) => {
