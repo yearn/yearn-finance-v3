@@ -11,7 +11,7 @@ const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVa
 const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMap.vaultsActionsStatusMap;
 const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 
-export const selectSaveVaults = createSelector(
+const selectSaveVaults = createSelector(
   [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap],
   (vaultsState, tokensMap, userVaultsMap, userTokensMap): Vault[] => {
     const { saveVaultsAddreses, vaultsMap } = vaultsState;
@@ -48,7 +48,7 @@ export const selectSaveVaults = createSelector(
   }
 );
 
-export const selectSaveVaultsGeneralStatus = createSelector(
+const selectSaveVaultsGeneralStatus = createSelector(
   [selectVaultsStatusMap],
   (statusMap): Status => {
     const loading = statusMap.getVaults.loading || statusMap.initiateSaveVaults.loading;
@@ -57,7 +57,7 @@ export const selectSaveVaultsGeneralStatus = createSelector(
   }
 );
 
-export const selectSelectedVault = createSelector(
+const selectSelectedVault = createSelector(
   [selectSaveVaults, selectSelectedVaultAddress],
   (vaults, selectedVaultAddress): Vault | undefined => {
     if (!selectedVaultAddress) {
@@ -68,9 +68,23 @@ export const selectSelectedVault = createSelector(
   }
 );
 
-export const selectSelectedVaultActionsStatusMap = createSelector(
+const selectSelectedVaultActionsStatusMap = createSelector(
   [selectVaultsActionsStatusMap, selectSelectedVaultAddress],
   (vaultsActionsStatusMap, selectedVaultAddress): VaultActionsStatusMap => {
     return selectedVaultAddress ? vaultsActionsStatusMap[selectedVaultAddress] : initialVaultActionsStatusMap;
   }
 );
+
+export const VaultsSelectors = {
+  selectVaultsState,
+  selectUserVaultsMap,
+  selectUserTokensMap,
+  selectTokensMap,
+  selectSelectedVaultAddress,
+  selectVaultsActionsStatusMap,
+  selectVaultsStatusMap,
+  selectSaveVaults,
+  selectSaveVaultsGeneralStatus,
+  selectSelectedVault,
+  selectSelectedVaultActionsStatusMap,
+};

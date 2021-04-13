@@ -1,12 +1,14 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { AppState } from '@types';
-import { initApp } from './app.actions';
+import { AppActions } from './app.actions';
 
 const initialState: AppState = {
   isInitialized: false,
   isLoading: false,
   error: undefined,
 };
+
+const { initApp } = AppActions;
 
 const appReducer = createReducer(initialState, (builder) => {
   builder

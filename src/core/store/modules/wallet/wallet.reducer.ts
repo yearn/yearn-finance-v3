@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { WalletState } from '@types';
-import { addressChange, balanceChange, networkChange, walletChange, walletSelect } from './wallet.actions';
+import { WalletActions } from './wallet.actions';
 
 const initialState: WalletState = {
   selectedAddress: undefined,
@@ -11,6 +11,8 @@ const initialState: WalletState = {
   isLoading: false,
   error: undefined,
 };
+
+const { addressChange, balanceChange, networkChange, walletChange, walletSelect } = WalletActions;
 
 const walletReducer = createReducer(initialState, (builder) => {
   builder

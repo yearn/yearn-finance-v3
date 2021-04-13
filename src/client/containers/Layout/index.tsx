@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { initApp, changeRoute, walletSelect } from '@store';
+import { AppActions, RouteActions, WalletActions } from '@store';
 import { useAppDispatch, useAppSelector } from '@hooks';
 import { Navigation } from '@components/app';
 import { Box } from '@components/common';
@@ -22,11 +22,11 @@ export const Layout: FC = ({ children }) => {
   const transparentNavbar = location.pathname === '/';
 
   useEffect(() => {
-    dispatch(initApp());
+    dispatch(AppActions.initApp());
   }, []);
 
   useEffect(() => {
-    dispatch(changeRoute({ path: location.pathname }));
+    dispatch(RouteActions.changeRoute({ path: location.pathname }));
   }, [location]);
 
   return (
@@ -34,7 +34,7 @@ export const Layout: FC = ({ children }) => {
       <Navigation
         transparentNavbar={transparentNavbar}
         walletAddress={selectedAddress ?? undefined}
-        onWalletClick={() => dispatch(walletSelect())}
+        onWalletClick={() => dispatch(WalletActions.walletSelect())}
       />
       <Content>{children}</Content>
     </Box>
