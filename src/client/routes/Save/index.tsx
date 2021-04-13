@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch, useAppTranslation } from '@hooks';
 import { AssetCard, Blade } from '@components/app';
-import { List } from '@components/common';
+import { List, SpinnerLoading } from '@components/common';
 import {
   initiateSaveVaults,
   selectSaveVaults,
@@ -14,7 +14,7 @@ import {
 import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
 import { weiToUnits, formatAmount, formatPercent } from '@src/utils';
-import { SpinnerLoading } from '../../components/common/SpinnerLoading';
+import { device } from '@themes/default';
 
 const SaveView = styled.div`
   display: flex;
@@ -31,7 +31,9 @@ const DefaultPageContent = styled.div`
   margin-top: 2.1rem;
   padding-bottom: 4rem;
 
-  flex-wrap: wrap;
+  @media ${device.tablet} {
+    flex-direction: column;
+  }
 `;
 
 const SaveInfo = styled.div`
@@ -44,6 +46,11 @@ const SaveInfo = styled.div`
   }
   .t-body-light {
     margin-top: 0.7rem;
+  }
+
+  @media ${device.tablet} {
+    order: -1;
+    width: 100%;
   }
 `;
 

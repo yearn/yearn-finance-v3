@@ -25,7 +25,6 @@ const defaultTheme: DefaultTheme = {
     shade90: '#FFF',
     shade100: '#FFF',
   },
-  mobile: 720,
   blade: {
     background: 'rgba(255, 255, 255, 0.2)',
     blur: '15px',
@@ -45,8 +44,23 @@ const defaultTheme: DefaultTheme = {
     navSidemenu: 1000,
     onboardModal: 1100,
   },
+  devices: {
+    mobile: 600,
+    tablet: 960,
+    desktopS: 1280,
+    desktop: 1920,
+    desktopL: 2560,
+  },
   globalFont: '"Rubik", sans-serif',
   globalMaxWidth: '128rem',
+};
+
+export const device = {
+  mobile: `(max-width: ${defaultTheme.devices.mobile}px)`,
+  tablet: `(max-width: ${defaultTheme.devices.tablet}px)`,
+  desktopS: `(max-width: ${defaultTheme.devices.desktopS}px)`,
+  desktop: `(max-width: ${defaultTheme.devices.desktop}px)`,
+  desktopL: `(max-width: ${defaultTheme.devices.desktopL}px)`,
 };
 
 export { defaultTheme };

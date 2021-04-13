@@ -1,7 +1,5 @@
 {
   "language": "es",
-  "title": "Protocolo de Crecimiento",
-  "subtitle": "Yearn Finance es una puerta de entrada a los productos DeFi. Soluciones simples, intuitivas y descentralizadas accesibles para cualquier persona.",
 
   "commons": {
     "connect-button": {
@@ -15,6 +13,12 @@
   "navigation": {
     "home": "Inicio",
     "save": "Save"
+  },
+  "landing": {
+    "title-1": "EL",
+    "title-2": "Protocolo de Crecimiento",
+    "subtitle": "Yearn Finance es una puerta de entrada a los productos DeFi. Soluciones simples, intuitivas y descentralizadas accesibles para cualquier persona.",
+    "action-button": "Ir a la App"
   },
   "save": {
     "assets-headers": {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getTheme } from '../themes';
 
-const MOBILE_WIDTH: number = getTheme().mobile;
+const MOBILE_WIDTH: number = getTheme().devices.mobile;
 
 export interface Dimension {
   width: number;
