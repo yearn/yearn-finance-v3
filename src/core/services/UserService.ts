@@ -16,22 +16,22 @@ export class UserServiceImpl implements UserService {
     const userVaultsData: UserVaultData[] = userVaults.map((vault) => {
       const allowancesMap: any = {};
       vault.allowances.forEach((allowance) => {
-        allowancesMap[allowance.spender] = allowance.allowance?.toString() ?? '0';
+        allowancesMap[allowance.spender] = allowance.allowance.toString();
       });
       const tokenAllowancesMap: any = {};
       vault.tokenPosition.allowances.forEach((allowance) => {
-        tokenAllowancesMap[allowance.spender] = allowance.allowance?.toString() ?? '0';
+        tokenAllowancesMap[allowance.spender] = allowance.allowance.toString();
       });
 
       return {
         address: vault.assetId,
-        depositedBalance: vault.balance?.toString() ?? '0',
-        depositedBalanceUsdc: vault.balanceUsdc?.toString() ?? '0',
+        depositedBalance: vault.balance.toString(),
+        depositedBalanceUsdc: vault.balanceUsdc.toString(),
         allowancesMap: allowancesMap,
         tokenPosition: {
           address: vault.tokenPosition.tokenId,
-          balance: vault.tokenPosition.balance?.toString() ?? '0',
-          balanceUsdc: vault.tokenPosition.balanceUsdc?.toString() ?? '0',
+          balance: vault.tokenPosition.balance.toString(),
+          balanceUsdc: vault.tokenPosition.balanceUsdc.toString(),
           allowancesMap: tokenAllowancesMap,
         },
       };
