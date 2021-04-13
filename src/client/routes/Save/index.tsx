@@ -8,6 +8,7 @@ import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
 import { AssetCard, Blade } from '@components/app';
 import { List, SpinnerLoading } from '@components/common';
+import { device } from '@themes/default';
 
 const SaveView = styled.div`
   display: flex;
