@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { VaultsSelectors, VaultsActions, WalletSelectors } from '@store';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { BladeContext } from '@context';
-import { Sidemenu, Icon, DeleteIcon, Button, SpinnerLoading } from '@components/common';
+import { Sidemenu, Icon, DeleteIcon, Button, SpinnerLoading, Input } from '@components/common';
 import { humanizeAmount } from '@src/utils';
 
 const StyledBlade = styled(Sidemenu)`
@@ -161,7 +161,7 @@ export const Blade = () => {
                   {humanizeAmount(selectedVault.token.balance, parseInt(selectedVault.token.decimals), 2)}
                 </strong>
               </AvailableBalance>
-              <input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
+              <Input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} min="0" />
               {approveButton}
               <ActionButton
                 className="outline"
@@ -183,7 +183,7 @@ export const Blade = () => {
                   {humanizeAmount(selectedVault.userDeposited, parseInt(selectedVault.token.decimals), 2)}
                 </strong>
               </AvailableBalance>
-              <input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
+              <Input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} min="0" />
               <ActionButton
                 className="outline"
                 onClick={() => withdraw(selectedVault.address!, withdrawAmount)}
