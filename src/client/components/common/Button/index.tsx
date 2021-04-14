@@ -20,6 +20,7 @@ const StyledButton = styled.button`
   cursor: pointer;
   user-select: none;
   font-size: 1.6rem;
+  transition: filter 200ms ease-in-out;
 
   &,
   a,
@@ -29,6 +30,9 @@ const StyledButton = styled.button`
 
   &:focus {
     outline: none;
+  }
+  &:hover {
+    filter: brightness(110%);
   }
 
   &.outline {
