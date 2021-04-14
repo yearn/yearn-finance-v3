@@ -14,7 +14,6 @@ interface NavSidemenuProps {
 }
 
 const StyledSidemenu = styled(Sidemenu)<{ open: boolean }>`
-  background: red;
   background-color: ${(props) => props.theme.colors.shade90};
   width: 40rem;
   max-width: 100%;
