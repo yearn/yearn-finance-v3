@@ -41,6 +41,7 @@ const StyledMenuButton = styled.div`
   margin-right: -1rem;
   flex-shrink: 0;
   cursor: pointer;
+  user-select: none;
   img {
     height: 1.8rem;
   }
