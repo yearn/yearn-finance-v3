@@ -25,7 +25,6 @@ declare module 'styled-components' {
       shade90: string;
       shade100: string;
     };
-    mobile: number;
     blade: {
       background: string;
       blur: string;
@@ -45,7 +44,16 @@ declare module 'styled-components' {
       navSidemenu: number;
       onboardModal: number;
     };
+    devices: Devices;
     globalFont: string;
     globalMaxWidth: string;
+  }
+
+  export interface Devices {
+    mobile: number;
+    tablet: number;
+    desktopS: number;
+    desktop: number;
+    desktopL: number;
   }
 }

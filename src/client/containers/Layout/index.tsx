@@ -19,6 +19,7 @@ export const Layout: FC = ({ children }) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
+  const transparentNavbar = location.pathname === '/';
 
   useEffect(() => {
     dispatch(AppActions.initApp());
@@ -31,6 +32,7 @@ export const Layout: FC = ({ children }) => {
   return (
     <Box display="flex" flexDirection="column" flex="1">
       <Navigation
+        transparentNavbar={transparentNavbar}
         walletAddress={selectedAddress ?? undefined}
         onWalletClick={() => dispatch(WalletActions.walletSelect())}
       />

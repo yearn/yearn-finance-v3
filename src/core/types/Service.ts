@@ -1,4 +1,4 @@
-import { VaultData, TokenData, UserVaultData, EthereumAddress, Wei, VaultType } from '@types';
+import { VaultData, TokenData, UserVaultData, EthereumAddress, Wei } from '@types';
 
 export interface UserService {
   getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
