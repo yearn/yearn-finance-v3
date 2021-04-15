@@ -12,7 +12,7 @@ export const getYearnSdk = ({ web3Provider, config }: { web3Provider: Web3Provid
         registryV2Adapter: CONTRACT_ADDRESSES.registryV2Adapter,
       }
     : undefined;
-  return new Yearn(1, {
+  return new Yearn(USE_MAINNET_FORK ? 1337 : 1, {
     provider,
     addresses,
   });
