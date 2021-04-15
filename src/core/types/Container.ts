@@ -1,3 +1,5 @@
+import { Yearn } from '@yfi/sdk';
+
 import { Wallet, Config, Web3Provider, UserService, VaultService, TokenService } from '@types';
 
 export interface DIContainer {
@@ -9,6 +11,7 @@ export interface DIContainer {
 export interface ContextContainer {
   wallet: Wallet;
   web3Provider: Web3Provider;
+  yearnSdk: YearnSdk;
 }
 export interface ServiceContainer {
   userService: UserService;
@@ -17,3 +20,5 @@ export interface ServiceContainer {
 }
 
 export interface ConfigContainer extends Config {}
+
+export type YearnSdk = Yearn<1>;
