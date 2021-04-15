@@ -15,8 +15,8 @@ export const getConstants = memoize(
       LOCAL_PROVIDER_HTTPS: 'http://127.0.0.1:8545/',
       CONTRACT_ADDRESSES: {
         oracle: '0xd3ca98d986be88b72ff95fc2ec976a5e6339150d',
-        lens: '0xb6286fAFd0451320ad6A8143089b216C2152c025',
-        registryV2Adapter: '0xe0aA552A10d7EC8760Fc6c246D391E698a82dDf9',
+        lens: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
+        registryV2Adapter: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
       },
     };
   }
