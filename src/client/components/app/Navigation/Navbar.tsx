@@ -7,6 +7,7 @@ import { Icon, HamburguerIcon, Logo } from '@components/common';
 interface NavbarProps {
   className?: string;
   walletAddress?: string;
+  transparent?: boolean;
   onWalletClick?: () => void;
   toggleSidemenu?: () => void;
 }
@@ -17,6 +18,8 @@ const StyledMenuButton = styled.div`
   margin-left: 2rem;
   flex-shrink: 0;
   cursor: pointer;
+  user-select: none;
+
   img {
     height: 1.8rem;
   }
@@ -28,7 +31,7 @@ const StyledNavbarActions = styled.div`
   flex: 1;
 `;
 
-const StyledNavbar = styled.nav`
+const StyledNavbar = styled.nav<{ transparent: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -39,11 +42,23 @@ const StyledNavbar = styled.nav`
   height: ${(props) => props.theme.navbar.height};
   border-bottom: 1px solid ${(props) => props.theme.colors.shade40};
   padding: 0 ${(props) => props.theme.navbar.padding};
+
+  &[transparent] {
+    background-color: transparent;
+  }
 `;
 
-export const Navbar = ({ className, walletAddress, onWalletClick, toggleSidemenu }: NavbarProps) => {
+export const Navbar = ({
+  className,
+  walletAddress,
+  transparent = false,
+  onWalletClick,
+  toggleSidemenu,
+}: NavbarProps) => {
   const sidemenuOnlyMobile = false;
   const { isMobile } = useWindowDimensions();
+
+  console.log(transparent);
 
   let mobileButton;
   let connectWalletButton;
@@ -61,7 +76,7 @@ export const Navbar = ({ className, walletAddress, onWalletClick, toggleSidemenu
   }
 
   return (
-    <StyledNavbar className={className}>
+    <StyledNavbar className={className} transparent={transparent}>
       <Logo full />
 
       <StyledNavbarActions>

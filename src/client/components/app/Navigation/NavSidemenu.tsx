@@ -14,7 +14,6 @@ interface NavSidemenuProps {
 }
 
 const StyledSidemenu = styled(Sidemenu)<{ open: boolean }>`
-  background: red;
   background-color: ${(props) => props.theme.colors.shade90};
   width: 40rem;
   max-width: 100%;
@@ -41,6 +40,7 @@ const StyledMenuButton = styled.div`
   margin-right: -1rem;
   flex-shrink: 0;
   cursor: pointer;
+  user-select: none;
   img {
     height: 1.8rem;
   }

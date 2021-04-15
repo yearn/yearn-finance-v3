@@ -6,18 +6,20 @@ import { Navbar } from './Navbar';
 import { NavSidemenu } from './NavSidemenu';
 
 interface NavigationProps {
+  transparentNavbar?: boolean;
   walletAddress?: string;
   onWalletClick?: () => void;
 }
 
 const StyledNavigation = styled.nav``;
 
-export const Navigation = ({ walletAddress, onWalletClick }: NavigationProps) => {
+export const Navigation = ({ transparentNavbar, walletAddress, onWalletClick }: NavigationProps) => {
   const { isOpen, toggle: toggleNavSidemenu } = useContext(NavSideMenuContext);
   return (
     <StyledNavigation>
       <NavSidemenu walletAddress={walletAddress} onWalletClick={() => onWalletClick && onWalletClick()} open={isOpen} />
       <Navbar
+        transparent={transparentNavbar}
         walletAddress={walletAddress}
         onWalletClick={() => onWalletClick && onWalletClick()}
         toggleSidemenu={toggleNavSidemenu}
