@@ -14,6 +14,10 @@
     "home": "Home",
     "save": "Save"
   },
+  "footer": {
+    "copyright": "Copyright © yearn 2021. All rights reserved. | ",
+    "private-policy": "Private Policy"
+  },
   "landing": {
     "title-1": "THE",
     "title-2": "Growth Protocol",
