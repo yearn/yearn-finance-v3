@@ -42,7 +42,7 @@ export class VaultServiceImpl implements VaultService {
         balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
         token: vault.token.id.toLowerCase(),
         apyData: apy ? apy.recommended.toString() : '0',
-        depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit?.toString() : '0',
+        depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
         pricePerShare: vault.metadata.pricePerShare.toString(),
       };
     });

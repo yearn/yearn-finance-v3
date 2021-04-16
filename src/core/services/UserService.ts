@@ -12,14 +12,13 @@ export class UserServiceImpl implements UserService {
     const userVaults = await yearn.vaults.positionsOf(userAddress);
     const userVaultsData: UserVaultData[] = userVaults.map((vault) => {
       const allowancesMap: any = {};
-      // TODO: refactor when implementing sdk new methods
-      // vault.assetAllowances.forEach((allowance) => {
-      //   allowancesMap[allowance.spender] = allowance.amount?.toString() ?? '0';
-      // });
+      vault.assetAllowances.forEach((allowance) => {
+        allowancesMap[allowance.spender] = allowance.amount.toString();
+      });
       const tokenAllowancesMap: any = {};
-      // TODO: refactor when implementing sdk new methods
+      // TODO: uncomment when fixed on sdk. Correct name is 'tokenAllowances', current is 'allowances'.
       // vault.tokenAllowances.forEach((allowance) => {
-      //   tokenAllowancesMap[allowance.spender] = allowance.amount?.toString() ?? '0';
+      //   tokenAllowancesMap[allowance.spender] = allowance.amount.toString();
       // });
 
       return {
