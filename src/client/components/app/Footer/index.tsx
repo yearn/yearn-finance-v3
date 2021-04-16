@@ -120,7 +120,7 @@ export const Footer = ({ className }: FooterProps) => {
     <SocialIcons>
       {socialLinks.map((social) => {
         return (
-          <StyledIconLink href={social.link}>
+          <StyledIconLink href={social.link} target="_blank">
             <Icon src={social.icon} />
           </StyledIconLink>
         );
