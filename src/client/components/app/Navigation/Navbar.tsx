@@ -66,7 +66,7 @@ export const Navbar = ({
   if ((isMobile && sidemenuOnlyMobile) || !sidemenuOnlyMobile) {
     mobileButton = (
       <StyledMenuButton onClick={toggleSidemenu}>
-        <Icon src={HamburguerIcon} />
+        <Icon Component={HamburguerIcon} />
       </StyledMenuButton>
     );
   }

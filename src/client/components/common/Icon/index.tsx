@@ -1,32 +1,32 @@
-import React, { FC } from 'react';
+import { ElementType, SVGProps } from 'react';
 import styled from 'styled-components';
 
-import BugIcon from '@assets/icons/bug.svg';
-import DeleteIcon from '@assets/icons/delete.svg';
-import DiscordIcon from '@assets/icons/discord.svg';
-import GithubIcon from '@assets/icons/github.svg';
-import HamburguerIcon from '@assets/icons/hamburguer.svg';
-import MediumIcon from '@assets/icons/medium.svg';
-import TelegramIcon from '@assets/icons/telegram.svg';
-import TwitterIcon from '@assets/icons/twitter.svg';
+import { ReactComponent as BugIcon } from '@assets/icons/bug.svg';
+import { ReactComponent as DeleteIcon } from '@assets/icons/delete.svg';
+import { ReactComponent as DiscordIcon } from '@assets/icons/discord.svg';
+import { ReactComponent as GithubIcon } from '@assets/icons/github.svg';
+import { ReactComponent as HamburguerIcon } from '@assets/icons/hamburguer.svg';
+import { ReactComponent as MediumIcon } from '@assets/icons/medium.svg';
+import { ReactComponent as TelegramIcon } from '@assets/icons/telegram.svg';
+import { ReactComponent as TwitterIcon } from '@assets/icons/twitter.svg';
 
-import { styledSystem, StyledSystemProps } from '../styledSystem';
+import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
-export interface IconProps extends Omit<StyledSystemProps, 'height' | 'width'> {
-  src: string;
-  height?: string;
-  width?: string;
+export interface IconProps
+  extends SVGProps<SVGElement>,
+    Omit<StyledSystemProps, keyof TypographyProps | 'height' | 'width' | 'opacity' | 'display' | 'order' | 'overflow'> {
+  Component: ElementType;
+  color?: string;
   onClick?: () => void;
 }
 
-const StyledImage = styled.img<StyledSystemProps>`
+export const Icon = styled(({ Component, ...props }: IconProps) => <Component {...props} />)`
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
-  ${styledSystem}
+  fill: ${({ theme, color, fill }) => fill ?? color ?? theme.contrasts.primary};
+  ${styledSystem};
 `;
-
-export const Icon: FC<IconProps> = (props) => <StyledImage {...props} />;
 
 export { BugIcon, DeleteIcon, DiscordIcon, GithubIcon, HamburguerIcon, MediumIcon, TelegramIcon, TwitterIcon };

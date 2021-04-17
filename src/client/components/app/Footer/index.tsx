@@ -76,6 +76,10 @@ const StyledIconLink = styled(Link)`
   }
 `;
 
+const StyledIcon = styled(Icon)`
+  fill: ${({ theme }) => theme.colors.shade30};
+`;
+
 const Copyright = styled.div`
   display: flex;
   align-items: center;
@@ -121,7 +125,7 @@ export const Footer = ({ className }: FooterProps) => {
       {socialLinks.map((social) => {
         return (
           <StyledIconLink href={social.link} target="_blank">
-            <Icon src={social.icon} />
+            <StyledIcon Component={social.icon} />
           </StyledIconLink>
         );
       })}
@@ -133,7 +137,6 @@ export const Footer = ({ className }: FooterProps) => {
       <Sections>
         <SocialSection>
           <Logo full />
-
           {socialIcons}
         </SocialSection>
 
