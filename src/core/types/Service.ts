@@ -1,4 +1,5 @@
 import { VaultData, TokenData, UserVaultData, EthereumAddress, Wei } from '@types';
+import { VaultDynamicData } from './Vault';
 
 export interface UserService {
   getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
@@ -10,6 +11,7 @@ export interface VaultService {
   approveDeposit: (props: ApproveDepositProps) => Promise<void>;
   deposit: (props: DepositProps) => Promise<void>;
   withdraw: (props: WithdrawProps) => Promise<void>;
+  getVaultsDynamicData: (props: any) => Promise<VaultDynamicData[]>;
   // approveZapIn:
   // zapIn:
   // zapOut:

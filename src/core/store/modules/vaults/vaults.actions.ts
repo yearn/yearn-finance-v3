@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkAPI } from '../../../frameworks/redux';
-import { VaultData } from '@types';
+import { ThunkAPI } from '@frameworks/redux';
+import { VaultData, VaultDynamicData } from '@types';
 import BigNumber from 'bignumber.js';
 import { UserActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';
@@ -29,6 +29,15 @@ const getVaults = createAsyncThunk<
   });
   return { vaultsMap, vaultsAddreses };
 });
+
+const getVaultsDynamic = createAsyncThunk<{ vaultsDynamicData: VaultDynamicData[] }, { addresses: string[] }, ThunkAPI>(
+  'vaults/getVaultsDynamic',
+  async ({ addresses }, { extra }) => {
+    const { vaultService } = extra.services;
+    const vaultsDynamicData = await vaultService.getVaultsDynamicData(addresses);
+    return { vaultsDynamicData };
+  }
+);
 
 const approveVault = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
   'vaults/approveVault',
@@ -124,4 +133,5 @@ export const VaultsActions = {
   approveVault,
   depositVault,
   withdrawVault,
+  getVaultsDynamic,
 };

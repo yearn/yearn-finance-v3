@@ -31,6 +31,7 @@ export interface VaultActionsStatusMap {
   approve: Status;
   deposit: Status;
   withdraw: Status;
+  get: Status;
 }
 export interface VaultsState {
   saveVaultsAddreses: string[];

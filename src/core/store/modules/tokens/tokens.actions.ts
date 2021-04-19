@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkAPI } from '../../../frameworks/redux';
+import { ThunkAPI } from '@frameworks/redux';
 import { TokenData } from '@types';
 
 const getTokens = createAsyncThunk<

@@ -6,6 +6,7 @@ export const initialVaultActionsStatusMap = {
   approve: initialStatus,
   deposit: initialStatus,
   withdraw: initialStatus,
+  get: initialStatus,
 };
 
 const initialState: VaultsState = {
@@ -26,6 +27,7 @@ const {
   initiateSaveVaults,
   setSelectedVaultAddress,
   withdrawVault,
+  getVaultsDynamic,
 } = VaultsActions;
 
 const vaultsReducer = createReducer(initialState, (builder) => {
@@ -91,6 +93,28 @@ const vaultsReducer = createReducer(initialState, (builder) => {
     .addCase(withdrawVault.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { error: error.message };
+    })
+    .addCase(getVaultsDynamic.pending, (state, { meta }) => {
+      const vaultAddresses = meta.arg.addresses;
+      vaultAddresses.forEach((address) => {
+        state.statusMap.vaultsActionsStatusMap[address].get = { loading: true };
+      });
+    })
+    .addCase(getVaultsDynamic.fulfilled, (state, { payload: { vaultsDynamicData } }) => {
+      vaultsDynamicData.forEach((vaultDynamicData) => {
+        const vaultAddress = vaultDynamicData.address;
+        state.vaultsMap[vaultAddress] = {
+          ...state.vaultsMap[vaultAddress],
+          ...vaultDynamicData,
+        };
+        state.statusMap.vaultsActionsStatusMap[vaultDynamicData.address].get = {};
+      });
+    })
+    .addCase(getVaultsDynamic.rejected, (state, { error, meta }) => {
+      const vaultAddresses: string[] = meta.arg.addresses;
+      vaultAddresses.forEach((address) => {
+        state.statusMap.vaultsActionsStatusMap[address].get = { error: error.message };
+      });
     });
 });
 

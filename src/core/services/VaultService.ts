@@ -12,10 +12,12 @@ import {
   ApproveDepositProps,
   DepositProps,
   WithdrawProps,
+  VaultDynamicData,
 } from '@types';
 import yVaultAbi from './contracts/yVault.json';
-// import v2VaultAbi from './contracts/v2Vault.json';
 import erc20Abi from './contracts/erc20.json';
+import { VaultDynamic } from '@yfi/sdk';
+import { BigNumber } from '@ethersproject/bignumber';
 
 export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;
@@ -41,6 +43,43 @@ export class VaultServiceImpl implements VaultService {
         balance: vault.underlyingTokenBalance.amount.toString(),
         balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
         token: vault.token.id.toLowerCase(),
+        apyData: apy ? apy.recommended.toString() : '0',
+        depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
+        pricePerShare: vault.metadata.pricePerShare.toString(),
+      };
+    });
+    const vaultData = Promise.all(vaultDataPromise);
+    return vaultData;
+  }
+
+  public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamicData[]> {
+    const yearn = this.yearnSdk;
+    // const vaultsDynamicData: VaultDynamic[] = await yearn.vaults.getDynamicData(addresses); // use when sdk ready.
+    // TODO remove mock when sdk ready.
+    const mockDynamicData: VaultDynamic = {
+      id: 'asd',
+      typeId: 'VAULT_V2',
+      tokenId: 'asd',
+      underlyingTokenBalance: {
+        amount: BigNumber.from(0),
+        amountUsdc: BigNumber.from(0),
+      },
+      metadata: {
+        symbol: 'asd',
+        pricePerShare: BigNumber.from(0),
+        migrationAvailable: false,
+        latestVaultAddress: 'asd',
+        depositLimit: BigNumber.from(0),
+        emergencyShutdown: false,
+      },
+    };
+    const vaultsDynamicData: VaultDynamic[] = [mockDynamicData]; // remove when sdk ready.
+    const vaultDataPromise = vaultsDynamicData.map(async (vault) => {
+      const apy = await yearn.vaults.apy(vault.id);
+      return {
+        address: vault.id,
+        balance: vault.underlyingTokenBalance.amount.toString(),
+        balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
         apyData: apy ? apy.recommended.toString() : '0',
         depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
         pricePerShare: vault.metadata.pricePerShare.toString(),
