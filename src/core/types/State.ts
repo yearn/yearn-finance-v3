@@ -9,7 +9,6 @@ export interface RootState {
   theme: ThemeState;
   vaults: VaultsState;
   wallet: WalletState;
-  user: UserState;
   tokens: TokensState;
 }
 
@@ -33,14 +32,22 @@ export interface VaultActionsStatusMap {
   withdraw: Status;
   get: Status;
 }
+export interface UserVaultActionsStatusMap {
+  get: Status;
+}
 export interface VaultsState {
   saveVaultsAddreses: string[];
   vaultsMap: { [address: string]: VaultData };
   selectedVaultAddress: EthereumAddress | undefined;
+  user: {
+    userVaultsMap: { [address: string]: UserVaultData };
+  };
   statusMap: {
     initiateSaveVaults: Status;
     getVaults: Status;
+    getUserVaults: Status;
     vaultsActionsStatusMap: { [vaultAddress: string]: VaultActionsStatusMap };
+    userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };
   };
 }
 
@@ -60,34 +67,16 @@ export interface UserVaultActionsMap {
 export interface UserTokenActionsMap {
   get: Status;
 }
-export interface UserState {
-  userVaultsMap: { [address: string]: UserVaultData };
-  userTokensMap: { [address: string]: UserTokenData };
-  userIronBank: {
-    borrowLimit: string;
-    borrowLimitUsed: string;
-    userCyTokensMap: { [cyTokenAddress: string]: UserCyTokenData };
-  };
-  statusMap: {
-    vaults: {
-      getUserVaults: Status;
-      userVaultsActionsMap: { [vaultAddress: string]: UserVaultActionsMap };
-    };
-    tokens: {
-      getUserTokens: Status;
-      userTokensActionsMap: { [vaultAddress: string]: UserTokenActionsMap };
-    };
-    ironBank: {
-      getUserIronBank: Status;
-      userCyTokenActionsMap: { [vaultAddress: string]: UserTokenActionsMap };
-    };
-  };
-}
 export interface TokensState {
   tokensAddresses: string[];
   tokensMap: { [address: string]: TokenData };
+  user: {
+    userTokensMap: { [address: string]: UserTokenData };
+  };
   statusMap: {
     getTokens: Status;
+    getUserTokens: Status;
+    userTokensActiosMap: { [address: string]: { get: Status } };
   };
 }
 
