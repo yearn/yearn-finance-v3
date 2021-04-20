@@ -3,7 +3,7 @@ import * as awilix from 'awilix';
 import { BlocknativeWalletImpl } from '@frameworks/blocknative';
 import { EthersWeb3ProviderImpl } from '@frameworks/ethers';
 import { getYearnSdk } from '@frameworks/yearnSdk';
-import { TokenServiceImpl, UserServiceImpl, VaultServiceImpl } from '@services';
+import { TokenServiceImpl, UserServiceImpl, VaultServiceImpl, IronBankServiceImpl } from '@services';
 import { getConfig } from '@config';
 import { DIContainer, ContextContainer, ServiceContainer, ConfigContainer } from '@types';
 
@@ -33,6 +33,7 @@ export class Container implements DIContainer {
       tokenService: awilix.asClass(TokenServiceImpl),
       userService: awilix.asClass(UserServiceImpl),
       vaultService: awilix.asClass(VaultServiceImpl),
+      ironBankService: awilix.asClass(IronBankServiceImpl),
     });
   }
 
@@ -55,6 +56,7 @@ export class Container implements DIContainer {
       tokenService: this.container.cradle.tokenService,
       userService: this.container.cradle.userService,
       vaultService: this.container.cradle.vaultService,
+      ironBankService: this.container.cradle.ironBankService,
     };
   }
 

@@ -1,5 +1,13 @@
-import { VaultData, TokenData, UserVaultData, EthereumAddress, Wei } from '@types';
-import { VaultDynamicData } from './Vault';
+import {
+  VaultData,
+  VaultDynamicData,
+  TokenData,
+  UserVaultData,
+  CyTokenData,
+  CyTokenDynamicData,
+  EthereumAddress,
+  Wei,
+} from '@types';
 
 export interface UserService {
   getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
@@ -40,4 +48,14 @@ export interface ApproveDepositProps {
   tokenAddress: EthereumAddress;
   vaultAddress: EthereumAddress;
   amount: Wei;
+}
+
+export interface IronBankService {
+  getSupportedCyTokens: () => Promise<CyTokenData[]>;
+  getCyTokensDynamicData: () => Promise<CyTokenDynamicData[]>;
+  // approveSupply: (props: ApproveSupplyProps) => Promise<void>;
+  // supply: (props: SupplyProps) => Promise<void>;
+  // withdraw: (props: WithdrawProps) => Promise<void>;
+  // borrow
+  // repay
 }
