@@ -1,5 +1,5 @@
 import { EthereumAddress } from '@types';
-import { Token } from './Token';
+import { Token, UserTokenData } from './Token';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
 
@@ -15,6 +15,15 @@ export interface VaultData {
   depositLimit: string;
   pricePerShare: string;
 }
+
+export interface UserVaultData {
+  address: EthereumAddress;
+  depositedBalance: string;
+  depositedBalanceUsdc: string;
+  allowancesMap: { [spenderAddress: string]: string };
+  tokenPosition: UserTokenData;
+}
+
 export interface Vault {
   address: EthereumAddress;
   name: string;

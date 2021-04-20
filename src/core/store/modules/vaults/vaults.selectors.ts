@@ -4,8 +4,8 @@ import BigNumber from 'bignumber.js';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 const selectVaultsState = (state: RootState) => state.vaults;
-const selectUserVaultsMap = (state: RootState) => state.user.userVaultsMap;
-const selectUserTokensMap = (state: RootState) => state.user.userTokensMap;
+const selectUserVaultsMap = (state: RootState) => state.vaults.user.userVaultsMap;
+const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVaultAddress;
 const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMap.vaultsActionsStatusMap;

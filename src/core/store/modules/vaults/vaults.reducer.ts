@@ -13,10 +13,15 @@ const initialState: VaultsState = {
   saveVaultsAddreses: [],
   vaultsMap: {},
   selectedVaultAddress: undefined,
+  user: {
+    userVaultsMap: {},
+  },
   statusMap: {
     initiateSaveVaults: { loading: false, error: null },
     getVaults: { loading: false, error: null },
     vaultsActionsStatusMap: {},
+    getUserVaults: { loading: false, error: null },
+    userVaultsActionsStatusMap: {},
   },
 };
 
@@ -28,6 +33,7 @@ const {
   setSelectedVaultAddress,
   withdrawVault,
   getVaultsDynamic,
+  getUserVaultsData,
 } = VaultsActions;
 
 const vaultsReducer = createReducer(initialState, (builder) => {
@@ -54,6 +60,16 @@ const vaultsReducer = createReducer(initialState, (builder) => {
     })
     .addCase(getVaults.rejected, (state, { error }) => {
       state.statusMap.getVaults = { error: error.message };
+    })
+    .addCase(getUserVaultsData.pending, (state) => {
+      state.statusMap.getUserVaults = { loading: true };
+    })
+    .addCase(getUserVaultsData.fulfilled, (state, { payload: { userVaultsMap } }) => {
+      state.user.userVaultsMap = { ...state.user.userVaultsMap, ...userVaultsMap };
+      state.statusMap.getUserVaults = {};
+    })
+    .addCase(getUserVaultsData.rejected, (state, { error }) => {
+      state.statusMap.getUserVaults = { error: error.message };
     })
     .addCase(setSelectedVaultAddress, (state, { payload: { vaultAddress } }) => {
       state.selectedVaultAddress = vaultAddress;
