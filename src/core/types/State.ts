@@ -10,6 +10,7 @@ export interface RootState {
   vaults: VaultsState;
   wallet: WalletState;
   tokens: TokensState;
+  ironBank: IronBankState;
 }
 
 export interface AppState {
@@ -87,12 +88,23 @@ export interface CyTokenActionsStatusMap {
   withdraw: Status;
   get: Status;
 }
+
+export interface UserCyTokenActionsStatusMap {
+  get: Status;
+}
+
 export interface IronBankState {
   cyTokenAddresses: EthereumAddress[];
   cyTokensMap: { [cyTokenAddress: string]: CyTokenData };
+  user: {
+    borrowLimit: string;
+    borrowLimitUsed: string;
+    userCyTokensMap: { [cyTokenAddress: string]: CyTokenData };
+  };
   statusMap: {
     initiateIronBank: Status;
     getCYTokens: Status;
     cyTokensActionsMap: { [cyTokenAddress: string]: CyTokenActionsStatusMap };
+    userCyTokensActionsMap: { [cyTokenAddress: string]: UserCyTokenActionsStatusMap };
   };
 }
