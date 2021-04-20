@@ -3,7 +3,7 @@ import { ThunkAPI } from '@frameworks/redux';
 import { TokenData, TokenDynamicData, UserTokenData } from '@types';
 
 const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('user/setUserTokenData');
-const setUserTokensMap = createAction<{ userTokensMap: { [address: string]: UserTokenData } }>('user/setUserTokenData');
+const setUserTokensMap = createAction<{ userTokensMap: { [address: string]: UserTokenData } }>('user/setUserTokensMap');
 
 const getTokens = createAsyncThunk<
   { tokensMap: { [address: string]: TokenData }; tokensAddresses: string[] },
