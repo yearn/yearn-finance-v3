@@ -88,6 +88,7 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
 
     const { vaultService } = services;
     await vaultService.deposit({ tokenAddress: vaultData.token, vaultAddress, amount: amount.toFixed(0) });
+    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(UserActions.getUserVaultsData());
     // dispatch(UserActions.getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
@@ -120,6 +121,7 @@ const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: Big
       vaultAddress,
       amountOfShares,
     });
+    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(UserActions.getUserVaultsData());
     // dispatch(UserActions.getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
