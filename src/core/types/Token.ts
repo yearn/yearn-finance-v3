@@ -9,6 +9,13 @@ export interface TokenData {
   priceUsdc: string;
 }
 
+export interface UserTokenData {
+  address: string;
+  balance: string;
+  balanceUsdc: string;
+  allowancesMap: { [spenderAddress: string]: string };
+}
+
 export interface Token {
   address: EthereumAddress;
   name: string;
