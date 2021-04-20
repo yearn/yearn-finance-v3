@@ -231,21 +231,39 @@ export const Footer = ({ className }: FooterProps) => {
 
         <LinkSection className="link-section">
           <Section>
-            <strong>Versions:</strong>
-            <StyledLink>v1</StyledLink>
-            <StyledLink>v2</StyledLink>
-            <StyledLink>v3</StyledLink>
+            <strong>{t('footer.links.versions')}</strong>
+            <StyledLink target="_blank" href="https://v1.yearn.finance">
+              {t('footer.links.v1')}
+            </StyledLink>
+            <StyledLink target="_blank" href="https://v2.yearn.finance">
+              {t('footer.links.v2')}
+            </StyledLink>
           </Section>
+
           <SeparatorLine className="separator-line vertical" />
+
           <Section>
-            <StyledLink>Documentation</StyledLink>
-            <StyledLink>Github</StyledLink>
-            <StyledLink>Labs</StyledLink>
+            <StyledLink target="_blank" href="https://docs.yearn.finance">
+              {t('footer.links.documentation')}
+            </StyledLink>
+            <StyledLink target="_blank" href="https://github.com/yearn">
+              {t('footer.links.github')}
+            </StyledLink>
+            <StyledLink target="_blank" href="https://yearn.fi">
+              {t('footer.links.labs')}
+            </StyledLink>
           </Section>
+
           <Section>
-            <StyledLink>Governance</StyledLink>
-            <StyledLink>Voting</StyledLink>
-            <StyledLink>Security</StyledLink>
+            <StyledLink target="_blank" href="https://gov.yearn.finance">
+              {t('footer.links.governance')}
+            </StyledLink>
+            <StyledLink target="_blank" href="https://snapshot.org/#/ybaby.eth">
+              {t('footer.links.voting')}
+            </StyledLink>
+            <StyledLink target="_blank" href="https://github.com/yearn/yearn-security">
+              {t('footer.links.security')}
+            </StyledLink>
           </Section>
         </LinkSection>
       </FooterSections>
