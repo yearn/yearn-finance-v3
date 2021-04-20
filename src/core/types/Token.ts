@@ -6,6 +6,7 @@ export interface TokenData {
   symbol: string;
   decimals: string;
   icon: string;
+  priceUsdc: string;
 }
 
 export interface Token {
@@ -17,4 +18,9 @@ export interface Token {
   balance: string;
   balanceUsdc: string;
   allowancesMap: { [tokenAddress: string]: string };
+}
+
+export interface TokenDynamicData {
+  address: EthereumAddress;
+  priceUsdc: string;
 }

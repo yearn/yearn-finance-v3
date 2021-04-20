@@ -1,4 +1,5 @@
 import { VaultData, TokenData, UserVaultData, EthereumAddress, Wei } from '@types';
+import { TokenDynamicData } from './Token';
 import { VaultDynamicData } from './Vault';
 
 export interface UserService {
@@ -21,6 +22,7 @@ export interface VaultService {
 
 export interface TokenService {
   getSupportedTokens: () => Promise<TokenData[]>;
+  getTokensDynamicData: (props: any) => Promise<TokenDynamicData[]>;
   // getTokenRates:
 }
 
