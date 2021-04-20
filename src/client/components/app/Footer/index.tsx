@@ -13,6 +13,8 @@ import {
   TelegramIcon,
   BugIcon,
 } from '@components/common';
+import { device } from '@themes/default';
+import { useAppTranslation } from '@hooks';
 
 interface FooterProps {
   className?: string;
@@ -26,19 +28,88 @@ const StyledFooter = styled.div`
   padding: 0 ${({ theme }) => theme.footer.padding};
   padding-top: ${({ theme }) => theme.footer.paddingTop};
   padding-bottom: ${({ theme }) => theme.footer.paddingBottom};
+
+  @media ${device.tablet} {
+    .footer-sections {
+      display: grid;
+      grid-gap: 4rem;
+    }
+
+    .social-section {
+      flex: 1 100%;
+      order: 5;
+
+      .social-icons {
+        margin-top: 3rem;
+      }
+    }
+
+    .link-section {
+      grid-gap: 7rem;
+
+      .separator-line {
+        margin: 0;
+      }
+    }
+  }
+
+  @media ${device.mobile} {
+    padding: 4rem;
+
+    .footer-sections {
+      grid-gap: 3.3rem;
+    }
+
+    .social-section {
+      .logo {
+        display: none;
+      }
+      .social-icons {
+        margin-top: 0;
+      }
+    }
+
+    .social-section {
+      margin-top: 0;
+    }
+
+    .link-section {
+      grid-template-columns: 1fr;
+      grid-gap: 2rem;
+
+      .separator-line {
+        display: none;
+      }
+    }
+
+    & > .separator-line {
+      margin-top: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .copyright {
+      flex-direction: column;
+      align-items: flex-start;
+      img {
+        order: -1;
+      }
+      span {
+        margin-top: 1.7rem;
+      }
+    }
+  }
 `;
 
-const Sections = styled.div`
+const FooterSections = styled.div`
   display: flex;
 `;
 
-const Section = styled.div`
+const LinkSection = styled.div`
   display: grid;
-  grid-auto-rows: minmax(min-content, max-content);
-  grid-gap: 2rem;
-  font-size: 1.4rem;
-  font-weight: 400;
-  padding: 0 6.5rem;
+  grid-template-columns: 3fr 1fr 3fr 3fr;
+  grid-gap: 11rem;
+  justify-content: space-between;
+  flex: 1;
 `;
 
 const SocialSection = styled.div`
@@ -49,6 +120,22 @@ const SocialSection = styled.div`
   flex: 1;
 `;
 
+const Section = styled.div`
+  display: grid;
+  grid-auto-rows: minmax(min-content, max-content);
+  grid-gap: 2rem;
+  font-size: 1.4rem;
+  font-weight: 400;
+`;
+
+const StyledLink = styled(Link)`
+  &:before {
+    content: '>';
+    color: grey;
+    margin-right: 0.78rem;
+  }
+`;
+
 const SocialIcons = styled.div`
   --icon-size: 3.5rem;
   display: grid;
@@ -56,7 +143,7 @@ const SocialIcons = styled.div`
 
   align-items: center;
   margin-top: 10rem;
-  gap: 1rem;
+  grid-gap: 1rem;
   width: 100%;
 `;
 
@@ -120,8 +207,10 @@ const socialLinks = [
 ];
 
 export const Footer = ({ className }: FooterProps) => {
+  const { t } = useAppTranslation('common');
+
   const socialIcons = (
-    <SocialIcons>
+    <SocialIcons className="social-icons">
       {socialLinks.map((social) => {
         return (
           <StyledIconLink href={social.link} target="_blank">
@@ -134,35 +223,37 @@ export const Footer = ({ className }: FooterProps) => {
 
   return (
     <StyledFooter className={className}>
-      <Sections>
-        <SocialSection>
-          <Logo full />
+      <FooterSections className="footer-sections">
+        <SocialSection className="social-section">
+          <Logo full className="logo" />
           {socialIcons}
         </SocialSection>
 
-        <Section>
-          <strong>Versions:</strong>
-          <Link>v1</Link>
-          <Link>v2</Link>
-          <Link>v3</Link>
-        </Section>
-        <SeparatorLine className="vertical" />
-        <Section>
-          <Link>Documentation</Link>
-          <Link>Github</Link>
-          <Link>Labs</Link>
-        </Section>
-        <Section>
-          <Link>Governance</Link>
-          <Link>Voting</Link>
-          <Link>Security</Link>
-        </Section>
-      </Sections>
+        <LinkSection className="link-section">
+          <Section>
+            <strong>Versions:</strong>
+            <StyledLink>v1</StyledLink>
+            <StyledLink>v2</StyledLink>
+            <StyledLink>v3</StyledLink>
+          </Section>
+          <SeparatorLine className="separator-line vertical" />
+          <Section>
+            <StyledLink>Documentation</StyledLink>
+            <StyledLink>Github</StyledLink>
+            <StyledLink>Labs</StyledLink>
+          </Section>
+          <Section>
+            <StyledLink>Governance</StyledLink>
+            <StyledLink>Voting</StyledLink>
+            <StyledLink>Security</StyledLink>
+          </Section>
+        </LinkSection>
+      </FooterSections>
 
-      <SeparatorLine />
+      <SeparatorLine className="separator-line" />
 
-      <Copyright>
-        <span>Copyright © yearn 2021. All rights reserved. | Private Policy </span>
+      <Copyright className="copyright">
+        <span>{t('footer.copyright')}</span>
         <img src={AlchemyCertified} alt="Alchemy Certified" />
       </Copyright>
     </StyledFooter>
