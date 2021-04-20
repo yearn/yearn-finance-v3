@@ -1,6 +1,11 @@
 import { EthereumAddress, UserTokenData } from '@types';
 
 export interface UserIronBankData {
+  borrowLimit: string;
+  borrowLimitUsed: string;
+}
+
+export interface UserCyTokenData {
   address: EthereumAddress;
   suppliedBalance: string;
   suppliedBalanceUsdc: string;

@@ -5,8 +5,7 @@ export interface IronBank extends IronBankData {
 }
 
 export interface IronBankData {
-  borrowLimit: string;
-  borrowLimitUsed: string;
+  supportedCyTokens: EthereumAddress[];
 }
 
 export interface CyToken {
