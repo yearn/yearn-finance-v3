@@ -5,6 +5,7 @@ import {
   UserVaultData,
   CyTokenData,
   CyTokenDynamicData,
+  TokenDynamicData,
   EthereumAddress,
   Wei,
 } from '@types';
@@ -29,6 +30,7 @@ export interface VaultService {
 
 export interface TokenService {
   getSupportedTokens: () => Promise<TokenData[]>;
+  getTokensDynamicData: (props: any) => Promise<TokenDynamicData[]>;
   // getTokenRates:
 }
 

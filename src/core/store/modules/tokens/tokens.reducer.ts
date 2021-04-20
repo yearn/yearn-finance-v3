@@ -11,7 +11,7 @@ const initialState: TokensState = {
   },
 };
 
-const { getTokens } = TokensActions;
+const { getTokens, getTokensDynamicData } = TokensActions;
 
 const tokensReducer = createReducer(initialState, (builder) => {
   builder
@@ -25,6 +25,13 @@ const tokensReducer = createReducer(initialState, (builder) => {
     })
     .addCase(getTokens.rejected, (state, { error }) => {
       state.statusMap.getTokens = { error: error.message };
+    })
+    // getTokensDynamicData pending and reject are not implemented because for now we dont support individual token statuses
+    .addCase(getTokensDynamicData.fulfilled, (state, { payload: { tokensDynamicData } }) => {
+      tokensDynamicData.forEach((tokenDynamicData) => {
+        const address = tokenDynamicData.address;
+        state.tokensMap[address] = { ...state.tokensMap[address], ...tokenDynamicData };
+      });
     });
 });
 
