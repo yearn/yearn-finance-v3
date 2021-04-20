@@ -1,6 +1,6 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { TokenData, UserTokenData, UserVaultData, VaultData } from '@types';
+import { TokenData, UserTokenData, UserVaultData, VaultData, CyTokenData, UserCyTokenData } from '@types';
 import { EthereumAddress } from './Ethereum';
 
 export interface RootState {
@@ -56,6 +56,11 @@ export interface WalletState {
 export interface UserState {
   userVaultsMap: { [address: string]: UserVaultData };
   userTokensMap: { [address: string]: UserTokenData };
+  userIronBank: {
+    borrowLimit: string;
+    borrowLimitUsed: string;
+    userCyTokensMap: { [cyTokenAddress: string]: UserCyTokenData };
+  };
   statusMap: {
     getUserVaults: Status;
   };
@@ -65,5 +70,22 @@ export interface TokensState {
   tokensMap: { [address: string]: TokenData };
   statusMap: {
     getTokens: Status;
+  };
+}
+
+export interface CyTokenActionsStatusMap {
+  borrow: Status;
+  supply: Status;
+  replay: Status;
+  withdraw: Status;
+  get: Status;
+}
+export interface IronBankState {
+  cyTokenAddresses: EthereumAddress[];
+  cyTokensMap: { [cyTokenAddress: string]: CyTokenData };
+  statusMap: {
+    initiateIronBank: Status;
+    getCYTokens: Status;
+    cyTokensActionsMap: { [cyTokenAddress: string]: CyTokenActionsStatusMap };
   };
 }
