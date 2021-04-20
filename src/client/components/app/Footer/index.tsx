@@ -211,9 +211,9 @@ export const Footer = ({ className }: FooterProps) => {
 
   const socialIcons = (
     <SocialIcons className="social-icons">
-      {socialLinks.map((social) => {
+      {socialLinks.map((social, index) => {
         return (
-          <StyledIconLink href={social.link} target="_blank">
+          <StyledIconLink href={social.link} target="_blank" key={index}>
             <StyledIcon Component={social.icon} />
           </StyledIconLink>
         );
