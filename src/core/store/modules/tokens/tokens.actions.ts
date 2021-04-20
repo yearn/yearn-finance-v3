@@ -22,7 +22,7 @@ const getTokensDynamicData = createAsyncThunk<
   { tokensDynamicData: TokenDynamicData[] },
   { addresses: string[] },
   ThunkAPI
->('tokens/getTokens', async ({ addresses }, { extra }) => {
+>('tokens/getTokensDynamic', async ({ addresses }, { extra }) => {
   const { tokenService } = extra.services;
   const tokensDynamicData = await tokenService.getTokensDynamicData(addresses);
   return { tokensDynamicData };

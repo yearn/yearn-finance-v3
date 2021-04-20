@@ -6,6 +6,7 @@ export interface Env {
   ENV: string;
   ETHEREUM_NETWORK: EthereumNetwork;
   USE_MAINNET_FORK: boolean;
+  USE_SDK_MOCK: boolean;
   INFURA_PROJECT_ID: string | undefined;
   ETHERSCAN_API_KEY: string | undefined;
   ALCHEMY_API_KEY: string | undefined;
