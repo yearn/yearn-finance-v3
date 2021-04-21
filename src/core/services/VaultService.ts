@@ -100,10 +100,9 @@ export class VaultServiceImpl implements VaultService {
         allowancesMap[allowance.spender] = allowance.amount.toString();
       });
       const tokenAllowancesMap: any = {};
-      // TODO: uncomment when fixed on sdk. Correct name is 'tokenAllowances', current is 'allowances'.
-      // vault.tokenAllowances.forEach((allowance) => {
-      //   tokenAllowancesMap[allowance.spender] = allowance.amount.toString();
-      // });
+      vault.tokenAllowances.forEach((allowance) => {
+        tokenAllowancesMap[allowance.spender] = allowance.amount.toString();
+      });
 
       return {
         address: vault.assetId,
