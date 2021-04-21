@@ -38,13 +38,13 @@ export class VaultServiceImpl implements VaultService {
     const vaultDataPromise = vaults.map(async (vault) => {
       const apy = await yearn.vaults.apy(vault.id);
       return {
-        address: vault.id.toLowerCase(),
+        address: vault.id,
         name: vault.name,
         version: vault.version,
         typeId: vault.typeId,
         balance: vault.underlyingTokenBalance.amount.toString(),
         balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
-        token: vault.token.id.toLowerCase(),
+        token: vault.token.id,
         apyData: apy ? apy.recommended.toString() : '0',
         depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
         pricePerShare: vault.metadata.pricePerShare.toString(),
@@ -106,12 +106,12 @@ export class VaultServiceImpl implements VaultService {
       // });
 
       return {
-        address: vault.assetId.toLowerCase(),
+        address: vault.assetId,
         depositedBalance: vault.accountTokenBalance.amount.toString(),
         depositedBalanceUsdc: vault.accountTokenBalance.amountUsdc.toString(),
         allowancesMap: allowancesMap,
         tokenPosition: {
-          address: vault.tokenId.toLowerCase(),
+          address: vault.tokenId,
           balance: vault.underlyingTokenBalance.amount.toString(),
           balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
           allowancesMap: tokenAllowancesMap,

@@ -3,11 +3,18 @@ import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
 import VaultsV2MockData from './mock/VaultsV2MockData.json';
+import TokensMockData from './mock/TokenMockData.json';
+import { getAddress } from '@ethersproject/address';
 
 const tokens = {
   supported: (): TokenPriced[] => {
-    console.log('Mock: tokens.supported()');
-    throw Error('Not implmented');
+    return TokensMockData.map((token) => ({
+      id: getAddress(token.address),
+      name: token.symbol,
+      symbol: token.symbol,
+      decimals: BigNumber.from(token.decimals),
+      price: BigNumber.from(Math.floor(Number(token.price) * 1e6)),
+    }));
   },
   //   dynamicData: () => {
   //     console.log('Mock: tokens.dynamicData()');
@@ -16,7 +23,6 @@ const tokens = {
 
 const vaults = {
   get: (): Vault[] => {
-    console.log('Mock: vaults.get()');
     const staticVaultsData = VaultsV2MockData.static;
     const dynamicVaultsData = VaultsV2MockData.dynamic;
 
@@ -49,8 +55,6 @@ const vaults = {
         },
       };
     });
-    console.log({ vaults });
-
     return vaults;
   },
   positionsOf: (): Promise<Position[]> => {

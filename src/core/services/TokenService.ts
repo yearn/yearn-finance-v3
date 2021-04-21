@@ -11,7 +11,7 @@ export class TokenServiceImpl implements TokenService {
     const yearn = this.yearnSdk;
     const tokens = await yearn.tokens.supported();
     const tokensData: TokenData[] = tokens.map((token) => ({
-      address: token.id.toLowerCase(),
+      address: token.id,
       name: token.name,
       symbol: token.symbol,
       decimals: token.decimals.toString(),
@@ -32,7 +32,7 @@ export class TokenServiceImpl implements TokenService {
     // const tokens = await yearn.tokens.dynamicData(addresses);
     const tokens = [mockDynamicData];
     const tokensDynamicData: TokenDynamicData[] = tokens.map((token) => ({
-      address: token.id.toLowerCase(),
+      address: token.id,
       priceUsdc: '0',
     }));
 
