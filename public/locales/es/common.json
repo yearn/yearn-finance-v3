@@ -12,6 +12,8 @@
 
   "navigation": {
     "home": "Inicio",
+    "dashboard": "Dashboard",
+    "invest": "Invest",
     "save": "Save"
   },
   "footer": {
