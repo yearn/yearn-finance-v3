@@ -80,7 +80,6 @@ const vaults = {
     return vaultsPositions;
   },
   apy: (vaultAddress: string): Apy | undefined => {
-    console.log('Mock: vaults.positionOf()');
     return {
       recommended: 99,
       composite: false,
@@ -93,7 +92,6 @@ const vaults = {
 
 const ironBank = {
   get: () => {
-    console.log('Mock: ironBank.get()');
     return IronBankGetMockData.map((cyToken) => ({
       ...cyToken,
       underlyingTokenBalance: {
@@ -108,7 +106,6 @@ const ironBank = {
     }));
   },
   positionsOf: () => {
-    console.log('Mock: ironBank.positionOf()');
     return IronBankPositionMockData.map((cyTokenPosition) => {
       const positions = cyTokenPosition.positions.map((position) => ({
         ...position,
