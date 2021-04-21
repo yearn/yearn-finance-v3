@@ -10,17 +10,15 @@ import {
   Wei,
 } from '@types';
 
-export interface UserService {
-  getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
-  // getUserTokensData:
-}
+export interface UserService {}
 
 export interface VaultService {
   getSupportedVaults: () => Promise<VaultData[]>;
+  getVaultsDynamicData: (props: any) => Promise<VaultDynamicData[]>;
+  getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
   approveDeposit: (props: ApproveDepositProps) => Promise<void>;
   deposit: (props: DepositProps) => Promise<void>;
   withdraw: (props: WithdrawProps) => Promise<void>;
-  getVaultsDynamicData: (props: any) => Promise<VaultDynamicData[]>;
   // approveZapIn:
   // zapIn:
   // zapOut:

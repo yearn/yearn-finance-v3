@@ -47,7 +47,7 @@ const getUserVaultsData = createAsyncThunk<{ userVaultsMap: { [address: string]:
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const userVaultsData = await services.userService.getUserVaultsData({ userAddress });
+    const userVaultsData = await services.vaultService.getUserVaultsData({ userAddress });
     const userVaultsMap: { [address: string]: UserVaultData } = {};
     const userTokensMap: { [address: string]: UserTokenData } = {}; // this should be removed when sdk.getTokens() ready.
     userVaultsData.forEach((vault) => {
