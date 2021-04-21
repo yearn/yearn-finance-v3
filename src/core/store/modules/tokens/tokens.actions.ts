@@ -1,6 +1,9 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkAPI } from '../../../frameworks/redux';
-import { TokenData } from '@types';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { ThunkAPI } from '@frameworks/redux';
+import { TokenData, TokenDynamicData, UserTokenData } from '@types';
+
+const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('user/setUserTokenData');
+const setUserTokensMap = createAction<{ userTokensMap: { [address: string]: UserTokenData } }>('user/setUserTokensMap');
 
 const getTokens = createAsyncThunk<
   { tokensMap: { [address: string]: TokenData }; tokensAddresses: string[] },
@@ -18,6 +21,19 @@ const getTokens = createAsyncThunk<
   return { tokensMap, tokensAddresses };
 });
 
+const getTokensDynamicData = createAsyncThunk<
+  { tokensDynamicData: TokenDynamicData[] },
+  { addresses: string[] },
+  ThunkAPI
+>('tokens/getTokensDynamic', async ({ addresses }, { extra }) => {
+  const { tokenService } = extra.services;
+  const tokensDynamicData = await tokenService.getTokensDynamicData(addresses);
+  return { tokensDynamicData };
+});
+
 export const TokensActions = {
+  setUserTokenData,
   getTokens,
+  getTokensDynamicData,
+  setUserTokensMap,
 };

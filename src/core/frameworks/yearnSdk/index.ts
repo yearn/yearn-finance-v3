@@ -1,9 +1,14 @@
 import { Yearn } from '@yfi/sdk';
 
 import { Web3Provider, Config } from '@types';
+import { yearnSdkMock } from './yearnSdkMock';
 
 export const getYearnSdk = ({ web3Provider, config }: { web3Provider: Web3Provider; config: Config }) => {
-  const { USE_MAINNET_FORK, CONTRACT_ADDRESSES } = config;
+  const { USE_MAINNET_FORK, CONTRACT_ADDRESSES, USE_SDK_MOCK } = config;
+
+  if (USE_SDK_MOCK) {
+    return yearnSdkMock;
+  }
 
   if (USE_MAINNET_FORK) {
     return new Yearn(

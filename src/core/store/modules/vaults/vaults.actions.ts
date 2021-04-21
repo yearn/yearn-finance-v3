@@ -1,8 +1,8 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkAPI } from '../../../frameworks/redux';
-import { VaultData } from '@types';
+import { ThunkAPI } from '@frameworks/redux';
+import { UserTokenData, UserVaultData, VaultData, VaultDynamicData } from '@types';
 import BigNumber from 'bignumber.js';
-import { UserActions } from '@store';
+import { TokensActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress: string }>('vaults/setSelectedVaultAddress');
@@ -30,12 +30,42 @@ const getVaults = createAsyncThunk<
   return { vaultsMap, vaultsAddreses };
 });
 
+const getVaultsDynamic = createAsyncThunk<{ vaultsDynamicData: VaultDynamicData[] }, { addresses: string[] }, ThunkAPI>(
+  'vaults/getVaultsDynamic',
+  async ({ addresses }, { extra }) => {
+    const { vaultService } = extra.services;
+    const vaultsDynamicData = await vaultService.getVaultsDynamicData(addresses);
+    return { vaultsDynamicData };
+  }
+);
+
+const getUserVaultsData = createAsyncThunk<{ userVaultsMap: { [address: string]: UserVaultData } }, void, ThunkAPI>(
+  'user/getUserVaultsData',
+  async (_arg, { extra, getState, dispatch }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+    const userVaultsData = await services.vaultService.getUserVaultsData({ userAddress });
+    const userVaultsMap: { [address: string]: UserVaultData } = {};
+    const userTokensMap: { [address: string]: UserTokenData } = {}; // this should be removed when sdk.getTokens() ready.
+    userVaultsData.forEach((vault) => {
+      userVaultsMap[vault.address] = vault;
+      userTokensMap[vault.tokenPosition.address] = vault.tokenPosition;
+    });
+
+    dispatch(TokensActions.setUserTokensMap({ userTokensMap }));
+    return { userVaultsMap };
+  }
+);
+
 const approveVault = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
   'vaults/approveVault',
   async ({ vaultAddress }, { extra, getState, dispatch }) => {
     const { services, config } = extra;
     const vaultData = getState().vaults.vaultsMap[vaultAddress];
-    const userTokenData = getState().user.userTokensMap[vaultData.token];
+    const userTokenData = getState().tokens.user.userTokensMap[vaultData.token];
     const approved = new BigNumber(userTokenData.allowancesMap[vaultAddress]).gt(0);
     if (approved) {
       throw new Error('ALREADY_APPROVED');
@@ -51,7 +81,7 @@ const approveVault = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
         [vaultAddress]: config.MAX_UINT256,
       },
     };
-    dispatch(UserActions.setUserTokenData({ userTokenData: newUserTokendata }));
+    dispatch(TokensActions.setUserTokenData({ userTokenData: newUserTokendata }));
   }
 );
 
@@ -61,7 +91,7 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
     const { services } = extra;
     const vaultData = getState().vaults.vaultsMap[vaultAddress];
     const tokenData = getState().tokens.tokensMap[vaultData.token];
-    const userTokenData = getState().user.userTokensMap[vaultData.token];
+    const userTokenData = getState().tokens.user.userTokensMap[vaultData.token];
     const decimals = new BigNumber(tokenData.decimals);
     const ONE_UNIT = new BigNumber(10).pow(decimals);
     amount = amount.multipliedBy(ONE_UNIT);
@@ -79,8 +109,9 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
 
     const { vaultService } = services;
     await vaultService.deposit({ tokenAddress: vaultData.token, vaultAddress, amount: amount.toFixed(0) });
-    dispatch(UserActions.getUserVaultsData());
-    // dispatch(UserActions.getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
+    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+    dispatch(getUserVaultsData());
+    // dispatch(getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
   }
 );
@@ -111,8 +142,9 @@ const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: Big
       vaultAddress,
       amountOfShares,
     });
-    dispatch(UserActions.getUserVaultsData());
-    // dispatch(UserActions.getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
+    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+    dispatch(getUserVaultsData());
+    // dispatch(getUserVaultsData([vaultAddress])); // TODO use when suported by sdk.
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
   }
 );
@@ -124,4 +156,6 @@ export const VaultsActions = {
   approveVault,
   depositVault,
   withdrawVault,
+  getVaultsDynamic,
+  getUserVaultsData,
 };

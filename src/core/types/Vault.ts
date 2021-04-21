@@ -1,13 +1,13 @@
 import { EthereumAddress } from '@types';
-import { Token } from './Token';
+import { Token, UserTokenData } from './Token';
 
-export type VaultType = 'v1' | 'v2';
+export type VaultType = 'VAULT_V1' | 'VAULT_V2';
 
 export interface VaultData {
   address: EthereumAddress;
   name: string;
   version: string;
-  typeId: string;
+  typeId: VaultType;
   balance: string;
   balanceUsdc: string;
   token: EthereumAddress;
@@ -15,6 +15,15 @@ export interface VaultData {
   depositLimit: string;
   pricePerShare: string;
 }
+
+export interface UserVaultData {
+  address: EthereumAddress;
+  depositedBalance: string;
+  depositedBalanceUsdc: string;
+  allowancesMap: { [spenderAddress: string]: string };
+  tokenPosition: UserTokenData;
+}
+
 export interface Vault {
   address: EthereumAddress;
   name: string;
@@ -27,4 +36,13 @@ export interface Vault {
   allowancesMap: { [vaultAddress: string]: string };
   approved: boolean;
   token: Token;
+}
+
+export interface VaultDynamicData {
+  address: EthereumAddress;
+  balance: string;
+  balanceUsdc: string;
+  apyData: any;
+  depositLimit: string;
+  pricePerShare: string;
 }
