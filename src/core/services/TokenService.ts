@@ -16,7 +16,7 @@ export class TokenServiceImpl implements TokenService {
       symbol: token.symbol,
       decimals: token.decimals.toString(),
       icon: 'MOCK', // TODO DEHARDCODE waiting for SDK TO ADD PROPERTY,
-      priceUsdc: '0', // TODO DEHARDCODE when implementing sdk and mock service.
+      priceUsdc: token.price.toString(),
     }));
 
     return tokensData;
