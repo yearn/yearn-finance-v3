@@ -12,7 +12,23 @@
 
   "navigation": {
     "home": "Inicio",
+    "dashboard": "Dashboard",
+    "invest": "Invest",
     "save": "Save"
+  },
+  "footer": {
+    "copyright": "Copyright © yearn 2021. Todos los derechos reservados.",
+    "links": {
+      "versions": "Versiones:",
+      "v1": "v1",
+      "v2": "v2",
+      "documentation": "Documentación",
+      "github": "Github",
+      "labs": "Labs",
+      "governance": "Governance",
+      "voting": "Voting",
+      "security": "Security"
+    }
   },
   "landing": {
     "title-1": "EL",

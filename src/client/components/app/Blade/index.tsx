@@ -140,7 +140,7 @@ export const Blade = () => {
   return (
     <StyledBlade open={isOpen}>
       <StyledMenuButton onClick={toggle}>
-        <Icon src={DeleteIcon} />
+        <Icon Component={DeleteIcon} />
       </StyledMenuButton>
       <BladeHeader>
         <h3>{selectedVault.name}</h3>

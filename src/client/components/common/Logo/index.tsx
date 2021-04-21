@@ -16,6 +16,7 @@ const StyledLogo = styled.div`
   justify-content: center;
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
 `;
+
 const StyledImg = styled.img`
   height: 4.8rem;
 `;

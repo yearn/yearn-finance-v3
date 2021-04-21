@@ -12,7 +12,23 @@
 
   "navigation": {
     "home": "Home",
+    "dashboard": "Dashboard",
+    "invest": "Invest",
     "save": "Save"
+  },
+  "footer": {
+    "copyright": "Copyright © yearn 2021. All rights reserved.",
+    "links": {
+      "versions": "Versions:",
+      "v1": "v1",
+      "v2": "v2",
+      "documentation": "Documentation",
+      "github": "Github",
+      "labs": "Labs",
+      "governance": "Governance",
+      "voting": "Voting",
+      "security": "Security"
+    }
   },
   "landing": {
     "title-1": "THE",

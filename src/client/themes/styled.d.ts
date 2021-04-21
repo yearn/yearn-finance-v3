@@ -33,6 +33,11 @@ declare module 'styled-components' {
       padding: string;
       height: string;
     };
+    footer: {
+      padding: string;
+      paddingTop: string;
+      paddingBottom: string;
+    };
     saveAsset: {
       cardBackground: string;
       cardBackgroundSelected: string;
@@ -40,6 +45,7 @@ declare module 'styled-components' {
       cardBorderSelected: string;
     };
     zindex: {
+      navbar: number;
       sidemenu: number;
       navSidemenu: number;
       onboardModal: number;

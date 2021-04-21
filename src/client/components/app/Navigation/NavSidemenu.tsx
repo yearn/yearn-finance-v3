@@ -52,12 +52,20 @@ const LinkList = styled.div`
   margin-top: 2.3rem;
 `;
 
-const StyledLink = styled(Link)`
+const RouterLink = styled(Link)`
   display: flex;
   flex-direction: column;
   padding: 2.4rem 0;
+  color: inherit;
   &:not(:first-child) {
     border-top: 1px solid ${(props) => props.theme.colors.shade40};
+  }
+  &:hover span {
+    filter: brightness(75%);
+  }
+
+  span {
+    transition: filter 200ms ease-in-out;
   }
 `;
 
@@ -65,26 +73,50 @@ export const NavSidemenu = ({ walletAddress, onWalletClick, open }: NavSidemenuP
   const { t } = useAppTranslation('common');
   const { toggle, close } = useContext(NavSideMenuContext);
 
+  const navLinks = [
+    {
+      to: '/',
+      text: t('navigation.home'),
+    },
+    {
+      to: '/dashboard',
+      text: t('navigation.dashboard'),
+    },
+    {
+      to: '/invest',
+      text: t('navigation.invest'),
+    },
+    {
+      to: '/save',
+      text: t('navigation.save'),
+    },
+  ];
+
+  const linkList = (
+    <LinkList>
+      {navLinks.map((link) => {
+        return (
+          <RouterLink to={link.to} onClick={close}>
+            <span>{link.text}</span>
+          </RouterLink>
+        );
+      })}
+    </LinkList>
+  );
+
   return (
     <StyledSidemenu open={open}>
       <SidemenuHeader>
         <Logo full />
         <StyledMenuButton onClick={toggle}>
-          <Icon src={DeleteIcon} height="24" />
+          <Icon Component={DeleteIcon} height="24" />
         </StyledMenuButton>
       </SidemenuHeader>
 
       <SidemenuContent>
         <ConnectWalletButton address={walletAddress} onClick={() => onWalletClick && onWalletClick()} />
 
-        <LinkList>
-          <StyledLink to="/" onClick={close}>
-            {t('navigation.home')}
-          </StyledLink>
-          <StyledLink to="/Save" onClick={close}>
-            {t('navigation.save')}
-          </StyledLink>
-        </LinkList>
+        {linkList}
       </SidemenuContent>
     </StyledSidemenu>
   );
