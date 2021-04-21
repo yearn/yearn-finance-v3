@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch, useAppTranslation } from '@hooks';
-import { VaultsActions, VaultsSelectors, UserActions } from '@store';
+import { VaultsActions, VaultsSelectors } from '@store';
 import { formatPercent, humanizeAmount } from '@src/utils';
 import { Vault } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
@@ -148,7 +148,7 @@ export const Save = () => {
 
   useEffect(() => {
     if (selectedAddress) {
-      dispatch(UserActions.getUserVaultsData());
+      dispatch(VaultsActions.getUserVaultsData());
     }
   }, [selectedAddress]);
 

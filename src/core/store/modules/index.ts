@@ -19,11 +19,11 @@ import walletReducer from './wallet/wallet.reducer';
 import { WalletActions } from './wallet/wallet.actions';
 import { WalletSelectors } from './wallet/wallet.selectors';
 
-import userReducer from './user/user.reducer';
-import { UserActions } from './user/user.actions';
-
 import tokensReducer from './tokens/tokens.reducer';
 import { TokensActions } from './tokens/tokens.actions';
+
+import ironBankReducer from './ironBank/ironBank.reducer';
+import { IronBankActions } from './ironBank/ironBank.actions';
 
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
@@ -31,14 +31,14 @@ const rootReducer: Reducer<RootState> = combineReducers({
   theme: themeReducer,
   vaults: vaultsReducer,
   wallet: walletReducer,
-  user: userReducer,
   tokens: tokensReducer,
+  ironBank: ironBankReducer,
 });
 
 export default rootReducer;
 
 // Actions
-export { UserActions, AppActions, VaultsActions, RouteActions, ThemeActions, WalletActions, TokensActions };
+export { AppActions, VaultsActions, RouteActions, ThemeActions, WalletActions, TokensActions, IronBankActions };
 
 // Selectors
 export { VaultsSelectors, WalletSelectors };
