@@ -3,6 +3,7 @@ import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
 import VaultsV2MockData from './mock/VaultsV2MockData.json';
+import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
 
@@ -57,9 +58,26 @@ const vaults = {
     });
     return vaults;
   },
-  positionsOf: (): Promise<Position[]> => {
-    console.log('Mock: vaults.positionOf()');
-    throw Error('Not implmented');
+  positionsOf: (): Position[] => {
+    const vaultsPositions = VaultsV2PositionsMockData.map((data) => {
+      const position = data.positions[0];
+      return {
+        ...position,
+        balance: BigNumber.from(position.balance),
+        accountTokenBalance: {
+          amount: BigNumber.from(position.accountTokenBalance.amount),
+          amountUsdc: BigNumber.from(position.accountTokenBalance.amountUsdc),
+        },
+        underlyingTokenBalance: {
+          amount: BigNumber.from(position.underlyingTokenBalance.amount),
+          amountUsdc: BigNumber.from(position.underlyingTokenBalance.amountUsdc),
+        },
+        assetAllowances: position.assetAllowances,
+        tokenAllowances: position.tokenAllowances,
+      };
+    });
+
+    return vaultsPositions;
   },
   apy: (vaultAddress: string): Apy | undefined => {
     console.log('Mock: vaults.positionOf()');

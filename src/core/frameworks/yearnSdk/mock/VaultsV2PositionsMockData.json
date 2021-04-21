@@ -4,15 +4,15 @@
       {
         "assetId": "0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1",
         "tokenId": "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -24,15 +24,15 @@
       {
         "assetId": "0xdCD90C7f6324cfa40d7169ef80b12031770B4325",
         "tokenId": "0x06325440D014e39736583c165C2963BA99fAf14E",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -44,15 +44,15 @@
       {
         "assetId": "0x986b4AFF588a109c09B50A03f42E4110E29D353F",
         "tokenId": "0xA3D87FffcE63B53E0d54fAa1cc983B7eB0b74A9c",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -64,15 +64,15 @@
       {
         "assetId": "0xcB550A6D4C8e3517A939BC79d0c7093eb7cF56B5",
         "tokenId": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -84,15 +84,15 @@
       {
         "assetId": "0xa9fE4601811213c340e850ea305481afF02f5b28",
         "tokenId": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -104,15 +104,15 @@
       {
         "assetId": "0xB8C3B7A2A618C552C23B1E4701109a9E756Bab67",
         "tokenId": "0x111111111117dC0aa78b770fA6A738034120C302",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -124,15 +124,15 @@
       {
         "assetId": "0xBFa4D8AA6d8a379aBFe7793399D3DdaCC5bBECBB",
         "tokenId": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -144,15 +144,15 @@
       {
         "assetId": "0x19D3364A399d251E894aC732651be8B0E4e85001",
         "tokenId": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -164,15 +164,15 @@
       {
         "assetId": "0xe11ba472F74869176652C35D30dB89854b5ae84D",
         "tokenId": "0x584bC13c7D411c00c01A62e8019472dE68768430",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -184,15 +184,15 @@
       {
         "assetId": "0xe2F6b9773BF3A015E2aA70741Bde1498bdB9425b",
         "tokenId": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -204,15 +204,15 @@
       {
         "assetId": "0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9",
         "tokenId": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -224,15 +224,15 @@
       {
         "assetId": "0x27b7b1ad7288079A66d12350c828D3C00A6F07d7",
         "tokenId": "0x5282a4eF67D9C33135340fB3289cc1711c13638C",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -244,15 +244,15 @@
       {
         "assetId": "0x625b7DF2fa8aBe21B0A976736CDa4775523aeD1E",
         "tokenId": "0xb19059ebb43466C323583928285a49f558E572Fd",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -264,15 +264,15 @@
       {
         "assetId": "0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a",
         "tokenId": "0xc5bDdf9843308380375a611c18B50Fb9341f502A",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -284,15 +284,15 @@
       {
         "assetId": "0x8414Db07a7F743dEbaFb402070AB01a4E0d2E45e",
         "tokenId": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -304,15 +304,15 @@
       {
         "assetId": "0x7047F90229a057C13BF847C0744D646CFb6c9E1A",
         "tokenId": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-        "typeId": "LEND",
-        "balance": "0.1007999753",
+        "typeId": "DEPOSIT",
+        "balance": "1007999753",
         "accountTokenBalance": {
-          "amount": "0.1007999753",
-          "amountUsdc": "235.8326302116"
+          "amount": "1007999753",
+          "amountUsdc": "2358326302116"
         },
         "underlyingTokenBalance": {
-          "amount": "0.2000000000",
-          "amountUsdc": "0.2000000000"
+          "amount": "2000000000",
+          "amountUsdc": "2000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
