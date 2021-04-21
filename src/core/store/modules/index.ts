@@ -22,6 +22,9 @@ import { WalletSelectors } from './wallet/wallet.selectors';
 import tokensReducer from './tokens/tokens.reducer';
 import { TokensActions } from './tokens/tokens.actions';
 
+import ironBankReducer from './ironBank/ironBank.reducer';
+import { IronBankActions } from './ironBank/ironBank.actions';
+
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
   route: routeReducer,
@@ -29,12 +32,13 @@ const rootReducer: Reducer<RootState> = combineReducers({
   vaults: vaultsReducer,
   wallet: walletReducer,
   tokens: tokensReducer,
+  ironBank: ironBankReducer,
 });
 
 export default rootReducer;
 
 // Actions
-export { AppActions, VaultsActions, RouteActions, ThemeActions, WalletActions, TokensActions };
+export { AppActions, VaultsActions, RouteActions, ThemeActions, WalletActions, TokensActions, IronBankActions };
 
 // Selectors
 export { VaultsSelectors, WalletSelectors };
