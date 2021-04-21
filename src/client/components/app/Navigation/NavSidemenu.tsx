@@ -70,7 +70,7 @@ export const NavSidemenu = ({ walletAddress, onWalletClick, open }: NavSidemenuP
       <SidemenuHeader>
         <Logo full />
         <StyledMenuButton onClick={toggle}>
-          <Icon src={DeleteIcon} height="24" />
+          <Icon Component={DeleteIcon} height="24" />
         </StyledMenuButton>
       </SidemenuHeader>
 
