@@ -1,4 +1,4 @@
-import { Vault, Position, TokenPriced } from '@yfi/sdk';
+import { Vault, Position, TokenPriced, Apy } from '@yfi/sdk';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
@@ -56,6 +56,16 @@ const vaults = {
   positionsOf: (): Promise<Position[]> => {
     console.log('Mock: vaults.positionOf()');
     throw Error('Not implmented');
+  },
+  apy: (vaultAddress: string): Apy | undefined => {
+    console.log('Mock: vaults.positionOf()');
+    return {
+      recommended: 99,
+      composite: false,
+      type: '',
+      description: '',
+      data: {},
+    };
   },
 };
 
