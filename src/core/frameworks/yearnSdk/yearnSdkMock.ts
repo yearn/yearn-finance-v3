@@ -1,5 +1,7 @@
 import { Vault, Position, TokenPriced } from '@yfi/sdk';
-// import { BigNumber } from '@frameworks/ethers';
+import { BigNumber } from '@frameworks/ethers';
+import IronBankGetMockData from './mock/IronBankGetMockData.json';
+import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
 
 const tokens = {
   supported: (): TokenPriced[] => {
@@ -25,9 +27,42 @@ const vaults = {
 const ironBank = {
   get: () => {
     console.log('Mock: ironBank.get()');
+    return IronBankGetMockData.map((cyToken) => ({
+      ...cyToken,
+      underlyingTokenBalance: {
+        amount: BigNumber.from(cyToken.underlyingTokenBalance.amount),
+        amountUsdc: BigNumber.from(cyToken.underlyingTokenBalance.amountUsdc),
+      },
+      metadata: {
+        ...cyToken.metadata,
+        decimals: BigNumber.from(cyToken.metadata.decimals),
+        liquidity: BigNumber.from(cyToken.metadata.liqudity),
+      },
+    }));
   },
   positionsOf: () => {
     console.log('Mock: ironBank.positionOf()');
+    return IronBankPositionMockData.map((cyTokenPosition) => {
+      const positions = cyTokenPosition.positions.map((position) => ({
+        ...position,
+        balance: BigNumber.from(position.balance),
+        accountTokenBalance: {
+          amount: BigNumber.from(position.accountTokenBalance.amount),
+          amountUsdc: BigNumber.from(position.accountTokenBalance.amountUsdc),
+        },
+        underlyingTokenBalance: {
+          amount: BigNumber.from(position.underlyingTokenBalance.amount),
+          amountUsdc: BigNumber.from(position.underlyingTokenBalance.amountUsdc),
+        },
+      }));
+      return {
+        positions,
+        metadata: {
+          ...cyTokenPosition.metadata,
+          borrowLimit: BigNumber.from(cyTokenPosition.metadata.borrowLimit),
+        },
+      };
+    });
   },
 };
 

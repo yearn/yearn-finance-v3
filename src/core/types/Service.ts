@@ -4,7 +4,7 @@ import {
   TokenData,
   UserVaultData,
   CyTokenData,
-  CyTokenDynamicData,
+  UserCyTokenData,
   TokenDynamicData,
   EthereumAddress,
   Wei,
@@ -54,7 +54,8 @@ export interface ApproveDepositProps {
 
 export interface IronBankService {
   getSupportedCyTokens: () => Promise<CyTokenData[]>;
-  getCyTokensDynamicData: () => Promise<CyTokenDynamicData[]>;
+  getUserCyTokensData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserCyTokenData[]>;
+  // getCyTokensDynamicData: () => Promise<CyTokenDynamicData[]>;
   // approveSupply: (props: ApproveSupplyProps) => Promise<void>;
   // supply: (props: SupplyProps) => Promise<void>;
   // withdraw: (props: WithdrawProps) => Promise<void>;
