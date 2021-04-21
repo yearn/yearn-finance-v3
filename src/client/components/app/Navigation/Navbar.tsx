@@ -42,6 +42,7 @@ const StyledNavbar = styled.nav<{ transparent: boolean }>`
   height: ${(props) => props.theme.navbar.height};
   border-bottom: 1px solid ${(props) => props.theme.colors.shade40};
   padding: 0 ${(props) => props.theme.navbar.padding};
+  z-index: ${(props) => props.theme.zindex.navbar};
 
   &[transparent] {
     background-color: transparent;
@@ -65,7 +66,7 @@ export const Navbar = ({
   if ((isMobile && sidemenuOnlyMobile) || !sidemenuOnlyMobile) {
     mobileButton = (
       <StyledMenuButton onClick={toggleSidemenu}>
-        <Icon src={HamburguerIcon} />
+        <Icon Component={HamburguerIcon} />
       </StyledMenuButton>
     );
   }

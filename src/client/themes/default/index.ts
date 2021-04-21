@@ -33,6 +33,11 @@ const defaultTheme: DefaultTheme = {
     padding: '2rem',
     height: '6.6rem',
   },
+  footer: {
+    padding: '7rem',
+    paddingTop: '4rem',
+    paddingBottom: '3.7rem',
+  },
   saveAsset: {
     cardBackground: 'rgba(42, 46, 59, 0.85)',
     cardBackgroundSelected: 'rgba(52, 57, 73, 0.7)',
@@ -40,6 +45,7 @@ const defaultTheme: DefaultTheme = {
     cardBorderSelected: '#424756',
   },
   zindex: {
+    navbar: 400,
     sidemenu: 500,
     navSidemenu: 1000,
     onboardModal: 1100,

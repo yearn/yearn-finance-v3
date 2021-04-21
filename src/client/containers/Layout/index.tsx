@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { AppActions, RouteActions, WalletActions } from '@store';
 import { useAppDispatch, useAppSelector } from '@hooks';
-import { Navigation } from '@components/app';
+import { Navigation, Footer } from '@components/app';
 import { Box } from '@components/common';
 
 const Content = styled.div`
@@ -13,6 +13,7 @@ const Content = styled.div`
   width: 100%;
   flex: 1;
   padding-top: ${(props) => props.theme.navbar.height};
+  min-height: 100%;
 `;
 
 export const Layout: FC = ({ children }) => {
@@ -37,6 +38,7 @@ export const Layout: FC = ({ children }) => {
         onWalletClick={() => dispatch(WalletActions.walletSelect())}
       />
       <Content>{children}</Content>
+      <Footer />
     </Box>
   );
 };
