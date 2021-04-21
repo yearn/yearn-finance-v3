@@ -12,6 +12,8 @@
 
   "navigation": {
     "home": "Home",
+    "dashboard": "Dashboard",
+    "invest": "Invest",
     "save": "Save"
   },
   "footer": {
