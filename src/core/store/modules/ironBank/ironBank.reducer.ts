@@ -7,6 +7,7 @@ const initialState: IronBankState = {
   cyTokenAddresses: [],
   cyTokensMap: {},
   address: '',
+  selectedCyTokenAddress: '',
   user: {
     borrowLimit: '0',
     borrowLimitUsed: '0',
@@ -24,7 +25,7 @@ const initialState: IronBankState = {
   },
 };
 
-const { initiateIronBank, getCyTokens, getIronBankData, getUserCyTokens } = IronBankActions;
+const { initiateIronBank, getCyTokens, getIronBankData, getUserCyTokens, setSelectedCyTokenAddress } = IronBankActions;
 
 const ironBankReducer = createReducer(initialState, (builder) => {
   builder
@@ -69,6 +70,9 @@ const ironBankReducer = createReducer(initialState, (builder) => {
     })
     .addCase(getUserCyTokens.rejected, (state, { error }) => {
       state.statusMap.user.getUserCYTokens = { error: error.message };
+    })
+    .addCase(setSelectedCyTokenAddress, (state, { payload: { cyTokenAddress } }) => {
+      state.selectedCyTokenAddress = cyTokenAddress;
     });
 });
 

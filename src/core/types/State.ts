@@ -97,6 +97,7 @@ export interface IronBankState {
   cyTokenAddresses: EthereumAddress[];
   cyTokensMap: { [cyTokenAddress: string]: CyTokenData };
   address: EthereumAddress;
+  selectedCyTokenAddress: EthereumAddress;
   user: {
     borrowLimit: string;
     borrowLimitUsed: string;

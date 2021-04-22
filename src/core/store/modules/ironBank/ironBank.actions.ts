@@ -1,7 +1,9 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import { CyTokenData, UserCyTokenData, UserTokenData } from '@types';
 import { TokensActions } from '@store';
+
+const setSelectedCyTokenAddress = createAction<{ cyTokenAddress: string }>('ironbank/setSelectedCyTokenAddress');
 
 const initiateIronBank = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'ironBank/initiateIronBank',
@@ -70,4 +72,5 @@ export const IronBankActions = {
   getCyTokens,
   getIronBankData,
   getUserCyTokens,
+  setSelectedCyTokenAddress,
 };
