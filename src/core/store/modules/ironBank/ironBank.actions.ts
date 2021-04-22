@@ -1,6 +1,7 @@
-import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { CyTokenData } from '@types';
+import { CyTokenData, UserCyTokenData, UserTokenData } from '@types';
+import { TokensActions } from '@store';
 
 const initiateIronBank = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'ironBank/initiateIronBank',
@@ -42,8 +43,31 @@ const getCyTokens = createAsyncThunk<{ cyTokensMap: CyTokensMap; cyTokensAddress
   }
 );
 
+const getUserCyTokens = createAsyncThunk<
+  { userCyTokensMap: { [cyTokenAddress: string]: UserCyTokenData } },
+  undefined,
+  ThunkAPI
+>('ironBank/getUserCyTokens', async (_arg, { extra, getState, dispatch }) => {
+  const { ironBankService } = extra.services;
+  const userAddress = getState().wallet.selectedAddress;
+  if (!userAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
+  const userCyTokens = await ironBankService.getUserCyTokensData({ userAddress });
+  const userCyTokensMap: { [address: string]: UserCyTokenData } = {};
+  const userTokensMap: { [address: string]: UserTokenData } = {}; // this should be removed when sdk.getTokens() ready.
+  userCyTokens.forEach((cyToken) => {
+    userCyTokensMap[cyToken.address] = cyToken;
+    userTokensMap[cyToken.tokenPosition.address] = cyToken.tokenPosition;
+  });
+
+  dispatch(TokensActions.setUserTokensMap({ userTokensMap }));
+  return { userCyTokensMap };
+});
+
 export const IronBankActions = {
   initiateIronBank,
   getCyTokens,
   getIronBankData,
+  getUserCyTokens,
 };

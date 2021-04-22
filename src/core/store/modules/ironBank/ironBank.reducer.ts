@@ -14,14 +14,17 @@ const initialState: IronBankState = {
   },
   statusMap: {
     initiateIronBank: { ...initialStatus },
-    getCYTokens: { ...initialStatus },
     getIronBankData: { ...initialStatus },
+    getCYTokens: { ...initialStatus },
     cyTokensActionsMap: {},
-    userCyTokensActionsMap: {},
+    user: {
+      getUserCYTokens: { ...initialStatus },
+      userCyTokensActionsMap: {},
+    },
   },
 };
 
-const { initiateIronBank, getCyTokens, getIronBankData } = IronBankActions;
+const { initiateIronBank, getCyTokens, getIronBankData, getUserCyTokens } = IronBankActions;
 
 const ironBankReducer = createReducer(initialState, (builder) => {
   builder
@@ -56,6 +59,16 @@ const ironBankReducer = createReducer(initialState, (builder) => {
     })
     .addCase(getCyTokens.rejected, (state, { error }) => {
       state.statusMap.getCYTokens = { error: error.message };
+    })
+    .addCase(getUserCyTokens.pending, (state) => {
+      state.statusMap.user.getUserCYTokens = { loading: true };
+    })
+    .addCase(getUserCyTokens.fulfilled, (state, { payload: { userCyTokensMap } }) => {
+      state.user.userCyTokensMap = userCyTokensMap;
+      state.statusMap.user.getUserCYTokens = {};
+    })
+    .addCase(getUserCyTokens.rejected, (state, { error }) => {
+      state.statusMap.user.getUserCYTokens = { error: error.message };
     });
 });
 
