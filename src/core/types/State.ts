@@ -96,10 +96,11 @@ export interface UserCyTokenActionsStatusMap {
 export interface IronBankState {
   cyTokenAddresses: EthereumAddress[];
   cyTokensMap: { [cyTokenAddress: string]: CyTokenData };
+  address: EthereumAddress;
   user: {
     borrowLimit: string;
     borrowLimitUsed: string;
-    userCyTokensMap: { [cyTokenAddress: string]: CyTokenData };
+    userCyTokensMap: { [cyTokenAddress: string]: UserCyTokenData };
   };
   statusMap: {
     initiateIronBank: Status;
