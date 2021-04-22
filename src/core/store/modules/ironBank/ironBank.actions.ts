@@ -5,10 +5,21 @@ import { CyTokenData } from '@types';
 const initiateIronBank = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'ironBank/initiateIronBank',
   async (_arg, { dispatch }) => {
-    // dispatch(getIronBankData());
+    await dispatch(getIronBankData());
     await dispatch(getCyTokens());
   }
 );
+
+const getIronBankData = createAsyncThunk<
+  { address: string; borrowLimit: string; borrowLimitUsed: string },
+  undefined,
+  ThunkAPI
+>('ironBank/getIronBankData', async (_arg, { extra, getState }) => {
+  const userAddress = getState().wallet.selectedAddress;
+  const { ironBankService } = extra.services;
+  const { address, borrowLimit, borrowLimitUsed } = await ironBankService.getIronBankData({ userAddress });
+  return { address, borrowLimit, borrowLimitUsed };
+});
 
 // todo move this
 interface CyTokensMap {
@@ -34,4 +45,5 @@ const getCyTokens = createAsyncThunk<{ cyTokensMap: CyTokensMap; cyTokensAddress
 export const IronBankActions = {
   initiateIronBank,
   getCyTokens,
+  getIronBankData,
 };

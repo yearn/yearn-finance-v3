@@ -105,6 +105,7 @@ export interface IronBankState {
   statusMap: {
     initiateIronBank: Status;
     getCYTokens: Status;
+    getIronBankData: Status;
     cyTokensActionsMap: { [cyTokenAddress: string]: CyTokenActionsStatusMap };
     userCyTokensActionsMap: { [cyTokenAddress: string]: UserCyTokenActionsStatusMap };
   };

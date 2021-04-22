@@ -7,6 +7,18 @@ export class IronBankServiceImpl implements IronBankService {
     this.yearnSdk = yearnSdk;
   }
 
+  public async getIronBankData({ userAddress }: { userAddress: string | undefined }): Promise<any> {
+    const yearn = this.yearnSdk;
+    const ironBank = await yearn.ironBank.getIronBank(userAddress);
+    console.log({ ironBank });
+
+    return {
+      address: ironBank.address,
+      borrowLimit: ironBank.userAssetMetadata.borrowLimit.toString(),
+      borrowLimitUsed: ironBank.userAssetMetadata.borrowLimitUSed.toString(),
+    };
+  }
+
   public async getSupportedCyTokens(): Promise<CyTokenData[]> {
     const yearn = this.yearnSdk;
     const ironBank = await yearn.ironBank.get();

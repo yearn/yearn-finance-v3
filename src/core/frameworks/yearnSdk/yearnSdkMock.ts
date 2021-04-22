@@ -128,6 +128,15 @@ const ironBank = {
       };
     });
   },
+  getIronBank: () => {
+    return {
+      address: '0x000...',
+      userAssetMetadata: {
+        borrowLimit: BigNumber.from('100'),
+        borrowLimitUSed: BigNumber.from('30'),
+      },
+    };
+  },
 };
 
 export const yearnSdkMock = {

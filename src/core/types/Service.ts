@@ -53,6 +53,7 @@ export interface ApproveDepositProps {
 export interface IronBankService {
   getSupportedCyTokens: () => Promise<CyTokenData[]>;
   getUserCyTokensData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserCyTokenData[]>;
+  getIronBankData: ({ userAddress }: { userAddress: EthereumAddress | undefined }) => Promise<any>;
   // getCyTokensDynamicData: () => Promise<CyTokenDynamicData[]>;
   // approveSupply: (props: ApproveSupplyProps) => Promise<void>;
   // supply: (props: SupplyProps) => Promise<void>;
