@@ -1,5 +1,4 @@
-import { EthereumAddress } from '@types';
-import { UserTokenData } from './Token';
+import { EthereumAddress, Token, UserTokenData } from '@types';
 
 export interface IronBank extends IronBankData {
   cyTokens: CyToken[];
@@ -27,6 +26,16 @@ export interface CyToken {
   reserveFactor: string;
   isActive: string;
   exchangeRate: string;
+  // user
+  suppliedBalance: string;
+  suppliedBalanceUsdc: string;
+  borrowedBalance: string;
+  borrowedBalanceUsdc: string;
+  allowancesMap: { [spenderAddress: string]: string };
+  enteredMarket: boolean;
+  borrowLimit: string;
+  // underlyingToken
+  token: Token;
 }
 
 export interface CyTokenData extends CyTokenStaticData, CyTokenDynamicData {}

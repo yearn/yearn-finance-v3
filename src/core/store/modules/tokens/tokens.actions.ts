@@ -1,6 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import { TokenData, TokenDynamicData, UserTokenData } from '@types';
+import BigNumber from 'bignumber.js';
 
 const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('user/setUserTokenData');
 const setUserTokensMap = createAction<{ userTokensMap: { [address: string]: UserTokenData } }>('user/setUserTokensMap');
@@ -31,9 +32,27 @@ const getTokensDynamicData = createAsyncThunk<
   return { tokensDynamicData };
 });
 
+const approve = createAsyncThunk<{ amount: string }, { tokenAddress: string; spenderAddress: string }, ThunkAPI>(
+  'tokens/approve',
+  async ({ tokenAddress, spenderAddress }, { extra, getState, rejectWithValue }) => {
+    const { tokenService } = extra.services;
+    const amount = extra.config.MAX_UINT256;
+    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
+    const approved = new BigNumber(userTokenData.allowancesMap[spenderAddress]).gt(0);
+    if (approved) {
+      return rejectWithValue('ALREADY_APPROVED');
+    }
+
+    await tokenService.approve({ tokenAddress, spenderAddress, amount });
+
+    return { amount };
+  }
+);
+
 export const TokensActions = {
   setUserTokenData,
   getTokens,
   getTokensDynamicData,
   setUserTokensMap,
+  approve,
 };

@@ -1,4 +1,4 @@
-import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import { UserTokenData, UserVaultData, VaultData, VaultDynamicData } from '@types';
 import BigNumber from 'bignumber.js';
@@ -60,28 +60,15 @@ const getUserVaultsData = createAsyncThunk<{ userVaultsMap: { [address: string]:
   }
 );
 
-const approveVault = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
+const approveVault = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveVault',
-  async ({ vaultAddress }, { extra, getState, dispatch }) => {
-    const { services, config } = extra;
-    const vaultData = getState().vaults.vaultsMap[vaultAddress];
-    const userTokenData = getState().tokens.user.userTokensMap[vaultData.token];
-    const approved = new BigNumber(userTokenData.allowancesMap[vaultAddress]).gt(0);
-    if (approved) {
-      throw new Error('ALREADY_APPROVED');
+  async ({ vaultAddress, tokenAddress }, { getState, dispatch }) => {
+    try {
+      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: vaultAddress }));
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
     }
-
-    const { vaultService } = services;
-    await vaultService.approveDeposit({ tokenAddress: vaultData.token, vaultAddress, amount: config.MAX_UINT256 });
-
-    const newUserTokendata = {
-      ...userTokenData,
-      allowancesMap: {
-        ...userTokenData.allowancesMap,
-        [vaultAddress]: config.MAX_UINT256,
-      },
-    };
-    dispatch(TokensActions.setUserTokenData({ userTokenData: newUserTokendata }));
   }
 );
 
@@ -104,7 +91,7 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
 
     const approved = new BigNumber(userTokenData.allowancesMap[vaultAddress]).gt(0);
     if (!approved) {
-      await dispatch(approveVault({ vaultAddress }));
+      await dispatch(approveVault({ vaultAddress, tokenAddress: tokenData.address }));
     }
 
     const { vaultService } = services;

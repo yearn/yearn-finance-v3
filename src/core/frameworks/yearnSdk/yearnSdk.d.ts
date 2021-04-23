@@ -6,6 +6,7 @@ declare module '@yfi/sdk' {
     ironBank: {
       get: () => Promise<Asset<any>[]>;
       positionsOf: (address: Address) => Promise<PositionsWithMetadata[]>;
+      getIronBank: (address: Address) => Promise<any>;
     };
   }
 
