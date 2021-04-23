@@ -46,9 +46,11 @@ export interface VaultsState {
   statusMap: {
     initiateSaveVaults: Status;
     getVaults: Status;
-    getUserVaults: Status;
     vaultsActionsStatusMap: { [vaultAddress: string]: VaultActionsStatusMap };
-    userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };
+    user: {
+      getUserVaults: Status;
+      userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };
+    };
   };
 }
 
@@ -76,12 +78,15 @@ export interface TokensState {
   };
   statusMap: {
     getTokens: Status;
-    getUserTokens: Status;
-    userTokensActiosMap: { [address: string]: { get: Status } };
+    user: {
+      getUserTokens: Status;
+      userTokensActiosMap: { [address: string]: UserTokenActionsMap };
+    };
   };
 }
 
 export interface CyTokenActionsStatusMap {
+  approve: Status;
   borrow: Status;
   supply: Status;
   replay: Status;
@@ -96,15 +101,21 @@ export interface UserCyTokenActionsStatusMap {
 export interface IronBankState {
   cyTokenAddresses: EthereumAddress[];
   cyTokensMap: { [cyTokenAddress: string]: CyTokenData };
+  address: EthereumAddress;
+  selectedCyTokenAddress: EthereumAddress;
   user: {
     borrowLimit: string;
     borrowLimitUsed: string;
-    userCyTokensMap: { [cyTokenAddress: string]: CyTokenData };
+    userCyTokensMap: { [cyTokenAddress: string]: UserCyTokenData };
   };
   statusMap: {
     initiateIronBank: Status;
+    getIronBankData: Status;
     getCYTokens: Status;
     cyTokensActionsMap: { [cyTokenAddress: string]: CyTokenActionsStatusMap };
-    userCyTokensActionsMap: { [cyTokenAddress: string]: UserCyTokenActionsStatusMap };
+    user: {
+      getUserCYTokens: Status;
+      userCyTokensActionsMap: { [cyTokenAddress: string]: UserCyTokenActionsStatusMap };
+    };
   };
 }

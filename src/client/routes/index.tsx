@@ -7,6 +7,7 @@ import { Invest } from './Invest';
 import { Landing } from './Landing';
 import { Dashboard } from './Dashboard';
 import { VaultDetail } from './VaultDetail';
+import { Borrow } from './Borrow';
 
 export const Routes = () => {
   return (
@@ -17,7 +18,7 @@ export const Routes = () => {
           <Route exact path="/invest" component={Invest} />
           <Route exact path="/save" component={Save} />
           <Route exact path="/vault/:vaultId" component={VaultDetail} />
-
+          <Route exact path="/borrow" component={Borrow} />
           <Route path="/" component={Landing} />
           <Route path="*">
             <Redirect to="/" />

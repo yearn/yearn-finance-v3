@@ -100,6 +100,8 @@ const ironBank = {
       },
       metadata: {
         ...cyToken.metadata,
+        lendApy: parseFloat(cyToken.metadata.lendAPY) / 100,
+        borrowApy: parseFloat(cyToken.metadata.borrowAPY) / 100,
         decimals: BigNumber.from(cyToken.metadata.decimals),
         liquidity: BigNumber.from(cyToken.metadata.liqudity),
       },
@@ -127,6 +129,15 @@ const ironBank = {
         },
       };
     });
+  },
+  getIronBank: () => {
+    return {
+      address: '0x000...',
+      userAssetMetadata: {
+        borrowLimit: BigNumber.from('100'),
+        borrowLimitUSed: BigNumber.from('30'),
+      },
+    };
   },
 };
 

@@ -90,6 +90,10 @@ export const NavSidemenu = ({ walletAddress, onWalletClick, open }: NavSidemenuP
       to: '/save',
       text: t('navigation.save'),
     },
+    {
+      to: '/borrow',
+      text: t('navigation.borrow'),
+    },
   ];
 
   const linkList = (

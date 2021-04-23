@@ -16,7 +16,6 @@ export interface VaultService {
   getSupportedVaults: () => Promise<VaultData[]>;
   getVaultsDynamicData: (props: any) => Promise<VaultDynamicData[]>;
   getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
-  approveDeposit: (props: ApproveDepositProps) => Promise<void>;
   deposit: (props: DepositProps) => Promise<void>;
   withdraw: (props: WithdrawProps) => Promise<void>;
   // approveZapIn:
@@ -29,6 +28,7 @@ export interface VaultService {
 export interface TokenService {
   getSupportedTokens: () => Promise<TokenData[]>;
   getTokensDynamicData: (props: any) => Promise<TokenDynamicData[]>;
+  approve: (props: ApproveProps) => Promise<void>;
   // getTokenRates:
 }
 
@@ -44,15 +44,16 @@ export interface WithdrawProps {
   amountOfShares: Wei;
 }
 
-export interface ApproveDepositProps {
+export interface ApproveProps {
   tokenAddress: EthereumAddress;
-  vaultAddress: EthereumAddress;
+  spenderAddress: EthereumAddress;
   amount: Wei;
 }
 
 export interface IronBankService {
   getSupportedCyTokens: () => Promise<CyTokenData[]>;
   getUserCyTokensData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserCyTokenData[]>;
+  getIronBankData: ({ userAddress }: { userAddress: EthereumAddress | undefined }) => Promise<any>;
   // getCyTokensDynamicData: () => Promise<CyTokenDynamicData[]>;
   // approveSupply: (props: ApproveSupplyProps) => Promise<void>;
   // supply: (props: SupplyProps) => Promise<void>;
