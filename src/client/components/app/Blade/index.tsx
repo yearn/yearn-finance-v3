@@ -113,7 +113,8 @@ export const Blade = () => {
   const [depositAmount, setDepositAmount] = useState('0');
   const [withdrawAmount, setWithdrawAmount] = useState('0');
 
-  const approve = (vaultAddress: string) => dispatch(VaultsActions.approveVault({ vaultAddress }));
+  const approve = (vaultAddress: string, tokenAddress: string) =>
+    dispatch(VaultsActions.approveVault({ vaultAddress, tokenAddress }));
   const deposit = (vaultAddress: string, amount: string) =>
     dispatch(VaultsActions.depositVault({ vaultAddress, amount: new BigNumber(amount) }));
   const withdraw = (vaultAddress: string, amount: string) =>
@@ -125,7 +126,7 @@ export const Blade = () => {
     approveButton = (
       <ActionButton
         className="outline"
-        onClick={() => approve(selectedVault?.address!)}
+        onClick={() => approve(selectedVault?.address!, selectedVault?.token?.address!)}
         disabled={approveStatus.loading || !walletIsConnected}
       >
         {approveStatus.loading && <StyledSpinnerLoading />} Approve

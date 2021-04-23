@@ -1,4 +1,4 @@
-import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import { CyTokenData, UserCyTokenData, UserTokenData } from '@types';
 import { TokensActions } from '@store';
@@ -67,10 +67,23 @@ const getUserCyTokens = createAsyncThunk<
   return { userCyTokensMap };
 });
 
+const approveCyToken = createAsyncThunk<void, { cyTokenAddress: string; tokenAddress: string }, ThunkAPI>(
+  'ironBank/approve',
+  async ({ cyTokenAddress, tokenAddress }, { extra, getState, dispatch }) => {
+    try {
+      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: cyTokenAddress }));
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
 export const IronBankActions = {
   initiateIronBank,
   getCyTokens,
   getIronBankData,
   getUserCyTokens,
   setSelectedCyTokenAddress,
+  approveCyToken,
 };
