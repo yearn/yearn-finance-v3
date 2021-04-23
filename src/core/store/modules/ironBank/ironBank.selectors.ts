@@ -4,6 +4,7 @@ import { RootState, CyToken, Status } from '@types';
 
 const selectIronBankState = (state: RootState) => state.ironBank;
 const selectTokensState = (state: RootState) => state.tokens;
+const selectSelectedCyTokenAddress = (state: RootState) => state.ironBank.selectedCyTokenAddress;
 
 const selectCyTokens = createSelector(
   [selectIronBankState, selectTokensState],
@@ -70,4 +71,15 @@ const selectIronBankGeneralStatus = createSelector(
   }
 );
 
-export const IronBankSelectors = { selectCyTokens, selectIronBankGeneralStatus };
+const selectSelectedCyToken = createSelector(
+  [selectCyTokens, selectSelectedCyTokenAddress],
+  (cyTokens, selectedCyTokenAddress): CyToken | undefined => {
+    if (!selectedCyTokenAddress) {
+      return undefined;
+    }
+    const selectedCyToken = cyTokens.find((cyToken) => cyToken.address === selectedCyTokenAddress);
+    return selectedCyToken;
+  }
+);
+
+export const IronBankSelectors = { selectCyTokens, selectIronBankGeneralStatus, selectSelectedCyToken };

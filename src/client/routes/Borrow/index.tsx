@@ -5,9 +5,11 @@ import { useAppSelector, useAppDispatch, useAppTranslation } from '@hooks';
 import { IronBankActions, IronBankSelectors } from '@store';
 import { formatPercent, humanizeAmount } from '@src/utils';
 import { BladeContext, NavSideMenuContext } from '@context';
-import { AssetCard, Blade } from '@components/app';
+import { AssetCard } from '@components/app';
 import { List, SpinnerLoading } from '@components/common';
 import { device } from '@themes/default';
+
+import { BladeDump } from '@components/app/BladeDump';
 
 const BorrowView = styled.div`
   display: flex;
@@ -83,6 +85,8 @@ export const Borrow = () => {
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
   const generalIronBankStatus = useAppSelector(IronBankSelectors.selectIronBankGeneralStatus);
   const cyTokens = useAppSelector(IronBankSelectors.selectCyTokens);
+  const selectedCyToken = useAppSelector(IronBankSelectors.selectSelectedCyToken);
+
   let assetList;
 
   if (!generalIronBankStatus.loading && !generalIronBankStatus.error) {
@@ -154,7 +158,7 @@ export const Borrow = () => {
 
   return (
     <BorrowView>
-      <Blade></Blade>
+      <BladeDump data={selectedCyToken} />
       <DefaultPageContent>
         {assetList}
         {saveInfo}
