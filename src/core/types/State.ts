@@ -46,9 +46,11 @@ export interface VaultsState {
   statusMap: {
     initiateSaveVaults: Status;
     getVaults: Status;
-    getUserVaults: Status;
     vaultsActionsStatusMap: { [vaultAddress: string]: VaultActionsStatusMap };
-    userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };
+    user: {
+      getUserVaults: Status;
+      userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };
+    };
   };
 }
 
@@ -76,8 +78,10 @@ export interface TokensState {
   };
   statusMap: {
     getTokens: Status;
-    getUserTokens: Status;
-    userTokensActiosMap: { [address: string]: { get: Status } };
+    user: {
+      getUserTokens: Status;
+      userTokensActiosMap: { [address: string]: { get: Status } };
+    };
   };
 }
 

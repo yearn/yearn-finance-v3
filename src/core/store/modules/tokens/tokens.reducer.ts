@@ -11,8 +11,10 @@ const initialState: TokensState = {
   },
   statusMap: {
     getTokens: { ...initialStatus },
-    getUserTokens: { ...initialStatus },
-    userTokensActiosMap: {},
+    user: {
+      getUserTokens: { ...initialStatus },
+      userTokensActiosMap: {},
+    },
   },
 };
 
