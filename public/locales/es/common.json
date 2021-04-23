@@ -14,7 +14,8 @@
     "home": "Inicio",
     "dashboard": "Dashboard",
     "invest": "Invest",
-    "save": "Save"
+    "save": "Save",
+    "borrow": "Borrow"
   },
   "footer": {
     "copyright": "Copyright © yearn 2021. Todos los derechos reservados.",
