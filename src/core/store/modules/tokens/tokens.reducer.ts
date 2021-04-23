@@ -1,7 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { TokensState } from '@types';
+import { TokensState, UserTokenActionsMap } from '@types';
 import { initialStatus } from '../../../types/Status';
 import { TokensActions } from './tokens.actions';
+
+export const initialUserTokenActionsMap: UserTokenActionsMap = {
+  get: initialStatus,
+};
 
 const initialState: TokensState = {
   tokensAddresses: [],
@@ -49,7 +53,14 @@ const tokensReducer = createReducer(initialState, (builder) => {
       state.user.userTokensMap[userTokenData.address] = userTokenData;
     })
     .addCase(setUserTokensMap, (state, { payload: { userTokensMap } }) => {
+      const tokensAddresses = Object.keys(userTokensMap);
+      const userTokensActiosMap: any = {};
+      tokensAddresses.forEach((address) => (userTokensActiosMap[address] = initialUserTokenActionsMap));
       state.user.userTokensMap = { ...state.user.userTokensMap, ...userTokensMap };
+      state.statusMap.user.userTokensActiosMap = {
+        ...state.statusMap.user.userTokensActiosMap,
+        ...userTokensActiosMap,
+      };
     })
     // getTokensDynamicData pending and reject are not implemented because for now we dont support individual token statuses
     .addCase(getTokensDynamicData.fulfilled, (state, { payload: { tokensDynamicData } }) => {

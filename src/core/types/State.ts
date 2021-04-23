@@ -80,7 +80,7 @@ export interface TokensState {
     getTokens: Status;
     user: {
       getUserTokens: Status;
-      userTokensActiosMap: { [address: string]: { get: Status } };
+      userTokensActiosMap: { [address: string]: UserTokenActionsMap };
     };
   };
 }
