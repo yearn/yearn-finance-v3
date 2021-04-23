@@ -10,7 +10,6 @@ export class IronBankServiceImpl implements IronBankService {
   public async getIronBankData({ userAddress }: { userAddress: string | undefined }): Promise<any> {
     const yearn = this.yearnSdk;
     const ironBank = await yearn.ironBank.getIronBank(userAddress);
-    console.log({ ironBank });
 
     return {
       address: ironBank.address,

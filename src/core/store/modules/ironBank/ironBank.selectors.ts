@@ -55,7 +55,6 @@ const selectCyTokens = createSelector(
         },
       };
     });
-    console.log({ cyTokens });
     return cyTokens;
   }
 );

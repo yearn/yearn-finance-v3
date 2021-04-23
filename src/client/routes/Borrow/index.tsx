@@ -79,8 +79,7 @@ const ErrorMessage = styled.div`
 export const Borrow = () => {
   const { t } = useAppTranslation('common');
   const { close: closeNavSidemenu } = useContext(NavSideMenuContext);
-  const { open: openBlade, isOpen } = useContext(BladeContext);
-  console.log(isOpen);
+  const { open: openBlade } = useContext(BladeContext);
   const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
   const generalIronBankStatus = useAppSelector(IronBankSelectors.selectIronBankGeneralStatus);

@@ -59,8 +59,6 @@ export const Navbar = ({
   const sidemenuOnlyMobile = false;
   const { isMobile } = useWindowDimensions();
 
-  console.log(transparent);
-
   let mobileButton;
   let connectWalletButton;
   if ((isMobile && sidemenuOnlyMobile) || !sidemenuOnlyMobile) {
