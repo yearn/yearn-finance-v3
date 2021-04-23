@@ -1,7 +1,16 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { IronBankState } from '@types';
+import { CyTokenActionsStatusMap, IronBankState } from '@types';
 import { initialStatus } from '../../../types/Status';
 import { IronBankActions } from './ironBank.actions';
+
+export const initialCyTokensActionsMap: CyTokenActionsStatusMap = {
+  approve: initialStatus,
+  get: initialStatus,
+  borrow: initialStatus,
+  replay: initialStatus,
+  supply: initialStatus,
+  withdraw: initialStatus,
+};
 
 const initialState: IronBankState = {
   cyTokenAddresses: [],
@@ -25,7 +34,14 @@ const initialState: IronBankState = {
   },
 };
 
-const { initiateIronBank, getCyTokens, getIronBankData, getUserCyTokens, setSelectedCyTokenAddress } = IronBankActions;
+const {
+  initiateIronBank,
+  getCyTokens,
+  getIronBankData,
+  getUserCyTokens,
+  setSelectedCyTokenAddress,
+  approveCyToken,
+} = IronBankActions;
 
 const ironBankReducer = createReducer(initialState, (builder) => {
   builder
@@ -54,9 +70,12 @@ const ironBankReducer = createReducer(initialState, (builder) => {
       state.statusMap.getCYTokens = { loading: true };
     })
     .addCase(getCyTokens.fulfilled, (state, { payload: { cyTokensAddresses, cyTokensMap } }) => {
+      const cyTokensActionsMap: any = {};
+      cyTokensAddresses.forEach((address) => (cyTokensActionsMap[address] = initialCyTokensActionsMap));
       state.cyTokenAddresses = cyTokensAddresses;
       state.cyTokensMap = cyTokensMap;
       state.statusMap.getCYTokens = {};
+      state.statusMap.cyTokensActionsMap = cyTokensActionsMap;
     })
     .addCase(getCyTokens.rejected, (state, { error }) => {
       state.statusMap.getCYTokens = { error: error.message };
@@ -70,6 +89,18 @@ const ironBankReducer = createReducer(initialState, (builder) => {
     })
     .addCase(getUserCyTokens.rejected, (state, { error }) => {
       state.statusMap.user.getUserCYTokens = { error: error.message };
+    })
+    .addCase(approveCyToken.pending, (state, { meta }) => {
+      const { cyTokenAddress } = meta.arg;
+      state.statusMap.cyTokensActionsMap[cyTokenAddress].approve = { loading: true };
+    })
+    .addCase(approveCyToken.fulfilled, (state, { meta }) => {
+      const { cyTokenAddress } = meta.arg;
+      state.statusMap.cyTokensActionsMap[cyTokenAddress].approve = {};
+    })
+    .addCase(approveCyToken.rejected, (state, { meta, error }) => {
+      const { cyTokenAddress } = meta.arg;
+      state.statusMap.cyTokensActionsMap[cyTokenAddress].approve = { error: error.message };
     })
     .addCase(setSelectedCyTokenAddress, (state, { payload: { cyTokenAddress } }) => {
       state.selectedCyTokenAddress = cyTokenAddress;

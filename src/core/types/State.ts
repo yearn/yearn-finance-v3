@@ -82,6 +82,7 @@ export interface TokensState {
 }
 
 export interface CyTokenActionsStatusMap {
+  approve: Status;
   borrow: Status;
   supply: Status;
   replay: Status;
