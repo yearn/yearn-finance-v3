@@ -56,35 +56,6 @@
   {
     "positions": [
       {
-        "assetId": "0x7589C9E17BCFcE1Ccaa1f921196FDa177F0207Fc",
-        "tokenId": "0x9cA85572E6A3EbF24dEDd195623F188735A5179f",
-        "typeId": "LEND",
-        "balance": "0000000000",
-        "accountTokenBalance": { "amount": "0000000000", "amountUsdc": "0000000000" },
-        "underlyingTokenBalance": { "amount": "0000000000", "amountUsdc": "0000000000" },
-        "assetAllowances": [],
-        "tokenAllowances": []
-      },
-      {
-        "assetId": "0x7589C9E17BCFcE1Ccaa1f921196FDa177F0207Fc",
-        "tokenId": "0x9cA85572E6A3EbF24dEDd195623F188735A5179f",
-        "typeId": "BORROW",
-        "balance": "0000000000",
-        "accountTokenBalance": { "amount": "0000000000", "amountUsdc": "0000000000" },
-        "underlyingTokenBalance": { "amount": "0000000000", "amountUsdc": "0000000000" },
-        "assetAllowances": [],
-        "tokenAllowances": []
-      }
-    ],
-    "metadata": {
-      "assetId": "0x7589C9E17BCFcE1Ccaa1f921196FDa177F0207Fc",
-      "enteredMarket": false,
-      "borrowLimit": "123"
-    }
-  },
-  {
-    "positions": [
-      {
         "assetId": "0xE7BFf2Da8A2f619c2586FB83938Fa56CE803aA16",
         "tokenId": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
         "typeId": "LEND",
