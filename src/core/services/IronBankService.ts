@@ -29,7 +29,7 @@ export class IronBankServiceImpl implements IronBankService {
         decimals: cyToken.metadata.decimals.toString(),
         name: cyToken.name,
         symbol: cyToken.metadata.symbol,
-        underlyingTokenAddress: cyToken.tokenId,
+        underlyingTokenAddress: cyToken.token.id,
         // dynamic
         lendApy: cyToken.metadata.lendApy,
         borrowApy: cyToken.metadata.borrowApy,

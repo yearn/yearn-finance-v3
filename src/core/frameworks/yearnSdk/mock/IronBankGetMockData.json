@@ -50,31 +50,6 @@
     }
   },
   {
-    "id": "0x7589C9E17BCFcE1Ccaa1f921196FDa177F0207Fc",
-    "typeId": "IRON_BANK",
-    "name": "Yearn Y3CRV",
-    "version": "",
-    "token": {
-      "id": "0x9cA85572E6A3EbF24dEDd195623F188735A5179f",
-      "name": "yearn Curve.fi DAI/USDC/USDT",
-      "symbol": "y3Crv",
-      "decimals": "18"
-    },
-    "underlyingTokenBalance": { "amount": "123", "amountUsdc": "123" },
-    "metadata": {
-      "lendAPY": "0.0000000000",
-      "borrowAPY": "0.0000004894",
-      "liqudity": "20372249503051908888959414",
-      "comptrollerAddress": "0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB",
-      "collateralFactor": "0.9000000000",
-      "isActive": true,
-      "reserveFactor": "0.9000000000",
-      "exchangeRate": "1",
-      "symbol": "cyY3CRV",
-      "decimals": "8"
-    }
-  },
-  {
     "id": "0xE7BFf2Da8A2f619c2586FB83938Fa56CE803aA16",
     "typeId": "IRON_BANK",
     "name": "Yearn ChainLink Token",
