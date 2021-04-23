@@ -9,7 +9,6 @@ import {
   Web3Provider,
   YearnSdk,
   Config,
-  ApproveDepositProps,
   DepositProps,
   WithdrawProps,
   VaultDynamicData,
@@ -119,17 +118,6 @@ export class VaultServiceImpl implements VaultService {
     });
 
     return userVaultsData;
-  }
-
-  public async approveDeposit(props: ApproveDepositProps): Promise<void> {
-    const { tokenAddress, vaultAddress, amount } = props;
-    const signer = this.web3Provider.getSigner();
-    const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
-    const transaction = await erc20Contract.approve(vaultAddress, amount);
-    console.log('Transaction: ', transaction);
-    notify.hash(transaction.hash);
-    const receipt = await transaction.wait(1);
-    console.log('Receipt: ', receipt);
   }
 
   public async deposit(props: DepositProps): Promise<void> {

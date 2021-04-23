@@ -35,7 +35,7 @@ const getTokensDynamicData = createAsyncThunk<
 const approve = createAsyncThunk<{ amount: string }, { tokenAddress: string; spenderAddress: string }, ThunkAPI>(
   'tokens/approve',
   async ({ tokenAddress, spenderAddress }, { extra, getState, rejectWithValue }) => {
-    const { tokenService, vaultService } = extra.services;
+    const { tokenService } = extra.services;
     const amount = extra.config.MAX_UINT256;
     const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
     const approved = new BigNumber(userTokenData.allowancesMap[spenderAddress]).gt(0);
@@ -43,8 +43,7 @@ const approve = createAsyncThunk<{ amount: string }, { tokenAddress: string; spe
       return rejectWithValue('ALREADY_APPROVED');
     }
 
-    await vaultService.approveDeposit({ tokenAddress, vaultAddress: spenderAddress, amount }); // TODO remove when implemented in token service
-    // await tokenService.approve({ tokenAddress, spenderAddress, amount }); // TODO move logic of vaultService.approveDEposit to token service
+    await tokenService.approve({ tokenAddress, spenderAddress, amount });
 
     return { amount };
   }
