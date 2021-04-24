@@ -6,6 +6,9 @@ import { yearnSdkMock } from './yearnSdkMock';
 export const getYearnSdk = ({ web3Provider, config }: { web3Provider: Web3Provider; config: Config }) => {
   const { USE_MAINNET_FORK, CONTRACT_ADDRESSES, USE_SDK_MOCK } = config;
 
+  console.log('USE_SDK_MOCK', USE_SDK_MOCK);
+  console.log('REACT_APP_USE_SDK_MOCK', process.env.REACT_APP_USE_SDK_MOCK);
+
   if (USE_SDK_MOCK) {
     return yearnSdkMock;
   }
