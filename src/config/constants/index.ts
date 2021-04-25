@@ -13,10 +13,15 @@ export const getConstants = memoize(
       WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
       FANTOM_PROVIDER_HTTPS: 'https://rpcapi.fantom.network',
       LOCAL_PROVIDER_HTTPS: 'http://127.0.0.1:8545/',
-      CONTRACT_ADDRESSES: {
-        oracle: '0xd3ca98d986be88b72ff95fc2ec976a5e6339150d',
+      CONTRACT_ADDRESSES_LOCAL: {
+        oracle: '0xd3ca98D986Be88b72Ff95fc2eC976a5E6339150d',
         lens: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
         registryV2Adapter: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
+      },
+      CONTRACT_ADDRESSES_MAINNET: {
+        oracle: '0x83d95e0D5f402511dB06817Aff3f9eA88224B030',
+        lens: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
+        registryV2Adapter: '0xE75E51566C5761896528B4698a88C92A54B3C954',
       },
     };
   }

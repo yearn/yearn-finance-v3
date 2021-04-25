@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { initialStatus, VaultsState } from '@types';
+import { initialStatus, VaultsState, Position } from '@types';
 import { VaultsActions } from './vaults.actions';
 
 export const initialVaultActionsStatusMap = {
@@ -15,6 +15,7 @@ const initialState: VaultsState = {
   selectedVaultAddress: undefined,
   user: {
     userVaultsMap: {},
+    positions: [],
   },
   statusMap: {
     initiateSaveVaults: { loading: false, error: null },
@@ -22,6 +23,7 @@ const initialState: VaultsState = {
     vaultsActionsStatusMap: {},
     user: {
       getUserVaults: { loading: false, error: null },
+      getVaultsPositionsOf: { loading: false, error: null },
       userVaultsActionsStatusMap: {},
     },
   },
@@ -36,6 +38,7 @@ const {
   withdrawVault,
   getVaultsDynamic,
   getUserVaultsData,
+  getVaultsPositionsOf,
 } = VaultsActions;
 
 const vaultsReducer = createReducer(initialState, (builder) => {
@@ -68,6 +71,10 @@ const vaultsReducer = createReducer(initialState, (builder) => {
     })
     .addCase(getUserVaultsData.fulfilled, (state, { payload: { userVaultsMap } }) => {
       state.user.userVaultsMap = { ...state.user.userVaultsMap, ...userVaultsMap };
+      state.statusMap.user.getUserVaults = {};
+    })
+    .addCase(getVaultsPositionsOf.fulfilled, (state, { payload }) => {
+      state.user.positions = payload;
       state.statusMap.user.getUserVaults = {};
     })
     .addCase(getUserVaultsData.rejected, (state, { error }) => {

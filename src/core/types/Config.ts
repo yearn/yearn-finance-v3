@@ -22,7 +22,12 @@ export interface Constants {
   WEB3_PROVIDER_WSS: string;
   FANTOM_PROVIDER_HTTPS: string;
   LOCAL_PROVIDER_HTTPS: string;
-  CONTRACT_ADDRESSES: {
+  CONTRACT_ADDRESSES_LOCAL: {
+    oracle: string;
+    lens: string;
+    registryV2Adapter: string;
+  };
+  CONTRACT_ADDRESSES_MAINNET: {
     oracle: string;
     lens: string;
     registryV2Adapter: string;

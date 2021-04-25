@@ -7,6 +7,7 @@ import {
   UserCyTokenData,
   TokenDynamicData,
   EthereumAddress,
+  Position,
   Wei,
 } from '@types';
 
@@ -15,6 +16,7 @@ export interface UserService {}
 export interface VaultService {
   getSupportedVaults: () => Promise<VaultData[]>;
   getVaultsDynamicData: (props: any) => Promise<VaultDynamicData[]>;
+  getVaultsPositionsOf: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<Position[]>;
   getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
   deposit: (props: DepositProps) => Promise<void>;
   withdraw: (props: WithdrawProps) => Promise<void>;

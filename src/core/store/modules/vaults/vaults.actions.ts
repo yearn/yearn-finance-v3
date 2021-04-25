@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { UserTokenData, UserVaultData, VaultData, VaultDynamicData } from '@types';
+import { UserTokenData, Position, UserVaultData, VaultData, VaultDynamicData } from '@types';
 import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';
@@ -57,6 +57,19 @@ const getUserVaultsData = createAsyncThunk<{ userVaultsMap: { [address: string]:
 
     dispatch(TokensActions.setUserTokensMap({ userTokensMap }));
     return { userVaultsMap };
+  }
+);
+
+const getVaultsPositionsOf = createAsyncThunk<Position[], void, ThunkAPI>(
+  'user/getPositionsData',
+  async (_arg, { extra, getState, dispatch }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+    const positions = await services.vaultService.getVaultsPositionsOf({ userAddress });
+    return positions;
   }
 );
 
@@ -145,4 +158,5 @@ export const VaultsActions = {
   withdrawVault,
   getVaultsDynamic,
   getUserVaultsData,
+  getVaultsPositionsOf,
 };

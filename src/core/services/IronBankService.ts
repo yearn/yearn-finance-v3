@@ -44,16 +44,16 @@ export class IronBankServiceImpl implements IronBankService {
 
   public async getUserCyTokensData({ userAddress }: { userAddress: string }): Promise<UserCyTokenData[]> {
     const yearn = this.yearnSdk;
-    const ironBank = await yearn.ironBank.positionsOf(userAddress);
+    const ironBank = await yearn.ironBank.assetsPositionsOf(userAddress);
     const cyTokenData = ironBank.map(({ positions, metadata }) => {
       const lendPosition = positions[0];
       const borrowPosition = positions[1];
       return {
         address: metadata.assetId,
-        suppliedBalance: lendPosition.accountTokenBalance.amount.toString(),
-        suppliedBalanceUsdc: lendPosition.accountTokenBalance.amountUsdc.toString(),
-        borrowedBalance: borrowPosition.accountTokenBalance.amount.toString(),
-        borrowedBalanceUsdc: borrowPosition.accountTokenBalance.amountUsdc.toString(),
+        suppliedBalance: lendPosition.underlyingTokenBalance.amount.toString(),
+        suppliedBalanceUsdc: lendPosition.underlyingTokenBalance.amountUsdc.toString(),
+        borrowedBalance: borrowPosition.underlyingTokenBalance.amount.toString(),
+        borrowedBalanceUsdc: borrowPosition.underlyingTokenBalance.amountUsdc.toString(),
         allowancesMap: borrowPosition.assetAllowances.reduce((map, allowance) => {
           map[allowance.spender] = allowance.amount.toString();
           return map;

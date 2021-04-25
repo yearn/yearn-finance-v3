@@ -4,6 +4,7 @@ import { Layout } from '@containers';
 // import { Page404 } from './404';
 import { Save } from './Save';
 import { Invest } from './Invest';
+import { InvestDump } from './InvestDump';
 import { Landing } from './Landing';
 import { Dashboard } from './Dashboard';
 import { VaultDetail } from './VaultDetail';
@@ -17,6 +18,7 @@ export const Routes = () => {
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/invest" component={Invest} />
           <Route exact path="/save" component={Save} />
+          <Route exact path="/investdump" component={InvestDump} />
           <Route exact path="/vault/:vaultId" component={VaultDetail} />
           <Route exact path="/borrow" component={Borrow} />
           <Route path="/" component={Landing} />

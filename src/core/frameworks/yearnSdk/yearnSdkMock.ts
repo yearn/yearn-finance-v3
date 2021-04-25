@@ -58,16 +58,12 @@ const vaults = {
     });
     return vaults;
   },
-  positionsOf: (): Position[] => {
+  assetsPositionsOf: (): Position[] => {
     const vaultsPositions = VaultsV2PositionsMockData.map((data) => {
       const position = data.positions[0];
       return {
         ...position,
         balance: BigNumber.from(position.balance),
-        accountTokenBalance: {
-          amount: BigNumber.from(position.accountTokenBalance.amount),
-          amountUsdc: BigNumber.from(position.accountTokenBalance.amountUsdc),
-        },
         underlyingTokenBalance: {
           amount: BigNumber.from(position.underlyingTokenBalance.amount),
           amountUsdc: BigNumber.from(position.underlyingTokenBalance.amountUsdc),
@@ -107,7 +103,7 @@ const ironBank = {
       },
     }));
   },
-  positionsOf: () => {
+  assetsPositionsOf: () => {
     return IronBankPositionMockData.map((cyTokenPosition) => {
       const positions = cyTokenPosition.positions.map((position) => ({
         ...position,

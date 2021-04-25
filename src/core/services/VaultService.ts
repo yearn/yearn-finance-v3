@@ -6,6 +6,7 @@ import { getContract } from '@frameworks/ethers';
 import {
   VaultService,
   VaultData,
+  Position,
   Web3Provider,
   YearnSdk,
   Config,
@@ -92,7 +93,7 @@ export class VaultServiceImpl implements VaultService {
 
   public async getUserVaultsData({ userAddress }: { userAddress: EthereumAddress }): Promise<UserVaultData[]> {
     const yearn = this.yearnSdk;
-    const userVaults = await yearn.vaults.positionsOf(userAddress);
+    const userVaults = await yearn.vaults.assetsPositionsOf(userAddress);
     const userVaultsData: UserVaultData[] = userVaults.map((vault) => {
       const allowancesMap: any = {};
       vault.assetAllowances.forEach((allowance) => {
@@ -105,8 +106,8 @@ export class VaultServiceImpl implements VaultService {
 
       return {
         address: vault.assetId,
-        depositedBalance: vault.accountTokenBalance.amount.toString(),
-        depositedBalanceUsdc: vault.accountTokenBalance.amountUsdc.toString(),
+        depositedBalance: vault.underlyingTokenBalance.amount.toString(),
+        depositedBalanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
         allowancesMap: allowancesMap,
         tokenPosition: {
           address: vault.tokenId,
@@ -118,6 +119,11 @@ export class VaultServiceImpl implements VaultService {
     });
 
     return userVaultsData;
+  }
+
+  public async getVaultsPositionsOf({ userAddress }: { userAddress: EthereumAddress }): Promise<Position[]> {
+    const yearn = this.yearnSdk;
+    return await yearn.vaults.assetsPositionsOf(userAddress);
   }
 
   public async deposit(props: DepositProps): Promise<void> {

@@ -1,10 +1,10 @@
+import { JsonRpcProvider } from '@ethersproject/providers';
 import { Yearn } from '@yfi/sdk';
-
 import { Web3Provider, Config } from '@types';
 import { yearnSdkMock } from './yearnSdkMock';
 
 export const getYearnSdk = ({ web3Provider, config }: { web3Provider: Web3Provider; config: Config }) => {
-  const { USE_MAINNET_FORK, CONTRACT_ADDRESSES, USE_SDK_MOCK } = config;
+  const { USE_MAINNET_FORK, CONTRACT_ADDRESSES_LOCAL, CONTRACT_ADDRESSES_MAINNET, USE_SDK_MOCK } = config;
 
   console.log('USE_SDK_MOCK', USE_SDK_MOCK);
   console.log('REACT_APP_USE_SDK_MOCK', process.env.REACT_APP_USE_SDK_MOCK);
@@ -19,9 +19,9 @@ export const getYearnSdk = ({ web3Provider, config }: { web3Provider: Web3Provid
       {
         provider: web3Provider.getInstanceOf('local'),
         addresses: {
-          oracle: CONTRACT_ADDRESSES.oracle,
-          lens: CONTRACT_ADDRESSES.lens,
-          registryV2Adapter: CONTRACT_ADDRESSES.registryV2Adapter,
+          oracle: CONTRACT_ADDRESSES_LOCAL.oracle,
+          lens: CONTRACT_ADDRESSES_LOCAL.lens,
+          registryV2Adapter: CONTRACT_ADDRESSES_LOCAL.registryV2Adapter,
         },
       },
       {
@@ -32,6 +32,11 @@ export const getYearnSdk = ({ web3Provider, config }: { web3Provider: Web3Provid
   } else {
     return new Yearn(1, {
       provider: web3Provider.getInstanceOf('default'),
+      addresses: {
+        oracle: CONTRACT_ADDRESSES_MAINNET.oracle,
+        lens: CONTRACT_ADDRESSES_MAINNET.lens,
+        registryV2Adapter: CONTRACT_ADDRESSES_MAINNET.registryV2Adapter,
+      },
     });
   }
 };

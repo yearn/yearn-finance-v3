@@ -1,6 +1,6 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { TokenData, UserTokenData, UserVaultData, VaultData, CyTokenData, UserCyTokenData } from '@types';
+import { TokenData, Position, UserTokenData, UserVaultData, VaultData, CyTokenData, UserCyTokenData } from '@types';
 import { EthereumAddress } from './Ethereum';
 
 export interface RootState {
@@ -42,6 +42,7 @@ export interface VaultsState {
   selectedVaultAddress: EthereumAddress | undefined;
   user: {
     userVaultsMap: { [address: string]: UserVaultData };
+    positions: Position[];
   };
   statusMap: {
     initiateSaveVaults: Status;
@@ -49,6 +50,7 @@ export interface VaultsState {
     vaultsActionsStatusMap: { [vaultAddress: string]: VaultActionsStatusMap };
     user: {
       getUserVaults: Status;
+      getVaultsPositionsOf: Status;
       userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };
     };
   };

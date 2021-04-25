@@ -5,6 +5,8 @@ import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 const selectVaultsState = (state: RootState) => state.vaults;
 const selectUserVaultsMap = (state: RootState) => state.vaults.user.userVaultsMap;
+const selectUserPositions = (state: RootState) => state.vaults.user.positions;
+
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVaultAddress;
@@ -78,6 +80,7 @@ const selectSelectedVaultActionsStatusMap = createSelector(
 export const VaultsSelectors = {
   selectVaultsState,
   selectUserVaultsMap,
+  selectUserPositions,
   selectUserTokensMap,
   selectTokensMap,
   selectSelectedVaultAddress,

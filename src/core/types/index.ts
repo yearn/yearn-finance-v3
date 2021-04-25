@@ -1,3 +1,4 @@
+export * from './Asset';
 export * from './Config';
 export * from './Container';
 export * from './Ethereum';
