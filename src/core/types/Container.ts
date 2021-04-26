@@ -1,6 +1,7 @@
 import { Yearn } from '@yfi/sdk';
 
 import { Wallet, Config, Web3Provider, UserService, VaultService, TokenService, IronBankService } from '@types';
+import { yearnSdkMock } from '../frameworks/yearnSdk/yearnSdkMock';
 
 export interface DIContainer {
   context: ContextContainer;
@@ -22,4 +23,4 @@ export interface ServiceContainer {
 
 export interface ConfigContainer extends Config {}
 
-export type YearnSdk = Yearn<1>;
+export type YearnSdk = Omit<Yearn<1>, 'tokens'> & typeof yearnSdkMock; // TODO use only Yearn<1> when sdk ready.
