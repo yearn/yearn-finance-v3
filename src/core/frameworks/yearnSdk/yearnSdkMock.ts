@@ -1,4 +1,4 @@
-import { Vault, Position, TokenPriced, Apy } from '@yfi/sdk';
+import { Vault, Position, Apy } from '@yfi/sdk';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
@@ -6,15 +6,18 @@ import VaultsV2MockData from './mock/VaultsV2MockData.json';
 import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
+import { TokenData } from '../../types';
 
 const tokens = {
-  supported: (): TokenPriced[] => {
+  supported: (): TokenData[] => {
     return TokensMockData.map((token) => ({
-      id: getAddress(token.address),
+      address: getAddress(token.address),
       name: token.symbol,
       symbol: token.symbol,
-      decimals: BigNumber.from(token.decimals),
-      price: BigNumber.from(Math.floor(Number(token.price) * 1e6)),
+      decimals: token.decimals,
+      icon: 'MOCK',
+      priceUsdc: token.price.toString(),
+      isZapperSupported: true,
     }));
   },
   //   dynamicData: () => {
