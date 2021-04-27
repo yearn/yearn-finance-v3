@@ -114,12 +114,6 @@ export class VaultServiceImpl implements VaultService {
         depositedBalance: vault.underlyingTokenBalance.amount.toString(),
         depositedBalanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
         allowancesMap: allowancesMap,
-        tokenPosition: {
-          address: vault.tokenId,
-          balance: vault.underlyingTokenBalance.amount.toString(),
-          balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
-          allowancesMap: tokenAllowancesMap,
-        },
       };
     });
 
