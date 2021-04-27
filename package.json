@@ -1,6 +1,6 @@
 {
   "name": "yearn-finance-v3",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "start": "craco start",
@@ -8,7 +8,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "upgrade-sdk": "yarn add yearn/yearn-sdk#build"
+    "upgrade-sdk": "yarn add yearn/yearn-sdk"
   },
   "dependencies": {
     "@craco/craco": "^6.1.1",
@@ -58,7 +58,7 @@
     "@ethersproject/address": "^5.1.0",
     "@ethersproject/contracts": "^5.1.0",
     "@ethersproject/providers": "^5.1.0",
-    "@yfi/sdk": "yearn/yearn-sdk#build"
+    "@yfi/sdk": "yearn/yearn-sdk#b137bbb41b743a2b5ed51ce63cc211c76e0e6fb0"
   },
   "eslintConfig": {
     "extends": [

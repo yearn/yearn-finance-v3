@@ -1,4 +1,4 @@
-import { Vault, Position, Apy } from '@yfi/sdk';
+import { Vault, Position, Apy, Token } from '@yfi/sdk';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
@@ -10,6 +10,7 @@ import { TokenData } from '../../types';
 
 const tokens = {
   supported: (): TokenData[] => {
+    // change this to use Token model when updated in the sdk
     return TokensMockData.map((token) => ({
       address: getAddress(token.address),
       name: token.symbol,
@@ -17,7 +18,9 @@ const tokens = {
       decimals: token.decimals,
       icon: 'MOCK',
       priceUsdc: token.price.toString(),
-      isZapperSupported: true,
+      supported: {
+        zapper: true,
+      },
     }));
   },
   //   dynamicData: () => {
@@ -61,7 +64,7 @@ const vaults = {
     });
     return vaults;
   },
-  positionsOf: (): Position[] => {
+  assetsPositionsOf: (): Position[] => {
     const vaultsPositions = VaultsV2PositionsMockData.map((data) => {
       const position = data.positions[0];
       return {
@@ -110,15 +113,11 @@ const ironBank = {
       },
     }));
   },
-  positionsOf: () => {
+  assetsPositionsOf: () => {
     return IronBankPositionMockData.map((cyTokenPosition) => {
       const positions = cyTokenPosition.positions.map((position) => ({
         ...position,
         balance: BigNumber.from(position.balance),
-        accountTokenBalance: {
-          amount: BigNumber.from(position.accountTokenBalance.amount),
-          amountUsdc: BigNumber.from(position.accountTokenBalance.amountUsdc),
-        },
         underlyingTokenBalance: {
           amount: BigNumber.from(position.underlyingTokenBalance.amount),
           amountUsdc: BigNumber.from(position.underlyingTokenBalance.amountUsdc),

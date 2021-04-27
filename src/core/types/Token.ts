@@ -7,7 +7,9 @@ export interface TokenData {
   decimals: number;
   icon: string;
   priceUsdc: string;
-  isZapperSupported: boolean;
+  supported: {
+    zapper: boolean;
+  };
 }
 
 export interface UserTokenData {

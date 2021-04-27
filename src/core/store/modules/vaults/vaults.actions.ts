@@ -49,13 +49,10 @@ const getUserVaultsData = createAsyncThunk<{ userVaultsMap: { [address: string]:
     }
     const userVaultsData = await services.vaultService.getUserVaultsData({ userAddress });
     const userVaultsMap: { [address: string]: UserVaultData } = {};
-    const userTokensMap: { [address: string]: UserTokenData } = {}; // this should be removed when sdk.getTokens() ready.
     userVaultsData.forEach((vault) => {
       userVaultsMap[vault.address] = vault;
-      userTokensMap[vault.tokenPosition.address] = vault.tokenPosition;
     });
 
-    dispatch(TokensActions.setUserTokensMap({ userTokensMap }));
     return { userVaultsMap };
   }
 );
