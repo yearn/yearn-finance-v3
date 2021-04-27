@@ -9,6 +9,7 @@ export interface VaultData extends VaultDynamicData {
   version: string;
   typeId: VaultType;
   token: EthereumAddress;
+  symbol: string;
 }
 
 export interface UserVaultData {

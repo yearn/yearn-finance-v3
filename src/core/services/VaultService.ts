@@ -50,6 +50,8 @@ export class VaultServiceImpl implements VaultService {
         migrationAvailable: vault.typeId === 'VAULT_V2' ? vault.metadata.migrationAvailable : false,
         latestVaultAddress: vault.typeId === 'VAULT_V2' ? vault.metadata.latestVaultAddress : '',
         emergencyShutdown: vault.typeId === 'VAULT_V2' ? vault.metadata.emergencyShutdown : false,
+        symbol: 'vault.metadata.symbol', // TODO remove when sdk implemented
+        // symbol: vault.typeId === 'VAULT_V2' ? vault.metadata.symbol : '', // TODO use when sdk adds it
       };
     });
     const vaultData = Promise.all(vaultDataPromise);
