@@ -47,6 +47,9 @@ export class VaultServiceImpl implements VaultService {
         apyData: apy ? apy.recommended.toString() : '0',
         depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
         pricePerShare: vault.metadata.pricePerShare.toString(),
+        migrationAvailable: vault.typeId === 'VAULT_V2' ? vault.metadata.migrationAvailable : false,
+        latestVaultAddress: vault.typeId === 'VAULT_V2' ? vault.metadata.latestVaultAddress : '',
+        emergencyShutdown: vault.typeId === 'VAULT_V2' ? vault.metadata.emergencyShutdown : false,
       };
     });
     const vaultData = Promise.all(vaultDataPromise);
@@ -84,6 +87,9 @@ export class VaultServiceImpl implements VaultService {
         apyData: apy ? apy.recommended.toString() : '0',
         depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
         pricePerShare: vault.metadata.pricePerShare.toString(),
+        migrationAvailable: vault.typeId === 'VAULT_V2' ? vault.metadata.migrationAvailable : false,
+        latestVaultAddress: vault.typeId === 'VAULT_V2' ? vault.metadata.latestVaultAddress : '',
+        emergencyShutdown: vault.typeId === 'VAULT_V2' ? vault.metadata.emergencyShutdown : false,
       };
     });
     const vaultData = Promise.all(vaultDataPromise);

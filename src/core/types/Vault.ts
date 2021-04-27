@@ -3,17 +3,12 @@ import { Token } from './Token';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
 
-export interface VaultData {
+export interface VaultData extends VaultDynamicData {
   address: EthereumAddress;
   name: string;
   version: string;
   typeId: VaultType;
-  balance: string;
-  balanceUsdc: string;
   token: EthereumAddress;
-  apyData: any;
-  depositLimit: string;
-  pricePerShare: string;
 }
 
 export interface UserVaultData {
@@ -44,4 +39,7 @@ export interface VaultDynamicData {
   apyData: any;
   depositLimit: string;
   pricePerShare: string;
+  migrationAvailable: boolean;
+  latestVaultAddress: string;
+  emergencyShutdown: boolean;
 }
