@@ -66,7 +66,6 @@ export interface UserCyTokenData {
   borrowedBalance: string;
   borrowedBalanceUsdc: string;
   allowancesMap: { [spenderAddress: string]: string };
-  tokenPosition: UserTokenData;
   enteredMarket: boolean;
   borrowLimit: string;
 }
