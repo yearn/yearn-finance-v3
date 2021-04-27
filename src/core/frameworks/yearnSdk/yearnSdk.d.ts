@@ -5,7 +5,7 @@ declare module '@yfi/sdk' {
   export interface Yearn {
     ironBank: {
       get: () => Promise<Asset<any>[]>;
-      positionsOf: (address: Address) => Promise<PositionsWithMetadata[]>;
+      assetsPositionsOf: (address: Address) => Promise<PositionsWithMetadata[]>;
       getIronBank: (address: Address) => Promise<any>;
     };
   }

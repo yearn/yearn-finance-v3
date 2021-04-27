@@ -57,13 +57,10 @@ const getUserCyTokens = createAsyncThunk<
   }
   const userCyTokens = await ironBankService.getUserCyTokensData({ userAddress });
   const userCyTokensMap: { [address: string]: UserCyTokenData } = {};
-  const userTokensMap: { [address: string]: UserTokenData } = {}; // this should be removed when sdk.getTokens() ready.
   userCyTokens.forEach((cyToken) => {
     userCyTokensMap[cyToken.address] = cyToken;
-    userTokensMap[cyToken.tokenPosition.address] = cyToken.tokenPosition;
   });
 
-  dispatch(TokensActions.setUserTokensMap({ userTokensMap }));
   return { userCyTokensMap };
 });
 
