@@ -2912,13 +2912,20 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
 
-"@yfi/sdk@yearn/yearn-sdk#build":
+"@yfi/sdk@yearn/yearn-sdk":
   version "0.0.18"
-  resolved "https://codeload.github.com/yearn/yearn-sdk/tar.gz/a5985333d7b2a320d968272635b71c50d79e4d2a"
+  resolved "https://codeload.github.com/yearn/yearn-sdk/tar.gz/b137bbb41b743a2b5ed51ce63cc211c76e0e6fb0"
   dependencies:
     cross-fetch "^3.1.3-alpha.6"
     events "^3.3.0"
     object-hash "^2.1.1"
+
+"@yfi/sdk@yearn/yearn-sdk#build":
+  version "0.0.18"
+  resolved "https://codeload.github.com/yearn/yearn-sdk/tar.gz/a5985333d7b2a320d968272635b71c50d79e4d2a"
+  dependencies:
+    events "^3.3.0"
+    fetch "^1.1.0"
 
 abab@^2.0.3:
   version "2.0.5"
