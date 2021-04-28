@@ -9,6 +9,10 @@ const StyledCard = styled(Card)<{ className?: string }>`
   padding: var(--asset-list-padding);
   align-items: center;
 
+  > * {
+    align-items: center;
+  }
+
   .icon-col {
     display: flex;
     align-items: center;
@@ -17,6 +21,15 @@ const StyledCard = styled(Card)<{ className?: string }>`
       width: 3.6rem;
       height: 3.6rem;
       margin-right: 1.1rem;
+    }
+  }
+
+  .actions-col {
+    display: flex;
+    align-items: center;
+
+    > button:not(:last-child) {
+      margin-right: 1rem;
     }
   }
 `;

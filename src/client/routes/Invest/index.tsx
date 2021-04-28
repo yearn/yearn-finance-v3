@@ -23,9 +23,36 @@ export const Invest = () => {
   // const { t } = useAppTranslation('common');
 
   const depositAssets = [
-    { icon: 'test', name: 'USDC', deposited: '119.492', wallet: '42.430', roi: '45.52%' },
-    { icon: 'test', name: 'USDC', deposited: '119.492', wallet: '42.430', roi: '45.52%' },
-    { icon: 'test', name: 'USDC', deposited: '119.492', wallet: '42.430', roi: '45.52%' },
+    {
+      icon: 'test',
+      name: 'USDC',
+      deposited: '119.492',
+      wallet: '42.430',
+      roi: '45.52%',
+      onWithdraw: () => console.log('withdraw'),
+      onInvest: () => console.log('invest'),
+      onInfo: () => console.log('info'),
+    },
+    {
+      icon: 'test',
+      name: 'USDC',
+      deposited: '119.492',
+      wallet: '42.430',
+      roi: '45.52%',
+      onWithdraw: () => console.log('withdraw'),
+      onInvest: () => console.log('invest'),
+      onInfo: () => console.log('info'),
+    },
+    {
+      icon: 'test',
+      name: 'USDC',
+      deposited: '119.492',
+      wallet: '42.430',
+      roi: '45.52%',
+      onWithdraw: () => console.log('withdraw'),
+      onInvest: () => console.log('invest'),
+      onInfo: () => console.log('info'),
+    },
   ];
 
   return (

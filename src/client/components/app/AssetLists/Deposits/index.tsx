@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-import { Card, Text } from '@components/common';
+import { Button, Text } from '@components/common';
 import { ListCard, ListCardsWrapper, ListHeaders } from '@src/client/components/app/AssetLists';
 import { useAppTranslation } from '@hooks';
 
 const StyledDepositsList = styled.div<{ className?: string }>`
-  --asset-list-columns: 1fr 1fr 1fr 1fr;
+  --asset-list-columns: 1fr 1fr 1fr 1fr 2fr;
   --asset-list-padding: 1.1rem;
 
   display: flex;
@@ -56,6 +56,17 @@ export const DepositsList = ({ assets, ...props }: DepositListProps) => {
               <Text>{asset.deposited}</Text>
               <Text>{asset.wallet}</Text>
               <Text>{asset.roi}</Text>
+              <div className="actions-col">
+                <Button onClick={() => asset.onWithdraw && asset.onWithdraw()} className="outline">
+                  <Text>Withdraw</Text>
+                </Button>
+                <Button onClick={() => asset.onInvest && asset.onInvest()} className="outline">
+                  <Text>Invest</Text>
+                </Button>
+                <Button onClick={() => asset.onInfo && asset.onInfo()} className="outline">
+                  <Text>Info</Text>
+                </Button>
+              </div>
             </ListCard>
           );
         })}
