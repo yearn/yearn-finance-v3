@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { UserTokenData, UserVaultData, VaultData, VaultDynamicData } from '@types';
+import { UserVaultData, VaultData, VaultDynamicData } from '@types';
 import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';

@@ -1,6 +1,3 @@
-// import BigNumber from 'bignumber.js';
-// import { ethers } from 'ethers';
-
 import { notify } from '@frameworks/blocknative';
 import { getContract } from '@frameworks/ethers';
 import {
@@ -17,8 +14,6 @@ import {
 } from '@types';
 import yVaultAbi from './contracts/yVault.json';
 import erc20Abi from './contracts/erc20.json';
-import { VaultDynamic } from '@yfi/sdk';
-import { BigNumber } from '@ethersproject/bignumber';
 
 export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;
