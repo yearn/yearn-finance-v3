@@ -4,9 +4,12 @@ export interface TokenData {
   address: EthereumAddress;
   name: string;
   symbol: string;
-  decimals: string;
+  decimals: number;
   icon: string;
   priceUsdc: string;
+  supported: {
+    zapper: boolean;
+  };
 }
 
 export interface UserTokenData {
@@ -20,7 +23,7 @@ export interface Token {
   address: EthereumAddress;
   name: string;
   symbol: string;
-  decimals: string;
+  decimals: number;
   icon: string;
   balance: string;
   balanceUsdc: string;

@@ -1,0 +1,26 @@
+[
+  {
+    "address": "0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1",
+    "balance": "1948947538444859",
+    "balanceUsdc": "1948947538444859",
+    "allowancesMap": {}
+  },
+  {
+    "address": "0xdCD90C7f6324cfa40d7169ef80b12031770B4325",
+    "balance": "1948947538444859",
+    "balanceUsdc": "1948947538444859",
+    "allowancesMap": {}
+  },
+  {
+    "address": "0x986b4AFF588a109c09B50A03f42E4110E29D353F",
+    "balance": "1948947538444859",
+    "balanceUsdc": "1948947538444859",
+    "allowancesMap": {}
+  },
+  {
+    "address": "0xcB550A6D4C8e3517A939BC79d0c7093eb7cF56B5",
+    "balance": "1948947538444859",
+    "balanceUsdc": "1948947538444859",
+    "allowancesMap": {}
+  }
+]

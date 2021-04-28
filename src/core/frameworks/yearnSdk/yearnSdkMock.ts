@@ -1,95 +1,107 @@
-import { Vault, Position, Apy, Token } from '@yfi/sdk';
+import { Token } from '@yfi/sdk';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
 import VaultsV2MockData from './mock/VaultsV2MockData.json';
 import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
+import UserTokensMockData from './mock/UserTokensMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
+import { TokenData, TokenDynamicData, UserTokenData, UserVaultData, VaultData, VaultDynamicData } from '../../types';
 
 const tokens = {
-  supported: (): Token[] => {
+  supported: (): TokenData[] => {
+    // change this to use Token model when updated in the sdk
     return TokensMockData.map((token) => ({
-      id: getAddress(token.address),
+      address: getAddress(token.address),
       name: token.symbol,
       symbol: token.symbol,
-      decimals: BigNumber.from(token.decimals),
-      price: BigNumber.from(Math.floor(Number(token.price) * 1e6)),
+      decimals: token.decimals,
+      icon: 'MOCK',
+      priceUsdc: token.price.toString(),
       supported: {
         zapper: true,
       },
     }));
   },
-  //   dynamicData: () => {
-  //     console.log('Mock: tokens.dynamicData()');
-  //   },
+  tokensDynamicData: (addresses?: string[]): TokenDynamicData[] => {
+    const tokensData = TokensMockData.slice(0, 4);
+
+    return tokensData.map((token) => {
+      return {
+        address: getAddress(token.address),
+        priceUsdc: (token.price + 400).toString(),
+      };
+    });
+  },
+  tokenPositionsOf: (addresses?: string[]): UserTokenData[] => {
+    return UserTokensMockData.map((userTokenData) => {
+      return {
+        address: userTokenData.address,
+        balance: userTokenData.balance,
+        balanceUsdc: userTokenData.balanceUsdc,
+        allowancesMap: userTokenData.allowancesMap,
+      };
+    });
+  },
 };
 
 const vaults = {
-  get: (): Vault[] => {
+  get: (): VaultData[] => {
     const staticVaultsData = VaultsV2MockData.static;
     const dynamicVaultsData = VaultsV2MockData.dynamic;
 
-    const vaults: Vault[] = staticVaultsData.map((staticData, i) => {
+    const vaults: VaultData[] = staticVaultsData.map((staticData, i) => {
       const dynamicData = dynamicVaultsData[i];
-
+      const vault = { ...staticData, ...dynamicData };
       return {
-        id: staticData.id,
+        address: vault.id,
+        name: vault.name,
+        version: vault.version,
         typeId: 'VAULT_V2',
-        name: staticData.name,
-        version: staticData.version,
-        token: {
-          id: staticData.token.id,
-          name: staticData.token.name,
-          symbol: staticData.token.symbol,
-          decimals: BigNumber.from(staticData.token.decimals),
-        },
-        tokenId: dynamicData.tokenId,
-        underlyingTokenBalance: {
-          amount: BigNumber.from(dynamicData.underlyingTokenBalance.amount),
-          amountUsdc: BigNumber.from(dynamicData.underlyingTokenBalance.amountUsdc),
-        },
-        metadata: {
-          symbol: dynamicData.metadata.symbol,
-          pricePerShare: BigNumber.from(dynamicData.metadata.pricePerShare),
-          migrationAvailable: dynamicData.metadata.migrationAvailable,
-          latestVaultAddress: dynamicData.metadata.latestVaultAddress,
-          depositLimit: BigNumber.from(dynamicData.metadata.depositLimit),
-          emergencyShutdown: dynamicData.metadata.emergencyShutdown,
-        },
+        balance: vault.underlyingTokenBalance.amount.toString(),
+        balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
+        token: vault.token.id,
+        apyData: '99',
+        depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
+        pricePerShare: vault.metadata.pricePerShare.toString(),
+        migrationAvailable: vault.typeId === 'VAULT_V2' ? vault.metadata.migrationAvailable : false,
+        latestVaultAddress: vault.typeId === 'VAULT_V2' ? vault.metadata.latestVaultAddress : '',
+        emergencyShutdown: vault.typeId === 'VAULT_V2' ? vault.metadata.emergencyShutdown : false,
+        symbol: vault.metadata.symbol,
       };
     });
     return vaults;
   },
-  assetsPositionsOf: (): Position[] => {
+  assetsPositionsOf: (userAddress: string): UserVaultData[] => {
     const vaultsPositions = VaultsV2PositionsMockData.map((data) => {
       const position = data.positions[0];
       return {
-        ...position,
-        balance: BigNumber.from(position.balance),
-        accountTokenBalance: {
-          amount: BigNumber.from(position.accountTokenBalance.amount),
-          amountUsdc: BigNumber.from(position.accountTokenBalance.amountUsdc),
-        },
-        underlyingTokenBalance: {
-          amount: BigNumber.from(position.underlyingTokenBalance.amount),
-          amountUsdc: BigNumber.from(position.underlyingTokenBalance.amountUsdc),
-        },
-        assetAllowances: position.assetAllowances,
-        tokenAllowances: position.tokenAllowances,
+        address: position.assetId,
+        depositedBalance: position.underlyingTokenBalance.amount.toString(),
+        depositedBalanceUsdc: position.underlyingTokenBalance.amountUsdc.toString(),
+        allowancesMap: {},
       };
     });
 
     return vaultsPositions;
   },
-  apy: (vaultAddress: string): Apy | undefined => {
-    return {
-      recommended: 99,
-      composite: false,
-      type: '',
-      description: '',
-      data: {},
-    };
+  assetsDynamicData: (addresses?: string[]): VaultDynamicData[] => {
+    const vaultsPositions = [VaultsV2MockData.dynamic[0]].map((dynamicData) => {
+      return {
+        address: dynamicData.id,
+        balance: dynamicData.underlyingTokenBalance.amount.toString(),
+        balanceUsdc: dynamicData.underlyingTokenBalance.amountUsdc.toString(),
+        apyData: '800',
+        depositLimit: dynamicData.typeId === 'VAULT_V2' ? dynamicData.metadata.depositLimit.toString() : '0',
+        pricePerShare: dynamicData.metadata.pricePerShare.toString(),
+        migrationAvailable: dynamicData.typeId === 'VAULT_V2' ? dynamicData.metadata.migrationAvailable : false,
+        latestVaultAddress: dynamicData.typeId === 'VAULT_V2' ? dynamicData.metadata.latestVaultAddress : '',
+        emergencyShutdown: dynamicData.typeId === 'VAULT_V2' ? dynamicData.metadata.emergencyShutdown : false,
+      };
+    });
+
+    return vaultsPositions;
   },
 };
 
