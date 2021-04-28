@@ -12,8 +12,7 @@ import { device } from '@themes/default';
 
 const SaveView = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
 `;
 
 const DefaultPageContent = styled.div`
