@@ -23,4 +23,4 @@ export interface ServiceContainer {
 
 export interface ConfigContainer extends Config {}
 
-export type YearnSdk = Omit<Yearn<1>, 'tokens'> & typeof yearnSdkMock; // TODO use only Yearn<1> when sdk ready.
+export type YearnSdk = Omit<Yearn<1>, 'tokens' | 'vaults'> & typeof yearnSdkMock; // TODO use only Yearn<1> when sdk ready.

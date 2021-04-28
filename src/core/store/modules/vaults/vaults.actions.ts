@@ -40,7 +40,7 @@ const getVaultsDynamic = createAsyncThunk<{ vaultsDynamicData: VaultDynamicData[
 );
 
 const getUserVaultsData = createAsyncThunk<{ userVaultsMap: { [address: string]: UserVaultData } }, void, ThunkAPI>(
-  'user/getUserVaultsData',
+  'vaults/getUserVaultsData',
   async (_arg, { extra, getState, dispatch }) => {
     const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;

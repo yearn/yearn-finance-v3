@@ -6,7 +6,7 @@ import VaultsV2MockData from './mock/VaultsV2MockData.json';
 import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
-import { TokenData } from '../../types';
+import { TokenData, VaultData } from '../../types';
 
 const tokens = {
   supported: (): TokenData[] => {
@@ -29,42 +29,33 @@ const tokens = {
 };
 
 const vaults = {
-  get: (): Vault[] => {
+  get: (): VaultData[] => {
     const staticVaultsData = VaultsV2MockData.static;
     const dynamicVaultsData = VaultsV2MockData.dynamic;
 
-    const vaults: Vault[] = staticVaultsData.map((staticData, i) => {
+    const vaults: VaultData[] = staticVaultsData.map((staticData, i) => {
       const dynamicData = dynamicVaultsData[i];
-
+      const vault = { ...staticData, ...dynamicData };
       return {
-        id: staticData.id,
+        address: vault.id,
+        name: vault.name,
+        version: vault.version,
         typeId: 'VAULT_V2',
-        name: staticData.name,
-        version: staticData.version,
-        token: {
-          id: staticData.token.id,
-          name: staticData.token.name,
-          symbol: staticData.token.symbol,
-          decimals: BigNumber.from(staticData.token.decimals),
-        },
-        tokenId: dynamicData.tokenId,
-        underlyingTokenBalance: {
-          amount: BigNumber.from(dynamicData.underlyingTokenBalance.amount),
-          amountUsdc: BigNumber.from(dynamicData.underlyingTokenBalance.amountUsdc),
-        },
-        metadata: {
-          symbol: dynamicData.metadata.symbol,
-          pricePerShare: BigNumber.from(dynamicData.metadata.pricePerShare),
-          migrationAvailable: dynamicData.metadata.migrationAvailable,
-          latestVaultAddress: dynamicData.metadata.latestVaultAddress,
-          depositLimit: BigNumber.from(dynamicData.metadata.depositLimit),
-          emergencyShutdown: dynamicData.metadata.emergencyShutdown,
-        },
+        balance: vault.underlyingTokenBalance.amount.toString(),
+        balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
+        token: vault.token.id,
+        apyData: '99',
+        depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
+        pricePerShare: vault.metadata.pricePerShare.toString(),
+        migrationAvailable: vault.typeId === 'VAULT_V2' ? vault.metadata.migrationAvailable : false,
+        latestVaultAddress: vault.typeId === 'VAULT_V2' ? vault.metadata.latestVaultAddress : '',
+        emergencyShutdown: vault.typeId === 'VAULT_V2' ? vault.metadata.emergencyShutdown : false,
+        symbol: vault.metadata.symbol,
       };
     });
     return vaults;
   },
-  assetsPositionsOf: (): Position[] => {
+  assetsPositionsOf: (userAddress: string): Position[] => {
     const vaultsPositions = VaultsV2PositionsMockData.map((data) => {
       const position = data.positions[0];
       return {

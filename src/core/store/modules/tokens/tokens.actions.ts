@@ -3,8 +3,10 @@ import { ThunkAPI } from '@frameworks/redux';
 import { TokenData, TokenDynamicData, UserTokenData } from '@types';
 import BigNumber from 'bignumber.js';
 
-const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('user/setUserTokenData');
-const setUserTokensMap = createAction<{ userTokensMap: { [address: string]: UserTokenData } }>('user/setUserTokensMap');
+const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('tokens/setUserTokenData');
+const setUserTokensMap = createAction<{ userTokensMap: { [address: string]: UserTokenData } }>(
+  'tokens/setUserTokensMap'
+);
 
 const getTokens = createAsyncThunk<
   { tokensMap: { [address: string]: TokenData }; tokensAddresses: string[] },

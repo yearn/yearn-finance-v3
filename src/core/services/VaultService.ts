@@ -33,29 +33,7 @@ export class VaultServiceImpl implements VaultService {
 
   public async getSupportedVaults(): Promise<VaultData[]> {
     const yearn = this.yearnSdk;
-    const vaults = await yearn.vaults.get();
-    const vaultDataPromise = vaults.map(async (vault) => {
-      const apy = await yearn.vaults.apy(vault.id);
-      return {
-        address: vault.id,
-        name: vault.name,
-        version: vault.version,
-        typeId: vault.typeId,
-        balance: vault.underlyingTokenBalance.amount.toString(),
-        balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
-        token: vault.token.id,
-        apyData: apy ? apy.recommended.toString() : '0',
-        depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
-        pricePerShare: vault.metadata.pricePerShare.toString(),
-        migrationAvailable: vault.typeId === 'VAULT_V2' ? vault.metadata.migrationAvailable : false,
-        latestVaultAddress: vault.typeId === 'VAULT_V2' ? vault.metadata.latestVaultAddress : '',
-        emergencyShutdown: vault.typeId === 'VAULT_V2' ? vault.metadata.emergencyShutdown : false,
-        symbol: 'vault.metadata.symbol', // TODO remove when sdk implemented
-        // symbol: vault.typeId === 'VAULT_V2' ? vault.metadata.symbol : '', // TODO use when sdk adds it
-      };
-    });
-    const vaultData = Promise.all(vaultDataPromise);
-    return vaultData;
+    return yearn.vaults.get();
   }
 
   public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamicData[]> {
