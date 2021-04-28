@@ -1,5 +1,5 @@
 import { notify } from '@frameworks/blocknative';
-import { TokenService, TokenData, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider } from '@types';
+import { TokenService, TokenData, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider, UserTokenData } from '@types';
 import { getContract } from '@frameworks/ethers';
 import erc20Abi from './contracts/erc20.json';
 
@@ -19,7 +19,12 @@ export class TokenServiceImpl implements TokenService {
 
   public async getTokensDynamicData(addresses?: string[]): Promise<TokenDynamicData[]> {
     const yearn = this.yearnSdk;
-    return yearn.tokens.dynamicData(addresses);
+    return yearn.tokens.tokensDynamicData(addresses);
+  }
+
+  public async getUserTokensData(addresses?: string[]): Promise<UserTokenData[]> {
+    const yearn = this.yearnSdk;
+    return yearn.tokens.tokenPositionsOf(addresses);
   }
 
   public async approve(props: ApproveProps): Promise<void> {

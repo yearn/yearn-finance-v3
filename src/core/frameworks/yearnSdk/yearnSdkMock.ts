@@ -4,9 +4,10 @@ import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
 import VaultsV2MockData from './mock/VaultsV2MockData.json';
 import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
+import UserTokensMockData from './mock/UserTokensMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
-import { TokenData, TokenDynamicData, UserVaultData, VaultData, VaultDynamicData } from '../../types';
+import { TokenData, TokenDynamicData, UserTokenData, UserVaultData, VaultData, VaultDynamicData } from '../../types';
 
 const tokens = {
   supported: (): TokenData[] => {
@@ -23,13 +24,23 @@ const tokens = {
       },
     }));
   },
-  dynamicData: (addresses?: string[]): TokenDynamicData[] => {
+  tokensDynamicData: (addresses?: string[]): TokenDynamicData[] => {
     const tokensData = TokensMockData.slice(0, 4);
 
     return tokensData.map((token) => {
       return {
         address: getAddress(token.address),
         priceUsdc: (token.price + 400).toString(),
+      };
+    });
+  },
+  tokenPositionsOf: (addresses?: string[]): UserTokenData[] => {
+    return UserTokensMockData.map((userTokenData) => {
+      return {
+        address: userTokenData.address,
+        balance: userTokenData.balance,
+        balanceUsdc: userTokenData.balanceUsdc,
+        allowancesMap: userTokenData.allowancesMap,
       };
     });
   },
