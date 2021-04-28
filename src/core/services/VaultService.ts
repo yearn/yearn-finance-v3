@@ -78,26 +78,7 @@ export class VaultServiceImpl implements VaultService {
 
   public async getUserVaultsData({ userAddress }: { userAddress: EthereumAddress }): Promise<UserVaultData[]> {
     const yearn = this.yearnSdk;
-    const userVaults = await yearn.vaults.assetsPositionsOf(userAddress);
-    const userVaultsData: UserVaultData[] = userVaults.map((vault) => {
-      const allowancesMap: any = {};
-      vault.assetAllowances.forEach((allowance) => {
-        allowancesMap[allowance.spender] = allowance.amount.toString();
-      });
-      const tokenAllowancesMap: any = {};
-      vault.tokenAllowances.forEach((allowance) => {
-        tokenAllowancesMap[allowance.spender] = allowance.amount.toString();
-      });
-
-      return {
-        address: vault.assetId,
-        depositedBalance: vault.underlyingTokenBalance.amount.toString(),
-        depositedBalanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
-        allowancesMap: allowancesMap,
-      };
-    });
-
-    return userVaultsData;
+    return yearn.vaults.assetsPositionsOf(userAddress);
   }
 
   public async deposit(props: DepositProps): Promise<void> {

@@ -6,7 +6,7 @@ import VaultsV2MockData from './mock/VaultsV2MockData.json';
 import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
-import { TokenData, VaultData } from '../../types';
+import { TokenData, UserVaultData, VaultData } from '../../types';
 
 const tokens = {
   supported: (): TokenData[] => {
@@ -55,22 +55,14 @@ const vaults = {
     });
     return vaults;
   },
-  assetsPositionsOf: (userAddress: string): Position[] => {
+  assetsPositionsOf: (userAddress: string): UserVaultData[] => {
     const vaultsPositions = VaultsV2PositionsMockData.map((data) => {
       const position = data.positions[0];
       return {
-        ...position,
-        balance: BigNumber.from(position.balance),
-        accountTokenBalance: {
-          amount: BigNumber.from(position.accountTokenBalance.amount),
-          amountUsdc: BigNumber.from(position.accountTokenBalance.amountUsdc),
-        },
-        underlyingTokenBalance: {
-          amount: BigNumber.from(position.underlyingTokenBalance.amount),
-          amountUsdc: BigNumber.from(position.underlyingTokenBalance.amountUsdc),
-        },
-        assetAllowances: position.assetAllowances,
-        tokenAllowances: position.tokenAllowances,
+        address: position.assetId,
+        depositedBalance: position.underlyingTokenBalance.amount.toString(),
+        depositedBalanceUsdc: position.underlyingTokenBalance.amountUsdc.toString(),
+        allowancesMap: {},
       };
     });
 
