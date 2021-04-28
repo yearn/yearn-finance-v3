@@ -1,4 +1,4 @@
-import { Vault, Position, Apy, Token } from '@yfi/sdk';
+import { Token } from '@yfi/sdk';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
@@ -6,7 +6,7 @@ import VaultsV2MockData from './mock/VaultsV2MockData.json';
 import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
-import { TokenData, UserVaultData, VaultData, VaultDynamicData } from '../../types';
+import { TokenData, TokenDynamicData, UserVaultData, VaultData, VaultDynamicData } from '../../types';
 
 const tokens = {
   supported: (): TokenData[] => {
@@ -23,9 +23,16 @@ const tokens = {
       },
     }));
   },
-  //   dynamicData: () => {
-  //     console.log('Mock: tokens.dynamicData()');
-  //   },
+  dynamicData: (addresses?: string[]): TokenDynamicData[] => {
+    const tokensData = TokensMockData.slice(0, 4);
+
+    return tokensData.map((token) => {
+      return {
+        address: getAddress(token.address),
+        priceUsdc: (token.price + 400).toString(),
+      };
+    });
+  },
 };
 
 const vaults = {
@@ -84,15 +91,6 @@ const vaults = {
     });
 
     return vaultsPositions;
-  },
-  apy: (vaultAddress: string): Apy | undefined => {
-    return {
-      recommended: 99,
-      composite: false,
-      type: '',
-      description: '',
-      data: {},
-    };
   },
 };
 

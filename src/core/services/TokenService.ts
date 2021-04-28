@@ -17,21 +17,9 @@ export class TokenServiceImpl implements TokenService {
     return await yearn.tokens.supported();
   }
 
-  public async getTokensDynamicData(addresses: string[]): Promise<TokenDynamicData[]> {
+  public async getTokensDynamicData(addresses?: string[]): Promise<TokenDynamicData[]> {
     const yearn = this.yearnSdk;
-    // TODO remove when implementing sdk and mock service.
-    const mockDynamicData = {
-      id: '0x000',
-      priceUsdc: '0',
-    };
-    // const tokens = await yearn.tokens.dynamicData(addresses);
-    const tokens = [mockDynamicData];
-    const tokensDynamicData: TokenDynamicData[] = tokens.map((token) => ({
-      address: token.id,
-      priceUsdc: '0',
-    }));
-
-    return tokensDynamicData;
+    return yearn.tokens.dynamicData(addresses);
   }
 
   public async approve(props: ApproveProps): Promise<void> {
