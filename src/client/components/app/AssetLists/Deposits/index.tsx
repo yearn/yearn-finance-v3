@@ -5,8 +5,8 @@ import { ListCard, ListCardsWrapper, ListHeaders } from '@src/client/components/
 import { useAppTranslation } from '@hooks';
 
 const StyledDepositsList = styled.div<{ className?: string }>`
-  --asset-list-columns: 1fr 1fr 1fr 1fr 2fr;
-  --asset-list-padding: 1.1rem;
+  --list-columns: 1fr 1fr 1fr 1fr 2fr;
+  --list-padding: 1.1rem;
 
   display: flex;
   flex-direction: column;

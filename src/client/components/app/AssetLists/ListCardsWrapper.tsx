@@ -8,7 +8,7 @@ interface ListHeadersProps {
 const StyledListCardsWrapper = styled.div<{ className?: string }>`
   display: grid;
   grid-template-columns: 1fr;
-  /* padding: var(--asset-list-padding); */
+  /* padding: var(--list-padding); */
   grid-gap: 1.6rem;
 `;
 

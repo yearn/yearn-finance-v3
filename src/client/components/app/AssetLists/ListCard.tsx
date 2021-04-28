@@ -5,8 +5,8 @@ import { Card } from '@components/common';
 
 const StyledCard = styled(Card)<{ className?: string }>`
   display: grid;
-  grid-template-columns: var(--asset-list-columns);
-  padding: var(--asset-list-padding);
+  grid-template-columns: var(--list-columns);
+  padding: var(--list-padding);
   align-items: center;
 
   > * {
