@@ -1,10 +1,11 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import { ResponsiveLine } from '@nivo/line';
+import { Serie, ResponsiveLine } from '@nivo/line';
+import { defaultTheme } from '@themes/default';
 
 export interface LineChartProps {
   className?: string;
-  data: any;
+  chartData: Serie[];
 }
 
 const StyledLineChart = styled.div`
@@ -12,10 +13,11 @@ const StyledLineChart = styled.div`
   height: 40rem;
 `;
 
-export const LineChart: FC<LineChartProps> = ({ data, className, ...props }) => (
+export const LineChart: FC<LineChartProps> = ({ chartData, className, ...props }) => (
   <StyledLineChart className={className} {...props}>
     <ResponsiveLine
-      data={data}
+      data={chartData}
+      theme={defaultTheme.chartTheme}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}
       yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}

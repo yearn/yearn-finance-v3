@@ -82,6 +82,60 @@ export const VaultDetail = () => {
         },
       ],
     },
+    {
+      id: 'norway',
+      color: '#6526d9',
+      data: [
+        {
+          x: 'plane',
+          y: 213,
+        },
+        {
+          x: 'helicopter',
+          y: 86,
+        },
+        {
+          x: 'boat',
+          y: 177,
+        },
+        {
+          x: 'train',
+          y: 155,
+        },
+        {
+          x: 'subway',
+          y: 197,
+        },
+        {
+          x: 'bus',
+          y: 26,
+        },
+        {
+          x: 'car',
+          y: 208,
+        },
+        {
+          x: 'moto',
+          y: 78,
+        },
+        {
+          x: 'bicycle',
+          y: 166,
+        },
+        {
+          x: 'horse',
+          y: 217,
+        },
+        {
+          x: 'skateboard',
+          y: 150,
+        },
+        {
+          x: 'others',
+          y: 222,
+        },
+      ],
+    },
   ];
 
   return (
@@ -90,7 +144,7 @@ export const VaultDetail = () => {
         <span>Vault: {vaultId}</span>
 
         <h4>Earnings over time</h4>
-        <LineChart data={data} />
+        <LineChart chartData={data} />
       </DefaultPageContent>
     </VaultDetailView>
   );

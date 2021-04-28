@@ -38,6 +38,7 @@ declare module 'styled-components' {
       paddingTop: string;
       paddingBottom: string;
     };
+    chartTheme: any;
     saveAsset: {
       cardBackground: string;
       cardBackgroundSelected: string;
