@@ -28,17 +28,17 @@ export class VaultServiceImpl implements VaultService {
 
   public async getSupportedVaults(): Promise<VaultData[]> {
     const yearn = this.yearnSdk;
-    return yearn.vaults.get();
+    return await yearn.vaults.get();
   }
 
   public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamicData[]> {
     const yearn = this.yearnSdk;
-    return yearn.vaults.assetsDynamicData(addresses);
+    return await yearn.vaults.assetsDynamicData(addresses);
   }
 
   public async getUserVaultsData({ userAddress }: { userAddress: EthereumAddress }): Promise<UserVaultData[]> {
     const yearn = this.yearnSdk;
-    return yearn.vaults.assetsPositionsOf(userAddress);
+    return await yearn.vaults.assetsPositionsOf(userAddress);
   }
 
   public async deposit(props: DepositProps): Promise<void> {

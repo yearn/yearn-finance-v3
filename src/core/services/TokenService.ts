@@ -19,12 +19,12 @@ export class TokenServiceImpl implements TokenService {
 
   public async getTokensDynamicData(addresses?: string[]): Promise<TokenDynamicData[]> {
     const yearn = this.yearnSdk;
-    return yearn.tokens.tokensDynamicData(addresses);
+    return await yearn.tokens.tokensDynamicData(addresses);
   }
 
   public async getUserTokensData(addresses?: string[]): Promise<UserTokenData[]> {
     const yearn = this.yearnSdk;
-    return yearn.tokens.tokenPositionsOf(addresses);
+    return await yearn.tokens.tokenPositionsOf(addresses);
   }
 
   public async approve(props: ApproveProps): Promise<void> {
