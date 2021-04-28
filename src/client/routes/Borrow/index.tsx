@@ -102,7 +102,7 @@ export const Borrow = () => {
             key: cyToken.address,
             icon: `https://raw.githack.com/iearn-finance/yearn-assets/master/icons/tokens/${cyToken.token.address}/logo-128.png`,
             name: cyToken.name,
-            balance: humanizeAmount(cyToken.suppliedBalance, parseInt(cyToken.token.decimals), 2),
+            balance: humanizeAmount(cyToken.suppliedBalance, cyToken.token.decimals, 2),
             earning: formatPercent(cyToken.lendApy, 0),
             onClick: () => selectCyToken(cyToken.address),
           }))}
