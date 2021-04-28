@@ -6,7 +6,7 @@ import VaultsV2MockData from './mock/VaultsV2MockData.json';
 import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
-import { TokenData, UserVaultData, VaultData } from '../../types';
+import { TokenData, UserVaultData, VaultData, VaultDynamicData } from '../../types';
 
 const tokens = {
   supported: (): TokenData[] => {
@@ -63,6 +63,23 @@ const vaults = {
         depositedBalance: position.underlyingTokenBalance.amount.toString(),
         depositedBalanceUsdc: position.underlyingTokenBalance.amountUsdc.toString(),
         allowancesMap: {},
+      };
+    });
+
+    return vaultsPositions;
+  },
+  assetsDynamicData: (addresses?: string[]): VaultDynamicData[] => {
+    const vaultsPositions = [VaultsV2MockData.dynamic[0]].map((dynamicData) => {
+      return {
+        address: dynamicData.id,
+        balance: dynamicData.underlyingTokenBalance.amount.toString(),
+        balanceUsdc: dynamicData.underlyingTokenBalance.amountUsdc.toString(),
+        apyData: '800',
+        depositLimit: dynamicData.typeId === 'VAULT_V2' ? dynamicData.metadata.depositLimit.toString() : '0',
+        pricePerShare: dynamicData.metadata.pricePerShare.toString(),
+        migrationAvailable: dynamicData.typeId === 'VAULT_V2' ? dynamicData.metadata.migrationAvailable : false,
+        latestVaultAddress: dynamicData.typeId === 'VAULT_V2' ? dynamicData.metadata.latestVaultAddress : '',
+        emergencyShutdown: dynamicData.typeId === 'VAULT_V2' ? dynamicData.metadata.emergencyShutdown : false,
       };
     });
 

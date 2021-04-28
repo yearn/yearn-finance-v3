@@ -38,42 +38,7 @@ export class VaultServiceImpl implements VaultService {
 
   public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamicData[]> {
     const yearn = this.yearnSdk;
-    // const vaultsDynamicData: VaultDynamic[] = await yearn.vaults.getDynamicData(addresses); // use when sdk ready.
-    // TODO remove mock when sdk ready.
-    const mockDynamicData: VaultDynamic = {
-      id: 'asd',
-      typeId: 'VAULT_V2',
-      tokenId: 'asd',
-      underlyingTokenBalance: {
-        amount: BigNumber.from(0),
-        amountUsdc: BigNumber.from(0),
-      },
-      metadata: {
-        symbol: 'asd',
-        pricePerShare: BigNumber.from(0),
-        migrationAvailable: false,
-        latestVaultAddress: 'asd',
-        depositLimit: BigNumber.from(0),
-        emergencyShutdown: false,
-      },
-    };
-    const vaultsDynamicData: VaultDynamic[] = [mockDynamicData]; // remove when sdk ready.
-    const vaultDataPromise = vaultsDynamicData.map(async (vault) => {
-      const apy = await yearn.vaults.apy(vault.id);
-      return {
-        address: vault.id,
-        balance: vault.underlyingTokenBalance.amount.toString(),
-        balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
-        apyData: apy ? apy.recommended.toString() : '0',
-        depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
-        pricePerShare: vault.metadata.pricePerShare.toString(),
-        migrationAvailable: vault.typeId === 'VAULT_V2' ? vault.metadata.migrationAvailable : false,
-        latestVaultAddress: vault.typeId === 'VAULT_V2' ? vault.metadata.latestVaultAddress : '',
-        emergencyShutdown: vault.typeId === 'VAULT_V2' ? vault.metadata.emergencyShutdown : false,
-      };
-    });
-    const vaultData = Promise.all(vaultDataPromise);
-    return vaultData;
+    return yearn.vaults.assetsDynamicData(addresses);
   }
 
   public async getUserVaultsData({ userAddress }: { userAddress: EthereumAddress }): Promise<UserVaultData[]> {
