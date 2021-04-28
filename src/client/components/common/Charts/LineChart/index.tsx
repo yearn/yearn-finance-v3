@@ -7,7 +7,10 @@ export interface LineChartProps {
   data: any;
 }
 
-const StyledLineChart = styled.div``;
+const StyledLineChart = styled.div`
+  width: 100%;
+  height: 40rem;
+`;
 
 export const LineChart: FC<LineChartProps> = ({ data, className, ...props }) => (
   <StyledLineChart className={className} {...props}>
