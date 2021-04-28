@@ -58,7 +58,7 @@
     "@ethersproject/address": "^5.1.0",
     "@ethersproject/contracts": "^5.1.0",
     "@ethersproject/providers": "^5.1.0",
-    "@yfi/sdk": "yearn/yearn-sdk"
+    "@yfi/sdk": "yearn/yearn-sdk#b137bbb41b743a2b5ed51ce63cc211c76e0e6fb0"
   },
   "eslintConfig": {
     "extends": [

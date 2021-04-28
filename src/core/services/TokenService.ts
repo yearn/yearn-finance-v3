@@ -1,5 +1,5 @@
 import { notify } from '@frameworks/blocknative';
-import { TokenService, TokenData, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider } from '@types';
+import { TokenService, TokenData, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider, UserTokenData } from '@types';
 import { getContract } from '@frameworks/ethers';
 import erc20Abi from './contracts/erc20.json';
 
@@ -14,34 +14,17 @@ export class TokenServiceImpl implements TokenService {
 
   public async getSupportedTokens(): Promise<TokenData[]> {
     const yearn = this.yearnSdk;
-    const tokens = await yearn.tokens.supported();
-    const tokensData: TokenData[] = tokens.map((token) => ({
-      address: token.id,
-      name: token.name,
-      symbol: token.symbol,
-      decimals: token.decimals.toString(),
-      icon: 'MOCK', // TODO DEHARDCODE waiting for SDK TO ADD PROPERTY,
-      priceUsdc: token.price.toString(),
-    }));
-
-    return tokensData;
+    return await yearn.tokens.supported();
   }
 
-  public async getTokensDynamicData(addresses: string[]): Promise<TokenDynamicData[]> {
+  public async getTokensDynamicData(addresses?: string[]): Promise<TokenDynamicData[]> {
     const yearn = this.yearnSdk;
-    // TODO remove when implementing sdk and mock service.
-    const mockDynamicData = {
-      id: '0x000',
-      priceUsdc: '0',
-    };
-    // const tokens = await yearn.tokens.dynamicData(addresses);
-    const tokens = [mockDynamicData];
-    const tokensDynamicData: TokenDynamicData[] = tokens.map((token) => ({
-      address: token.id,
-      priceUsdc: '0',
-    }));
+    return await yearn.tokens.tokensDynamicData(addresses);
+  }
 
-    return tokensDynamicData;
+  public async getUserTokensData(addresses?: string[]): Promise<UserTokenData[]> {
+    const yearn = this.yearnSdk;
+    return await yearn.tokens.tokenPositionsOf(addresses);
   }
 
   public async approve(props: ApproveProps): Promise<void> {

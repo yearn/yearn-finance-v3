@@ -161,7 +161,7 @@ export const Blade = () => {
               <AvailableBalance>
                 <span className="t-body">AVAILABLE</span>
                 <strong className="t-body balance">
-                  {humanizeAmount(selectedVault.token.balance, parseInt(selectedVault.token.decimals), 2)}
+                  {humanizeAmount(selectedVault.token.balance, selectedVault.token.decimals, 2)}
                 </strong>
               </AvailableBalance>
               <Input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} min="0" />
@@ -183,7 +183,7 @@ export const Blade = () => {
               <AvailableBalance>
                 <span className="t-body">AVAILABLE</span>
                 <strong className="t-body balance">
-                  {humanizeAmount(selectedVault.userDeposited, parseInt(selectedVault.token.decimals), 2)}
+                  {humanizeAmount(selectedVault.userDeposited, selectedVault.token.decimals, 2)}
                 </strong>
               </AvailableBalance>
               <Input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} min="0" />

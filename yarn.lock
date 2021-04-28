@@ -2912,17 +2912,9 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
 
-"@yfi/sdk@yearn/yearn-sdk":
+"@yfi/sdk@yearn/yearn-sdk", "@yfi/sdk@yearn/yearn-sdk#b137bbb41b743a2b5ed51ce63cc211c76e0e6fb0":
   version "0.0.18"
   resolved "https://codeload.github.com/yearn/yearn-sdk/tar.gz/b137bbb41b743a2b5ed51ce63cc211c76e0e6fb0"
-  dependencies:
-    cross-fetch "^3.1.3-alpha.6"
-    events "^3.3.0"
-    object-hash "^2.1.1"
-
-"@yfi/sdk@yearn/yearn-sdk#build":
-  version "0.0.18"
-  resolved "https://codeload.github.com/yearn/yearn-sdk/tar.gz/a5985333d7b2a320d968272635b71c50d79e4d2a"
   dependencies:
     events "^3.3.0"
     fetch "^1.1.0"
@@ -4068,6 +4060,13 @@ bip66@^1.1.5:
   resolved "https://registry.yarnpkg.com/bip66/-/bip66-1.1.5.tgz#01fa8748785ca70955d5011217d1b3139969ca22"
   dependencies:
     safe-buffer "^5.0.1"
+
+biskviit@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/biskviit/-/biskviit-1.0.1.tgz#037a0cd4b71b9e331fd90a1122de17dc49e420a7"
+  integrity sha1-A3oM1LcbnjMf2QoRIt4X3EnkIKc=
+  dependencies:
+    psl "^1.1.7"
 
 bitwise@^2.0.4:
   version "2.1.0"
@@ -5731,6 +5730,13 @@ encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
 
+encoding@0.1.12:
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.12.tgz#538b66f3ee62cd1ab51ec323829d1f9480c74beb"
+  integrity sha1-U4tm8+5izRq1HsMjgp0flIDHS+s=
+  dependencies:
+    iconv-lite "~0.4.13"
+
 encoding@^0.1.11:
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
@@ -6830,6 +6836,14 @@ fetch-ponyfill@^4.0.0:
   dependencies:
     node-fetch "~1.7.1"
 
+fetch@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/fetch/-/fetch-1.1.0.tgz#0a8279f06be37f9f0ebb567560a30a480da59a2e"
+  integrity sha1-CoJ58Gvjf58Ou1Z1YKMKSA2lmi4=
+  dependencies:
+    biskviit "1.0.1"
+    encoding "0.1.12"
+
 figgy-pudding@^3.5.1:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.2.tgz#b4eee8148abb01dcf1d1ac34367d59e12fa61d6e"
@@ -7597,7 +7611,7 @@ i18next@^20.1.0:
   dependencies:
     "@babel/runtime" "^7.12.0"
 
-iconv-lite@0.4.24:
+iconv-lite@0.4.24, iconv-lite@~0.4.13:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
   dependencies:
@@ -10915,7 +10929,7 @@ prr@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/prr/-/prr-1.0.1.tgz#d3fc114ba06995a45ec6893f484ceb1d78f5f476"
 
-psl@^1.1.28:
+psl@^1.1.28, psl@^1.1.7:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/psl/-/psl-1.8.0.tgz#9326f8bcfb013adcc005fdff056acce020e51c24"
 
