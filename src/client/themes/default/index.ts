@@ -38,6 +38,31 @@ const defaultTheme: DefaultTheme = {
     paddingTop: '4rem',
     paddingBottom: '3.7rem',
   },
+  chartTheme: {
+    // background: '#292929',
+    textColor: '#ffffff',
+    fontSize: 11,
+    axis: {
+      domain: {
+        line: {
+          stroke: '#777777',
+          strokeWidth: 1,
+        },
+      },
+      ticks: {
+        line: {
+          stroke: '#adadad',
+          strokeWidth: 1,
+        },
+      },
+    },
+    grid: {
+      line: {
+        stroke: '#dddddd',
+        strokeWidth: 1,
+      },
+    },
+  },
   saveAsset: {
     cardBackground: 'rgba(42, 46, 59, 0.85)',
     cardBackgroundSelected: 'rgba(52, 57, 73, 0.7)',
