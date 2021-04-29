@@ -15,19 +15,29 @@ const LandingView = styled.div`
   flex: 1;
 `;
 
-const VideoWrapper = styled.div`
+const BackgroundWrapper = styled.div`
+  --video-background: #16171a;
+
   position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
   z-index: -1;
-  background-image: url(${YearnSplash});
-  background-size: cover;
-  background-position: center;
+  background-color: var(--video-background);
 `;
 
 const StyledVideo = styled.video`
+  position: relative;
+  object-fit: cover;
+  /* width: 100%;
+  height: 100%; */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const StyledImg = styled.img`
   position: relative;
   object-fit: cover;
   width: 100%;
@@ -93,15 +103,17 @@ export const Landing = () => {
   const { t } = useAppTranslation('common');
   const { isMobile } = useWindowDimensions();
 
-  let video;
+  let background;
 
-  if (!isMobile) {
-    video = <StyledVideo src={YearnSplashVideo} autoPlay loop playsInline muted />;
+  if (isMobile) {
+    background = <StyledImg src={YearnSplash} />;
+  } else {
+    background = <StyledVideo src={YearnSplashVideo} autoPlay loop playsInline muted />;
   }
 
   return (
     <LandingView>
-      <VideoWrapper>{video}</VideoWrapper>
+      <BackgroundWrapper>{background}</BackgroundWrapper>
       <SplashContent>
         <h3>{t('landing.title-1')}</h3>
         <h1>{t('landing.title-2')}</h1>

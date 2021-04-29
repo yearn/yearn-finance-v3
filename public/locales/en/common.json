@@ -10,6 +10,15 @@
     "default": "There was an unexpected error"
   },
 
+  "asset-lists": {
+    "deposits": "Deposits",
+    "headers": {
+      "asset": "Asset",
+      "deposited": "Deposited",
+      "wallet": "Wallet",
+      "roi": "ROI"
+    }
+  },
   "navigation": {
     "home": "Home",
     "dashboard": "Dashboard",
