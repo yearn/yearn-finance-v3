@@ -10,8 +10,8 @@ export interface CardProps extends StyledSystemProps {
 const StyledDiv = styled.div<StyledSystemProps>`
   background-color: ${({ theme }) => theme.colors.card};
   color: ${({ theme }) => theme.contrasts.card};
-  border-radius: 15px;
-  padding: 17px 11px;
+  border-radius: 1.5rem;
+  padding: 1.7rem 1.1rem;
   ${styledSystem};
 `;
 
