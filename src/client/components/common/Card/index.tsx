@@ -1,6 +1,9 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import { CardHeader } from './CardHeader';
+import { CardContent } from './CardContent';
+import { CardElement } from './CardElement';
 import { styledSystem, StyledSystemProps } from '../styledSystem';
 
 export interface CardProps extends StyledSystemProps {
@@ -16,3 +19,5 @@ const StyledDiv = styled.div<StyledSystemProps>`
 `;
 
 export const Card: FC<CardProps> = (props) => <StyledDiv {...props} />;
+
+export { CardHeader, CardContent, CardElement };
