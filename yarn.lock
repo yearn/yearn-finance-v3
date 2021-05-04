@@ -1271,7 +1271,7 @@
   dependencies:
     "@ethersproject/bignumber" "^5.1.0"
 
-"@ethersproject/contracts@5.1.1", "@ethersproject/contracts@^5.1.0":
+"@ethersproject/contracts@5.1.1", "@ethersproject/contracts@^5.1.1":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@ethersproject/contracts/-/contracts-5.1.1.tgz#c66cb6d618fcbd73e20a6b808e8f768b2b781d0b"
   dependencies:
@@ -1364,7 +1364,7 @@
   dependencies:
     "@ethersproject/logger" "^5.1.0"
 
-"@ethersproject/providers@5.1.2", "@ethersproject/providers@^5.1.0":
+"@ethersproject/providers@5.1.2", "@ethersproject/providers@^5.1.2":
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.1.2.tgz#4e4459698903f911402fe91aa7544eb07f3921ed"
   dependencies:
@@ -2949,9 +2949,10 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
 
-"@yfi/sdk@yearn/yearn-sdk#b137bbb41b743a2b5ed51ce63cc211c76e0e6fb0":
-  version "0.0.18"
-  resolved "https://codeload.github.com/yearn/yearn-sdk/tar.gz/b137bbb41b743a2b5ed51ce63cc211c76e0e6fb0"
+"@yfi/sdk@0.0.19":
+  version "0.0.19"
+  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-0.0.19.tgz#dcb815a7c323f7e71ba3caed123510c9558fc965"
+  integrity sha512-BVz5U2cS2+fW0Qou9PcS7/ef8cMEHk8gPWUrTJ94RqaR5P61A+iXYivmQeMqvJ1ENe/knMa+mm3crUTG2gXFrw==
   dependencies:
     cross-fetch "^3.1.3-alpha.6"
     events "^3.3.0"
@@ -4564,6 +4565,7 @@ cross-fetch@^2.1.0:
 cross-fetch@^3.1.3-alpha.6:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
+  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
   dependencies:
     node-fetch "2.6.1"
 
@@ -9200,6 +9202,7 @@ object-copy@^0.1.0:
 object-hash@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/object-hash/-/object-hash-2.1.1.tgz#9447d0279b4fcf80cff3259bf66a1dc73afabe09"
+  integrity sha512-VOJmgmS+7wvXf8CjbQmimtCnEx3IAoLxI3fp2fbWehxrWBcAQFbk+vcwb6vzR0VZv/eNCJ/27j151ZTwqW/JeQ==
 
 object-inspect@^1.9.0:
   version "1.10.2"
