@@ -24,11 +24,11 @@ export class IronBankServiceImpl implements IronBankService {
     const cyTokenData = ironBank.map((cyToken) => {
       return {
         // static
-        address: cyToken.id,
+        address: cyToken.tokenId,
         decimals: cyToken.metadata.decimals.toString(),
         name: cyToken.name,
         symbol: cyToken.metadata.symbol,
-        underlyingTokenAddress: cyToken.token.id,
+        underlyingTokenAddress: cyToken.token.address,
         // dynamic
         lendApy: cyToken.metadata.lendApy,
         borrowApy: cyToken.metadata.borrowApy,
