@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@craco/craco": "^6.1.1",
+    "@ethersproject/address": "^5.1.0",
+    "@ethersproject/contracts": "^5.1.1",
+    "@ethersproject/providers": "^5.1.2",
     "@nivo/core": "^0.68.0",
     "@nivo/line": "^0.68.0",
     "@reduxjs/toolkit": "^1.5.0",
@@ -28,6 +31,7 @@
     "@types/redux-logger": "^3.0.8",
     "@types/styled-components": "^5.1.9",
     "@types/styled-system": "^5.1.10",
+    "@yfi/sdk": "0.0.19",
     "awilix": "^4.3.3",
     "bignumber.js": "^9.0.1",
     "bnc-notify": "^1.5.1",
@@ -56,12 +60,7 @@
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
   },
-  "devDependencies": {
-    "@ethersproject/address": "^5.1.0",
-    "@ethersproject/contracts": "^5.1.0",
-    "@ethersproject/providers": "^5.1.0",
-    "@yfi/sdk": "yearn/yearn-sdk#b137bbb41b743a2b5ed51ce63cc211c76e0e6fb0"
-  },
+  "devDependencies": {},
   "eslintConfig": {
     "extends": [
       "react-app",
