@@ -2,8 +2,10 @@ import { FC, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AppActions, RouteActions, WalletActions } from '@store';
-import { useAppDispatch, useAppSelector } from '@hooks';
+// import { WalletActions } from '@store';
+// import { useAppSelector } from '@hooks';
+import { AppActions, RouteActions } from '@store';
+import { useAppDispatch } from '@hooks';
 import { Navigation, Footer } from '@components/app';
 import { Box } from '@components/common';
 
@@ -19,8 +21,8 @@ const Content = styled.div`
 export const Layout: FC = ({ children }) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
-  const transparentNavbar = location.pathname === '/';
+  // const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
+  // const transparentNavbar = location.pathname === '/';
 
   useEffect(() => {
     dispatch(AppActions.initApp());
@@ -31,14 +33,13 @@ export const Layout: FC = ({ children }) => {
   }, [location]);
 
   return (
-    <Box display="flex" flexDirection="column" flex="1">
-      <Navigation
-        transparentNavbar={transparentNavbar}
-        walletAddress={selectedAddress ?? undefined}
-        onWalletClick={() => dispatch(WalletActions.walletSelect())}
-      />
-      <Content>{children}</Content>
-      <Footer />
+    <Box display="flex" flex="1">
+      <Navigation />
+
+      <Content>
+        {children}
+        <Footer />
+      </Content>
     </Box>
   );
 };

@@ -6,6 +6,7 @@ import { ReactComponent as DeleteIcon } from '@assets/icons/delete.svg';
 import { ReactComponent as DiscordIcon } from '@assets/icons/discord.svg';
 import { ReactComponent as GithubIcon } from '@assets/icons/github.svg';
 import { ReactComponent as HamburguerIcon } from '@assets/icons/hamburguer.svg';
+import { ReactComponent as HomeIcon } from '@assets/icons/home.svg';
 import { ReactComponent as MediumIcon } from '@assets/icons/medium.svg';
 import { ReactComponent as TelegramIcon } from '@assets/icons/telegram.svg';
 import { ReactComponent as TwitterIcon } from '@assets/icons/twitter.svg';
@@ -29,4 +30,14 @@ export const Icon = styled(({ Component, ...props }: IconProps) => <Component {.
   ${styledSystem};
 `;
 
-export { BugIcon, DeleteIcon, DiscordIcon, GithubIcon, HamburguerIcon, MediumIcon, TelegramIcon, TwitterIcon };
+export {
+  BugIcon,
+  DeleteIcon,
+  DiscordIcon,
+  GithubIcon,
+  HamburguerIcon,
+  HomeIcon,
+  MediumIcon,
+  TelegramIcon,
+  TwitterIcon,
+};
