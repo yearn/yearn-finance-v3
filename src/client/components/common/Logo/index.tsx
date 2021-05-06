@@ -15,18 +15,19 @@ const StyledLogo = styled.div`
   align-items: center;
   justify-content: center;
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
-`;
-
-const StyledImg = styled.img`
   height: 4.8rem;
 `;
 
+const StyledImg = styled.img`
+  height: 100%;
+`;
+
 export const Logo: FC<LogoProps> = ({ className, full, onClick, ...props }) => {
-  const logoImg = full ? LogoFull : LogoSimple;
+  const logoSvg = full ? LogoFull : LogoSimple;
 
   return (
     <StyledLogo className={className} onClick={onClick} {...props}>
-      <StyledImg src={logoImg} alt="Yearn logo" />
+      <StyledImg src={logoSvg} alt="Yearn logo" />
     </StyledLogo>
   );
 };
