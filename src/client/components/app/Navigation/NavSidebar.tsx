@@ -4,7 +4,11 @@ import { useAppTranslation } from '@hooks';
 
 import { HomeIcon, Icon, Logo } from '@components/common';
 
-const StyledSidebar = styled.div`
+interface NavSidebarProps {
+  collapsed?: boolean;
+}
+
+const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   display: flex;
   flex-direction: column;
   border: 2px solid ${({ theme }) => theme.colors.shade0};
@@ -13,6 +17,17 @@ const StyledSidebar = styled.div`
   height: 100%;
   max-width: 100%;
   padding: 1rem 1.2rem;
+
+  ${(props) =>
+    props.collapsed &&
+    `
+    width: 4.8rem;
+
+    .link-list span,
+    .copyright-text {
+      display: none;
+    }
+  `};
 `;
 
 const SidebarHeader = styled.div`
@@ -59,7 +74,7 @@ const LinkIcon = styled(Icon)`
   margin-right: 1.2rem;
 `;
 
-export const NavSidebar = () => {
+export const NavSidebar = ({ collapsed }: NavSidebarProps) => {
   const { t } = useAppTranslation('common');
 
   const navLinks = [
@@ -91,7 +106,7 @@ export const NavSidebar = () => {
   ];
 
   const linkList = (
-    <LinkList>
+    <LinkList className="link-list">
       {navLinks.map((link, index) => {
         return (
           <RouterLink to={link.to} key={index}>
@@ -103,13 +118,15 @@ export const NavSidebar = () => {
   );
 
   return (
-    <StyledSidebar>
+    <StyledSidebar collapsed={collapsed}>
       <SidebarHeader>
-        <StyledLogo full />
+        <StyledLogo full={!collapsed} />
       </SidebarHeader>
 
       <SidebarContent>{linkList}</SidebarContent>
-      <SidebarFooter>© Yearn 2021</SidebarFooter>
+      <SidebarFooter>
+        <span className="copyright">©</span> <span className="copyright-text">Yearn 2021</span>
+      </SidebarFooter>
     </StyledSidebar>
   );
 };

@@ -6,9 +6,11 @@ const StyledNavigation = styled.nav``;
 const StyledNavSidebar = styled(NavSidebar)``;
 
 export const Navigation = () => {
+  const collapsedSidebar = false;
+
   return (
     <StyledNavigation>
-      <StyledNavSidebar />
+      <StyledNavSidebar collapsed={collapsedSidebar} />
     </StyledNavigation>
   );
 };
