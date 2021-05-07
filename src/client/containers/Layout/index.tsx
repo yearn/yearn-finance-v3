@@ -14,7 +14,8 @@ const Content = styled.div`
   flex-direction: column;
   width: 100%;
   flex: 1;
-  padding-top: ${(props) => props.theme.navbar.height};
+  padding-top: ${({ theme }) => theme.navbar.height};
+  padding-left: ${({ theme }) => theme.sideBar.width};
   min-height: 100%;
 `;
 

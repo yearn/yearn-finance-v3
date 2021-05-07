@@ -84,6 +84,11 @@ const defaultTheme: DefaultTheme = {
   },
   globalFont: '"Rubik", sans-serif',
   globalMaxWidth: '128rem',
+
+  sideBar: {
+    width: '16rem',
+    collapsedWidth: '4.8rem',
+  },
 };
 
 export const device = {

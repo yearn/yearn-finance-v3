@@ -13,15 +13,16 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   flex-direction: column;
   border: 2px solid ${({ theme }) => theme.colors.shade0};
   border-radius: 0.8rem;
-  width: 16rem;
+  width: ${({ theme }) => theme.sideBar.width};
   height: 100%;
   max-width: 100%;
   padding: 1rem 1.2rem;
+  position: fixed;
 
   ${(props) =>
     props.collapsed &&
     `
-    width: 4.8rem;
+    width: ${props.theme.sideBar.collapsedWidth};
 
     .link-list span,
     .copyright-text {
