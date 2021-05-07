@@ -6,7 +6,7 @@ import styled from 'styled-components';
 // import { useAppSelector } from '@hooks';
 import { AppActions, RouteActions } from '@store';
 import { useAppDispatch } from '@hooks';
-import { Navigation, Footer } from '@components/app';
+import { Navigation, Footer, Navbar } from '@components/app';
 import { Box } from '@components/common';
 
 const Content = styled.div`
@@ -14,7 +14,6 @@ const Content = styled.div`
   flex-direction: column;
   width: 100%;
   flex: 1;
-  padding-top: ${({ theme }) => theme.navbar.height};
   padding-left: ${({ theme }) => theme.sideBar.width};
   min-height: 100%;
 `;
@@ -38,6 +37,7 @@ export const Layout: FC = ({ children }) => {
       <Navigation />
 
       <Content>
+        <Navbar />
         {children}
         <Footer />
       </Content>
