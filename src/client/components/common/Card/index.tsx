@@ -15,6 +15,7 @@ const StyledDiv = styled.div<StyledSystemProps>`
   color: ${({ theme }) => theme.contrasts.card};
   border-radius: 1.5rem;
   padding: 1.7rem 1.1rem;
+  min-width: fit-content;
   ${styledSystem};
 `;
 

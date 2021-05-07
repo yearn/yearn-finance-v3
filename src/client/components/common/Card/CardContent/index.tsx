@@ -1,12 +1,17 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div`
+const Container = styled.div<{ wrap?: boolean }>`
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: ${({ wrap }) => (wrap ? 'wrap' : 'nowrap')};
+  align-items: center;
 `;
 
-export const CardContent: FC = ({ children }) => {
-  return <Container>{children}</Container>;
+interface CardContentProps {
+  wrap?: boolean;
+}
+
+export const CardContent: FC<CardContentProps> = ({ children, wrap }) => {
+  return <Container wrap={wrap}>{children}</Container>;
 };

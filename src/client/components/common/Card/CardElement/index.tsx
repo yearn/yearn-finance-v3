@@ -1,11 +1,13 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div`
+const Container = styled.div<{ width?: string; align?: string; grow?: string }>`
   display: flex;
   flex-direction: column;
-  width: 24rem;
-  margin-top: 0.825rem;
+  min-width: ${({ width }) => width ?? '14rem'};
+  align-items: ${({ align }) => align ?? 'flex-start'};
+  flex-grow: ${({ grow }) => grow ?? '0'};
+  margin: 0.825rem 1.2rem;
 `;
 
 const Header = styled.div`
@@ -20,11 +22,14 @@ const Content = styled.div`
 interface CardElementProps {
   header?: string;
   content?: string;
+  width?: string;
+  align?: 'flex-start' | 'center' | 'flex-end';
+  grow?: '1' | '0';
 }
 
-export const CardElement: FC<CardElementProps> = ({ children, header, content }) => {
+export const CardElement: FC<CardElementProps> = ({ children, header, content, width, align, grow }) => {
   return (
-    <Container>
+    <Container width={width} align={align} grow={grow}>
       {header && <Header>{header}</Header>}
       {content && <Content>{content}</Content>}
       {children}

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
+  margin: 0 1.2rem;
 `;
 
 const Header = styled.div`

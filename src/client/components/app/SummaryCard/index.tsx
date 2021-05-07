@@ -5,7 +5,7 @@ import { Card, CardHeader, CardContent, CardElement } from '@components/common';
 
 const StyledCard = styled(Card)`
   max-width: max-content;
-  padding: 1.2rem;
+  padding: 1.2rem 0;
 `;
 
 interface Item {
@@ -23,7 +23,7 @@ export const SummaryCard = ({ header, items }: SummaryCardProps) => {
   return (
     <StyledCard>
       <CardHeader header={header} />
-      <CardContent>
+      <CardContent wrap>
         {items.map((item) => (
           <CardElement key={item.header} header={item.header} content={item.content}>
             {item.Component}
