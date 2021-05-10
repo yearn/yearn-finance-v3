@@ -1,5 +1,5 @@
 import { EthereumAddress } from '@types';
-import { Token } from './Token';
+import { TokenView } from './Token';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
 
@@ -30,7 +30,7 @@ export interface Vault {
   userDepositedUsdc: string;
   allowancesMap: { [vaultAddress: string]: string };
   approved: boolean;
-  token: Token;
+  token: TokenView;
 }
 
 export interface VaultDynamicData {

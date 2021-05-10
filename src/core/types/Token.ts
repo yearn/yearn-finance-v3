@@ -19,7 +19,7 @@ export interface UserTokenData {
   allowancesMap: { [spenderAddress: string]: string };
 }
 
-export interface Token {
+export interface TokenView {
   address: EthereumAddress;
   name: string;
   symbol: string;
