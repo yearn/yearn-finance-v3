@@ -112,7 +112,7 @@ const vaults = {
     });
     return vaults;
   },
-  assetsPositionsOf: (userAddress: string): UserVaultData[] => {
+  assetsPositionsOf: (userAddress: string, vaultAddresses?: string[]): UserVaultData[] => {
     const vaultsPositions = VaultsV2PositionsMockData.map((data) => {
       const position = data.positions[0];
       return {

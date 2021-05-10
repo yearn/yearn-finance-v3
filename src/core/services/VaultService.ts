@@ -36,9 +36,15 @@ export class VaultServiceImpl implements VaultService {
     return await yearn.vaults.assetsDynamicData(addresses);
   }
 
-  public async getUserVaultsData({ userAddress }: { userAddress: EthereumAddress }): Promise<UserVaultData[]> {
+  public async getUserVaultsData({
+    userAddress,
+    vaultAddresses,
+  }: {
+    userAddress: EthereumAddress;
+    vaultAddresses?: string[];
+  }): Promise<UserVaultData[]> {
     const yearn = this.yearnSdk;
-    return await yearn.vaults.assetsPositionsOf(userAddress);
+    return await yearn.vaults.assetsPositionsOf(userAddress, vaultAddresses);
   }
 
   public async deposit(props: DepositProps): Promise<void> {

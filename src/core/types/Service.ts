@@ -15,7 +15,13 @@ export interface UserService {}
 export interface VaultService {
   getSupportedVaults: () => Promise<Vault[]>;
   getVaultsDynamicData: (props: any) => Promise<VaultDynamicData[]>;
-  getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
+  getUserVaultsData: ({
+    userAddress,
+    vaultAddresses,
+  }: {
+    userAddress: EthereumAddress;
+    vaultAddresses?: string[];
+  }) => Promise<UserVaultData[]>;
   deposit: (props: DepositProps) => Promise<void>;
   withdraw: (props: WithdrawProps) => Promise<void>;
   // approveZapIn:
