@@ -25,7 +25,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-color: ${(props) => props.theme.colors.shade90};
+    background-color: ${(props) => props.theme.colors.shade100};
     color: ${(props) => props.theme.colors.shade0};
     font-size: 1.6rem;
     overflow: hidden;

@@ -2,28 +2,28 @@ import { DefaultTheme } from 'styled-components';
 
 const defaultTheme: DefaultTheme = {
   colors: {
-    primary: '#0075FF',
+    primary: '#000000',
     card: '#292D39',
     error: 'red',
 
-    shade0: '#FFFFFF',
-    shade20: '#A7A8AC',
-    shade30: '#696D78',
-    shade40: '#3F424A',
-    shade90: '#22252E',
-    shade100: '#00070E',
+    shade0: '#00070E',
+    shade20: '#22252E',
+    shade30: '#3F424A',
+    shade40: '#696D78',
+    shade90: '#A7A8AC',
+    shade100: '#FFFFFF',
   },
   contrasts: {
     primary: '#FFF',
     card: '#FFF',
     error: '#FFF',
 
-    shade0: '#000',
+    shade0: '#FFF',
     shade20: '#FFF',
     shade30: '#FFF',
     shade40: '#FFF',
     shade90: '#FFF',
-    shade100: '#FFF',
+    shade100: '#000',
   },
   blade: {
     background: 'rgba(255, 255, 255, 0.2)',
@@ -38,6 +38,7 @@ const defaultTheme: DefaultTheme = {
     paddingTop: '4rem',
     paddingBottom: '3.7rem',
   },
+
   chartTheme: {
     // background: '#292929',
     textColor: '#ffffff',

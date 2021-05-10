@@ -2,10 +2,9 @@ import { FC, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-// import { WalletActions } from '@store';
-// import { useAppSelector } from '@hooks';
-import { AppActions, RouteActions } from '@store';
-import { useAppDispatch } from '@hooks';
+import { AppActions, RouteActions, WalletActions } from '@store';
+
+import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { Navigation, Footer, Navbar } from '@components/app';
 import { Box } from '@components/common';
 
@@ -19,10 +18,12 @@ const Content = styled.div`
 `;
 
 export const Layout: FC = ({ children }) => {
+  const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const location = useLocation();
-  // const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
-  // const transparentNavbar = location.pathname === '/';
+  const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
+  // const path = useAppSelector(({ route }) => route.path);
+  const path = location.pathname.toLowerCase().split('/')[1];
 
   useEffect(() => {
     dispatch(AppActions.initApp());
@@ -37,7 +38,11 @@ export const Layout: FC = ({ children }) => {
       <Navigation />
 
       <Content>
-        <Navbar />
+        <Navbar
+          title={t(`navigation.${path}`)}
+          walletAddress={selectedAddress}
+          onWalletClick={() => dispatch(WalletActions.walletSelect())}
+        />
         {children}
         <Footer />
       </Content>
