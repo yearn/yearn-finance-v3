@@ -27,7 +27,7 @@ export interface VaultService {
 
 export interface TokenService {
   getSupportedTokens: () => Promise<Token[]>;
-  getTokensDynamicData: (props: any) => Promise<TokenDynamicData[]>;
+  getTokensDynamicData: (props: string[]) => Promise<TokenDynamicData[]>;
   approve: (props: ApproveProps) => Promise<void>;
   // getTokenRates:
 }

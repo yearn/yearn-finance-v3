@@ -24,21 +24,21 @@ const tokens = {
       },
     }));
   },
-  priceUsdc: (address: string): Integer => {
+  priceUsdc: (tokenAddress: string): Integer => {
     return '44.08';
   },
   // Deprecated
-  tokensDynamicData: (addresses?: string[]): TokenDynamicData[] => {
-    const tokensData = TokensMockData.slice(0, 4);
+  // tokensDynamicData: (addresses?: string[]): TokenDynamicData[] => {
+  //   const tokensData = TokensMockData.slice(0, 4);
 
-    return tokensData.map((token) => {
-      return {
-        address: getAddress(token.address),
-        priceUsdc: (token.price + 400).toString(),
-      };
-    });
-  },
-  balances: (addresses?: string[]): Balance[] => {
+  //   return tokensData.map((token) => {
+  //     return {
+  //       address: getAddress(token.address),
+  //       priceUsdc: (token.price + 400).toString(),
+  //     };
+  //   });
+  // },
+  balances: (address: string): Balance[] => {
     return UserTokensMockData.map((userTokenData) => {
       return {
         address: userTokenData.address,

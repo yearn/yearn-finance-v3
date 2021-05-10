@@ -28,9 +28,9 @@ export class TokenServiceImpl implements TokenService {
     return pricesUsdc.map((priceUsdc, i: number) => ({ address: addresses[i], priceUsdc }));
   }
 
-  public async getUserTokensData(addresses?: string[]): Promise<Balance[]> {
+  public async getUserTokensData(address: string): Promise<Balance[]> {
     const yearn = this.yearnSdk;
-    return await yearn.tokens.balances(addresses);
+    return await yearn.tokens.balances(address);
   }
 
   public async approve(props: ApproveProps): Promise<void> {
