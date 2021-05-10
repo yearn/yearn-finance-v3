@@ -1,7 +1,8 @@
 import { notify } from '@frameworks/blocknative';
-import { TokenService, TokenData, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider, UserTokenData } from '@types';
+import { TokenService, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider } from '@types';
 import { getContract } from '@frameworks/ethers';
 import erc20Abi from './contracts/erc20.json';
+import { Balance, Token } from '@yfi/sdk';
 
 export class TokenServiceImpl implements TokenService {
   private yearnSdk: YearnSdk;
@@ -12,19 +13,24 @@ export class TokenServiceImpl implements TokenService {
     this.web3Provider = web3Provider;
   }
 
-  public async getSupportedTokens(): Promise<TokenData[]> {
+  public async getSupportedTokens(): Promise<Token[]> {
     const yearn = this.yearnSdk;
     return await yearn.tokens.supported();
   }
 
-  public async getTokensDynamicData(addresses?: string[]): Promise<TokenDynamicData[]> {
+  public async getTokensDynamicData(addresses: string[]): Promise<TokenDynamicData[]> {
+    // TODO this should be refactored correctly when sdk implements the method to fetch more that one token prices at onces
     const yearn = this.yearnSdk;
-    return await yearn.tokens.tokensDynamicData(addresses);
+    if (!addresses.length) {
+      throw new Error('Need to provide addresses');
+    }
+    const pricesUsdc = await Promise.all(addresses.map((address: string) => yearn.tokens.priceUsdc(address)));
+    return pricesUsdc.map((priceUsdc, i: number) => ({ address: addresses[i], priceUsdc }));
   }
 
-  public async getUserTokensData(addresses?: string[]): Promise<UserTokenData[]> {
+  public async getUserTokensData(address: string): Promise<Balance[]> {
     const yearn = this.yearnSdk;
-    return await yearn.tokens.tokenPositionsOf(addresses);
+    return await yearn.tokens.balances(address);
   }
 
   public async approve(props: ApproveProps): Promise<void> {
