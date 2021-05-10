@@ -80,7 +80,7 @@ export const NavSidebar = ({ collapsed }: NavSidebarProps) => {
 
   const navLinks = [
     {
-      to: '/',
+      to: '/home',
       text: t('navigation.home'),
       icon: HomeIcon,
     },
