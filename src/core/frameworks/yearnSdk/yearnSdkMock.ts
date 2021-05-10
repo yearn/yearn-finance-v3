@@ -1,4 +1,4 @@
-import { Balance, Token, ERC20 } from '@yfi/sdk';
+import { Balance, Token } from '@yfi/sdk';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';

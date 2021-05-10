@@ -1,16 +1,17 @@
 import { EthereumAddress } from '@types';
 
-export interface TokenData {
-  address: EthereumAddress;
-  name: string;
-  symbol: string;
-  decimals: number;
-  icon: string;
-  priceUsdc: string;
-  supported: {
-    zapper: boolean;
-  };
-}
+// TODO deprecated
+// export interface TokenData {
+//   address: EthereumAddress;
+//   name: string;
+//   symbol: string;
+//   decimals: number;
+//   icon: string;
+//   priceUsdc: string;
+//   supported: {
+//     zapper: boolean;
+//   };
+// }
 
 export interface UserTokenData {
   address: string;
