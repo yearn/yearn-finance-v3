@@ -17,11 +17,12 @@ interface Item {
 interface SummaryCardProps {
   header: string;
   items: Item[];
+  variant?: 'primary';
 }
 
-export const SummaryCard = ({ header, items }: SummaryCardProps) => {
+export const SummaryCard = ({ header, items, variant }: SummaryCardProps) => {
   return (
-    <StyledCard>
+    <StyledCard variant={variant}>
       <CardHeader header={header} />
       <CardContent wrap>
         {items.map((item) => (
