@@ -1,4 +1,4 @@
-import { Token } from '@yfi/sdk';
+import { Balance, Token, ERC20 } from '@yfi/sdk';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
@@ -7,23 +7,27 @@ import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import UserTokensMockData from './mock/UserTokensMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
-import { TokenData, TokenDynamicData, UserTokenData, UserVaultData, VaultData, VaultDynamicData } from '../../types';
+import { TokenDynamicData, UserVaultData, VaultData, VaultDynamicData } from '../../types';
+import { Integer } from '@yfi/sdk/dist/common';
 
 const tokens = {
-  supported: (): TokenData[] => {
-    // change this to use Token model when updated in the sdk
+  supported: (): Token[] => {
     return TokensMockData.map((token) => ({
       address: getAddress(token.address),
       name: token.symbol,
       symbol: token.symbol,
-      decimals: token.decimals,
+      decimals: token.decimals.toString(),
       icon: 'MOCK',
-      priceUsdc: token.price.toString(),
+      price: token.price.toString(),
       supported: {
         zapper: true,
       },
     }));
   },
+  priceUsdc: (address: string): Integer => {
+    return '44.08';
+  },
+  // Deprecated
   tokensDynamicData: (addresses?: string[]): TokenDynamicData[] => {
     const tokensData = TokensMockData.slice(0, 4);
 
@@ -34,13 +38,20 @@ const tokens = {
       };
     });
   },
-  tokenPositionsOf: (addresses?: string[]): UserTokenData[] => {
+  balances: (addresses?: string[]): Balance[] => {
     return UserTokensMockData.map((userTokenData) => {
       return {
         address: userTokenData.address,
         balance: userTokenData.balance,
         balanceUsdc: userTokenData.balanceUsdc,
         allowancesMap: userTokenData.allowancesMap,
+        token: {
+          address: userTokenData.address,
+          decimals: userTokenData.decimals.toString(),
+          name: userTokenData.symbol,
+          symbol: userTokenData.symbol,
+        },
+        price: userTokenData.price.toString(),
       };
     });
   },

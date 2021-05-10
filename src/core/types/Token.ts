@@ -24,7 +24,7 @@ export interface Token {
   name: string;
   symbol: string;
   decimals: number;
-  icon: string;
+  icon: string | undefined;
   balance: string;
   balanceUsdc: string;
   allowancesMap: { [tokenAddress: string]: string };

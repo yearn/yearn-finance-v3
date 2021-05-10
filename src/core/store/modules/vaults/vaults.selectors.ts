@@ -36,7 +36,7 @@ const selectSaveVaults = createSelector(
           address: tokenData?.address,
           name: tokenData?.name,
           symbol: tokenData?.symbol,
-          decimals: tokenData?.decimals,
+          decimals: parseInt(tokenData?.decimals),
           icon: tokenData?.icon,
           balance: userTokenData?.balance ?? '0',
           balanceUsdc: userTokenData?.balanceUsdc ?? '0',

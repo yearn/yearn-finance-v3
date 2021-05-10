@@ -1,24 +1,36 @@
 [
   {
-    "address": "0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1",
+    "address": "0xacd43e627e64355f1861cec6d3a6688b31a6f952",
+    "decimals": 18,
+    "symbol": "yDAI",
+    "price": 0,
     "balance": "1948947538444859",
     "balanceUsdc": "1948947538444859",
     "allowancesMap": {}
   },
   {
-    "address": "0xdCD90C7f6324cfa40d7169ef80b12031770B4325",
+    "address": "0xaf20b44c1c651d1d29cfb916ee2a0630b828eb7a",
+    "decimals": 18,
+    "symbol": "YYFI",
+    "price": 0.490075,
     "balance": "1948947538444859",
     "balanceUsdc": "1948947538444859",
     "allowancesMap": {}
   },
   {
-    "address": "0x986b4AFF588a109c09B50A03f42E4110E29D353F",
+    "address": "0x597ad1e0c13bfe8025993d9e79c69e1c0233522e",
+    "decimals": 6,
+    "symbol": "yUSDC",
+    "price": 0,
     "balance": "1948947538444859",
     "balanceUsdc": "1948947538444859",
     "allowancesMap": {}
   },
   {
-    "address": "0xcB550A6D4C8e3517A939BC79d0c7093eb7cF56B5",
+    "address": "0x2f08119c6f07c006695e079aafc638b8789faf18",
+    "decimals": 6,
+    "symbol": "yUSDT",
+    "price": 0,
     "balance": "1948947538444859",
     "balanceUsdc": "1948947538444859",
     "allowancesMap": {}

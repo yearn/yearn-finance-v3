@@ -1,7 +1,8 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { TokenData, UserTokenData, UserVaultData, VaultData, CyTokenData, UserCyTokenData } from '@types';
+import { UserTokenData, UserVaultData, VaultData, CyTokenData, UserCyTokenData } from '@types';
 import { EthereumAddress } from './Ethereum';
+import { Token } from '@yfi/sdk';
 
 export interface RootState {
   app: AppState;
@@ -72,7 +73,7 @@ export interface UserTokenActionsMap {
 }
 export interface TokensState {
   tokensAddresses: string[];
-  tokensMap: { [address: string]: TokenData };
+  tokensMap: { [address: string]: Token };
   user: {
     userTokensMap: { [address: string]: UserTokenData };
   };

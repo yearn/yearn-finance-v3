@@ -1,7 +1,6 @@
 import {
   VaultData,
   VaultDynamicData,
-  TokenData,
   UserVaultData,
   CyTokenData,
   UserCyTokenData,
@@ -9,6 +8,7 @@ import {
   EthereumAddress,
   Wei,
 } from '@types';
+import { Token } from '@yfi/sdk';
 
 export interface UserService {}
 
@@ -26,7 +26,7 @@ export interface VaultService {
 }
 
 export interface TokenService {
-  getSupportedTokens: () => Promise<TokenData[]>;
+  getSupportedTokens: () => Promise<Token[]>;
   getTokensDynamicData: (props: any) => Promise<TokenDynamicData[]>;
   approve: (props: ApproveProps) => Promise<void>;
   // getTokenRates:
