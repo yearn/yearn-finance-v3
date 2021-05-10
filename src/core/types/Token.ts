@@ -1,16 +1,17 @@
 import { EthereumAddress } from '@types';
 
-export interface TokenData {
-  address: EthereumAddress;
-  name: string;
-  symbol: string;
-  decimals: number;
-  icon: string;
-  priceUsdc: string;
-  supported: {
-    zapper: boolean;
-  };
-}
+// TODO deprecated
+// export interface TokenData {
+//   address: EthereumAddress;
+//   name: string;
+//   symbol: string;
+//   decimals: number;
+//   icon: string;
+//   priceUsdc: string;
+//   supported: {
+//     zapper: boolean;
+//   };
+// }
 
 export interface UserTokenData {
   address: string;
@@ -19,12 +20,12 @@ export interface UserTokenData {
   allowancesMap: { [spenderAddress: string]: string };
 }
 
-export interface Token {
+export interface TokenView {
   address: EthereumAddress;
   name: string;
   symbol: string;
   decimals: number;
-  icon: string;
+  icon: string | undefined;
   balance: string;
   balanceUsdc: string;
   allowancesMap: { [tokenAddress: string]: string };
