@@ -54,6 +54,11 @@ declare module 'styled-components' {
     devices: Devices;
     globalFont: string;
     globalMaxWidth: string;
+
+    sideBar: {
+      width: string;
+      collapsedWidth: string;
+    };
   }
 
   export interface Devices {
