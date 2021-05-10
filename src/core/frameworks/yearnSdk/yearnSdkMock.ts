@@ -1,4 +1,4 @@
-import { Balance, Token } from '@yfi/sdk';
+import { Balance, Token, Vault } from '@yfi/sdk';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
@@ -6,8 +6,8 @@ import VaultsV2MockData from './mock/VaultsV2MockData.json';
 import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import UserTokensMockData from './mock/UserTokensMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
-import { getAddress } from '@ethersproject/address';
-import { TokenDynamicData, UserVaultData, VaultData, VaultDynamicData } from '../../types';
+import { getAddress, isAddress } from '@ethersproject/address';
+import { UserVaultData, VaultData, VaultDynamicData } from '../../types';
 import { Integer } from '@yfi/sdk/dist/common';
 
 const tokens = {
@@ -58,28 +58,56 @@ const tokens = {
 };
 
 const vaults = {
-  get: (): VaultData[] => {
+  // get: (): VaultData[] => {
+  //   const staticVaultsData = VaultsV2MockData.static;
+  //   const dynamicVaultsData = VaultsV2MockData.dynamic;
+
+  //   const vaults: VaultData[] = staticVaultsData.map((staticData, i) => {
+  //     const dynamicData = dynamicVaultsData[i];
+  //     const vault = { ...staticData, ...dynamicData };
+  //     return {
+  //       address: vault.id,
+  //       name: vault.name,
+  //       version: vault.version,
+  //       typeId: 'VAULT_V2',
+  //       balance: vault.underlyingTokenBalance.amount.toString(),
+  //       balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
+  //       token: vault.token.id,
+  //       apyData: '99',
+  //       depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
+  //       pricePerShare: vault.metadata.pricePerShare.toString(),
+  //       migrationAvailable: vault.typeId === 'VAULT_V2' ? vault.metadata.migrationAvailable : false,
+  //       latestVaultAddress: vault.typeId === 'VAULT_V2' ? vault.metadata.latestVaultAddress : '',
+  //       emergencyShutdown: vault.typeId === 'VAULT_V2' ? vault.metadata.emergencyShutdown : false,
+  //       symbol: vault.metadata.symbol,
+  //     };
+  //   });
+  //   return vaults;
+  // },
+  get: (): Vault[] => {
     const staticVaultsData = VaultsV2MockData.static;
     const dynamicVaultsData = VaultsV2MockData.dynamic;
 
-    const vaults: VaultData[] = staticVaultsData.map((staticData, i) => {
+    const vaults: Vault[] = staticVaultsData.map((staticData, i) => {
       const dynamicData = dynamicVaultsData[i];
       const vault = { ...staticData, ...dynamicData };
       return {
-        address: vault.id,
-        name: vault.name,
-        version: vault.version,
+        ...vault,
         typeId: 'VAULT_V2',
-        balance: vault.underlyingTokenBalance.amount.toString(),
-        balanceUsdc: vault.underlyingTokenBalance.amountUsdc.toString(),
-        token: vault.token.id,
-        apyData: '99',
-        depositLimit: vault.typeId === 'VAULT_V2' ? vault.metadata.depositLimit.toString() : '0',
-        pricePerShare: vault.metadata.pricePerShare.toString(),
-        migrationAvailable: vault.typeId === 'VAULT_V2' ? vault.metadata.migrationAvailable : false,
-        latestVaultAddress: vault.typeId === 'VAULT_V2' ? vault.metadata.latestVaultAddress : '',
-        emergencyShutdown: vault.typeId === 'VAULT_V2' ? vault.metadata.emergencyShutdown : false,
-        symbol: vault.metadata.symbol,
+
+        // address: vault.address,
+        // typeId: 'VAULT_V2',
+        // name: vault.name,
+        // version: vault.version,
+        // token: {
+        //   address: vault.token.address,
+        //   decimals: vault.token.decimals,
+        //   name: vault.token.name,
+        //   symbol: vault.token.symbol,
+        // },
+        // tokenId: vault.tokenId,
+        // underlyingTokenBalance: vault.underlyingTokenBalance,
+        // metadata: vault.metadata,
       };
     });
     return vaults;
@@ -100,7 +128,7 @@ const vaults = {
   assetsDynamicData: (addresses?: string[]): VaultDynamicData[] => {
     const vaultsPositions = [VaultsV2MockData.dynamic[0]].map((dynamicData) => {
       return {
-        address: dynamicData.id,
+        address: dynamicData.address,
         balance: dynamicData.underlyingTokenBalance.amount.toString(),
         balanceUsdc: dynamicData.underlyingTokenBalance.amountUsdc.toString(),
         apyData: '800',

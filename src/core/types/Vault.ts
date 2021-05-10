@@ -19,7 +19,7 @@ export interface UserVaultData {
   allowancesMap: { [spenderAddress: string]: string };
 }
 
-export interface Vault {
+export interface VaultView {
   address: EthereumAddress;
   name: string;
   vaultBalance: string;

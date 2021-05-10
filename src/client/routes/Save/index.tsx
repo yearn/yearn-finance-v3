@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useAppSelector, useAppDispatch, useAppTranslation } from '@hooks';
 import { VaultsActions, VaultsSelectors } from '@store';
 import { formatPercent, humanizeAmount } from '@src/utils';
-import { Vault } from '@types';
+import { VaultView } from '@types';
 import { BladeContext, NavSideMenuContext } from '@context';
 import { AssetCard, Blade } from '@components/app';
 import { List, SpinnerLoading } from '@components/common';
@@ -135,7 +135,7 @@ export const Save = () => {
     </SaveInfo>
   );
 
-  const selectVault = (vault: Vault) => {
+  const selectVault = (vault: VaultView) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: vault.address }));
     closeNavSidemenu();
     openBlade();

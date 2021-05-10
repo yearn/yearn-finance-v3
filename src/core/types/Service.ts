@@ -8,12 +8,12 @@ import {
   EthereumAddress,
   Wei,
 } from '@types';
-import { Token } from '@yfi/sdk';
+import { Token, Vault } from '@yfi/sdk';
 
 export interface UserService {}
 
 export interface VaultService {
-  getSupportedVaults: () => Promise<VaultData[]>;
+  getSupportedVaults: () => Promise<Vault[]>;
   getVaultsDynamicData: (props: any) => Promise<VaultDynamicData[]>;
   getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
   deposit: (props: DepositProps) => Promise<void>;

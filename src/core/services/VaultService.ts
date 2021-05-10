@@ -2,7 +2,6 @@ import { notify } from '@frameworks/blocknative';
 import { getContract } from '@frameworks/ethers';
 import {
   VaultService,
-  VaultData,
   Web3Provider,
   YearnSdk,
   Config,
@@ -14,6 +13,7 @@ import {
 } from '@types';
 import yVaultAbi from './contracts/yVault.json';
 import erc20Abi from './contracts/erc20.json';
+import { Vault } from '@yfi/sdk';
 
 export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;
@@ -26,7 +26,7 @@ export class VaultServiceImpl implements VaultService {
     this.config = config;
   }
 
-  public async getSupportedVaults(): Promise<VaultData[]> {
+  public async getSupportedVaults(): Promise<Vault[]> {
     const yearn = this.yearnSdk;
     return await yearn.vaults.get();
   }

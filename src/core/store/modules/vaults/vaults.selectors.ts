@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState, Status, Vault, VaultActionsStatusMap } from '@types';
+import { RootState, Status, VaultView, VaultActionsStatusMap } from '@types';
 import BigNumber from 'bignumber.js';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
 
@@ -13,20 +13,20 @@ const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 
 const selectSaveVaults = createSelector(
   [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap],
-  (vaultsState, tokensMap, userVaultsMap, userTokensMap): Vault[] => {
+  (vaultsState, tokensMap, userVaultsMap, userTokensMap): VaultView[] => {
     const { saveVaultsAddreses, vaultsMap } = vaultsState;
-    const vaults: Vault[] = saveVaultsAddreses.map((address) => {
+    const vaults: VaultView[] = saveVaultsAddreses.map((address) => {
       const vaultData = vaultsMap[address];
-      const tokenData = tokensMap[vaultData.token];
+      const tokenData = tokensMap[vaultData.tokenId];
       const userVaultData = userVaultsMap[address];
-      const userTokenData = userTokensMap[vaultData.token];
+      const userTokenData = userTokensMap[vaultData.tokenId];
       const currentAllowance: string = userTokenData?.allowancesMap[address] ?? '0';
       return {
         address: vaultData.address,
         name: vaultData.name,
-        vaultBalance: vaultData.balance,
-        vaultBalanceUsdc: vaultData.balanceUsdc,
-        depositLimit: vaultData.depositLimit,
+        vaultBalance: vaultData.underlyingTokenBalance.amount,
+        vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
+        depositLimit: vaultData.metadata.depositLimit,
         apyData: vaultData.apyData,
         userDeposited: userVaultData?.depositedBalance ?? '0',
         userDepositedUsdc: userVaultData?.depositedBalanceUsdc ?? '0',
@@ -59,7 +59,7 @@ const selectSaveVaultsGeneralStatus = createSelector(
 
 const selectSelectedVault = createSelector(
   [selectSaveVaults, selectSelectedVaultAddress],
-  (vaults, selectedVaultAddress): Vault | undefined => {
+  (vaults, selectedVaultAddress): VaultView | undefined => {
     if (!selectedVaultAddress) {
       return undefined;
     }
