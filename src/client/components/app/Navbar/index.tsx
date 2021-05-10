@@ -2,12 +2,13 @@ import styled from 'styled-components';
 import useWindowDimensions from '@hooks/windowDimensions';
 
 import { ConnectWalletButton } from '@components/app';
+import { Text } from '@components/common';
 
 interface NavbarProps {
   className?: string;
+  title?: string;
   walletAddress?: string;
   onWalletClick?: () => void;
-  toggleSidemenu?: () => void;
 }
 
 const StyledNavbarActions = styled.div`
@@ -24,14 +25,13 @@ const StyledNavbar = styled.nav`
   width: 100%;
   display: flex;
   align-items: center;
-  background-color: ${(props) => props.theme.colors.shade90};
+  background-color: ${(props) => props.theme.colors.shade100};
   height: ${(props) => props.theme.navbar.height};
-  border-bottom: 1px solid ${(props) => props.theme.colors.shade40};
   padding: 0 ${(props) => props.theme.navbar.padding};
   z-index: ${(props) => props.theme.zindex.navbar};
 `;
 
-export const Navbar = ({ className, walletAddress, onWalletClick }: NavbarProps) => {
+export const Navbar = ({ className, title, walletAddress, onWalletClick }: NavbarProps) => {
   const { isMobile } = useWindowDimensions();
 
   let connectWalletButton;
@@ -44,6 +44,7 @@ export const Navbar = ({ className, walletAddress, onWalletClick }: NavbarProps)
 
   return (
     <StyledNavbar className={className}>
+      {title && <Text>{title}</Text>}
       <StyledNavbarActions>{connectWalletButton}</StyledNavbarActions>
     </StyledNavbar>
   );

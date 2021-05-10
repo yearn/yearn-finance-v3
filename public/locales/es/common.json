@@ -20,11 +20,12 @@
     }
   },
   "navigation": {
-    "home": "Inicio",
     "dashboard": "Dashboard",
     "invest": "Invest",
     "save": "Save",
-    "borrow": "Borrow"
+    "borrow": "Borrow",
+    "home": "Inicio",
+    "vault": "Vault"
   },
   "footer": {
     "copyright": "Copyright © yearn 2021. Todos los derechos reservados.",
