@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div<{ wrap?: boolean }>`
+const Container = styled.div<{ wrap?: string }>`
   display: flex;
   flex-direction: row;
-  flex-wrap: ${({ wrap }) => (wrap ? 'wrap' : 'nowrap')};
+  flex-wrap: ${({ wrap }) => wrap};
   align-items: center;
 `;
 
@@ -13,5 +13,5 @@ interface CardContentProps {
 }
 
 export const CardContent: FC<CardContentProps> = ({ children, wrap }) => {
-  return <Container wrap={wrap}>{children}</Container>;
+  return <Container wrap={wrap ? 'wrap' : 'nowrap'}>{children}</Container>;
 };
