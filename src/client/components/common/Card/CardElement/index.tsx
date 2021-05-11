@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Container = styled.div<{ width?: string; align?: string; grow?: string }>`
   display: flex;
   flex-direction: column;
-  min-width: ${({ width }) => width ?? '14rem'};
+  width: ${({ width }) => width ?? '17rem'};
   align-items: ${({ align }) => align ?? 'flex-start'};
   flex-grow: ${({ grow }) => grow ?? '0'};
   margin: 0.825rem 1.2rem;

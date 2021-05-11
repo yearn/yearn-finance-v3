@@ -25,7 +25,8 @@
     "save": "Save",
     "borrow": "Borrow",
     "home": "Inicio",
-    "vault": "Vault"
+    "vault": "Vault",
+    "vaults": "Vaults"
   },
   "footer": {
     "copyright": "Copyright © yearn 2021. Todos los derechos reservados.",
