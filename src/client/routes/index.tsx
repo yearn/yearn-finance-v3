@@ -7,6 +7,7 @@ import { Landing } from './Landing';
 import { Dashboard } from './Dashboard';
 import { VaultDetail } from './VaultDetail';
 import { Borrow } from './Borrow';
+import { Vaults } from './Vaults';
 
 const routesMap = [
   {
@@ -32,6 +33,10 @@ const routesMap = [
   {
     path: '/home',
     component: Landing,
+  },
+  {
+    path: '/vaults',
+    component: Vaults,
   },
 ];
 

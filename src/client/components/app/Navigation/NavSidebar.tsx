@@ -104,6 +104,11 @@ export const NavSidebar = ({ collapsed }: NavSidebarProps) => {
       text: t('navigation.borrow'),
       icon: HomeIcon,
     },
+    {
+      to: '/vaults',
+      text: t('navigation.vaults'),
+      icon: HomeIcon,
+    },
   ];
 
   const linkList = (
