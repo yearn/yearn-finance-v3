@@ -38,7 +38,7 @@ export interface VaultActionsStatusMap {
 export interface UserVaultActionsStatusMap {
   get: Status;
 }
-interface VaultPositionsMap {
+export interface VaultPositionsMap {
   DEPOSIT: Position;
 }
 
@@ -50,7 +50,7 @@ export interface VaultsState {
   vaultsMap: { [address: string]: Vault };
   selectedVaultAddress: EthereumAddress | undefined;
   user: {
-    userVaultsMap: { [address: string]: Position };
+    userVaultsMap: { [address: string]: VaultPositionsMap };
     vaultsAllowancesMap: { [vaultAddress: string]: AllowancesMap };
   };
   statusMap: {

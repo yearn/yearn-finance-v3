@@ -19,7 +19,7 @@ const selectSaveVaults = createSelector(
     const vaults: VaultView[] = saveVaultsAddreses.map((address) => {
       const vaultData = vaultsMap[address];
       const tokenData = tokensMap[vaultData.tokenId];
-      const userVaultData = userVaultsMap[address];
+      const userVaultData = userVaultsMap[address]?.DEPOSIT;
       const userTokenData = userTokensMap[vaultData.tokenId];
       const currentAllowance: string = userTokenData?.allowancesMap[address] ?? '0';
       return {

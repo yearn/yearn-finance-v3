@@ -72,6 +72,19 @@ const vaults = {
     return vaults;
   },
   assetsPositionsOf: (userAddress: string, vaultAddresses?: string[]): Position[] => {
+    // if (vaultAddresses?.length) {
+    //   const position = VaultsV2PositionsMockData[3].positions[0];
+    //   return [
+    //     {
+    //       ...position,
+    //       underlyingTokenBalance: {
+    //         amount: '999999999999999',
+    //         amountUsdc: '999999999999999',
+    //       },
+    //     },
+    //   ];
+    // }
+
     const vaultsPositions: Position[] = [];
     VaultsV2PositionsMockData.forEach((data) => {
       vaultsPositions.push(...data.positions);

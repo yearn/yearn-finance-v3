@@ -1,5 +1,8 @@
+import { groupBy, keyBy } from 'lodash';
+
 import { createReducer } from '@reduxjs/toolkit';
-import { initialStatus, VaultsState } from '@types';
+import { initialStatus, VaultsState, VaultPositionsMap } from '@types';
+import { Position } from '@yfi/sdk';
 import { VaultsActions } from './vaults.actions';
 
 export const initialVaultActionsStatusMap = {
@@ -84,16 +87,18 @@ const vaultsReducer = createReducer(initialState, (builder) => {
       state.statusMap.user.getUserVaults = { loading: true };
     })
     .addCase(getUserVaultsData.fulfilled, (state, { payload: { userVaultsData } }) => {
+      const vaultsPositionsMap = parsePositionsIntoMap(userVaultsData);
+
       userVaultsData.forEach((position) => {
         const address = position.assetAddress;
         const allowancesMap: any = {};
         position.assetAllowances.forEach((allowance) => (allowancesMap[allowance.spender] = allowance.amount));
 
-        state.user.userVaultsMap[address] = position;
         state.user.vaultsAllowancesMap[address] = allowancesMap;
         state.statusMap.user.userVaultsActionsStatusMap[address].get = {};
       });
 
+      state.user.userVaultsMap = { ...state.user.userVaultsMap, ...vaultsPositionsMap };
       state.statusMap.user.getUserVaults = {};
     })
     .addCase(getUserVaultsData.rejected, (state, { meta, error }) => {
@@ -165,5 +170,15 @@ const vaultsReducer = createReducer(initialState, (builder) => {
       });
     });
 });
+
+function parsePositionsIntoMap(positions: Position[]): { [vaultAddress: string]: VaultPositionsMap } {
+  const grouped = groupBy(positions, 'assetAddress');
+  const vaultsMap: { [vaultAddress: string]: any } = {};
+  Object.entries(grouped).forEach(([key, value]) => {
+    console.log({ key, value });
+    vaultsMap[key] = keyBy(value, 'typeId');
+  });
+  return vaultsMap;
+}
 
 export default vaultsReducer;
