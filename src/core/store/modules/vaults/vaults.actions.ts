@@ -1,10 +1,9 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { UserVaultData } from '@types';
 import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';
-import { Vault, VaultDynamic } from '@yfi/sdk';
+import { Position, Vault, VaultDynamic } from '@yfi/sdk';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress: string }>('vaults/setSelectedVaultAddress');
 
@@ -40,24 +39,18 @@ const getVaultsDynamic = createAsyncThunk<{ vaultsDynamicData: VaultDynamic[] },
   }
 );
 
-const getUserVaultsData = createAsyncThunk<
-  { userVaultsMap: { [address: string]: UserVaultData } },
-  { vaultAddresses?: string[] },
-  ThunkAPI
->('vaults/getUserVaultsData', async ({ vaultAddresses }, { extra, getState, dispatch }) => {
-  const { services } = extra;
-  const userAddress = getState().wallet.selectedAddress;
-  if (!userAddress) {
-    throw new Error('WALLET NOT CONNECTED');
+const getUserVaultsData = createAsyncThunk<{ userVaultsData: Position[] }, { vaultAddresses?: string[] }, ThunkAPI>(
+  'vaults/getUserVaultsData',
+  async ({ vaultAddresses }, { extra, getState, dispatch }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+    const userVaultsData = await services.vaultService.getUserVaultsData({ userAddress, vaultAddresses });
+    return { userVaultsData };
   }
-  const userVaultsData = await services.vaultService.getUserVaultsData({ userAddress, vaultAddresses });
-  const userVaultsMap: { [address: string]: UserVaultData } = {};
-  userVaultsData.forEach((vault) => {
-    userVaultsMap[vault.assetAddress] = vault;
-  });
-
-  return { userVaultsMap };
-});
+);
 
 const approveVault = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveVault',

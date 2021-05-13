@@ -10,8 +10,16 @@
           "amount": "2000000000",
           "amountUsdc": "2000000000"
         },
-        "assetAllowances": [],
-        "tokenAllowances": []
+        "assetAllowances": [
+          {
+            "owner": "",
+            "spender": "0x0000ce2Cc1FD87494432FAa18E1878048a4C1b00",
+            "amount": "83912839182938192391"
+          }
+        ],
+        "tokenAllowances": [
+
+        ]
       }
     ]
   },

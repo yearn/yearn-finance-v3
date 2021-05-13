@@ -19,6 +19,7 @@ const initialState: VaultsState = {
   selectedVaultAddress: undefined,
   user: {
     userVaultsMap: {},
+    vaultsAllowancesMap: {},
   },
   statusMap: {
     initiateSaveVaults: { loading: false, error: null },
@@ -82,12 +83,17 @@ const vaultsReducer = createReducer(initialState, (builder) => {
       });
       state.statusMap.user.getUserVaults = { loading: true };
     })
-    .addCase(getUserVaultsData.fulfilled, (state, { meta, payload: { userVaultsMap } }) => {
-      const vaultAddresses = meta.arg.vaultAddresses || [];
-      vaultAddresses.forEach((address) => {
+    .addCase(getUserVaultsData.fulfilled, (state, { payload: { userVaultsData } }) => {
+      userVaultsData.forEach((position) => {
+        const address = position.assetAddress;
+        const allowancesMap: any = {};
+        position.assetAllowances.forEach((allowance) => (allowancesMap[allowance.spender] = allowance.amount));
+
+        state.user.userVaultsMap[address] = position;
+        state.user.vaultsAllowancesMap[address] = allowancesMap;
         state.statusMap.user.userVaultsActionsStatusMap[address].get = {};
       });
-      state.user.userVaultsMap = { ...state.user.userVaultsMap, ...userVaultsMap };
+
       state.statusMap.user.getUserVaults = {};
     })
     .addCase(getUserVaultsData.rejected, (state, { meta, error }) => {

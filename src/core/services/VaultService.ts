@@ -1,18 +1,9 @@
 import { notify } from '@frameworks/blocknative';
 import { getContract } from '@frameworks/ethers';
-import {
-  VaultService,
-  Web3Provider,
-  YearnSdk,
-  Config,
-  DepositProps,
-  WithdrawProps,
-  UserVaultData,
-  EthereumAddress,
-} from '@types';
+import { VaultService, Web3Provider, YearnSdk, Config, DepositProps, WithdrawProps, EthereumAddress } from '@types';
 import yVaultAbi from './contracts/yVault.json';
 import erc20Abi from './contracts/erc20.json';
-import { Vault, VaultDynamic } from '@yfi/sdk';
+import { Position, Vault, VaultDynamic } from '@yfi/sdk';
 
 export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;
@@ -41,21 +32,9 @@ export class VaultServiceImpl implements VaultService {
   }: {
     userAddress: EthereumAddress;
     vaultAddresses?: string[];
-  }): Promise<UserVaultData[]> {
+  }): Promise<Position[]> {
     const yearn = this.yearnSdk;
-    const positions = await yearn.vaults.assetsPositionsOf(userAddress, vaultAddresses);
-    const userVaultsData: UserVaultData[] = positions.map((position) => {
-      const allowancesMap: { [spender: string]: string } = {};
-      position.assetAllowances.forEach((allowance) => {
-        allowancesMap[allowance.spender] = allowance.amount;
-      });
-      return {
-        ...position,
-        allowancesMap,
-      };
-    });
-
-    return userVaultsData;
+    return await yearn.vaults.assetsPositionsOf(userAddress, vaultAddresses);
   }
 
   public async deposit(props: DepositProps): Promise<void> {

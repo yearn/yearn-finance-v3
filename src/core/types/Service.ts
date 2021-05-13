@@ -1,5 +1,5 @@
-import { UserVaultData, CyTokenData, UserCyTokenData, TokenDynamicData, EthereumAddress, Wei } from '@types';
-import { Token, Vault, VaultDynamic } from '@yfi/sdk';
+import { CyTokenData, UserCyTokenData, TokenDynamicData, EthereumAddress, Wei } from '@types';
+import { Position, Token, Vault, VaultDynamic } from '@yfi/sdk';
 
 export interface UserService {}
 
@@ -12,7 +12,7 @@ export interface VaultService {
   }: {
     userAddress: EthereumAddress;
     vaultAddresses?: string[];
-  }) => Promise<UserVaultData[]>;
+  }) => Promise<Position[]>;
   deposit: (props: DepositProps) => Promise<void>;
   withdraw: (props: WithdrawProps) => Promise<void>;
   // approveZapIn:

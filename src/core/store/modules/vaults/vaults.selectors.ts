@@ -6,14 +6,15 @@ import { initialVaultActionsStatusMap } from './vaults.reducer';
 const selectVaultsState = (state: RootState) => state.vaults;
 const selectUserVaultsMap = (state: RootState) => state.vaults.user.userVaultsMap;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
+const selectVaultsAllowancesMap = (state: RootState) => state.vaults.user.vaultsAllowancesMap;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVaultAddress;
 const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMap.vaultsActionsStatusMap;
 const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 
 const selectSaveVaults = createSelector(
-  [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap],
-  (vaultsState, tokensMap, userVaultsMap, userTokensMap): VaultView[] => {
+  [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap, selectVaultsAllowancesMap],
+  (vaultsState, tokensMap, userVaultsMap, userTokensMap, vaultsAllowancesMap): VaultView[] => {
     const { saveVaultsAddreses, vaultsMap } = vaultsState;
     const vaults: VaultView[] = saveVaultsAddreses.map((address) => {
       const vaultData = vaultsMap[address];
@@ -31,7 +32,7 @@ const selectSaveVaults = createSelector(
         // apyData: vaultData.apyData, TODO
         userDeposited: userVaultData?.underlyingTokenBalance.amount ?? '0',
         userDepositedUsdc: userVaultData?.underlyingTokenBalance.amountUsdc ?? '0',
-        allowancesMap: userVaultData?.allowancesMap ?? {},
+        allowancesMap: vaultsAllowancesMap[address] ?? {},
         approved: new BigNumber(currentAllowance).gt(0),
         token: {
           address: tokenData?.address,
