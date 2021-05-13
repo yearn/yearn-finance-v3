@@ -1,4 +1,4 @@
-import { Balance, Token, Vault, VaultDynamic } from '@yfi/sdk';
+import { Balance, Position, Token, Vault, VaultDynamic } from '@yfi/sdk';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
@@ -7,7 +7,6 @@ import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import UserTokensMockData from './mock/UserTokensMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
-import { UserVaultData } from '../../types';
 import { Integer } from '@yfi/sdk/dist/common';
 
 const tokens = {
@@ -72,15 +71,10 @@ const vaults = {
     });
     return vaults;
   },
-  assetsPositionsOf: (userAddress: string, vaultAddresses?: string[]): UserVaultData[] => {
-    const vaultsPositions = VaultsV2PositionsMockData.map((data) => {
-      const position = data.positions[0];
-      return {
-        address: position.assetId,
-        depositedBalance: position.underlyingTokenBalance.amount.toString(),
-        depositedBalanceUsdc: position.underlyingTokenBalance.amountUsdc.toString(),
-        allowancesMap: {},
-      };
+  assetsPositionsOf: (userAddress: string, vaultAddresses?: string[]): Position[] => {
+    const vaultsPositions: Position[] = [];
+    VaultsV2PositionsMockData.forEach((data) => {
+      vaultsPositions.push(...data.positions);
     });
 
     return vaultsPositions;

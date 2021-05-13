@@ -43,7 +43,19 @@ export class VaultServiceImpl implements VaultService {
     vaultAddresses?: string[];
   }): Promise<UserVaultData[]> {
     const yearn = this.yearnSdk;
-    return await yearn.vaults.assetsPositionsOf(userAddress, vaultAddresses);
+    const positions = await yearn.vaults.assetsPositionsOf(userAddress, vaultAddresses);
+    const userVaultsData: UserVaultData[] = positions.map((position) => {
+      const allowancesMap: { [spender: string]: string } = {};
+      position.assetAllowances.forEach((allowance) => {
+        allowancesMap[allowance.spender] = allowance.amount;
+      });
+      return {
+        ...position,
+        allowancesMap,
+      };
+    });
+
+    return userVaultsData;
   }
 
   public async deposit(props: DepositProps): Promise<void> {

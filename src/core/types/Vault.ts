@@ -1,4 +1,5 @@
 import { EthereumAddress } from '@types';
+import { Position } from '@yfi/sdk';
 import { TokenView } from './Token';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
@@ -12,10 +13,7 @@ export interface VaultData extends VaultDynamicData {
   symbol: string;
 }
 
-export interface UserVaultData {
-  address: EthereumAddress;
-  depositedBalance: string;
-  depositedBalanceUsdc: string;
+export interface UserVaultData extends Position {
   allowancesMap: { [spenderAddress: string]: string };
 }
 

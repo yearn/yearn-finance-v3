@@ -53,7 +53,7 @@ const getUserVaultsData = createAsyncThunk<
   const userVaultsData = await services.vaultService.getUserVaultsData({ userAddress, vaultAddresses });
   const userVaultsMap: { [address: string]: UserVaultData } = {};
   userVaultsData.forEach((vault) => {
-    userVaultsMap[vault.address] = vault;
+    userVaultsMap[vault.assetAddress] = vault;
   });
 
   return { userVaultsMap };
