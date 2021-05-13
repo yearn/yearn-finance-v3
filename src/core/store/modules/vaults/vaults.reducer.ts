@@ -175,7 +175,6 @@ function parsePositionsIntoMap(positions: Position[]): { [vaultAddress: string]:
   const grouped = groupBy(positions, 'assetAddress');
   const vaultsMap: { [vaultAddress: string]: any } = {};
   Object.entries(grouped).forEach(([key, value]) => {
-    console.log({ key, value });
     vaultsMap[key] = keyBy(value, 'typeId');
   });
   return vaultsMap;

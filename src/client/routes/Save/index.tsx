@@ -151,12 +151,8 @@ export const Save = () => {
     }
   }, [selectedAddress]);
 
-  function getDynamicData() {
-    dispatch(VaultsActions.getUserVaultsData({ vaultAddresses: ['0xcB550A6D4C8e3517A939BC79d0c7093eb7cF56B5'] }));
-  }
   return (
     <SaveView>
-      <button onClick={getDynamicData}>get dynamic data</button>
       <Blade></Blade>
       <DefaultPageContent>
         {assetList}
