@@ -1,20 +1,11 @@
-import {
-  VaultData,
-  VaultDynamicData,
-  UserVaultData,
-  CyTokenData,
-  UserCyTokenData,
-  TokenDynamicData,
-  EthereumAddress,
-  Wei,
-} from '@types';
-import { Token, Vault } from '@yfi/sdk';
+import { UserVaultData, CyTokenData, UserCyTokenData, TokenDynamicData, EthereumAddress, Wei } from '@types';
+import { Token, Vault, VaultDynamic } from '@yfi/sdk';
 
 export interface UserService {}
 
 export interface VaultService {
   getSupportedVaults: () => Promise<Vault[]>;
-  getVaultsDynamicData: (props: any) => Promise<VaultDynamicData[]>;
+  getVaultsDynamicData: (props: any) => Promise<VaultDynamic[]>;
   getUserVaultsData: ({
     userAddress,
     vaultAddresses,

@@ -7,13 +7,12 @@ import {
   Config,
   DepositProps,
   WithdrawProps,
-  VaultDynamicData,
   UserVaultData,
   EthereumAddress,
 } from '@types';
 import yVaultAbi from './contracts/yVault.json';
 import erc20Abi from './contracts/erc20.json';
-import { Vault } from '@yfi/sdk';
+import { Vault, VaultDynamic } from '@yfi/sdk';
 
 export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;
@@ -31,7 +30,7 @@ export class VaultServiceImpl implements VaultService {
     return await yearn.vaults.get();
   }
 
-  public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamicData[]> {
+  public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamic[]> {
     const yearn = this.yearnSdk;
     return await yearn.vaults.assetsDynamicData(addresses);
   }

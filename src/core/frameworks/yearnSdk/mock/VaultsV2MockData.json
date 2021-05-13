@@ -3,194 +3,146 @@
     {
       "address": "0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1",
       "typeId": "VAULT_V2",
+      "token": "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
       "name": "YFI yVault",
       "version": "0.3.2",
-      "token": {
-        "address": "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
-        "name": "yearn.finance",
-        "symbol": "YFI",
-        "decimals": "18"
-      }
+      "symbol": "0.3.2",
+      "decimals": "0.3.2"
     },
     {
       "address": "0xdCD90C7f6324cfa40d7169ef80b12031770B4325",
       "typeId": "VAULT_V2",
       "name": "Curve stETH Pool yVault",
       "version": "0.3.0",
-      "token": {
-        "address": "0x06325440D014e39736583c165C2963BA99fAf14E",
-        "name": "Curve.fi ETH/stETH",
-        "symbol": "steCRV",
-        "decimals": "18"
-      }
+      "token": "0x06325440D014e39736583c165C2963BA99fAf14E",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0x986b4AFF588a109c09B50A03f42E4110E29D353F",
       "typeId": "VAULT_V2",
       "name": "Curve sETH Pool yVault",
       "version": "0.3.2",
-      "token": {
-        "address": "0xA3D87FffcE63B53E0d54fAa1cc983B7eB0b74A9c",
-        "name": "Curve.fi ETH/sETH",
-        "symbol": "eCRV",
-        "decimals": "18"
-      }
+      "token": "0xA3D87FffcE63B53E0d54fAa1cc983B7eB0b74A9c",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0xcB550A6D4C8e3517A939BC79d0c7093eb7cF56B5",
       "typeId": "VAULT_V2",
       "name": "WBTC yVault",
       "version": "0.3.1",
-      "token": {
-        "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-        "name": "Wrapped BTC",
-        "symbol": "WBTC",
-        "decimals": "8"
-      }
+      "token": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0xa9fE4601811213c340e850ea305481afF02f5b28",
       "typeId": "VAULT_V2",
       "name": "WETH yVault",
       "version": "0.3.2",
-      "token": {
-        "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-        "name": "Wrapped Ether",
-        "symbol": "WETH",
-        "decimals": "18"
-      }
+      "token": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0xB8C3B7A2A618C552C23B1E4701109a9E756Bab67",
       "typeId": "VAULT_V2",
       "name": "1INCH yVault",
       "version": "0.3.2",
-      "token": {
-        "address": "0x111111111117dC0aa78b770fA6A738034120C302",
-        "name": "1INCH Token",
-        "symbol": "1INCH",
-        "decimals": "18"
-      }
+      "token": "0x111111111117dC0aa78b770fA6A738034120C302",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0xBFa4D8AA6d8a379aBFe7793399D3DdaCC5bBECBB",
       "typeId": "VAULT_V2",
       "name": "DAI yVault",
       "version": "0.2.2",
-      "token": {
-        "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-        "name": "Dai Stablecoin",
-        "symbol": "DAI",
-        "decimals": "18"
-      }
+      "token": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0x19D3364A399d251E894aC732651be8B0E4e85001",
       "typeId": "VAULT_V2",
       "name": "DAI yVault",
       "version": "0.3.0",
-      "token": {
-        "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-        "name": "Dai Stablecoin",
-        "symbol": "DAI",
-        "decimals": "18"
-      }
+      "token": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0xe11ba472F74869176652C35D30dB89854b5ae84D",
       "typeId": "VAULT_V2",
       "name": "HEGIC yVault",
       "version": "0.3.0",
-      "token": {
-        "address": "0x584bC13c7D411c00c01A62e8019472dE68768430",
-        "name": "Hegic",
-        "symbol": "HEGIC",
-        "decimals": "18"
-      }
+      "token": "0x584bC13c7D411c00c01A62e8019472dE68768430",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0xe2F6b9773BF3A015E2aA70741Bde1498bdB9425b",
       "typeId": "VAULT_V2",
       "name": "Yearn USDC Vault",
       "version": "0.2.2",
-      "token": {
-        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-        "name": "USD Coin",
-        "symbol": "USDC",
-        "decimals": "6"
-      }
+      "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9",
       "typeId": "VAULT_V2",
       "name": "USDC yVault",
       "version": "0.3.0",
-      "token": {
-        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-        "name": "USD Coin",
-        "symbol": "USDC",
-        "decimals": "6"
-      }
+      "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0x27b7b1ad7288079A66d12350c828D3C00A6F07d7",
       "typeId": "VAULT_V2",
       "name": "Curve Iron Bank Pool yVault",
       "version": "0.3.2",
-      "token": {
-        "address": "0x5282a4eF67D9C33135340fB3289cc1711c13638C",
-        "name": "Curve.fi cyDAI/cyUSDC/cyUSDT",
-        "symbol": "ib3CRV",
-        "decimals": "18"
-      }
+      "token": "0x5282a4eF67D9C33135340fB3289cc1711c13638C",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0x625b7DF2fa8aBe21B0A976736CDa4775523aeD1E",
       "typeId": "VAULT_V2",
       "name": "Curve HBTC Pool yVault",
       "version": "0.3.3",
-      "token": {
-        "address": "0xb19059ebb43466C323583928285a49f558E572Fd",
-        "name": "Curve.fi hBTC/wBTC",
-        "symbol": "hCRV",
-        "decimals": "18"
-      }
+      "token": "0xb19059ebb43466C323583928285a49f558E572Fd",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a",
       "typeId": "VAULT_V2",
       "name": "Yearn Compounding veCRV yVault",
       "version": "0.3.5",
-      "token": {
-        "address": "0xc5bDdf9843308380375a611c18B50Fb9341f502A",
-        "name": "veCRV-DAO yVault",
-        "symbol": "yveCRV-DAO",
-        "decimals": "18"
-      }
+      "token": "0xc5bDdf9843308380375a611c18B50Fb9341f502A",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0x8414Db07a7F743dEbaFb402070AB01a4E0d2E45e",
       "typeId": "VAULT_V2",
       "name": "Curve sBTC Pool yVault",
       "version": "0.3.5",
-      "token": {
-        "address": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
-        "name": "Curve.fi renBTC/wBTC/sBTC",
-        "symbol": "crvRenWSBTC",
-        "decimals": "18"
-      }
+      "token": "0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3",
+      "symbol": "vSymbol",
+      "decimals": "18"
     },
     {
       "address": "0x7047F90229a057C13BF847C0744D646CFb6c9E1A",
       "typeId": "VAULT_V2",
       "name": "Curve renBTC Pool yVault",
       "version": "0.3.5",
-      "token": {
-        "address": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-        "name": "Curve.fi renBTC/wBTC",
-        "symbol": "crvRenWBTC",
-        "decimals": "18"
-      }
+      "token": "0x49849C98ae39Fff122806C06791Fa73784FB3675",
+      "symbol": "vSymbol",
+      "decimals": "18"
     }
   ],
 
@@ -209,7 +161,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1",
         "depositLimit": "1000000000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -226,7 +182,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0xdCD90C7f6324cfa40d7169ef80b12031770B4325",
         "depositLimit": "100000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -243,7 +203,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0x986b4AFF588a109c09B50A03f42E4110E29D353F",
         "depositLimit": "100000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -260,7 +224,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0xcB550A6D4C8e3517A939BC79d0c7093eb7cF56B5",
         "depositLimit": "2100000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -277,7 +245,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0xa9fE4601811213c340e850ea305481afF02f5b28",
         "depositLimit": "1000000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -294,7 +266,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0xB8C3B7A2A618C552C23B1E4701109a9E756Bab67",
         "depositLimit": "2493765000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -311,7 +287,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0x19D3364A399d251E894aC732651be8B0E4e85001",
         "depositLimit": "1050000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -328,7 +308,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0x19D3364A399d251E894aC732651be8B0E4e85001",
         "depositLimit": "1000000000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -345,7 +329,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0xe11ba472F74869176652C35D30dB89854b5ae84D",
         "depositLimit": "20000000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -362,7 +350,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9",
         "depositLimit": "250000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -379,7 +371,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9",
         "depositLimit": "1000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -396,7 +392,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0x27b7b1ad7288079A66d12350c828D3C00A6F07d7",
         "depositLimit": "1000000000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -413,7 +413,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0x625b7DF2fa8aBe21B0A976736CDa4775523aeD1E",
         "depositLimit": "10000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -430,7 +434,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a",
         "depositLimit": "30000000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -447,7 +455,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0x8414Db07a7F743dEbaFb402070AB01a4E0d2E45e",
         "depositLimit": "10000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     },
     {
@@ -464,7 +476,11 @@
         "migrationAvailable": false,
         "latestVaultAddress": "0x7047F90229a057C13BF847C0744D646CFb6c9E1A",
         "depositLimit": "10000000000000000000000",
-        "emergencyShutdown": false
+        "emergencyShutdown": false,
+
+        "controller": "0.1",
+        "totalAssets": "8888888888",
+        "totalSupply": "999999999999"
       }
     }
   ]
