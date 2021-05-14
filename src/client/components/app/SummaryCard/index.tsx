@@ -6,6 +6,7 @@ import { Card, CardHeader, CardContent, CardElement } from '@components/common';
 const StyledCard = styled(Card)`
   max-width: max-content;
   padding: 1.2rem 0;
+  margin-bottom: 1.6rem;
 `;
 
 interface Item {

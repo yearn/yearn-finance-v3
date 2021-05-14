@@ -5,4 +5,6 @@ export * from './DetailCard';
 export * from './Footer';
 export * from './Navbar';
 export * from './Navigation';
+export * from './RecommendationsCard';
+export * from './SearchBar';
 export * from './SummaryCard';

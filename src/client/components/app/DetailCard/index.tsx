@@ -13,7 +13,7 @@ interface Metadata {
   align?: 'flex-start' | 'center' | 'flex-end';
   width?: string;
   grow?: '1' | '0';
-  transform?: () => ReactNode;
+  transform?: (data: Data) => ReactNode;
 }
 
 interface Data {
@@ -24,26 +24,28 @@ interface DetailCardProps {
   header: string;
   metadata: Metadata[];
   data: Data[];
+  SearchBar?: ReactNode;
 }
 
-export const DetailCard = ({ header, metadata, data }: DetailCardProps) => {
+export const DetailCard = ({ header, metadata, data, SearchBar }: DetailCardProps) => {
   return (
     <StyledCard>
       <CardHeader header={header} />
+      {SearchBar}
       <CardContent>
         {metadata.map(({ key, header, width, align, grow }) => (
           <CardElement key={key} header={header} width={width} align={align} grow={grow} />
         ))}
       </CardContent>
-      <CardContent>
-        {data.map((item, i) => {
-          return metadata.map(({ key, width, align, grow, transform }) => (
-            <CardElement key={`${key}-${i}`} content={item[key]} width={width} align={align} grow={grow}>
-              {transform && transform()}
+      {data.map((item, i) => (
+        <CardContent key={`content-${i}`}>
+          {metadata.map(({ key, width, align, grow, transform }) => (
+            <CardElement key={`element-${key}-${i}`} content={item[key]} width={width} align={align} grow={grow}>
+              {transform && transform(item)}
             </CardElement>
-          ));
-        })}
-      </CardContent>
+          ))}
+        </CardContent>
+      ))}
     </StyledCard>
   );
 };
