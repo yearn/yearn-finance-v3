@@ -1,8 +1,7 @@
 import { notify } from '@frameworks/blocknative';
-import { TokenService, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider } from '@types';
+import { TokenService, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider, Balance, Token } from '@types';
 import { getContract } from '@frameworks/ethers';
 import erc20Abi from './contracts/erc20.json';
-import { Balance, Token } from '@yfi/sdk';
 
 export class TokenServiceImpl implements TokenService {
   private yearnSdk: YearnSdk;

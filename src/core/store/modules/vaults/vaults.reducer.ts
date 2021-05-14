@@ -1,8 +1,7 @@
 import { groupBy, keyBy, union } from 'lodash';
 
 import { createReducer } from '@reduxjs/toolkit';
-import { initialStatus, VaultsState, VaultPositionsMap } from '@types';
-import { Position } from '@yfi/sdk';
+import { initialStatus, VaultsState, VaultPositionsMap, Position } from '@types';
 import { VaultsActions } from './vaults.actions';
 
 export const initialVaultActionsStatusMap = {

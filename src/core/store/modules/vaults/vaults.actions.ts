@@ -3,7 +3,7 @@ import { ThunkAPI } from '@frameworks/redux';
 import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';
-import { Position, Vault, VaultDynamic } from '@yfi/sdk';
+import { Position, Vault, VaultDynamic } from '@types';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress: string }>('vaults/setSelectedVaultAddress');
 

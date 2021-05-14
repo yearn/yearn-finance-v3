@@ -1,8 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { TokenDynamicData, UserTokenData } from '@types';
+import { TokenDynamicData, UserTokenData, Token } from '@types';
 import BigNumber from 'bignumber.js';
-import { Token } from '@yfi/sdk';
 
 const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('tokens/setUserTokenData');
 const setUserTokensMap = createAction<{ userTokensMap: { [address: string]: UserTokenData } }>(

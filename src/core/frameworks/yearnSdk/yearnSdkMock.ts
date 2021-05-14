@@ -1,4 +1,4 @@
-import { Balance, Position, Token, Vault, VaultDynamic } from '@yfi/sdk';
+import { Balance, Position, Token, Vault, VaultDynamic } from '@types';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';

@@ -1,9 +1,19 @@
 import { notify } from '@frameworks/blocknative';
 import { getContract } from '@frameworks/ethers';
-import { VaultService, Web3Provider, YearnSdk, Config, DepositProps, WithdrawProps, EthereumAddress } from '@types';
+import {
+  VaultService,
+  Web3Provider,
+  YearnSdk,
+  Config,
+  DepositProps,
+  WithdrawProps,
+  EthereumAddress,
+  Position,
+  Vault,
+  VaultDynamic,
+} from '@types';
 import yVaultAbi from './contracts/yVault.json';
 import erc20Abi from './contracts/erc20.json';
-import { Position, Vault, VaultDynamic } from '@yfi/sdk';
 
 export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;

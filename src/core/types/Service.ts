@@ -1,5 +1,14 @@
-import { CyTokenData, UserCyTokenData, TokenDynamicData, EthereumAddress, Wei } from '@types';
-import { Position, Token, Vault, VaultDynamic } from '@yfi/sdk';
+import {
+  CyTokenData,
+  UserCyTokenData,
+  TokenDynamicData,
+  EthereumAddress,
+  Wei,
+  Position,
+  Token,
+  Vault,
+  VaultDynamic,
+} from '@types';
 
 export interface UserService {}
 
