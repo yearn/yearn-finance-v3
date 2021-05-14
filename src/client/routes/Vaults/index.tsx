@@ -60,7 +60,7 @@ export const Vaults = () => {
 
   useEffect(() => {
     if (selectedAddress) {
-      dispatch(VaultsActions.getUserVaultsData());
+      dispatch(VaultsActions.getUserVaultsData({}));
     }
   }, [selectedAddress]);
 
