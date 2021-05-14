@@ -1,8 +1,8 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { UserTokenData, UserVaultData, VaultData, CyTokenData, UserCyTokenData } from '@types';
+import { UserTokenData, CyTokenData, UserCyTokenData, Position, Token, Vault } from '@types';
 import { EthereumAddress } from './Ethereum';
-import { Token } from '@yfi/sdk';
+import { Integer } from '@yfi/sdk/dist/common';
 
 export interface RootState {
   app: AppState;
@@ -37,12 +37,20 @@ export interface VaultActionsStatusMap {
 export interface UserVaultActionsStatusMap {
   get: Status;
 }
+export interface VaultPositionsMap {
+  DEPOSIT: Position;
+}
+
+interface AllowancesMap {
+  [spender: string]: Integer;
+}
 export interface VaultsState {
-  saveVaultsAddreses: string[];
-  vaultsMap: { [address: string]: VaultData };
+  vaultsAddresses: string[];
+  vaultsMap: { [address: string]: Vault };
   selectedVaultAddress: EthereumAddress | undefined;
   user: {
-    userVaultsMap: { [address: string]: UserVaultData };
+    userVaultsMap: { [address: string]: VaultPositionsMap };
+    vaultsAllowancesMap: { [vaultAddress: string]: AllowancesMap };
   };
   statusMap: {
     initiateSaveVaults: Status;
