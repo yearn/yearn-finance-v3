@@ -8,6 +8,7 @@ import { Dashboard } from './Dashboard';
 import { VaultDetail } from './VaultDetail';
 import { Borrow } from './Borrow';
 import { Vaults } from './Vaults';
+import { Settings } from './Settings';
 
 const routesMap = [
   {
@@ -37,6 +38,10 @@ const routesMap = [
   {
     path: '/vaults',
     component: Vaults,
+  },
+  {
+    path: '/settings',
+    component: Settings,
   },
 ];
 
