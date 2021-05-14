@@ -14,21 +14,14 @@ const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   }
 );
 
-const getVaults = createAsyncThunk<
-  { vaultsMap: { [address: string]: Vault }; vaultsAddreses: string[] },
-  string | undefined,
-  ThunkAPI
->('vaults/getVaults', async (_arg, { extra }) => {
-  const { vaultService } = extra.services;
-  const supportedVaults = await vaultService.getSupportedVaults();
-  const vaultsMap: { [address: string]: Vault } = {};
-  const vaultsAddreses: string[] = [];
-  supportedVaults.forEach((vault) => {
-    vaultsMap[vault.address] = vault;
-    vaultsAddreses.push(vault.address);
-  });
-  return { vaultsMap, vaultsAddreses };
-});
+const getVaults = createAsyncThunk<{ vaultsData: Vault[] }, string | undefined, ThunkAPI>(
+  'vaults/getVaults',
+  async (_arg, { extra }) => {
+    const { vaultService } = extra.services;
+    const vaultsData = await vaultService.getSupportedVaults();
+    return { vaultsData };
+  }
+);
 
 const getVaultsDynamic = createAsyncThunk<{ vaultsDynamicData: VaultDynamic[] }, { addresses: string[] }, ThunkAPI>(
   'vaults/getVaultsDynamic',

@@ -15,8 +15,8 @@ const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 const selectSaveVaults = createSelector(
   [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap, selectVaultsAllowancesMap],
   (vaultsState, tokensMap, userVaultsMap, userTokensMap, vaultsAllowancesMap): VaultView[] => {
-    const { saveVaultsAddreses, vaultsMap } = vaultsState;
-    const vaults: VaultView[] = saveVaultsAddreses.map((address) => {
+    const { vaultsAddresses, vaultsMap } = vaultsState;
+    const vaults: VaultView[] = vaultsAddresses.map((address) => {
       const vaultData = vaultsMap[address];
       const tokenData = tokensMap[vaultData.tokenId];
       const userVaultData = userVaultsMap[address]?.DEPOSIT;

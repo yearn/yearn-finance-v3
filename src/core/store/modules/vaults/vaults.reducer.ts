@@ -1,4 +1,4 @@
-import { groupBy, keyBy } from 'lodash';
+import { groupBy, keyBy, union } from 'lodash';
 
 import { createReducer } from '@reduxjs/toolkit';
 import { initialStatus, VaultsState, VaultPositionsMap } from '@types';
@@ -17,7 +17,7 @@ export const initialUserVaultsActionsStatusMap = {
 };
 
 const initialState: VaultsState = {
-  saveVaultsAddreses: [],
+  vaultsAddresses: [],
   vaultsMap: {},
   selectedVaultAddress: undefined,
   user: {
@@ -60,21 +60,16 @@ const vaultsReducer = createReducer(initialState, (builder) => {
     .addCase(getVaults.pending, (state) => {
       state.statusMap.getVaults = { loading: true };
     })
-    .addCase(getVaults.fulfilled, (state, { payload: { vaultsMap, vaultsAddreses } }) => {
-      const vaultsActionsStatusMap: any = {};
-      const userVaultsActionsStatusMap: any = {};
-      vaultsAddreses.forEach((address) => {
-        vaultsActionsStatusMap[address] = initialVaultActionsStatusMap;
-        userVaultsActionsStatusMap[address] = initialUserVaultsActionsStatusMap;
+    .addCase(getVaults.fulfilled, (state, { payload: { vaultsData } }) => {
+      const vaultAddress: string[] = [];
+      vaultsData.forEach((vault) => {
+        vaultAddress.push(vault.address);
+        state.vaultsMap[vault.address] = vault;
+        state.statusMap.vaultsActionsStatusMap[vault.address] = initialVaultActionsStatusMap;
+        state.statusMap.user.userVaultsActionsStatusMap[vault.address] = initialUserVaultsActionsStatusMap;
       });
-      state.saveVaultsAddreses = vaultsAddreses;
-      state.vaultsMap = { ...state.vaultsMap, ...vaultsMap };
+      state.vaultsAddresses = union(state.vaultsAddresses, vaultAddress);
       state.statusMap.getVaults = {};
-      state.statusMap.vaultsActionsStatusMap = { ...state.statusMap.vaultsActionsStatusMap, ...vaultsActionsStatusMap };
-      state.statusMap.user.userVaultsActionsStatusMap = {
-        ...state.statusMap.user.userVaultsActionsStatusMap,
-        ...userVaultsActionsStatusMap,
-      };
     })
     .addCase(getVaults.rejected, (state, { error }) => {
       state.statusMap.getVaults = { error: error.message };

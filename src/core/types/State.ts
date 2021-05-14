@@ -46,7 +46,7 @@ interface AllowancesMap {
   [spender: string]: Integer;
 }
 export interface VaultsState {
-  saveVaultsAddreses: string[];
+  vaultsAddresses: string[];
   vaultsMap: { [address: string]: Vault };
   selectedVaultAddress: EthereumAddress | undefined;
   user: {
