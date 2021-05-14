@@ -9,21 +9,14 @@ const setUserTokensMap = createAction<{ userTokensMap: { [address: string]: User
   'tokens/setUserTokensMap'
 );
 
-const getTokens = createAsyncThunk<
-  { tokensMap: { [address: string]: Token }; tokensAddresses: string[] },
-  string | undefined,
-  ThunkAPI
->('tokens/getTokens', async (_arg, { extra }) => {
-  const { tokenService } = extra.services;
-  const tokensData: Token[] = await tokenService.getSupportedTokens();
-  const tokensMap: { [address: string]: Token } = {};
-  const tokensAddresses: string[] = [];
-  tokensData.forEach((token) => {
-    tokensMap[token.address] = token;
-    tokensAddresses.push(token.address);
-  });
-  return { tokensMap, tokensAddresses };
-});
+const getTokens = createAsyncThunk<{ tokensData: Token[] }, string | undefined, ThunkAPI>(
+  'tokens/getTokens',
+  async (_arg, { extra }) => {
+    const { tokenService } = extra.services;
+    const tokensData: Token[] = await tokenService.getSupportedTokens();
+    return { tokensData };
+  }
+);
 
 const getTokensDynamicData = createAsyncThunk<
   { tokensDynamicData: TokenDynamicData[] },
