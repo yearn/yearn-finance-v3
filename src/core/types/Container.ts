@@ -1,6 +1,4 @@
-import { Yearn } from '@yfi/sdk';
-
-import { Wallet, Config, Web3Provider, UserService, VaultService, TokenService, IronBankService } from '@types';
+import { Wallet, Config, Web3Provider, UserService, VaultService, TokenService, IronBankService, Yearn } from '@types';
 import { yearnSdkMock } from '../frameworks/yearnSdk/yearnSdkMock';
 
 export interface DIContainer {

@@ -1,29 +1,21 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { TokenDynamicData, UserTokenData } from '@types';
+import { TokenDynamicData, UserTokenData, Token } from '@types';
 import BigNumber from 'bignumber.js';
-import { Token } from '@yfi/sdk';
 
 const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('tokens/setUserTokenData');
 const setUserTokensMap = createAction<{ userTokensMap: { [address: string]: UserTokenData } }>(
   'tokens/setUserTokensMap'
 );
 
-const getTokens = createAsyncThunk<
-  { tokensMap: { [address: string]: Token }; tokensAddresses: string[] },
-  string | undefined,
-  ThunkAPI
->('tokens/getTokens', async (_arg, { extra }) => {
-  const { tokenService } = extra.services;
-  const tokensData: Token[] = await tokenService.getSupportedTokens();
-  const tokensMap: { [address: string]: Token } = {};
-  const tokensAddresses: string[] = [];
-  tokensData.forEach((token) => {
-    tokensMap[token.address] = token;
-    tokensAddresses.push(token.address);
-  });
-  return { tokensMap, tokensAddresses };
-});
+const getTokens = createAsyncThunk<{ tokensData: Token[] }, string | undefined, ThunkAPI>(
+  'tokens/getTokens',
+  async (_arg, { extra }) => {
+    const { tokenService } = extra.services;
+    const tokensData: Token[] = await tokenService.getSupportedTokens();
+    return { tokensData };
+  }
+);
 
 const getTokensDynamicData = createAsyncThunk<
   { tokensDynamicData: TokenDynamicData[] },

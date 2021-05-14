@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { TokensState, UserTokenActionsMap } from '@types';
+import { union } from 'lodash';
 import { initialStatus } from '../../../types/Status';
 import { TokensActions } from './tokens.actions';
 
@@ -29,9 +30,13 @@ const tokensReducer = createReducer(initialState, (builder) => {
     .addCase(getTokens.pending, (state) => {
       state.statusMap.getTokens = { loading: true };
     })
-    .addCase(getTokens.fulfilled, (state, { payload: { tokensMap, tokensAddresses } }) => {
-      state.tokensMap = tokensMap;
-      state.tokensAddresses = tokensAddresses;
+    .addCase(getTokens.fulfilled, (state, { payload: { tokensData } }) => {
+      const tokenAddresses: string[] = [];
+      tokensData.forEach((token) => {
+        state.tokensMap[token.address] = token;
+        tokenAddresses.push(token.address);
+      });
+      state.tokensAddresses = union(state.tokensAddresses, tokenAddresses);
       state.statusMap.getTokens = {};
     })
     .addCase(getTokens.rejected, (state, { error }) => {

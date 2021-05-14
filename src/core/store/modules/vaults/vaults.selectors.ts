@@ -1,36 +1,38 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState, Status, Vault, VaultActionsStatusMap } from '@types';
+import { RootState, Status, VaultView, VaultActionsStatusMap } from '@types';
 import BigNumber from 'bignumber.js';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 const selectVaultsState = (state: RootState) => state.vaults;
 const selectUserVaultsMap = (state: RootState) => state.vaults.user.userVaultsMap;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
+const selectVaultsAllowancesMap = (state: RootState) => state.vaults.user.vaultsAllowancesMap;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVaultAddress;
 const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMap.vaultsActionsStatusMap;
 const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 
 const selectSaveVaults = createSelector(
-  [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap],
-  (vaultsState, tokensMap, userVaultsMap, userTokensMap): Vault[] => {
-    const { saveVaultsAddreses, vaultsMap } = vaultsState;
-    const vaults: Vault[] = saveVaultsAddreses.map((address) => {
+  [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap, selectVaultsAllowancesMap],
+  (vaultsState, tokensMap, userVaultsMap, userTokensMap, vaultsAllowancesMap): VaultView[] => {
+    const { vaultsAddresses, vaultsMap } = vaultsState;
+    const vaults: VaultView[] = vaultsAddresses.map((address) => {
       const vaultData = vaultsMap[address];
-      const tokenData = tokensMap[vaultData.token];
-      const userVaultData = userVaultsMap[address];
-      const userTokenData = userTokensMap[vaultData.token];
+      const tokenData = tokensMap[vaultData.tokenId];
+      const userVaultData = userVaultsMap[address]?.DEPOSIT;
+      const userTokenData = userTokensMap[vaultData.tokenId];
       const currentAllowance: string = userTokenData?.allowancesMap[address] ?? '0';
       return {
         address: vaultData.address,
         name: vaultData.name,
-        vaultBalance: vaultData.balance,
-        vaultBalanceUsdc: vaultData.balanceUsdc,
-        depositLimit: vaultData.depositLimit,
-        apyData: vaultData.apyData,
-        userDeposited: userVaultData?.depositedBalance ?? '0',
-        userDepositedUsdc: userVaultData?.depositedBalanceUsdc ?? '0',
-        allowancesMap: userVaultData?.allowancesMap ?? {},
+        vaultBalance: vaultData.underlyingTokenBalance.amount,
+        vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
+        depositLimit: vaultData.metadata.depositLimit,
+        apyData: '99',
+        // apyData: vaultData.apyData, TODO
+        userDeposited: userVaultData?.underlyingTokenBalance.amount ?? '0',
+        userDepositedUsdc: userVaultData?.underlyingTokenBalance.amountUsdc ?? '0',
+        allowancesMap: vaultsAllowancesMap[address] ?? {},
         approved: new BigNumber(currentAllowance).gt(0),
         token: {
           address: tokenData?.address,
@@ -59,7 +61,7 @@ const selectSaveVaultsGeneralStatus = createSelector(
 
 const selectSelectedVault = createSelector(
   [selectSaveVaults, selectSelectedVaultAddress],
-  (vaults, selectedVaultAddress): Vault | undefined => {
+  (vaults, selectedVaultAddress): VaultView | undefined => {
     if (!selectedVaultAddress) {
       return undefined;
     }

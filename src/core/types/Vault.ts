@@ -12,14 +12,7 @@ export interface VaultData extends VaultDynamicData {
   symbol: string;
 }
 
-export interface UserVaultData {
-  address: EthereumAddress;
-  depositedBalance: string;
-  depositedBalanceUsdc: string;
-  allowancesMap: { [spenderAddress: string]: string };
-}
-
-export interface Vault {
+export interface VaultView {
   address: EthereumAddress;
   name: string;
   vaultBalance: string;
