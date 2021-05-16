@@ -24,7 +24,7 @@ const StyledFooter = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.shade100};
+  background-color: ${({ theme }) => theme.oldColors.shade100};
   padding: 0 ${({ theme }) => theme.footer.padding};
   padding-top: ${({ theme }) => theme.footer.paddingTop};
   padding-bottom: ${({ theme }) => theme.footer.paddingBottom};
@@ -154,8 +154,8 @@ const StyledIconLink = styled(Link)`
   width: var(--icon-size);
   height: var(--icon-size);
   border-radius: 100%;
-  background-color: ${({ theme }) => theme.colors.shade40};
-  color: ${({ theme }) => theme.colors.shade30};
+  background-color: ${({ theme }) => theme.oldColors.shade40};
+  color: ${({ theme }) => theme.oldColors.shade30};
   transition: filter 200ms ease-in-out;
 
   &:hover {
@@ -164,7 +164,7 @@ const StyledIconLink = styled(Link)`
 `;
 
 const StyledIcon = styled(Icon)`
-  fill: ${({ theme }) => theme.colors.shade30};
+  fill: ${({ theme }) => theme.oldColors.shade30};
 `;
 
 const Copyright = styled.div`
@@ -172,7 +172,7 @@ const Copyright = styled.div`
   align-items: center;
   justify-content: space-between;
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.colors.shade20};
+  color: ${({ theme }) => theme.oldColors.shade20};
 
   img {
     width: 18.6rem;

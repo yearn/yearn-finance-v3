@@ -1,6 +1,10 @@
 {
   "language": "es",
 
+  "themes": {
+    "light": "Light",
+    "cyberpunk": "Cyberpunk"
+  },
   "commons": {
     "connect-button": {
       "connect": "Conectar"
@@ -26,7 +30,8 @@
     "borrow": "Borrow",
     "home": "Inicio",
     "vault": "Vault",
-    "vaults": "Vaults"
+    "vaults": "Vaults",
+    "settings": "Ajustes"
   },
   "footer": {
     "copyright": "Copyright © yearn 2021. Todos los derechos reservados.",
