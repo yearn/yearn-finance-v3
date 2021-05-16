@@ -38,9 +38,9 @@ const StyledNavbar = styled.nav<{ transparent: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;
-  background-color: ${(props) => props.theme.colors.shade90};
+  background-color: ${(props) => props.theme.oldColors.shade90};
   height: ${(props) => props.theme.navbar.height};
-  border-bottom: 1px solid ${(props) => props.theme.colors.shade40};
+  border-bottom: 1px solid ${(props) => props.theme.oldColors.shade40};
   padding: 0 ${(props) => props.theme.navbar.padding};
   z-index: ${(props) => props.theme.zindex.navbar};
 

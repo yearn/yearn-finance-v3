@@ -7,12 +7,12 @@ import { CardElement } from './CardElement';
 import { styledSystem, StyledSystemProps } from '../styledSystem';
 
 const defaultVariant = css`
-  background-color: ${({ theme }) => theme.colors.card};
+  background-color: ${({ theme }) => theme.oldColors.card};
   color: ${({ theme }) => theme.contrasts.card};
 `;
 
 const primaryVariant = css`
-  background-color: ${({ theme }) => theme.colors.primary};
+  background-color: ${({ theme }) => theme.oldColors.primary};
   color: ${({ theme }) => theme.contrasts.primary};
 `;
 

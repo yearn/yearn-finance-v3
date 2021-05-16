@@ -1,7 +1,7 @@
 import 'styled-components';
 declare module 'styled-components' {
-  export interface DefaultTheme {
-    colors: {
+  export interface SharedTheme {
+    oldColors: {
       primary: string;
       card: string;
       error: string;
@@ -58,6 +58,35 @@ declare module 'styled-components' {
     sideBar: {
       width: string;
       collapsedWidth: string;
+    };
+  }
+
+  // TODO Restructure theme and generic vars shared between themes
+  export interface DefaultTheme extends SharedTheme {
+    colors: {
+      primary: string;
+      primaryVariant: string;
+
+      secondary: string;
+      secondaryVariantA: string;
+      secondaryVariantB: string;
+
+      onPrimary: string;
+      onPrimaryVariant: string;
+
+      background: string;
+      onBackground: string;
+
+      surface: string;
+      surfaceVariant: string;
+      onSurface: string;
+      onSurfaceVariantA: string;
+      onSurfaceVariantB: string;
+
+      upTrend: string;
+      downTrend: string;
+
+      hoverHbar: string;
     };
   }
 
