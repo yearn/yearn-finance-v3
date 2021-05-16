@@ -1,6 +1,4 @@
-import { Yearn } from '@yfi/sdk';
-
-import { Web3Provider, Config } from '@types';
+import { Web3Provider, Config, Yearn } from '@types';
 import { yearnSdkMock } from './yearnSdkMock';
 
 type YearnMockSdk = typeof yearnSdkMock;

@@ -2,15 +2,15 @@ import { notify } from '@frameworks/blocknative';
 import { getContract } from '@frameworks/ethers';
 import {
   VaultService,
-  VaultData,
   Web3Provider,
   YearnSdk,
   Config,
   DepositProps,
   WithdrawProps,
-  VaultDynamicData,
-  UserVaultData,
   EthereumAddress,
+  Position,
+  Vault,
+  VaultDynamic,
 } from '@types';
 import yVaultAbi from './contracts/yVault.json';
 import erc20Abi from './contracts/erc20.json';
@@ -26,19 +26,25 @@ export class VaultServiceImpl implements VaultService {
     this.config = config;
   }
 
-  public async getSupportedVaults(): Promise<VaultData[]> {
+  public async getSupportedVaults(): Promise<Vault[]> {
     const yearn = this.yearnSdk;
     return await yearn.vaults.get();
   }
 
-  public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamicData[]> {
+  public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamic[]> {
     const yearn = this.yearnSdk;
     return await yearn.vaults.assetsDynamicData(addresses);
   }
 
-  public async getUserVaultsData({ userAddress }: { userAddress: EthereumAddress }): Promise<UserVaultData[]> {
+  public async getUserVaultsData({
+    userAddress,
+    vaultAddresses,
+  }: {
+    userAddress: EthereumAddress;
+    vaultAddresses?: string[];
+  }): Promise<Position[]> {
     const yearn = this.yearnSdk;
-    return await yearn.vaults.assetsPositionsOf(userAddress);
+    return await yearn.vaults.assetsPositionsOf(userAddress, vaultAddresses);
   }
 
   public async deposit(props: DepositProps): Promise<void> {

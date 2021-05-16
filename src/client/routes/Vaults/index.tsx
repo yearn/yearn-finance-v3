@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { VaultsActions, VaultsSelectors } from '@store';
 import { Box, Button } from '@components/common';
-import { SummaryCard, DetailCard, SearchBar } from '@components/app';
+import { SummaryCard, DetailCard, SearchBar, RecomendationsCard } from '@components/app';
 import { formatPercent, humanizeAmount } from '@src/utils';
 
 const Container = styled.div`
@@ -60,7 +60,7 @@ export const Vaults = () => {
 
   useEffect(() => {
     if (selectedAddress) {
-      dispatch(VaultsActions.getUserVaultsData());
+      dispatch(VaultsActions.getUserVaultsData({}));
     }
   }, [selectedAddress]);
 
@@ -74,6 +74,38 @@ export const Vaults = () => {
           { header: 'Est. Yearly Yield', content: '$ 12,015.10' },
         ]}
         variant="primary"
+      />
+      <RecomendationsCard
+        header="Recommendations"
+        items={[
+          {
+            header: 'Stablecoin Safe',
+            icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png`,
+            name: 'YFI',
+            info: '13.33%',
+            infoDetail: 'EYY',
+            action: 'Go to Vault',
+            onAction: () => console.log('Go'),
+          },
+          {
+            header: 'Stablecoin Safe',
+            icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png`,
+            name: 'YFI',
+            info: '13.33%',
+            infoDetail: 'EYY',
+            action: 'Go to Vault',
+            onAction: () => console.log('Go'),
+          },
+          {
+            header: 'Stablecoin Safe',
+            icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png`,
+            name: 'YFI',
+            info: '13.33%',
+            infoDetail: 'EYY',
+            action: 'Go to Vault',
+            onAction: () => console.log('Go'),
+          },
+        ]}
       />
       <DetailCard
         header="Deposits"

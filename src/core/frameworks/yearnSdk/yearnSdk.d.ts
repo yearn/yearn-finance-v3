@@ -1,5 +1,5 @@
 import '@yfi/sdk';
-import { Asset, Position } from '@yfi/sdk';
+import { Asset, Position } from '@types';
 
 declare module '@yfi/sdk' {
   export interface Yearn {

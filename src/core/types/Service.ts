@@ -1,21 +1,27 @@
 import {
-  VaultData,
-  VaultDynamicData,
-  UserVaultData,
   CyTokenData,
   UserCyTokenData,
   TokenDynamicData,
   EthereumAddress,
   Wei,
+  Position,
+  Token,
+  Vault,
+  VaultDynamic,
 } from '@types';
-import { Token } from '@yfi/sdk';
 
 export interface UserService {}
 
 export interface VaultService {
-  getSupportedVaults: () => Promise<VaultData[]>;
-  getVaultsDynamicData: (props: any) => Promise<VaultDynamicData[]>;
-  getUserVaultsData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserVaultData[]>;
+  getSupportedVaults: () => Promise<Vault[]>;
+  getVaultsDynamicData: (props: any) => Promise<VaultDynamic[]>;
+  getUserVaultsData: ({
+    userAddress,
+    vaultAddresses,
+  }: {
+    userAddress: EthereumAddress;
+    vaultAddresses?: string[];
+  }) => Promise<Position[]>;
   deposit: (props: DepositProps) => Promise<void>;
   withdraw: (props: WithdrawProps) => Promise<void>;
   // approveZapIn:
