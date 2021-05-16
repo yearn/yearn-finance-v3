@@ -1,7 +1,7 @@
-import { DefaultTheme } from 'styled-components';
+import { SharedTheme } from 'styled-components';
 
-const defaultTheme: DefaultTheme = {
-  colors: {
+const sharedTheme: SharedTheme = {
+  oldColors: {
     primary: '#000000',
     card: '#292D39',
     error: 'red',
@@ -93,11 +93,11 @@ const defaultTheme: DefaultTheme = {
 };
 
 export const device = {
-  mobile: `(max-width: ${defaultTheme.devices.mobile}px)`,
-  tablet: `(max-width: ${defaultTheme.devices.tablet}px)`,
-  desktopS: `(max-width: ${defaultTheme.devices.desktopS}px)`,
-  desktop: `(max-width: ${defaultTheme.devices.desktop}px)`,
-  desktopL: `(max-width: ${defaultTheme.devices.desktopL}px)`,
+  mobile: `(max-width: ${sharedTheme.devices.mobile}px)`,
+  tablet: `(max-width: ${sharedTheme.devices.tablet}px)`,
+  desktopS: `(max-width: ${sharedTheme.devices.desktopS}px)`,
+  desktop: `(max-width: ${sharedTheme.devices.desktop}px)`,
+  desktopL: `(max-width: ${sharedTheme.devices.desktopL}px)`,
 };
 
-export { defaultTheme };
+export { sharedTheme };

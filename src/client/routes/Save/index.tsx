@@ -71,7 +71,7 @@ const ErrorMessage = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: ${({ theme }) => theme.colors.error};
+  color: ${({ theme }) => theme.oldColors.error};
 `;
 
 export const Save = () => {

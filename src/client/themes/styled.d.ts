@@ -1,7 +1,7 @@
 import 'styled-components';
 declare module 'styled-components' {
-  export interface DefaultTheme {
-    colors: {
+  export interface SharedTheme {
+    oldColors: {
       primary: string;
       card: string;
       error: string;
@@ -62,8 +62,8 @@ declare module 'styled-components' {
   }
 
   // TODO Restructure theme and generic vars shared between themes
-  export interface ThemePallete extends DefaultTheme {
-    themeColors: {
+  export interface DefaultTheme extends SharedTheme {
+    colors: {
       primary: string;
       primaryVariant: string;
 

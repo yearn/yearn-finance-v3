@@ -1,11 +1,11 @@
-import { ThemePallete } from 'styled-components';
-import { defaultTheme } from '../default';
+import { DefaultTheme } from 'styled-components';
+import { sharedTheme } from '../default';
 
-const lightTheme: ThemePallete = {
-  ...defaultTheme,
-  themeColors: {
+const lightTheme: DefaultTheme = {
+  ...sharedTheme,
+  colors: {
     primary: '#000000',
-    primaryVariant: '#000000',
+    primaryVariant: '#FFFFFF',
 
     secondary: '#000000',
     secondaryVariantA: '#000000',
@@ -21,7 +21,7 @@ const lightTheme: ThemePallete = {
     surfaceVariant: '#FFFFFF',
     onSurface: '#000000',
     onSurfaceVariantA: '#000000',
-    onSurfaceVariantB: '#000000',
+    onSurfaceVariantB: '#F0F0F0',
 
     upTrend: '#DBFF00',
     downTrend: '#FF005E',

@@ -1,9 +1,9 @@
-import { ThemePallete } from 'styled-components';
-import { defaultTheme } from '../default';
+import { DefaultTheme } from 'styled-components';
+import { sharedTheme } from '../default';
 
-const cyberpunkTheme: ThemePallete = {
-  ...defaultTheme,
-  themeColors: {
+const cyberpunkTheme: DefaultTheme = {
+  ...sharedTheme,
+  colors: {
     primary: '#0CA7C9',
     primaryVariant: '#7AF6FF',
 

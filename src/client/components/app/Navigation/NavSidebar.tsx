@@ -11,7 +11,8 @@ interface NavSidebarProps {
 const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   display: flex;
   flex-direction: column;
-  border: 2px solid ${({ theme }) => theme.colors.shade0};
+  color: ${({ theme }) => theme.colors.primaryVariant};
+  background-color: ${({ theme }) => theme.colors.primary};
   border-radius: 0.8rem;
   width: ${({ theme }) => theme.sideBar.width};
   height: 100%;
@@ -48,6 +49,7 @@ const SidebarFooter = styled.div``;
 
 const StyledLogo = styled(Logo)`
   height: 2.4rem;
+  fill: ${({ theme }) => theme.colors.background};
 `;
 
 const LinkList = styled.div`

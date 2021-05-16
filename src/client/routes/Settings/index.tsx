@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 
-import { useAppSelector, useAppTranslation } from '@hooks';
+import { useAppSelector, useAppDispatch } from '@hooks';
+import { ThemeActions } from '@store';
 import { AVAILABLE_THEMES, getTheme } from '@themes';
 import { Theme } from '@types';
+
+import { ThemeBox } from '@components/app/Settings';
 
 const SettingsView = styled.div`
   display: flex;
@@ -13,26 +16,31 @@ const SettingsView = styled.div`
 const ThemeList = styled.div`
   display: flex;
   flex-wrap: wrap;
-`;
-
-const ThemeBox = styled.div<{ theme: string }>`
-  display: flex;
-  flex-direction: column;
+  justify-content: center;
+  grid-gap: 1rem;
+  margin-top: 3rem;
 `;
 
 export const Settings = () => {
-  const { t } = useAppTranslation('common');
+  // const { t } = useAppTranslation('common');
+  const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
-  console.log(currentTheme);
+
+  const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
   return (
     <SettingsView>
-      Settings
+      Theme:
       <ThemeList>
-        {AVAILABLE_THEMES.map((theme) => (
-          <ThemeBox theme={getTheme(theme)}>{t(`themes.${theme}`)}</ThemeBox>
+        {AVAILABLE_THEMES.map((theme: Theme, index) => (
+          <ThemeBox
+            themePallete={getTheme(theme)}
+            name={theme}
+            key={index}
+            selected={theme === currentTheme}
+            onClick={() => changeTheme(theme)}
+          />
         ))}
-        {/* <ThemeBox theme="cyberpunk">Cyberpunk</ThemeBox> */}
       </ThemeList>
     </SettingsView>
   );

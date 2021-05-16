@@ -1,12 +1,12 @@
 import { Theme } from '@types';
-import { ThemePallete } from 'styled-components';
+import { DefaultTheme } from 'styled-components';
 
 import { cyberpunkTheme } from './cyberpunk';
 import { lightTheme } from './light';
 
 export const AVAILABLE_THEMES: Theme[] = ['light', 'cyberpunk'];
 
-export const getTheme = (theme?: Theme): ThemePallete => {
+export const getTheme = (theme?: Theme): DefaultTheme => {
   switch (theme) {
     case 'default':
       return lightTheme;

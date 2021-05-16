@@ -14,7 +14,7 @@ interface NavSidemenuProps {
 }
 
 const StyledSidemenu = styled(Sidemenu)<{ open: boolean }>`
-  background-color: ${(props) => props.theme.colors.shade90};
+  background-color: ${(props) => props.theme.oldColors.shade90};
   width: 40rem;
   max-width: 100%;
   z-index: ${(props) => props.theme.zindex.navSidemenu};
@@ -58,7 +58,7 @@ const RouterLink = styled(Link)`
   padding: 2.4rem 0;
   color: inherit;
   &:not(:first-child) {
-    border-top: 1px solid ${(props) => props.theme.colors.shade40};
+    border-top: 1px solid ${(props) => props.theme.oldColors.shade40};
   }
   &:hover span {
     filter: brightness(75%);
