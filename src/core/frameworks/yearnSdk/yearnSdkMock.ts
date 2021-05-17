@@ -43,7 +43,6 @@ const tokens = {
         address: userTokenData.address,
         balance: userTokenData.balance,
         balanceUsdc: userTokenData.balanceUsdc,
-        allowancesMap: userTokenData.allowancesMap,
         token: {
           address: userTokenData.address,
           decimals: userTokenData.decimals.toString(),
