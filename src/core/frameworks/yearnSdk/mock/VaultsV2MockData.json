@@ -165,7 +165,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -186,7 +193,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -207,7 +221,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -228,7 +249,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -249,7 +277,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -270,7 +305,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -291,7 +333,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -312,7 +361,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -333,7 +389,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -354,7 +417,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -375,7 +445,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -396,7 +473,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -417,7 +501,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -438,7 +529,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -459,7 +557,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     },
     {
@@ -480,7 +585,14 @@
 
         "controller": "0.1",
         "totalAssets": "8888888888",
-        "totalSupply": "999999999999"
+        "totalSupply": "999999999999",
+
+        "apy": {
+          "recommended": 9.99,
+          "composite": false,
+          "type": "APY_TYPE",
+          "description": "Apy description"
+        }
       }
     }
   ]
