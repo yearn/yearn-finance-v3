@@ -80,7 +80,7 @@ export const Save = () => {
   const { open: openBlade } = useContext(BladeContext);
   const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
-  const generalVaultsStatus = useAppSelector(VaultsSelectors.selectSaveVaultsGeneralStatus);
+  const generalVaultsStatus = useAppSelector(VaultsSelectors.selectVaultsGeneralStatus);
   const vaults = useAppSelector(VaultsSelectors.selectSaveVaults);
   let assetList;
 
