@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 import { Serie, ResponsiveLine } from '@nivo/line';
-import { defaultTheme } from '@themes/default';
+import { sharedTheme } from '@themes/default';
 
 export interface LineChartProps {
   className?: string;
@@ -14,10 +14,11 @@ const StyledLineChart = styled.div`
 `;
 
 export const LineChart: FC<LineChartProps> = ({ chartData, className, ...props }) => (
+  // TODO Load currentTheme instead of defaultTheme
   <StyledLineChart className={className} {...props}>
     <ResponsiveLine
       data={chartData}
-      theme={defaultTheme.chartTheme}
+      theme={sharedTheme.chartTheme}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}
       yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}

@@ -16,7 +16,7 @@ const StyledLogo = styled.div`
   justify-content: center;
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
   height: 2.4rem;
-  fill: ${({ theme, color }) => color ?? theme.colors.shade0};
+  fill: ${({ theme, color }) => color ?? theme.oldColors.shade0};
 `;
 
 const StyledLogoSimple = styled(LogoSimple)`

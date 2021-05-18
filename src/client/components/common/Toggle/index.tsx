@@ -27,7 +27,7 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   --toggle-size: 2.6rem;
   --toggle-offset: 0.2rem;
   --toggle-color: ${({ theme }) => theme.contrasts.shade30};
-  --toggle-background: ${({ theme }) => theme.colors.shade30};
+  --toggle-background: ${({ theme }) => theme.oldColors.shade30};
 
   display: flex;
   align-items: center;
