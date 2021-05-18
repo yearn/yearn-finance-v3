@@ -72,8 +72,8 @@ const ActionCardWrapper = styled.div`
 const ActionCard = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.oldColors.card};
-  color: ${({ theme }) => theme.oldColors.shade30};
+  background-color: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.onSurface};
   border-radius: 1.5rem;
   padding: 1.4rem 1.5rem;
   grid-gap: 1rem;
@@ -83,8 +83,8 @@ const ActionCard = styled.div`
 const ActionButton = styled(Button)`
   font-size: 1.4rem;
   &.outline {
-    border-color: ${(props) => props.theme.oldColors.shade20};
-    color: ${(props) => props.theme.oldColors.shade20};
+    border-color: ${(props) => props.theme.colors.onSurfaceVariantB};
+    color: ${(props) => props.theme.colors.onSurface};
   }
 `;
 
@@ -94,7 +94,7 @@ const AvailableBalance = styled.div`
   justify-content: space-between;
 
   .balance {
-    color: ${({ theme }) => theme.oldColors.shade0};
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 

@@ -15,17 +15,18 @@ const StyledButton = styled.button`
   padding: 0 1rem;
   height: 3.7rem;
   border: 2px solid transparent;
-  border-radius: 2.3rem;
-  background: ${(props) => props.theme.oldColors.primary};
+  border-radius: 0.8rem;
+  background: ${(props) => props.theme.colors.primary};
   cursor: pointer;
   user-select: none;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   transition: filter 200ms ease-in-out;
 
   &,
   a,
-  span {
-    color: ${(props) => props.theme.contrasts.primary};
+  span,
+  div {
+    color: ${(props) => props.theme.colors.background};
   }
 
   &:focus {
@@ -36,9 +37,9 @@ const StyledButton = styled.button`
   }
 
   &.outline {
-    border-color: ${(props) => props.color || props.theme.oldColors.primary};
+    border-color: ${(props) => props.color || props.theme.colors.primary};
     background: transparent;
-    color: ${(props) => props.color || props.theme.oldColors.primary};
+    color: ${(props) => props.color || props.theme.colors.primary};
   }
 `;
 

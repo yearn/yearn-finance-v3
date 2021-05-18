@@ -39,12 +39,6 @@ declare module 'styled-components' {
       paddingBottom: string;
     };
     chartTheme: any;
-    saveAsset: {
-      cardBackground: string;
-      cardBackgroundSelected: string;
-      cardBorder: string;
-      cardBorderSelected: string;
-    };
     zindex: {
       navbar: number;
       sidemenu: number;
@@ -59,6 +53,8 @@ declare module 'styled-components' {
       width: string;
       collapsedWidth: string;
     };
+
+    layoutPadding: string;
   }
 
   // TODO Restructure theme and generic vars shared between themes

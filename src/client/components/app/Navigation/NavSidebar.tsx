@@ -19,6 +19,9 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   max-width: 100%;
   padding: 1rem 1.2rem;
   position: fixed;
+  /* position: sticky; */
+  max-height: calc(100% - ${({ theme }) => theme.layoutPadding} * 2);
+  /* max-height: calc(100vh - ${({ theme }) => theme.layoutPadding} * 2); */
 
   ${(props) =>
     props.collapsed &&
@@ -28,6 +31,10 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
     .link-list span,
     .copyright-text {
       display: none;
+    }
+    .copyright {
+      display: block;
+      text-align: center;
     }
   `};
 `;
