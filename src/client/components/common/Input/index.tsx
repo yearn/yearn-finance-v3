@@ -8,20 +8,20 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const StyledInput = styled.input`
   display: flex;
-  background: ${(props) => props.theme.colors.shade90};
+  background: ${(props) => props.theme.oldColors.shade90};
   color: ${(props) => props.theme.contrasts.shade90};
   outline: none;
-  border: 1px solid ${(props) => props.theme.colors.shade30};
+  border: 1px solid ${(props) => props.theme.oldColors.shade30};
   border-radius: 0.8rem;
   padding: 0 1rem;
   height: 3.6rem;
   transition: border 200ms ease-in-out;
 
   &::placeholder {
-    color: ${(props) => props.theme.colors.shade30};
+    color: ${(props) => props.theme.oldColors.shade30};
   }
   &:focus {
-    border-color: ${(props) => props.theme.colors.primary};
+    border-color: ${(props) => props.theme.oldColors.primary};
   }
 `;
 

@@ -16,7 +16,7 @@ const StyledButton = styled.button`
   height: 3.7rem;
   border: 2px solid transparent;
   border-radius: 2.3rem;
-  background: ${(props) => props.theme.colors.primary};
+  background: ${(props) => props.theme.oldColors.primary};
   cursor: pointer;
   user-select: none;
   font-size: 1.6rem;
@@ -36,9 +36,9 @@ const StyledButton = styled.button`
   }
 
   &.outline {
-    border-color: ${(props) => props.color || props.theme.colors.primary};
+    border-color: ${(props) => props.color || props.theme.oldColors.primary};
     background: transparent;
-    color: ${(props) => props.color || props.theme.colors.primary};
+    color: ${(props) => props.color || props.theme.oldColors.primary};
   }
 `;
 

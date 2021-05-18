@@ -37,3 +37,15 @@ export interface VaultDynamicData {
   latestVaultAddress: string;
   emergencyShutdown: boolean;
 }
+
+export interface VaultRecommendation {
+  tokenAddress: string;
+  vaultAddress: string;
+  apy: string;
+  symbol: string;
+}
+export interface VaultsRecommendations {
+  name: string;
+  apy: string;
+  symbol: string;
+}

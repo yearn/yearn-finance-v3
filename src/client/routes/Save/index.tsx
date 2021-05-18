@@ -71,7 +71,7 @@ const ErrorMessage = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: ${({ theme }) => theme.colors.error};
+  color: ${({ theme }) => theme.oldColors.error};
 `;
 
 export const Save = () => {
@@ -80,7 +80,7 @@ export const Save = () => {
   const { open: openBlade } = useContext(BladeContext);
   const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
-  const generalVaultsStatus = useAppSelector(VaultsSelectors.selectSaveVaultsGeneralStatus);
+  const generalVaultsStatus = useAppSelector(VaultsSelectors.selectVaultsGeneralStatus);
   const vaults = useAppSelector(VaultsSelectors.selectSaveVaults);
   let assetList;
 
