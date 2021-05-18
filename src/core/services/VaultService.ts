@@ -33,7 +33,7 @@ export class VaultServiceImpl implements VaultService {
 
   public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamic[]> {
     const yearn = this.yearnSdk;
-    return await yearn.vaults.assetsDynamicData(addresses);
+    return await yearn.vaults.getDynamic(addresses);
   }
 
   public async getUserVaultsData({

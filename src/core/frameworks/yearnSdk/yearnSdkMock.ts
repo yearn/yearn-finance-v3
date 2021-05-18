@@ -1,4 +1,4 @@
-import { Balance, Position, Token, Vault, VaultDynamic, Usdc } from '@types';
+import { Balance, Position, Token, Vault, VaultDynamic, Usdc, VaultStatic } from '@types';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
@@ -81,7 +81,12 @@ const vaults = {
 
     return vaultsPositions;
   },
-  assetsDynamicData: (addresses?: string[]): VaultDynamic[] => {
+  getStatic: (addresses?: string[]): VaultStatic[] => {
+    const vaultStaticData: VaultStatic = { ...VaultsV2MockData.static[0], typeId: 'VAULT_V2' };
+
+    return [vaultStaticData];
+  },
+  getDynamic: (addresses?: string[]): VaultDynamic[] => {
     const vaultDynamicData: VaultDynamic = { ...VaultsV2MockData.dynamic[0], typeId: 'VAULT_V2' };
 
     return [vaultDynamicData];
