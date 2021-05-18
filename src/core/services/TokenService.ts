@@ -18,13 +18,9 @@ export class TokenServiceImpl implements TokenService {
   }
 
   public async getTokensDynamicData(addresses: string[]): Promise<TokenDynamicData[]> {
-    // TODO this should be refactored correctly when sdk implements the method to fetch more that one token prices at onces
     const yearn = this.yearnSdk;
-    if (!addresses.length) {
-      throw new Error('Need to provide addresses');
-    }
-    const pricesUsdc = await Promise.all(addresses.map((address: string) => yearn.tokens.priceUsdc(address)));
-    return pricesUsdc.map((priceUsdc, i: number) => ({ address: addresses[i], priceUsdc }));
+    const pricesUsdcMap = yearn.tokens.priceUsdc(addresses);
+    return addresses.map((address: string) => ({ address, priceUsdc: pricesUsdcMap[address] }));
   }
 
   public async getUserTokensData(address: string): Promise<Balance[]> {

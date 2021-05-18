@@ -1,4 +1,4 @@
-import { Balance, Position, Token, Vault, VaultDynamic } from '@types';
+import { Balance, Position, Token, Vault, VaultDynamic, Usdc, VaultStatic } from '@types';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
@@ -7,7 +7,6 @@ import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import UserTokensMockData from './mock/UserTokensMockData.json';
 import TokensMockData from './mock/TokenMockData.json';
 import { getAddress } from '@ethersproject/address';
-import { Integer } from '@yfi/sdk/dist/common';
 
 const tokens = {
   supported: (): Token[] => {
@@ -17,26 +16,17 @@ const tokens = {
       symbol: token.symbol,
       decimals: token.decimals.toString(),
       icon: 'MOCK',
-      price: token.price.toString(),
+      priceUsdc: token.price.toString(),
       supported: {
         zapper: true,
       },
     }));
   },
-  priceUsdc: (tokenAddress: string): Integer => {
-    return '44.08';
+  priceUsdc: (tokenAddresses: string[]): { [address: string]: Usdc } => {
+    const tokensPricesMap: any = {};
+    tokenAddresses.forEach((address) => (tokensPricesMap[address] = '44.09'));
+    return tokensPricesMap;
   },
-  // Deprecated
-  // tokensDynamicData: (addresses?: string[]): TokenDynamicData[] => {
-  //   const tokensData = TokensMockData.slice(0, 4);
-
-  //   return tokensData.map((token) => {
-  //     return {
-  //       address: getAddress(token.address),
-  //       priceUsdc: (token.price + 400).toString(),
-  //     };
-  //   });
-  // },
   balances: (address: string): Balance[] => {
     return UserTokensMockData.map((userTokenData) => {
       return {
@@ -49,7 +39,7 @@ const tokens = {
           name: userTokenData.symbol,
           symbol: userTokenData.symbol,
         },
-        price: userTokenData.price.toString(),
+        priceUsdc: userTokenData.price.toString(),
       };
     });
   },
@@ -91,7 +81,12 @@ const vaults = {
 
     return vaultsPositions;
   },
-  assetsDynamicData: (addresses?: string[]): VaultDynamic[] => {
+  getStatic: (addresses?: string[]): VaultStatic[] => {
+    const vaultStaticData: VaultStatic = { ...VaultsV2MockData.static[0], typeId: 'VAULT_V2' };
+
+    return [vaultStaticData];
+  },
+  getDynamic: (addresses?: string[]): VaultDynamic[] => {
     const vaultDynamicData: VaultDynamic = { ...VaultsV2MockData.dynamic[0], typeId: 'VAULT_V2' };
 
     return [vaultDynamicData];
