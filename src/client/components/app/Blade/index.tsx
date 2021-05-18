@@ -84,7 +84,7 @@ const ActionButton = styled(Button)`
   font-size: 1.4rem;
   &.outline {
     border-color: ${(props) => props.theme.colors.onSurfaceVariantB};
-    color: ${(props) => props.theme.colors.onSurface};
+    color: ${(props) => props.theme.colors.onSurfaceVariantB};
   }
 `;
 
