@@ -30,8 +30,7 @@ const selectSaveVaults = createSelector(
         vaultBalance: vaultData.underlyingTokenBalance.amount,
         vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
         depositLimit: vaultData.metadata.depositLimit,
-        apyData: '99',
-        // apyData: vaultData.apyData, TODO
+        apyData: vaultData.metadata.apy?.recommended.toString() ?? '0',
         userDeposited: userVaultData?.underlyingTokenBalance.amount ?? '0',
         userDepositedUsdc: userVaultData?.underlyingTokenBalance.amountUsdc ?? '0',
         allowancesMap: vaultsAllowancesMap[address] ?? {},
@@ -68,8 +67,7 @@ const selectVaults = createSelector(
         vaultBalance: vaultData.underlyingTokenBalance.amount,
         vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
         depositLimit: vaultData.metadata.depositLimit,
-        apyData: '99',
-        // apyData: vaultData.apyData, TODO
+        apyData: vaultData.metadata.apy?.recommended.toString() ?? '0',
         allowancesMap: vaultsAllowancesMap[address] ?? {},
         approved: new BigNumber(currentAllowance).gt(0),
         DEPOSIT: {
