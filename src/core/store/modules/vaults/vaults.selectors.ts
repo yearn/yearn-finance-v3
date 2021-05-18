@@ -113,21 +113,15 @@ const selectVaultsGeneralStatus = createSelector(
   }
 );
 
-const selectSelectedVault = createSelector([selectVaults, selectSelectedVaultAddress], (vaults, selectedVaultAddress):
-  | VaultView
-  | undefined => {
-  if (!selectedVaultAddress) {
-    return undefined;
+const selectSelectedVault = createSelector(
+  [selectVaults, selectSelectedVaultAddress],
+  (vaults, selectedVaultAddress) => {
+    if (!selectedVaultAddress) {
+      return undefined;
+    }
+    return vaults.find((vault) => vault.address === selectedVaultAddress);
   }
-  const selectedVault = vaults.find((vault) => vault.address === selectedVaultAddress);
-  if (!selectedVault) return undefined;
-  const { DEPOSIT, token, ...rest } = selectedVault;
-  return {
-    token,
-    ...DEPOSIT,
-    ...rest,
-  };
-});
+);
 
 const selectSelectedVaultActionsStatusMap = createSelector(
   [selectVaultsActionsStatusMap, selectSelectedVaultAddress],
