@@ -14,7 +14,7 @@ export class TokenServiceImpl implements TokenService {
 
   public async getSupportedTokens(): Promise<Token[]> {
     const yearn = this.yearnSdk;
-    return await yearn.tokens.supported();
+    return await yearn.vaults.tokens();
   }
 
   public async getTokensDynamicData(addresses: string[]): Promise<TokenDynamicData[]> {
