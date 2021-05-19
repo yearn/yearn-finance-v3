@@ -5,12 +5,13 @@ import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
 import VaultsV2MockData from './mock/VaultsV2MockData.json';
 import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import UserTokensMockData from './mock/UserTokensMockData.json';
-import TokensMockData from './mock/TokenMockData.json';
+import ZapperTokensMockData from './mock/ZapperTokensMockData.json';
+import VaultsTokensMockData from './mock/VaultsTokensMockData.json';
 import { getAddress } from '@ethersproject/address';
 
 const tokens = {
   supported: (): Token[] => {
-    return TokensMockData.map((token) => ({
+    return ZapperTokensMockData.map((token) => ({
       address: getAddress(token.address),
       name: token.symbol,
       symbol: token.symbol,
@@ -90,6 +91,9 @@ const vaults = {
     const vaultDynamicData: VaultDynamic = { ...VaultsV2MockData.dynamic[0], typeId: 'VAULT_V2' };
 
     return [vaultDynamicData];
+  },
+  tokens: (overrides?: any): Token[] => {
+    return VaultsTokensMockData;
   },
 };
 
