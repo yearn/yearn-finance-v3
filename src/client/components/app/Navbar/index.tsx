@@ -18,6 +18,13 @@ const StyledNavbarActions = styled.div`
   flex: 1;
 `;
 
+const StyledText = styled(Text)`
+  font-size: 2.4rem;
+  font-weight: bold;
+  padding-left: 1rem;
+  color: ${({ theme }) => theme.colors.onBackground};
+`;
+
 const StyledNavbar = styled.nav`
   position: sticky;
   top: 0;
@@ -25,9 +32,8 @@ const StyledNavbar = styled.nav`
   width: 100%;
   display: flex;
   align-items: center;
-  background-color: ${(props) => props.theme.oldColors.shade100};
+  background-color: ${({ theme }) => theme.colors.background};
   height: ${(props) => props.theme.navbar.height};
-  padding: 0 ${(props) => props.theme.navbar.padding};
   z-index: ${(props) => props.theme.zindex.navbar};
 `;
 
@@ -44,7 +50,7 @@ export const Navbar = ({ className, title, walletAddress, onWalletClick }: Navba
 
   return (
     <StyledNavbar className={className}>
-      {title && <Text>{title}</Text>}
+      {title && <StyledText>{title}</StyledText>}
       <StyledNavbarActions>{connectWalletButton}</StyledNavbarActions>
     </StyledNavbar>
   );

@@ -6,15 +6,24 @@ import { AppActions, RouteActions, WalletActions } from '@store';
 
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { Navigation, Footer, Navbar } from '@components/app';
-import { Box } from '@components/common';
 
-const Content = styled.div`
+const StyledLayout = styled.div`
+  display: flex;
+  flex: 1;
+  padding: ${({ theme }) => theme.layoutPadding};
+`;
+
+const Content = styled.div<{ collapsedSidebar?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
   flex: 1;
-  padding-left: ${({ theme }) => theme.sideBar.width};
   min-height: 100%;
+
+  padding-left: ${(props) =>
+    props.collapsedSidebar
+      ? `calc(${props.theme.sideBar.collapsedWidth} + 1.2rem)`
+      : `calc(${props.theme.sideBar.width} + 1.2rem)`};
 `;
 
 export const Layout: FC = ({ children }) => {
@@ -22,6 +31,9 @@ export const Layout: FC = ({ children }) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
+
+  // TODO collapsedSidebar should be in settingsState
+  const collapsedSidebar = false;
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1];
 
@@ -34,18 +46,18 @@ export const Layout: FC = ({ children }) => {
   }, [location]);
 
   return (
-    <Box display="flex" flex="1">
-      <Navigation />
+    <StyledLayout>
+      <Navigation collapsedSidebar={collapsedSidebar} />
 
-      <Content>
+      <Content collapsedSidebar={collapsedSidebar}>
         <Navbar
           title={t(`navigation.${path}`)}
           walletAddress={selectedAddress}
           onWalletClick={() => dispatch(WalletActions.walletSelect())}
         />
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </Content>
-    </Box>
+    </StyledLayout>
   );
 };

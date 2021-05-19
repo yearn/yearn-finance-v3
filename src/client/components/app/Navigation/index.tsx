@@ -5,9 +5,11 @@ import { NavSidebar } from './NavSidebar';
 const StyledNavigation = styled.nav``;
 const StyledNavSidebar = styled(NavSidebar)``;
 
-export const Navigation = () => {
-  const collapsedSidebar = false;
+interface NavigationProps {
+  collapsedSidebar?: boolean;
+}
 
+export const Navigation = ({ collapsedSidebar }: NavigationProps) => {
   return (
     <StyledNavigation>
       <StyledNavSidebar collapsed={collapsedSidebar} />

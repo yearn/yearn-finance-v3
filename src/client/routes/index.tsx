@@ -4,17 +4,12 @@ import { Layout } from '@containers';
 import { Save } from './Save';
 import { Invest } from './Invest';
 import { Landing } from './Landing';
-import { Dashboard } from './Dashboard';
 import { VaultDetail } from './VaultDetail';
 import { Borrow } from './Borrow';
 import { Vaults } from './Vaults';
 import { Settings } from './Settings';
 
 const routesMap = [
-  {
-    path: '/dashboard',
-    component: Dashboard,
-  },
   {
     path: '/invest',
     component: Invest,
