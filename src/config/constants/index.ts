@@ -14,9 +14,10 @@ export const getConstants = memoize(
       FANTOM_PROVIDER_HTTPS: 'https://rpcapi.fantom.network',
       LOCAL_PROVIDER_HTTPS: 'http://127.0.0.1:8545/',
       CONTRACT_ADDRESSES: {
-        oracle: '0xd3ca98d986be88b72ff95fc2ec976a5e6339150d',
-        lens: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
-        registryV2Adapter: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
+        oracle: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
+        lens: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
+        registryV2Adapter: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
+        helper: '0x420b1099B9eF5baba6D92029594eF45E19A04A4A',
       },
     };
   }

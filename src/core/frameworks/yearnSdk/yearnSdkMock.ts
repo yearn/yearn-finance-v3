@@ -60,7 +60,7 @@ const vaults = {
     });
     return vaults;
   },
-  assetsPositionsOf: (userAddress: string, vaultAddresses?: string[]): Position[] => {
+  positionsOf: (userAddress: string, vaultAddresses?: string[]): Position[] => {
     // if (vaultAddresses?.length) {
     //   const position = VaultsV2PositionsMockData[3].positions[0];
     //   return [
