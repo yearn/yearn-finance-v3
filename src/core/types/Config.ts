@@ -26,5 +26,6 @@ export interface Constants {
     oracle: string;
     lens: string;
     registryV2Adapter: string;
+    helper: string;
   };
 }
