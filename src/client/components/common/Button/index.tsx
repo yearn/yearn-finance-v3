@@ -13,19 +13,20 @@ const StyledButton = styled.button`
   align-items: center;
   justify-content: center;
   padding: 0 1rem;
-  height: 3.7rem;
+  height: 2.8rem;
   border: 2px solid transparent;
-  border-radius: 2.3rem;
-  background: ${(props) => props.theme.oldColors.primary};
+  border-radius: 0.8rem;
+  background: ${(props) => props.theme.colors.primary};
   cursor: pointer;
   user-select: none;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   transition: filter 200ms ease-in-out;
 
   &,
   a,
-  span {
-    color: ${(props) => props.theme.contrasts.primary};
+  span,
+  div {
+    color: ${(props) => props.theme.colors.background};
   }
 
   &:focus {

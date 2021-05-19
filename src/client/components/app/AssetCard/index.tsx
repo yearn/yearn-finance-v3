@@ -7,15 +7,13 @@ const StyledCard = styled(Card)<{ className: string }>`
   grid-template-columns: var(--vaults-columns);
   width: 100%;
   margin-bottom: 16px;
-  background-color: ${({ theme }) => theme.saveAsset.cardBackground};
-  border: 1px solid ${({ theme }) => theme.saveAsset.cardBorder};
+  background-color: ${({ theme }) => theme.colors.surface};
   padding-left: var(--vaults-padding);
   padding-right: var(--vaults-padding);
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
 
   &.selected {
-    background-color: ${({ theme }) => theme.saveAsset.cardBackgroundSelected};
-    border-color: ${({ theme }) => theme.saveAsset.cardBorderSelected};
+    background-color: ${({ theme }) => theme.colors.onSurfaceVariantA};
   }
 `;
 

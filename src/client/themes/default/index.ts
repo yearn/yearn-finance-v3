@@ -64,12 +64,6 @@ const sharedTheme: SharedTheme = {
       },
     },
   },
-  saveAsset: {
-    cardBackground: 'rgba(42, 46, 59, 0.85)',
-    cardBackgroundSelected: 'rgba(52, 57, 73, 0.7)',
-    cardBorder: 'rgba(66, 71, 86, 0.3)',
-    cardBorderSelected: '#424756',
-  },
   zindex: {
     navbar: 400,
     sidemenu: 500,
@@ -90,6 +84,8 @@ const sharedTheme: SharedTheme = {
     width: '16rem',
     collapsedWidth: '4.8rem',
   },
+
+  layoutPadding: '1.6rem',
 };
 
 export const device = {

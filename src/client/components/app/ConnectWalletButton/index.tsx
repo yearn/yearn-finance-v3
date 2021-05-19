@@ -7,14 +7,6 @@ interface WalletAddressProps {
   onClick: () => void;
 }
 
-const StyledButton = styled(Button)`
-  font-size: 1.4rem;
-  &.outline {
-    border-color: ${(props) => props.theme.oldColors.shade20};
-    color: ${(props) => props.theme.oldColors.shade20};
-  }
-`;
-
 export const ConnectWalletButton = ({ address, onClick }: WalletAddressProps) => {
   const { t } = useAppTranslation('common');
   let buttonMessage;
@@ -26,8 +18,8 @@ export const ConnectWalletButton = ({ address, onClick }: WalletAddressProps) =>
   }
 
   return (
-    <StyledButton onClick={() => onClick && onClick()} className="outline">
+    <Button onClick={() => onClick && onClick()}>
       <Text>{buttonMessage}</Text>
-    </StyledButton>
+    </Button>
   );
 };

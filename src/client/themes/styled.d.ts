@@ -39,12 +39,6 @@ declare module 'styled-components' {
       paddingBottom: string;
     };
     chartTheme: any;
-    saveAsset: {
-      cardBackground: string;
-      cardBackgroundSelected: string;
-      cardBorder: string;
-      cardBorderSelected: string;
-    };
     zindex: {
       navbar: number;
       sidemenu: number;
@@ -58,6 +52,37 @@ declare module 'styled-components' {
     sideBar: {
       width: string;
       collapsedWidth: string;
+    };
+
+    layoutPadding: string;
+  }
+
+  // TODO Restructure theme and generic vars shared between themes
+  export interface DefaultTheme extends SharedTheme {
+    colors: {
+      primary: string;
+      primaryVariant: string;
+
+      secondary: string;
+      secondaryVariantA: string;
+      secondaryVariantB: string;
+
+      onPrimary: string;
+      onPrimaryVariant: string;
+
+      background: string;
+      onBackground: string;
+
+      surface: string;
+      surfaceVariant: string;
+      onSurface: string;
+      onSurfaceVariantA: string;
+      onSurfaceVariantB: string;
+
+      upTrend: string;
+      downTrend: string;
+
+      hoverHbar: string;
     };
   }
 
