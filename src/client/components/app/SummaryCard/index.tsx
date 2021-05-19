@@ -18,7 +18,7 @@ interface Item {
 interface SummaryCardProps {
   header: string;
   items: Item[];
-  variant?: 'primary';
+  variant?: 'primary' | 'surface';
 }
 
 export const SummaryCard = ({ header, items, variant }: SummaryCardProps) => {

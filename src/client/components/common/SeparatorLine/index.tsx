@@ -9,7 +9,7 @@ export interface SeparatorLineProps {
 const StyledSeparatorLine = styled.div`
   height: 1px;
   width: 100%;
-  background-color: ${({ theme }) => theme.oldColors.shade30};
+  background-color: ${({ theme }) => theme.colors.primary};
   margin-top: 2.7rem;
   margin-bottom: 0.5rem;
 

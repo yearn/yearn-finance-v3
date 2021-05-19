@@ -18,6 +18,10 @@ const ItemCard = styled(Card)`
   margin-bottom: 1.6rem;
 `;
 
+const ItemInfo = styled(Text)`
+  color: ${({ theme }) => theme.colors.onSurface};
+`;
+
 const InnerBox = styled(Card)`
   display: flex;
   flex-direction: column;
@@ -71,9 +75,9 @@ export const RecomendationsCard = ({ header, items }: RecommendationsProps) => {
                   {item.name}
                 </CenterIcon>
               </InnerBox>
-              <Text fontSize="2.4rem" fontWeight="600">
+              <ItemInfo fontSize="2.4rem" fontWeight="600">
                 {item.info}
-              </Text>
+              </ItemInfo>
               <Button onClick={item.onAction}>{item.action}</Button>
             </ItemCard>
           </CardElement>

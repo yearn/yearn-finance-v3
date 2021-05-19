@@ -75,7 +75,7 @@ export const Vaults = () => {
           { header: 'Earnings', content: '$ 2,015.10' },
           { header: 'Est. Yearly Yield', content: '$ 12,015.10' },
         ]}
-        variant="primary"
+        variant="surface"
       />
       {recomendations.length > 0 && (
         <RecomendationsCard

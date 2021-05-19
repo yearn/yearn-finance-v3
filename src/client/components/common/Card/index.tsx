@@ -7,25 +7,32 @@ import { CardElement } from './CardElement';
 import { styledSystem, StyledSystemProps } from '../styledSystem';
 
 const defaultVariant = css`
-  background-color: ${({ theme }) => theme.oldColors.card};
-  color: ${({ theme }) => theme.contrasts.card};
+  background-color: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.onSurface};
 `;
 
 const primaryVariant = css`
-  background-color: ${({ theme }) => theme.oldColors.primary};
-  color: ${({ theme }) => theme.contrasts.primary};
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.onSurfaceVariantB};
+`;
+
+const surfaceVariant = css`
+  background-color: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.onSurface};
 `;
 
 const variantStyle = ({ variant }: CardProps) => {
   switch (variant) {
     case 'primary':
       return primaryVariant;
+    case 'surface':
+      return surfaceVariant;
     default:
       return defaultVariant;
   }
 };
 
-type CardVariant = 'primary';
+type CardVariant = 'primary' | 'surface';
 
 export interface CardProps extends StyledSystemProps {
   onClick?: () => void;
