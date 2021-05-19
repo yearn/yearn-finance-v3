@@ -1,8 +1,7 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { CyTokenData, UserCyTokenData, Position, Token, Vault, Integer } from '@types';
+import { CyTokenData, UserCyTokenData, Position, Token, Vault, Integer, Balance } from '@types';
 import { EthereumAddress } from './Ethereum';
-import { Balance } from '@yfi/sdk';
 
 export interface RootState {
   app: AppState;

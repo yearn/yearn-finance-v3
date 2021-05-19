@@ -8,8 +8,8 @@ import {
   Token,
   Vault,
   VaultDynamic,
+  Balance,
 } from '@types';
-import { Balance } from '@yfi/sdk';
 
 export interface UserService {}
 
