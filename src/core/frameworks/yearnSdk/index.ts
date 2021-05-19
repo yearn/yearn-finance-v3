@@ -14,24 +14,16 @@ export const getYearnSdk = ({ web3Provider, config }: { web3Provider: Web3Provid
   }
 
   if (USE_MAINNET_FORK) {
-    return new Yearn(
-      1337,
-      {
-        provider: web3Provider.getInstanceOf('local'),
-        addresses: {
-          oracle: CONTRACT_ADDRESSES.oracle,
-          // lens: CONTRACT_ADDRESSES.lens,
-          helper: CONTRACT_ADDRESSES.helper,
-          adapters: {
-            registryV2: CONTRACT_ADDRESSES.registryV2Adapter,
-          },
+    return new Yearn(1337, {
+      provider: web3Provider.getInstanceOf('local'),
+      addresses: {
+        oracle: CONTRACT_ADDRESSES.oracle,
+        helper: CONTRACT_ADDRESSES.helper,
+        adapters: {
+          registryV2: CONTRACT_ADDRESSES.registryV2Adapter,
         },
       },
-      {
-        get: (key) => localStorage.getItem(key) ?? undefined,
-        set: (key, value) => localStorage.setItem(key, value),
-      }
-    );
+    });
   } else {
     return new Yearn(1, {
       provider: web3Provider.getInstanceOf('default'),
