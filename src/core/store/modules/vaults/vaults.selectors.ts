@@ -8,6 +8,7 @@ const selectUserVaultsMap = (state: RootState) => state.vaults.user.userVaultsMa
 const selectVaultsMap = (state: RootState) => state.vaults.vaultsMap;
 const selectVaultsAddresses = (state: RootState) => state.vaults.vaultsAddresses;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
+const selectUserTokensAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap;
 const selectVaultsAllowancesMap = (state: RootState) => state.vaults.user.vaultsAllowancesMap;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVaultAddress;
@@ -15,15 +16,23 @@ const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMa
 const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 
 const selectSaveVaults = createSelector(
-  [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap, selectVaultsAllowancesMap],
-  (vaultsState, tokensMap, userVaultsMap, userTokensMap, vaultsAllowancesMap): VaultView[] => {
+  [
+    selectVaultsState,
+    selectTokensMap,
+    selectUserVaultsMap,
+    selectUserTokensMap,
+    selectVaultsAllowancesMap,
+    selectUserTokensAllowancesMap,
+  ],
+  (vaultsState, tokensMap, userVaultsMap, userTokensMap, vaultsAllowancesMap, userTokensAllowancesMap): VaultView[] => {
     const { vaultsAddresses, vaultsMap } = vaultsState;
     const vaults: VaultView[] = vaultsAddresses.map((address) => {
       const vaultData = vaultsMap[address];
       const tokenData = tokensMap[vaultData.tokenId];
       const userVaultData = userVaultsMap[address]?.DEPOSIT;
       const userTokenData = userTokensMap[vaultData.tokenId];
-      const currentAllowance: string = userTokenData?.allowancesMap[address] ?? '0';
+      const allowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
+      const currentAllowance = allowancesMap[address] ?? '0';
       return {
         address: vaultData.address,
         name: vaultData.name,
@@ -43,7 +52,7 @@ const selectSaveVaults = createSelector(
           icon: tokenData?.icon,
           balance: userTokenData?.balance ?? '0',
           balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-          allowancesMap: userTokenData?.allowancesMap ?? {},
+          allowancesMap: allowancesMap,
         },
       };
     });
@@ -52,15 +61,23 @@ const selectSaveVaults = createSelector(
 );
 
 const selectVaults = createSelector(
-  [selectVaultsState, selectTokensMap, selectUserVaultsMap, selectUserTokensMap, selectVaultsAllowancesMap],
-  (vaultsState, tokensMap, userVaultsMap, userTokensMap, vaultsAllowancesMap) => {
+  [
+    selectVaultsState,
+    selectTokensMap,
+    selectUserVaultsMap,
+    selectUserTokensMap,
+    selectVaultsAllowancesMap,
+    selectUserTokensAllowancesMap,
+  ],
+  (vaultsState, tokensMap, userVaultsMap, userTokensMap, vaultsAllowancesMap, userTokensAllowancesMap) => {
     const { vaultsAddresses, vaultsMap } = vaultsState;
     const vaults = vaultsAddresses.map((address) => {
       const vaultData = vaultsMap[address];
       const tokenData = tokensMap[vaultData.tokenId];
       const userVaultDataDeposit = userVaultsMap[address]?.DEPOSIT;
       const userTokenData = userTokensMap[vaultData.tokenId];
-      const currentAllowance: string = userTokenData?.allowancesMap[address] ?? '0';
+      const allowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
+      const currentAllowance = allowancesMap[address] ?? '0';
       return {
         address: vaultData.address,
         name: vaultData.name,
@@ -82,7 +99,7 @@ const selectVaults = createSelector(
           icon: tokenData?.icon,
           balance: userTokenData?.balance ?? '0',
           balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-          allowancesMap: userTokenData?.allowancesMap ?? {},
+          allowancesMap: allowancesMap,
         },
       };
     });

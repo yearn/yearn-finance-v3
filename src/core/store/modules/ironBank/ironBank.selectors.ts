@@ -23,6 +23,7 @@ const selectCyTokens = createSelector(
       const userCyTokenData = userCyTokensMap[address];
       const tokenData = tokensMap[cyTokenData.underlyingTokenAddress];
       const userTokenData = userTokensMap[cyTokenData.underlyingTokenAddress];
+      const allowancesMap = tokensState.user.userTokensAllowancesMap[cyTokenData.underlyingTokenAddress] ?? {};
       return {
         address: cyTokenData.address,
         decimals: cyTokenData.decimals,
@@ -51,7 +52,7 @@ const selectCyTokens = createSelector(
           icon: tokenData?.icon,
           balance: userTokenData?.balance ?? '0',
           balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-          allowancesMap: userTokenData?.allowancesMap ?? {},
+          allowancesMap: allowancesMap,
         },
       };
     });
