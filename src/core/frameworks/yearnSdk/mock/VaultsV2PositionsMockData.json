@@ -7,8 +7,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [
           {
@@ -31,8 +31,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -47,8 +47,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -63,8 +63,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000",
+          "amountUsdc": "20000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -79,8 +79,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -95,8 +95,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -111,8 +111,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -127,8 +127,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -143,8 +143,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -159,8 +159,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "2000000000000",
+          "amountUsdc": "2000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -175,8 +175,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "2000000000000",
+          "amountUsdc": "2000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -191,8 +191,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -207,8 +207,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -223,8 +223,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -239,8 +239,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
@@ -255,8 +255,8 @@
         "typeId": "DEPOSIT",
         "balance": "1007999753",
         "underlyingTokenBalance": {
-          "amount": "2000000000",
-          "amountUsdc": "2000000000"
+          "amount": "20000000000000000000",
+          "amountUsdc": "20000000000000000000"
         },
         "assetAllowances": [],
         "tokenAllowances": []
