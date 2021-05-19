@@ -10,6 +10,8 @@ import { ReactComponent as HomeIcon } from '@assets/icons/home.svg';
 import { ReactComponent as MediumIcon } from '@assets/icons/medium.svg';
 import { ReactComponent as TelegramIcon } from '@assets/icons/telegram.svg';
 import { ReactComponent as TwitterIcon } from '@assets/icons/twitter.svg';
+import { ReactComponent as VaultIcon } from '@assets/icons/vault.svg';
+import { ReactComponent as WalletIcon } from '@assets/icons/wallet.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
@@ -40,4 +42,6 @@ export {
   MediumIcon,
   TelegramIcon,
   TwitterIcon,
+  VaultIcon,
+  WalletIcon,
 };

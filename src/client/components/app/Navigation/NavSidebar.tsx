@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAppTranslation } from '@hooks';
 
-import { HomeIcon, Icon, Logo } from '@components/common';
+import { HomeIcon, Icon, Logo, VaultIcon, WalletIcon } from '@components/common';
 
 interface NavSidebarProps {
   collapsed?: boolean;
@@ -93,30 +93,30 @@ export const NavSidebar = ({ collapsed }: NavSidebarProps) => {
       text: t('navigation.home'),
       icon: HomeIcon,
     },
+    // {
+    //   to: '/invest',
+    //   text: t('navigation.invest'),
+    //   icon: HomeIcon,
+    // },
+    // {
+    //   to: '/save',
+    //   text: t('navigation.save'),
+    //   icon: HomeIcon,
+    // },
+    // {
+    //   to: '/borrow',
+    //   text: t('navigation.borrow'),
+    //   icon: HomeIcon,
+    // },
     {
-      to: '/dashboard',
-      text: t('navigation.dashboard'),
-      icon: HomeIcon,
-    },
-    {
-      to: '/invest',
-      text: t('navigation.invest'),
-      icon: HomeIcon,
-    },
-    {
-      to: '/save',
-      text: t('navigation.save'),
-      icon: HomeIcon,
-    },
-    {
-      to: '/borrow',
-      text: t('navigation.borrow'),
-      icon: HomeIcon,
+      to: '/wallet',
+      text: t('navigation.wallet'),
+      icon: WalletIcon,
     },
     {
       to: '/vaults',
       text: t('navigation.vaults'),
-      icon: HomeIcon,
+      icon: VaultIcon,
     },
     {
       to: '/settings',

@@ -13,7 +13,7 @@ const StyledButton = styled.button`
   align-items: center;
   justify-content: center;
   padding: 0 1rem;
-  height: 3.7rem;
+  height: 2.8rem;
   border: 2px solid transparent;
   border-radius: 0.8rem;
   background: ${(props) => props.theme.colors.primary};

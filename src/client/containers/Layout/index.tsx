@@ -56,7 +56,7 @@ export const Layout: FC = ({ children }) => {
           onWalletClick={() => dispatch(WalletActions.walletSelect())}
         />
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </Content>
     </StyledLayout>
   );
