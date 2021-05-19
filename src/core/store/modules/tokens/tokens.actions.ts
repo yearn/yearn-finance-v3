@@ -1,12 +1,7 @@
-import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { TokenDynamicData, UserTokenData, Token } from '@types';
+import { TokenDynamicData, Token, Balance } from '@types';
 import BigNumber from 'bignumber.js';
-
-const setUserTokenData = createAction<{ userTokenData: UserTokenData }>('tokens/setUserTokenData');
-const setUserTokensMap = createAction<{ userTokensMap: { [address: string]: UserTokenData } }>(
-  'tokens/setUserTokensMap'
-);
 
 const getTokens = createAsyncThunk<{ tokensData: Token[] }, string | undefined, ThunkAPI>(
   'tokens/getTokens',
@@ -27,13 +22,29 @@ const getTokensDynamicData = createAsyncThunk<
   return { tokensDynamicData };
 });
 
+const getUserTokens = createAsyncThunk<{ userTokens: Balance[] }, { addresses?: string[] }, ThunkAPI>(
+  'tokens/getUserTokens',
+  async ({ addresses }, { extra, getState }) => {
+    const accountAddress = getState().wallet.selectedAddress;
+    if (!accountAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+
+    const { tokenService } = extra.services;
+    const userTokens = await tokenService.getUserTokensData(accountAddress, addresses);
+    return { userTokens };
+  }
+);
+
 const approve = createAsyncThunk<{ amount: string }, { tokenAddress: string; spenderAddress: string }, ThunkAPI>(
   'tokens/approve',
   async ({ tokenAddress, spenderAddress }, { extra, getState, rejectWithValue }) => {
+    // TODO make it possible to receive approve amount and make needed checks.
     const { tokenService } = extra.services;
     const amount = extra.config.MAX_UINT256;
-    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
-    const approved = new BigNumber(userTokenData.allowancesMap[spenderAddress]).gt(0);
+    const allowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
+    const allowance = allowancesMap[spenderAddress] ?? '0';
+    const approved = new BigNumber(allowance).gt(0);
     if (approved) {
       return rejectWithValue('ALREADY_APPROVED');
     }
@@ -45,9 +56,8 @@ const approve = createAsyncThunk<{ amount: string }, { tokenAddress: string; spe
 );
 
 export const TokensActions = {
-  setUserTokenData,
   getTokens,
   getTokensDynamicData,
-  setUserTokensMap,
+  getUserTokens,
   approve,
 };

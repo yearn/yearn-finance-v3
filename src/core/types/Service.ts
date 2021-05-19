@@ -9,6 +9,7 @@ import {
   Vault,
   VaultDynamic,
 } from '@types';
+import { Balance } from '@yfi/sdk';
 
 export interface UserService {}
 
@@ -34,6 +35,7 @@ export interface VaultService {
 export interface TokenService {
   getSupportedTokens: () => Promise<Token[]>;
   getTokensDynamicData: (props: string[]) => Promise<TokenDynamicData[]>;
+  getUserTokensData: (accountAddress: string, tokenAddress?: string[]) => Promise<Balance[]>;
   approve: (props: ApproveProps) => Promise<void>;
   // getTokenRates:
 }

@@ -63,7 +63,8 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
     const { services } = extra;
     const vaultData = getState().vaults.vaultsMap[vaultAddress];
     const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
-    const userTokenData = getState().tokens.user.userTokensMap[vaultData.tokenId];
+    // const userTokenData = getState().tokens.user.userTokensMap[vaultData.tokenId];
+    const allowancesMap = getState().tokens.user.userTokensAllowancesMap[vaultData.tokenId] ?? {};
     const decimals = new BigNumber(tokenData.decimals);
     const ONE_UNIT = new BigNumber(10).pow(decimals);
     amount = amount.multipliedBy(ONE_UNIT);
@@ -74,7 +75,8 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
     //   throw new Error('INSUFICIENT FUNDS');
     // }
 
-    const approved = new BigNumber(userTokenData.allowancesMap[vaultAddress]).gt(0);
+    const allowance = allowancesMap[vaultAddress] ?? '0';
+    const approved = new BigNumber(allowance).gte(amount);
     if (!approved) {
       await dispatch(approveVault({ vaultAddress, tokenAddress: tokenData.address }));
     }

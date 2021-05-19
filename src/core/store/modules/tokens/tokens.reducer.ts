@@ -5,7 +5,8 @@ import { initialStatus } from '../../../types/Status';
 import { TokensActions } from './tokens.actions';
 
 export const initialUserTokenActionsMap: UserTokenActionsMap = {
-  get: initialStatus,
+  get: { ...initialStatus },
+  getAllowances: { ...initialStatus },
 };
 
 const initialState: TokensState = {
@@ -13,17 +14,19 @@ const initialState: TokensState = {
   tokensMap: {},
   user: {
     userTokensMap: {},
+    userTokensAllowancesMap: {},
   },
   statusMap: {
     getTokens: { ...initialStatus },
     user: {
       getUserTokens: { ...initialStatus },
+      getUserTokensAllowances: { ...initialStatus },
       userTokensActiosMap: {},
     },
   },
 };
 
-const { getTokens, getTokensDynamicData, setUserTokenData, setUserTokensMap, approve } = TokensActions;
+const { getTokens, getTokensDynamicData, getUserTokens, approve } = TokensActions;
 
 const tokensReducer = createReducer(initialState, (builder) => {
   builder
@@ -42,29 +45,39 @@ const tokensReducer = createReducer(initialState, (builder) => {
     .addCase(getTokens.rejected, (state, { error }) => {
       state.statusMap.getTokens = { error: error.message };
     })
+    .addCase(getUserTokens.pending, (state, { meta }) => {
+      const tokenAddresses = meta.arg.addresses;
+      tokenAddresses?.forEach((address) => {
+        // TODO need to initiate actionsMap somewhere. this will explode.
+        state.statusMap.user.userTokensActiosMap[address].get = { loading: true };
+      });
+      state.statusMap.user.getUserTokens = { loading: true };
+    })
+    .addCase(getUserTokens.fulfilled, (state, { meta, payload: { userTokens } }) => {
+      const tokenAddresses = meta.arg.addresses;
+      tokenAddresses?.forEach((address) => {
+        state.statusMap.user.userTokensActiosMap[address].get = {};
+      });
+
+      userTokens.forEach((userToken) => {
+        state.user.userTokensMap[userToken.address] = userToken;
+      });
+
+      state.statusMap.user.getUserTokens = {};
+    })
+    .addCase(getUserTokens.rejected, (state, { meta, error }) => {
+      const tokenAddresses = meta.arg.addresses;
+      tokenAddresses?.forEach((address) => {
+        state.statusMap.user.userTokensActiosMap[address].get = { error: error.message };
+      });
+      state.statusMap.user.getUserTokens = { error: error.message };
+    })
     // Note: approve pending/rejected statuses are handled on each asset (vault/ironbank/...) approve action.
     .addCase(approve.fulfilled, (state, { meta, payload: { amount } }) => {
       const { tokenAddress, spenderAddress } = meta.arg;
-      const userTokenData = state.user.userTokensMap[tokenAddress];
-      state.user.userTokensMap[tokenAddress] = {
-        ...userTokenData,
-        allowancesMap: {
-          ...userTokenData.allowancesMap,
-          [spenderAddress]: amount,
-        },
-      };
-    })
-    .addCase(setUserTokenData, (state, { payload: { userTokenData } }) => {
-      state.user.userTokensMap[userTokenData.address] = userTokenData;
-    })
-    .addCase(setUserTokensMap, (state, { payload: { userTokensMap } }) => {
-      const tokensAddresses = Object.keys(userTokensMap);
-      const userTokensActiosMap: any = {};
-      tokensAddresses.forEach((address) => (userTokensActiosMap[address] = initialUserTokenActionsMap));
-      state.user.userTokensMap = { ...state.user.userTokensMap, ...userTokensMap };
-      state.statusMap.user.userTokensActiosMap = {
-        ...state.statusMap.user.userTokensActiosMap,
-        ...userTokensActiosMap,
+      state.user.userTokensAllowancesMap[tokenAddress] = {
+        ...state.user.userTokensAllowancesMap[tokenAddress],
+        [spenderAddress]: amount,
       };
     })
     // getTokensDynamicData pending and reject are not implemented because for now we dont support individual token statuses
