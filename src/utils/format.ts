@@ -19,7 +19,7 @@ export const formatAmount = (amount: string, decimals: number) => {
 export const weiToUnits = (amount: string, decimals: number) => formatUnits(EthersBN.from(amount), decimals);
 
 export const formatPercent = (amount: string, decimals: number) => {
-  return new BigNumber(amount).times(100).toFormat(decimals, { ...format, prefix: '%' });
+  return new BigNumber(amount).times(100).toFormat(decimals, { ...format, suffix: '%' });
 };
 
 export const humanizeAmount = (amount: string | undefined, tokenDecimals: number, wantedDecimals: number) => {
@@ -28,4 +28,8 @@ export const humanizeAmount = (amount: string | undefined, tokenDecimals: number
   }
   const units = weiToUnits(amount, tokenDecimals);
   return formatAmount(units, wantedDecimals);
+};
+
+export const formatUsd = (amount: string | undefined) => {
+  return new BigNumber(amount ?? '0').toFormat(2, { ...format, prefix: '$ ' });
 };

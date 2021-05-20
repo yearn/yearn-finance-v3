@@ -5,6 +5,7 @@ import { Card, CardHeader, CardContent, CardElement } from '@components/common';
 
 const StyledCard = styled(Card)`
   padding: 1.2rem 0;
+  margin-bottom: 1.6rem;
 `;
 
 interface Metadata {
@@ -28,6 +29,10 @@ interface DetailCardProps {
 }
 
 export const DetailCard = ({ header, metadata, data, SearchBar }: DetailCardProps) => {
+  if (data.length === 0) {
+    return null;
+  }
+
   return (
     <StyledCard>
       <CardHeader header={header} />
