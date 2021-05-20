@@ -3,10 +3,11 @@ import { Layout } from '@containers';
 
 import { Save } from './Save';
 import { Invest } from './Invest';
-import { Landing } from './Landing';
+import { Home } from './Home';
 import { VaultDetail } from './VaultDetail';
 import { Borrow } from './Borrow';
 import { Vaults } from './Vaults';
+import { Wallet } from './Wallet';
 import { Settings } from './Settings';
 
 const routesMap = [
@@ -28,11 +29,15 @@ const routesMap = [
   },
   {
     path: '/home',
-    component: Landing,
+    component: Home,
   },
   {
     path: '/vaults',
     component: Vaults,
+  },
+  {
+    path: '/wallet',
+    component: Wallet,
   },
   {
     path: '/settings',

@@ -9,28 +9,21 @@ const StyledCard = styled(Card)`
   margin-bottom: 1.6rem;
 `;
 
-interface Item {
+interface InfoCardProps {
   header: string;
   content?: string;
   Component?: ReactNode;
-}
-
-interface SummaryCardProps {
-  header?: string;
-  items: Item[];
   variant?: 'primary' | 'surface';
 }
 
-export const SummaryCard = ({ header, items, variant }: SummaryCardProps) => {
+export const InfoCard = ({ header, content, Component, variant }: InfoCardProps) => {
   return (
     <StyledCard variant={variant}>
-      {header && <CardHeader header={header} />}
-      <CardContent wrap>
-        {items.map((item) => (
-          <CardElement key={item.header} header={item.header} content={item.content}>
-            {item.Component}
-          </CardElement>
-        ))}
+      <CardHeader header={header} />
+      <CardContent>
+        <CardElement content={content} width="36.5rem">
+          {Component}
+        </CardElement>
       </CardContent>
     </StyledCard>
   );
