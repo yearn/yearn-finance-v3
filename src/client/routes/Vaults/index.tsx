@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, VaultsActions, VaultsSelectors } from '@store';
+import { ModalsActions, VaultsActions, VaultsSelectors, TokensActions } from '@store';
 import { Box, Button } from '@components/common';
 import { SummaryCard, DetailCard, SearchBar, RecomendationsCard } from '@components/app';
-import { formatPercent, humanizeAmount, formatUsd } from '@src/utils';
+import { formatPercent, humanizeAmount, formatUsd, USDC_DECIMALS } from '@src/utils';
 
 const Container = styled.div`
   margin: 1.6rem;
@@ -79,6 +79,7 @@ export const Vaults = () => {
   useEffect(() => {
     if (selectedAddress) {
       dispatch(VaultsActions.getUserVaultsData({}));
+      dispatch(TokensActions.getUserTokens({}));
     }
   }, [selectedAddress]);
 
@@ -96,7 +97,6 @@ export const Vaults = () => {
         ]}
         variant="surface"
       />
-
       <RecomendationsCard
         header="Recommendations"
         items={recomendations.map(({ token, apyData }) => ({
@@ -109,7 +109,6 @@ export const Vaults = () => {
           onAction: () => console.log('Go'),
         }))}
       />
-
       <DetailCard
         header="Deposits"
         metadata={[
@@ -128,12 +127,11 @@ export const Vaults = () => {
           address: vault.token.address,
           symbol: vault.token.symbol,
           name: vault.name,
-          deposited: humanizeAmount(vault.userDepositedUsdc, vault.token.decimals, 2),
-          wallet: humanizeAmount(vault.token.balanceUsdc, vault.token.decimals, 2),
+          deposited: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
+          wallet: `$ ${humanizeAmount(vault.token.balanceUsdc, USDC_DECIMALS, 2)}`,
           apy: formatPercent(vault.apyData, 2),
         }))}
       />
-
       <DetailCard
         header="Opportunities"
         metadata={[
@@ -151,7 +149,7 @@ export const Vaults = () => {
           address: vault.token.address,
           symbol: vault.token.symbol,
           name: vault.name,
-          vaultBalanceUsdc: humanizeAmount(vault.vaultBalanceUsdc, vault.token.decimals, 2),
+          vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 2)}`,
           apy: formatPercent(vault.apyData, 2),
         }))}
         SearchBar={

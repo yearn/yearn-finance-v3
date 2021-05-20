@@ -48,7 +48,7 @@ const tokensReducer = createReducer(initialState, (builder) => {
     .addCase(getUserTokens.pending, (state, { meta }) => {
       const tokenAddresses = meta.arg.addresses;
       tokenAddresses?.forEach((address) => {
-        // TODO need to initiate actionsMap somewhere. this will explode.
+        checkAndInitUserTokenStatus(state, address);
         state.statusMap.user.userTokensActiosMap[address].get = { loading: true };
       });
       state.statusMap.user.getUserTokens = { loading: true };
@@ -90,3 +90,9 @@ const tokensReducer = createReducer(initialState, (builder) => {
 });
 
 export default tokensReducer;
+
+function checkAndInitUserTokenStatus(state: TokensState, tokenAddress: string) {
+  const actionsMap = state.statusMap.user.userTokensActiosMap[tokenAddress];
+  if (actionsMap) return;
+  state.statusMap.user.userTokensActiosMap[tokenAddress] = { ...initialUserTokenActionsMap };
+}
