@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { VaultsActions, VaultsSelectors } from '@store';
+import { TokensActions, VaultsActions, VaultsSelectors } from '@store';
 import { Box, Button } from '@components/common';
 import { SummaryCard, DetailCard, SearchBar, RecomendationsCard } from '@components/app';
 import { formatPercent, humanizeAmount } from '@src/utils';
@@ -63,6 +63,7 @@ export const Vaults = () => {
   useEffect(() => {
     if (selectedAddress) {
       dispatch(VaultsActions.getUserVaultsData({}));
+      dispatch(TokensActions.getUserTokens({}));
     }
   }, [selectedAddress]);
 
