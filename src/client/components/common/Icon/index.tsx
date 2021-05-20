@@ -12,6 +12,8 @@ import { ReactComponent as TelegramIcon } from '@assets/icons/telegram.svg';
 import { ReactComponent as TwitterIcon } from '@assets/icons/twitter.svg';
 import { ReactComponent as VaultIcon } from '@assets/icons/vault.svg';
 import { ReactComponent as WalletIcon } from '@assets/icons/wallet.svg';
+import { ReactComponent as HelpIcon } from '@assets/icons/help.svg';
+import { ReactComponent as CloseIcon } from '@assets/icons/close.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
@@ -44,4 +46,6 @@ export {
   TwitterIcon,
   VaultIcon,
   WalletIcon,
+  HelpIcon,
+  CloseIcon,
 };

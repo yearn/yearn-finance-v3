@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { VaultsActions, VaultsSelectors } from '@store';
+import { ModalsActions, VaultsActions, VaultsSelectors } from '@store';
 import { Box, Button } from '@components/common';
 import { SummaryCard, DetailCard, SearchBar, RecomendationsCard } from '@components/app';
 import { formatPercent, humanizeAmount, formatUsd } from '@src/utils';
@@ -66,6 +66,8 @@ export const Vaults = () => {
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
 
+  const activeModal = useAppSelector(({ modals }) => modals.activeModal);
+
   useEffect(() => {
     dispatch(VaultsActions.initiateSaveVaults());
   }, []);
@@ -82,6 +84,9 @@ export const Vaults = () => {
 
   return (
     <Container>
+      active modal: {activeModal}
+      <button onClick={() => dispatch(ModalsActions.openModal({ modalName: 'test' }))}>Open test modal</button>
+      <button onClick={() => dispatch(ModalsActions.closeModal())}>close modal</button>
       <SummaryCard
         header="My Portfolio"
         items={[

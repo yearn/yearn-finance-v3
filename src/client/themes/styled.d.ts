@@ -43,6 +43,7 @@ declare module 'styled-components' {
       navbar: number;
       sidemenu: number;
       navSidemenu: number;
+      modals: number;
       onboardModal: number;
     };
     devices: Devices;
