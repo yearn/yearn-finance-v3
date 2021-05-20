@@ -15,51 +15,6 @@ const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVa
 const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMap.vaultsActionsStatusMap;
 const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 
-const selectSaveVaults = createSelector(
-  [
-    selectVaultsState,
-    selectTokensMap,
-    selectUserVaultsMap,
-    selectUserTokensMap,
-    selectVaultsAllowancesMap,
-    selectUserTokensAllowancesMap,
-  ],
-  (vaultsState, tokensMap, userVaultsMap, userTokensMap, vaultsAllowancesMap, userTokensAllowancesMap): VaultView[] => {
-    const { vaultsAddresses, vaultsMap } = vaultsState;
-    const vaults: VaultView[] = vaultsAddresses.map((address) => {
-      const vaultData = vaultsMap[address];
-      const tokenData = tokensMap[vaultData.tokenId];
-      const userVaultData = userVaultsMap[address]?.DEPOSIT;
-      const userTokenData = userTokensMap[vaultData.tokenId];
-      const allowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
-      const currentAllowance = allowancesMap[address] ?? '0';
-      return {
-        address: vaultData.address,
-        name: vaultData.name,
-        vaultBalance: vaultData.underlyingTokenBalance.amount,
-        vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
-        depositLimit: vaultData.metadata.depositLimit,
-        apyData: vaultData.metadata.apy?.recommended.toString() ?? '0',
-        userDeposited: userVaultData?.underlyingTokenBalance.amount ?? '0',
-        userDepositedUsdc: userVaultData?.underlyingTokenBalance.amountUsdc ?? '0',
-        allowancesMap: vaultsAllowancesMap[address] ?? {},
-        approved: new BigNumber(currentAllowance).gt(0),
-        token: {
-          address: tokenData?.address,
-          name: tokenData?.name,
-          symbol: tokenData?.symbol,
-          decimals: parseInt(tokenData?.decimals),
-          icon: tokenData?.icon,
-          balance: userTokenData?.balance ?? '0',
-          balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-          allowancesMap: allowancesMap,
-        },
-      };
-    });
-    return vaults;
-  }
-);
-
 const selectVaults = createSelector(
   [
     selectVaultsState,
@@ -99,6 +54,7 @@ const selectVaults = createSelector(
           icon: tokenData?.icon,
           balance: userTokenData?.balance ?? '0',
           balanceUsdc: userTokenData?.balanceUsdc ?? '0',
+          priceUsdc: tokenData?.priceUsdc ?? '0',
           allowancesMap: allowancesMap,
         },
       };
@@ -162,13 +118,13 @@ const selectRecomendations = createSelector([selectVaults], (vaults) => {
 
 export const VaultsSelectors = {
   selectVaultsState,
+  selectVaults,
   selectUserVaultsMap,
   selectUserTokensMap,
   selectTokensMap,
   selectSelectedVaultAddress,
   selectVaultsActionsStatusMap,
   selectVaultsStatusMap,
-  selectSaveVaults,
   selectVaultsGeneralStatus,
   selectSelectedVault,
   selectSelectedVaultActionsStatusMap,

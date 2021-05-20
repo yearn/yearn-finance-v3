@@ -81,7 +81,7 @@ export const Save = () => {
   const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
   const generalVaultsStatus = useAppSelector(VaultsSelectors.selectVaultsGeneralStatus);
-  const vaults = useAppSelector(VaultsSelectors.selectSaveVaults);
+  const vaults = useAppSelector(VaultsSelectors.selectDepositedVaults);
   let assetList;
 
   if (!generalVaultsStatus.loading && !generalVaultsStatus.error) {

@@ -384,7 +384,7 @@
         "pricePerShare": "1008284529906675079",
         "migrationAvailable": false,
         "latestVaultAddress": "0xe11ba472F74869176652C35D30dB89854b5ae84D",
-        "depositLimit": "20000000000000000000000000",
+        "depositLimit": "200000000000000000",
         "emergencyShutdown": false,
 
         "controller": "0.1",

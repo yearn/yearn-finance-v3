@@ -13,6 +13,7 @@ const initialState: TokensState = {
   tokensAddresses: [],
   tokensMap: {},
   user: {
+    userTokensAddresses: [],
     userTokensMap: {},
     userTokensAllowancesMap: {},
   },
@@ -59,10 +60,13 @@ const tokensReducer = createReducer(initialState, (builder) => {
         state.statusMap.user.userTokensActiosMap[address].get = {};
       });
 
+      const fetchedTokenAddesses: string[] = [];
       userTokens.forEach((userToken) => {
+        fetchedTokenAddesses.push(userToken.address);
         state.user.userTokensMap[userToken.address] = userToken;
       });
 
+      state.user.userTokensAddresses = union(state.user.userTokensAddresses, fetchedTokenAddesses);
       state.statusMap.user.getUserTokens = {};
     })
     .addCase(getUserTokens.rejected, (state, { meta, error }) => {
