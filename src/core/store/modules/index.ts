@@ -24,6 +24,7 @@ import { WalletSelectors } from './wallet/wallet.selectors';
 
 import tokensReducer from './tokens/tokens.reducer';
 import { TokensActions } from './tokens/tokens.actions';
+import { TokensSelectors } from './tokens/tokens.selectors';
 
 import ironBankReducer from './ironBank/ironBank.reducer';
 import { IronBankActions } from './ironBank/ironBank.actions';
@@ -55,4 +56,4 @@ export {
 };
 
 // Selectors
-export { VaultsSelectors, WalletSelectors, IronBankSelectors };
+export { VaultsSelectors, WalletSelectors, IronBankSelectors, TokensSelectors };
