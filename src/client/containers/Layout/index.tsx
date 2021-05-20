@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { AppActions, RouteActions, WalletActions } from '@store';
 
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
-import { Navigation, Footer, Navbar } from '@components/app';
+import { Navigation, Navbar, Modals } from '@components/app';
 
 const StyledLayout = styled.div`
   display: flex;
@@ -47,6 +47,7 @@ export const Layout: FC = ({ children }) => {
 
   return (
     <StyledLayout>
+      <Modals />
       <Navigation collapsedSidebar={collapsedSidebar} />
 
       <Content collapsedSidebar={collapsedSidebar}>

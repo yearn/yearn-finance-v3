@@ -5,6 +5,7 @@ import { EthereumAddress } from './Ethereum';
 
 export interface RootState {
   app: AppState;
+  modals: ModalsState;
   route: RouteState;
   theme: ThemeState;
   vaults: VaultsState;
@@ -19,6 +20,9 @@ export interface AppState {
   error: string | undefined;
 }
 
+export interface ModalsState {
+  activeModal: string | undefined;
+}
 export interface RouteState {
   path: string | undefined;
 }

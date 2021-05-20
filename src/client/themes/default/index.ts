@@ -68,6 +68,7 @@ const sharedTheme: SharedTheme = {
     navbar: 400,
     sidemenu: 500,
     navSidemenu: 1000,
+    modals: 1099,
     onboardModal: 1100,
   },
   devices: {

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { TokensActions, VaultsActions, VaultsSelectors } from '@store';
+import { ModalsActions, VaultsActions, VaultsSelectors, TokensActions } from '@store';
 import { Box, Button } from '@components/common';
 import { SummaryCard, DetailCard, SearchBar, RecomendationsCard } from '@components/app';
 import { formatPercent, humanizeAmount, formatUsd, USDC_DECIMALS } from '@src/utils';
@@ -66,6 +66,8 @@ export const Vaults = () => {
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
 
+  const activeModal = useAppSelector(({ modals }) => modals.activeModal);
+
   useEffect(() => {
     dispatch(VaultsActions.initiateSaveVaults());
   }, []);
@@ -83,6 +85,9 @@ export const Vaults = () => {
 
   return (
     <Container>
+      active modal: {activeModal}
+      <button onClick={() => dispatch(ModalsActions.openModal({ modalName: 'test' }))}>Open test modal</button>
+      <button onClick={() => dispatch(ModalsActions.closeModal())}>close modal</button>
       <SummaryCard
         header="My Portfolio"
         items={[
@@ -92,7 +97,6 @@ export const Vaults = () => {
         ]}
         variant="surface"
       />
-
       <RecomendationsCard
         header="Recommendations"
         items={recomendations.map(({ token, apyData }) => ({
@@ -105,7 +109,6 @@ export const Vaults = () => {
           onAction: () => console.log('Go'),
         }))}
       />
-
       <DetailCard
         header="Deposits"
         metadata={[
@@ -129,7 +132,6 @@ export const Vaults = () => {
           apy: formatPercent(vault.apyData, 2),
         }))}
       />
-
       <DetailCard
         header="Opportunities"
         metadata={[
