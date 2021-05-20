@@ -28,11 +28,11 @@ const selectUserTokens = createSelector([selectTokensState], (tokensState): Toke
 
 const selectSummaryData = createSelector([selectTokensState], (tokensState) => {
   const { userTokensAddresses, userTokensMap } = tokensState.user;
-  let totalBalance: BigNumber = new BigNumber(0);
+  let totalBalance: BigNumber = new BigNumber('0');
   if (userTokensAddresses.length) {
     totalBalance = userTokensAddresses.reduce((total, address) => {
       return total.plus(userTokensMap[address]?.balanceUsdc ?? '0');
-    }, new BigNumber(0));
+    }, new BigNumber('0'));
   }
 
   return {
