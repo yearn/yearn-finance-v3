@@ -5,6 +5,9 @@ import { RootState } from '@types';
 import appReducer from './app/app.reducer';
 import { AppActions } from './app/app.actions';
 
+import modalsReducer from './modals/modals.reducer';
+import { ModalsActions } from './modals/modals.actions';
+
 import routeReducer from './route/route.reducer';
 import { RouteActions } from './route/route.actions';
 
@@ -28,6 +31,7 @@ import { IronBankSelectors } from './ironBank/ironBank.selectors';
 
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
+  modals: modalsReducer,
   route: routeReducer,
   theme: themeReducer,
   vaults: vaultsReducer,
@@ -39,7 +43,16 @@ const rootReducer: Reducer<RootState> = combineReducers({
 export default rootReducer;
 
 // Actions
-export { AppActions, VaultsActions, RouteActions, ThemeActions, WalletActions, TokensActions, IronBankActions };
+export {
+  AppActions,
+  VaultsActions,
+  ModalsActions,
+  RouteActions,
+  ThemeActions,
+  WalletActions,
+  TokensActions,
+  IronBankActions,
+};
 
 // Selectors
 export { VaultsSelectors, WalletSelectors, IronBankSelectors };

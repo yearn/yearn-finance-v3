@@ -6,6 +6,7 @@ export * from './Input';
 export * from './Link';
 export * from './List';
 export * from './Logo';
+export * from './Modal';
 export * from './SeparatorLine';
 export * from './Sidemenu';
 export * from './SpinnerLoading';
