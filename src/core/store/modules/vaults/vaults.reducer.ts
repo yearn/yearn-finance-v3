@@ -76,12 +76,17 @@ const vaultsReducer = createReducer(initialState, (builder) => {
     .addCase(getUserVaultsData.pending, (state, { meta }) => {
       const vaultAddresses = meta.arg.vaultAddresses || [];
       vaultAddresses.forEach((address) => {
+        checkAndInitUserVaultStatus(state, address);
         state.statusMap.user.userVaultsActionsStatusMap[address].get = { loading: true };
       });
       state.statusMap.user.getUserVaults = { loading: true };
     })
-    .addCase(getUserVaultsData.fulfilled, (state, { payload: { userVaultsData } }) => {
+    .addCase(getUserVaultsData.fulfilled, (state, { meta, payload: { userVaultsData } }) => {
       const vaultsPositionsMap = parsePositionsIntoMap(userVaultsData);
+      const vaultAddresses = meta.arg.vaultAddresses;
+      vaultAddresses?.forEach((address) => {
+        state.statusMap.user.userVaultsActionsStatusMap[address].get = {};
+      });
 
       userVaultsData.forEach((position) => {
         const address = position.assetAddress;
@@ -89,7 +94,6 @@ const vaultsReducer = createReducer(initialState, (builder) => {
         position.assetAllowances.forEach((allowance) => (allowancesMap[allowance.spender] = allowance.amount));
 
         state.user.vaultsAllowancesMap[address] = allowancesMap;
-        state.statusMap.user.userVaultsActionsStatusMap[address].get = {};
       });
 
       state.user.userVaultsMap = { ...state.user.userVaultsMap, ...vaultsPositionsMap };
@@ -172,6 +176,12 @@ function parsePositionsIntoMap(positions: Position[]): { [vaultAddress: string]:
     vaultsMap[key] = keyBy(value, 'typeId');
   });
   return vaultsMap;
+}
+
+function checkAndInitUserVaultStatus(state: VaultsState, vaultAddress: string) {
+  const actionsMap = state.statusMap.user.userVaultsActionsStatusMap[vaultAddress];
+  if (actionsMap) return;
+  state.statusMap.user.userVaultsActionsStatusMap[vaultAddress] = { ...initialUserVaultsActionsStatusMap };
 }
 
 export default vaultsReducer;

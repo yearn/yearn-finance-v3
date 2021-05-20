@@ -124,8 +124,8 @@ export const Vaults = () => {
           address: vault.token.address,
           symbol: vault.token.symbol,
           name: vault.name,
-          deposited: humanizeAmount(vault.userDepositedUsdc, vault.token.decimals, 2),
-          wallet: humanizeAmount(vault.token.balanceUsdc, vault.token.decimals, 2),
+          deposited: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
+          wallet: `$ ${humanizeAmount(vault.token.balanceUsdc, USDC_DECIMALS, 2)}`,
           apy: formatPercent(vault.apyData, 2),
         }))}
       />
