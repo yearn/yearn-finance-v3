@@ -1,6 +1,8 @@
 import BigNumber from 'bignumber.js';
 import { formatUnits, BigNumber as EthersBN } from '@frameworks/ethers';
 
+export const USDC_DECIMALS = 6;
+
 const format = {
   prefix: '',
   decimalSeparator: '.',

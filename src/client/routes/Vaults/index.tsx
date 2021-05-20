@@ -5,7 +5,7 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { TokensActions, VaultsActions, VaultsSelectors } from '@store';
 import { Box, Button } from '@components/common';
 import { SummaryCard, DetailCard, SearchBar, RecomendationsCard } from '@components/app';
-import { formatPercent, humanizeAmount, formatUsd } from '@src/utils';
+import { formatPercent, humanizeAmount, formatUsd, USDC_DECIMALS } from '@src/utils';
 
 const Container = styled.div`
   margin: 1.6rem;
@@ -147,7 +147,7 @@ export const Vaults = () => {
           address: vault.token.address,
           symbol: vault.token.symbol,
           name: vault.name,
-          vaultBalanceUsdc: humanizeAmount(vault.vaultBalanceUsdc, vault.token.decimals, 2),
+          vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 2)}`,
           apy: formatPercent(vault.apyData, 2),
         }))}
         SearchBar={
