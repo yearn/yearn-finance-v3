@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { VaultsActions, VaultsSelectors } from '@store';
+import { TokensSelectors, VaultsActions, VaultsSelectors } from '@store';
 import { SummaryCard, InfoCard } from '@components/app';
-import { formatUsd } from '@src/utils';
+import { formatUsd, humanizeAmount, USDC_DECIMALS } from '@src/utils';
 
 const Container = styled.div`
   margin: 1.6rem;
@@ -33,6 +33,7 @@ export const Home = () => {
   const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
+  const walletSummary = useAppSelector(TokensSelectors.selectSummaryData);
 
   useEffect(() => {
     dispatch(VaultsActions.initiateSaveVaults());
@@ -60,8 +61,8 @@ export const Home = () => {
           <SummaryCard
             header="Wallet"
             items={[
-              { header: 'Balance', content: `$ 55,000.00` },
-              { header: 'Supported Tokens', content: `02` },
+              { header: 'Balance', content: `$ ${humanizeAmount(walletSummary.totalBalance, USDC_DECIMALS, 2)}` },
+              { header: 'Supported Tokens', content: walletSummary.tokensAmount },
             ]}
             variant="surface"
           />

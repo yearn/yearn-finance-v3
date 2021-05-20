@@ -87,6 +87,7 @@ export interface TokensState {
   tokensAddresses: string[];
   tokensMap: { [address: string]: Token };
   user: {
+    userTokensAddresses: string[];
     userTokensMap: { [address: string]: Balance };
     userTokensAllowancesMap: { [address: string]: AllowancesMap };
   };

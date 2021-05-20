@@ -52,6 +52,7 @@ const selectCyTokens = createSelector(
           icon: tokenData?.icon,
           balance: userTokenData?.balance ?? '0',
           balanceUsdc: userTokenData?.balanceUsdc ?? '0',
+          priceUsdc: tokenData?.priceUsdc ?? '0',
           allowancesMap: allowancesMap,
         },
       };
