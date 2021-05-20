@@ -28,7 +28,7 @@ export interface TokenView {
   icon: string | undefined;
   balance: string;
   balanceUsdc: string;
-  // priceUsdc: string;
+  priceUsdc: string;
   allowancesMap: { [tokenAddress: string]: string };
 }
 

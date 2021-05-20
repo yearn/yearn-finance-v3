@@ -19,7 +19,7 @@ const selectUserTokens = createSelector([selectTokensState], (tokensState): Toke
       balance: userTokenData?.balance ?? '0',
       balanceUsdc: userTokenData?.balanceUsdc ?? '0',
       allowancesMap: allowancesMap,
-      // priceUsdc: tokenData?.priceUsdc ?? '0',
+      priceUsdc: userTokenData?.priceUsdc ?? '0',
     };
   });
   return tokens;

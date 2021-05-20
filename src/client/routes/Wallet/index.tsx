@@ -94,7 +94,7 @@ export const Wallet = () => {
           symbol: token.symbol,
           name: token.name,
           balance: humanizeAmount(token.balance, token.decimals, 2),
-          price: '$ 1.01',
+          price: humanizeAmount(token.priceUsdc, USDC_DECIMALS, 2),
           value: humanizeAmount(token.balanceUsdc, USDC_DECIMALS, 2),
         }))}
       />

@@ -2,6 +2,7 @@ import { notify } from '@frameworks/blocknative';
 import { TokenService, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider, Balance, Token } from '@types';
 import { getContract } from '@frameworks/ethers';
 import erc20Abi from './contracts/erc20.json';
+import { unionBy } from 'lodash';
 
 export class TokenServiceImpl implements TokenService {
   private yearnSdk: YearnSdk;
@@ -14,7 +15,11 @@ export class TokenServiceImpl implements TokenService {
 
   public async getSupportedTokens(): Promise<Token[]> {
     const yearn = this.yearnSdk;
-    return await yearn.vaults.tokens();
+    const [zapperTokens, vaultsTokens]: [Token[], Token[]] = await Promise.all([
+      yearn.tokens.supported(),
+      yearn.vaults.tokens(),
+    ]);
+    return unionBy(zapperTokens, vaultsTokens, 'address');
   }
 
   public async getTokensDynamicData(addresses: string[]): Promise<TokenDynamicData[]> {
