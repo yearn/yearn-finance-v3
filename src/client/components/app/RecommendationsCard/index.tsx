@@ -61,6 +61,10 @@ interface RecommendationsProps {
 }
 
 export const RecomendationsCard = ({ header, items }: RecommendationsProps) => {
+  if (items.length === 0) {
+    return null;
+  }
+
   return (
     <ContainerCard>
       <CardHeader header={header} />
