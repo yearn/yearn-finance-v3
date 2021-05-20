@@ -36,24 +36,18 @@ const getUserTokens = createAsyncThunk<{ userTokens: Balance[] }, { addresses?: 
   }
 );
 
-const approve = createAsyncThunk<{ amount: string }, { tokenAddress: string; spenderAddress: string }, ThunkAPI>(
-  'tokens/approve',
-  async ({ tokenAddress, spenderAddress }, { extra, getState, rejectWithValue }) => {
-    // TODO make it possible to receive approve amount and make needed checks.
-    const { tokenService } = extra.services;
-    const amount = extra.config.MAX_UINT256;
-    const allowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
-    const allowance = allowancesMap[spenderAddress] ?? '0';
-    const approved = new BigNumber(allowance).gt(0);
-    if (approved) {
-      return rejectWithValue('ALREADY_APPROVED');
-    }
+const approve = createAsyncThunk<
+  { amount: string },
+  { tokenAddress: string; spenderAddress: string; amountToApprove?: string },
+  ThunkAPI
+>('tokens/approve', async ({ tokenAddress, spenderAddress, amountToApprove }, { extra, getState, rejectWithValue }) => {
+  const { tokenService } = extra.services;
+  const amount = amountToApprove ?? extra.config.MAX_UINT256;
 
-    await tokenService.approve({ tokenAddress, spenderAddress, amount });
+  await tokenService.approve({ tokenAddress, spenderAddress, amount });
 
-    return { amount };
-  }
-);
+  return { amount };
+});
 
 export const TokensActions = {
   getTokens,
