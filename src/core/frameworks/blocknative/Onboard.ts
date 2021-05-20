@@ -4,6 +4,7 @@ import { API } from 'bnc-onboard/dist/src/interfaces';
 import { getConfig } from '@config';
 import { getNetworkId } from '@utils';
 import { Wallet, Subscriptions, EthereumNetwork, Theme } from '@types';
+import { getAddress } from '@ethersproject/address';
 
 export class BlocknativeWalletImpl implements Wallet {
   private onboard?: API;
@@ -13,7 +14,8 @@ export class BlocknativeWalletImpl implements Wallet {
   }
 
   get selectedAddress() {
-    return this.getState()?.address;
+    const address = this.getState()?.address;
+    return address ? getAddress(address) : undefined;
   }
 
   get networkVersion() {

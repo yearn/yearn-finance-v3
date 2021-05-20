@@ -2974,10 +2974,10 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
 
-"@yfi/sdk@0.0.25":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-0.0.25.tgz#0a84c9f1e9912fe57b1f025438ee78f215b8881a"
-  integrity sha512-8cTZgXpKKlGheJKp8whupf8UD2fJAoVC+65hNRwSpSL+Po+dOghVnpO2+iYcY+sxk7xWRBzOVL2NrZiipjn6sA==
+"@yfi/sdk@0.0.27":
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-0.0.27.tgz#f6e102a64af421d7c7269d4db84b0023009f591b"
+  integrity sha512-RKMo7/VkaqeyRwtzElKuEqIHzoGOkIx7aOjq5SCvHme3/jKiO1U2GQkP8bGyYSbPu1e2MiUs/BZVN+hO4bxByg==
   dependencies:
     apollo-cache-inmemory "^1.6.6"
     apollo-client "^2.6.10"

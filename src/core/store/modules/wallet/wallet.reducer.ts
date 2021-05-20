@@ -1,3 +1,4 @@
+import { getAddress } from '@ethersproject/address';
 import { createReducer } from '@reduxjs/toolkit';
 import { WalletState } from '@types';
 import { WalletActions } from './wallet.actions';
@@ -20,7 +21,7 @@ const walletReducer = createReducer(initialState, (builder) => {
       state.name = walletName;
     })
     .addCase(addressChange, (state, { payload: { address } }) => {
-      state.selectedAddress = address;
+      state.selectedAddress = getAddress(address);
     })
     .addCase(networkChange, (state, { payload: { network } }) => {
       state.networkVersion = network;
