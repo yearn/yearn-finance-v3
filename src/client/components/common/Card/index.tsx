@@ -40,7 +40,7 @@ export interface CardProps extends StyledSystemProps {
 }
 
 const StyledDiv = styled.div<CardProps>`
-  border-radius: 1.5rem;
+  border-radius: 0.8rem;
   padding: 1.7rem 1.1rem;
   min-width: fit-content;
   ${variantStyle};
