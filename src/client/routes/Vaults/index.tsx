@@ -15,6 +15,18 @@ const SearchBarContainer = styled.div`
   margin: 1.2rem;
 `;
 
+const ActionButton = styled(Button)`
+  background: transparent;
+  color: ${({ theme }) => theme.colors.actionButton};
+  border: 2px solid ${({ theme }) => theme.colors.actionButton};
+  margin-right: 1.2rem;
+  padding: 0 1.6rem;
+
+  &:last-child {
+    margin-right: 0;
+  }
+`;
+
 interface TokenProps {
   address: string;
   symbol: string;
@@ -41,15 +53,15 @@ const Actions = ({ type }: ActionProps) => {
   switch (type) {
     case 'deposits':
       return (
-        <Box display="flex" flexDirection="row" alignItems="center">
-          <Button>Invest</Button>
-          <Button>Withdraw</Button>
+        <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" flexDirection="row" alignItems="center">
+          <ActionButton>Invest</ActionButton>
+          <ActionButton>Withdraw</ActionButton>
         </Box>
       );
     case 'opportunities':
       return (
-        <Box display="flex" flexDirection="row" alignItems="center">
-          <Button>Deposit</Button>
+        <Box display="grid" flexDirection="row" alignItems="center">
+          <ActionButton>Deposit</ActionButton>
         </Box>
       );
   }
@@ -95,7 +107,7 @@ export const Vaults = () => {
           { header: 'Earnings', content: `${formatUsd(totalEarnings)}` },
           { header: 'Est. Yearly Yield', content: `${formatUsd(estYearlyYeild)}` },
         ]}
-        variant="surface"
+        variant="secondary"
       />
       <RecomendationsCard
         header="Recommendations"

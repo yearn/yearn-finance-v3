@@ -13,7 +13,7 @@ const StyledCard = styled(Card)<{ className: string }>`
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
 
   &.selected {
-    background-color: ${({ theme }) => theme.colors.onSurfaceVariantA};
+    background-color: ${({ theme }) => theme.colors.onSurfaceH2};
   }
 `;
 

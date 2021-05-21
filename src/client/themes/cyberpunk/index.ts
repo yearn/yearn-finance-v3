@@ -5,28 +5,34 @@ const cyberpunkTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
     primary: '#0CA7C9',
+    background: '#3D305F',
+    surface: '#523C6E',
+
     primaryVariant: '#7AF6FF',
 
-    secondary: '#D35290',
-    secondaryVariantA: '#BB6FA1',
-    secondaryVariantB: '#FBD282',
+    secondary: '#FBD282',
+    secondaryVariantA: '#523C6E',
+    secondaryVariantB: '#BB6FA1',
 
-    onPrimary: '#0CA7C9',
+    surfaceVariantA: '#594177',
+    surfaceVariantB: '#523C6E',
+
+    selectionBar: '#D35290',
+
+    onPrimary: '#7AF6FF',
     onPrimaryVariant: '#FBD282',
-
-    background: '#3D305F',
     onBackground: '#FBD282',
 
-    surface: '#523C6E',
-    surfaceVariant: '#594177',
-    onSurface: '#D35290',
-    onSurfaceVariantA: '#BB6FA1',
-    onSurfaceVariantB: '#0CA7C9',
+    onSurfaceH1: '#D35290',
+    onSurfaceH2: '#0CA7C9',
+    onSurfaceH2Hover: '#FBD282',
+    onSurfaceSH1: '#BB6FA1',
+    onSurfaceSH1Hover: '#523C6E',
+
+    actionButton: '#BB6FA1',
 
     upTrend: '#ADFF00',
-    downTrend: '#FF002F',
-
-    hoverHbar: '#D35290',
+    downTrend: '#DE0B3B',
   },
 };
 

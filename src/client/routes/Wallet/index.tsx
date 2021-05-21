@@ -67,7 +67,7 @@ export const Wallet = () => {
           { header: 'Balance', content: `$ ${humanizeAmount(totalBalance, USDC_DECIMALS, 2)}` },
           { header: 'Tokens Owned', content: tokensAmount },
         ]}
-        variant="surface"
+        variant="secondary"
       />
 
       <DetailCard

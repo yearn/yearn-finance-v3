@@ -62,28 +62,34 @@ declare module 'styled-components' {
   export interface DefaultTheme extends SharedTheme {
     colors: {
       primary: string;
+      background: string;
+      surface: string;
+
       primaryVariant: string;
 
       secondary: string;
       secondaryVariantA: string;
       secondaryVariantB: string;
 
+      surfaceVariantA: string;
+      surfaceVariantB: string;
+
+      selectionBar: string;
+
       onPrimary: string;
       onPrimaryVariant: string;
-
-      background: string;
       onBackground: string;
 
-      surface: string;
-      surfaceVariant: string;
-      onSurface: string;
-      onSurfaceVariantA: string;
-      onSurfaceVariantB: string;
+      onSurfaceH1: string;
+      onSurfaceH2: string;
+      onSurfaceH2Hover: string;
+      onSurfaceSH1: string;
+      onSurfaceSH1Hover: string;
+
+      actionButton: string;
 
       upTrend: string;
       downTrend: string;
-
-      hoverHbar: string;
     };
   }
 

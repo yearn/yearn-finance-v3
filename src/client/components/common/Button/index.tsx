@@ -37,9 +37,9 @@ const StyledButton = styled.button`
   }
 
   &.outline {
-    border-color: ${(props) => props.color || props.theme.oldColors.primary};
+    border-color: ${(props) => props.color || props.theme.colors.primary};
     background: transparent;
-    color: ${(props) => props.color || props.theme.oldColors.primary};
+    color: ${(props) => props.color || props.theme.colors.primary};
   }
 `;
 

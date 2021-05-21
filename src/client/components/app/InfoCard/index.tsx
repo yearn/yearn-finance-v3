@@ -13,7 +13,7 @@ interface InfoCardProps {
   header: string;
   content?: string;
   Component?: ReactNode;
-  variant?: 'primary' | 'surface';
+  variant?: 'primary' | 'secondary';
 }
 
 export const InfoCard = ({ header, content, Component, variant }: InfoCardProps) => {
