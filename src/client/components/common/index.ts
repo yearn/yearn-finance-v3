@@ -12,3 +12,4 @@ export * from './Sidemenu';
 export * from './SpinnerLoading';
 export * from './Text';
 export * from './Toggle';
+export * from './TokenDropdown';
