@@ -19,12 +19,7 @@ const ActionButton = styled(Button)`
   background: transparent;
   color: ${({ theme }) => theme.colors.actionButton};
   border: 2px solid ${({ theme }) => theme.colors.actionButton};
-  margin-right: 1.2rem;
   padding: 0 1.6rem;
-
-  &:last-child {
-    margin-right: 0;
-  }
 `;
 
 interface TokenProps {
@@ -53,7 +48,13 @@ const Actions = ({ type }: ActionProps) => {
   switch (type) {
     case 'deposits':
       return (
-        <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" flexDirection="row" alignItems="center">
+        <Box
+          display="grid"
+          gridTemplateColumns="repeat(2, 1fr)"
+          gridGap="1.2rem"
+          flexDirection="row"
+          alignItems="center"
+        >
           <ActionButton>Invest</ActionButton>
           <ActionButton>Withdraw</ActionButton>
         </Box>
