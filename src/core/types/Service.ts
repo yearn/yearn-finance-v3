@@ -9,8 +9,8 @@ import {
   Vault,
   VaultDynamic,
   Balance,
+  Integer,
 } from '@types';
-import { Integer } from '@yfi/sdk';
 
 export interface UserService {}
 
