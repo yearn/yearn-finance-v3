@@ -27,7 +27,7 @@ const initialState: TokensState = {
   },
 };
 
-const { getTokens, getTokensDynamicData, getUserTokens, approve } = TokensActions;
+const { getTokens, getTokensDynamicData, getUserTokens, approve, getTokenAllowance } = TokensActions;
 
 const tokensReducer = createReducer(initialState, (builder) => {
   builder
@@ -90,6 +90,26 @@ const tokensReducer = createReducer(initialState, (builder) => {
         const address = tokenDynamicData.address;
         state.tokensMap[address] = { ...state.tokensMap[address], ...tokenDynamicData };
       });
+    })
+    .addCase(getTokenAllowance.pending, (state, { meta }) => {
+      const { tokenAddress } = meta.arg;
+      checkAndInitUserTokenStatus(state, tokenAddress);
+      state.statusMap.user.userTokensActiosMap[tokenAddress].getAllowances = { loading: true };
+      state.statusMap.user.getUserTokensAllowances = { loading: true };
+    })
+    .addCase(getTokenAllowance.fulfilled, (state, { meta, payload: { allowance } }) => {
+      const { tokenAddress, spenderAddress } = meta.arg;
+      state.user.userTokensAllowancesMap[tokenAddress] = {
+        ...state.user.userTokensAllowancesMap[tokenAddress],
+        [spenderAddress]: allowance,
+      };
+      state.statusMap.user.userTokensActiosMap[tokenAddress].getAllowances = {};
+      state.statusMap.user.getUserTokensAllowances = {};
+    })
+    .addCase(getTokenAllowance.rejected, (state, { meta, error }) => {
+      const { tokenAddress } = meta.arg;
+      state.statusMap.user.userTokensActiosMap[tokenAddress].getAllowances = { error: error.message };
+      state.statusMap.user.getUserTokensAllowances = { error: error.message };
     });
 });
 
