@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { TokenDynamicData, Token, Balance } from '@types';
-import BigNumber from 'bignumber.js';
+import { TokenDynamicData, Token, Balance, Integer } from '@types';
 
 const getTokens = createAsyncThunk<{ tokensData: Token[] }, string | undefined, ThunkAPI>(
   'tokens/getTokens',
@@ -36,6 +35,21 @@ const getUserTokens = createAsyncThunk<{ userTokens: Balance[] }, { addresses?: 
   }
 );
 
+const getTokenAllowance = createAsyncThunk<
+  { allowance: Integer },
+  { tokenAddress: string; spenderAddress: string },
+  ThunkAPI
+>('tokens/getTokenAllowance', async ({ tokenAddress, spenderAddress }, { extra, getState }) => {
+  const accountAddress = getState().wallet.selectedAddress;
+  if (!accountAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
+
+  const { tokenService } = extra.services;
+  const allowance = await tokenService.getTokenAllowance(accountAddress, tokenAddress, spenderAddress);
+  return { allowance };
+});
+
 const approve = createAsyncThunk<
   { amount: string },
   { tokenAddress: string; spenderAddress: string; amountToApprove?: string },
@@ -53,5 +67,6 @@ export const TokensActions = {
   getTokens,
   getTokensDynamicData,
   getUserTokens,
+  getTokenAllowance,
   approve,
 };

@@ -9,6 +9,7 @@ import {
   Vault,
   VaultDynamic,
   Balance,
+  Integer,
 } from '@types';
 
 export interface UserService {}
@@ -36,6 +37,7 @@ export interface TokenService {
   getSupportedTokens: () => Promise<Token[]>;
   getTokensDynamicData: (props: string[]) => Promise<TokenDynamicData[]>;
   getUserTokensData: (accountAddress: string, tokenAddress?: string[]) => Promise<Balance[]>;
+  getTokenAllowance: (accountAddress: string, tokenAddress: string, spenderAddress: string) => Promise<Integer>;
   approve: (props: ApproveProps) => Promise<void>;
   // getTokenRates:
 }
