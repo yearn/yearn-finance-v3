@@ -7,7 +7,7 @@ interface DropdownOption {
   value: string;
 }
 
-export interface TokenDropdownProps {
+export interface SimpleDropdownProps {
   selected: DropdownOption;
   setSelected: (selected: DropdownOption) => void;
   options: DropdownOption[];
@@ -16,7 +16,7 @@ export interface TokenDropdownProps {
   onChange?: (selected: DropdownOption | undefined) => void;
 }
 
-const StyledTokenDropdown = styled.div<{ disabled?: boolean; tabIndex: number }>`
+const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number }>`
   --dropdown-background: ${({ theme }) => theme.colors.onSurface};
   --dropdown-color: ${({ theme }) => theme.colors.primaryVariant};
   --dropdown-hover-color: ${({ theme }) => theme.colors.onSurfaceVariantA};
@@ -97,7 +97,7 @@ const Option = styled.div<{ selected?: boolean }>`
   }
 `;
 
-export const TokenDropdown: FC<TokenDropdownProps> = ({
+export const SimpleDropdown: FC<SimpleDropdownProps> = ({
   selected,
   setSelected,
   options,
@@ -124,7 +124,7 @@ export const TokenDropdown: FC<TokenDropdownProps> = ({
   };
 
   return (
-    <StyledTokenDropdown
+    <StyledSimpleDropdown
       className={className}
       tabIndex={0}
       disabled={disabled}
@@ -143,6 +143,6 @@ export const TokenDropdown: FC<TokenDropdownProps> = ({
           </Option>
         ))}
       </DropdownOptions>
-    </StyledTokenDropdown>
+    </StyledSimpleDropdown>
   );
 };
