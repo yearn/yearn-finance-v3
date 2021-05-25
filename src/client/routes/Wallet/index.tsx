@@ -71,7 +71,7 @@ export const Wallet = () => {
       />
 
       <DetailCard
-        header="Deposits"
+        header="Tokens"
         metadata={[
           {
             key: 'icon',
