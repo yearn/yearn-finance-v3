@@ -34,8 +34,8 @@ const darkTheme: DefaultTheme = {
 
     vaultActionButton: {
       background: 'transparent',
-      borderColor: '#FFFFFF',
-      color: '#FFFFFF',
+      borderColor: '#555555',
+      color: '#555555',
     },
 
     walletButton: {
