@@ -29,10 +29,15 @@ const cyberpunkTheme: DefaultTheme = {
     onSurfaceSH1: '#BB6FA1',
     onSurfaceSH1Hover: '#523C6E',
 
-    actionButton: '#BB6FA1',
-
     upTrend: '#ADFF00',
     downTrend: '#DE0B3B',
+
+    actionButton: '#BB6FA1',
+
+    walletButton: {
+      background: '#0CA7C9',
+      color: '#FBD282',
+    },
   },
 };
 

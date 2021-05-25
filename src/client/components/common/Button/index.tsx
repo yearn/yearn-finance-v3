@@ -18,16 +18,16 @@ const StyledButton = styled.button`
   border: 2px solid transparent;
   border-radius: 0.8rem;
   background: ${(props) => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.background};
   cursor: pointer;
   user-select: none;
   font-size: 1.4rem;
   transition: filter 200ms ease-in-out;
 
-  &,
   a,
   span,
   div {
-    color: ${(props) => props.theme.colors.background};
+    color: inherit;
   }
 
   &:focus {

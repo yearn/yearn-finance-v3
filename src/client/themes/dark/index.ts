@@ -29,10 +29,15 @@ const darkTheme: DefaultTheme = {
     onSurfaceSH1: '#555555',
     onSurfaceSH1Hover: '#FFFFFF',
 
-    actionButton: '#555555',
-
     upTrend: '#C6E11E',
     downTrend: '#FF005E',
+
+    actionButton: '#555555',
+
+    walletButton: {
+      background: '#006AE3',
+      color: '#202020',
+    },
   },
 };
 

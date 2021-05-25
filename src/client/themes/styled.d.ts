@@ -86,39 +86,15 @@ declare module 'styled-components' {
       onSurfaceSH1: string;
       onSurfaceSH1Hover: string;
 
+      upTrend: string;
+      downTrend: string;
+
       actionButton: string;
 
-      upTrend: string;
-      downTrend: string;
-    };
-  }
-
-  // TODO Restructure theme and generic vars shared between themes
-  export interface DefaultTheme extends SharedTheme {
-    colors: {
-      primary: string;
-      primaryVariant: string;
-
-      secondary: string;
-      secondaryVariantA: string;
-      secondaryVariantB: string;
-
-      onPrimary: string;
-      onPrimaryVariant: string;
-
-      background: string;
-      onBackground: string;
-
-      surface: string;
-      surfaceVariant: string;
-      onSurface: string;
-      onSurfaceVariantA: string;
-      onSurfaceVariantB: string;
-
-      upTrend: string;
-      downTrend: string;
-
-      hoverHbar: string;
+      walletButton: {
+        background: string;
+        color: string;
+      };
     };
   }
 

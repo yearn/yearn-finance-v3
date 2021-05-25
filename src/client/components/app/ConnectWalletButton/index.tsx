@@ -8,7 +8,8 @@ interface WalletAddressProps {
 }
 
 const StyledButton = styled(Button)`
-  background-color: ${({ theme }) => theme.colors.onSurfaceH2};
+  background-color: ${({ theme }) => theme.colors.walletButton.background};
+  color: ${({ theme }) => theme.colors.walletButton.color};
 `;
 
 export const ConnectWalletButton = ({ address, onClick }: WalletAddressProps) => {

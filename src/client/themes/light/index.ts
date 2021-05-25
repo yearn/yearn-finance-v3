@@ -29,10 +29,15 @@ const lightTheme: DefaultTheme = {
     onSurfaceSH1: '#888888',
     onSurfaceSH1Hover: '#000000',
 
-    actionButton: '#000000',
-
     upTrend: '#C6E11E',
     downTrend: '#FF005E',
+
+    actionButton: '#000000',
+
+    walletButton: {
+      background: '#006AE3',
+      color: '#FFFFFF',
+    },
   },
 };
 
