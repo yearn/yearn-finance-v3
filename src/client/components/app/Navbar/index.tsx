@@ -22,7 +22,7 @@ const StyledText = styled(Text)`
   font-size: 2.4rem;
   font-weight: bold;
   padding-left: 1rem;
-  color: ${({ theme }) => theme.colors.onBackground};
+  color: ${({ theme }) => theme.colors.secondary};
 `;
 
 const StyledNavbar = styled.nav`

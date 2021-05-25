@@ -19,7 +19,7 @@ const ItemCard = styled(Card)`
 `;
 
 const ItemInfo = styled(Text)`
-  color: ${({ theme }) => theme.colors.onSurface};
+  color: ${({ theme }) => theme.colors.onSurfaceH1};
 `;
 
 const InnerBox = styled(Card)`

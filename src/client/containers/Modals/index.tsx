@@ -27,6 +27,10 @@ const StyledBackdrop = styled.div`
   pointer-events: all;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 0;
+
+  @media (min-width: ${({ theme }) => theme.devices.tablet}px) {
+    backdrop-filter: blur(11px);
+  }
 `;
 
 // TODO dynamic modals list

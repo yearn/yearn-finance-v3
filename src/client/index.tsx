@@ -26,7 +26,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     background-color: ${(props) => props.theme.colors.background};
-    color: ${(props) => props.theme.colors.onBackground};
+    color: ${(props) => props.theme.colors.secondary};
     font-size: 1.6rem;
     overflow: hidden;
     overflow-y: scroll;
