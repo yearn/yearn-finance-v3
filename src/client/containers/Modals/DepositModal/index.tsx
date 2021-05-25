@@ -7,7 +7,6 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 import { Modal, Card, Text, Input, Box, Button, SimpleDropdown } from '@components/common';
 import { humanizeAmount, normalizeAmount } from '@src/utils';
-// import { initialStatus } from '@types';
 
 const StyledModal = styled(Modal)`
   width: 38.4rem;
@@ -107,6 +106,9 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   // const userTokensActionsMap = useAppSelector((state) => state.tokens.statusMap.user.userTokensActiosMap);
   // const selectedVaultActionsStatusMap = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
+  // const getTokenAllowanceStatus = useAppSelector(
+  //   TokensSelectors.selectGetTokenAllowanceStatus(selectedSellTokenAddress)
+  // );
 
   const sellTokensOptions = selectedVault
     ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
@@ -129,7 +131,6 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
     return null;
   }
 
-  // const userTokenAllowanceStatus = userTokensActionsMap[selectedSellTokenAddress]?.getAllowances ?? initialStatus;
   const allowance = selectedVault.token.allowancesMap[selectedVault.address] ?? '0';
   const isApproved = new BigNumber(allowance).gte(normalizeAmount(amount, selectedVault.token.decimals));
 
@@ -143,7 +144,7 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
   return (
     <StyledModal {...props} onClose={onClose}>
       <Text>Invest</Text>
-      {/* {userTokenAllowanceStatus.loading && <SpinnerLoading />} */}
+      {/* {getTokenAllowanceStatus.loading && <SpinnerLoading />} */}
       <TransferContainer variant="primary">
         <BalanceContainer>
           <Text>Wallet Balance</Text>

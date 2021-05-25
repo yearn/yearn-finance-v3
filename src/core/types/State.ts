@@ -96,7 +96,7 @@ export interface TokensState {
     user: {
       getUserTokens: Status;
       getUserTokensAllowances: Status;
-      userTokensActiosMap: { [tokenAddress: string]: UserTokenActionsMap };
+      userTokensActionsMap: { [tokenAddress: string]: UserTokenActionsMap };
     };
   };
 }
