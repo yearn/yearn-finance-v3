@@ -20,6 +20,9 @@ export const formatAmount = (amount: string, decimals: number) => {
 
 export const weiToUnits = (amount: string, decimals: number) => formatUnits(EthersBN.from(amount), decimals);
 
+export const normalizeAmount = (amount: string, decimals: number) =>
+  new BigNumber(amount).div(10 ** decimals).toString();
+
 export const formatPercent = (amount: string, decimals: number) => {
   return new BigNumber(amount).times(100).toFormat(decimals, { ...format, suffix: '%' });
 };

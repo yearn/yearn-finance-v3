@@ -19,16 +19,14 @@ export const SearchBar = <T,>({ searchableData, searchableKeys, onSearch }: Sear
 
   useEffect(() => {
     const filteredData = searchableData.filter((item) => {
-      let matches = false;
-      searchableKeys.forEach((key) => {
+      const matches = searchableKeys.find((key) => {
         const text = get(item, key);
         if (typeof text === 'string') {
-          matches = text.toLowerCase().includes(searchText.toLowerCase());
-          if (matches) return;
+          return text.toLowerCase().includes(searchText.toLowerCase());
         }
+        return false;
       });
-
-      return matches;
+      return !!matches;
     });
     onSearch(filteredData);
   }, [searchText]);

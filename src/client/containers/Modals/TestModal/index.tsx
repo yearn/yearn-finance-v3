@@ -7,12 +7,12 @@ const StyledTestModal = styled(Modal)`
 `;
 
 interface TestModalProps {
-  closeModal: () => void;
+  onClose: () => void;
 }
 
-export const TestModal: FC<TestModalProps> = ({ closeModal, ...props }) => {
+export const TestModal: FC<TestModalProps> = ({ onClose, ...props }) => {
   return (
-    <StyledTestModal {...props} closeModal={closeModal}>
+    <StyledTestModal {...props} onClose={onClose}>
       Test modal
     </StyledTestModal>
   );

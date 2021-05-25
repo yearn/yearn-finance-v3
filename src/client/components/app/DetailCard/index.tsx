@@ -29,7 +29,7 @@ interface DetailCardProps {
 }
 
 export const DetailCard = ({ header, metadata, data, SearchBar }: DetailCardProps) => {
-  if (data.length === 0) {
+  if (data.length === 0 && !SearchBar) {
     return null;
   }
 
@@ -45,7 +45,13 @@ export const DetailCard = ({ header, metadata, data, SearchBar }: DetailCardProp
       {data.map((item, i) => (
         <CardContent key={`content-${i}`}>
           {metadata.map(({ key, width, align, grow, transform }) => (
-            <CardElement key={`element-${key}-${i}`} content={item[key]} width={width} align={align} grow={grow}>
+            <CardElement
+              key={`element-${key}-${i}`}
+              content={transform ? undefined : item[key]}
+              width={width}
+              align={align}
+              grow={grow}
+            >
               {transform && transform(item)}
             </CardElement>
           ))}
