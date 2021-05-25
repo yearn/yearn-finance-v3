@@ -1,5 +1,5 @@
 import { notify } from '@frameworks/blocknative';
-import { TokenService, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider, Balance, Token } from '@types';
+import { TokenService, YearnSdk, TokenDynamicData, ApproveProps, Web3Provider, Balance, Token, Integer } from '@types';
 import { getContract } from '@frameworks/ethers';
 import erc20Abi from './contracts/erc20.json';
 import { unionBy } from 'lodash';
@@ -31,6 +31,20 @@ export class TokenServiceImpl implements TokenService {
   public async getUserTokensData(address: string, tokenAddresses?: string[]): Promise<Balance[]> {
     const yearn = this.yearnSdk;
     return await yearn.tokens.balances(address);
+  }
+
+  public async getTokenAllowance(
+    accountAddress: string,
+    tokenAddress: string,
+    spenderAddress: string
+  ): Promise<Integer> {
+    // TODO use sdk when new method added.
+    // const yearn = this.yearnSdk;
+    // return await yearn.tokens.allowance(address);
+    const signer = this.web3Provider.getSigner();
+    const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
+    const allowance = await erc20Contract.allowance(accountAddress, spenderAddress);
+    return allowance.toString();
   }
 
   public async approve(props: ApproveProps): Promise<void> {

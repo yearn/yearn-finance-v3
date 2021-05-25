@@ -23,50 +23,32 @@ const ActionButton = styled(Button)`
 `;
 
 interface TokenProps {
-  address: string;
+  icon: string;
   symbol: string;
 }
 
-const Token = ({ address, symbol }: TokenProps) => {
+const Token = ({ icon, symbol }: TokenProps) => {
   return (
     <Box display="flex" flexDirection="row" alignItems="center">
-      <img
-        alt={symbol}
-        src={`https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${address}/logo-128.png`}
-        width="36"
-        height="36"
-      />
+      <img alt={symbol} src={icon} width="36" height="36" />
     </Box>
   );
 };
 
 interface ActionProps {
-  type: 'deposits' | 'opportunities';
+  actions: Array<{
+    name: string;
+    handler: () => void;
+  }>;
 }
 
-const Actions = ({ type }: ActionProps) => {
-  switch (type) {
-    case 'deposits':
-      return (
-        <Box
-          display="grid"
-          gridTemplateColumns="repeat(2, 1fr)"
-          gridGap="1.2rem"
-          flexDirection="row"
-          alignItems="center"
-        >
-          <ActionButton>Invest</ActionButton>
-          <ActionButton>Withdraw</ActionButton>
-        </Box>
-      );
-    case 'opportunities':
-      return (
-        <Box display="grid" flexDirection="row" alignItems="center">
-          <ActionButton>Deposit</ActionButton>
-        </Box>
-      );
-  }
-};
+const ActionButtons = ({ actions }: ActionProps) => (
+  <Box display="grid" gridTemplateColumns={`repeat(${actions.length}, 1fr)`} flexDirection="row" alignItems="center">
+    {actions.map(({ name, handler }) => (
+      <Button onClick={handler}>{name}</Button>
+    ))}
+  </Box>
+);
 
 export const Vaults = () => {
   // TODO: Add translation
@@ -78,8 +60,6 @@ export const Vaults = () => {
   const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
-
-  const activeModal = useAppSelector(({ modals }) => modals.activeModal);
 
   useEffect(() => {
     dispatch(VaultsActions.initiateSaveVaults());
@@ -96,11 +76,13 @@ export const Vaults = () => {
     }
   }, [selectedAddress]);
 
+  const depositHandler = (vaultAddress: string) => {
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+    dispatch(ModalsActions.openModal({ modalName: 'deposit' }));
+  };
+
   return (
     <Container>
-      active modal: {activeModal}
-      <button onClick={() => dispatch(ModalsActions.openModal({ modalName: 'test' }))}>Open test modal</button>
-      <button onClick={() => dispatch(ModalsActions.closeModal())}>close modal</button>
       <SummaryCard
         header="My Portfolio"
         items={[
@@ -127,22 +109,35 @@ export const Vaults = () => {
         metadata={[
           {
             key: 'icon',
-            transform: ({ address, symbol }) => <Token address={address} symbol={symbol} />,
+            transform: ({ icon, tokenSymbol }) => <Token icon={icon} symbol={tokenSymbol} />,
             width: '4.8rem',
           },
           { key: 'name', header: 'Name' },
           { key: 'deposited', header: 'Deposited' },
           { key: 'wallet', header: 'Wallet' },
           { key: 'apy', header: 'Return of Investment' },
-          { key: 'actions', transform: () => <Actions type="deposits" />, align: 'flex-end', grow: '1' },
+          {
+            key: 'actions',
+            transform: ({ vaultAddress }) => (
+              <ActionButtons
+                actions={[
+                  { name: 'Invest', handler: () => depositHandler(vaultAddress) },
+                  { name: 'Withdraw', handler: () => console.log('TODO') },
+                ]}
+              />
+            ),
+            align: 'flex-end',
+            grow: '1',
+          },
         ]}
         data={deposits.map((vault) => ({
-          address: vault.token.address,
-          symbol: vault.token.symbol,
+          icon: vault.token.icon ?? '',
+          tokenSymbol: vault.token.symbol,
           name: vault.name,
           deposited: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
           wallet: `$ ${humanizeAmount(vault.token.balanceUsdc, USDC_DECIMALS, 2)}`,
           apy: formatPercent(vault.apyData, 2),
+          vaultAddress: vault.address,
         }))}
       />
       <DetailCard
@@ -150,26 +145,34 @@ export const Vaults = () => {
         metadata={[
           {
             key: 'icon',
-            transform: ({ address, symbol }) => <Token address={address} symbol={symbol} />,
+            transform: ({ icon, tokenSymbol }) => <Token icon={icon} symbol={tokenSymbol} />,
             width: '4.8rem',
           },
           { key: 'name', header: 'Name' },
           { key: 'vaultBalanceUsdc', header: 'Value in $' },
           { key: 'apy', header: 'Growth in %' },
-          { key: 'actions', transform: () => <Actions type="opportunities" />, align: 'flex-end', grow: '1' },
+          {
+            key: 'actions',
+            transform: ({ vaultAddress }) => (
+              <ActionButtons actions={[{ name: 'Deposit', handler: () => depositHandler(vaultAddress) }]} />
+            ),
+            align: 'flex-end',
+            grow: '1',
+          },
         ]}
         data={filteredVaults.map((vault) => ({
-          address: vault.token.address,
-          symbol: vault.token.symbol,
+          icon: vault.token.icon ?? '',
+          tokenSymbol: vault.token.symbol,
           name: vault.name,
           vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 2)}`,
           apy: formatPercent(vault.apyData, 2),
+          vaultAddress: vault.address,
         }))}
         SearchBar={
           <SearchBarContainer>
             <SearchBar
               searchableData={opportunities}
-              searchableKeys={['name', 'token.symbol']}
+              searchableKeys={['name', 'token.symbol', 'token.name']}
               onSearch={(data) => setFilteredVaults(data)}
             />
           </SearchBarContainer>
