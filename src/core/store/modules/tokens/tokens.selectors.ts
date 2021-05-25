@@ -1,11 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState, TokenView, initialStatus } from '@types';
+import { RootState, TokenView } from '@types';
 import BigNumber from 'bignumber.js';
 
 const selectTokensState = (state: RootState) => state.tokens;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectTokensUser = (state: RootState) => state.tokens.user;
 const selectUserTokensStatusMap = (state: RootState) => state.tokens.statusMap;
+
+const selectUserTokensAddresses = (state: RootState) => state.tokens.user.userTokensAddresses;
+const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
 
 const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user): TokenView[] => {
   const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
@@ -28,30 +31,22 @@ const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (to
   return tokens;
 });
 
-const selectSummaryData = createSelector([selectTokensState], (tokensState) => {
-  const { userTokensAddresses, userTokensMap } = tokensState.user;
-  let totalBalance: BigNumber = new BigNumber('0');
-  if (userTokensAddresses.length) {
-    totalBalance = userTokensAddresses.reduce((total, address) => {
-      return total.plus(userTokensMap[address]?.balanceUsdc ?? '0');
-    }, new BigNumber('0'));
+const selectSummaryData = createSelector(
+  [selectUserTokensAddresses, selectUserTokensMap],
+  (userTokensAddresses, userTokensMap) => {
+    let totalBalance: BigNumber = new BigNumber('0');
+    if (userTokensAddresses.length) {
+      totalBalance = userTokensAddresses.reduce((total, address) => {
+        return total.plus(userTokensMap[address]?.balanceUsdc ?? '0');
+      }, new BigNumber('0'));
+    }
+
+    return {
+      totalBalance: totalBalance?.toString() ?? '0',
+      tokensAmount: userTokensAddresses.length.toString(),
+    };
   }
-
-  return {
-    totalBalance: totalBalance?.toString() ?? '0',
-    tokensAmount: userTokensAddresses.length.toString(),
-  };
-});
-
-const selectAllowance = (tokenAddress: string, spenderAddress: string) =>
-  createSelector([selectUserTokens], (userTokens) => {
-    return userTokens.find((token) => token.address === tokenAddress)?.allowancesMap[spenderAddress] ?? '0';
-  });
-
-const selectGetTokenAllowanceStatus = (spenderAddress: string) =>
-  createSelector([selectUserTokensStatusMap], (userTokensStatusMap) => {
-    return userTokensStatusMap.user.userTokensActionsMap[spenderAddress]?.getAllowances ?? initialStatus;
-  });
+);
 
 export const TokensSelectors = {
   selectTokensState,
@@ -60,6 +55,4 @@ export const TokensSelectors = {
   selectUserTokensStatusMap,
   selectUserTokens,
   selectSummaryData,
-  selectAllowance,
-  selectGetTokenAllowanceStatus,
 };

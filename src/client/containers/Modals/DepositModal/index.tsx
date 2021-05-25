@@ -104,11 +104,6 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const [selectedSellTokenAddress, setSelectedSellTokenAddress] = useState(selectedVault?.token.address ?? '');
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
-  // const userTokensActionsMap = useAppSelector((state) => state.tokens.statusMap.user.userTokensActiosMap);
-  // const selectedVaultActionsStatusMap = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
-  // const getTokenAllowanceStatus = useAppSelector(
-  //   TokensSelectors.selectGetTokenAllowanceStatus(selectedSellTokenAddress)
-  // );
 
   const sellTokensOptions = selectedVault
     ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
@@ -131,8 +126,8 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
     return null;
   }
 
-  const allowance = selectedVault.token.allowancesMap[selectedVault.address] ?? '0';
-  const isApproved = new BigNumber(allowance).gte(normalizeAmount(amount, selectedVault.token.decimals));
+  const allowance = selectedSellToken.allowancesMap[selectedVault.address] ?? '0';
+  const isApproved = new BigNumber(allowance).gte(normalizeAmount(amount, selectedSellToken.decimals));
 
   const approve = () =>
     dispatch(
@@ -144,7 +139,6 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
   return (
     <StyledModal {...props} onClose={onClose}>
       <Text>Invest</Text>
-      {/* {getTokenAllowanceStatus.loading && <SpinnerLoading />} */}
       <TransferContainer variant="primary">
         <BalanceContainer>
           <Text>Wallet Balance</Text>
