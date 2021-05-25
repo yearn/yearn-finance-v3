@@ -89,7 +89,11 @@ declare module 'styled-components' {
       upTrend: string;
       downTrend: string;
 
-      actionButton: string;
+      vaultActionButton: {
+        background: string;
+        borderColor: string;
+        color: string;
+      };
 
       walletButton: {
         background: string;

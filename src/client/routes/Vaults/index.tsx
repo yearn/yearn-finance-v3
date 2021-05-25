@@ -15,10 +15,10 @@ const SearchBarContainer = styled.div`
   margin: 1.2rem;
 `;
 
-const ActionButton = styled(Button)`
-  background: transparent;
-  color: ${({ theme }) => theme.colors.actionButton};
-  border: 2px solid ${({ theme }) => theme.colors.actionButton};
+const VaultActionButton = styled(Button)`
+  background: ${({ theme }) => theme.colors.vaultActionButton.background};
+  color: ${({ theme }) => theme.colors.vaultActionButton.color};
+  border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.borderColor};
   padding: 0 1.6rem;
 `;
 
@@ -45,7 +45,7 @@ interface ActionProps {
 const ActionButtons = ({ actions }: ActionProps) => (
   <Box display="grid" gridTemplateColumns={`repeat(${actions.length}, 1fr)`} flexDirection="row" alignItems="center">
     {actions.map(({ name, handler }) => (
-      <Button onClick={handler}>{name}</Button>
+      <VaultActionButton onClick={handler}>{name}</VaultActionButton>
     ))}
   </Box>
 );

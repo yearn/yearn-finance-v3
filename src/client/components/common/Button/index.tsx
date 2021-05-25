@@ -17,7 +17,7 @@ const StyledButton = styled.button`
   height: 2.8rem;
   border: 2px solid transparent;
   border-radius: 0.8rem;
-  background: ${(props) => props.theme.colors.primary};
+  background: ${(props) => props.theme.colors.secondary};
   color: ${(props) => props.theme.colors.background};
   cursor: pointer;
   user-select: none;

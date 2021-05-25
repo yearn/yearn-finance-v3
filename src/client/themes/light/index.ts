@@ -32,7 +32,11 @@ const lightTheme: DefaultTheme = {
     upTrend: '#C6E11E',
     downTrend: '#FF005E',
 
-    actionButton: '#000000',
+    vaultActionButton: {
+      background: 'transparent',
+      borderColor: '#000000',
+      color: '#000000',
+    },
 
     walletButton: {
       background: '#006AE3',

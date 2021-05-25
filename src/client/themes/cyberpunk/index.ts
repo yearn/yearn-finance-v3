@@ -32,7 +32,11 @@ const cyberpunkTheme: DefaultTheme = {
     upTrend: '#ADFF00',
     downTrend: '#DE0B3B',
 
-    actionButton: '#BB6FA1',
+    vaultActionButton: {
+      background: 'transparent',
+      borderColor: '#BB6FA1',
+      color: '#BB6FA1',
+    },
 
     walletButton: {
       background: '#0CA7C9',
