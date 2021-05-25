@@ -127,7 +127,7 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
   }
 
   const allowance = selectedSellToken.allowancesMap[selectedVault.address] ?? '0';
-  const isApproved = new BigNumber(allowance).gte(normalizeAmount(amount, selectedVault.token.decimals));
+  const isApproved = new BigNumber(allowance).gte(normalizeAmount(amount, selectedSellToken.decimals));
 
   const approve = () =>
     dispatch(
