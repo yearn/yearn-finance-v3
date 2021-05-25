@@ -7,6 +7,7 @@ const selectTokensState = (state: RootState) => state.tokens;
 const selectSelectedCyTokenAddress = (state: RootState) => state.ironBank.selectedCyTokenAddress;
 
 const selectCyTokens = createSelector(
+  // TODO use specific selectors for each needed state variable.
   [selectIronBankState, selectTokensState],
   (ironBankState, tokensState): CyToken[] => {
     const {
@@ -62,6 +63,7 @@ const selectCyTokens = createSelector(
 );
 
 const selectIronBankGeneralStatus = createSelector(
+  // TODO use specific selectors for each needed state variable.
   [selectIronBankState],
   (ironBankState): Status => {
     const { statusMap } = ironBankState;
@@ -73,6 +75,7 @@ const selectIronBankGeneralStatus = createSelector(
 );
 
 const selectSelectedCyToken = createSelector(
+  // TODO use specific selectors for each needed state variable.
   [selectCyTokens, selectSelectedCyTokenAddress],
   (cyTokens, selectedCyTokenAddress): CyToken | undefined => {
     if (!selectedCyTokenAddress) {

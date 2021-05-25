@@ -17,15 +17,23 @@ const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 
 const selectVaults = createSelector(
   [
-    selectVaultsState,
+    selectVaultsMap,
+    selectVaultsAddresses,
     selectTokensMap,
     selectUserVaultsMap,
     selectUserTokensMap,
     selectVaultsAllowancesMap,
     selectUserTokensAllowancesMap,
   ],
-  (vaultsState, tokensMap, userVaultsMap, userTokensMap, vaultsAllowancesMap, userTokensAllowancesMap) => {
-    const { vaultsAddresses, vaultsMap } = vaultsState;
+  (
+    vaultsMap,
+    vaultsAddresses,
+    tokensMap,
+    userVaultsMap,
+    userTokensMap,
+    vaultsAllowancesMap,
+    userTokensAllowancesMap
+  ) => {
     const vaults = vaultsAddresses.map((address) => {
       const vaultData = vaultsMap[address];
       const tokenData = tokensMap[vaultData.tokenId];
