@@ -1,12 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState, TokenView } from '@types';
+import { RootState, TokenView, initialStatus } from '@types';
 import BigNumber from 'bignumber.js';
 
 const selectTokensState = (state: RootState) => state.tokens;
+const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
+const selectTokensUser = (state: RootState) => state.tokens.user;
+const selectUserTokensStatusMap = (state: RootState) => state.tokens.statusMap;
 
-const selectUserTokens = createSelector([selectTokensState], (tokensState): TokenView[] => {
-  const { tokensMap } = tokensState;
-  const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = tokensState.user;
+const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user): TokenView[] => {
+  const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
   const tokens = userTokensAddresses.map((address) => {
     const tokenData = tokensMap[address];
     const userTokenData = userTokensMap[address];
@@ -41,8 +43,23 @@ const selectSummaryData = createSelector([selectTokensState], (tokensState) => {
   };
 });
 
+const selectAllowance = (tokenAddress: string, spenderAddress: string) =>
+  createSelector([selectUserTokens], (userTokens) => {
+    return userTokens.find((token) => token.address === tokenAddress)?.allowancesMap[spenderAddress] ?? '0';
+  });
+
+const selectGetTokenAllowanceStatus = (spenderAddress: string) =>
+  createSelector([selectUserTokensStatusMap], (userTokensStatusMap) => {
+    return userTokensStatusMap.user.userTokensActionsMap[spenderAddress]?.getAllowances ?? initialStatus;
+  });
+
 export const TokensSelectors = {
   selectTokensState,
+  selectTokensMap,
+  selectTokensUser,
+  selectUserTokensStatusMap,
   selectUserTokens,
   selectSummaryData,
+  selectAllowance,
+  selectGetTokenAllowanceStatus,
 };
