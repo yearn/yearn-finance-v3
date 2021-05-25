@@ -56,7 +56,7 @@ const SidebarFooter = styled.div``;
 
 const StyledLogo = styled(Logo)`
   height: 2.4rem;
-  fill: ${({ theme }) => theme.colors.background};
+  fill: ${({ theme }) => theme.colors.secondaryVariantA};
 `;
 
 const LinkList = styled.div`
@@ -82,6 +82,7 @@ const RouterLink = styled(Link)`
 
 const LinkIcon = styled(Icon)`
   margin-right: 1.2rem;
+  fill: ${({ theme }) => theme.colors.primaryVariant};
 `;
 
 export const NavSidebar = ({ collapsed }: NavSidebarProps) => {

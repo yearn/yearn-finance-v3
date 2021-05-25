@@ -2,9 +2,10 @@ import { Theme } from '@types';
 import { DefaultTheme } from 'styled-components';
 
 import { cyberpunkTheme } from './cyberpunk';
+import { darkTheme } from './dark';
 import { lightTheme } from './light';
 
-export const AVAILABLE_THEMES: Theme[] = ['light', 'cyberpunk'];
+export const AVAILABLE_THEMES: Theme[] = ['light', 'dark', 'cyberpunk'];
 
 export const getTheme = (theme?: Theme): DefaultTheme => {
   switch (theme) {
@@ -12,6 +13,8 @@ export const getTheme = (theme?: Theme): DefaultTheme => {
       return lightTheme;
     case 'light':
       return lightTheme;
+    case 'dark':
+      return darkTheme;
     case 'cyberpunk':
       return cyberpunkTheme;
     default:

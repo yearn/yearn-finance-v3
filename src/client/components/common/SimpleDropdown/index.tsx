@@ -17,9 +17,9 @@ export interface SimpleDropdownProps {
 }
 
 const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number }>`
-  --dropdown-background: ${({ theme }) => theme.colors.onSurface};
+  --dropdown-background: ${({ theme }) => theme.colors.onSurfaceH1};
   --dropdown-color: ${({ theme }) => theme.colors.primaryVariant};
-  --dropdown-hover-color: ${({ theme }) => theme.colors.onSurfaceVariantA};
+  --dropdown-hover-color: ${({ theme }) => theme.colors.onSurfaceH2};
   --dropdown-selected-color: ${({ theme }) => theme.colors.onPrimaryVariant};
 
   display: flex;

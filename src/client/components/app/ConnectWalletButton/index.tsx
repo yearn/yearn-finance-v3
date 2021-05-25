@@ -7,6 +7,11 @@ interface WalletAddressProps {
   onClick: () => void;
 }
 
+const StyledButton = styled(Button)`
+  background-color: ${({ theme }) => theme.colors.walletButton.background};
+  color: ${({ theme }) => theme.colors.walletButton.color};
+`;
+
 export const ConnectWalletButton = ({ address, onClick }: WalletAddressProps) => {
   const { t } = useAppTranslation('common');
   let buttonMessage;
@@ -18,8 +23,8 @@ export const ConnectWalletButton = ({ address, onClick }: WalletAddressProps) =>
   }
 
   return (
-    <Button onClick={() => onClick && onClick()}>
+    <StyledButton onClick={() => onClick && onClick()}>
       <Text>{buttonMessage}</Text>
-    </Button>
+    </StyledButton>
   );
 };

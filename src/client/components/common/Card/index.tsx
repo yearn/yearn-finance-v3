@@ -8,31 +8,31 @@ import { styledSystem, StyledSystemProps } from '../styledSystem';
 
 const defaultVariant = css`
   background-color: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.onSurface};
+  color: ${({ theme }) => theme.colors.onSurfaceH2};
 `;
 
 const primaryVariant = css`
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.onSurfaceVariantB};
+  background-color: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.onSurfaceH2};
 `;
 
-const surfaceVariant = css`
-  background-color: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.onSurface};
+const secondaryVariant = css`
+  background-color: ${({ theme }) => theme.colors.secondaryVariantA};
+  color: ${({ theme }) => theme.colors.onSurfaceH1};
 `;
 
 const variantStyle = ({ variant }: CardProps) => {
   switch (variant) {
     case 'primary':
       return primaryVariant;
-    case 'surface':
-      return surfaceVariant;
+    case 'secondary':
+      return secondaryVariant;
     default:
       return defaultVariant;
   }
 };
 
-type CardVariant = 'primary' | 'surface';
+type CardVariant = 'primary' | 'secondary';
 
 export interface CardProps extends StyledSystemProps {
   onClick?: () => void;
@@ -40,7 +40,7 @@ export interface CardProps extends StyledSystemProps {
 }
 
 const StyledDiv = styled.div<CardProps>`
-  border-radius: 1.5rem;
+  border-radius: 0.8rem;
   padding: 1.7rem 1.1rem;
   min-width: fit-content;
   ${variantStyle};

@@ -20,7 +20,7 @@ const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boole
     props.selected &&
     `
     cursor: default;
-    border-color: ${props.theme.colors.onSurface};
+    border-color: ${props.theme.colors.onSurfaceH1};
   `};
 
   .themebox-header {
@@ -28,7 +28,7 @@ const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boole
   }
   .themebox-content {
     background: ${(props) => props.themePallete.colors.surface};
-    color: ${(props) => props.themePallete.colors.onSurface};
+    color: ${(props) => props.themePallete.colors.onSurfaceSH1};
     min-height: 10rem;
     padding: 1rem;
   }

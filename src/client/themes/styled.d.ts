@@ -62,57 +62,43 @@ declare module 'styled-components' {
   export interface DefaultTheme extends SharedTheme {
     colors: {
       primary: string;
+      background: string;
+      surface: string;
+
       primaryVariant: string;
 
       secondary: string;
       secondaryVariantA: string;
       secondaryVariantB: string;
 
+      surfaceVariantA: string;
+      surfaceVariantB: string;
+
+      selectionBar: string;
+
       onPrimary: string;
       onPrimaryVariant: string;
-
-      background: string;
       onBackground: string;
 
-      surface: string;
-      surfaceVariant: string;
-      onSurface: string;
-      onSurfaceVariantA: string;
-      onSurfaceVariantB: string;
+      onSurfaceH1: string;
+      onSurfaceH2: string;
+      onSurfaceH2Hover: string;
+      onSurfaceSH1: string;
+      onSurfaceSH1Hover: string;
 
       upTrend: string;
       downTrend: string;
 
-      hoverHbar: string;
-    };
-  }
+      vaultActionButton: {
+        background: string;
+        borderColor: string;
+        color: string;
+      };
 
-  // TODO Restructure theme and generic vars shared between themes
-  export interface DefaultTheme extends SharedTheme {
-    colors: {
-      primary: string;
-      primaryVariant: string;
-
-      secondary: string;
-      secondaryVariantA: string;
-      secondaryVariantB: string;
-
-      onPrimary: string;
-      onPrimaryVariant: string;
-
-      background: string;
-      onBackground: string;
-
-      surface: string;
-      surfaceVariant: string;
-      onSurface: string;
-      onSurfaceVariantA: string;
-      onSurfaceVariantB: string;
-
-      upTrend: string;
-      downTrend: string;
-
-      hoverHbar: string;
+      walletButton: {
+        background: string;
+        color: string;
+      };
     };
   }
 

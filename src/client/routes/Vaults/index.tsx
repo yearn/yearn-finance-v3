@@ -15,6 +15,13 @@ const SearchBarContainer = styled.div`
   margin: 1.2rem;
 `;
 
+const VaultActionButton = styled(Button)`
+  background: ${({ theme }) => theme.colors.vaultActionButton.background};
+  color: ${({ theme }) => theme.colors.vaultActionButton.color};
+  border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.borderColor};
+  padding: 0 1.6rem;
+`;
+
 interface TokenProps {
   icon: string;
   symbol: string;
@@ -36,9 +43,9 @@ interface ActionProps {
 }
 
 const ActionButtons = ({ actions }: ActionProps) => (
-  <Box display="flex" flexDirection="row" alignItems="center">
+  <Box display="grid" gridTemplateColumns={`repeat(${actions.length}, 1fr)`} flexDirection="row" alignItems="center">
     {actions.map(({ name, handler }) => (
-      <Button onClick={handler}>{name}</Button>
+      <VaultActionButton onClick={handler}>{name}</VaultActionButton>
     ))}
   </Box>
 );
@@ -83,7 +90,7 @@ export const Vaults = () => {
           { header: 'Earnings', content: `${formatUsd(totalEarnings)}` },
           { header: 'Est. Yearly Yield', content: `${formatUsd(estYearlyYeild)}` },
         ]}
-        variant="surface"
+        variant="secondary"
       />
       <RecomendationsCard
         header="Recommendations"

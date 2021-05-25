@@ -53,7 +53,7 @@ export const Home = () => {
           { header: 'Earnings', content: `${formatUsd(totalEarnings)}` },
           { header: 'Est. Yearly Yield', content: `${formatUsd(estYearlyYeild)}` },
         ]}
-        variant="surface"
+        variant="secondary"
       />
 
       <Row>
@@ -64,7 +64,7 @@ export const Home = () => {
               { header: 'Balance', content: `$ ${humanizeAmount(walletSummary.totalBalance, USDC_DECIMALS, 2)}` },
               { header: 'Supported Tokens', content: walletSummary.tokensAmount },
             ]}
-            variant="surface"
+            variant="secondary"
           />
 
           <SummaryCard
@@ -73,7 +73,7 @@ export const Home = () => {
               { header: 'Total Deposits', content: `${formatUsd(totalDeposits)}` },
               { header: 'Total Yield Claimed', content: `${formatUsd(totalEarnings)}` },
             ]}
-            variant="surface"
+            variant="secondary"
           />
         </Column>
 
