@@ -6,8 +6,6 @@ import { AVAILABLE_THEMES, getTheme } from '@themes';
 import { Theme } from '@types';
 
 import { ThemeBox } from '@components/app/Settings';
-import { TokenDropdown } from '@components/common';
-import { useState } from 'react';
 
 const SettingsView = styled.div`
   display: flex;
@@ -30,24 +28,8 @@ export const Settings = () => {
 
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
-  const [dropdownSelected, setDropdownSelected] = useState({ label: '', value: '' });
-  const onDropdownChange = (selected: any) => console.log(selected);
-  const dropdownOptions = [
-    { label: 'USDC', value: 'usdc' },
-    { label: 'ETHEREUM', value: 'eth' },
-    { label: 'KEEP3R', value: 'keep' },
-    { label: 'Etc etcaaaaaaaaaaaaaaa', value: 'etc' },
-  ];
-
   return (
     <SettingsView>
-      Dropdown test:
-      <TokenDropdown
-        selected={dropdownSelected}
-        setSelected={setDropdownSelected}
-        onChange={onDropdownChange}
-        options={dropdownOptions}
-      />
       Theme:
       <ThemeList>
         {AVAILABLE_THEMES.map((theme: Theme, index) => (

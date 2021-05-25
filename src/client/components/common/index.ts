@@ -9,7 +9,7 @@ export * from './Logo';
 export * from './Modal';
 export * from './SeparatorLine';
 export * from './Sidemenu';
+export * from './SimpleDropdown';
 export * from './SpinnerLoading';
 export * from './Text';
 export * from './Toggle';
-export * from './TokenDropdown';

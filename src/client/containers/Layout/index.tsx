@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { AppActions, RouteActions, WalletActions } from '@store';
 
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
-import { Navigation, Navbar, Modals } from '@components/app';
+import { Navigation, Navbar } from '@components/app';
+import { Modals } from '@containers';
 
 const StyledLayout = styled.div`
   display: flex;
