@@ -7,6 +7,7 @@ import { AppActions } from './app/app.actions';
 
 import modalsReducer from './modals/modals.reducer';
 import { ModalsActions } from './modals/modals.actions';
+import { ModalSelectors } from './modals/modals.selectors';
 
 import routeReducer from './route/route.reducer';
 import { RouteActions } from './route/route.actions';
@@ -56,4 +57,4 @@ export {
 };
 
 // Selectors
-export { VaultsSelectors, WalletSelectors, IronBankSelectors, TokensSelectors };
+export { ModalSelectors, VaultsSelectors, WalletSelectors, IronBankSelectors, TokensSelectors };

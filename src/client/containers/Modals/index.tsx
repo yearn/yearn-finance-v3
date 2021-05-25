@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions } from '@core/store';
+import { ModalsActions, ModalSelectors } from '@core/store';
 
 import { TestModal } from './TestModal';
+import { DepositModal } from './DepositModal';
 
 const StyledModals = styled.div`
   position: fixed;
@@ -46,7 +47,7 @@ export const Backdrop = ({ onClick }: BackdropProps) => {
 
 export const Modals = () => {
   const dispatch = useAppDispatch();
-  const activeModal = useAppSelector(({ modals }) => modals.activeModal);
+  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
   const closeModal = () => dispatch(ModalsActions.closeModal());
 
@@ -55,10 +56,11 @@ export const Modals = () => {
   if (activeModal) {
     backdrop = <Backdrop onClick={closeModal} />;
   }
+
   return (
     <StyledModals>
-      {activeModal === 'test' && <TestModal closeModal={closeModal} />}
-
+      {activeModal === 'test' && <TestModal onClose={closeModal} />}
+      {activeModal === 'deposit' && <DepositModal onClose={closeModal} />}
       {backdrop}
     </StyledModals>
   );

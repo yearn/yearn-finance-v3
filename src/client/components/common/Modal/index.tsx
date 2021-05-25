@@ -2,17 +2,10 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { Icon, CloseIcon } from '@components/common/Icon';
 
-export interface ModalProps {
-  className?: string;
-  closeModal?: () => void;
-}
-
 const StyledModal = styled.div`
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
   overflow-y: auto;
-  padding: 3rem;
+  padding: 1.6rem;
   background: ${({ theme }) => theme.colors.surface};
   position: relative;
   pointer-events: all;
@@ -24,9 +17,6 @@ const StyledModal = styled.div`
 `;
 
 const CloseModal = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 0.5rem;
   position: absolute;
   right: 1rem;
@@ -39,12 +29,17 @@ const CloseModal = styled.div`
   }
 `;
 
-export const Modal: FC<ModalProps> = ({ className, closeModal, children, ...props }) => {
+export interface ModalProps {
+  className?: string;
+  onClose?: () => void;
+}
+
+export const Modal: FC<ModalProps> = ({ className, onClose, children, ...props }) => {
   let closeButton;
 
-  if (closeModal) {
+  if (onClose) {
     closeButton = (
-      <CloseModal onClick={closeModal}>
+      <CloseModal onClick={onClose}>
         <Icon Component={CloseIcon} />
       </CloseModal>
     );
