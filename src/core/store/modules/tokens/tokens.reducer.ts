@@ -22,7 +22,7 @@ const initialState: TokensState = {
     user: {
       getUserTokens: { ...initialStatus },
       getUserTokensAllowances: { ...initialStatus },
-      userTokensActiosMap: {},
+      userTokensActionsMap: {},
     },
   },
 };
@@ -50,14 +50,14 @@ const tokensReducer = createReducer(initialState, (builder) => {
       const tokenAddresses = meta.arg.addresses;
       tokenAddresses?.forEach((address) => {
         checkAndInitUserTokenStatus(state, address);
-        state.statusMap.user.userTokensActiosMap[address].get = { loading: true };
+        state.statusMap.user.userTokensActionsMap[address].get = { loading: true };
       });
       state.statusMap.user.getUserTokens = { loading: true };
     })
     .addCase(getUserTokens.fulfilled, (state, { meta, payload: { userTokens } }) => {
       const tokenAddresses = meta.arg.addresses;
       tokenAddresses?.forEach((address) => {
-        state.statusMap.user.userTokensActiosMap[address].get = {};
+        state.statusMap.user.userTokensActionsMap[address].get = {};
       });
 
       const fetchedTokenAddesses: string[] = [];
@@ -72,7 +72,7 @@ const tokensReducer = createReducer(initialState, (builder) => {
     .addCase(getUserTokens.rejected, (state, { meta, error }) => {
       const tokenAddresses = meta.arg.addresses;
       tokenAddresses?.forEach((address) => {
-        state.statusMap.user.userTokensActiosMap[address].get = { error: error.message };
+        state.statusMap.user.userTokensActionsMap[address].get = { error: error.message };
       });
       state.statusMap.user.getUserTokens = { error: error.message };
     })
@@ -94,7 +94,7 @@ const tokensReducer = createReducer(initialState, (builder) => {
     .addCase(getTokenAllowance.pending, (state, { meta }) => {
       const { tokenAddress } = meta.arg;
       checkAndInitUserTokenStatus(state, tokenAddress);
-      state.statusMap.user.userTokensActiosMap[tokenAddress].getAllowances = { loading: true };
+      state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = { loading: true };
       state.statusMap.user.getUserTokensAllowances = { loading: true };
     })
     .addCase(getTokenAllowance.fulfilled, (state, { meta, payload: { allowance } }) => {
@@ -103,12 +103,12 @@ const tokensReducer = createReducer(initialState, (builder) => {
         ...state.user.userTokensAllowancesMap[tokenAddress],
         [spenderAddress]: allowance,
       };
-      state.statusMap.user.userTokensActiosMap[tokenAddress].getAllowances = {};
+      state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = {};
       state.statusMap.user.getUserTokensAllowances = {};
     })
     .addCase(getTokenAllowance.rejected, (state, { meta, error }) => {
       const { tokenAddress } = meta.arg;
-      state.statusMap.user.userTokensActiosMap[tokenAddress].getAllowances = { error: error.message };
+      state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = { error: error.message };
       state.statusMap.user.getUserTokensAllowances = { error: error.message };
     });
 });
@@ -116,7 +116,7 @@ const tokensReducer = createReducer(initialState, (builder) => {
 export default tokensReducer;
 
 function checkAndInitUserTokenStatus(state: TokensState, tokenAddress: string) {
-  const actionsMap = state.statusMap.user.userTokensActiosMap[tokenAddress];
+  const actionsMap = state.statusMap.user.userTokensActionsMap[tokenAddress];
   if (actionsMap) return;
-  state.statusMap.user.userTokensActiosMap[tokenAddress] = { ...initialUserTokenActionsMap };
+  state.statusMap.user.userTokensActionsMap[tokenAddress] = { ...initialUserTokenActionsMap };
 }
