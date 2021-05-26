@@ -47,7 +47,7 @@ const routesMap = [
 
 export const Routes = () => {
   return (
-    <Router>
+    <Router basename="/#">
       <Layout>
         <Switch>
           {routesMap.map((route, index) => (
