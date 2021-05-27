@@ -10,7 +10,8 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
     dispatch(WalletActions.walletSelect(wallet.name));
   }
   dispatch(TokensActions.getTokens());
-  dispatch(initSubscriptions());
+  // TODO use when sdk ready
+  // dispatch(initSubscriptions());
 });
 
 const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
