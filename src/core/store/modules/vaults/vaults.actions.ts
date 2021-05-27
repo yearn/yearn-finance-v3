@@ -121,6 +121,27 @@ const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: Big
   }
 );
 
+const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
+  'vaults/initSubscriptions',
+  async (_arg, { extra, dispatch }) => {
+    const { subscriptionService } = extra.services;
+    subscriptionService.subscribe({
+      module: 'vaults',
+      event: 'getDynamic',
+      action: (vaultsAddresses: string[]) => {
+        dispatch(getVaultsDynamic({ addresses: vaultsAddresses }));
+      },
+    });
+    subscriptionService.subscribe({
+      module: 'vaults',
+      event: 'positionsOf',
+      action: (vaultAddresses: string[]) => {
+        dispatch(getUserVaultsData({ vaultAddresses }));
+      },
+    });
+  }
+);
+
 export const VaultsActions = {
   setSelectedVaultAddress,
   initiateSaveVaults,
@@ -130,4 +151,5 @@ export const VaultsActions = {
   withdrawVault,
   getVaultsDynamic,
   getUserVaultsData,
+  initSubscriptions,
 };

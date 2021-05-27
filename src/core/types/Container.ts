@@ -1,4 +1,15 @@
-import { Wallet, Config, Web3Provider, UserService, VaultService, TokenService, IronBankService, Yearn } from '@types';
+import { Yearn } from '@yfi/sdk';
+
+import {
+  Wallet,
+  Config,
+  Web3Provider,
+  UserService,
+  VaultService,
+  TokenService,
+  IronBankService,
+  SubscriptionService,
+} from '@types';
 import { yearnSdkMock } from '../frameworks/yearnSdk/yearnSdkMock';
 
 export interface DIContainer {
@@ -17,6 +28,7 @@ export interface ServiceContainer {
   vaultService: VaultService;
   tokenService: TokenService;
   ironBankService: IronBankService;
+  subscriptionService: SubscriptionService;
 }
 
 export interface ConfigContainer extends Config {}

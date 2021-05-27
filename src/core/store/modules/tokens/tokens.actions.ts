@@ -63,10 +63,39 @@ const approve = createAsyncThunk<
   return { amount };
 });
 
+const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
+  'tokens/initSubscriptions',
+  async (_arg, { extra, dispatch }) => {
+    const { subscriptionService } = extra.services;
+    subscriptionService.subscribe({
+      module: 'tokens',
+      event: 'priceUsdc',
+      action: (tokenAddresses: string[]) => {
+        dispatch(getTokensDynamicData({ addresses: tokenAddresses }));
+      },
+    });
+    subscriptionService.subscribe({
+      module: 'tokens',
+      event: 'balances',
+      action: (tokenAddresses: string[]) => {
+        dispatch(getUserTokens({ addresses: tokenAddresses }));
+      },
+    });
+    subscriptionService.subscribe({
+      module: 'tokens',
+      event: 'getAllowance',
+      action: (tokenAddress: string, spenderAddress: string) => {
+        dispatch(getTokenAllowance({ tokenAddress, spenderAddress }));
+      },
+    });
+  }
+);
+
 export const TokensActions = {
   getTokens,
   getTokensDynamicData,
   getUserTokens,
   getTokenAllowance,
   approve,
+  initSubscriptions,
 };
