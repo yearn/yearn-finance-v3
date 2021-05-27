@@ -12,6 +12,7 @@ export interface RootState {
   wallet: WalletState;
   tokens: TokensState;
   ironBank: IronBankState;
+  settings: SettingsState;
 }
 
 export interface AppState {
@@ -134,4 +135,7 @@ export interface IronBankState {
       userCyTokensActionsMap: { [cyTokenAddress: string]: UserCyTokenActionsStatusMap };
     };
   };
+}
+export interface SettingsState {
+  sidebarCollapsed: boolean;
 }
