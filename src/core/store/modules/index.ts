@@ -31,6 +31,10 @@ import ironBankReducer from './ironBank/ironBank.reducer';
 import { IronBankActions } from './ironBank/ironBank.actions';
 import { IronBankSelectors } from './ironBank/ironBank.selectors';
 
+import settingsReducer from './settings/settings.reducer';
+import { SettingsActions } from './settings/settings.actions';
+import { SettingsSelectors } from './settings/settings.selectors';
+
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
   modals: modalsReducer,
@@ -40,6 +44,7 @@ const rootReducer: Reducer<RootState> = combineReducers({
   wallet: walletReducer,
   tokens: tokensReducer,
   ironBank: ironBankReducer,
+  settings: settingsReducer,
 });
 
 export default rootReducer;
@@ -54,7 +59,8 @@ export {
   WalletActions,
   TokensActions,
   IronBankActions,
+  SettingsActions,
 };
 
 // Selectors
-export { ModalSelectors, VaultsSelectors, WalletSelectors, IronBankSelectors, TokensSelectors };
+export { ModalSelectors, VaultsSelectors, WalletSelectors, IronBankSelectors, TokensSelectors, SettingsSelectors };

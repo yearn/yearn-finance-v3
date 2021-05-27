@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AppActions, RouteActions, WalletActions } from '@store';
+import { AppActions, RouteActions, WalletActions, SettingsSelectors } from '@store';
 
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { Navigation, Navbar } from '@components/app';
@@ -20,6 +20,7 @@ const Content = styled.div<{ collapsedSidebar?: boolean }>`
   width: 100%;
   flex: 1;
   min-height: 100%;
+  transition: padding-left ${({ theme }) => theme.sideBar.animation};
 
   padding-left: ${(props) =>
     props.collapsedSidebar
@@ -32,9 +33,8 @@ export const Layout: FC = ({ children }) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
+  const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
-  // TODO collapsedSidebar should be in settingsState
-  const collapsedSidebar = false;
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1];
 
@@ -49,7 +49,7 @@ export const Layout: FC = ({ children }) => {
   return (
     <StyledLayout>
       <Modals />
-      <Navigation collapsedSidebar={collapsedSidebar} />
+      <Navigation />
 
       <Content collapsedSidebar={collapsedSidebar}>
         <Navbar
