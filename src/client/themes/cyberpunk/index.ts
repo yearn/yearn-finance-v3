@@ -11,7 +11,7 @@ const cyberpunkTheme: DefaultTheme = {
     primaryVariant: '#7AF6FF',
 
     secondary: '#FBD282',
-    secondaryVariantA: '#523C6E',
+    secondaryVariantA: '#392850',
     secondaryVariantB: '#BB6FA1',
 
     surfaceVariantA: '#594177',

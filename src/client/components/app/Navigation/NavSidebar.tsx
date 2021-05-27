@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAppTranslation } from '@hooks';
 
-import { HomeIcon, Icon, Logo, VaultIcon, WalletIcon } from '@components/common';
+import { HomeIcon, Icon, Logo, VaultIcon, WalletIcon, SettingsIcon } from '@components/common';
 
 interface NavSidebarProps {
   collapsed?: boolean;
@@ -83,6 +83,8 @@ const RouterLink = styled(Link)`
 const LinkIcon = styled(Icon)`
   margin-right: 1.2rem;
   fill: ${({ theme }) => theme.colors.primaryVariant};
+  width: 2.4rem;
+  height: 2.4rem;
 `;
 
 export const NavSidebar = ({ collapsed }: NavSidebarProps) => {
@@ -122,7 +124,7 @@ export const NavSidebar = ({ collapsed }: NavSidebarProps) => {
     {
       to: '/settings',
       text: t('navigation.settings'),
-      icon: HomeIcon,
+      icon: SettingsIcon,
     },
   ];
 

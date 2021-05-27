@@ -61,5 +61,9 @@
       "balance": "Balance",
       "earning": "Rendimiento"
     }
+  },
+
+  "settings": {
+    "themes": "Temas"
   }
 }
