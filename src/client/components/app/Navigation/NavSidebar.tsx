@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
 
-import { HomeIcon, Icon, Logo, VaultIcon, WalletIcon, CollapseIcon } from '@components/common';
+import { HomeIcon, Icon, Logo, VaultIcon, WalletIcon, CollapseIcon, SettingsIcon } from '@components/common';
 
 const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
@@ -85,6 +85,8 @@ const LinkIcon = styled(Icon)`
   margin-right: 1.2rem;
   fill: ${({ theme }) => theme.colors.primaryVariant};
   cursor: pointer;
+  width: 2.4rem;
+  height: 2.4rem;
 `;
 
 const ToggleSidebarButton = styled(LinkIcon)`
@@ -137,7 +139,7 @@ export const NavSidebar = () => {
     {
       to: '/settings',
       text: t('navigation.settings'),
-      icon: HomeIcon,
+      icon: SettingsIcon,
     },
   ];
 

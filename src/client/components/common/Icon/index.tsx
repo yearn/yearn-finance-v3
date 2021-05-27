@@ -16,6 +16,8 @@ import { ReactComponent as HelpIcon } from '@assets/icons/help.svg';
 import { ReactComponent as CloseIcon } from '@assets/icons/close.svg';
 import { ReactComponent as ArrowDown } from '@assets/icons/arrow-down.svg';
 import { ReactComponent as CollapseIcon } from '@assets/icons/collapse.svg';
+import { ReactComponent as SettingsIcon } from '@assets/icons/settings.svg';
+import { ReactComponent as ThemesIcon } from '@assets/icons/themes.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
@@ -24,6 +26,7 @@ export interface IconProps
     Omit<StyledSystemProps, keyof TypographyProps | 'height' | 'width' | 'opacity' | 'display' | 'order' | 'overflow'> {
   Component: ElementType;
   color?: string;
+  size?: string;
   onClick?: () => void;
 }
 
@@ -33,6 +36,8 @@ export const Icon = styled(({ Component, ...props }: IconProps) => <Component {.
   justify-content: center;
   user-select: none;
   fill: ${({ theme, color, fill }) => fill ?? color ?? theme.contrasts.primary};
+  width: ${({ size }) => size ?? 'initial'};
+  height: ${({ size }) => size ?? 'initial'};
   ${styledSystem};
 `;
 
@@ -52,4 +57,6 @@ export {
   CloseIcon,
   ArrowDown,
   CollapseIcon,
+  SettingsIcon,
+  ThemesIcon,
 };
