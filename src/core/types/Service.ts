@@ -71,3 +71,14 @@ export interface IronBankService {
   // borrow
   // repay
 }
+
+export interface SubscriptionProps {
+  module: string;
+  event: string;
+  action: (...args: any[]) => void;
+}
+
+export interface SubscriptionService {
+  subscribe: (props: SubscriptionProps) => void;
+  unsubscribe: (props: SubscriptionProps) => void;
+}
