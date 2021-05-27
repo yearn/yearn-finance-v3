@@ -5,32 +5,54 @@ import { useAppTranslation } from '@hooks';
 
 const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boolean }>`
   display: flex;
-  flex-direction: column;
-  background-color: ${(props) => props.themePallete.colors.primary};
+  background-color: ${(props) => props.themePallete.colors.background};
   color: ${(props) => props.themePallete.colors.primaryVariant};
   min-width: 10rem;
-  max-width: 40rem;
-  border-radius: 1rem;
+  width: 24rem;
+  height: 12rem;
+  border-radius: 0.8rem;
   overflow: hidden;
-  border: 3px solid transparent;
+  border: 2px solid transparent;
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
+  padding: 1.2rem;
   user-select: none;
 
   ${(props) =>
     props.selected &&
     `
     cursor: default;
-    border-color: ${props.theme.colors.onSurfaceH1};
+    border-color: ${props.theme.colors.surface};
   `};
 
-  .themebox-header {
-    padding: 1rem;
+  * {
+    border-radius: 0.4rem;
+  }
+
+  .themebox-sidebar {
+    width: 3.2rem;
+    height: 100%;
+    background-color: ${(props) => props.themePallete.colors.primary};
+    margin-right: 0.8rem;
   }
   .themebox-content {
-    background: ${(props) => props.themePallete.colors.surface};
-    color: ${(props) => props.themePallete.colors.onSurfaceSH1};
-    min-height: 10rem;
-    padding: 1rem;
+    display: grid;
+    grid-auto-rows: auto 1fr;
+    grid-gap: 0.8rem;
+    flex: 1;
+    height: 100%;
+
+    .content-portfolio {
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      background: ${(props) => props.themePallete.colors.secondaryVariantA};
+      height: 3.2rem;
+      font-size: 1.2rem;
+    }
+    .content-card {
+      background: ${(props) => props.themePallete.colors.surface};
+      flex: 1;
+    }
   }
 `;
 
@@ -43,14 +65,14 @@ interface ThemeBoxProps {
 
 export const ThemeBox = ({ themePallete, name, selected, onClick }: ThemeBoxProps) => {
   const { t } = useAppTranslation('common');
-  /* border: 1px solid ${({ theme }) => theme.colors.onSurface} .themebox-header { */
+
   return (
     <StyledThemeBox themePallete={themePallete} selected={selected} onClick={onClick}>
       {selected}
-      <div className="themebox-header">{t(`themes.${name}`)}</div>
+      <div className="themebox-sidebar"></div>
       <div className="themebox-content">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+        <div className="content-portfolio">{t(`themes.${name}`)}</div>
+        <div className="content-card"></div>
       </div>
     </StyledThemeBox>
   );

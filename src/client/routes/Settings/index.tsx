@@ -1,28 +1,45 @@
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
 import { ThemeActions } from '@store';
 import { AVAILABLE_THEMES, getTheme } from '@themes';
 import { Theme } from '@types';
 
+import { ThemesIcon, Icon } from '@components/common';
 import { ThemeBox } from '@components/app/Settings';
 
 const SettingsView = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  display: grid;
+  margin-top: 1.6rem;
+  grid-gap: 3.2rem;
 `;
 
-const ThemeList = styled.div`
+const SettingsSection = styled.div`
+  display: grid;
+  grid-template-columns: 20rem 1fr;
+  align-items: flex-start;
+`;
+
+const SectionTitle = styled.div`
+  display: flex;
+  align-items: center;
+  color: ${({ theme }) => theme.colors.secondary};
+  fill: ${({ theme }) => theme.colors.secondary};
+`;
+
+const SectionIcon = styled(Icon)`
+  fill: inherit;
+  margin-right: 0.7rem;
+`;
+
+const SectionContent = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   grid-gap: 1rem;
-  margin-top: 3rem;
 `;
 
 export const Settings = () => {
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
 
@@ -30,18 +47,32 @@ export const Settings = () => {
 
   return (
     <SettingsView>
-      Theme:
-      <ThemeList>
-        {AVAILABLE_THEMES.map((theme: Theme, index) => (
-          <ThemeBox
-            themePallete={getTheme(theme)}
-            name={theme}
-            key={index}
-            selected={theme === currentTheme}
-            onClick={() => changeTheme(theme)}
-          />
-        ))}
-      </ThemeList>
+      <SettingsSection>
+        <SectionTitle>
+          <SectionIcon Component={ThemesIcon} />
+          Slipped tolerance
+        </SectionTitle>
+        <SectionContent>TBD</SectionContent>
+      </SettingsSection>
+
+      <SettingsSection>
+        <SectionTitle>
+          <SectionIcon Component={ThemesIcon} />
+          {t('settings.themes')}
+        </SectionTitle>
+
+        <SectionContent>
+          {AVAILABLE_THEMES.map((theme: Theme, index) => (
+            <ThemeBox
+              themePallete={getTheme(theme)}
+              name={theme}
+              key={index}
+              selected={theme === currentTheme}
+              onClick={() => changeTheme(theme)}
+            />
+          ))}
+        </SectionContent>
+      </SettingsSection>
     </SettingsView>
   );
 };
