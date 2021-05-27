@@ -53,6 +53,7 @@ declare module 'styled-components' {
     sideBar: {
       width: string;
       collapsedWidth: string;
+      animation: string;
     };
 
     layoutPadding: string;

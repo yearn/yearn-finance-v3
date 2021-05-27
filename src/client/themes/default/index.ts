@@ -84,6 +84,7 @@ const sharedTheme: SharedTheme = {
   sideBar: {
     width: '16rem',
     collapsedWidth: '4.8rem',
+    animation: '200ms ease-in-out',
   },
 
   layoutPadding: '1.6rem',

@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useAppTranslation } from '@hooks';
+import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
+import { SettingsActions, SettingsSelectors } from '@store';
 
-import { HomeIcon, Icon, Logo, VaultIcon, WalletIcon, SettingsIcon } from '@components/common';
+import { HomeIcon, Icon, Logo, VaultIcon, WalletIcon, CollapseIcon, SettingsIcon } from '@components/common';
 
-interface NavSidebarProps {
-  collapsed?: boolean;
-}
+const linkHoverFilter = 'brightness(90%)';
+const linkTransition = 'filter 200ms ease-in-out';
 
 const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   display: flex;
@@ -19,9 +19,10 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   max-width: 100%;
   padding: 1rem 1.2rem;
   position: fixed;
-  /* position: sticky; */
   max-height: calc(100% - ${({ theme }) => theme.layoutPadding} * 2);
-  /* max-height: calc(100vh - ${({ theme }) => theme.layoutPadding} * 2); */
+  transition: width ${({ theme }) => theme.sideBar.animation};
+  overflow: hidden;
+  overflow-y: auto;
 
   ${(props) =>
     props.collapsed &&
@@ -40,9 +41,8 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
 `;
 
 const SidebarHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-gap: 1.2rem;
 `;
 
 const SidebarContent = styled.div`
@@ -55,6 +55,7 @@ const SidebarContent = styled.div`
 const SidebarFooter = styled.div``;
 
 const StyledLogo = styled(Logo)`
+  justify-content: flex-start;
   height: 2.4rem;
   fill: ${({ theme }) => theme.colors.secondaryVariantA};
 `;
@@ -72,23 +73,37 @@ const RouterLink = styled(Link)`
   font-size: 1.8rem;
 
   &:hover span {
-    filter: brightness(75%);
+    filter: ${linkHoverFilter};
   }
 
   span {
-    transition: filter 200ms ease-in-out;
+    transition: ${linkTransition};
   }
 `;
 
 const LinkIcon = styled(Icon)`
   margin-right: 1.2rem;
   fill: ${({ theme }) => theme.colors.primaryVariant};
+  cursor: pointer;
   width: 2.4rem;
   height: 2.4rem;
 `;
 
-export const NavSidebar = ({ collapsed }: NavSidebarProps) => {
+const ToggleSidebarButton = styled(LinkIcon)`
+  fill: ${({ theme }) => theme.colors.primaryVariant};
+  transition: ${linkTransition};
+  &:hover {
+    filter: ${linkHoverFilter};
+  }
+  margin-right: 0;
+`;
+
+export const NavSidebar = () => {
   const { t } = useAppTranslation('common');
+  const dispatch = useAppDispatch();
+  const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
+
+  const toggleSidebar = () => dispatch(SettingsActions.toggleSidebar());
 
   const navLinks = [
     {
@@ -141,9 +156,10 @@ export const NavSidebar = ({ collapsed }: NavSidebarProps) => {
   );
 
   return (
-    <StyledSidebar collapsed={collapsed}>
+    <StyledSidebar collapsed={collapsedSidebar}>
       <SidebarHeader>
-        <StyledLogo full={!collapsed} />
+        <StyledLogo full={!collapsedSidebar} />
+        <ToggleSidebarButton Component={CollapseIcon} onClick={toggleSidebar} />
       </SidebarHeader>
 
       <SidebarContent>{linkList}</SidebarContent>
