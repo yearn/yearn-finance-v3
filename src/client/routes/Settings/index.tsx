@@ -5,7 +5,9 @@ import { ThemeActions } from '@store';
 import { AVAILABLE_THEMES, getTheme } from '@themes';
 import { Theme } from '@types';
 
-import { ThemesIcon, Icon } from '@components/common';
+import { ModalsActions } from '@store';
+
+import { ThemesIcon, Icon, Button } from '@components/common';
 import { ThemeBox } from '@components/app/Settings';
 
 const SettingsView = styled.div`
@@ -45,6 +47,10 @@ export const Settings = () => {
 
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
+  const openTestModal = () => {
+    dispatch(ModalsActions.openModal({ modalName: 'test', modalProps: { testVar: 'test variable' } }));
+  };
+
   return (
     <SettingsView>
       <SettingsSection>
@@ -71,6 +77,16 @@ export const Settings = () => {
               onClick={() => changeTheme(theme)}
             />
           ))}
+        </SectionContent>
+      </SettingsSection>
+
+      <SettingsSection>
+        <SectionTitle>
+          <SectionIcon Component={ThemesIcon} />
+          Testing space
+        </SectionTitle>
+        <SectionContent>
+          <Button onClick={openTestModal}>Open test modal</Button>
         </SectionContent>
       </SettingsSection>
     </SettingsView>
