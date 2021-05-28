@@ -5,15 +5,18 @@ import { Modal } from '@components/common';
 const StyledTestModal = styled(Modal)`
   width: 38.5rem;
 `;
-
-interface TestModalProps {
+export interface TestModalProps {
   onClose: () => void;
+  modalProps: {
+    testVar: string;
+  };
 }
 
-export const TestModal: FC<TestModalProps> = ({ onClose, ...props }) => {
+export const TestModal: FC<TestModalProps> = ({ onClose, modalProps, ...props }) => {
   return (
     <StyledTestModal {...props} onClose={onClose}>
       Test modal
+      <p>{modalProps.testVar}</p>
     </StyledTestModal>
   );
 };

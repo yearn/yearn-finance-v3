@@ -23,6 +23,7 @@ export interface AppState {
 
 export interface ModalsState {
   activeModal: string | undefined;
+  modalProps: any | undefined;
 }
 export interface RouteState {
   path: string | undefined;

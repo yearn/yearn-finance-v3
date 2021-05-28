@@ -52,6 +52,7 @@ export const Backdrop = ({ onClick }: BackdropProps) => {
 export const Modals = () => {
   const dispatch = useAppDispatch();
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
+  const modalProps = useAppSelector(ModalSelectors.selectActiveModalProps);
 
   const closeModal = () => dispatch(ModalsActions.closeModal());
 
@@ -63,8 +64,9 @@ export const Modals = () => {
 
   return (
     <StyledModals>
-      {activeModal === 'test' && <TestModal onClose={closeModal} />}
+      {activeModal === 'test' && <TestModal modalProps={modalProps} onClose={closeModal} />}
       {activeModal === 'deposit' && <DepositModal onClose={closeModal} />}
+
       {backdrop}
     </StyledModals>
   );
