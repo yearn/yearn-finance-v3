@@ -1,11 +1,14 @@
 import styled from 'styled-components';
 
+import { getEnv } from '@config/env';
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
 import { ThemeActions } from '@store';
 import { AVAILABLE_THEMES, getTheme } from '@themes';
 import { Theme } from '@types';
 
-import { ThemesIcon, Icon } from '@components/common';
+import { ModalsActions } from '@store';
+
+import { ThemesIcon, Icon, Button } from '@components/common';
 import { ThemeBox } from '@components/app/Settings';
 
 const SettingsView = styled.div`
@@ -42,8 +45,13 @@ export const Settings = () => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
+  const developmentMode = getEnv().ENV === 'development';
 
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
+
+  const openTestModal = () => {
+    dispatch(ModalsActions.openModal({ modalName: 'test', modalProps: { testVar: 'test variable' } }));
+  };
 
   return (
     <SettingsView>
@@ -73,6 +81,19 @@ export const Settings = () => {
           ))}
         </SectionContent>
       </SettingsSection>
+
+      {/* Only on development for testing! */}
+      {developmentMode && (
+        <SettingsSection>
+          <SectionTitle>
+            <SectionIcon Component={ThemesIcon} />
+            Testing space
+          </SectionTitle>
+          <SectionContent>
+            <Button onClick={openTestModal}>Open test modal</Button>
+          </SectionContent>
+        </SettingsSection>
+      )}
     </SettingsView>
   );
 };

@@ -9,7 +9,7 @@ import { DIContainer } from '@types';
 export const getStore = (extraArgument?: any) => {
   const persistConfig = {
     namespace: 'yearn',
-    states: ['theme', 'wallet.name'],
+    states: ['theme', 'wallet.name', 'settings'],
   };
   const logger = createLogger({ collapsed: true });
   const middlewareOptions = {
