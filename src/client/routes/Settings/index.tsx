@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { getEnv } from '@config/env';
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
 import { ThemeActions } from '@store';
 import { AVAILABLE_THEMES, getTheme } from '@themes';
@@ -44,6 +45,7 @@ export const Settings = () => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
+  const developmentMode = getEnv().ENV === 'development';
 
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
@@ -81,7 +83,7 @@ export const Settings = () => {
       </SettingsSection>
 
       {/* Only on development for testing! */}
-      {process.env.NODE_ENV === 'development' && (
+      {developmentMode && (
         <SettingsSection>
           <SectionTitle>
             <SectionIcon Component={ThemesIcon} />
