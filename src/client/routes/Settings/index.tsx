@@ -80,15 +80,18 @@ export const Settings = () => {
         </SectionContent>
       </SettingsSection>
 
-      <SettingsSection>
-        <SectionTitle>
-          <SectionIcon Component={ThemesIcon} />
-          Testing space
-        </SectionTitle>
-        <SectionContent>
-          <Button onClick={openTestModal}>Open test modal</Button>
-        </SectionContent>
-      </SettingsSection>
+      {/* Only on development for testing! */}
+      {process.env.NODE_ENV === 'development' && (
+        <SettingsSection>
+          <SectionTitle>
+            <SectionIcon Component={ThemesIcon} />
+            Testing space
+          </SectionTitle>
+          <SectionContent>
+            <Button onClick={openTestModal}>Open test modal</Button>
+          </SectionContent>
+        </SettingsSection>
+      )}
     </SettingsView>
   );
 };
