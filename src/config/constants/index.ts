@@ -19,6 +19,8 @@ export const getConstants = memoize(
         registryV2Adapter: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
         helper: '0x420b1099B9eF5baba6D92029594eF45E19A04A4A',
       },
+      SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
+      DEFAULT_SLIPPAGE: 0.01,
     };
   }
 );

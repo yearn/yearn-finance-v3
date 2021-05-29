@@ -6,7 +6,8 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 import { TokenAmountInput, TransactionSettings } from '@components/app';
 import { Modal, Card, Text, Box, Button } from '@components/common';
-import { toBN, humanizeAmount, normalizeAmount, USDC_DECIMALS } from '@src/utils';
+import { toBN, formatPercent, humanizeAmount, normalizeAmount, USDC_DECIMALS } from '@src/utils';
+import { getConfig } from '@config';
 
 const StyledModal = styled(Modal)`
   width: 38.4rem;
@@ -32,7 +33,7 @@ const BalanceContainer = styled(Card)`
   margin-bottom: 0.8rem;
 `;
 
-const VaultContainer = styled(Card)`
+const TargetContainer = styled(Card)`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -59,17 +60,16 @@ const VaultTokenIcon = styled.img`
   width: 3.2rem;
 `;
 
-const slippageOptions = [
-  { value: '1', label: '1%' },
-  { value: '2', label: '2%' },
-  { value: '3', label: '3%' },
-];
-
 interface DepositModalProps {
   onClose: () => void;
 }
 
 export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
+  const { SLIPPAGE_OPTIONS } = getConfig();
+  const slippageOptions = SLIPPAGE_OPTIONS.map((value) => ({
+    value: value.toString(),
+    label: formatPercent(value.toString(), 0),
+  }));
   const dispatch = useAppDispatch();
   const [amount, setAmount] = useState('');
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
@@ -126,9 +126,9 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
           onSelectedTokenChange={setSelectedSellTokenAddress}
           tokenOptions={sellTokensOptions}
         />
-        <VaultContainer>
+        <TargetContainer>
           <VaultTokenIcon src={selectedVault.token.icon} alt={selectedVault.token.symbol} />
-        </VaultContainer>
+        </TargetContainer>
       </TransferContainer>
       <ButtonContainer>
         <StyledButton onClick={() => approve()}>APPROVE</StyledButton>
