@@ -14,6 +14,13 @@ const format = {
   suffix: '',
 };
 
+export const toBN = (amount?: string) => {
+  if (!amount || amount === '') {
+    amount = '0';
+  }
+  return new BigNumber(amount);
+};
+
 export const formatAmount = (amount: string, decimals: number) => {
   return new BigNumber(amount).toFormat(decimals, format);
 };
