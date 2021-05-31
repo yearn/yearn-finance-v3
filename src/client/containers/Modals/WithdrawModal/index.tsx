@@ -5,7 +5,7 @@ import { keyBy } from 'lodash';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 import { TokenAmountInput, TransactionSettings } from '@components/app';
-import { Modal, Card, Text, Box, Button } from '@components/common';
+import { Modal, Card, Text, Box, Button, SimpleDropdown } from '@components/common';
 import { toBN, formatPercent, formatAmount, normalizeAmount, USDC_DECIMALS } from '@src/utils';
 import { getConfig } from '@config';
 
@@ -35,7 +35,7 @@ const BalanceContainer = styled(Card)`
 
 const TargetContainer = styled(Card)`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -60,11 +60,11 @@ const VaultTokenIcon = styled.img`
   width: 3.2rem;
 `;
 
-interface DepositModalProps {
+interface WithdrawModalProps {
   onClose: () => void;
 }
 
-export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
+export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => {
   const { SLIPPAGE_OPTIONS } = getConfig();
   const slippageOptions = SLIPPAGE_OPTIONS.map((value) => ({
     value: value.toString(),
@@ -73,69 +73,62 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
   const dispatch = useAppDispatch();
   const [amount, setAmount] = useState('');
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
-  const [selectedSellTokenAddress, setSelectedSellTokenAddress] = useState(selectedVault?.token.address ?? '');
-  const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
+  const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
+  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedVault?.token.address ?? '');
   const [selectedSlippage, setSelectedSlippage] = useState(slippageOptions[0]);
-
-  const sellTokensOptions = selectedVault
-    ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
-    : userTokens;
-  const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
-  const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress];
+  const targetTokensOptions = selectedVault
+    ? [selectedVault.token, ...zapOutTokens.filter(({ address }) => address !== selectedVault.token.address)]
+    : zapOutTokens;
+  const targetTokensOptionsMap = keyBy(targetTokensOptions, 'address');
+  const selectedTargetToken = targetTokensOptionsMap[selectedTargetTokenAddress];
 
   useEffect(() => {
     if (!selectedVault) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
-        tokenAddress: selectedSellTokenAddress,
+        tokenAddress: selectedTargetTokenAddress,
         spenderAddress: selectedVault.address,
       })
     );
-  }, [selectedSellTokenAddress]);
+  }, [selectedTargetTokenAddress]);
 
-  if (!selectedVault || !selectedSellToken || !sellTokensOptions) {
+  if (!selectedVault || !selectedTargetToken || !targetTokensOptions) {
     return null;
   }
 
-  const allowance = selectedSellToken.allowancesMap[selectedVault.address] ?? '0';
-  const isApproved = toBN(allowance).gte(normalizeAmount(amount, selectedSellToken.decimals));
-  const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
-  const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
+  const balance = normalizeAmount(selectedVault.DEPOSIT.userDeposited, selectedVault.token.decimals);
+  const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
 
-  const approve = () =>
-    dispatch(
-      VaultsActions.approveVault({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
-    );
-  const deposit = () =>
-    dispatch(VaultsActions.depositVault({ vaultAddress: selectedVault.address, amount: toBN(amount) }));
+  const withdraw = () =>
+    dispatch(VaultsActions.withdrawVault({ vaultAddress: selectedVault.address, amount: toBN(amount) }));
 
   return (
     <StyledModal {...props} onClose={onClose}>
-      <Text>Invest</Text>
+      <Text>Withdraw</Text>
       <TransferContainer variant="primary">
         <BalanceContainer>
-          <Text>Wallet Balance</Text>
-          <Text>{`${formatAmount(balance, 4)} ${selectedSellToken.symbol}`}</Text>
+          <Text>Balance Availability</Text>
+          <Text>{`${formatAmount(balance, 4)} ${selectedVault.token.symbol}`}</Text>
         </BalanceContainer>
         <TokenAmountInput
           amount={amount}
-          price={normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)}
+          price={normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)}
           onAmountChange={setAmount}
           maxAmount={balance}
-          selectedToken={selectedSellToken}
-          onSelectedTokenChange={setSelectedSellTokenAddress}
-          tokenOptions={sellTokensOptions}
+          selectedToken={selectedVault.token}
         />
         <TargetContainer>
-          <VaultTokenIcon src={selectedVault.token.icon} alt={selectedVault.token.symbol} />
+          <VaultTokenIcon src={selectedTargetToken.icon} alt={selectedTargetToken.symbol} />
+          <SimpleDropdown
+            selected={{ value: selectedTargetToken.address, label: selectedTargetToken.name }}
+            setSelected={(selected) => setSelectedTargetTokenAddress(selected.value)}
+            options={targetTokensOptions.map(({ address, name }) => ({ value: address, label: name }))}
+          />
         </TargetContainer>
       </TransferContainer>
       <ButtonContainer>
-        <StyledButton onClick={() => approve()}>APPROVE</StyledButton>
-        <StyledButton onClick={() => deposit()} disabled={!isApproved}>
-          DEPOSIT
-        </StyledButton>
+        <StyledButton onClick={() => withdraw()}>WITHDRAW</StyledButton>
       </ButtonContainer>
       <TransactionSettings
         amount={amountValue}

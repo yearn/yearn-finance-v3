@@ -37,7 +37,7 @@ export const TransactionSettings = ({
   slippageOptions,
   onSelectedSlippageChange,
 }: TransactionSettingsProps) => {
-  const maximumSlippageAmount = toBN(amount).times(selectedSlippage.value).div(100);
+  const maximumSlippageAmount = toBN(amount).times(selectedSlippage.value);
   const minimumAmountReceived = toBN(amount).minus(maximumSlippageAmount).toString();
   return (
     <Container variant="primary">

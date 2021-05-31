@@ -4,6 +4,7 @@ import { ModalsActions, ModalSelectors } from '@core/store';
 
 import { TestModal } from './TestModal';
 import { DepositModal } from './DepositModal';
+import { WithdrawModal } from './WithdrawModal';
 
 const StyledModals = styled.div`
   position: fixed;
@@ -66,7 +67,7 @@ export const Modals = () => {
     <StyledModals>
       {activeModal === 'test' && <TestModal modalProps={modalProps} onClose={closeModal} />}
       {activeModal === 'deposit' && <DepositModal onClose={closeModal} />}
-
+      {activeModal === 'withdraw' && <WithdrawModal onClose={closeModal} />}
       {backdrop}
     </StyledModals>
   );

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { Card, Text, Input, Box, Button, SimpleDropdown } from '@components/common';
-import { toBN, formatUsd, normalizeAmount, USDC_DECIMALS } from '@src/utils';
+import { toBN, formatUsd } from '@src/utils';
 
 const Container = styled(Card)`
   width: 100%;
@@ -47,15 +47,17 @@ interface Token {
 
 interface TokenAmountInputProps {
   amount: string;
+  price: string;
   onAmountChange: (amount: string) => void;
   maxAmount: string;
   selectedToken: Token;
-  onSelectedTokenChange: (address: string) => void;
+  onSelectedTokenChange?: (address: string) => void;
   tokenOptions?: Token[];
 }
 
 export const TokenAmountInput = ({
   amount,
+  price,
   onAmountChange,
   maxAmount,
   selectedToken,
@@ -63,7 +65,8 @@ export const TokenAmountInput = ({
   tokenOptions,
 }: TokenAmountInputProps) => {
   const availableTokenOptions = tokenOptions ? tokenOptions : [selectedToken];
-  const amountValue = toBN(amount).times(normalizeAmount(selectedToken.priceUsdc, USDC_DECIMALS)).toString();
+  const amountValue = toBN(amount).times(price).toString();
+
   return (
     <Container>
       <Box position="absolute" right={32}>
@@ -76,7 +79,9 @@ export const TokenAmountInput = ({
         <SimpleDropdown
           selected={{ label: selectedToken.symbol, value: selectedToken.address }}
           setSelected={(selected) => {
-            onSelectedTokenChange(selected.value);
+            if (onSelectedTokenChange) {
+              onSelectedTokenChange(selected.value);
+            }
             onAmountChange('');
           }}
           options={availableTokenOptions.map(({ address, symbol }) => ({ label: symbol, value: address }))}
