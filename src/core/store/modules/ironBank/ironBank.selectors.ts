@@ -1,15 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { RootState, CyTokenView, Status } from '@types';
+import { RootState, IronBankMarketView } from '@types';
 import BigNumber from 'bignumber.js';
 
-const selectIronBankState = (state: RootState) => state.ironBank;
-const selectSelectedCyTokenAddress = (state: RootState) => state.ironBank.selectedCyTokenAddress;
-
-const selectCyTokensMap = (state: RootState) => state.ironBank.cyTokensMap;
-const selectCyTokensAddresses = (state: RootState) => state.ironBank.cyTokenAddresses;
-const selectCyTokensAllowancesMap = (state: RootState) => state.ironBank.user.marketsAllowancesMap;
-const selectUserCyTokensMap = (state: RootState) => state.ironBank.user.userCyTokensMap;
+const selectMarketsMap = (state: RootState) => state.ironBank.marketsMap;
+const selectMarketsAddresses = (state: RootState) => state.ironBank.marketAddresses;
+const selectMarketsAllowancesMap = (state: RootState) => state.ironBank.user.marketsAllowancesMap;
+const selectUserMarketsMap = (state: RootState) => state.ironBank.user.userMarketsMap;
 const selectIronBankData = (state: RootState) => state.ironBank.ironBankData;
 
 // tokens
@@ -17,58 +14,58 @@ const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMa
 const selectUserTokensAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 
-const selectCyTokens = createSelector(
+const selectMarkets = createSelector(
   [
-    selectCyTokensMap,
-    selectCyTokensAddresses,
+    selectMarketsMap,
+    selectMarketsAddresses,
     selectTokensMap,
-    selectUserCyTokensMap,
+    selectUserMarketsMap,
     selectUserTokensMap,
-    selectCyTokensAllowancesMap,
+    selectMarketsAllowancesMap,
     selectUserTokensAllowancesMap,
     selectIronBankData,
   ],
   (
-    cyTokensMap,
-    cyTokenAddresses,
+    marketsMap,
+    marketAddresses,
     tokensMap,
-    userCyTokensMap,
+    userMarketsMap,
     userTokensMap,
-    cyTokensAllowancesMap,
+    marketsAllowancesMap,
     userTokensAllowancesMap,
     ironBankData
   ) => {
-    const cyTokens = cyTokenAddresses.map((address) => {
-      const cyTokenData = cyTokensMap[address];
-      const userCyTokenData = userCyTokensMap[address];
-      const tokenData = tokensMap[cyTokenData.tokenId];
-      const userTokenData = userTokensMap[cyTokenData.tokenId];
-      const tokenAllowancesMap = userTokensAllowancesMap[cyTokenData.tokenId] ?? {};
+    const markets = marketAddresses.map((address) => {
+      const marketData = marketsMap[address];
+      const userMarketData = userMarketsMap[address];
+      const tokenData = tokensMap[marketData.tokenId];
+      const userTokenData = userTokensMap[marketData.tokenId];
+      const tokenAllowancesMap = userTokensAllowancesMap[marketData.tokenId] ?? {};
       return {
-        address: cyTokenData.address,
-        decimals: cyTokenData.decimals,
-        name: cyTokenData.name,
-        symbol: cyTokenData.symbol,
-        lendApy: cyTokenData.metadata.lendApyBips,
-        borrowApy: cyTokenData.metadata.borrowApyBips,
-        liquidity: cyTokenData.metadata.liquidityUsdc,
-        collateralFactor: cyTokenData.metadata.collateralFactor,
-        reserveFactor: cyTokenData.metadata.reserveFactor,
-        isActive: cyTokenData.metadata.isActive,
-        exchangeRate: cyTokenData.metadata.exchangeRate,
+        address: marketData.address,
+        decimals: marketData.decimals,
+        name: marketData.name,
+        symbol: marketData.symbol,
+        lendApy: marketData.metadata.lendApyBips,
+        borrowApy: marketData.metadata.borrowApyBips,
+        liquidity: marketData.metadata.liquidityUsdc,
+        collateralFactor: marketData.metadata.collateralFactor,
+        reserveFactor: marketData.metadata.reserveFactor,
+        isActive: marketData.metadata.isActive,
+        exchangeRate: marketData.metadata.exchangeRate,
         borrowLimit: ironBankData?.borrowLimitUsdc ?? '0',
         LEND: {
-          userDeposited: userCyTokenData?.LEND.underlyingTokenBalance.amount ?? '0',
-          userDepositedUsdc: userCyTokenData?.LEND.underlyingTokenBalance.amountUsdc ?? '0',
+          userDeposited: userMarketData?.LEND.underlyingTokenBalance.amount ?? '0',
+          userDepositedUsdc: userMarketData?.LEND.underlyingTokenBalance.amountUsdc ?? '0',
         },
         BORROW: {
-          userDeposited: userCyTokenData?.BORROW.underlyingTokenBalance.amount ?? '0',
-          userDepositedUsdc: userCyTokenData?.BORROW.underlyingTokenBalance.amountUsdc ?? '0',
+          userDeposited: userMarketData?.BORROW.underlyingTokenBalance.amount ?? '0',
+          userDepositedUsdc: userMarketData?.BORROW.underlyingTokenBalance.amountUsdc ?? '0',
         },
-        allowancesMap: cyTokensAllowancesMap[address] ?? {},
+        allowancesMap: marketsAllowancesMap[address] ?? {},
 
         enteredMarket: false, // TODO POPULATE WITH REAL DATA
-        // enteredMarket: userCyTokenData?.metamask.enteredMarket ?? false,
+        // enteredMarket: userMarketData?.metamask.enteredMarket ?? false,
         token: {
           address: tokenData.address,
           name: tokenData.name,
@@ -82,22 +79,22 @@ const selectCyTokens = createSelector(
         },
       };
     });
-    return cyTokens;
+    return markets;
   }
 );
 
-const selectLendMarkets = createSelector([selectCyTokens], (markets): CyTokenView[] => {
+const selectLendMarkets = createSelector([selectMarkets], (markets): IronBankMarketView[] => {
   const lendMarkets = markets.map(({ BORROW, LEND, token, ...rest }) => ({ token, ...LEND, ...rest }));
   return lendMarkets.filter((market) => new BigNumber(market.userDeposited).gt(0));
 });
 
-const selectBorrowMarkets = createSelector([selectCyTokens], (markets) => {
+const selectBorrowMarkets = createSelector([selectMarkets], (markets) => {
   const borrowMarkets = markets.map(({ BORROW, LEND, token, ...rest }) => ({ token, ...BORROW, ...rest }));
   return borrowMarkets.filter((market) => new BigNumber(market.userDeposited).gt(0));
 });
 
 export const IronBankSelectors = {
-  selectCyTokens,
+  selectMarkets,
   selectIronBankData,
   selectLendMarkets,
   selectBorrowMarkets,

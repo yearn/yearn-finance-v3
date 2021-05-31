@@ -3,13 +3,13 @@ import { ThunkAPI } from '@frameworks/redux';
 import { IronBankMarket, IronBankMarketDynamic, IronBankPosition, Position } from '@types';
 import { TokensActions } from '@store';
 
-const setSelectedCyTokenAddress = createAction<{ cyTokenAddress: string }>('ironbank/setSelectedCyTokenAddress');
+const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
 
 const initiateIronBank = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'ironBank/initiateIronBank',
   async (_arg, { dispatch }) => {
     await dispatch(getIronBankData());
-    await dispatch(getCyTokens());
+    await dispatch(getMarkets());
   }
 );
 
@@ -35,35 +35,35 @@ const getMarketsDynamic = createAsyncThunk<
   return { marketsDynamicData };
 });
 
-const getCyTokens = createAsyncThunk<{ ironBankMarkets: IronBankMarket[] }, undefined, ThunkAPI>(
-  'ironBank/getCyTokens',
+const getMarkets = createAsyncThunk<{ ironBankMarkets: IronBankMarket[] }, undefined, ThunkAPI>(
+  'ironBank/getMarkets',
   async (_arg, { extra }) => {
     const { ironBankService } = extra.services;
-    const ironBankMarkets = await ironBankService.getSupportedCyTokens();
+    const ironBankMarkets = await ironBankService.getSupportedMarkets();
 
     return { ironBankMarkets };
   }
 );
 
-const getUserCyTokens = createAsyncThunk<{ userMarketsData: Position[] }, { marketAddresses?: string[] }, ThunkAPI>(
-  'ironBank/getUserCyTokens',
+const getUserMarkets = createAsyncThunk<{ userMarketsData: Position[] }, { marketAddresses?: string[] }, ThunkAPI>(
+  'ironBank/getUserMarkets',
   async ({ marketAddresses }, { extra, getState, dispatch }) => {
     const { ironBankService } = extra.services;
     const userAddress = getState().wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const userMarketsData = await ironBankService.getUserCyTokensData({ userAddress, marketAddresses });
+    const userMarketsData = await ironBankService.getUserMarketsData({ userAddress, marketAddresses });
 
     return { userMarketsData };
   }
 );
 
-const approveCyToken = createAsyncThunk<void, { cyTokenAddress: string; tokenAddress: string }, ThunkAPI>(
+const approveMarket = createAsyncThunk<void, { marketAddress: string; tokenAddress: string }, ThunkAPI>(
   'ironBank/approve',
-  async ({ cyTokenAddress, tokenAddress }, { extra, getState, dispatch }) => {
+  async ({ marketAddress, tokenAddress }, { extra, getState, dispatch }) => {
     try {
-      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: cyTokenAddress }));
+      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: marketAddress }));
       unwrapResult(result);
     } catch (error) {
       throw new Error(error.message);
@@ -73,10 +73,10 @@ const approveCyToken = createAsyncThunk<void, { cyTokenAddress: string; tokenAdd
 
 export const IronBankActions = {
   initiateIronBank,
-  getCyTokens,
+  getMarkets,
   getIronBankData,
-  getUserCyTokens,
-  setSelectedCyTokenAddress,
-  approveCyToken,
+  getUserMarkets,
+  setSelectedMarketAddress,
+  approveMarket,
   getMarketsDynamic,
 };

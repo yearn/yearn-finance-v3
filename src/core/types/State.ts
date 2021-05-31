@@ -104,7 +104,7 @@ export interface TokensState {
   };
 }
 
-export interface CyTokenActionsStatusMap {
+export interface MarketActionsStatusMap {
   approve: Status;
   borrow: Status;
   supply: Status;
@@ -113,7 +113,7 @@ export interface CyTokenActionsStatusMap {
   get: Status;
 }
 
-export interface UserCyTokenActionsStatusMap {
+export interface UserMarketActionsStatusMap {
   get: Status;
 }
 
@@ -123,22 +123,22 @@ export interface IronBankMarketPositionsMap {
 }
 
 export interface IronBankState {
-  cyTokenAddresses: EthereumAddress[];
-  cyTokensMap: { [cyTokenAddress: string]: IronBankMarket };
-  selectedCyTokenAddress: EthereumAddress;
+  marketAddresses: EthereumAddress[];
+  marketsMap: { [marketAddress: string]: IronBankMarket };
+  selectedMarketAddress: EthereumAddress;
   ironBankData: IronBankPosition | undefined;
   user: {
-    userCyTokensMap: { [cyTokenAddress: string]: IronBankMarketPositionsMap };
+    userMarketsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
     marketsAllowancesMap: { [marketAddress: string]: AllowancesMap };
   };
   statusMap: {
     initiateIronBank: Status;
     getIronBankData: Status;
-    getCYTokens: Status;
-    cyTokensActionsMap: { [cyTokenAddress: string]: CyTokenActionsStatusMap };
+    getMarkets: Status;
+    marketsActionsMap: { [marketAddress: string]: MarketActionsStatusMap };
     user: {
-      getUserCYTokens: Status;
-      userCyTokensActionsMap: { [cyTokenAddress: string]: UserCyTokenActionsStatusMap };
+      getUserMarkets: Status;
+      userMarketsActionsMap: { [marketAddress: string]: UserMarketActionsStatusMap };
     };
   };
 }

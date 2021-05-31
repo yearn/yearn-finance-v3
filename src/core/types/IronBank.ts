@@ -1,19 +1,6 @@
-import { EthereumAddress, TokenView, UserTokenData } from '@types';
+import { EthereumAddress, TokenView } from '@types';
 
-export interface IronBank extends IronBankData {
-  cyTokens: CyTokenView[];
-}
-
-export interface IronBankData {
-  supportedCyTokens: EthereumAddress[];
-}
-
-export interface UserIronBankData {
-  borrowLimit: string;
-  borrowLimitUsed: string;
-}
-
-export interface CyTokenView {
+export interface IronBankMarketView {
   address: EthereumAddress;
   decimals: string;
   name: string;
@@ -34,36 +21,4 @@ export interface CyTokenView {
 
   // underlyingToken
   token: TokenView;
-}
-
-export interface CyTokenData extends CyTokenStaticData, CyTokenDynamicData {}
-
-export interface CyTokenStaticData {
-  address: EthereumAddress;
-  decimals: string;
-  name: string;
-  symbol: string;
-  underlyingTokenAddress: EthereumAddress;
-}
-
-export interface CyTokenDynamicData {
-  address: EthereumAddress;
-  lendApy: string;
-  borrowApy: string;
-  liquidity: string;
-  collateralFactor: string;
-  reserveFactor: string;
-  isActive: string;
-  exchangeRate: string;
-}
-
-export interface UserCyTokenData {
-  address: EthereumAddress;
-  suppliedBalance: string;
-  suppliedBalanceUsdc: string;
-  borrowedBalance: string;
-  borrowedBalanceUsdc: string;
-  allowancesMap: { [spenderAddress: string]: string };
-  enteredMarket: boolean;
-  borrowLimit: string;
 }

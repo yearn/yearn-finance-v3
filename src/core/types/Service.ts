@@ -50,8 +50,8 @@ export interface ApproveProps {
 }
 
 export interface IronBankService {
-  getSupportedCyTokens: () => Promise<IronBankMarket[]>;
-  getUserCyTokensData: ({
+  getSupportedMarkets: () => Promise<IronBankMarket[]>;
+  getUserMarketsData: ({
     userAddress,
     marketAddresses,
   }: {

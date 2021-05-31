@@ -1,8 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
-  CyTokenActionsStatusMap,
+  MarketActionsStatusMap,
   IronBankState,
-  UserCyTokenActionsStatusMap,
+  UserMarketActionsStatusMap,
   IronBankMarketPositionsMap,
   Position,
 } from '@types';
@@ -10,7 +10,7 @@ import { groupBy, keyBy, union } from 'lodash';
 import { initialStatus } from '../../../types/Status';
 import { IronBankActions } from './ironBank.actions';
 
-export const initialCyTokensActionsMap: CyTokenActionsStatusMap = {
+export const initialMarketsActionsMap: MarketActionsStatusMap = {
   approve: initialStatus,
   get: initialStatus,
   borrow: initialStatus,
@@ -19,38 +19,38 @@ export const initialCyTokensActionsMap: CyTokenActionsStatusMap = {
   withdraw: initialStatus,
 };
 
-export const initialUserCyTokensActionsMap: UserCyTokenActionsStatusMap = {
+export const initialUserMarketsActionsMap: UserMarketActionsStatusMap = {
   get: initialStatus,
 };
 
 const initialState: IronBankState = {
-  cyTokenAddresses: [],
-  cyTokensMap: {},
-  selectedCyTokenAddress: '',
+  marketAddresses: [],
+  marketsMap: {},
+  selectedMarketAddress: '',
   ironBankData: undefined,
   user: {
-    userCyTokensMap: {},
+    userMarketsMap: {},
     marketsAllowancesMap: {},
   },
   statusMap: {
     initiateIronBank: { ...initialStatus },
     getIronBankData: { ...initialStatus },
-    getCYTokens: { ...initialStatus },
-    cyTokensActionsMap: {},
+    getMarkets: { ...initialStatus },
+    marketsActionsMap: {},
     user: {
-      getUserCYTokens: { ...initialStatus },
-      userCyTokensActionsMap: {},
+      getUserMarkets: { ...initialStatus },
+      userMarketsActionsMap: {},
     },
   },
 };
 
 const {
   initiateIronBank,
-  getCyTokens,
+  getMarkets,
   getIronBankData,
-  getUserCyTokens,
-  setSelectedCyTokenAddress,
-  approveCyToken,
+  getUserMarkets,
+  setSelectedMarketAddress,
+  approveMarket,
   getMarketsDynamic,
 } = IronBankActions;
 
@@ -75,37 +75,37 @@ const ironBankReducer = createReducer(initialState, (builder) => {
     .addCase(getIronBankData.rejected, (state, { error }) => {
       state.statusMap.getIronBankData = { error: error.message };
     })
-    .addCase(getCyTokens.pending, (state) => {
-      state.statusMap.getCYTokens = { loading: true };
+    .addCase(getMarkets.pending, (state) => {
+      state.statusMap.getMarkets = { loading: true };
     })
-    .addCase(getCyTokens.fulfilled, (state, { payload: { ironBankMarkets } }) => {
+    .addCase(getMarkets.fulfilled, (state, { payload: { ironBankMarkets } }) => {
       const marketAddresses: string[] = [];
       ironBankMarkets.forEach((market) => {
         const address = market.address;
         marketAddresses.push(address);
-        state.cyTokensMap[address] = market;
-        state.statusMap.cyTokensActionsMap[address] = initialCyTokensActionsMap;
-        state.statusMap.user.userCyTokensActionsMap[address] = initialUserCyTokensActionsMap;
+        state.marketsMap[address] = market;
+        state.statusMap.marketsActionsMap[address] = initialMarketsActionsMap;
+        state.statusMap.user.userMarketsActionsMap[address] = initialUserMarketsActionsMap;
       });
-      state.cyTokenAddresses = union(state.cyTokenAddresses, marketAddresses);
-      state.statusMap.getCYTokens = {};
+      state.marketAddresses = union(state.marketAddresses, marketAddresses);
+      state.statusMap.getMarkets = {};
     })
-    .addCase(getCyTokens.rejected, (state, { error }) => {
-      state.statusMap.getCYTokens = { error: error.message };
+    .addCase(getMarkets.rejected, (state, { error }) => {
+      state.statusMap.getMarkets = { error: error.message };
     })
-    .addCase(getUserCyTokens.pending, (state, { meta }) => {
+    .addCase(getUserMarkets.pending, (state, { meta }) => {
       const marketAddresses = meta.arg.marketAddresses || [];
       marketAddresses.forEach((address) => {
         checkAndInitUserMarketStatus(state, address);
-        state.statusMap.user.userCyTokensActionsMap[address].get = { loading: true };
+        state.statusMap.user.userMarketsActionsMap[address].get = { loading: true };
       });
-      state.statusMap.user.getUserCYTokens = { loading: true };
+      state.statusMap.user.getUserMarkets = { loading: true };
     })
-    .addCase(getUserCyTokens.fulfilled, (state, { meta, payload: { userMarketsData } }) => {
+    .addCase(getUserMarkets.fulfilled, (state, { meta, payload: { userMarketsData } }) => {
       const marketsPositionsMap = parsePositionsIntoMap(userMarketsData);
       const marketAddresses = meta.arg.marketAddresses;
       marketAddresses?.forEach((address) => {
-        state.statusMap.user.userCyTokensActionsMap[address].get = {};
+        state.statusMap.user.userMarketsActionsMap[address].get = {};
       });
 
       userMarketsData.forEach((position) => {
@@ -116,45 +116,45 @@ const ironBankReducer = createReducer(initialState, (builder) => {
         state.user.marketsAllowancesMap[address] = allowancesMap;
       });
 
-      state.user.userCyTokensMap = { ...state.user.userCyTokensMap, ...marketsPositionsMap };
-      state.statusMap.user.getUserCYTokens = {};
+      state.user.userMarketsMap = { ...state.user.userMarketsMap, ...marketsPositionsMap };
+      state.statusMap.user.getUserMarkets = {};
     })
-    .addCase(getUserCyTokens.rejected, (state, { meta, error }) => {
+    .addCase(getUserMarkets.rejected, (state, { meta, error }) => {
       const marketAddresses = meta.arg.marketAddresses || [];
       marketAddresses.forEach((address) => {
-        state.statusMap.user.userCyTokensActionsMap[address].get = {};
+        state.statusMap.user.userMarketsActionsMap[address].get = {};
       });
-      state.statusMap.user.getUserCYTokens = { error: error.message };
+      state.statusMap.user.getUserMarkets = { error: error.message };
     })
-    .addCase(approveCyToken.pending, (state, { meta }) => {
-      const { cyTokenAddress } = meta.arg;
-      state.statusMap.cyTokensActionsMap[cyTokenAddress].approve = { loading: true };
+    .addCase(approveMarket.pending, (state, { meta }) => {
+      const { marketAddress } = meta.arg;
+      state.statusMap.marketsActionsMap[marketAddress].approve = { loading: true };
     })
-    .addCase(approveCyToken.fulfilled, (state, { meta }) => {
-      const { cyTokenAddress } = meta.arg;
-      state.statusMap.cyTokensActionsMap[cyTokenAddress].approve = {};
+    .addCase(approveMarket.fulfilled, (state, { meta }) => {
+      const { marketAddress } = meta.arg;
+      state.statusMap.marketsActionsMap[marketAddress].approve = {};
     })
-    .addCase(approveCyToken.rejected, (state, { meta, error }) => {
-      const { cyTokenAddress } = meta.arg;
-      state.statusMap.cyTokensActionsMap[cyTokenAddress].approve = { error: error.message };
+    .addCase(approveMarket.rejected, (state, { meta, error }) => {
+      const { marketAddress } = meta.arg;
+      state.statusMap.marketsActionsMap[marketAddress].approve = { error: error.message };
     })
-    .addCase(setSelectedCyTokenAddress, (state, { payload: { cyTokenAddress } }) => {
-      state.selectedCyTokenAddress = cyTokenAddress;
+    .addCase(setSelectedMarketAddress, (state, { payload: { marketAddress } }) => {
+      state.selectedMarketAddress = marketAddress;
     })
     .addCase(getMarketsDynamic.pending, (state, { meta }) => {
       const marketAddresses = meta.arg.addresses;
       marketAddresses.forEach((address) => {
-        state.statusMap.cyTokensActionsMap[address].get = { loading: true };
+        state.statusMap.marketsActionsMap[address].get = { loading: true };
       });
     })
     .addCase(getMarketsDynamic.fulfilled, (state, { meta, payload: { marketsDynamicData } }) => {
       const marketAddresses = meta.arg.addresses;
-      marketAddresses.forEach((address) => (state.statusMap.cyTokensActionsMap[address].get = {}));
+      marketAddresses.forEach((address) => (state.statusMap.marketsActionsMap[address].get = {}));
 
       marketsDynamicData.forEach((marketDynamicData) => {
         const address = marketDynamicData.address;
-        state.cyTokensMap[address] = {
-          ...state.cyTokensMap[address],
+        state.marketsMap[address] = {
+          ...state.marketsMap[address],
           ...marketDynamicData,
         };
       });
@@ -162,7 +162,7 @@ const ironBankReducer = createReducer(initialState, (builder) => {
     .addCase(getMarketsDynamic.rejected, (state, { meta, error }) => {
       const marketAddresses: string[] = meta.arg.addresses;
       marketAddresses.forEach((address) => {
-        state.statusMap.cyTokensActionsMap[address].get = { error: error.message };
+        state.statusMap.marketsActionsMap[address].get = { error: error.message };
       });
     });
 });
@@ -170,9 +170,9 @@ const ironBankReducer = createReducer(initialState, (builder) => {
 export default ironBankReducer;
 
 function checkAndInitUserMarketStatus(state: IronBankState, marketAddress: string) {
-  const actionsMap = state.statusMap.user.userCyTokensActionsMap[marketAddress];
+  const actionsMap = state.statusMap.user.userMarketsActionsMap[marketAddress];
   if (actionsMap) return;
-  state.statusMap.user.userCyTokensActionsMap[marketAddress] = { ...initialUserCyTokensActionsMap };
+  state.statusMap.user.userMarketsActionsMap[marketAddress] = { ...initialUserMarketsActionsMap };
 }
 
 function parsePositionsIntoMap(positions: Position[]): { [marketAddress: string]: IronBankMarketPositionsMap } {
