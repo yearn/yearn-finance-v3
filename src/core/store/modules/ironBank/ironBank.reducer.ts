@@ -28,6 +28,7 @@ const initialState: IronBankState = {
   cyTokensMap: {},
   address: '',
   selectedCyTokenAddress: '',
+  ironBankData: undefined,
   user: {
     borrowLimit: '0',
     borrowLimitUsed: '0',
@@ -69,10 +70,8 @@ const ironBankReducer = createReducer(initialState, (builder) => {
     .addCase(getIronBankData.pending, (state) => {
       state.statusMap.getIronBankData = { loading: true };
     })
-    .addCase(getIronBankData.fulfilled, (state, { payload: { address, borrowLimit, borrowLimitUsed } }) => {
-      state.address = address;
-      state.user.borrowLimit = borrowLimit;
-      state.user.borrowLimitUsed = borrowLimitUsed;
+    .addCase(getIronBankData.fulfilled, (state, { payload: { ironBankData } }) => {
+      state.ironBankData = ironBankData;
       state.statusMap.getIronBankData = {};
     })
     .addCase(getIronBankData.rejected, (state, { error }) => {

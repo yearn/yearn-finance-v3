@@ -9,6 +9,7 @@ const selectCyTokensMap = (state: RootState) => state.ironBank.cyTokensMap;
 const selectCyTokensAddresses = (state: RootState) => state.ironBank.cyTokenAddresses;
 const selectCyTokensAllowancesMap = (state: RootState) => state.ironBank.user.marketsAllowancesMap;
 const selectUserCyTokensMap = (state: RootState) => state.ironBank.user.userCyTokensMap;
+const selectIronBankData = (state: RootState) => state.ironBank.ironBankData;
 
 // tokens
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
@@ -24,6 +25,7 @@ const selectCyTokens = createSelector(
     selectUserTokensMap,
     selectCyTokensAllowancesMap,
     selectUserTokensAllowancesMap,
+    selectIronBankData,
   ],
   (
     cyTokensMap,
@@ -32,7 +34,8 @@ const selectCyTokens = createSelector(
     userCyTokensMap,
     userTokensMap,
     cyTokensAllowancesMap,
-    userTokensAllowancesMap
+    userTokensAllowancesMap,
+    ironBankData
   ) => {
     const cyTokens: any[] = cyTokenAddresses.map((address) => {
       const cyTokenData = cyTokensMap[address];
@@ -52,6 +55,7 @@ const selectCyTokens = createSelector(
         reserveFactor: cyTokenData.metadata.reserveFactor,
         isActive: cyTokenData.metadata.isActive,
         exchangeRate: cyTokenData.metadata.exchangeRate,
+        borrowLimit: ironBankData?.borrowLimitUsdc ?? '0',
         LEND: {
           suppliedBalance: userCyTokenData?.LEND.underlyingTokenBalance.amount ?? '0',
           suppliedBalanceUsdc: userCyTokenData?.LEND.underlyingTokenBalance.amountUsdc ?? '0',
@@ -64,10 +68,8 @@ const selectCyTokens = createSelector(
         // TODO POPULATE WITH REAL DATA
         allowancesMap: {},
         enteredMarket: false,
-        borrowLimit: '0',
         // allowancesMap: userCyTokenData?.allowancesMap ?? {},
         // enteredMarket: userCyTokenData?.enteredMarket ?? false,
-        // borrowLimit: userCyTokenData?.borrowLimit ?? '0',
         token: {
           address: tokenData.address,
           name: tokenData.name,
@@ -109,4 +111,9 @@ const selectSelectedCyToken = createSelector(
   }
 );
 
-export const IronBankSelectors = { selectCyTokens, selectIronBankGeneralStatus, selectSelectedCyToken };
+export const IronBankSelectors = {
+  selectCyTokens,
+  selectIronBankGeneralStatus,
+  selectSelectedCyToken,
+  selectIronBankData,
+};

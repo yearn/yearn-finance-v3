@@ -1,4 +1,4 @@
-import { IronBankService, YearnSdk, IronBankMarket, Position } from '@types';
+import { IronBankService, YearnSdk, IronBankMarket, Position, IronBankPosition } from '@types';
 
 export class IronBankServiceImpl implements IronBankService {
   private yearnSdk: YearnSdk;
@@ -7,11 +7,9 @@ export class IronBankServiceImpl implements IronBankService {
     this.yearnSdk = yearnSdk;
   }
 
-  public async getIronBankData({ userAddress }: { userAddress: string | undefined }): Promise<any> {
-    // const yearn = this.yearnSdk;
-    // const ironBank = await yearn.ironBank.getIronBank(userAddress);
-
-    return;
+  public async getIronBankData({ userAddress }: { userAddress: string }): Promise<IronBankPosition> {
+    const yearn = this.yearnSdk;
+    return await yearn.ironBank.generalPositionOf(userAddress);
   }
 
   public async getSupportedCyTokens(): Promise<IronBankMarket[]> {

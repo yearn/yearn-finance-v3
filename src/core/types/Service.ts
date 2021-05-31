@@ -1,16 +1,5 @@
-import {
-  UserCyTokenData,
-  TokenDynamicData,
-  EthereumAddress,
-  Wei,
-  Position,
-  Token,
-  Vault,
-  VaultDynamic,
-  Balance,
-  Integer,
-} from '@types';
-import { IronBankMarket } from '@yfi/sdk';
+import { TokenDynamicData, EthereumAddress, Wei, Position, Token, Vault, VaultDynamic, Balance, Integer } from '@types';
+import { IronBankMarket, IronBankPosition } from '@yfi/sdk';
 
 export interface UserService {}
 
@@ -69,7 +58,7 @@ export interface IronBankService {
     userAddress: EthereumAddress;
     marketAddresses?: string[];
   }) => Promise<Position[]>;
-  getIronBankData: ({ userAddress }: { userAddress: EthereumAddress | undefined }) => Promise<any>;
+  getIronBankData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankPosition>;
   // getCyTokensDynamicData: () => Promise<CyTokenDynamicData[]>;
   // approveSupply: (props: ApproveSupplyProps) => Promise<void>;
   // supply: (props: SupplyProps) => Promise<void>;

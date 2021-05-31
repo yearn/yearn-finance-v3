@@ -1,7 +1,8 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { UserCyTokenData, Position, Token, Vault, Integer, Balance, IronBankMarket } from '@types';
+import { Position, Token, Vault, Integer, Balance, IronBankMarket } from '@types';
 import { EthereumAddress } from './Ethereum';
+import { IronBankPosition } from '@yfi/sdk';
 
 export interface RootState {
   app: AppState;
@@ -126,6 +127,7 @@ export interface IronBankState {
   cyTokensMap: { [cyTokenAddress: string]: IronBankMarket };
   address: EthereumAddress;
   selectedCyTokenAddress: EthereumAddress;
+  ironBankData: IronBankPosition | undefined;
   user: {
     borrowLimit: string;
     borrowLimitUsed: string;
