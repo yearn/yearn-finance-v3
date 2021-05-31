@@ -125,12 +125,9 @@ export interface IronBankMarketPositionsMap {
 export interface IronBankState {
   cyTokenAddresses: EthereumAddress[];
   cyTokensMap: { [cyTokenAddress: string]: IronBankMarket };
-  address: EthereumAddress;
   selectedCyTokenAddress: EthereumAddress;
   ironBankData: IronBankPosition | undefined;
   user: {
-    borrowLimit: string;
-    borrowLimitUsed: string;
     userCyTokensMap: { [cyTokenAddress: string]: IronBankMarketPositionsMap };
     marketsAllowancesMap: { [marketAddress: string]: AllowancesMap };
   };

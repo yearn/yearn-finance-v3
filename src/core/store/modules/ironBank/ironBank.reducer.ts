@@ -26,12 +26,9 @@ export const initialUserCyTokensActionsMap: UserCyTokenActionsStatusMap = {
 const initialState: IronBankState = {
   cyTokenAddresses: [],
   cyTokensMap: {},
-  address: '',
   selectedCyTokenAddress: '',
   ironBankData: undefined,
   user: {
-    borrowLimit: '0',
-    borrowLimitUsed: '0',
     userCyTokensMap: {},
     marketsAllowancesMap: {},
   },
