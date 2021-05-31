@@ -1,5 +1,4 @@
 import {
-  CyTokenData,
   UserCyTokenData,
   TokenDynamicData,
   EthereumAddress,
@@ -11,6 +10,7 @@ import {
   Balance,
   Integer,
 } from '@types';
+import { IronBankMarket } from '@yfi/sdk';
 
 export interface UserService {}
 
@@ -61,7 +61,7 @@ export interface ApproveProps {
 }
 
 export interface IronBankService {
-  getSupportedCyTokens: () => Promise<CyTokenData[]>;
+  getSupportedCyTokens: () => Promise<IronBankMarket[]>;
   getUserCyTokensData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserCyTokenData[]>;
   getIronBankData: ({ userAddress }: { userAddress: EthereumAddress | undefined }) => Promise<any>;
   // getCyTokensDynamicData: () => Promise<CyTokenDynamicData[]>;

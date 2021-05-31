@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { CyTokenData, UserCyTokenData, UserTokenData } from '@types';
+import { IronBankMarket, UserCyTokenData } from '@types';
 import { TokensActions } from '@store';
 
 const setSelectedCyTokenAddress = createAction<{ cyTokenAddress: string }>('ironbank/setSelectedCyTokenAddress');
@@ -24,24 +24,13 @@ const getIronBankData = createAsyncThunk<
   return { address, borrowLimit, borrowLimitUsed };
 });
 
-// todo move this
-interface CyTokensMap {
-  [cyTokenAddress: string]: CyTokenData;
-}
-
-const getCyTokens = createAsyncThunk<{ cyTokensMap: CyTokensMap; cyTokensAddresses: string[] }, undefined, ThunkAPI>(
+const getCyTokens = createAsyncThunk<{ ironBankMarkets: IronBankMarket[] }, undefined, ThunkAPI>(
   'ironBank/getCyTokens',
   async (_arg, { extra }) => {
     const { ironBankService } = extra.services;
-    const cyTokens = await ironBankService.getSupportedCyTokens();
-    const cyTokensMap: { [cyTokenAddress: string]: CyTokenData } = {};
-    const cyTokensAddresses: string[] = [];
-    cyTokens.forEach((cyToken) => {
-      cyTokensMap[cyToken.address] = cyToken;
-      cyTokensAddresses.push(cyToken.address);
-    });
+    const ironBankMarkets = await ironBankService.getSupportedCyTokens();
 
-    return { cyTokensMap, cyTokensAddresses };
+    return { ironBankMarkets };
   }
 );
 

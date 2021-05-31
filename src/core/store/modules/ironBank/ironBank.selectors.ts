@@ -9,7 +9,7 @@ const selectSelectedCyTokenAddress = (state: RootState) => state.ironBank.select
 const selectCyTokens = createSelector(
   // TODO use specific selectors for each needed state variable.
   [selectIronBankState, selectTokensState],
-  (ironBankState, tokensState): CyToken[] => {
+  (ironBankState, tokensState) => {
     const {
       cyTokenAddresses,
       cyTokensMap,
@@ -19,25 +19,25 @@ const selectCyTokens = createSelector(
       tokensMap,
       user: { userTokensMap },
     } = tokensState;
-    const cyTokens: CyToken[] = cyTokenAddresses.map((address) => {
+    const cyTokens: any[] = cyTokenAddresses.map((address) => {
       const cyTokenData = cyTokensMap[address];
       const userCyTokenData = userCyTokensMap[address];
-      const tokenData = tokensMap[cyTokenData.underlyingTokenAddress];
-      const userTokenData = userTokensMap[cyTokenData.underlyingTokenAddress];
-      const allowancesMap = tokensState.user.userTokensAllowancesMap[cyTokenData.underlyingTokenAddress] ?? {};
+      const tokenData = tokensMap[cyTokenData.tokenId];
+      const userTokenData = userTokensMap[cyTokenData.tokenId];
+      const allowancesMap = tokensState.user.userTokensAllowancesMap[cyTokenData.tokenId] ?? {};
       return {
         address: cyTokenData.address,
         decimals: cyTokenData.decimals,
         name: cyTokenData.name,
         symbol: cyTokenData.symbol,
-        underlyingTokenAddress: cyTokenData.underlyingTokenAddress,
-        lendApy: cyTokenData.lendApy,
-        borrowApy: cyTokenData.borrowApy,
-        liquidity: cyTokenData.liquidity,
-        collateralFactor: cyTokenData.collateralFactor,
-        reserveFactor: cyTokenData.reserveFactor,
-        isActive: cyTokenData.isActive,
-        exchangeRate: cyTokenData.exchangeRate,
+        underlyingTokenAddress: cyTokenData.tokenId,
+        lendApy: cyTokenData.metadata.lendApyBips,
+        borrowApy: cyTokenData.metadata.borrowApyBips,
+        liquidity: cyTokenData.metadata.liquidityUsdc,
+        collateralFactor: cyTokenData.metadata.collateralFactor,
+        reserveFactor: cyTokenData.metadata.reserveFactor,
+        isActive: cyTokenData.metadata.isActive,
+        exchangeRate: cyTokenData.metadata.exchangeRate,
         suppliedBalance: userCyTokenData?.suppliedBalance ?? '0',
         suppliedBalanceUsdc: userCyTokenData?.suppliedBalanceUsdc ?? '0',
         borrowedBalance: userCyTokenData?.borrowedBalance ?? '0',

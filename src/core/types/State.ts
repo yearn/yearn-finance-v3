@@ -1,6 +1,6 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { CyTokenData, UserCyTokenData, Position, Token, Vault, Integer, Balance } from '@types';
+import { UserCyTokenData, Position, Token, Vault, Integer, Balance, IronBankMarket } from '@types';
 import { EthereumAddress } from './Ethereum';
 
 export interface RootState {
@@ -118,7 +118,7 @@ export interface UserCyTokenActionsStatusMap {
 
 export interface IronBankState {
   cyTokenAddresses: EthereumAddress[];
-  cyTokensMap: { [cyTokenAddress: string]: CyTokenData };
+  cyTokensMap: { [cyTokenAddress: string]: IronBankMarket };
   address: EthereumAddress;
   selectedCyTokenAddress: EthereumAddress;
   user: {

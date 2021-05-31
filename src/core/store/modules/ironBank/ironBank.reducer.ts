@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { CyTokenActionsStatusMap, IronBankState } from '@types';
+import { CyTokenActionsStatusMap, IronBankState, UserCyTokenActionsStatusMap } from '@types';
+import { union } from 'lodash';
 import { initialStatus } from '../../../types/Status';
 import { IronBankActions } from './ironBank.actions';
 
@@ -10,6 +11,10 @@ export const initialCyTokensActionsMap: CyTokenActionsStatusMap = {
   replay: initialStatus,
   supply: initialStatus,
   withdraw: initialStatus,
+};
+
+export const initialUserCyTokensActionsMap: UserCyTokenActionsStatusMap = {
+  get: initialStatus,
 };
 
 const initialState: IronBankState = {
@@ -69,13 +74,17 @@ const ironBankReducer = createReducer(initialState, (builder) => {
     .addCase(getCyTokens.pending, (state) => {
       state.statusMap.getCYTokens = { loading: true };
     })
-    .addCase(getCyTokens.fulfilled, (state, { payload: { cyTokensAddresses, cyTokensMap } }) => {
-      const cyTokensActionsMap: any = {};
-      cyTokensAddresses.forEach((address) => (cyTokensActionsMap[address] = initialCyTokensActionsMap));
-      state.cyTokenAddresses = cyTokensAddresses;
-      state.cyTokensMap = cyTokensMap;
+    .addCase(getCyTokens.fulfilled, (state, { payload: { ironBankMarkets } }) => {
+      const marketAddresses: string[] = [];
+      ironBankMarkets.forEach((market) => {
+        const address = market.address;
+        marketAddresses.push(address);
+        state.cyTokensMap[address] = market;
+        state.statusMap.cyTokensActionsMap[address] = initialCyTokensActionsMap;
+        state.statusMap.user.userCyTokensActionsMap[address] = initialUserCyTokensActionsMap;
+      });
+      state.cyTokenAddresses = union(state.cyTokenAddresses, marketAddresses);
       state.statusMap.getCYTokens = {};
-      state.statusMap.cyTokensActionsMap = cyTokensActionsMap;
     })
     .addCase(getCyTokens.rejected, (state, { error }) => {
       state.statusMap.getCYTokens = { error: error.message };

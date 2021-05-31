@@ -1,4 +1,4 @@
-import { IronBankService, CyTokenData, UserCyTokenData, YearnSdk } from '@types';
+import { IronBankService, YearnSdk, IronBankMarket } from '@types';
 
 export class IronBankServiceImpl implements IronBankService {
   private yearnSdk: YearnSdk;
@@ -19,29 +19,9 @@ export class IronBankServiceImpl implements IronBankService {
     return;
   }
 
-  public async getSupportedCyTokens(): Promise<any[]> {
-    // public async getSupportedCyTokens(): Promise<CyTokenData[]> {
-    // const yearn = this.yearnSdk;
-    // const ironBank = await yearn.ironBank.get();
-    // const cyTokenData = ironBank.map((cyToken) => {
-    //   return {
-    //     // static
-    //     address: cyToken.tokenId,
-    //     decimals: cyToken.metadata.decimals.toString(),
-    //     name: cyToken.name,
-    //     symbol: cyToken.metadata.symbol,
-    //     underlyingTokenAddress: cyToken.token.address,
-    //     // dynamic
-    //     lendApy: cyToken.metadata.lendApy,
-    //     borrowApy: cyToken.metadata.borrowApy,
-    //     liquidity: cyToken.metadata.liquidity.toString(),
-    //     collateralFactor: cyToken.metadata.collateralFactor,
-    //     reserveFactor: cyToken.metadata.reserveFactor,
-    //     isActive: cyToken.metadata.isActive,
-    //     exchangeRate: cyToken.metadata.exchangeRate,
-    //   };
-    // });
-    return [];
+  public async getSupportedCyTokens(): Promise<IronBankMarket[]> {
+    const yearn = this.yearnSdk;
+    return await yearn.ironBank.get();
   }
 
   public async getUserCyTokensData({ userAddress }: { userAddress: string }): Promise<any[]> {
