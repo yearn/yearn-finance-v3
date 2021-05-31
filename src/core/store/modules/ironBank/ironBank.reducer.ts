@@ -1,6 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { CyTokenActionsStatusMap, IronBankState, UserCyTokenActionsStatusMap } from '@types';
-import { union } from 'lodash';
+import {
+  CyTokenActionsStatusMap,
+  IronBankState,
+  UserCyTokenActionsStatusMap,
+  IronBankMarketPositionsMap,
+  Position,
+} from '@types';
+import { groupBy, keyBy, union } from 'lodash';
 import { initialStatus } from '../../../types/Status';
 import { IronBankActions } from './ironBank.actions';
 
@@ -26,6 +32,7 @@ const initialState: IronBankState = {
     borrowLimit: '0',
     borrowLimitUsed: '0',
     userCyTokensMap: {},
+    marketsAllowancesMap: {},
   },
   statusMap: {
     initiateIronBank: { ...initialStatus },
@@ -89,14 +96,37 @@ const ironBankReducer = createReducer(initialState, (builder) => {
     .addCase(getCyTokens.rejected, (state, { error }) => {
       state.statusMap.getCYTokens = { error: error.message };
     })
-    .addCase(getUserCyTokens.pending, (state) => {
+    .addCase(getUserCyTokens.pending, (state, { meta }) => {
+      const marketAddresses = meta.arg.marketAddresses || [];
+      marketAddresses.forEach((address) => {
+        checkAndInitUserMarketStatus(state, address);
+        state.statusMap.user.userCyTokensActionsMap[address].get = { loading: true };
+      });
       state.statusMap.user.getUserCYTokens = { loading: true };
     })
-    .addCase(getUserCyTokens.fulfilled, (state, { payload: { userCyTokensMap } }) => {
-      state.user.userCyTokensMap = userCyTokensMap;
+    .addCase(getUserCyTokens.fulfilled, (state, { meta, payload: { userMarketsData } }) => {
+      const marketsPositionsMap = parsePositionsIntoMap(userMarketsData);
+      const marketAddresses = meta.arg.marketAddresses;
+      marketAddresses?.forEach((address) => {
+        state.statusMap.user.userCyTokensActionsMap[address].get = {};
+      });
+
+      userMarketsData.forEach((position) => {
+        const address = position.assetAddress;
+        const allowancesMap: any = {};
+        position.assetAllowances.forEach((allowance) => (allowancesMap[allowance.spender] = allowance.amount));
+
+        state.user.marketsAllowancesMap[address] = allowancesMap;
+      });
+
+      state.user.userCyTokensMap = { ...state.user.userCyTokensMap, ...marketsPositionsMap };
       state.statusMap.user.getUserCYTokens = {};
     })
-    .addCase(getUserCyTokens.rejected, (state, { error }) => {
+    .addCase(getUserCyTokens.rejected, (state, { meta, error }) => {
+      const marketAddresses = meta.arg.marketAddresses || [];
+      marketAddresses.forEach((address) => {
+        state.statusMap.user.userCyTokensActionsMap[address].get = {};
+      });
       state.statusMap.user.getUserCYTokens = { error: error.message };
     })
     .addCase(approveCyToken.pending, (state, { meta }) => {
@@ -117,3 +147,18 @@ const ironBankReducer = createReducer(initialState, (builder) => {
 });
 
 export default ironBankReducer;
+
+function checkAndInitUserMarketStatus(state: IronBankState, marketAddress: string) {
+  const actionsMap = state.statusMap.user.userCyTokensActionsMap[marketAddress];
+  if (actionsMap) return;
+  state.statusMap.user.userCyTokensActionsMap[marketAddress] = { ...initialUserCyTokensActionsMap };
+}
+
+function parsePositionsIntoMap(positions: Position[]): { [marketAddress: string]: IronBankMarketPositionsMap } {
+  const grouped = groupBy(positions, 'assetAddress');
+  const marketsMap: { [marketAddress: string]: any } = {};
+  Object.entries(grouped).forEach(([key, value]) => {
+    marketsMap[key] = keyBy(value, 'typeId');
+  });
+  return marketsMap;
+}

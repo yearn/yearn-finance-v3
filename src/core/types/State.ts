@@ -116,6 +116,11 @@ export interface UserCyTokenActionsStatusMap {
   get: Status;
 }
 
+export interface IronBankMarketPositionsMap {
+  LEND: Position;
+  BORROW: Position;
+}
+
 export interface IronBankState {
   cyTokenAddresses: EthereumAddress[];
   cyTokensMap: { [cyTokenAddress: string]: IronBankMarket };
@@ -124,7 +129,8 @@ export interface IronBankState {
   user: {
     borrowLimit: string;
     borrowLimitUsed: string;
-    userCyTokensMap: { [cyTokenAddress: string]: UserCyTokenData };
+    userCyTokensMap: { [cyTokenAddress: string]: IronBankMarketPositionsMap };
+    marketsAllowancesMap: { [marketAddress: string]: AllowancesMap };
   };
   statusMap: {
     initiateIronBank: Status;

@@ -1,4 +1,4 @@
-import { IronBankService, YearnSdk, IronBankMarket } from '@types';
+import { IronBankService, YearnSdk, IronBankMarket, Position } from '@types';
 
 export class IronBankServiceImpl implements IronBankService {
   private yearnSdk: YearnSdk;
@@ -19,29 +19,14 @@ export class IronBankServiceImpl implements IronBankService {
     return await yearn.ironBank.get();
   }
 
-  public async getUserCyTokensData({ userAddress }: { userAddress: string }): Promise<any[]> {
-    // public async getUserCyTokensData({ userAddress }: { userAddress: string }): Promise<UserCyTokenData[]> {
-    //   const yearn = this.yearnSdk;
-    //   const ironBank = await yearn.ironBank.assetsPositionsOf(userAddress);
-    //   const cyTokenData = ironBank.map(({ positions, metadata }) => {
-    //     const lendPosition = positions[0];
-    //     const borrowPosition = positions[1];
-    //     return {
-    //       address: metadata.assetId,
-    //       suppliedBalance: lendPosition.underlyingTokenBalance.amount.toString(),
-    //       suppliedBalanceUsdc: lendPosition.underlyingTokenBalance.amountUsdc.toString(),
-    //       borrowedBalance: borrowPosition.underlyingTokenBalance.amount.toString(),
-    //       borrowedBalanceUsdc: borrowPosition.underlyingTokenBalance.amountUsdc.toString(),
-    //       allowancesMap: borrowPosition.assetAllowances.reduce((map, allowance) => {
-    //         map[allowance.spender] = allowance.amount.toString();
-    //         return map;
-    //       }, {} as { [key: string]: string }),
-
-    //       enteredMarket: metadata.enteredMarket,
-    //       borrowLimit: metadata.borrowLimit.toString(),
-    //     };
-    //   });
-    //   return cyTokenData;
-    return [];
+  public async getUserCyTokensData({
+    userAddress,
+    marketAddresses,
+  }: {
+    userAddress: string;
+    marketAddresses?: string[];
+  }): Promise<Position[]> {
+    const yearn = this.yearnSdk;
+    return await yearn.ironBank.positionsOf(userAddress, marketAddresses);
   }
 }

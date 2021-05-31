@@ -151,7 +151,7 @@ export const Borrow = () => {
 
   useEffect(() => {
     if (selectedAddress) {
-      dispatch(IronBankActions.getUserCyTokens());
+      dispatch(IronBankActions.getUserCyTokens({}));
     }
   }, [selectedAddress]);
 

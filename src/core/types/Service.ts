@@ -62,7 +62,13 @@ export interface ApproveProps {
 
 export interface IronBankService {
   getSupportedCyTokens: () => Promise<IronBankMarket[]>;
-  getUserCyTokensData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserCyTokenData[]>;
+  getUserCyTokensData: ({
+    userAddress,
+    marketAddresses,
+  }: {
+    userAddress: EthereumAddress;
+    marketAddresses?: string[];
+  }) => Promise<Position[]>;
   getIronBankData: ({ userAddress }: { userAddress: EthereumAddress | undefined }) => Promise<any>;
   // getCyTokensDynamicData: () => Promise<CyTokenDynamicData[]>;
   // approveSupply: (props: ApproveSupplyProps) => Promise<void>;

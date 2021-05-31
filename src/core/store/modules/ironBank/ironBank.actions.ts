@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { IronBankMarket, UserCyTokenData } from '@types';
+import { IronBankMarket, Position } from '@types';
 import { TokensActions } from '@store';
 
 const setSelectedCyTokenAddress = createAction<{ cyTokenAddress: string }>('ironbank/setSelectedCyTokenAddress');
@@ -34,24 +34,19 @@ const getCyTokens = createAsyncThunk<{ ironBankMarkets: IronBankMarket[] }, unde
   }
 );
 
-const getUserCyTokens = createAsyncThunk<
-  { userCyTokensMap: { [cyTokenAddress: string]: UserCyTokenData } },
-  undefined,
-  ThunkAPI
->('ironBank/getUserCyTokens', async (_arg, { extra, getState, dispatch }) => {
-  const { ironBankService } = extra.services;
-  const userAddress = getState().wallet.selectedAddress;
-  if (!userAddress) {
-    throw new Error('WALLET NOT CONNECTED');
-  }
-  const userCyTokens = await ironBankService.getUserCyTokensData({ userAddress });
-  const userCyTokensMap: { [address: string]: UserCyTokenData } = {};
-  userCyTokens.forEach((cyToken) => {
-    userCyTokensMap[cyToken.address] = cyToken;
-  });
+const getUserCyTokens = createAsyncThunk<{ userMarketsData: Position[] }, { marketAddresses?: string[] }, ThunkAPI>(
+  'ironBank/getUserCyTokens',
+  async ({ marketAddresses }, { extra, getState, dispatch }) => {
+    const { ironBankService } = extra.services;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+    const userMarketsData = await ironBankService.getUserCyTokensData({ userAddress, marketAddresses });
 
-  return { userCyTokensMap };
-});
+    return { userMarketsData };
+  }
+);
 
 const approveCyToken = createAsyncThunk<void, { cyTokenAddress: string; tokenAddress: string }, ThunkAPI>(
   'ironBank/approve',
