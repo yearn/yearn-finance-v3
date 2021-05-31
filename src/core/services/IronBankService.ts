@@ -17,6 +17,11 @@ export class IronBankServiceImpl implements IronBankService {
     return await yearn.ironBank.get();
   }
 
+  public async getMarketsDynamicData(marketAddresses: string[]): Promise<IronBankMarketDynamic[]> {
+    const yearn = this.yearnSdk;
+    return await yearn.ironBank.getDynamic(marketAddresses);
+  }
+
   public async getUserCyTokensData({
     userAddress,
     marketAddresses,
@@ -26,10 +31,5 @@ export class IronBankServiceImpl implements IronBankService {
   }): Promise<Position[]> {
     const yearn = this.yearnSdk;
     return await yearn.ironBank.positionsOf(userAddress, marketAddresses);
-  }
-
-  public async getMarketsDynamic(marketAddresses: string[]): Promise<IronBankMarketDynamic[]> {
-    const yearn = this.yearnSdk;
-    return await yearn.ironBank.getDynamic(marketAddresses);
   }
 }

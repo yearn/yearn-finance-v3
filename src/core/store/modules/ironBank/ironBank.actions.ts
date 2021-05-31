@@ -31,7 +31,7 @@ const getMarketsDynamic = createAsyncThunk<
   ThunkAPI
 >('ironBank/getMarketsDynamic', async ({ addresses }, { extra }) => {
   const { ironBankService } = extra.services;
-  const marketsDynamicData = await ironBankService.getMarketsDynamic(addresses);
+  const marketsDynamicData = await ironBankService.getMarketsDynamicData(addresses);
   return { marketsDynamicData };
 });
 

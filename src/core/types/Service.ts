@@ -59,7 +59,7 @@ export interface IronBankService {
     marketAddresses?: string[];
   }) => Promise<Position[]>;
   getIronBankData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankPosition>;
-  getMarketsDynamic: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
+  getMarketsDynamicData: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
   // approveSupply: (props: ApproveSupplyProps) => Promise<void>;
   // supply: (props: SupplyProps) => Promise<void>;
   // withdraw: (props: WithdrawProps) => Promise<void>;
