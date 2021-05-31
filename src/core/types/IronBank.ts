@@ -1,7 +1,7 @@
 import { EthereumAddress, TokenView, UserTokenData } from '@types';
 
 export interface IronBank extends IronBankData {
-  cyTokens: CyToken[];
+  cyTokens: CyTokenView[];
 }
 
 export interface IronBankData {
@@ -13,27 +13,25 @@ export interface UserIronBankData {
   borrowLimitUsed: string;
 }
 
-export interface CyToken {
+export interface CyTokenView {
   address: EthereumAddress;
   decimals: string;
   name: string;
   symbol: string;
-  underlyingTokenAddress: EthereumAddress;
   lendApy: string;
   borrowApy: string;
   liquidity: string;
   collateralFactor: string;
   reserveFactor: string;
-  isActive: string;
+  isActive: boolean;
   exchangeRate: string;
   // user
-  suppliedBalance: string;
-  suppliedBalanceUsdc: string;
-  borrowedBalance: string;
-  borrowedBalanceUsdc: string;
+  userDeposited: string;
+  userDepositedUsdc: string;
   allowancesMap: { [spenderAddress: string]: string };
   enteredMarket: boolean;
   borrowLimit: string;
+
   // underlyingToken
   token: TokenView;
 }

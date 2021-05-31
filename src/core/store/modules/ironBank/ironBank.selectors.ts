@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { RootState, CyToken, Status } from '@types';
+import { RootState, CyTokenView, Status } from '@types';
+import BigNumber from 'bignumber.js';
 
 const selectIronBankState = (state: RootState) => state.ironBank;
 const selectSelectedCyTokenAddress = (state: RootState) => state.ironBank.selectedCyTokenAddress;
@@ -13,7 +14,7 @@ const selectIronBankData = (state: RootState) => state.ironBank.ironBankData;
 
 // tokens
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
-const selectUserTokensAllowancesMap = (state: RootState) => state.tokens.user.userTokensMap;
+const selectUserTokensAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 
 const selectCyTokens = createSelector(
@@ -37,12 +38,12 @@ const selectCyTokens = createSelector(
     userTokensAllowancesMap,
     ironBankData
   ) => {
-    const cyTokens: any[] = cyTokenAddresses.map((address) => {
+    const cyTokens = cyTokenAddresses.map((address) => {
       const cyTokenData = cyTokensMap[address];
       const userCyTokenData = userCyTokensMap[address];
       const tokenData = tokensMap[cyTokenData.tokenId];
       const userTokenData = userTokensMap[cyTokenData.tokenId];
-      const allowancesMap = userTokensAllowancesMap[cyTokenData.tokenId] ?? {};
+      const tokenAllowancesMap = userTokensAllowancesMap[cyTokenData.tokenId] ?? {};
       return {
         address: cyTokenData.address,
         decimals: cyTokenData.decimals,
@@ -57,19 +58,17 @@ const selectCyTokens = createSelector(
         exchangeRate: cyTokenData.metadata.exchangeRate,
         borrowLimit: ironBankData?.borrowLimitUsdc ?? '0',
         LEND: {
-          suppliedBalance: userCyTokenData?.LEND.underlyingTokenBalance.amount ?? '0',
-          suppliedBalanceUsdc: userCyTokenData?.LEND.underlyingTokenBalance.amountUsdc ?? '0',
+          userDeposited: userCyTokenData?.LEND.underlyingTokenBalance.amount ?? '0',
+          userDepositedUsdc: userCyTokenData?.LEND.underlyingTokenBalance.amountUsdc ?? '0',
         },
         BORROW: {
-          borrowedBalance: userCyTokenData?.BORROW.underlyingTokenBalance.amount ?? '0',
-          borrowedBalanceUsdc: userCyTokenData?.BORROW.underlyingTokenBalance.amountUsdc ?? '0',
+          userDeposited: userCyTokenData?.BORROW.underlyingTokenBalance.amount ?? '0',
+          userDepositedUsdc: userCyTokenData?.BORROW.underlyingTokenBalance.amountUsdc ?? '0',
         },
+        allowancesMap: cyTokensAllowancesMap[address] ?? {},
 
-        // TODO POPULATE WITH REAL DATA
-        allowancesMap: {},
-        enteredMarket: false,
-        // allowancesMap: userCyTokenData?.allowancesMap ?? {},
-        // enteredMarket: userCyTokenData?.enteredMarket ?? false,
+        enteredMarket: false, // TODO POPULATE WITH REAL DATA
+        // enteredMarket: userCyTokenData?.metamask.enteredMarket ?? false,
         token: {
           address: tokenData.address,
           name: tokenData.name,
@@ -79,7 +78,7 @@ const selectCyTokens = createSelector(
           balance: userTokenData?.balance ?? '0',
           balanceUsdc: userTokenData?.balanceUsdc ?? '0',
           priceUsdc: tokenData?.priceUsdc ?? '0',
-          allowancesMap: allowancesMap,
+          allowancesMap: tokenAllowancesMap,
         },
       };
     });
@@ -87,33 +86,19 @@ const selectCyTokens = createSelector(
   }
 );
 
-const selectIronBankGeneralStatus = createSelector(
-  // TODO use specific selectors for each needed state variable.
-  [selectIronBankState],
-  (ironBankState): Status => {
-    const { statusMap } = ironBankState;
-    const loading =
-      statusMap.initiateIronBank.loading || statusMap.getIronBankData.loading || statusMap.getCYTokens.loading;
-    const error = statusMap.initiateIronBank.error || statusMap.getIronBankData.error || statusMap.getCYTokens.error;
-    return { loading, error };
-  }
-);
+const selectLendMarkets = createSelector([selectCyTokens], (markets): CyTokenView[] => {
+  const lendMarkets = markets.map(({ BORROW, LEND, token, ...rest }) => ({ token, ...LEND, ...rest }));
+  return lendMarkets.filter((market) => new BigNumber(market.userDeposited).gt(0));
+});
 
-const selectSelectedCyToken = createSelector(
-  // TODO use specific selectors for each needed state variable.
-  [selectCyTokens, selectSelectedCyTokenAddress],
-  (cyTokens, selectedCyTokenAddress): CyToken | undefined => {
-    if (!selectedCyTokenAddress) {
-      return undefined;
-    }
-    const selectedCyToken = cyTokens.find((cyToken) => cyToken.address === selectedCyTokenAddress);
-    return selectedCyToken;
-  }
-);
+const selectBorrowMarkets = createSelector([selectCyTokens], (markets) => {
+  const borrowMarkets = markets.map(({ BORROW, LEND, token, ...rest }) => ({ token, ...BORROW, ...rest }));
+  return borrowMarkets.filter((market) => new BigNumber(market.userDeposited).gt(0));
+});
 
 export const IronBankSelectors = {
   selectCyTokens,
-  selectIronBankGeneralStatus,
-  selectSelectedCyToken,
   selectIronBankData,
+  selectLendMarkets,
+  selectBorrowMarkets,
 };
