@@ -3,34 +3,48 @@ import { createSelector } from '@reduxjs/toolkit';
 import { RootState, CyToken, Status } from '@types';
 
 const selectIronBankState = (state: RootState) => state.ironBank;
-const selectTokensState = (state: RootState) => state.tokens;
 const selectSelectedCyTokenAddress = (state: RootState) => state.ironBank.selectedCyTokenAddress;
 
+const selectCyTokensMap = (state: RootState) => state.ironBank.cyTokensMap;
+const selectCyTokensAddresses = (state: RootState) => state.ironBank.cyTokenAddresses;
+const selectCyTokensAllowancesMap = (state: RootState) => state.ironBank.user.marketsAllowancesMap;
+const selectUserCyTokensMap = (state: RootState) => state.ironBank.user.userCyTokensMap;
+
+// tokens
+const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
+const selectUserTokensAllowancesMap = (state: RootState) => state.tokens.user.userTokensMap;
+const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
+
 const selectCyTokens = createSelector(
-  // TODO use specific selectors for each needed state variable.
-  [selectIronBankState, selectTokensState],
-  (ironBankState, tokensState) => {
-    const {
-      cyTokenAddresses,
-      cyTokensMap,
-      user: { userCyTokensMap },
-    } = ironBankState;
-    const {
-      tokensMap,
-      user: { userTokensMap },
-    } = tokensState;
+  [
+    selectCyTokensMap,
+    selectCyTokensAddresses,
+    selectTokensMap,
+    selectUserCyTokensMap,
+    selectUserTokensMap,
+    selectCyTokensAllowancesMap,
+    selectUserTokensAllowancesMap,
+  ],
+  (
+    cyTokensMap,
+    cyTokenAddresses,
+    tokensMap,
+    userCyTokensMap,
+    userTokensMap,
+    cyTokensAllowancesMap,
+    userTokensAllowancesMap
+  ) => {
     const cyTokens: any[] = cyTokenAddresses.map((address) => {
       const cyTokenData = cyTokensMap[address];
       const userCyTokenData = userCyTokensMap[address];
       const tokenData = tokensMap[cyTokenData.tokenId];
       const userTokenData = userTokensMap[cyTokenData.tokenId];
-      const allowancesMap = tokensState.user.userTokensAllowancesMap[cyTokenData.tokenId] ?? {};
+      const allowancesMap = userTokensAllowancesMap[cyTokenData.tokenId] ?? {};
       return {
         address: cyTokenData.address,
         decimals: cyTokenData.decimals,
         name: cyTokenData.name,
         symbol: cyTokenData.symbol,
-        underlyingTokenAddress: cyTokenData.tokenId,
         lendApy: cyTokenData.metadata.lendApyBips,
         borrowApy: cyTokenData.metadata.borrowApyBips,
         liquidity: cyTokenData.metadata.liquidityUsdc,
@@ -38,13 +52,22 @@ const selectCyTokens = createSelector(
         reserveFactor: cyTokenData.metadata.reserveFactor,
         isActive: cyTokenData.metadata.isActive,
         exchangeRate: cyTokenData.metadata.exchangeRate,
-        suppliedBalance: userCyTokenData?.suppliedBalance ?? '0',
-        suppliedBalanceUsdc: userCyTokenData?.suppliedBalanceUsdc ?? '0',
-        borrowedBalance: userCyTokenData?.borrowedBalance ?? '0',
-        borrowedBalanceUsdc: userCyTokenData?.borrowedBalanceUsdc ?? '0',
-        allowancesMap: userCyTokenData?.allowancesMap ?? {},
-        enteredMarket: userCyTokenData?.enteredMarket ?? false,
-        borrowLimit: userCyTokenData?.borrowLimit ?? '0',
+        LEND: {
+          suppliedBalance: userCyTokenData?.LEND.underlyingTokenBalance.amount ?? '0',
+          suppliedBalanceUsdc: userCyTokenData?.LEND.underlyingTokenBalance.amountUsdc ?? '0',
+        },
+        BORROW: {
+          borrowedBalance: userCyTokenData?.BORROW.underlyingTokenBalance.amount ?? '0',
+          borrowedBalanceUsdc: userCyTokenData?.BORROW.underlyingTokenBalance.amountUsdc ?? '0',
+        },
+
+        // TODO POPULATE WITH REAL DATA
+        allowancesMap: {},
+        enteredMarket: false,
+        borrowLimit: '0',
+        // allowancesMap: userCyTokenData?.allowancesMap ?? {},
+        // enteredMarket: userCyTokenData?.enteredMarket ?? false,
+        // borrowLimit: userCyTokenData?.borrowLimit ?? '0',
         token: {
           address: tokenData.address,
           name: tokenData.name,
