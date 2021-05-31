@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { IronBankMarket, IronBankPosition, Position } from '@types';
+import { IronBankMarket, IronBankMarketDynamic, IronBankPosition, Position } from '@types';
 import { TokensActions } from '@store';
 
 const setSelectedCyTokenAddress = createAction<{ cyTokenAddress: string }>('ironbank/setSelectedCyTokenAddress');
@@ -24,6 +24,16 @@ const getIronBankData = createAsyncThunk<{ ironBankData: IronBankPosition }, und
     return { ironBankData };
   }
 );
+
+const getMarketsDynamic = createAsyncThunk<
+  { marketsDynamicData: IronBankMarketDynamic[] },
+  { addresses: string[] },
+  ThunkAPI
+>('ironBank/getMarketsDynamic', async ({ addresses }, { extra }) => {
+  const { ironBankService } = extra.services;
+  const marketsDynamicData = await ironBankService.getMarketsDynamic(addresses);
+  return { marketsDynamicData };
+});
 
 const getCyTokens = createAsyncThunk<{ ironBankMarkets: IronBankMarket[] }, undefined, ThunkAPI>(
   'ironBank/getCyTokens',
@@ -68,4 +78,5 @@ export const IronBankActions = {
   getUserCyTokens,
   setSelectedCyTokenAddress,
   approveCyToken,
+  getMarketsDynamic,
 };

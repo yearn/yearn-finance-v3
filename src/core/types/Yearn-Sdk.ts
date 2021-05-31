@@ -11,6 +11,7 @@ import {
   VaultStatic,
   IronBankMarket,
   IronBankPosition,
+  IronBankMarketDynamic,
 } from '@yfi/sdk';
 
 export type {
@@ -26,4 +27,5 @@ export type {
   VaultStatic,
   IronBankMarket,
   IronBankPosition,
+  IronBankMarketDynamic,
 };

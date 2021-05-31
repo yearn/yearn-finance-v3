@@ -1,4 +1,4 @@
-import { IronBankService, YearnSdk, IronBankMarket, Position, IronBankPosition } from '@types';
+import { IronBankService, YearnSdk, IronBankMarket, Position, IronBankPosition, IronBankMarketDynamic } from '@types';
 
 export class IronBankServiceImpl implements IronBankService {
   private yearnSdk: YearnSdk;
@@ -26,5 +26,10 @@ export class IronBankServiceImpl implements IronBankService {
   }): Promise<Position[]> {
     const yearn = this.yearnSdk;
     return await yearn.ironBank.positionsOf(userAddress, marketAddresses);
+  }
+
+  public async getMarketsDynamic(marketAddresses: string[]): Promise<IronBankMarketDynamic[]> {
+    const yearn = this.yearnSdk;
+    return await yearn.ironBank.getDynamic(marketAddresses);
   }
 }

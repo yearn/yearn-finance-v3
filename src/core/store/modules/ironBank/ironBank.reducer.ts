@@ -54,6 +54,7 @@ const {
   getUserCyTokens,
   setSelectedCyTokenAddress,
   approveCyToken,
+  getMarketsDynamic,
 } = IronBankActions;
 
 const ironBankReducer = createReducer(initialState, (builder) => {
@@ -142,6 +143,30 @@ const ironBankReducer = createReducer(initialState, (builder) => {
     })
     .addCase(setSelectedCyTokenAddress, (state, { payload: { cyTokenAddress } }) => {
       state.selectedCyTokenAddress = cyTokenAddress;
+    })
+    .addCase(getMarketsDynamic.pending, (state, { meta }) => {
+      const marketAddresses = meta.arg.addresses;
+      marketAddresses.forEach((address) => {
+        state.statusMap.cyTokensActionsMap[address].get = { loading: true };
+      });
+    })
+    .addCase(getMarketsDynamic.fulfilled, (state, { meta, payload: { marketsDynamicData } }) => {
+      const marketAddresses = meta.arg.addresses;
+      marketAddresses.forEach((address) => (state.statusMap.cyTokensActionsMap[address].get = {}));
+
+      marketsDynamicData.forEach((marketDynamicData) => {
+        const address = marketDynamicData.address;
+        state.cyTokensMap[address] = {
+          ...state.cyTokensMap[address],
+          ...marketDynamicData,
+        };
+      });
+    })
+    .addCase(getMarketsDynamic.rejected, (state, { meta, error }) => {
+      const marketAddresses: string[] = meta.arg.addresses;
+      marketAddresses.forEach((address) => {
+        state.statusMap.cyTokensActionsMap[address].get = { error: error.message };
+      });
     });
 });
 

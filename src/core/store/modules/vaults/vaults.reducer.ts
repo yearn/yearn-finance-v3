@@ -151,14 +151,16 @@ const vaultsReducer = createReducer(initialState, (builder) => {
         state.statusMap.vaultsActionsStatusMap[address].get = { loading: true };
       });
     })
-    .addCase(getVaultsDynamic.fulfilled, (state, { payload: { vaultsDynamicData } }) => {
+    .addCase(getVaultsDynamic.fulfilled, (state, { meta, payload: { vaultsDynamicData } }) => {
+      const vaultAddresses = meta.arg.addresses;
+      vaultAddresses.forEach((address) => (state.statusMap.vaultsActionsStatusMap[address].get = {}));
+
       vaultsDynamicData.forEach((vaultDynamicData) => {
         const vaultAddress = vaultDynamicData.address;
         state.vaultsMap[vaultAddress] = {
           ...state.vaultsMap[vaultAddress],
           ...vaultDynamicData,
         };
-        state.statusMap.vaultsActionsStatusMap[vaultAddress].get = {};
       });
     })
     .addCase(getVaultsDynamic.rejected, (state, { error, meta }) => {
