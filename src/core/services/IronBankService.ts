@@ -11,11 +11,6 @@ export class IronBankServiceImpl implements IronBankService {
     // const yearn = this.yearnSdk;
     // const ironBank = await yearn.ironBank.getIronBank(userAddress);
 
-    // return {
-    //   address: ironBank.address,
-    //   borrowLimit: ironBank.userAssetMetadata.borrowLimit.toString(),
-    //   borrowLimitUsed: ironBank.userAssetMetadata.borrowLimitUSed.toString(),
-    // };
     return;
   }
 
