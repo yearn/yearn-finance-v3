@@ -29,6 +29,7 @@ const initialState: IronBankState = {
   selectedMarketAddress: '',
   ironBankData: undefined,
   user: {
+    userMarketsPositionsMap: {},
     userMarketsMap: {},
     marketsAllowancesMap: {},
   },
@@ -116,7 +117,7 @@ const ironBankReducer = createReducer(initialState, (builder) => {
         state.user.marketsAllowancesMap[address] = allowancesMap;
       });
 
-      state.user.userMarketsMap = { ...state.user.userMarketsMap, ...marketsPositionsMap };
+      state.user.userMarketsPositionsMap = { ...state.user.userMarketsPositionsMap, ...marketsPositionsMap };
       state.statusMap.user.getUserMarkets = {};
     })
     .addCase(getUserMarkets.rejected, (state, { meta, error }) => {

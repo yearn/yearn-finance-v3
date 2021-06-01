@@ -2,7 +2,7 @@ import { Theme } from './Settings';
 import { Status } from './Status';
 import { Position, Token, Vault, Integer, Balance, IronBankMarket } from '@types';
 import { EthereumAddress } from './Ethereum';
-import { IronBankPosition } from '@yfi/sdk';
+import { CyTokenUserMetadata, IronBankPosition } from '@yfi/sdk';
 
 export interface RootState {
   app: AppState;
@@ -128,7 +128,8 @@ export interface IronBankState {
   selectedMarketAddress: EthereumAddress;
   ironBankData: IronBankPosition | undefined;
   user: {
-    userMarketsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
+    userMarketsPositionsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
+    userMarketsMap: { [marketAddress: string]: CyTokenUserMetadata };
     marketsAllowancesMap: { [marketAddress: string]: AllowancesMap };
   };
   statusMap: {

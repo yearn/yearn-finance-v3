@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 const selectMarketsMap = (state: RootState) => state.ironBank.marketsMap;
 const selectMarketsAddresses = (state: RootState) => state.ironBank.marketAddresses;
 const selectMarketsAllowancesMap = (state: RootState) => state.ironBank.user.marketsAllowancesMap;
-const selectUserMarketsMap = (state: RootState) => state.ironBank.user.userMarketsMap;
+const selectUserMarketsPositionMap = (state: RootState) => state.ironBank.user.userMarketsPositionsMap;
 const selectIronBankData = (state: RootState) => state.ironBank.ironBankData;
 
 // tokens
@@ -19,7 +19,7 @@ const selectMarkets = createSelector(
     selectMarketsMap,
     selectMarketsAddresses,
     selectTokensMap,
-    selectUserMarketsMap,
+    selectUserMarketsPositionMap,
     selectUserTokensMap,
     selectMarketsAllowancesMap,
     selectUserTokensAllowancesMap,
@@ -29,7 +29,7 @@ const selectMarkets = createSelector(
     marketsMap,
     marketAddresses,
     tokensMap,
-    userMarketsMap,
+    userMarketsPositionMap,
     userTokensMap,
     marketsAllowancesMap,
     userTokensAllowancesMap,
@@ -37,7 +37,7 @@ const selectMarkets = createSelector(
   ) => {
     const markets = marketAddresses.map((address) => {
       const marketData = marketsMap[address];
-      const userMarketData = userMarketsMap[address];
+      const userMarketPositionData = userMarketsPositionMap[address];
       const tokenData = tokensMap[marketData.tokenId];
       const userTokenData = userTokensMap[marketData.tokenId];
       const tokenAllowancesMap = userTokensAllowancesMap[marketData.tokenId] ?? {};
@@ -55,12 +55,12 @@ const selectMarkets = createSelector(
         exchangeRate: marketData.metadata.exchangeRate,
         borrowLimit: ironBankData?.borrowLimitUsdc ?? '0',
         LEND: {
-          userDeposited: userMarketData?.LEND.underlyingTokenBalance.amount ?? '0',
-          userDepositedUsdc: userMarketData?.LEND.underlyingTokenBalance.amountUsdc ?? '0',
+          userDeposited: userMarketPositionData?.LEND.underlyingTokenBalance.amount ?? '0',
+          userDepositedUsdc: userMarketPositionData?.LEND.underlyingTokenBalance.amountUsdc ?? '0',
         },
         BORROW: {
-          userDeposited: userMarketData?.BORROW.underlyingTokenBalance.amount ?? '0',
-          userDepositedUsdc: userMarketData?.BORROW.underlyingTokenBalance.amountUsdc ?? '0',
+          userDeposited: userMarketPositionData?.BORROW.underlyingTokenBalance.amount ?? '0',
+          userDepositedUsdc: userMarketPositionData?.BORROW.underlyingTokenBalance.amountUsdc ?? '0',
         },
         allowancesMap: marketsAllowancesMap[address] ?? {},
 

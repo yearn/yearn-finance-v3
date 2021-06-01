@@ -12,6 +12,7 @@ import {
   IronBankMarket,
   IronBankPosition,
   IronBankMarketDynamic,
+  CyTokenUserMetadata,
 } from '@yfi/sdk';
 
 export type {
@@ -28,4 +29,5 @@ export type {
   IronBankMarket,
   IronBankPosition,
   IronBankMarketDynamic,
+  CyTokenUserMetadata,
 };
