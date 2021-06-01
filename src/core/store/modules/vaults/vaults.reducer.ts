@@ -20,7 +20,7 @@ const initialState: VaultsState = {
   vaultsMap: {},
   selectedVaultAddress: undefined,
   user: {
-    userVaultsMap: {},
+    userVaultsPositionsMap: {},
     vaultsAllowancesMap: {},
   },
   statusMap: {
@@ -96,7 +96,7 @@ const vaultsReducer = createReducer(initialState, (builder) => {
         state.user.vaultsAllowancesMap[address] = allowancesMap;
       });
 
-      state.user.userVaultsMap = { ...state.user.userVaultsMap, ...vaultsPositionsMap };
+      state.user.userVaultsPositionsMap = { ...state.user.userVaultsPositionsMap, ...vaultsPositionsMap };
       state.statusMap.user.getUserVaults = {};
     })
     .addCase(getUserVaultsData.rejected, (state, { meta, error }) => {

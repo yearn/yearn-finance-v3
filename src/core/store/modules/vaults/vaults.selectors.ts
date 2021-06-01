@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 const selectVaultsState = (state: RootState) => state.vaults;
-const selectUserVaultsMap = (state: RootState) => state.vaults.user.userVaultsMap;
+const selectUserVaultsPositionsMap = (state: RootState) => state.vaults.user.userVaultsPositionsMap;
 const selectVaultsMap = (state: RootState) => state.vaults.vaultsMap;
 const selectVaultsAddresses = (state: RootState) => state.vaults.vaultsAddresses;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
@@ -20,7 +20,7 @@ const selectVaults = createSelector(
     selectVaultsMap,
     selectVaultsAddresses,
     selectTokensMap,
-    selectUserVaultsMap,
+    selectUserVaultsPositionsMap,
     selectUserTokensMap,
     selectVaultsAllowancesMap,
     selectUserTokensAllowancesMap,
@@ -29,7 +29,7 @@ const selectVaults = createSelector(
     vaultsMap,
     vaultsAddresses,
     tokensMap,
-    userVaultsMap,
+    userVaultsPositionsMap,
     userTokensMap,
     vaultsAllowancesMap,
     userTokensAllowancesMap
@@ -37,7 +37,7 @@ const selectVaults = createSelector(
     const vaults = vaultsAddresses.map((address) => {
       const vaultData = vaultsMap[address];
       const tokenData = tokensMap[vaultData.tokenId];
-      const userVaultDataDeposit = userVaultsMap[address]?.DEPOSIT;
+      const userVaultDataDeposit = userVaultsPositionsMap[address]?.DEPOSIT;
       const userTokenData = userTokensMap[vaultData.tokenId];
       const allowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
       const currentAllowance = allowancesMap[address] ?? '0';
@@ -127,7 +127,7 @@ const selectRecomendations = createSelector([selectVaults], (vaults) => {
 export const VaultsSelectors = {
   selectVaultsState,
   selectVaults,
-  selectUserVaultsMap,
+  selectUserVaultsPositionsMap,
   selectUserTokensMap,
   selectTokensMap,
   selectSelectedVaultAddress,
