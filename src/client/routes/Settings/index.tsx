@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 
-import { getEnv } from '@config/env';
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
-import { ThemeActions } from '@store';
+import { ThemeActions, SettingsActions, SettingsSelectors } from '@store';
 import { AVAILABLE_THEMES, getTheme } from '@themes';
+import { getConfig } from '@config';
 import { Theme } from '@types';
 
 import { ModalsActions } from '@store';
 
-import { ThemesIcon, Icon, Button } from '@components/common';
+import { ThemesIcon, Icon, Button, ToggleButton, Input } from '@components/common';
 import { ThemeBox } from '@components/app/Settings';
 
 const SettingsView = styled.div`
@@ -39,14 +39,15 @@ const SectionContent = styled.div`
   display: flex;
   flex-wrap: wrap;
   grid-gap: 1rem;
+  align-items: center;
 `;
 
 export const Settings = () => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
-  const developmentMode = getEnv().ENV === 'development';
-
+  const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
+  const { ALLOW_DEV_MODE } = getConfig();
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
   const openTestModal = () => {
@@ -83,7 +84,7 @@ export const Settings = () => {
       </SettingsSection>
 
       {/* Only on development for testing! */}
-      {developmentMode && (
+      {ALLOW_DEV_MODE && (
         <SettingsSection>
           <SectionTitle>
             <SectionIcon Component={ThemesIcon} />
@@ -93,6 +94,36 @@ export const Settings = () => {
             <Button onClick={openTestModal}>Open test modal</Button>
           </SectionContent>
         </SettingsSection>
+      )}
+
+      {ALLOW_DEV_MODE && (
+        <>
+          <SettingsSection>
+            <SectionTitle>
+              <SectionIcon Component={ThemesIcon} />
+              Dev Mode
+            </SectionTitle>
+            <SectionContent>
+              Enable Dev Mode
+              <ToggleButton
+                selected={devModeSettings.enabled}
+                setSelected={() => dispatch(SettingsActions.toggleDevMode({ enable: !devModeSettings.enabled }))}
+              />
+            </SectionContent>
+          </SettingsSection>
+          {devModeSettings.enabled && (
+            <SettingsSection>
+              <SectionTitle />
+              <SectionContent>
+                Wallet Address Override
+                <Input
+                  value={devModeSettings.walletAddressOverride}
+                  onChange={(e) => dispatch(SettingsActions.changeWalletAddressOverride({ address: e.target.value }))}
+                />
+              </SectionContent>
+            </SettingsSection>
+          )}
+        </>
       )}
     </SettingsView>
   );
