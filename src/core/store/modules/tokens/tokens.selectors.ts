@@ -1,6 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState, TokenView } from '@types';
 import BigNumber from 'bignumber.js';
+
+import { RootState, TokenView } from '@types';
+import { getConfig } from '@config';
 
 const selectTokensState = (state: RootState) => state.tokens;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
@@ -48,6 +50,22 @@ const selectSummaryData = createSelector(
   }
 );
 
+const selectZapOutTokens = createSelector([selectTokensMap], (tokensMap) => {
+  const { ZAP_OUT_TOKENS } = getConfig();
+  const tokens = ZAP_OUT_TOKENS.map((address) => {
+    const tokenData = tokensMap[address];
+    return {
+      address: tokenData?.address,
+      name: tokenData?.name,
+      symbol: tokenData?.symbol,
+      decimals: parseInt(tokenData?.decimals),
+      icon: tokenData?.icon,
+      priceUsdc: tokenData?.priceUsdc ?? '0',
+    };
+  });
+  return tokens;
+});
+
 export const TokensSelectors = {
   selectTokensState,
   selectTokensMap,
@@ -55,4 +73,5 @@ export const TokensSelectors = {
   selectUserTokensStatusMap,
   selectUserTokens,
   selectSummaryData,
+  selectZapOutTokens,
 };

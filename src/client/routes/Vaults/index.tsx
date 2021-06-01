@@ -81,6 +81,11 @@ export const Vaults = () => {
     dispatch(ModalsActions.openModal({ modalName: 'deposit' }));
   };
 
+  const withdrawHandler = (vaultAddress: string) => {
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+    dispatch(ModalsActions.openModal({ modalName: 'withdraw' }));
+  };
+
   return (
     <Container>
       <SummaryCard
@@ -122,7 +127,7 @@ export const Vaults = () => {
               <ActionButtons
                 actions={[
                   { name: 'Invest', handler: () => depositHandler(vaultAddress) },
-                  { name: 'Withdraw', handler: () => console.log('TODO') },
+                  { name: 'Withdraw', handler: () => withdrawHandler(vaultAddress) },
                 ]}
               />
             ),

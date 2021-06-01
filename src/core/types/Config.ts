@@ -28,4 +28,7 @@ export interface Constants {
     registryV2Adapter: string;
     helper: string;
   };
+  SLIPPAGE_OPTIONS: number[];
+  DEFAULT_SLIPPAGE: number;
+  ZAP_OUT_TOKENS: string[];
 }
