@@ -2,21 +2,7 @@ import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { ArrowDown, Icon } from '@components/common';
 
-interface DropdownOption {
-  label: string;
-  value: string;
-}
-
-export interface SimpleDropdownProps {
-  selected: DropdownOption;
-  setSelected: (selected: DropdownOption) => void;
-  options: DropdownOption[];
-  className?: string;
-  disabled?: boolean;
-  onChange?: (selected: DropdownOption | undefined) => void;
-}
-
-const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number }>`
+const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
   --dropdown-background: ${({ theme }) => theme.colors.onSurfaceH1};
   --dropdown-color: ${({ theme }) => theme.colors.primaryVariant};
   --dropdown-hover-color: ${({ theme }) => theme.colors.onSurfaceH2};
@@ -29,7 +15,7 @@ const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number }
   border-radius: 0.8rem;
   position: relative;
   font-size: 1.4rem;
-  cursor: pointer;
+  cursor: ${({ selectable }) => (selectable ? 'pointer' : null)};
   width: max-content;
   min-width: 9rem;
 
@@ -43,7 +29,7 @@ const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number }
 
 const Arrow = styled(Icon)`
   fill: var(--dropdown-color);
-  margin-right: 1.6rem;
+  /* margin-right: 1.6rem; */
   transition: transform 100ms ease-in-out;
 `;
 
@@ -54,7 +40,7 @@ const DropdownSelected = styled.div<{ open?: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0.8rem;
-
+  width: 100%;
   ${(props) =>
     props.open &&
     `
@@ -64,9 +50,17 @@ const DropdownSelected = styled.div<{ open?: boolean }>`
   `}
 `;
 
+const SelectedText = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
 const DropdownOptions = styled.div<{ open?: boolean }>`
   display: none;
   flex-direction: column;
+  flex-grow: 1;
   position: absolute;
   background-color: var(--dropdown-background);
   width: 100%;
@@ -78,7 +72,7 @@ const DropdownOptions = styled.div<{ open?: boolean }>`
   border-top-right-radius: 0;
   padding: 0.8rem;
   overflow: hidden;
-
+  z-index: 1;
   ${(props) => props.open && `display: flex;`}
 `;
 
@@ -97,6 +91,20 @@ const Option = styled.div<{ selected?: boolean }>`
   }
 `;
 
+interface DropdownOption {
+  value: string;
+  label: string;
+}
+
+export interface SimpleDropdownProps {
+  selected: DropdownOption;
+  setSelected: (selected: DropdownOption) => void;
+  options: DropdownOption[];
+  className?: string;
+  disabled?: boolean;
+  onChange?: (selected: DropdownOption | undefined) => void;
+}
+
 export const SimpleDropdown: FC<SimpleDropdownProps> = ({
   selected,
   setSelected,
@@ -108,6 +116,7 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
   ...props
 }) => {
   const [open, setOpen] = useState(false);
+  const isSingleOption = options.length === 1;
 
   let selectedText = 'None';
   if (selected?.value) {
@@ -128,12 +137,13 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
       className={className}
       tabIndex={0}
       disabled={disabled}
+      selectable={!isSingleOption}
       onBlur={() => setOpen(false)}
       {...props}
     >
-      <DropdownSelected onClick={() => setOpen(!open)} open={open}>
-        <Arrow Component={ArrowDown} />
-        {selectedText}
+      <DropdownSelected onClick={() => (!isSingleOption ? setOpen(!open) : null)} open={open}>
+        {!isSingleOption && <Arrow Component={ArrowDown} />}
+        <SelectedText>{selectedText}</SelectedText>
       </DropdownSelected>
 
       <DropdownOptions open={open}>
