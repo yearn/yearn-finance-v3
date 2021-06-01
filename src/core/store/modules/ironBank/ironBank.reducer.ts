@@ -41,7 +41,7 @@ const initialState: IronBankState = {
     marketsActionsMap: {},
     user: {
       getUserMarketsPositions: { ...initialStatus },
-      getUserMarketsMetadatas: { ...initialStatus },
+      getUserMarketsMetadata: { ...initialStatus },
       userMarketsActionsMap: {},
     },
   },
@@ -52,6 +52,7 @@ const {
   getMarkets,
   getIronBankData,
   getUserMarketsPositions,
+  getUserMarketsMetadata,
   setSelectedMarketAddress,
   approveMarket,
   getMarketsDynamic,
@@ -128,6 +129,33 @@ const ironBankReducer = createReducer(initialState, (builder) => {
         state.statusMap.user.userMarketsActionsMap[address].getPosition = {};
       });
       state.statusMap.user.getUserMarketsPositions = { error: error.message };
+    })
+    .addCase(getUserMarketsMetadata.pending, (state, { meta }) => {
+      const marketAddresses = meta.arg.marketAddresses || [];
+      marketAddresses.forEach((address) => {
+        checkAndInitUserMarketStatus(state, address);
+        state.statusMap.user.userMarketsActionsMap[address].getMetadata = { loading: true };
+      });
+      state.statusMap.user.getUserMarketsMetadata = { loading: true };
+    })
+    .addCase(getUserMarketsMetadata.fulfilled, (state, { meta, payload: { userMarketsMetadata } }) => {
+      const marketAddresses = meta.arg.marketAddresses || [];
+      marketAddresses.forEach((address) => {
+        checkAndInitUserMarketStatus(state, address);
+        state.statusMap.user.userMarketsActionsMap[address].getMetadata = {};
+      });
+
+      userMarketsMetadata.forEach((metadata) => {
+        state.user.userMarketsMetadataMap[metadata.assetAddress] = metadata;
+      });
+      state.statusMap.user.getUserMarketsMetadata = {};
+    })
+    .addCase(getUserMarketsMetadata.rejected, (state, { meta, error }) => {
+      const marketAddresses = meta.arg.marketAddresses || [];
+      marketAddresses.forEach((address) => {
+        state.statusMap.user.userMarketsActionsMap[address].getMetadata = {};
+      });
+      state.statusMap.user.getUserMarketsMetadata = { error: error.message };
     })
     .addCase(approveMarket.pending, (state, { meta }) => {
       const { marketAddress } = meta.arg;

@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { IronBankMarket, IronBankMarketDynamic, IronBankPosition, Position } from '@types';
+import { CyTokenUserMetadata, IronBankMarket, IronBankMarketDynamic, IronBankPosition, Position } from '@types';
 import { TokensActions } from '@store';
 
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
@@ -60,6 +60,21 @@ const getUserMarketsPositions = createAsyncThunk<
   return { userMarketsPositions };
 });
 
+const getUserMarketsMetadata = createAsyncThunk<
+  { userMarketsMetadata: CyTokenUserMetadata[] },
+  { marketAddresses?: string[] },
+  ThunkAPI
+>('ironBank/getUserMarketsMetadata', async ({ marketAddresses }, { extra, getState, dispatch }) => {
+  const { ironBankService } = extra.services;
+  const userAddress = getState().wallet.selectedAddress;
+  if (!userAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
+  const userMarketsMetadata = await ironBankService.getUserMarketsMetadata({ userAddress, marketAddresses });
+
+  return { userMarketsMetadata };
+});
+
 const approveMarket = createAsyncThunk<void, { marketAddress: string; tokenAddress: string }, ThunkAPI>(
   'ironBank/approve',
   async ({ marketAddress, tokenAddress }, { extra, getState, dispatch }) => {
@@ -77,6 +92,7 @@ export const IronBankActions = {
   getMarkets,
   getIronBankData,
   getUserMarketsPositions,
+  getUserMarketsMetadata,
   setSelectedMarketAddress,
   approveMarket,
   getMarketsDynamic,

@@ -140,7 +140,7 @@ export interface IronBankState {
     marketsActionsMap: { [marketAddress: string]: MarketActionsStatusMap };
     user: {
       getUserMarketsPositions: Status;
-      getUserMarketsMetadatas: Status;
+      getUserMarketsMetadata: Status;
       userMarketsActionsMap: { [marketAddress: string]: UserMarketActionsStatusMap };
     };
   };
