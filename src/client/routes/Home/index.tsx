@@ -41,7 +41,7 @@ export const Home = () => {
 
   useEffect(() => {
     if (selectedAddress) {
-      dispatch(VaultsActions.getUserVaultsData({}));
+      dispatch(VaultsActions.getUserVaultsPositions({}));
     }
   }, [selectedAddress]);
 

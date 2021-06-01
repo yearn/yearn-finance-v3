@@ -32,18 +32,19 @@ const getVaultsDynamic = createAsyncThunk<{ vaultsDynamicData: VaultDynamic[] },
   }
 );
 
-const getUserVaultsData = createAsyncThunk<{ userVaultsData: Position[] }, { vaultAddresses?: string[] }, ThunkAPI>(
-  'vaults/getUserVaultsData',
-  async ({ vaultAddresses }, { extra, getState, dispatch }) => {
-    const { services } = extra;
-    const userAddress = getState().wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
-    const userVaultsData = await services.vaultService.getUserVaultsData({ userAddress, vaultAddresses });
-    return { userVaultsData };
+const getUserVaultsPositions = createAsyncThunk<
+  { userVaultsPositions: Position[] },
+  { vaultAddresses?: string[] },
+  ThunkAPI
+>('vaults/getUserVaultsPositions', async ({ vaultAddresses }, { extra, getState, dispatch }) => {
+  const { services } = extra;
+  const userAddress = getState().wallet.selectedAddress;
+  if (!userAddress) {
+    throw new Error('WALLET NOT CONNECTED');
   }
-);
+  const userVaultsPositions = await services.vaultService.getUserVaultsPositions({ userAddress, vaultAddresses });
+  return { userVaultsPositions };
+});
 
 const approveVault = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveVault',
@@ -84,7 +85,7 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
     const { vaultService } = services;
     await vaultService.deposit({ tokenAddress: vaultData.tokenId, vaultAddress, amount: amount.toFixed(0) });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-    dispatch(getUserVaultsData({ vaultAddresses: [vaultAddress] }));
+    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
   }
 );
@@ -116,7 +117,7 @@ const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: Big
       amountOfShares,
     });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-    dispatch(getUserVaultsData({ vaultAddresses: [vaultAddress] }));
+    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
   }
 );
@@ -136,7 +137,7 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
       module: 'vaults',
       event: 'positionsOf',
       action: (vaultAddresses: string[]) => {
-        dispatch(getUserVaultsData({ vaultAddresses }));
+        dispatch(getUserVaultsPositions({ vaultAddresses }));
       },
     });
   }
@@ -150,6 +151,6 @@ export const VaultsActions = {
   depositVault,
   withdrawVault,
   getVaultsDynamic,
-  getUserVaultsData,
+  getUserVaultsPositions,
   initSubscriptions,
 };

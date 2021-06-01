@@ -41,7 +41,7 @@ export interface VaultActionsStatusMap {
   get: Status;
 }
 export interface UserVaultActionsStatusMap {
-  get: Status;
+  getPosition: Status;
 }
 export interface VaultPositionsMap {
   DEPOSIT: Position;
@@ -63,7 +63,7 @@ export interface VaultsState {
     getVaults: Status;
     vaultsActionsStatusMap: { [vaultAddress: string]: VaultActionsStatusMap };
     user: {
-      getUserVaults: Status;
+      getUserVaultsPositions: Status;
       userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };
     };
   };

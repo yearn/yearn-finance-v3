@@ -6,7 +6,7 @@ export interface UserService {}
 export interface VaultService {
   getSupportedVaults: () => Promise<Vault[]>;
   getVaultsDynamicData: (props: any) => Promise<VaultDynamic[]>;
-  getUserVaultsData: ({
+  getUserVaultsPositions: ({
     userAddress,
     vaultAddresses,
   }: {
