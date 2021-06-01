@@ -114,7 +114,8 @@ export interface MarketActionsStatusMap {
 }
 
 export interface UserMarketActionsStatusMap {
-  get: Status;
+  getPosition: Status;
+  getMetadata: Status;
 }
 
 export interface IronBankMarketPositionsMap {
@@ -129,7 +130,7 @@ export interface IronBankState {
   ironBankData: IronBankPosition | undefined;
   user: {
     userMarketsPositionsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
-    userMarketsMap: { [marketAddress: string]: CyTokenUserMetadata };
+    userMarketsMetadataMap: { [marketAddress: string]: CyTokenUserMetadata };
     marketsAllowancesMap: { [marketAddress: string]: AllowancesMap };
   };
   statusMap: {
@@ -138,7 +139,8 @@ export interface IronBankState {
     getMarkets: Status;
     marketsActionsMap: { [marketAddress: string]: MarketActionsStatusMap };
     user: {
-      getUserMarkets: Status;
+      getUserMarketsPositions: Status;
+      getUserMarketsMetadatas: Status;
       userMarketsActionsMap: { [marketAddress: string]: UserMarketActionsStatusMap };
     };
   };

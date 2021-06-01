@@ -22,7 +22,7 @@ export class IronBankServiceImpl implements IronBankService {
     return await yearn.ironBank.getDynamic(marketAddresses);
   }
 
-  public async getUserMarketsData({
+  public async getUserMarketsPositions({
     userAddress,
     marketAddresses,
   }: {

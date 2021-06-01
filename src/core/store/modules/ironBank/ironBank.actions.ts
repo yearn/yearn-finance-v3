@@ -45,19 +45,20 @@ const getMarkets = createAsyncThunk<{ ironBankMarkets: IronBankMarket[] }, undef
   }
 );
 
-const getUserMarkets = createAsyncThunk<{ userMarketsData: Position[] }, { marketAddresses?: string[] }, ThunkAPI>(
-  'ironBank/getUserMarkets',
-  async ({ marketAddresses }, { extra, getState, dispatch }) => {
-    const { ironBankService } = extra.services;
-    const userAddress = getState().wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
-    const userMarketsData = await ironBankService.getUserMarketsData({ userAddress, marketAddresses });
-
-    return { userMarketsData };
+const getUserMarketsPositions = createAsyncThunk<
+  { userMarketsPositions: Position[] },
+  { marketAddresses?: string[] },
+  ThunkAPI
+>('ironBank/getUserMarketsPositions', async ({ marketAddresses }, { extra, getState, dispatch }) => {
+  const { ironBankService } = extra.services;
+  const userAddress = getState().wallet.selectedAddress;
+  if (!userAddress) {
+    throw new Error('WALLET NOT CONNECTED');
   }
-);
+  const userMarketsPositions = await ironBankService.getUserMarketsPositions({ userAddress, marketAddresses });
+
+  return { userMarketsPositions };
+});
 
 const approveMarket = createAsyncThunk<void, { marketAddress: string; tokenAddress: string }, ThunkAPI>(
   'ironBank/approve',
@@ -75,7 +76,7 @@ export const IronBankActions = {
   initiateIronBank,
   getMarkets,
   getIronBankData,
-  getUserMarkets,
+  getUserMarketsPositions,
   setSelectedMarketAddress,
   approveMarket,
   getMarketsDynamic,

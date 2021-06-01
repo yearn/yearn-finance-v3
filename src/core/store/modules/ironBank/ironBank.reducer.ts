@@ -20,7 +20,8 @@ export const initialMarketsActionsMap: MarketActionsStatusMap = {
 };
 
 export const initialUserMarketsActionsMap: UserMarketActionsStatusMap = {
-  get: initialStatus,
+  getPosition: initialStatus,
+  getMetadata: initialStatus,
 };
 
 const initialState: IronBankState = {
@@ -30,7 +31,7 @@ const initialState: IronBankState = {
   ironBankData: undefined,
   user: {
     userMarketsPositionsMap: {},
-    userMarketsMap: {},
+    userMarketsMetadataMap: {},
     marketsAllowancesMap: {},
   },
   statusMap: {
@@ -39,7 +40,8 @@ const initialState: IronBankState = {
     getMarkets: { ...initialStatus },
     marketsActionsMap: {},
     user: {
-      getUserMarkets: { ...initialStatus },
+      getUserMarketsPositions: { ...initialStatus },
+      getUserMarketsMetadatas: { ...initialStatus },
       userMarketsActionsMap: {},
     },
   },
@@ -49,7 +51,7 @@ const {
   initiateIronBank,
   getMarkets,
   getIronBankData,
-  getUserMarkets,
+  getUserMarketsPositions,
   setSelectedMarketAddress,
   approveMarket,
   getMarketsDynamic,
@@ -94,22 +96,22 @@ const ironBankReducer = createReducer(initialState, (builder) => {
     .addCase(getMarkets.rejected, (state, { error }) => {
       state.statusMap.getMarkets = { error: error.message };
     })
-    .addCase(getUserMarkets.pending, (state, { meta }) => {
+    .addCase(getUserMarketsPositions.pending, (state, { meta }) => {
       const marketAddresses = meta.arg.marketAddresses || [];
       marketAddresses.forEach((address) => {
         checkAndInitUserMarketStatus(state, address);
-        state.statusMap.user.userMarketsActionsMap[address].get = { loading: true };
+        state.statusMap.user.userMarketsActionsMap[address].getPosition = { loading: true };
       });
-      state.statusMap.user.getUserMarkets = { loading: true };
+      state.statusMap.user.getUserMarketsPositions = { loading: true };
     })
-    .addCase(getUserMarkets.fulfilled, (state, { meta, payload: { userMarketsData } }) => {
-      const marketsPositionsMap = parsePositionsIntoMap(userMarketsData);
+    .addCase(getUserMarketsPositions.fulfilled, (state, { meta, payload: { userMarketsPositions } }) => {
+      const marketsPositionsMap = parsePositionsIntoMap(userMarketsPositions);
       const marketAddresses = meta.arg.marketAddresses;
       marketAddresses?.forEach((address) => {
-        state.statusMap.user.userMarketsActionsMap[address].get = {};
+        state.statusMap.user.userMarketsActionsMap[address].getPosition = {};
       });
 
-      userMarketsData.forEach((position) => {
+      userMarketsPositions.forEach((position) => {
         const address = position.assetAddress;
         const allowancesMap: any = {};
         position.assetAllowances.forEach((allowance) => (allowancesMap[allowance.spender] = allowance.amount));
@@ -118,14 +120,14 @@ const ironBankReducer = createReducer(initialState, (builder) => {
       });
 
       state.user.userMarketsPositionsMap = { ...state.user.userMarketsPositionsMap, ...marketsPositionsMap };
-      state.statusMap.user.getUserMarkets = {};
+      state.statusMap.user.getUserMarketsPositions = {};
     })
-    .addCase(getUserMarkets.rejected, (state, { meta, error }) => {
+    .addCase(getUserMarketsPositions.rejected, (state, { meta, error }) => {
       const marketAddresses = meta.arg.marketAddresses || [];
       marketAddresses.forEach((address) => {
-        state.statusMap.user.userMarketsActionsMap[address].get = {};
+        state.statusMap.user.userMarketsActionsMap[address].getPosition = {};
       });
-      state.statusMap.user.getUserMarkets = { error: error.message };
+      state.statusMap.user.getUserMarketsPositions = { error: error.message };
     })
     .addCase(approveMarket.pending, (state, { meta }) => {
       const { marketAddress } = meta.arg;

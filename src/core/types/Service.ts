@@ -51,7 +51,7 @@ export interface ApproveProps {
 
 export interface IronBankService {
   getSupportedMarkets: () => Promise<IronBankMarket[]>;
-  getUserMarketsData: ({
+  getUserMarketsPositions: ({
     userAddress,
     marketAddresses,
   }: {
