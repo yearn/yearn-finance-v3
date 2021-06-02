@@ -1,3 +1,33 @@
-import { Position, Asset, Vault, Yearn, Balance, VaultDynamic, Token, Integer, Usdc, VaultStatic } from '@yfi/sdk';
+import {
+  Position,
+  Asset,
+  Vault,
+  Yearn,
+  Balance,
+  VaultDynamic,
+  Token,
+  Integer,
+  Usdc,
+  VaultStatic,
+  IronBankMarket,
+  IronBankPosition,
+  IronBankMarketDynamic,
+  CyTokenUserMetadata,
+} from '@yfi/sdk';
 
-export type { Position, Asset, Vault, Yearn, Balance, VaultDynamic, Token, Integer, Usdc, VaultStatic };
+export type {
+  Position,
+  Asset,
+  Vault,
+  Yearn,
+  Balance,
+  VaultDynamic,
+  Token,
+  Integer,
+  Usdc,
+  VaultStatic,
+  IronBankMarket,
+  IronBankPosition,
+  IronBankMarketDynamic,
+  CyTokenUserMetadata,
+};

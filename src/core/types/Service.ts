@@ -1,23 +1,12 @@
-import {
-  CyTokenData,
-  UserCyTokenData,
-  TokenDynamicData,
-  EthereumAddress,
-  Wei,
-  Position,
-  Token,
-  Vault,
-  VaultDynamic,
-  Balance,
-  Integer,
-} from '@types';
+import { TokenDynamicData, EthereumAddress, Wei, Position, Token, Vault, VaultDynamic, Balance, Integer } from '@types';
+import { CyTokenUserMetadata, IronBankMarket, IronBankMarketDynamic, IronBankPosition } from '@yfi/sdk';
 
 export interface UserService {}
 
 export interface VaultService {
   getSupportedVaults: () => Promise<Vault[]>;
   getVaultsDynamicData: (props: any) => Promise<VaultDynamic[]>;
-  getUserVaultsData: ({
+  getUserVaultsPositions: ({
     userAddress,
     vaultAddresses,
   }: {
@@ -61,10 +50,23 @@ export interface ApproveProps {
 }
 
 export interface IronBankService {
-  getSupportedCyTokens: () => Promise<CyTokenData[]>;
-  getUserCyTokensData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<UserCyTokenData[]>;
-  getIronBankData: ({ userAddress }: { userAddress: EthereumAddress | undefined }) => Promise<any>;
-  // getCyTokensDynamicData: () => Promise<CyTokenDynamicData[]>;
+  getSupportedMarkets: () => Promise<IronBankMarket[]>;
+  getUserMarketsPositions: ({
+    userAddress,
+    marketAddresses,
+  }: {
+    userAddress: EthereumAddress;
+    marketAddresses?: string[];
+  }) => Promise<Position[]>;
+  getUserMarketsMetadata: ({
+    userAddress,
+    marketAddresses,
+  }: {
+    userAddress: EthereumAddress;
+    marketAddresses?: string[];
+  }) => Promise<CyTokenUserMetadata[]>;
+  getIronBankData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankPosition>;
+  getMarketsDynamicData: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
   // approveSupply: (props: ApproveSupplyProps) => Promise<void>;
   // supply: (props: SupplyProps) => Promise<void>;
   // withdraw: (props: WithdrawProps) => Promise<void>;

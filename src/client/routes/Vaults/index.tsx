@@ -71,7 +71,7 @@ export const Vaults = () => {
 
   useEffect(() => {
     if (selectedAddress) {
-      dispatch(VaultsActions.getUserVaultsData({}));
+      dispatch(VaultsActions.getUserVaultsPositions({}));
       dispatch(TokensActions.getUserTokens({}));
     }
   }, [selectedAddress]);

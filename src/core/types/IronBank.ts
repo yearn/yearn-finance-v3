@@ -1,71 +1,24 @@
-import { EthereumAddress, TokenView, UserTokenData } from '@types';
+import { EthereumAddress, TokenView } from '@types';
 
-export interface IronBank extends IronBankData {
-  cyTokens: CyToken[];
-}
-
-export interface IronBankData {
-  supportedCyTokens: EthereumAddress[];
-}
-
-export interface UserIronBankData {
-  borrowLimit: string;
-  borrowLimitUsed: string;
-}
-
-export interface CyToken {
+export interface IronBankMarketView {
   address: EthereumAddress;
   decimals: string;
   name: string;
   symbol: string;
-  underlyingTokenAddress: EthereumAddress;
   lendApy: string;
   borrowApy: string;
   liquidity: string;
   collateralFactor: string;
   reserveFactor: string;
-  isActive: string;
+  isActive: boolean;
   exchangeRate: string;
   // user
-  suppliedBalance: string;
-  suppliedBalanceUsdc: string;
-  borrowedBalance: string;
-  borrowedBalanceUsdc: string;
+  userDeposited: string;
+  userDepositedUsdc: string;
   allowancesMap: { [spenderAddress: string]: string };
   enteredMarket: boolean;
   borrowLimit: string;
+
   // underlyingToken
   token: TokenView;
-}
-
-export interface CyTokenData extends CyTokenStaticData, CyTokenDynamicData {}
-
-export interface CyTokenStaticData {
-  address: EthereumAddress;
-  decimals: string;
-  name: string;
-  symbol: string;
-  underlyingTokenAddress: EthereumAddress;
-}
-
-export interface CyTokenDynamicData {
-  address: EthereumAddress;
-  lendApy: string;
-  borrowApy: string;
-  liquidity: string;
-  collateralFactor: string;
-  reserveFactor: string;
-  isActive: string;
-  exchangeRate: string;
-}
-
-export interface UserCyTokenData {
-  address: EthereumAddress;
-  suppliedBalance: string;
-  suppliedBalanceUsdc: string;
-  borrowedBalance: string;
-  borrowedBalanceUsdc: string;
-  allowancesMap: { [spenderAddress: string]: string };
-  enteredMarket: boolean;
-  borrowLimit: string;
 }

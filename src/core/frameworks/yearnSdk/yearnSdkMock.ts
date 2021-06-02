@@ -1,7 +1,8 @@
-import { Balance, Position, Token, Vault, VaultDynamic, Usdc, VaultStatic } from '@types';
+import { Balance, Position, Token, Vault, VaultDynamic, Usdc, VaultStatic, IronBankMarket } from '@types';
 import { BigNumber } from '@frameworks/ethers';
 import IronBankGetMockData from './mock/IronBankGetMockData.json';
 import IronBankPositionMockData from './mock/IronBankPositionMockData.json';
+import IronBankMarketsData from './mock/IronBankMarketsMockData.json';
 import VaultsV2MockData from './mock/VaultsV2MockData.json';
 import VaultsV2PositionsMockData from './mock/VaultsV2PositionsMockData.json';
 import UserTokensMockData from './mock/UserTokensMockData.json';
@@ -62,19 +63,6 @@ const vaults = {
     return vaults;
   },
   positionsOf: (userAddress: string, vaultAddresses?: string[]): Position[] => {
-    // if (vaultAddresses?.length) {
-    //   const position = VaultsV2PositionsMockData[3].positions[0];
-    //   return [
-    //     {
-    //       ...position,
-    //       underlyingTokenBalance: {
-    //         amount: '999999999999999',
-    //         amountUsdc: '999999999999999',
-    //       },
-    //     },
-    //   ];
-    // }
-
     const vaultsPositions: Position[] = [];
     VaultsV2PositionsMockData.forEach((data) => {
       vaultsPositions.push(...data.positions);
@@ -98,50 +86,47 @@ const vaults = {
 };
 
 const ironBank = {
-  get: () => {
-    return IronBankGetMockData.map((cyToken) => ({
-      ...cyToken,
-      underlyingTokenBalance: {
-        amount: BigNumber.from(cyToken.underlyingTokenBalance.amount),
-        amountUsdc: BigNumber.from(cyToken.underlyingTokenBalance.amountUsdc),
-      },
-      metadata: {
-        ...cyToken.metadata,
-        lendApy: parseFloat(cyToken.metadata.lendAPY) / 100,
-        borrowApy: parseFloat(cyToken.metadata.borrowAPY) / 100,
-        decimals: BigNumber.from(cyToken.metadata.decimals),
-        liquidity: BigNumber.from(cyToken.metadata.liqudity),
-      },
-    }));
-  },
-  assetsPositionsOf: () => {
-    return IronBankPositionMockData.map((cyTokenPosition) => {
-      const positions = cyTokenPosition.positions.map((position) => ({
-        ...position,
-        balance: BigNumber.from(position.balance),
-        underlyingTokenBalance: {
-          amount: BigNumber.from(position.underlyingTokenBalance.amount),
-          amountUsdc: BigNumber.from(position.underlyingTokenBalance.amountUsdc),
-        },
-      }));
-      return {
-        positions,
-        metadata: {
-          ...cyTokenPosition.metadata,
-          borrowLimit: BigNumber.from(cyTokenPosition.metadata.borrowLimit),
-        },
-      };
-    });
-  },
-  getIronBank: () => {
-    return {
-      address: '0x000...',
-      userAssetMetadata: {
-        borrowLimit: BigNumber.from('100'),
-        borrowLimitUSed: BigNumber.from('30'),
-      },
-    };
-  },
+  // get: (): IronBankMarket[] => {
+  //   const marketsStaticData = IronBankMarketsData.static;
+  //   const marketsDynamicData = IronBankMarketsData.dynamic;
+  //   const markets: IronBankMarket[] = marketsStaticData.map((staticData, i) => {
+  //     const dynamicData = marketsDynamicData[i];
+  //     const vault = { ...staticData, ...dynamicData };
+  //     return {
+  //       ...vault,
+  //       typeId: 'IRON_BANK_MARKET',
+  //     };
+  //   });
+  //   return markets;
+  // },
+  //   assetsPositionsOf: () => {
+  //     return IronBankPositionMockData.map((cyTokenPosition) => {
+  //       const positions = cyTokenPosition.positions.map((position) => ({
+  //         ...position,
+  //         balance: BigNumber.from(position.balance),
+  //         underlyingTokenBalance: {
+  //           amount: BigNumber.from(position.underlyingTokenBalance.amount),
+  //           amountUsdc: BigNumber.from(position.underlyingTokenBalance.amountUsdc),
+  //         },
+  //       }));
+  //       return {
+  //         positions,
+  //         metadata: {
+  //           ...cyTokenPosition.metadata,
+  //           borrowLimit: BigNumber.from(cyTokenPosition.metadata.borrowLimit),
+  //         },
+  //       };
+  //     });
+  //   },
+  //   getIronBank: () => {
+  //     return {
+  //       address: '0x000...',
+  //       userAssetMetadata: {
+  //         borrowLimit: BigNumber.from('100'),
+  //         borrowLimitUSed: BigNumber.from('30'),
+  //       },
+  //     };
+  //   },
 };
 
 export const yearnSdkMock = {
