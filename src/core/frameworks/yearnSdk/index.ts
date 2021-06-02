@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers';
 import { Web3Provider, Config } from '@types';
 import { Yearn } from '@yfi/sdk';
 import { yearnSdkMock } from './yearnSdkMock';
@@ -15,7 +16,7 @@ export const getYearnSdk = ({ web3Provider, config }: { web3Provider: Web3Provid
 
   if (USE_MAINNET_FORK) {
     return new Yearn(1337, {
-      provider: web3Provider.getInstanceOf('local'),
+      provider: web3Provider.getInstanceOf('local') as JsonRpcProvider, // TODO make it work with writeProviders
       addresses: {
         oracle: CONTRACT_ADDRESSES.oracle,
         helper: CONTRACT_ADDRESSES.helper,
@@ -26,7 +27,7 @@ export const getYearnSdk = ({ web3Provider, config }: { web3Provider: Web3Provid
     });
   } else {
     return new Yearn(1, {
-      provider: web3Provider.getInstanceOf('default'),
+      provider: web3Provider.getInstanceOf('default') as JsonRpcProvider, // TODO make it work with writeProviders
     });
   }
 };

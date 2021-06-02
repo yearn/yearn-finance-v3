@@ -36,7 +36,7 @@ export class VaultServiceImpl implements VaultService {
     return await yearn.vaults.getDynamic(addresses);
   }
 
-  public async getUserVaultsData({
+  public async getUserVaultsPositions({
     userAddress,
     vaultAddresses,
   }: {

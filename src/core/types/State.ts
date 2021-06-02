@@ -1,7 +1,8 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { CyTokenData, UserCyTokenData, Position, Token, Vault, Integer, Balance } from '@types';
+import { Position, Token, Vault, Integer, Balance, IronBankMarket } from '@types';
 import { EthereumAddress } from './Ethereum';
+import { CyTokenUserMetadata, IronBankPosition } from '@yfi/sdk';
 
 export interface RootState {
   app: AppState;
@@ -40,7 +41,7 @@ export interface VaultActionsStatusMap {
   get: Status;
 }
 export interface UserVaultActionsStatusMap {
-  get: Status;
+  getPosition: Status;
 }
 export interface VaultPositionsMap {
   DEPOSIT: Position;
@@ -54,7 +55,7 @@ export interface VaultsState {
   vaultsMap: { [address: string]: Vault };
   selectedVaultAddress: EthereumAddress | undefined;
   user: {
-    userVaultsMap: { [address: string]: VaultPositionsMap };
+    userVaultsPositionsMap: { [address: string]: VaultPositionsMap };
     vaultsAllowancesMap: { [vaultAddress: string]: AllowancesMap };
   };
   statusMap: {
@@ -62,7 +63,7 @@ export interface VaultsState {
     getVaults: Status;
     vaultsActionsStatusMap: { [vaultAddress: string]: VaultActionsStatusMap };
     user: {
-      getUserVaults: Status;
+      getUserVaultsPositions: Status;
       userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };
     };
   };
@@ -103,7 +104,7 @@ export interface TokensState {
   };
 }
 
-export interface CyTokenActionsStatusMap {
+export interface MarketActionsStatusMap {
   approve: Status;
   borrow: Status;
   supply: Status;
@@ -112,28 +113,35 @@ export interface CyTokenActionsStatusMap {
   get: Status;
 }
 
-export interface UserCyTokenActionsStatusMap {
-  get: Status;
+export interface UserMarketActionsStatusMap {
+  getPosition: Status;
+  getMetadata: Status;
+}
+
+export interface IronBankMarketPositionsMap {
+  LEND: Position;
+  BORROW: Position;
 }
 
 export interface IronBankState {
-  cyTokenAddresses: EthereumAddress[];
-  cyTokensMap: { [cyTokenAddress: string]: CyTokenData };
-  address: EthereumAddress;
-  selectedCyTokenAddress: EthereumAddress;
+  marketAddresses: EthereumAddress[];
+  marketsMap: { [marketAddress: string]: IronBankMarket };
+  selectedMarketAddress: EthereumAddress;
+  ironBankData: IronBankPosition | undefined;
   user: {
-    borrowLimit: string;
-    borrowLimitUsed: string;
-    userCyTokensMap: { [cyTokenAddress: string]: UserCyTokenData };
+    userMarketsPositionsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
+    userMarketsMetadataMap: { [marketAddress: string]: CyTokenUserMetadata };
+    marketsAllowancesMap: { [marketAddress: string]: AllowancesMap };
   };
   statusMap: {
     initiateIronBank: Status;
     getIronBankData: Status;
-    getCYTokens: Status;
-    cyTokensActionsMap: { [cyTokenAddress: string]: CyTokenActionsStatusMap };
+    getMarkets: Status;
+    marketsActionsMap: { [marketAddress: string]: MarketActionsStatusMap };
     user: {
-      getUserCYTokens: Status;
-      userCyTokensActionsMap: { [cyTokenAddress: string]: UserCyTokenActionsStatusMap };
+      getUserMarketsPositions: Status;
+      getUserMarketsMetadata: Status;
+      userMarketsActionsMap: { [marketAddress: string]: UserMarketActionsStatusMap };
     };
   };
 }

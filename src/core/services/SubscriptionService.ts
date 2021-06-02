@@ -16,7 +16,8 @@ export class SubscriptionServiceImpl implements SubscriptionService {
     if (!sdkModule) throw new Error(`'${module}' module not implemented on SDK`);
     if (!sdkModule?.events) throw new Error(`'${module}' module does not support events`);
 
-    sdkModule.events.on(event, action);
+    // TODO when working on event handler
+    // sdkModule.events.on(event, action);
   }
 
   public unsubscribe({ module, event, action }: SubscriptionProps): void {
@@ -26,6 +27,7 @@ export class SubscriptionServiceImpl implements SubscriptionService {
     if (!sdkModule) throw new Error(`'${module}' module not implemented on SDK`);
     if (!sdkModule?.events) throw new Error(`'${module}' module does not support events`);
 
-    sdkModule.events.removeListener(event, action);
+    // TODO when working on event handler
+    // sdkModule.events.removeListener(event, action);
   }
 }
