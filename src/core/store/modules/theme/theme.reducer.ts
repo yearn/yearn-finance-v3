@@ -1,9 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ThemeState } from '@types';
+import { DEFAULT_THEME } from '@themes';
 import { ThemeActions } from './theme.actions';
 
 const initialState: ThemeState = {
-  current: 'default',
+  current: DEFAULT_THEME,
 };
 
 const { changeTheme } = ThemeActions;
