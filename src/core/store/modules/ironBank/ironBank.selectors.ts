@@ -95,9 +95,36 @@ const selectBorrowMarkets = createSelector([selectMarkets], (markets) => {
   return borrowMarkets.filter((market) => new BigNumber(market.userDeposited).gt(0));
 });
 
+const selectSummaryData = createSelector(
+  [selectLendMarkets, selectBorrowMarkets, selectIronBankData],
+  (lendPositions, borrowPositions, ironBankData) => {
+    let totalSupply: BigNumber = new BigNumber('0');
+    if (lendPositions.length) {
+      totalSupply = lendPositions.reduce((total, position) => {
+        return total.plus(position?.userDepositedUsdc ?? '0');
+      }, new BigNumber('0'));
+    }
+
+    let totalBorrow: BigNumber = new BigNumber('0');
+    if (lendPositions.length) {
+      totalBorrow = borrowPositions.reduce((total, position) => {
+        return total.plus(position?.userDepositedUsdc ?? '0');
+      }, new BigNumber('0'));
+    }
+
+    return {
+      supplyBalance: totalSupply.toString(),
+      borrowBalance: totalBorrow.toString(),
+      borrowRatioBips: ironBankData?.utilizationRatioBips ?? '0',
+      netAPY: 'TBD',
+    };
+  }
+);
+
 export const IronBankSelectors = {
   selectMarkets,
   selectIronBankData,
   selectLendMarkets,
   selectBorrowMarkets,
+  selectSummaryData,
 };
