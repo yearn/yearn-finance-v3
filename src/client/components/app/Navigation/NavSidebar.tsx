@@ -3,7 +3,16 @@ import styled from 'styled-components';
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
 
-import { HomeIcon, Icon, Logo, VaultIcon, WalletIcon, CollapseIcon, SettingsIcon } from '@components/common';
+import {
+  HomeIcon,
+  Icon,
+  Logo,
+  VaultIcon,
+  WalletIcon,
+  CollapseIcon,
+  SettingsIcon,
+  IronBankIcon,
+} from '@components/common';
 
 const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
@@ -135,6 +144,11 @@ export const NavSidebar = () => {
       to: '/vaults',
       text: t('navigation.vaults'),
       icon: VaultIcon,
+    },
+    {
+      to: '/ironBank',
+      text: t('navigation.ironbank'),
+      icon: IronBankIcon,
     },
     {
       to: '/settings',
