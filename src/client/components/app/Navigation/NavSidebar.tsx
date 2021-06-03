@@ -51,7 +51,7 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
 
 const SidebarHeader = styled.div`
   display: grid;
-  grid-gap: 1.2rem;
+  gap: 1.2rem;
 `;
 
 const SidebarContent = styled.div`
@@ -71,7 +71,7 @@ const StyledLogo = styled(Logo)`
 
 const LinkList = styled.div`
   display: grid;
-  grid-gap: 1.2rem;
+  gap: 1.2rem;
   margin-top: 2.3rem;
 `;
 

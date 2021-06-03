@@ -7,7 +7,7 @@ import { SummaryCard, InfoCard } from '@components/app';
 import { formatUsd, humanizeAmount, USDC_DECIMALS } from '@src/utils';
 
 const Container = styled.div`
-  margin: 1.6rem;
+  max-width: ${({ theme }) => theme.globalMaxWidth};
 `;
 
 const Row = styled.div`
@@ -24,7 +24,6 @@ const Column = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-right: 1.6rem;
 `;
 
 export const Home = () => {

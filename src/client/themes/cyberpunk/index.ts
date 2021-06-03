@@ -24,6 +24,7 @@ const cyberpunkTheme: DefaultTheme = {
     onBackground: '#FBD282',
 
     onSurfaceH1: '#D35290',
+    onSurfaceH1Contrast: '#0CA7C9',
     onSurfaceH2: '#0CA7C9',
     onSurfaceH2Hover: '#FBD282',
     onSurfaceSH1: '#BB6FA1',

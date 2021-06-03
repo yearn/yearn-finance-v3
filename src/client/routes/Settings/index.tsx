@@ -14,7 +14,7 @@ import { ThemeBox } from '@components/app/Settings';
 const SettingsView = styled.div`
   display: grid;
   margin-top: 1.6rem;
-  grid-gap: 3.2rem;
+  gap: 3.2rem;
 `;
 
 const SettingsSection = styled.div`
@@ -38,7 +38,7 @@ const SectionIcon = styled(Icon)`
 const SectionContent = styled.div`
   display: flex;
   flex-wrap: wrap;
-  grid-gap: 1rem;
+  gap: 1rem;
   align-items: center;
 `;
 

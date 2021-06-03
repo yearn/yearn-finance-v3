@@ -16,7 +16,6 @@ const StyledBlade = styled(Sidemenu)`
 const BladeContent = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 ${(props) => props.theme.navbar.padding};
   margin-top: 3.7rem;
 `;
 
