@@ -115,8 +115,9 @@ const selectSummaryData = createSelector(
     return {
       supplyBalance: totalSupply.toString(),
       borrowBalance: totalBorrow.toString(),
-      borrowRatioBips: ironBankData?.utilizationRatioBips ?? '0',
-      netAPY: 'TBD',
+      borrowUtilizationRatio: ironBankData?.utilizationRatioBips ?? '0',
+      // TODO: Calc for NET APY
+      netAPY: '0',
     };
   }
 );

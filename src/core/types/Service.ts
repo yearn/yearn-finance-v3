@@ -50,7 +50,7 @@ export interface ApproveProps {
   amount: Wei;
 }
 
-export interface IronBankGenericActionProps {
+export interface IronBankTransactionProps {
   userAddress: EthereumAddress;
   marketAddress: string;
   amount: Wei;
@@ -70,7 +70,7 @@ export interface IronBankService {
   getUserMarketsMetadata: (props: IronBankGenericGetUserDataProps) => Promise<CyTokenUserMetadata[]>;
   getIronBankData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankPosition>;
   getMarketsDynamicData: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
-  makeAction: (props: IronBankGenericActionProps) => Promise<any>;
+  executeTransaction: (props: IronBankTransactionProps) => Promise<any>;
   enterMarkets: (props: EnterMarketsProps) => Promise<any>;
 }
 

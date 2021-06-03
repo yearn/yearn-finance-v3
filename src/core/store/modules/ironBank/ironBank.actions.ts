@@ -100,7 +100,7 @@ const supplyMarket = createAsyncThunk<void, { marketAddress: string; amount: Big
 
       // TODO Needed checks for amount
 
-      const txResponse = await ironBankService.makeAction({
+      const txResponse = await ironBankService.executeTransaction({
         userAddress,
         marketAddress,
         amount: amount.toString(),
@@ -125,7 +125,7 @@ const borrowMarket = createAsyncThunk<void, { marketAddress: string; amount: Big
 
       // TODO Needed checks for amount
 
-      const txResponse = await ironBankService.makeAction({
+      const txResponse = await ironBankService.executeTransaction({
         userAddress,
         marketAddress,
         amount: amount.toString(),
@@ -150,7 +150,7 @@ const withdrawMarket = createAsyncThunk<void, { marketAddress: string; amount: B
 
       // TODO Needed checks for amount
 
-      const txResponse = await ironBankService.makeAction({
+      const txResponse = await ironBankService.executeTransaction({
         userAddress,
         marketAddress,
         amount: amount.toString(),
@@ -175,7 +175,7 @@ const repayMarket = createAsyncThunk<void, { marketAddress: string; amount: BigN
 
       // TODO Needed checks for amount
 
-      const txResponse = await ironBankService.makeAction({
+      const txResponse = await ironBankService.executeTransaction({
         userAddress,
         marketAddress,
         amount: amount.toString(),
