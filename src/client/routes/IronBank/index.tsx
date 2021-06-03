@@ -78,7 +78,6 @@ export const IronBank = () => {
   }, [selectedAddress]);
 
   const actionHandler = (action: string, marketAddress: string) => {
-    console.log('action');
     dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
     dispatch(ModalsActions.openModal({ modalName: 'test' }));
   };
@@ -170,7 +169,7 @@ export const IronBank = () => {
           name: market.name,
           balance: normalizeUsdc(market.token.balanceUsdc),
           apy: normalizePercent(market.lendApy, 2),
-          supplied: normalizeUsdc(market.userDepositedUsdc),
+          borrowed: normalizeUsdc(market.userDepositedUsdc),
           address: market.address,
         }))}
       />
