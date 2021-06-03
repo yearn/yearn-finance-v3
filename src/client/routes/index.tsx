@@ -8,6 +8,7 @@ import { VaultDetail } from './VaultDetail';
 import { Borrow } from './Borrow';
 import { Vaults } from './Vaults';
 import { Wallet } from './Wallet';
+import { IronBank } from './IronBank';
 import { Settings } from './Settings';
 
 const routesMap = [
@@ -38,6 +39,10 @@ const routesMap = [
   {
     path: '/wallet',
     component: Wallet,
+  },
+  {
+    path: '/ironBank',
+    component: IronBank,
   },
   {
     path: '/settings',
