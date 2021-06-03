@@ -1,10 +1,11 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { AnyAction, AsyncThunk, createReducer } from '@reduxjs/toolkit';
 import {
   MarketActionsStatusMap,
   IronBankState,
   UserMarketActionsStatusMap,
   IronBankMarketPositionsMap,
   Position,
+  MarketActionsTypes,
 } from '@types';
 import { groupBy, keyBy, union } from 'lodash';
 import { initialStatus } from '../../../types/Status';
@@ -14,8 +15,9 @@ export const initialMarketsActionsMap: MarketActionsStatusMap = {
   approve: initialStatus,
   get: initialStatus,
   borrow: initialStatus,
-  replay: initialStatus,
+  repay: initialStatus,
   supply: initialStatus,
+  enterMarket: initialStatus,
   withdraw: initialStatus,
 };
 
@@ -57,6 +59,38 @@ const {
   approveMarket,
   getMarketsDynamic,
 } = IronBankActions;
+
+type GenericAsyncThunk = AsyncThunk<any, any, any>;
+type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
+type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
+type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
+
+function isPendingTxAction(action: AnyAction): action is PendingAction {
+  return (
+    action.type === 'ironBank/supply/pending' ||
+    action.type === 'ironBank/borrow/pending' ||
+    action.type === 'ironBank/repay/pending' ||
+    action.type === 'ironBank/withdraw/pending'
+  );
+}
+
+function isFulfiledTxAction(action: AnyAction): action is FulfilledAction {
+  return (
+    action.type === 'ironBank/supply/fulfilled' ||
+    action.type === 'ironBank/borrow/fulfilled' ||
+    action.type === 'ironBank/repay/fulfilled' ||
+    action.type === 'ironBank/withdraw/fulfilled'
+  );
+}
+
+function isRejectedTxAction(action: AnyAction): action is RejectedAction {
+  return (
+    action.type === 'ironBank/supply/rejected' ||
+    action.type === 'ironBank/borrow/rejected' ||
+    action.type === 'ironBank/repay/rejected' ||
+    action.type === 'ironBank/withdraw/rejected'
+  );
+}
 
 const ironBankReducer = createReducer(initialState, (builder) => {
   builder
@@ -195,6 +229,22 @@ const ironBankReducer = createReducer(initialState, (builder) => {
       marketAddresses.forEach((address) => {
         state.statusMap.marketsActionsMap[address].get = { error: error.message };
       });
+    })
+    .addMatcher(isPendingTxAction, (state, { meta, type }) => {
+      const marketAddress: string = meta.arg.marketAddress;
+      const action = type.split('/')[1] as MarketActionsTypes;
+      state.statusMap.marketsActionsMap[marketAddress][action] = { loading: true };
+    })
+    .addMatcher(isFulfiledTxAction, (state, { meta, type }) => {
+      const marketAddress: string = meta.arg.marketAddress;
+      const action = type.split('/')[1] as MarketActionsTypes;
+      state.statusMap.marketsActionsMap[marketAddress][action] = {};
+    })
+    .addMatcher(isRejectedTxAction, (state, { meta, type, error }) => {
+      const marketAddress: string = meta.arg.marketAddress;
+      const action = type.split('/')[1] as MarketActionsTypes;
+      const { message } = error as any;
+      state.statusMap.marketsActionsMap[marketAddress][action] = { error: message };
     });
 });
 

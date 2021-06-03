@@ -108,10 +108,12 @@ export interface MarketActionsStatusMap {
   approve: Status;
   borrow: Status;
   supply: Status;
-  replay: Status;
+  repay: Status;
   withdraw: Status;
+  enterMarket: Status;
   get: Status;
 }
+export type MarketActionsTypes = keyof MarketActionsStatusMap;
 
 export interface UserMarketActionsStatusMap {
   getPosition: Status;
