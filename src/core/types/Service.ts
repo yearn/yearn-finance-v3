@@ -61,6 +61,7 @@ export interface IronBankGenericGetUserDataProps {
   marketAddresses?: string[];
 }
 export interface EnterMarketsProps {
+  userAddress: EthereumAddress;
   marketAddresses: string[];
 }
 

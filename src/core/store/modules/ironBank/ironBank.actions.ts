@@ -200,7 +200,7 @@ const enterMarkets = createAsyncThunk<void, { marketAddresses: string[] }, Thunk
 
       // TODO should we double check if user is in markets?
 
-      const txResponse = await ironBankService.enterMarkets({ marketAddresses });
+      const txResponse = await ironBankService.enterMarkets({ marketAddresses, userAddress });
       // await txResponse.wait(1);
     } catch (error) {
       throw new Error(error.message);
