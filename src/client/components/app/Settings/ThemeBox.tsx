@@ -37,7 +37,7 @@ const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boole
   .themebox-content {
     display: grid;
     grid-auto-rows: auto 1fr;
-    grid-gap: 0.8rem;
+    gap: 0.8rem;
     flex: 1;
     height: 100%;
 

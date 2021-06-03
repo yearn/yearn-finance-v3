@@ -19,7 +19,7 @@ const DefaultPageContent = styled.div`
   display: flex;
   max-width: ${({ theme }) => theme.globalMaxWidth};
   width: 100%;
-  grid-gap: 2.8rem;
+  gap: 2.8rem;
   padding: 0 4rem;
   margin-top: 2.1rem;
   padding-bottom: 4rem;
@@ -71,7 +71,6 @@ const ErrorMessage = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: ${({ theme }) => theme.oldColors.error};
 `;
 
 export const Save = () => {

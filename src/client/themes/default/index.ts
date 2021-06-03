@@ -1,42 +1,12 @@
 import { SharedTheme } from 'styled-components';
 
 const sharedTheme: SharedTheme = {
-  oldColors: {
-    primary: '#000000',
-    card: '#292D39',
-    error: 'red',
-
-    shade0: '#00070E',
-    shade20: '#22252E',
-    shade30: '#3F424A',
-    shade40: '#696D78',
-    shade90: '#A7A8AC',
-    shade100: '#FFFFFF',
-  },
-  contrasts: {
-    primary: '#FFF',
-    card: '#FFF',
-    error: '#FFF',
-
-    shade0: '#FFF',
-    shade20: '#FFF',
-    shade30: '#FFF',
-    shade40: '#FFF',
-    shade90: '#FFF',
-    shade100: '#000',
-  },
   blade: {
     background: 'rgba(255, 255, 255, 0.2)',
     blur: '15px',
   },
   navbar: {
-    padding: '2rem',
     height: '6.6rem',
-  },
-  footer: {
-    padding: '7rem',
-    paddingTop: '4rem',
-    paddingBottom: '3.7rem',
   },
 
   chartTheme: {
@@ -79,7 +49,7 @@ const sharedTheme: SharedTheme = {
     desktopL: 2560,
   },
   globalFont: '"Rubik", sans-serif',
-  globalMaxWidth: '128rem',
+  globalMaxWidth: '120rem',
 
   sideBar: {
     width: '16rem',

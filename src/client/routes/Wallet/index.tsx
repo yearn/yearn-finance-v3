@@ -8,7 +8,7 @@ import { SummaryCard, DetailCard } from '@components/app';
 import { formatUsd, humanizeAmount, USDC_DECIMALS } from '@src/utils';
 
 const Container = styled.div`
-  margin: 1.6rem;
+  max-width: ${({ theme }) => theme.globalMaxWidth};
 `;
 
 interface TokenProps {

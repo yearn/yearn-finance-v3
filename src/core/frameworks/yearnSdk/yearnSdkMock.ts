@@ -16,6 +16,7 @@ const tokens = {
       name: token.symbol,
       symbol: token.symbol,
       decimals: token.decimals.toString(),
+      // TODO mock should be undefined and be set to a default image in html
       icon: 'MOCK',
       priceUsdc: token.price.toString(),
       supported: {
