@@ -34,6 +34,10 @@ export const formatPercent = (amount: string, decimals: number) => {
   return new BigNumber(amount).times(100).toFormat(decimals, { ...format, suffix: '%' });
 };
 
+export const normalizePercent = (amount: string, decimals: number) => {
+  return formatPercent(new BigNumber(amount).div(10 ** 4).toString(), decimals);
+};
+
 export const humanizeAmount = (amount: string | undefined, tokenDecimals: number, wantedDecimals: number) => {
   if (!amount || !tokenDecimals || !wantedDecimals) {
     return '0';
@@ -42,6 +46,17 @@ export const humanizeAmount = (amount: string | undefined, tokenDecimals: number
   return formatAmount(units, wantedDecimals);
 };
 
-export const formatUsd = (amount: string | undefined) => {
+export const formatUsd = (amount?: string) => {
+  if (!amount || amount === '') {
+    amount = '0';
+  }
   return new BigNumber(amount ?? '0').toFormat(2, { ...format, prefix: '$ ' });
+};
+
+export const normalizeUsdc = (amount?: string) => {
+  if (!amount || amount === '') {
+    amount = '0';
+  }
+  const units = weiToUnits(amount, USDC_DECIMALS);
+  return formatUsd(units);
 };
