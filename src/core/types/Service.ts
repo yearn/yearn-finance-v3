@@ -1,5 +1,6 @@
 import { TokenDynamicData, EthereumAddress, Wei, Position, Token, Vault, VaultDynamic, Balance, Integer } from '@types';
 import { CyTokenUserMetadata, IronBankMarket, IronBankMarketDynamic, IronBankPosition } from '@yfi/sdk';
+import BigNumber from 'bignumber.js';
 
 export interface UserService {}
 
@@ -49,6 +50,13 @@ export interface ApproveProps {
   amount: Wei;
 }
 
+export interface IronBankTransactionProps {
+  userAddress: EthereumAddress;
+  marketAddress: string;
+  amount: Wei;
+  action: 'supply' | 'borrow' | 'withdraw' | 'repay';
+}
+
 export interface IronBankService {
   getSupportedMarkets: () => Promise<IronBankMarket[]>;
   getUserMarketsPositions: ({
@@ -67,11 +75,7 @@ export interface IronBankService {
   }) => Promise<CyTokenUserMetadata[]>;
   getIronBankData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankPosition>;
   getMarketsDynamicData: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
-  // approveSupply: (props: ApproveSupplyProps) => Promise<void>;
-  // supply: (props: SupplyProps) => Promise<void>;
-  // withdraw: (props: WithdrawProps) => Promise<void>;
-  // borrow
-  // repay
+  executeTransaction: (props: IronBankTransactionProps) => Promise<any>;
 }
 
 export interface SubscriptionProps {

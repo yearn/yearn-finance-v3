@@ -2,6 +2,7 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import { CyTokenUserMetadata, IronBankMarket, IronBankMarketDynamic, IronBankPosition, Position } from '@types';
 import { TokensActions } from '@store';
+import BigNumber from 'bignumber.js';
 
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
 
@@ -87,13 +88,117 @@ const approveMarket = createAsyncThunk<void, { marketAddress: string; tokenAddre
   }
 );
 
+const supplyMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+  'ironBank/supply',
+  async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
+    try {
+      const { ironBankService } = extra.services;
+      const userAddress = getState().wallet.selectedAddress;
+      if (!userAddress) {
+        throw new Error('WALLET NOT CONNECTED');
+      }
+
+      // TODO Needed checks for amount
+
+      const txResponse = await ironBankService.executeTransaction({
+        userAddress,
+        marketAddress,
+        amount: amount.toString(),
+        action: 'supply',
+      });
+      // await txResponse.wait(1);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const borrowMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+  'ironBank/borrow',
+  async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
+    try {
+      const { ironBankService } = extra.services;
+      const userAddress = getState().wallet.selectedAddress;
+      if (!userAddress) {
+        throw new Error('WALLET NOT CONNECTED');
+      }
+
+      // TODO Needed checks for amount
+
+      const txResponse = await ironBankService.executeTransaction({
+        userAddress,
+        marketAddress,
+        amount: amount.toString(),
+        action: 'borrow',
+      });
+      // await txResponse.wait(1);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const withdrawMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+  'ironBank/withdraw',
+  async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
+    try {
+      const { ironBankService } = extra.services;
+      const userAddress = getState().wallet.selectedAddress;
+      if (!userAddress) {
+        throw new Error('WALLET NOT CONNECTED');
+      }
+
+      // TODO Needed checks for amount
+
+      const txResponse = await ironBankService.executeTransaction({
+        userAddress,
+        marketAddress,
+        amount: amount.toString(),
+        action: 'withdraw',
+      });
+      // await txResponse.wait(1);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const repayMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+  'ironBank/repay',
+  async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
+    try {
+      const { ironBankService } = extra.services;
+      const userAddress = getState().wallet.selectedAddress;
+      if (!userAddress) {
+        throw new Error('WALLET NOT CONNECTED');
+      }
+
+      // TODO Needed checks for amount
+
+      const txResponse = await ironBankService.executeTransaction({
+        userAddress,
+        marketAddress,
+        amount: amount.toString(),
+        action: 'repay',
+      });
+      // await txResponse.wait(1);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
 export const IronBankActions = {
   initiateIronBank,
   getMarkets,
+  getMarketsDynamic,
   getIronBankData,
   getUserMarketsPositions,
   getUserMarketsMetadata,
   setSelectedMarketAddress,
   approveMarket,
-  getMarketsDynamic,
+  supplyMarket,
+  borrowMarket,
+  withdrawMarket,
+  repayMarket,
 };
