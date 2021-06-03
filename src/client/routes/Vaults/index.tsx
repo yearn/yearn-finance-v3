@@ -8,7 +8,7 @@ import { SummaryCard, DetailCard, SearchBar, RecomendationsCard } from '@compone
 import { formatPercent, humanizeAmount, formatUsd, USDC_DECIMALS } from '@src/utils';
 
 const Container = styled.div`
-  margin: 1.6rem;
+  max-width: ${({ theme }) => theme.globalMaxWidth};
 `;
 
 const SearchBarContainer = styled.div`
@@ -89,13 +89,15 @@ export const Vaults = () => {
   return (
     <Container>
       <SummaryCard
-        header="My Portfolio"
+        header="Welcome"
         items={[
-          { header: 'Deposits', content: `${formatUsd(totalDeposits)}` },
           { header: 'Earnings', content: `${formatUsd(totalEarnings)}` },
+          { header: 'Deposits', content: `${formatUsd(totalDeposits)}` },
           { header: 'Est. Yearly Yield', content: `${formatUsd(estYearlyYeild)}` },
         ]}
         variant="secondary"
+        cardSize="big"
+        type="header"
       />
       <RecomendationsCard
         header="Recommendations"

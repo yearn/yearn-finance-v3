@@ -9,7 +9,7 @@ const StyledListCardsWrapper = styled.div<{ className?: string }>`
   display: grid;
   grid-template-columns: 1fr;
   /* padding: var(--list-padding); */
-  grid-gap: 1.6rem;
+  gap: 1.6rem;
 `;
 
 export const ListCardsWrapper: FC<ListHeadersProps> = ({ className, children, ...props }) => (

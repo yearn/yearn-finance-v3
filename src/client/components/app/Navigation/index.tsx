@@ -6,6 +6,8 @@ const StyledNavigation = styled.nav``;
 const StyledNavSidebar = styled(NavSidebar)``;
 
 export const Navigation = () => {
+  // const { isMobile } = useWindowDimensions();
+
   return (
     <StyledNavigation>
       <StyledNavSidebar />

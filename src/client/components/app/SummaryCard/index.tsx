@@ -1,12 +1,26 @@
-import { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
-import { Card, CardHeader, CardContent, CardElement } from '@components/common';
+import { Card, CardHeader, CardContent, CardElement, Text } from '@components/common';
 
 const StyledCard = styled(Card)`
-  max-width: max-content;
   padding: 1.2rem 0;
   margin-bottom: 1.6rem;
+  flex: 1;
+  width: 100%;
+`;
+
+const StyledCardContent = styled(CardContent)`
+  column-gap: 10.9rem;
+`;
+const StyledCardElement = styled(CardElement)`
+  max-width: 100%;
+  overflow: hidden;
+`;
+
+const StyledText = styled(Text)`
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.onSurfaceH1Contrast};
 `;
 
 interface Item {
@@ -19,19 +33,24 @@ interface SummaryCardProps {
   header?: string;
   items: Item[];
   variant?: 'primary' | 'secondary';
+  cardSize?: 'small' | 'big';
+  type?: 'header';
 }
 
-export const SummaryCard = ({ header, items, variant }: SummaryCardProps) => {
+export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, cardSize, type, ...props }) => {
   return (
-    <StyledCard variant={variant}>
+    <StyledCard variant={variant} cardSize={cardSize} {...props}>
       {header && <CardHeader header={header} />}
-      <CardContent wrap>
+
+      <StyledCardContent wrap>
         {items.map((item) => (
-          <CardElement key={item.header} header={item.header} content={item.content}>
-            {item.Component}
-          </CardElement>
+          <StyledCardElement
+            key={item.header}
+            header={item.header}
+            content={<StyledText>{item.content}</StyledText>}
+          ></StyledCardElement>
         ))}
-      </CardContent>
+      </StyledCardContent>
     </StyledCard>
   );
 };

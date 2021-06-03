@@ -24,6 +24,7 @@ const lightTheme: DefaultTheme = {
     onBackground: '#000000',
 
     onSurfaceH1: '#FFFFFF',
+    onSurfaceH1Contrast: '#FFFFFF',
     onSurfaceH2: '#000000',
     onSurfaceH2Hover: '#000000',
     onSurfaceSH1: '#888888',

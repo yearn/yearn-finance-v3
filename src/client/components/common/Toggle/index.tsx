@@ -26,8 +26,8 @@ const ToggleCircle = styled.div`
 const StyledToggleButton = styled.button<{ selected?: boolean }>`
   --toggle-size: 2.6rem;
   --toggle-offset: 0.2rem;
-  --toggle-color: ${({ theme }) => theme.contrasts.shade30};
-  --toggle-background: ${({ theme }) => theme.oldColors.shade30};
+  --toggle-color: ${({ theme }) => theme.colors.secondary};
+  --toggle-background: ${({ theme }) => theme.colors.onSurfaceH1};
 
   display: flex;
   align-items: center;

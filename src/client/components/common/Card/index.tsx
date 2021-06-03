@@ -6,6 +6,14 @@ import { CardContent } from './CardContent';
 import { CardElement } from './CardElement';
 import { styledSystem, StyledSystemProps } from '../styledSystem';
 
+const bigSize = css`
+  min-height: 17.2rem;
+`;
+
+const smallSize = css`
+  min-height: 13.2rem;
+`;
+
 const defaultVariant = css`
   background-color: ${({ theme }) => theme.colors.surface};
   color: ${({ theme }) => theme.colors.onSurfaceH2};
@@ -21,6 +29,17 @@ const secondaryVariant = css`
   color: ${({ theme }) => theme.colors.onSurfaceH1};
 `;
 
+const sizeStyle = ({ cardSize }: CardProps) => {
+  switch (cardSize) {
+    case 'small':
+      return smallSize;
+    case 'big':
+      return bigSize;
+    default:
+      return;
+  }
+};
+
 const variantStyle = ({ variant }: CardProps) => {
   switch (variant) {
     case 'primary':
@@ -33,17 +52,19 @@ const variantStyle = ({ variant }: CardProps) => {
 };
 
 type CardVariant = 'primary' | 'secondary';
+type CardSize = 'small' | 'big';
 
 export interface CardProps extends StyledSystemProps {
   onClick?: () => void;
   variant?: CardVariant;
+  cardSize?: CardSize;
 }
 
 const StyledDiv = styled.div<CardProps>`
   border-radius: 0.8rem;
   padding: 1.7rem 1.1rem;
-  min-width: fit-content;
   ${variantStyle};
+  ${sizeStyle};
   ${styledSystem};
 `;
 
