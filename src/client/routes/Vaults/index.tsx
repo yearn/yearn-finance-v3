@@ -138,7 +138,7 @@ export const Vaults = () => {
         data={deposits.map((vault) => ({
           icon: vault.token.icon ?? '',
           tokenSymbol: vault.token.symbol,
-          name: vault.name,
+          name: vault.token.symbol,
           balance: humanizeAmount(vault.userBalance, parseInt(vault.decimals), 4),
           value: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
           apy: formatPercent(vault.apyData, 2),
@@ -168,7 +168,7 @@ export const Vaults = () => {
         data={filteredVaults.map((vault) => ({
           icon: vault.token.icon ?? '',
           tokenSymbol: vault.token.symbol,
-          name: vault.name,
+          name: vault.token.symbol,
           vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 2)}`,
           apy: formatPercent(vault.apyData, 2),
           vaultAddress: vault.address,

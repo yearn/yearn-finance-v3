@@ -129,7 +129,7 @@ export const IronBank = () => {
         data={supplied.map((market) => ({
           icon: market.token.icon ?? '',
           tokenSymbol: market.token.symbol,
-          name: market.name,
+          name: market.token.symbol,
           balance: normalizeUsdc(market.token.balanceUsdc),
           apy: normalizePercent(market.lendApy, 2),
           supplied: normalizeUsdc(market.userDepositedUsdc),
@@ -166,7 +166,7 @@ export const IronBank = () => {
         data={borrowed.map((market) => ({
           icon: market.token.icon ?? '',
           tokenSymbol: market.token.symbol,
-          name: market.name,
+          name: market.token.symbol,
           balance: normalizeUsdc(market.token.balanceUsdc),
           apy: normalizePercent(market.lendApy, 2),
           borrowed: normalizeUsdc(market.userDepositedUsdc),
@@ -202,7 +202,7 @@ export const IronBank = () => {
         data={filteredMarkets.map((market) => ({
           icon: market.token.icon ?? '',
           tokenSymbol: market.token.symbol,
-          name: market.name,
+          name: market.token.symbol,
           supplyAPY: normalizePercent(market.lendApy, 2),
           borrowAPY: normalizePercent(market.borrowApy, 2),
           liquidity: normalizeUsdc(market.liquidity),
