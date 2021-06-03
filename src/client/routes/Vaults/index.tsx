@@ -118,8 +118,8 @@ export const Vaults = () => {
             width: '4.8rem',
           },
           { key: 'name', header: 'Name' },
-          { key: 'deposited', header: 'Deposited' },
-          { key: 'wallet', header: 'Wallet' },
+          { key: 'balance', header: 'Balance' },
+          { key: 'value', header: 'Value' },
           { key: 'apy', header: 'Return of Investment' },
           {
             key: 'actions',
@@ -139,8 +139,8 @@ export const Vaults = () => {
           icon: vault.token.icon ?? '',
           tokenSymbol: vault.token.symbol,
           name: vault.name,
-          deposited: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
-          wallet: `$ ${humanizeAmount(vault.token.balanceUsdc, USDC_DECIMALS, 2)}`,
+          balance: humanizeAmount(vault.userBalance, parseInt(vault.decimals), 4),
+          value: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
           apy: formatPercent(vault.apyData, 2),
           vaultAddress: vault.address,
         }))}
