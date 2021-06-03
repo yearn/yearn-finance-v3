@@ -6,6 +6,7 @@ import {
   IronBankPosition,
   IronBankMarketDynamic,
   CyTokenUserMetadata,
+  IronBankGenericActionProps,
 } from '@types';
 
 export class IronBankServiceImpl implements IronBankService {
@@ -51,5 +52,17 @@ export class IronBankServiceImpl implements IronBankService {
     const yearn = this.yearnSdk;
     return await yearn.ironBank.userMetadata(userAddress);
     // return await yearn.ironBank.userMetadata(userAddress, marketAddresses); // TODO use when sdk updated to receive marketAddresses
+  }
+
+  public async supply({ userAddress, marketAddress, amount }: IronBankGenericActionProps): Promise<any> {
+    // const yearn = this.yearnSdk;
+    // return await yearn.ironBank.supply(userAddress, marketAddress, amount); // TODO use when sdk uready
+    return;
+  }
+
+  public async borrow({ userAddress, marketAddress, amount }: IronBankGenericActionProps): Promise<any> {
+    // const yearn = this.yearnSdk;
+    // return await yearn.ironBank.supply(userAddress, marketAddress, amount); // TODO use when sdk uready
+    return;
   }
 }

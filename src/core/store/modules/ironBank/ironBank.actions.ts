@@ -2,6 +2,7 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import { CyTokenUserMetadata, IronBankMarket, IronBankMarketDynamic, IronBankPosition, Position } from '@types';
 import { TokensActions } from '@store';
+import BigNumber from 'bignumber.js';
 
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
 
@@ -87,13 +88,55 @@ const approveMarket = createAsyncThunk<void, { marketAddress: string; tokenAddre
   }
 );
 
+const supplyMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+  'ironBank/supply',
+  async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
+    try {
+      const { ironBankService } = extra.services;
+      const userAddress = getState().wallet.selectedAddress;
+      if (!userAddress) {
+        throw new Error('WALLET NOT CONNECTED');
+      }
+
+      // TODO Needed checks for amount
+
+      const txResponse = await ironBankService.supply({ userAddress, marketAddress, amount: amount.toString() });
+      // await txResponse.wait(1);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const borrowMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+  'ironBank/borrow',
+  async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
+    try {
+      const { ironBankService } = extra.services;
+      const userAddress = getState().wallet.selectedAddress;
+      if (!userAddress) {
+        throw new Error('WALLET NOT CONNECTED');
+      }
+
+      // TODO Needed checks for amount
+
+      const txResponse = await ironBankService.borrow({ userAddress, marketAddress, amount: amount.toString() });
+      // await txResponse.wait(1);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
 export const IronBankActions = {
   initiateIronBank,
   getMarkets,
+  getMarketsDynamic,
   getIronBankData,
   getUserMarketsPositions,
   getUserMarketsMetadata,
   setSelectedMarketAddress,
   approveMarket,
-  getMarketsDynamic,
+  supplyMarket,
+  borrowMarket,
 };
