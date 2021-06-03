@@ -54,15 +54,9 @@ export class IronBankServiceImpl implements IronBankService {
     // return await yearn.ironBank.userMetadata(userAddress, marketAddresses); // TODO use when sdk updated to receive marketAddresses
   }
 
-  public async supply({ userAddress, marketAddress, amount }: IronBankGenericActionProps): Promise<any> {
+  public async makeAction({ userAddress, marketAddress, amount, action }: IronBankGenericActionProps): Promise<any> {
     // const yearn = this.yearnSdk;
-    // return await yearn.ironBank.supply(userAddress, marketAddress, amount); // TODO use when sdk uready
-    return;
-  }
-
-  public async borrow({ userAddress, marketAddress, amount }: IronBankGenericActionProps): Promise<any> {
-    // const yearn = this.yearnSdk;
-    // return await yearn.ironBank.supply(userAddress, marketAddress, amount); // TODO use when sdk uready
+    // return await yearn.ironBank[action](userAddress, marketAddress, amount); // TODO use when sdk uready
     return;
   }
 }

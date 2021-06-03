@@ -100,7 +100,12 @@ const supplyMarket = createAsyncThunk<void, { marketAddress: string; amount: Big
 
       // TODO Needed checks for amount
 
-      const txResponse = await ironBankService.supply({ userAddress, marketAddress, amount: amount.toString() });
+      const txResponse = await ironBankService.makeAction({
+        userAddress,
+        marketAddress,
+        amount: amount.toString(),
+        action: 'supply',
+      });
       // await txResponse.wait(1);
     } catch (error) {
       throw new Error(error.message);
@@ -120,7 +125,62 @@ const borrowMarket = createAsyncThunk<void, { marketAddress: string; amount: Big
 
       // TODO Needed checks for amount
 
-      const txResponse = await ironBankService.borrow({ userAddress, marketAddress, amount: amount.toString() });
+      const txResponse = await ironBankService.makeAction({
+        userAddress,
+        marketAddress,
+        amount: amount.toString(),
+        action: 'borrow',
+      });
+      // await txResponse.wait(1);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const withdrawMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+  'ironBank/withdraw',
+  async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
+    try {
+      const { ironBankService } = extra.services;
+      const userAddress = getState().wallet.selectedAddress;
+      if (!userAddress) {
+        throw new Error('WALLET NOT CONNECTED');
+      }
+
+      // TODO Needed checks for amount
+
+      const txResponse = await ironBankService.makeAction({
+        userAddress,
+        marketAddress,
+        amount: amount.toString(),
+        action: 'withdraw',
+      });
+      // await txResponse.wait(1);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const repayMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+  'ironBank/repay',
+  async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
+    try {
+      const { ironBankService } = extra.services;
+      const userAddress = getState().wallet.selectedAddress;
+      if (!userAddress) {
+        throw new Error('WALLET NOT CONNECTED');
+      }
+
+      // TODO Needed checks for amount
+
+      const txResponse = await ironBankService.makeAction({
+        userAddress,
+        marketAddress,
+        amount: amount.toString(),
+        action: 'repay',
+      });
       // await txResponse.wait(1);
     } catch (error) {
       throw new Error(error.message);
@@ -139,4 +199,6 @@ export const IronBankActions = {
   approveMarket,
   supplyMarket,
   borrowMarket,
+  withdrawMarket,
+  repayMarket,
 };
