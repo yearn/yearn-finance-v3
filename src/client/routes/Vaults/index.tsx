@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, VaultsActions, VaultsSelectors, TokensActions } from '@store';
-import { Box, Button } from '@components/common';
-import { SummaryCard, DetailCard, SearchBar, RecomendationsCard } from '@components/app';
+import { ModalsActions, VaultsActions, VaultsSelectors, TokensActions, WalletSelectors } from '@store';
+import { SummaryCard, DetailCard, SearchBar, RecomendationsCard, ActionButtons, TokenIcon } from '@components/app';
 import { formatPercent, humanizeAmount, formatUsd, USDC_DECIMALS } from '@src/utils';
 
 const Container = styled.div`
@@ -15,46 +14,12 @@ const SearchBarContainer = styled.div`
   margin: 1.2rem;
 `;
 
-const VaultActionButton = styled(Button)`
-  background: ${({ theme }) => theme.colors.vaultActionButton.background};
-  color: ${({ theme }) => theme.colors.vaultActionButton.color};
-  border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.borderColor};
-  padding: 0 1.6rem;
-`;
-
-interface TokenProps {
-  icon: string;
-  symbol: string;
-}
-
-const Token = ({ icon, symbol }: TokenProps) => {
-  return (
-    <Box display="flex" flexDirection="row" alignItems="center">
-      <img alt={symbol} src={icon} width="36" height="36" />
-    </Box>
-  );
-};
-
-interface ActionProps {
-  actions: Array<{
-    name: string;
-    handler: () => void;
-  }>;
-}
-
-const ActionButtons = ({ actions }: ActionProps) => (
-  <Box display="grid" gridTemplateColumns={`repeat(${actions.length}, 1fr)`} flexDirection="row" alignItems="center">
-    {actions.map(({ name, handler }) => (
-      <VaultActionButton onClick={handler}>{name}</VaultActionButton>
-    ))}
-  </Box>
-);
-
 export const Vaults = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
+  const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
   const recomendations = useAppSelector(VaultsSelectors.selectRecomendations);
   const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
@@ -114,7 +79,7 @@ export const Vaults = () => {
         metadata={[
           {
             key: 'icon',
-            transform: ({ icon, tokenSymbol }) => <Token icon={icon} symbol={tokenSymbol} />,
+            transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
             width: '4.8rem',
           },
           { key: 'name', header: 'Name' },
@@ -150,7 +115,7 @@ export const Vaults = () => {
         metadata={[
           {
             key: 'icon',
-            transform: ({ icon, tokenSymbol }) => <Token icon={icon} symbol={tokenSymbol} />,
+            transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
             width: '4.8rem',
           },
           { key: 'name', header: 'Name' },
@@ -159,7 +124,11 @@ export const Vaults = () => {
           {
             key: 'actions',
             transform: ({ vaultAddress }) => (
-              <ActionButtons actions={[{ name: 'Deposit', handler: () => depositHandler(vaultAddress) }]} />
+              <ActionButtons
+                actions={[
+                  { name: 'Deposit', handler: () => depositHandler(vaultAddress), disabled: !walletIsConnected },
+                ]}
+              />
             ),
             align: 'flex-end',
             grow: '1',
@@ -169,7 +138,7 @@ export const Vaults = () => {
           icon: vault.token.icon ?? '',
           tokenSymbol: vault.token.symbol,
           name: vault.token.symbol,
-          vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 2)}`,
+          vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 0)}`,
           apy: formatPercent(vault.apyData, 2),
           vaultAddress: vault.address,
         }))}

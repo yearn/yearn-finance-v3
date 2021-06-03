@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, IronBankActions, IronBankSelectors, TokensActions } from '@store';
-import { Box, Button, ToggleButton } from '@components/common';
-import { SummaryCard, DetailCard, SearchBar } from '@components/app';
+import { ModalsActions, IronBankActions, IronBankSelectors, TokensActions, WalletSelectors } from '@store';
+import { ToggleButton } from '@components/common';
+import { SummaryCard, DetailCard, SearchBar, ActionButtons, TokenIcon } from '@components/app';
 import { normalizeUsdc, normalizePercent } from '@src/utils';
 
 const Container = styled.div`
@@ -15,46 +15,12 @@ const SearchBarContainer = styled.div`
   margin: 1.2rem;
 `;
 
-const ActionButton = styled(Button)`
-  background: ${({ theme }) => theme.colors.vaultActionButton.background};
-  color: ${({ theme }) => theme.colors.vaultActionButton.color};
-  border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.borderColor};
-  padding: 0 1.6rem;
-`;
-
-interface TokenProps {
-  icon: string;
-  symbol: string;
-}
-
-const Token = ({ icon, symbol }: TokenProps) => {
-  return (
-    <Box display="flex" flexDirection="row" alignItems="center">
-      <img alt={symbol} src={icon} width="36" height="36" />
-    </Box>
-  );
-};
-
-interface ActionProps {
-  actions: Array<{
-    name: string;
-    handler: () => void;
-  }>;
-}
-
-const ActionButtons = ({ actions }: ActionProps) => (
-  <Box display="grid" gridTemplateColumns={`repeat(${actions.length}, 1fr)`} flexDirection="row" alignItems="center">
-    {actions.map(({ name, handler }) => (
-      <ActionButton onClick={handler}>{name}</ActionButton>
-    ))}
-  </Box>
-);
-
 export const IronBank = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
+  const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { supplyBalance, borrowBalance, borrowUtilizationRatio } = useAppSelector(IronBankSelectors.selectSummaryData);
   const markets = useAppSelector(IronBankSelectors.selectMarkets);
   const supplied = useAppSelector(IronBankSelectors.selectLendMarkets);
@@ -98,7 +64,7 @@ export const IronBank = () => {
         metadata={[
           {
             key: 'icon',
-            transform: ({ icon, tokenSymbol }) => <Token icon={icon} symbol={tokenSymbol} />,
+            transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
             width: '4.8rem',
           },
           { key: 'name', header: 'Name' },
@@ -142,7 +108,7 @@ export const IronBank = () => {
         metadata={[
           {
             key: 'icon',
-            transform: ({ icon, tokenSymbol }) => <Token icon={icon} symbol={tokenSymbol} />,
+            transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
             width: '4.8rem',
           },
           { key: 'name', header: 'Name' },
@@ -178,7 +144,7 @@ export const IronBank = () => {
         metadata={[
           {
             key: 'icon',
-            transform: ({ icon, tokenSymbol }) => <Token icon={icon} symbol={tokenSymbol} />,
+            transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
             width: '4.8rem',
           },
           { key: 'name', header: 'Name' },
@@ -190,8 +156,8 @@ export const IronBank = () => {
             transform: ({ address }) => (
               <ActionButtons
                 actions={[
-                  { name: 'Supply', handler: () => actionHandler('supply', address) },
-                  { name: 'Borrow', handler: () => actionHandler('borrow', address) },
+                  { name: 'Supply', handler: () => actionHandler('supply', address), disabled: !walletIsConnected },
+                  { name: 'Borrow', handler: () => actionHandler('borrow', address), disabled: !walletIsConnected },
                 ]}
               />
             ),
@@ -205,7 +171,7 @@ export const IronBank = () => {
           name: market.token.symbol,
           supplyAPY: normalizePercent(market.lendApy, 2),
           borrowAPY: normalizePercent(market.borrowApy, 2),
-          liquidity: normalizeUsdc(market.liquidity),
+          liquidity: normalizeUsdc(market.liquidity, 0),
           address: market.address,
         }))}
         SearchBar={

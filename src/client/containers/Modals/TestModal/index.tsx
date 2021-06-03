@@ -15,7 +15,7 @@ export interface TestModalProps {
 export const TestModal: FC<TestModalProps> = ({ onClose, modalProps, ...props }) => {
   return (
     <StyledTestModal {...props} onClose={onClose}>
-      Test modal
+      TBD
       <p>{modalProps.testVar}</p>
     </StyledTestModal>
   );

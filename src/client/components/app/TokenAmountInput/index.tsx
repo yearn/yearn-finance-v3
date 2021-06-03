@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { Card, Text, Input, Box, Button, SimpleDropdown } from '@components/common';
+import { TokenIcon } from '@components/app';
 import { toBN, formatUsd } from '@src/utils';
 
 const Container = styled(Card)`
@@ -31,11 +32,9 @@ const InputControls = styled(Box)`
   align-items: center;
 `;
 
-const SellTokenIcon = styled.img`
+const SellTokenIcon = styled(TokenIcon)`
   top: 0;
   right: 0;
-  height: 3.2rem;
-  width: 3.2rem;
 `;
 
 interface Token {
@@ -70,7 +69,7 @@ export const TokenAmountInput = ({
   return (
     <Container>
       <Box position="absolute" right={32}>
-        <SellTokenIcon src={selectedToken.icon} alt={selectedToken.symbol} />
+        <SellTokenIcon icon={selectedToken.icon} symbol={selectedToken.symbol} />
       </Box>
       <StyledInput value={amount} onChange={(e) => onAmountChange(e.target.value)} placeholder="0.00" />
       <InputControls>

@@ -4,7 +4,7 @@ import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
-import { TokenAmountInput, TransactionSettings } from '@components/app';
+import { TokenAmountInput, TransactionSettings, TokenIcon } from '@components/app';
 import { Modal, Card, Text, Box, Button } from '@components/common';
 import { toBN, formatPercent, formatAmount, normalizeAmount, USDC_DECIMALS } from '@src/utils';
 import { getConfig } from '@config';
@@ -53,11 +53,6 @@ const ButtonContainer = styled(Box)`
 
 const StyledButton = styled(Button)`
   width: 100%;
-`;
-
-const VaultTokenIcon = styled.img`
-  height: 3.2rem;
-  width: 3.2rem;
 `;
 
 interface DepositModalProps {
@@ -128,7 +123,7 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
           tokenOptions={sellTokensOptions}
         />
         <TargetContainer>
-          <VaultTokenIcon src={selectedVault.token.icon} alt={selectedVault.token.symbol} />
+          <TokenIcon icon={selectedVault.token.icon} symbol={selectedVault.token.symbol} />
         </TargetContainer>
       </TransferContainer>
       <ButtonContainer>

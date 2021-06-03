@@ -39,24 +39,24 @@ export const normalizePercent = (amount: string, decimals: number) => {
 };
 
 export const humanizeAmount = (amount: string | undefined, tokenDecimals: number, wantedDecimals: number) => {
-  if (!amount || !tokenDecimals || !wantedDecimals) {
+  if (!amount || !tokenDecimals) {
     return '0';
   }
   const units = weiToUnits(amount, tokenDecimals);
   return formatAmount(units, wantedDecimals);
 };
 
-export const formatUsd = (amount?: string) => {
+export const formatUsd = (amount?: string, decimals = 2) => {
   if (!amount || amount === '') {
     amount = '0';
   }
-  return new BigNumber(amount ?? '0').toFormat(2, { ...format, prefix: '$ ' });
+  return new BigNumber(amount ?? '0').toFormat(decimals, { ...format, prefix: '$ ' });
 };
 
-export const normalizeUsdc = (amount?: string) => {
+export const normalizeUsdc = (amount?: string, decimals = 2) => {
   if (!amount || amount === '') {
     amount = '0';
   }
   const units = weiToUnits(amount, USDC_DECIMALS);
-  return formatUsd(units);
+  return formatUsd(units, decimals);
 };
