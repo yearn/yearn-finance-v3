@@ -56,26 +56,23 @@ export interface IronBankTransactionProps {
   amount: Wei;
   action: 'supply' | 'borrow' | 'withdraw' | 'repay';
 }
+export interface IronBankGenericGetUserDataProps {
+  userAddress: EthereumAddress;
+  marketAddresses?: string[];
+}
+export interface EnterMarketsProps {
+  userAddress: EthereumAddress;
+  marketAddresses: string[];
+}
 
 export interface IronBankService {
   getSupportedMarkets: () => Promise<IronBankMarket[]>;
-  getUserMarketsPositions: ({
-    userAddress,
-    marketAddresses,
-  }: {
-    userAddress: EthereumAddress;
-    marketAddresses?: string[];
-  }) => Promise<Position[]>;
-  getUserMarketsMetadata: ({
-    userAddress,
-    marketAddresses,
-  }: {
-    userAddress: EthereumAddress;
-    marketAddresses?: string[];
-  }) => Promise<CyTokenUserMetadata[]>;
+  getUserMarketsPositions: (props: IronBankGenericGetUserDataProps) => Promise<Position[]>;
+  getUserMarketsMetadata: (props: IronBankGenericGetUserDataProps) => Promise<CyTokenUserMetadata[]>;
   getIronBankData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankPosition>;
   getMarketsDynamicData: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
   executeTransaction: (props: IronBankTransactionProps) => Promise<any>;
+  enterMarkets: (props: EnterMarketsProps) => Promise<any>;
 }
 
 export interface SubscriptionProps {
