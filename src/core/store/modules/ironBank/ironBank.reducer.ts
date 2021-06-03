@@ -58,6 +58,7 @@ const {
   setSelectedMarketAddress,
   approveMarket,
   getMarketsDynamic,
+  enterMarkets,
 } = IronBankActions;
 
 type GenericAsyncThunk = AsyncThunk<any, any, any>;
@@ -228,6 +229,24 @@ const ironBankReducer = createReducer(initialState, (builder) => {
       const marketAddresses: string[] = meta.arg.addresses;
       marketAddresses.forEach((address) => {
         state.statusMap.marketsActionsMap[address].get = { error: error.message };
+      });
+    })
+    .addCase(enterMarkets.pending, (state, { meta }) => {
+      const marketAddresses = meta.arg.marketAddresses;
+      marketAddresses.forEach((address) => {
+        state.statusMap.marketsActionsMap[address].enterMarket = { loading: true };
+      });
+    })
+    .addCase(enterMarkets.fulfilled, (state, { meta }) => {
+      const marketAddresses = meta.arg.marketAddresses;
+      marketAddresses.forEach((address) => {
+        state.statusMap.marketsActionsMap[address].enterMarket = {};
+      });
+    })
+    .addCase(enterMarkets.rejected, (state, { meta, error }) => {
+      const marketAddresses = meta.arg.marketAddresses;
+      marketAddresses.forEach((address) => {
+        state.statusMap.marketsActionsMap[address].enterMarket = { error: error.message };
       });
     })
     .addMatcher(isPendingTxAction, (state, { meta, type }) => {

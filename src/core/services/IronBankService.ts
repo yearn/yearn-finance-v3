@@ -7,6 +7,8 @@ import {
   IronBankMarketDynamic,
   CyTokenUserMetadata,
   IronBankGenericActionProps,
+  EnterMarketsProps,
+  IronBankGenericGetUserDataProps,
 } from '@types';
 
 export class IronBankServiceImpl implements IronBankService {
@@ -34,10 +36,7 @@ export class IronBankServiceImpl implements IronBankService {
   public async getUserMarketsPositions({
     userAddress,
     marketAddresses,
-  }: {
-    userAddress: string;
-    marketAddresses?: string[];
-  }): Promise<Position[]> {
+  }: IronBankGenericGetUserDataProps): Promise<Position[]> {
     const yearn = this.yearnSdk;
     return await yearn.ironBank.positionsOf(userAddress, marketAddresses);
   }
@@ -45,10 +44,7 @@ export class IronBankServiceImpl implements IronBankService {
   public async getUserMarketsMetadata({
     userAddress,
     marketAddresses,
-  }: {
-    userAddress: string;
-    marketAddresses?: string[];
-  }): Promise<CyTokenUserMetadata[]> {
+  }: IronBankGenericGetUserDataProps): Promise<CyTokenUserMetadata[]> {
     const yearn = this.yearnSdk;
     return await yearn.ironBank.userMetadata(userAddress);
     // return await yearn.ironBank.userMetadata(userAddress, marketAddresses); // TODO use when sdk updated to receive marketAddresses
@@ -57,6 +53,12 @@ export class IronBankServiceImpl implements IronBankService {
   public async makeAction({ userAddress, marketAddress, amount, action }: IronBankGenericActionProps): Promise<any> {
     // const yearn = this.yearnSdk;
     // return await yearn.ironBank[action](userAddress, marketAddress, amount); // TODO use when sdk uready
+    return;
+  }
+
+  public async enterMarkets({ marketAddresses }: EnterMarketsProps): Promise<any> {
+    // const yearn = this.yearnSdk;
+    // return await yearn.ironBank.enterMarkets(marketAddresses); // TODO use when sdk uready
     return;
   }
 }

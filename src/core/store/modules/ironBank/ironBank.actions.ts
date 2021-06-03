@@ -188,6 +188,26 @@ const repayMarket = createAsyncThunk<void, { marketAddress: string; amount: BigN
   }
 );
 
+const enterMarkets = createAsyncThunk<void, { marketAddresses: string[] }, ThunkAPI>(
+  'ironBank/enterMarkets',
+  async ({ marketAddresses }, { extra, getState, dispatch }) => {
+    try {
+      const { ironBankService } = extra.services;
+      const userAddress = getState().wallet.selectedAddress;
+      if (!userAddress) {
+        throw new Error('WALLET NOT CONNECTED');
+      }
+
+      // TODO should we double check if user is in markets?
+
+      const txResponse = await ironBankService.enterMarkets({ marketAddresses });
+      // await txResponse.wait(1);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
 export const IronBankActions = {
   initiateIronBank,
   getMarkets,
@@ -201,4 +221,5 @@ export const IronBankActions = {
   borrowMarket,
   withdrawMarket,
   repayMarket,
+  enterMarkets,
 };
