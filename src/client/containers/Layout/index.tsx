@@ -57,6 +57,9 @@ export const Layout: FC = ({ children }) => {
   useEffect(() => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
     switch (path) {
+      case 'home':
+        dispatch(VaultsActions.initiateSaveVaults());
+        break;
       case 'vaults':
         dispatch(VaultsActions.initiateSaveVaults());
         break;
@@ -75,6 +78,10 @@ export const Layout: FC = ({ children }) => {
   useEffect(() => {
     if (selectedAddress) {
       switch (path) {
+        case 'home':
+          dispatch(VaultsActions.getUserVaultsPositions({}));
+          dispatch(TokensActions.getUserTokens({}));
+          break;
         case 'vaults':
           dispatch(VaultsActions.getUserVaultsPositions({}));
           dispatch(TokensActions.getUserTokens({}));

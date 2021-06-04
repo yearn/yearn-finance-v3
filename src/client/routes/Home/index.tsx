@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
-import { TokensSelectors, VaultsActions, VaultsSelectors } from '@store';
+import { useAppSelector } from '@hooks';
+import { TokensSelectors, VaultsSelectors } from '@store';
 import { SummaryCard, InfoCard, ViewContainer } from '@components/app';
 import { formatUsd, humanizeAmount, USDC_DECIMALS } from '@src/utils';
 
@@ -42,20 +41,8 @@ const StyledSummaryCard = styled(SummaryCard)`
 export const Home = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
-  const dispatch = useAppDispatch();
-  const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
   const walletSummary = useAppSelector(TokensSelectors.selectSummaryData);
-
-  useEffect(() => {
-    dispatch(VaultsActions.initiateSaveVaults());
-  }, []);
-
-  useEffect(() => {
-    if (selectedAddress) {
-      dispatch(VaultsActions.getUserVaultsPositions({}));
-    }
-  }, [selectedAddress]);
 
   return (
     <StyledViewContainer>
