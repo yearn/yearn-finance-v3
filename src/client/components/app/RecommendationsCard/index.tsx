@@ -5,7 +5,6 @@ import { Card, CardHeader, CardContent, CardElement, Text, Button } from '@compo
 const ContainerCard = styled(Card)`
   max-width: max-content;
   padding: 1.2rem 1.2rem 0 0;
-  margin-bottom: 1.6rem;
 `;
 
 const ItemCard = styled(Card)`

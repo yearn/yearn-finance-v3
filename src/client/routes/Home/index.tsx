@@ -1,29 +1,41 @@
 import { useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { TokensSelectors, VaultsActions, VaultsSelectors } from '@store';
-import { SummaryCard, InfoCard } from '@components/app';
+import { SummaryCard, InfoCard, ViewContainer } from '@components/app';
 import { formatUsd, humanizeAmount, USDC_DECIMALS } from '@src/utils';
 
-const Container = styled.div`
-  max-width: ${({ theme }) => theme.globalMaxWidth};
+const halfWidth = css`
+  max-width: calc(${({ theme }) => theme.globalMaxWidth} / 2 - ${({ theme }) => theme.layoutPadding} / 2);
 `;
 
-const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
+const StyledViewContainer = styled(ViewContainer)`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 `;
 
-const Column = styled.div`
+const HeaderCard = styled(SummaryCard)`
+  grid-column: 1 / 3;
+`;
+
+const Row = styled.div<{ split?: boolean }>`
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
+  flex-wrap: wrap;
+  grid-column: 1 / 3;
+`;
+
+const StyledInfoCard = styled(InfoCard)`
+  max-width: 100%;
+  flex: 1;
+`;
+
+const StyledSummaryCard = styled(SummaryCard)`
+  width: 100%;
+  ${halfWidth};
 `;
 
 export const Home = () => {
@@ -45,42 +57,43 @@ export const Home = () => {
   }, [selectedAddress]);
 
   return (
-    <Container>
-      <SummaryCard
+    <StyledViewContainer>
+      <HeaderCard
+        header="Welcome"
         items={[
-          { header: 'Net Worth', content: `${formatUsd(totalDeposits)}` },
           { header: 'Earnings', content: `${formatUsd(totalEarnings)}` },
+          { header: 'Net Worth', content: `${formatUsd(totalDeposits)}` },
           { header: 'Est. Yearly Yield', content: `${formatUsd(estYearlyYeild)}` },
         ]}
         variant="secondary"
+        cardSize="big"
       />
 
       <Row>
-        <Column>
-          <SummaryCard
-            header="Wallet"
-            items={[
-              { header: 'Balance', content: `$ ${humanizeAmount(walletSummary.totalBalance, USDC_DECIMALS, 2)}` },
-              { header: 'Supported Tokens', content: walletSummary.tokensAmount },
-            ]}
-            variant="secondary"
-          />
-
-          <SummaryCard
-            header="Vaults"
-            items={[
-              { header: 'Total Deposits', content: `${formatUsd(totalDeposits)}` },
-              { header: 'Total Yield Claimed', content: `${formatUsd(totalEarnings)}` },
-            ]}
-            variant="secondary"
-          />
-        </Column>
-
-        <Column>
-          <InfoCard header="Onboarding" content="....." />
-          <InfoCard header="Promo" content="......" />
-        </Column>
+        <StyledInfoCard header="Onboarding" content="....." />
+        <StyledInfoCard header="Promo" content="......" />
       </Row>
-    </Container>
+
+      <Row>
+        <StyledSummaryCard
+          header="Wallet"
+          items={[
+            { header: 'Balance', content: `$ ${humanizeAmount(walletSummary.totalBalance, USDC_DECIMALS, 2)}` },
+            { header: 'Supported Tokens', content: walletSummary.tokensAmount },
+          ]}
+          cardSize="small"
+        />
+      </Row>
+      <Row>
+        <StyledSummaryCard
+          header="Vaults"
+          items={[
+            { header: 'Total Deposits', content: `${formatUsd(totalDeposits)}` },
+            { header: 'Total Yield Claimed', content: `${formatUsd(totalEarnings)}` },
+          ]}
+          cardSize="small"
+        />
+      </Row>
+    </StyledViewContainer>
   );
 };
