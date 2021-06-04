@@ -6,6 +6,7 @@ import { formatUnits } from '@frameworks/ethers';
 import { Position, Vault, VaultDynamic } from '@types';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
+const clearUserData = createAction<void>('vaults/clearUserData');
 
 const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',
@@ -153,4 +154,5 @@ export const VaultsActions = {
   getVaultsDynamic,
   getUserVaultsPositions,
   initSubscriptions,
+  clearUserData,
 };

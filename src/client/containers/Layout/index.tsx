@@ -79,6 +79,12 @@ export const Layout: FC = ({ children }) => {
     if (selectedAddress) {
       switch (path) {
         default:
+          // clean old data
+          dispatch(TokensActions.clearUserTokenState());
+          dispatch(VaultsActions.clearUserData());
+          dispatch(IronBankActions.clearUserData());
+
+          // fetch new data
           dispatch(TokensActions.getUserTokens({}));
           dispatch(VaultsActions.getUserVaultsPositions({}));
           dispatch(IronBankActions.getUserMarketsPositions({}));

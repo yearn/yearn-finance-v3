@@ -3,6 +3,7 @@ import { ThunkAPI } from '@frameworks/redux';
 import { TokenDynamicData, Token, Balance, Integer } from '@types';
 
 const setSelectedTokenAddress = createAction<{ tokenAddress?: string }>('tokens/setSelectedTokenAddress');
+const clearUserTokenState = createAction<void>('tokens/clearUserTokenState');
 
 const getTokens = createAsyncThunk<{ tokensData: Token[] }, string | undefined, ThunkAPI>(
   'tokens/getTokens',
@@ -101,4 +102,5 @@ export const TokensActions = {
   getTokenAllowance,
   approve,
   initSubscriptions,
+  clearUserTokenState,
 };

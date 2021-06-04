@@ -5,6 +5,7 @@ import { TokensActions } from '@store';
 import BigNumber from 'bignumber.js';
 
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
+const clearUserData = createAction<void>('ironbank/clearUserData');
 
 const initiateIronBank = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'ironBank/initiateIronBank',
@@ -222,4 +223,5 @@ export const IronBankActions = {
   withdrawMarket,
   repayMarket,
   enterMarkets,
+  clearUserData,
 };

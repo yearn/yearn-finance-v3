@@ -35,6 +35,7 @@ const {
   setSelectedTokenAddress,
   approve,
   getTokenAllowance,
+  clearUserTokenState,
 } = TokensActions;
 
 const tokensReducer = createReducer(initialState, (builder) => {
@@ -121,6 +122,11 @@ const tokensReducer = createReducer(initialState, (builder) => {
       const { tokenAddress } = meta.arg;
       state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = { error: error.message };
       state.statusMap.user.getUserTokensAllowances = { error: error.message };
+    })
+    .addCase(clearUserTokenState, (state) => {
+      state.user.userTokensAddresses = [];
+      state.user.userTokensAllowancesMap = {};
+      state.user.userTokensMap = {};
     });
 });
 
