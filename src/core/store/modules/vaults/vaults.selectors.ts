@@ -111,16 +111,16 @@ const selectSelectedVaultActionsStatusMap = createSelector(
   }
 );
 
-const selectSummaryData = createSelector(
-  [selectVaultsActionsStatusMap, selectSelectedVaultAddress],
-  (vaultsActionsStatusMap, selectedVaultAddress) => {
-    return {
-      totalDeposits: '999999',
-      totalEarnings: '200000',
-      estYearlyYeild: '90000',
-    };
-  }
-);
+const selectSummaryData = createSelector([selectDepositedVaults], (depositedVaults) => {
+  let totalDeposited: BigNumber = new BigNumber('0');
+  depositedVaults.forEach((vault) => totalDeposited.plus(vault.userDepositedUsdc));
+
+  return {
+    totalDeposits: totalDeposited.toString(),
+    totalEarnings: '0',
+    estYearlyYeild: '0',
+  };
+});
 
 const selectRecomendations = createSelector([selectVaults], (vaults) => {
   return [vaults[0], vaults[5], vaults[8]].filter((item) => !!item);

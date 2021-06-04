@@ -33,22 +33,15 @@ const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (to
   return tokens;
 });
 
-const selectSummaryData = createSelector(
-  [selectUserTokensAddresses, selectUserTokensMap],
-  (userTokensAddresses, userTokensMap) => {
-    let totalBalance: BigNumber = new BigNumber('0');
-    if (userTokensAddresses.length) {
-      totalBalance = userTokensAddresses.reduce((total, address) => {
-        return total.plus(userTokensMap[address]?.balanceUsdc ?? '0');
-      }, new BigNumber('0'));
-    }
+const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
+  let totalBalance: BigNumber = new BigNumber('0');
+  userTokens.forEach((userToken) => totalBalance.plus(userToken.balanceUsdc));
 
-    return {
-      totalBalance: totalBalance?.toString() ?? '0',
-      tokensAmount: userTokensAddresses.length.toString(),
-    };
-  }
-);
+  return {
+    totalBalance: totalBalance?.toString() ?? '0',
+    tokensAmount: userTokens.length.toString(),
+  };
+});
 
 const selectZapOutTokens = createSelector([selectTokensMap], (tokensMap) => {
   const { ZAP_OUT_TOKENS } = getConfig();
