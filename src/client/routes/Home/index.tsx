@@ -19,7 +19,7 @@ const HeaderCard = styled(SummaryCard)`
   grid-column: 1 / 3;
 `;
 
-const Row = styled.div<{ split?: boolean }>`
+const Row = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
