@@ -2,6 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkAPI } from '@frameworks/redux';
 import { getEthersProvider } from '@frameworks/ethers';
 import { Theme, RootState, DIContainer, Subscriptions } from '@types';
+import { isValidAddress } from '@utils';
 
 const walletChange = createAction<{ walletName: string }>('wallet/walletChange');
 const addressChange = createAction<{ address: string }>('wallet/addressChange');
@@ -39,7 +40,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefin
       const customSubscriptions: Subscriptions = {
         wallet: (wallet) => web3Provider.register('wallet', getEthersProvider(wallet.provider)),
         address: () => {
-          if (ALLOW_DEV_MODE && settings.devMode.enabled) {
+          if (ALLOW_DEV_MODE && settings.devMode.enabled && isValidAddress(settings.devMode.walletAddressOverride)) {
             dispatch(addressChange({ address: settings.devMode.walletAddressOverride }));
           }
         },
