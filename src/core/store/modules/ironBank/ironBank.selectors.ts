@@ -100,8 +100,8 @@ const selectSummaryData = createSelector(
   (lendMarkets, borrowMarkets, ironBankData) => {
     let totalSupply: BigNumber = new BigNumber('0');
     let totalBorrow: BigNumber = new BigNumber('0');
-    lendMarkets.forEach((lendMarket) => totalSupply.plus(lendMarket.userDepositedUsdc));
-    borrowMarkets.forEach((borrowMarket) => totalSupply.plus(borrowMarket.userDepositedUsdc));
+    lendMarkets.forEach((lendMarket) => (totalSupply = totalSupply.plus(lendMarket.userDepositedUsdc)));
+    borrowMarkets.forEach((borrowMarket) => (totalBorrow = totalBorrow.plus(borrowMarket.userDepositedUsdc)));
 
     return {
       supplyBalance: totalSupply.toString(),
