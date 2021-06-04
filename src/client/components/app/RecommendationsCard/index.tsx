@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { Card, CardHeader, CardContent, CardElement, Text, Button } from '@components/common';
+import { TokenIcon } from '../TokenIcon';
 
 const ContainerCard = styled(Card)`
   max-width: max-content;
@@ -60,11 +61,6 @@ const CenterIcon = styled.div`
   height: 15.6rem;
 `;
 
-const Icon = styled.img`
-  width: 3.6rem;
-  height: 3.6rem;
-`;
-
 interface Item {
   header: string;
   icon: string;
@@ -95,7 +91,7 @@ export const RecomendationsCard = ({ header, items }: RecommendationsProps) => {
               <InnerBox>
                 {item.header}
                 <CenterIcon>
-                  <Icon alt={item.name} src={item.icon} />
+                  <TokenIcon symbol={item.name} icon={item.icon} />
                   <ItemName>{item.name}</ItemName>
                 </CenterIcon>
               </InnerBox>

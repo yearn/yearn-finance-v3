@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { VaultsActions, WalletSelectors, TokensSelectors, TokensActions, IronBankActions, ModalsActions } from '@store';
-import { SpinnerLoading } from '@components/common';
+import { Box, SpinnerLoading } from '@components/common';
 import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
 import { humanizeAmount, USDC_DECIMALS } from '@src/utils';
 
@@ -46,14 +46,6 @@ export const Wallet = () => {
     }
   };
 
-  if (tokensListStatus.loading) {
-    return (
-      <ViewContainer>
-        <SpinnerLoading flex="1" />
-      </ViewContainer>
-    );
-  }
-
   return (
     <ViewContainer>
       <SummaryCard
@@ -64,55 +56,62 @@ export const Wallet = () => {
         variant="secondary"
       />
 
-      <DetailCard
-        header="Tokens"
-        metadata={[
-          {
-            key: 'icon',
-            transform: ({ icon, symbol }) => <TokenIcon icon={icon} symbol={symbol} />,
-            width: '4.8rem',
-          },
-          { key: 'name', header: 'Name' },
-          { key: 'balance', header: 'Balance' },
-          { key: 'price', header: 'Price' },
-          { key: 'value', header: 'Value' },
-          {
-            key: 'actions',
-            transform: ({ tokenAddress }) => (
-              <ActionButtons
-                actions={[
-                  {
-                    name: 'Invest',
-                    handler: () => actionHandler('invest', tokenAddress),
-                    disabled: !walletIsConnected,
-                  },
-                  {
-                    name: 'Supply',
-                    handler: () => actionHandler('supply', tokenAddress),
-                    disabled: !walletIsConnected,
-                  },
-                  {
-                    name: 'Borrow',
-                    handler: () => actionHandler('borrow', tokenAddress),
-                    disabled: !walletIsConnected,
-                  },
-                ]}
-              />
-            ),
-            align: 'flex-end',
-            grow: '1',
-          },
-        ]}
-        data={userTokens.map((token) => ({
-          icon: token.icon ?? '',
-          symbol: token.symbol,
-          name: token.name,
-          balance: humanizeAmount(token.balance, token.decimals, 2),
-          price: `$ ${humanizeAmount(token.priceUsdc, USDC_DECIMALS, 4)}`,
-          value: `$ ${humanizeAmount(token.balanceUsdc, USDC_DECIMALS, 2)}`,
-          tokenAddress: token.address,
-        }))}
-      />
+      {tokensListStatus.loading && (
+        <Box height="100%" width="100%" position="relative" display="flex" center paddingTop="4rem">
+          <SpinnerLoading flex="1" />
+        </Box>
+      )}
+      {!tokensListStatus.loading && (
+        <DetailCard
+          header="Tokens"
+          metadata={[
+            {
+              key: 'icon',
+              transform: ({ icon, symbol }) => <TokenIcon icon={icon} symbol={symbol} />,
+              width: '4.8rem',
+            },
+            { key: 'name', header: 'Name' },
+            { key: 'balance', header: 'Balance' },
+            { key: 'price', header: 'Price' },
+            { key: 'value', header: 'Value' },
+            {
+              key: 'actions',
+              transform: ({ tokenAddress }) => (
+                <ActionButtons
+                  actions={[
+                    {
+                      name: 'Invest',
+                      handler: () => actionHandler('invest', tokenAddress),
+                      disabled: !walletIsConnected,
+                    },
+                    {
+                      name: 'Supply',
+                      handler: () => actionHandler('supply', tokenAddress),
+                      disabled: !walletIsConnected,
+                    },
+                    {
+                      name: 'Borrow',
+                      handler: () => actionHandler('borrow', tokenAddress),
+                      disabled: !walletIsConnected,
+                    },
+                  ]}
+                />
+              ),
+              align: 'flex-end',
+              grow: '1',
+            },
+          ]}
+          data={userTokens.map((token) => ({
+            icon: token.icon ?? '',
+            symbol: token.symbol,
+            name: token.name,
+            balance: humanizeAmount(token.balance, token.decimals, 2),
+            price: `$ ${humanizeAmount(token.priceUsdc, USDC_DECIMALS, 4)}`,
+            value: `$ ${humanizeAmount(token.balanceUsdc, USDC_DECIMALS, 2)}`,
+            tokenAddress: token.address,
+          }))}
+        />
+      )}
     </ViewContainer>
   );
 };
