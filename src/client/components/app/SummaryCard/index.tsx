@@ -5,7 +5,6 @@ import { Card, CardHeader, CardContent, CardElement, Text } from '@components/co
 
 const StyledCard = styled(Card)`
   padding: 1.2rem 0;
-  margin-bottom: 1.6rem;
   flex: 1;
   width: 100%;
 `;
@@ -34,10 +33,9 @@ interface SummaryCardProps {
   items: Item[];
   variant?: 'primary' | 'secondary';
   cardSize?: 'small' | 'big';
-  type?: 'header';
 }
 
-export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, cardSize, type, ...props }) => {
+export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, cardSize, ...props }) => {
   return (
     <StyledCard variant={variant} cardSize={cardSize} {...props}>
       {header && <CardHeader header={header} />}

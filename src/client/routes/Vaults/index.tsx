@@ -6,10 +6,7 @@ import { ModalsActions, VaultsActions, VaultsSelectors, TokensActions } from '@s
 import { Box, Button } from '@components/common';
 import { SummaryCard, DetailCard, SearchBar, RecomendationsCard } from '@components/app';
 import { formatPercent, humanizeAmount, formatUsd, USDC_DECIMALS } from '@src/utils';
-
-const Container = styled.div`
-  max-width: ${({ theme }) => theme.globalMaxWidth};
-`;
+import { ViewContainer } from '@components/app';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -87,7 +84,7 @@ export const Vaults = () => {
   };
 
   return (
-    <Container>
+    <ViewContainer>
       <SummaryCard
         header="Welcome"
         items={[
@@ -97,7 +94,6 @@ export const Vaults = () => {
         ]}
         variant="secondary"
         cardSize="big"
-        type="header"
       />
       <RecomendationsCard
         header="Recommendations"
@@ -185,6 +181,6 @@ export const Vaults = () => {
           </SearchBarContainer>
         }
       />
-    </Container>
+    </ViewContainer>
   );
 };

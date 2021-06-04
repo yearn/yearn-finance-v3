@@ -1,15 +1,11 @@
 import { useEffect } from 'react';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { VaultsActions, VaultsSelectors, TokensSelectors, TokensActions } from '@store';
 import { Box, Button } from '@components/common';
-import { SummaryCard, DetailCard } from '@components/app';
+import { SummaryCard, DetailCard, ViewContainer } from '@components/app';
 import { formatUsd, humanizeAmount, USDC_DECIMALS } from '@src/utils';
-
-const Container = styled.div`
-  max-width: ${({ theme }) => theme.globalMaxWidth};
-`;
 
 interface TokenProps {
   address: string;
@@ -61,7 +57,7 @@ export const Wallet = () => {
   }, [selectedAddress]);
 
   return (
-    <Container>
+    <ViewContainer>
       <SummaryCard
         items={[
           { header: 'Balance', content: `$ ${humanizeAmount(totalBalance, USDC_DECIMALS, 2)}` },
@@ -93,6 +89,6 @@ export const Wallet = () => {
           value: `$ ${humanizeAmount(token.balanceUsdc, USDC_DECIMALS, 2)}`,
         }))}
       />
-    </Container>
+    </ViewContainer>
   );
 };
