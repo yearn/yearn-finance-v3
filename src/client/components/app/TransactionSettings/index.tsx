@@ -10,6 +10,8 @@ const Container = styled(Card)`
   margin-bottom: 1.6rem;
   font-size: 1.6rem;
   margin-bottom: 0.8rem;
+  grid-gap: 0.5rem;
+  background-color: ${({ theme }) => theme.colors.modalColors.backgroundVariant};
 `;
 
 const Row = styled.div`
@@ -17,6 +19,19 @@ const Row = styled.div`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
+`;
+
+const StyledText = styled(Text)`
+  color: ${({ theme }) => theme.colors.modalColors.textContrast};
+`;
+
+const StyledSimpleDropdown = styled(SimpleDropdown)`
+  --dropdown-background: ${({ theme }) => theme.colors.modalColors.background};
+  --dropdown-color: ${({ theme }) => theme.colors.modalColors.textContrast};
+  --dropdown-hover-color: ${({ theme }) => theme.colors.modalColors.primary};
+  --dropdown-selected-color: ${({ theme }) => theme.colors.modalColors.primary};
+
+  color: ${({ theme }) => theme.colors.modalColors.textContrast};
 `;
 
 interface SlippageOption {
@@ -36,18 +51,23 @@ export const TransactionSettings = ({
   selectedSlippage,
   slippageOptions,
   onSelectedSlippageChange,
+  ...props
 }: TransactionSettingsProps) => {
   const maximumSlippageAmount = toBN(amount).times(selectedSlippage.value);
   const minimumAmountReceived = toBN(amount).minus(maximumSlippageAmount).toString();
   return (
-    <Container variant="primary">
+    <Container variant="primary" {...props}>
       <Row>
-        <Text>Slippage Tolerance</Text>
-        <SimpleDropdown selected={selectedSlippage} setSelected={onSelectedSlippageChange} options={slippageOptions} />
+        <StyledText>Slippage Tolerance</StyledText>
+        <StyledSimpleDropdown
+          selected={selectedSlippage}
+          setSelected={onSelectedSlippageChange}
+          options={slippageOptions}
+        />
       </Row>
       <Row>
-        <Text>Minimum Received</Text>
-        <Text>{formatUsd(minimumAmountReceived)}</Text>
+        <StyledText>Minimum Received</StyledText>
+        <StyledText>{formatUsd(minimumAmountReceived)}</StyledText>
       </Row>
     </Container>
   );

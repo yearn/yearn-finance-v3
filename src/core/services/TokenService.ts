@@ -15,11 +15,13 @@ export class TokenServiceImpl implements TokenService {
 
   public async getSupportedTokens(): Promise<Token[]> {
     const yearn = this.yearnSdk;
-    const [zapperTokens, vaultsTokens]: [Token[], Token[]] = await Promise.all([
+    const [zapperTokens, vaultsTokens, ironBankTokens]: [Token[], Token[], Token[]] = await Promise.all([
       yearn.tokens.supported(),
       yearn.vaults.tokens(),
+      yearn.ironBank.tokens(),
     ]);
-    return unionBy(zapperTokens, vaultsTokens, 'address');
+    const tokens = unionBy(vaultsTokens, ironBankTokens, 'address');
+    return unionBy(zapperTokens, tokens, 'address');
   }
 
   public async getTokensDynamicData(addresses: string[]): Promise<TokenDynamicData[]> {

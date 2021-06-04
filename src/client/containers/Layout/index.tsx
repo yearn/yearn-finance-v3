@@ -2,7 +2,16 @@ import { FC, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AppActions, RouteActions, WalletActions, SettingsSelectors } from '@store';
+import {
+  AppActions,
+  RouteActions,
+  WalletActions,
+  TokensActions,
+  VaultsActions,
+  IronBankActions,
+  WalletSelectors,
+  SettingsSelectors,
+} from '@store';
 
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { Navigation, Navbar } from '@components/app';
@@ -34,7 +43,7 @@ export const Layout: FC = ({ children }) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const selectedAddress = useAppSelector(({ wallet }) => wallet.selectedAddress);
+  const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
   // const path = useAppSelector(({ route }) => route.path);
@@ -44,9 +53,46 @@ export const Layout: FC = ({ children }) => {
     dispatch(AppActions.initApp());
   }, []);
 
+  // TODO: MOVE THIS LOGIC TO THUNKS
   useEffect(() => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
+    switch (path) {
+      case 'home':
+        dispatch(VaultsActions.initiateSaveVaults());
+        break;
+      case 'vaults':
+        dispatch(VaultsActions.initiateSaveVaults());
+        break;
+      case 'wallet':
+        dispatch(VaultsActions.initiateSaveVaults());
+        break;
+      case 'ironbank':
+        dispatch(IronBankActions.initiateIronBank());
+        break;
+      default:
+        break;
+    }
   }, [location]);
+
+  // TODO: MOVE THIS LOGIC TO THUNKS
+  useEffect(() => {
+    if (selectedAddress) {
+      switch (path) {
+        default:
+          // clean old data
+          dispatch(TokensActions.clearUserTokenState());
+          dispatch(VaultsActions.clearUserData());
+          dispatch(IronBankActions.clearUserData());
+
+          // fetch new data
+          dispatch(TokensActions.getUserTokens({}));
+          dispatch(VaultsActions.getUserVaultsPositions({}));
+          dispatch(IronBankActions.getUserMarketsPositions({}));
+          dispatch(IronBankActions.getUserMarketsMetadata({}));
+          break;
+      }
+    }
+  }, [selectedAddress]);
 
   return (
     <StyledLayout>

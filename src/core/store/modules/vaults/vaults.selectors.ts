@@ -15,6 +15,9 @@ const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVa
 const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMap.vaultsActionsStatusMap;
 const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 
+const selectGetVaultsStatus = (state: RootState) => state.vaults.statusMap.getVaults;
+const selectGetUserVaultsPositionsStatus = (state: RootState) => state.vaults.statusMap.user.getUserVaultsPositions;
+
 const selectVaults = createSelector(
   [
     selectVaultsMap,
@@ -111,20 +114,30 @@ const selectSelectedVaultActionsStatusMap = createSelector(
   }
 );
 
-const selectSummaryData = createSelector(
-  [selectVaultsActionsStatusMap, selectSelectedVaultAddress],
-  (vaultsActionsStatusMap, selectedVaultAddress) => {
-    return {
-      totalDeposits: '999999',
-      totalEarnings: '200000',
-      estYearlyYeild: '90000',
-    };
-  }
-);
+const selectSummaryData = createSelector([selectDepositedVaults], (depositedVaults) => {
+  let totalDeposited: BigNumber = new BigNumber('0');
+  depositedVaults.forEach((vault) => (totalDeposited = totalDeposited.plus(vault.userDepositedUsdc)));
+
+  return {
+    totalDeposits: totalDeposited.toString(),
+    totalEarnings: '0',
+    estYearlyYeild: '0',
+  };
+});
 
 const selectRecomendations = createSelector([selectVaults], (vaults) => {
   return [vaults[0], vaults[5], vaults[8]].filter((item) => !!item);
 });
+
+const selectVaultsStatus = createSelector(
+  [selectGetVaultsStatus, selectGetUserVaultsPositionsStatus],
+  (getVaultsStatus, getUserVaultsPositionsStatus): Status => {
+    return {
+      loading: getVaultsStatus.loading || getUserVaultsPositionsStatus.loading,
+      error: getVaultsStatus.error || getUserVaultsPositionsStatus.error,
+    };
+  }
+);
 
 export const VaultsSelectors = {
   selectVaultsState,
@@ -142,4 +155,5 @@ export const VaultsSelectors = {
   selectVaultsOportunities,
   selectSummaryData,
   selectRecomendations,
+  selectVaultsStatus,
 };

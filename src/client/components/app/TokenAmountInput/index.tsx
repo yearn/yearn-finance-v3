@@ -2,11 +2,14 @@ import styled from 'styled-components';
 
 import { Card, Text, Input, Box, Button, SimpleDropdown } from '@components/common';
 import { toBN, formatUsd } from '@src/utils';
+import { TokenIcon } from '../TokenIcon';
 
 const Container = styled(Card)`
   width: 100%;
   padding: 0.8rem;
   margin-bottom: 1.6rem;
+  position: relative;
+  background-color: ${({ theme }) => theme.colors.modalColors.background};
 `;
 
 const StyledInput = styled(Input)`
@@ -19,9 +22,20 @@ const StyledInput = styled(Input)`
   border: none;
   border-width: 0px;
   padding-right: 3.2rem;
+  &,
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.modalColors.textContrast};
+  }
   :focus {
     outline: none !important;
   }
+`;
+
+const StyledSimpleDropdown = styled(SimpleDropdown)`
+  --dropdown-background: ${({ theme }) => theme.colors.modalColors.backgroundVariant};
+  --dropdown-color: ${({ theme }) => theme.colors.modalColors.textContrast};
+  --dropdown-hover-color: ${({ theme }) => theme.colors.modalColors.primary};
+  --dropdown-selected-color: ${({ theme }) => theme.colors.modalColors.primary};
 `;
 
 const InputControls = styled(Box)`
@@ -31,11 +45,18 @@ const InputControls = styled(Box)`
   align-items: center;
 `;
 
-const SellTokenIcon = styled.img`
+const SellTokenIcon = styled(TokenIcon)`
   top: 0;
   right: 0;
-  height: 3.2rem;
-  width: 3.2rem;
+`;
+
+const StyledText = styled(Text)`
+  color: ${({ theme }) => theme.colors.modalColors.text};
+`;
+
+const StyledButton = styled(Button)`
+  background-color: ${({ theme }) => theme.colors.modalColors.primary};
+  color: ${({ theme }) => theme.colors.modalColors.background};
 `;
 
 interface Token {
@@ -63,20 +84,21 @@ export const TokenAmountInput = ({
   selectedToken,
   onSelectedTokenChange,
   tokenOptions,
+  ...props
 }: TokenAmountInputProps) => {
   const availableTokenOptions = tokenOptions ? tokenOptions : [selectedToken];
   const amountValue = toBN(amount).times(price).toString();
 
   return (
-    <Container>
+    <Container {...props}>
       <Box position="absolute" right={32}>
-        <SellTokenIcon src={selectedToken.icon} alt={selectedToken.symbol} />
+        <SellTokenIcon icon={selectedToken.icon} symbol={selectedToken.symbol} />
       </Box>
       <StyledInput value={amount} onChange={(e) => onAmountChange(e.target.value)} placeholder="0.00" />
       <InputControls>
-        <Button onClick={() => onAmountChange(maxAmount)}>Max</Button>
-        <Text>{`Valued ${formatUsd(amountValue)}`}</Text>
-        <SimpleDropdown
+        <StyledButton onClick={() => onAmountChange(maxAmount)}>Max</StyledButton>
+        <StyledText>{`Valued ${formatUsd(amountValue)}`}</StyledText>
+        <StyledSimpleDropdown
           selected={{ label: selectedToken.symbol, value: selectedToken.address }}
           setSelected={(selected) => {
             if (onSelectedTokenChange) {

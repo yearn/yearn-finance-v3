@@ -1,13 +1,16 @@
 import { createSelector } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
-import { RootState, TokenView } from '@types';
+import { RootState, Status, TokenView } from '@types';
 import { getConfig } from '@config';
 
 const selectTokensState = (state: RootState) => state.tokens;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
+const selectSelectedTokenAddress = (state: RootState) => state.tokens.selectedTokenAddress;
 const selectTokensUser = (state: RootState) => state.tokens.user;
 const selectUserTokensStatusMap = (state: RootState) => state.tokens.statusMap;
+const selectGetTokensStatus = (state: RootState) => state.tokens.statusMap.getTokens;
+const selectGetUserTokensStatus = (state: RootState) => state.tokens.statusMap.user.getUserTokens;
 
 const selectUserTokensAddresses = (state: RootState) => state.tokens.user.userTokensAddresses;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
@@ -33,22 +36,15 @@ const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (to
   return tokens;
 });
 
-const selectSummaryData = createSelector(
-  [selectUserTokensAddresses, selectUserTokensMap],
-  (userTokensAddresses, userTokensMap) => {
-    let totalBalance: BigNumber = new BigNumber('0');
-    if (userTokensAddresses.length) {
-      totalBalance = userTokensAddresses.reduce((total, address) => {
-        return total.plus(userTokensMap[address]?.balanceUsdc ?? '0');
-      }, new BigNumber('0'));
-    }
+const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
+  let totalBalance: BigNumber = new BigNumber('0');
+  userTokens.forEach((userToken) => (totalBalance = totalBalance.plus(userToken.balanceUsdc)));
 
-    return {
-      totalBalance: totalBalance?.toString() ?? '0',
-      tokensAmount: userTokensAddresses.length.toString(),
-    };
-  }
-);
+  return {
+    totalBalance: totalBalance?.toString() ?? '0',
+    tokensAmount: userTokens.length.toString(),
+  };
+});
 
 const selectZapOutTokens = createSelector([selectTokensMap], (tokensMap) => {
   const { ZAP_OUT_TOKENS } = getConfig();
@@ -66,12 +62,24 @@ const selectZapOutTokens = createSelector([selectTokensMap], (tokensMap) => {
   return tokens;
 });
 
+const selectWalletTokensStatus = createSelector(
+  [selectGetTokensStatus, selectGetUserTokensStatus],
+  (getTokensStatus, getUserTokensStatus): Status => {
+    return {
+      loading: getTokensStatus.loading || getUserTokensStatus.loading,
+      error: getTokensStatus.error || getUserTokensStatus.error,
+    };
+  }
+);
+
 export const TokensSelectors = {
   selectTokensState,
   selectTokensMap,
+  selectSelectedTokenAddress,
   selectTokensUser,
   selectUserTokensStatusMap,
   selectUserTokens,
   selectSummaryData,
   selectZapOutTokens,
+  selectWalletTokensStatus,
 };

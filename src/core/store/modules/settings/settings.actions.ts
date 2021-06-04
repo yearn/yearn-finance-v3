@@ -1,6 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import { WalletActions } from '@store';
+import { isValidAddress } from '@utils';
 
 const toggleSidebar = createAction('settings/toggleSidebar');
 
@@ -25,7 +26,7 @@ const changeWalletAddressOverride = createAsyncThunk<void, { address: string }, 
     const { ALLOW_DEV_MODE } = config;
     const { settings } = getState();
 
-    if (ALLOW_DEV_MODE && settings.devMode.enabled) {
+    if (ALLOW_DEV_MODE && settings.devMode.enabled && isValidAddress(address)) {
       dispatch(WalletActions.addressChange({ address }));
     }
   }

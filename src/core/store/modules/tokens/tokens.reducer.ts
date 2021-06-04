@@ -12,6 +12,7 @@ export const initialUserTokenActionsMap: UserTokenActionsMap = {
 const initialState: TokensState = {
   tokensAddresses: [],
   tokensMap: {},
+  selectedTokenAddress: undefined,
   user: {
     userTokensAddresses: [],
     userTokensMap: {},
@@ -27,7 +28,15 @@ const initialState: TokensState = {
   },
 };
 
-const { getTokens, getTokensDynamicData, getUserTokens, approve, getTokenAllowance } = TokensActions;
+const {
+  getTokens,
+  getTokensDynamicData,
+  getUserTokens,
+  setSelectedTokenAddress,
+  approve,
+  getTokenAllowance,
+  clearUserTokenState,
+} = TokensActions;
 
 const tokensReducer = createReducer(initialState, (builder) => {
   builder
@@ -76,6 +85,9 @@ const tokensReducer = createReducer(initialState, (builder) => {
       });
       state.statusMap.user.getUserTokens = { error: error.message };
     })
+    .addCase(setSelectedTokenAddress, (state, { payload: { tokenAddress } }) => {
+      state.selectedTokenAddress = tokenAddress;
+    })
     // Note: approve pending/rejected statuses are handled on each asset (vault/ironbank/...) approve action.
     .addCase(approve.fulfilled, (state, { meta, payload: { amount } }) => {
       const { tokenAddress, spenderAddress } = meta.arg;
@@ -110,6 +122,11 @@ const tokensReducer = createReducer(initialState, (builder) => {
       const { tokenAddress } = meta.arg;
       state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = { error: error.message };
       state.statusMap.user.getUserTokensAllowances = { error: error.message };
+    })
+    .addCase(clearUserTokenState, (state) => {
+      state.user.userTokensAddresses = [];
+      state.user.userTokensAllowancesMap = {};
+      state.user.userTokensMap = {};
     });
 });
 

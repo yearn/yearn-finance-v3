@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { RootState, IronBankMarketView } from '@types';
+import { RootState, IronBankMarketView, Status } from '@types';
 import BigNumber from 'bignumber.js';
 
 const selectMarketsMap = (state: RootState) => state.ironBank.marketsMap;
@@ -9,6 +9,11 @@ const selectMarketsAllowancesMap = (state: RootState) => state.ironBank.user.mar
 const selectUserMarketsPositionsMap = (state: RootState) => state.ironBank.user.userMarketsPositionsMap;
 const selectUserMarketsMetadataMap = (state: RootState) => state.ironBank.user.userMarketsMetadataMap;
 const selectIronBankData = (state: RootState) => state.ironBank.ironBankData;
+
+const selectGetIronBankDataStatus = (state: RootState) => state.ironBank.statusMap.getIronBankData;
+const selectGetMarketsStatus = (state: RootState) => state.ironBank.statusMap.getMarkets;
+const selectGetUserMarketsPositionsStatus = (state: RootState) => state.ironBank.statusMap.user.getUserMarketsPositions;
+const selectGetUserMarketsMetadataStatus = (state: RootState) => state.ironBank.statusMap.user.getUserMarketsMetadata;
 
 // tokens
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
@@ -97,20 +102,11 @@ const selectBorrowMarkets = createSelector([selectMarkets], (markets) => {
 
 const selectSummaryData = createSelector(
   [selectLendMarkets, selectBorrowMarkets, selectIronBankData],
-  (lendPositions, borrowPositions, ironBankData) => {
+  (lendMarkets, borrowMarkets, ironBankData) => {
     let totalSupply: BigNumber = new BigNumber('0');
-    if (lendPositions.length) {
-      totalSupply = lendPositions.reduce((total, position) => {
-        return total.plus(position?.userDepositedUsdc ?? '0');
-      }, new BigNumber('0'));
-    }
-
     let totalBorrow: BigNumber = new BigNumber('0');
-    if (lendPositions.length) {
-      totalBorrow = borrowPositions.reduce((total, position) => {
-        return total.plus(position?.userDepositedUsdc ?? '0');
-      }, new BigNumber('0'));
-    }
+    lendMarkets.forEach((lendMarket) => (totalSupply = totalSupply.plus(lendMarket.userDepositedUsdc)));
+    borrowMarkets.forEach((borrowMarket) => (totalBorrow = totalBorrow.plus(borrowMarket.userDepositedUsdc)));
 
     return {
       supplyBalance: totalSupply.toString(),
@@ -122,10 +118,34 @@ const selectSummaryData = createSelector(
   }
 );
 
+const selectIronBankStatus = createSelector(
+  [
+    selectGetIronBankDataStatus,
+    selectGetMarketsStatus,
+    selectGetUserMarketsPositionsStatus,
+    selectGetUserMarketsMetadataStatus,
+  ],
+  (getIronBankDataStatis, getMarketsStatus, getUserMarketsPositionsStatus, getUserMarketsMetadataStatus): Status => {
+    return {
+      loading:
+        getIronBankDataStatis.loading ||
+        getMarketsStatus.loading ||
+        getUserMarketsPositionsStatus.loading ||
+        getUserMarketsMetadataStatus.loading,
+      error:
+        getIronBankDataStatis.error ||
+        getMarketsStatus.error ||
+        getUserMarketsPositionsStatus.error ||
+        getUserMarketsMetadataStatus.error,
+    };
+  }
+);
+
 export const IronBankSelectors = {
   selectMarkets,
   selectIronBankData,
   selectLendMarkets,
   selectBorrowMarkets,
   selectSummaryData,
+  selectIronBankStatus,
 };
