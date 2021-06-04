@@ -5,9 +5,6 @@ import { cyberpunkTheme } from './cyberpunk';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
 
-export const AVAILABLE_THEMES: Theme[] = ['light', 'dark', 'cyberpunk'];
-export const DEFAULT_THEME: Theme = 'light';
-
 export const getTheme = (theme?: Theme): DefaultTheme => {
   switch (theme) {
     case 'light':

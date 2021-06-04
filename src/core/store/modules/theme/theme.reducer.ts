@@ -1,16 +1,18 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ThemeState } from '@types';
-import { DEFAULT_THEME } from '@themes';
+import { getConfig } from '@config';
+
 import { ThemeActions } from './theme.actions';
 
 const initialState: ThemeState = {
-  current: DEFAULT_THEME,
+  current: getConfig().DEFAULT_THEME,
 };
 
 const { changeTheme } = ThemeActions;
 
 const themeReducer = createReducer(initialState, (builder) => {
   builder.addCase(changeTheme, (state, { payload: { theme } }) => {
+    // TODO Check that the theme exists on AVAILABLE_THEMES
     state.current = theme;
   });
 });
