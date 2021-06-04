@@ -36,7 +36,7 @@ export const Icon = styled(({ Component, ...props }: IconProps) => <Component {.
   align-items: center;
   justify-content: center;
   user-select: none;
-  fill: ${({ theme, color, fill }) => fill ?? color ?? theme.contrasts.primary};
+  fill: ${({ theme, color, fill }) => fill ?? color ?? theme.colors.secondary};
   width: ${({ size }) => size ?? 'initial'};
   height: ${({ size }) => size ?? 'initial'};
   ${styledSystem};

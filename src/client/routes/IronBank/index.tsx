@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
+
 import { ModalsActions, IronBankActions, IronBankSelectors, TokensActions, WalletSelectors } from '@store';
 import { ToggleButton } from '@components/common';
-import { SummaryCard, DetailCard, SearchBar, ActionButtons, TokenIcon } from '@components/app';
-import { normalizeUsdc, normalizePercent } from '@src/utils';
+import { SummaryCard, DetailCard, SearchBar, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
 
-const Container = styled.div`
-  margin: 1.6rem;
-`;
+import { normalizeUsdc, normalizePercent } from '@src/utils';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -49,7 +47,7 @@ export const IronBank = () => {
   };
 
   return (
-    <Container>
+    <ViewContainer>
       <SummaryCard
         header="Welcome"
         items={[
@@ -184,6 +182,6 @@ export const IronBank = () => {
           </SearchBarContainer>
         }
       />
-    </Container>
+    </ViewContainer>
   );
 };

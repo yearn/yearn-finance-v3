@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
 import { ThemeActions, SettingsActions, SettingsSelectors } from '@store';
-import { AVAILABLE_THEMES, getTheme } from '@themes';
+import { getTheme } from '@themes';
 import { getConfig } from '@config';
 import { Theme } from '@types';
 
@@ -14,7 +14,7 @@ import { ThemeBox } from '@components/app/Settings';
 const SettingsView = styled.div`
   display: grid;
   margin-top: 1.6rem;
-  grid-gap: 3.2rem;
+  gap: 3.2rem;
 `;
 
 const SettingsSection = styled.div`
@@ -38,7 +38,7 @@ const SectionIcon = styled(Icon)`
 const SectionContent = styled.div`
   display: flex;
   flex-wrap: wrap;
-  grid-gap: 1rem;
+  gap: 1rem;
   align-items: center;
 `;
 
@@ -47,7 +47,7 @@ export const Settings = () => {
   const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
-  const { ALLOW_DEV_MODE } = getConfig();
+  const { ALLOW_DEV_MODE, AVAILABLE_THEMES } = getConfig();
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
   const openTestModal = () => {

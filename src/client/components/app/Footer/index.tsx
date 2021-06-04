@@ -24,15 +24,11 @@ const StyledFooter = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: ${({ theme }) => theme.oldColors.shade100};
-  padding: 0 ${({ theme }) => theme.footer.padding};
-  padding-top: ${({ theme }) => theme.footer.paddingTop};
-  padding-bottom: ${({ theme }) => theme.footer.paddingBottom};
 
   @media ${device.tablet} {
     .footer-sections {
       display: grid;
-      grid-gap: 4rem;
+      gap: 4rem;
     }
 
     .social-section {
@@ -45,7 +41,7 @@ const StyledFooter = styled.div`
     }
 
     .link-section {
-      grid-gap: 7rem;
+      gap: 7rem;
 
       .separator-line {
         margin: 0;
@@ -57,7 +53,7 @@ const StyledFooter = styled.div`
     padding: 4rem;
 
     .footer-sections {
-      grid-gap: 3.3rem;
+      gap: 3.3rem;
     }
 
     .social-section {
@@ -75,7 +71,7 @@ const StyledFooter = styled.div`
 
     .link-section {
       grid-template-columns: 1fr;
-      grid-gap: 2rem;
+      gap: 2rem;
 
       .separator-line {
         display: none;
@@ -107,7 +103,7 @@ const FooterSections = styled.div`
 const LinkSection = styled.div`
   display: grid;
   grid-template-columns: 3fr 1fr 3fr 3fr;
-  grid-gap: 11rem;
+  gap: 11rem;
   justify-content: space-between;
   flex: 1;
 `;
@@ -123,7 +119,7 @@ const SocialSection = styled.div`
 const Section = styled.div`
   display: grid;
   grid-auto-rows: minmax(min-content, max-content);
-  grid-gap: 2rem;
+  gap: 2rem;
   font-size: 1.4rem;
   font-weight: 400;
 `;
@@ -143,7 +139,7 @@ const SocialIcons = styled.div`
 
   align-items: center;
   margin-top: 10rem;
-  grid-gap: 1rem;
+  gap: 1rem;
   width: 100%;
 `;
 
@@ -154,8 +150,6 @@ const StyledIconLink = styled(Link)`
   width: var(--icon-size);
   height: var(--icon-size);
   border-radius: 100%;
-  background-color: ${({ theme }) => theme.oldColors.shade40};
-  color: ${({ theme }) => theme.oldColors.shade30};
   transition: filter 200ms ease-in-out;
 
   &:hover {
@@ -163,16 +157,13 @@ const StyledIconLink = styled(Link)`
   }
 `;
 
-const StyledIcon = styled(Icon)`
-  fill: ${({ theme }) => theme.oldColors.shade30};
-`;
+const StyledIcon = styled(Icon)``;
 
 const Copyright = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.oldColors.shade20};
 
   img {
     width: 18.6rem;

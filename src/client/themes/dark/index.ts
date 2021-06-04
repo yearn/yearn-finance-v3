@@ -24,6 +24,7 @@ const darkTheme: DefaultTheme = {
     onBackground: '#000000',
 
     onSurfaceH1: '#888888',
+    onSurfaceH1Contrast: '#FFFFFF',
     onSurfaceH2: '#FFFFFF',
     onSurfaceH2Hover: '#FFFFFF',
     onSurfaceSH1: '#555555',

@@ -5,10 +5,7 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { ModalsActions, VaultsActions, VaultsSelectors, TokensActions, WalletSelectors } from '@store';
 import { SummaryCard, DetailCard, SearchBar, RecomendationsCard, ActionButtons, TokenIcon } from '@components/app';
 import { formatPercent, humanizeAmount, formatUsd, USDC_DECIMALS } from '@src/utils';
-
-const Container = styled.div`
-  margin: 1.6rem;
-`;
+import { ViewContainer } from '@components/app';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -52,16 +49,18 @@ export const Vaults = () => {
   };
 
   return (
-    <Container>
+    <ViewContainer>
       <SummaryCard
-        header="My Portfolio"
+        header="Welcome"
         items={[
-          { header: 'Deposits', content: `${formatUsd(totalDeposits)}` },
           { header: 'Earnings', content: `${formatUsd(totalEarnings)}` },
+          { header: 'Deposits', content: `${formatUsd(totalDeposits)}` },
           { header: 'Est. Yearly Yield', content: `${formatUsd(estYearlyYeild)}` },
         ]}
         variant="secondary"
+        cardSize="big"
       />
+
       <RecomendationsCard
         header="Recommendations"
         items={recomendations.map(({ token, apyData }) => ({
@@ -74,6 +73,7 @@ export const Vaults = () => {
           onAction: () => console.log('Go'),
         }))}
       />
+
       <DetailCard
         header="Deposits"
         metadata={[
@@ -85,7 +85,7 @@ export const Vaults = () => {
           { key: 'name', header: 'Name' },
           { key: 'balance', header: 'Balance' },
           { key: 'value', header: 'Value' },
-          { key: 'apy', header: 'Return of Investment' },
+          { key: 'apy', header: 'ROI' },
           {
             key: 'actions',
             transform: ({ vaultAddress }) => (
@@ -110,15 +110,16 @@ export const Vaults = () => {
           vaultAddress: vault.address,
         }))}
       />
+
       <DetailCard
         header="Opportunities"
         metadata={[
           {
             key: 'icon',
             transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
-            width: '4.8rem',
+            width: '6rem',
           },
-          { key: 'name', header: 'Name' },
+          { key: 'name', header: 'Name', fontWeight: 600 },
           { key: 'vaultBalanceUsdc', header: 'Value in $' },
           { key: 'apy', header: 'Growth in %' },
           {
@@ -152,6 +153,6 @@ export const Vaults = () => {
           </SearchBarContainer>
         }
       />
-    </Container>
+    </ViewContainer>
   );
 };

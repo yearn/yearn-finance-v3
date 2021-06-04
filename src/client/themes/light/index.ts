@@ -17,13 +17,14 @@ const lightTheme: DefaultTheme = {
     surfaceVariantA: '#E8E8EA',
     surfaceVariantB: '#000000',
 
-    selectionBar: 'rgba(#000000, .1)',
+    selectionBar: 'rgba(0, 0, 0, .1)',
 
     onPrimary: '#B4B4B4',
     onPrimaryVariant: '#000000',
     onBackground: '#000000',
 
     onSurfaceH1: '#FFFFFF',
+    onSurfaceH1Contrast: '#FFFFFF',
     onSurfaceH2: '#000000',
     onSurfaceH2Hover: '#000000',
     onSurfaceSH1: '#888888',

@@ -8,6 +8,8 @@ import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { Navigation, Navbar } from '@components/app';
 import { Modals } from '@containers';
 
+const contentSeparation = '1.6rem';
+
 const StyledLayout = styled.div`
   display: flex;
   flex: 1;
@@ -24,8 +26,8 @@ const Content = styled.div<{ collapsedSidebar?: boolean }>`
 
   padding-left: ${(props) =>
     props.collapsedSidebar
-      ? `calc(${props.theme.sideBar.collapsedWidth} + 1.2rem)`
-      : `calc(${props.theme.sideBar.width} + 1.2rem)`};
+      ? `calc(${props.theme.sideBar.collapsedWidth} + ${contentSeparation})`
+      : `calc(${props.theme.sideBar.width} + ${contentSeparation})`};
 `;
 
 export const Layout: FC = ({ children }) => {

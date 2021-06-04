@@ -1,14 +1,42 @@
 import { useEffect } from 'react';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
+import { Box, Button } from '@components/common';
+
 import { VaultsActions, WalletSelectors, TokensSelectors, TokensActions, IronBankActions, ModalsActions } from '@store';
-import { SummaryCard, DetailCard, ActionButtons, TokenIcon } from '@components/app';
+import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
 import { humanizeAmount, USDC_DECIMALS } from '@src/utils';
 
-const Container = styled.div`
-  margin: 1.6rem;
-`;
+interface TokenProps {
+  address: string;
+  symbol: string;
+}
+
+const Token = ({ address, symbol }: TokenProps) => {
+  return (
+    <Box display="flex" flexDirection="row" alignItems="center">
+      <img alt={symbol} src={`https://zapper.fi/images/${symbol}-icon.png`} width="36" height="36" />
+    </Box>
+  );
+};
+
+interface ActionProps {
+  type: 'tokens';
+}
+
+const Actions = ({ type }: ActionProps) => {
+  switch (type) {
+    case 'tokens':
+      return (
+        <Box display="flex" flexDirection="row" alignItems="center">
+          <Button>Invest</Button>
+          <Button>Lend</Button>
+          <Button>Borrow</Button>
+        </Box>
+      );
+  }
+};
 
 export const Wallet = () => {
   // TODO: Add translation
@@ -51,7 +79,7 @@ export const Wallet = () => {
   };
 
   return (
-    <Container>
+    <ViewContainer>
       <SummaryCard
         items={[
           { header: 'Balance', content: `$ ${humanizeAmount(totalBalance, USDC_DECIMALS, 2)}` },
@@ -96,6 +124,6 @@ export const Wallet = () => {
           value: `$ ${humanizeAmount(token.balanceUsdc, USDC_DECIMALS, 2)}`,
         }))}
       />
-    </Container>
+    </ViewContainer>
   );
 };
