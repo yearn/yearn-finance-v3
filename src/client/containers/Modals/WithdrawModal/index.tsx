@@ -21,6 +21,7 @@ const TransferContainer = styled(Card)`
   align-items: center;
   width: 100%;
   margin-bottom: 1.6rem;
+  background-color: ${({ theme }) => theme.colors.modalColors.backgroundVariant};
 `;
 
 const BalanceContainer = styled(Card)`
@@ -31,6 +32,7 @@ const BalanceContainer = styled(Card)`
   margin-bottom: 1.6rem;
   font-size: 1.6rem;
   margin-bottom: 0.8rem;
+  background-color: ${({ theme }) => theme.colors.modalColors.background};
 `;
 
 const TargetContainer = styled(Card)`
@@ -39,6 +41,7 @@ const TargetContainer = styled(Card)`
   justify-content: center;
   align-items: center;
   width: 100%;
+  background-color: ${({ theme }) => theme.colors.modalColors.background};
 `;
 
 const ButtonContainer = styled(Box)`
@@ -51,8 +54,20 @@ const ButtonContainer = styled(Box)`
   width: 100%;
 `;
 
+const StyledSimpleDropdown = styled(SimpleDropdown)`
+  --dropdown-background: ${({ theme }) => theme.colors.modalColors.backgroundVariant};
+  --dropdown-color: ${({ theme }) => theme.colors.modalColors.textContrast};
+  --dropdown-hover-color: ${({ theme }) => theme.colors.modalColors.primary};
+  --dropdown-selected-color: ${({ theme }) => theme.colors.modalColors.primary};
+`;
+
 const StyledButton = styled(Button)`
   width: 100%;
+  background-color: ${({ theme }) => theme.colors.modalColors.primary};
+  color: ${({ theme }) => theme.colors.modalColors.background};
+  text-transform: uppercase;
+  font-weight: 500;
+  height: 4rem;
 `;
 
 const VaultTokenIcon = styled.img`
@@ -127,7 +142,7 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
         />
         <TargetContainer>
           <VaultTokenIcon src={selectedTargetToken.icon} alt={selectedTargetToken.symbol} />
-          <SimpleDropdown
+          <StyledSimpleDropdown
             selected={{ value: selectedTargetToken.address, label: selectedTargetToken.name }}
             setSelected={(selected) => setSelectedTargetTokenAddress(selected.value)}
             options={targetTokensOptions.map(({ address, name }) => ({ value: address, label: name }))}

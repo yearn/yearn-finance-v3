@@ -6,7 +6,8 @@ const StyledModal = styled.div`
   overflow: hidden;
   overflow-y: auto;
   padding: 1.6rem;
-  background: ${({ theme }) => theme.colors.surface};
+  background: ${({ theme }) => theme.colors.modalColors.background};
+  color: ${({ theme }) => theme.colors.modalColors.textContrast}
   position: relative;
   pointer-events: all;
   z-index: 1;

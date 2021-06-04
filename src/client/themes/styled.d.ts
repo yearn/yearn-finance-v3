@@ -71,6 +71,14 @@ declare module 'styled-components' {
         background: string;
         color: string;
       };
+
+      modalColors: {
+        background: string;
+        backgroundVariant: string;
+        primary: string;
+        text: string;
+        textContrast: string;
+      };
     };
   }
 

@@ -21,6 +21,7 @@ const TransferContainer = styled(Card)`
   align-items: center;
   width: 100%;
   margin-bottom: 1.6rem;
+  background-color: ${({ theme }) => theme.colors.modalColors.backgroundVariant};
 `;
 
 const BalanceContainer = styled(Card)`
@@ -31,6 +32,7 @@ const BalanceContainer = styled(Card)`
   margin-bottom: 1.6rem;
   font-size: 1.6rem;
   margin-bottom: 0.8rem;
+  background-color: ${({ theme }) => theme.colors.modalColors.background};
 `;
 
 const TargetContainer = styled(Card)`
@@ -39,6 +41,7 @@ const TargetContainer = styled(Card)`
   justify-content: center;
   align-items: center;
   width: 100%;
+  background-color: ${({ theme }) => theme.colors.modalColors.background};
 `;
 
 const ButtonContainer = styled(Box)`
@@ -53,6 +56,24 @@ const ButtonContainer = styled(Box)`
 
 const StyledButton = styled(Button)`
   width: 100%;
+  background-color: ${({ theme }) => theme.colors.modalColors.primary};
+  color: ${({ theme }) => theme.colors.modalColors.background};
+  text-transform: uppercase;
+  font-weight: 500;
+  height: 4rem;
+`;
+
+const StyledSimpleDropdown = styled(SimpleDropdown)`
+  --dropdown-background: ${({ theme }) => theme.colors.modalColors.backgroundVariant};
+  --dropdown-color: ${({ theme }) => theme.colors.modalColors.textContrast};
+  --dropdown-hover-color: ${({ theme }) => theme.colors.modalColors.primary};
+  --dropdown-selected-color: ${({ theme }) => theme.colors.modalColors.primary};
+
+  margin-top: 1.2rem;
+`;
+
+const StyledText = styled(Text)`
+  color: ${({ theme }) => theme.colors.modalColors.textContrast};
 `;
 
 interface DepositModalProps {
@@ -126,11 +147,12 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
 
   return (
     <StyledModal {...props} onClose={onClose}>
-      <Text>Invest</Text>
-      <TransferContainer variant="primary">
+      <StyledText>Invest</StyledText>
+
+      <TransferContainer>
         <BalanceContainer>
-          <Text>Wallet Balance</Text>
-          <Text>{`${formatAmount(balance, 4)} ${selectedSellToken.symbol}`}</Text>
+          <StyledText>Wallet Balance</StyledText>
+          <StyledText>{`${formatAmount(balance, 4)} ${selectedSellToken.symbol}`}</StyledText>
         </BalanceContainer>
         <TokenAmountInput
           amount={amount}
@@ -143,7 +165,7 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
         />
         <TargetContainer>
           <TokenIcon icon={selectedVault.token.icon} symbol={selectedVault.token.symbol} />
-          <SimpleDropdown
+          <StyledSimpleDropdown
             selected={{ label: selectedVault.token.symbol, value: selectedVault.token.address }}
             setSelected={(selected) =>
               dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: selected.value }))
@@ -154,12 +176,14 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
           />
         </TargetContainer>
       </TransferContainer>
+
       <ButtonContainer>
         <StyledButton onClick={() => approve()}>APPROVE</StyledButton>
         <StyledButton onClick={() => deposit()} disabled={!isApproved}>
           DEPOSIT
         </StyledButton>
       </ButtonContainer>
+
       <TransactionSettings
         amount={amountValue}
         selectedSlippage={selectedSlippage}
