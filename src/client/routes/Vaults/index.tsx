@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { ModalsActions, VaultsActions, VaultsSelectors, TokensActions, WalletSelectors } from '@store';
@@ -14,6 +15,7 @@ const SearchBarContainer = styled.div`
 export const Vaults = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
+  const history = useHistory();
   const dispatch = useAppDispatch();
   const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -63,14 +65,14 @@ export const Vaults = () => {
 
       <RecomendationsCard
         header="Recommendations"
-        items={recomendations.map(({ token, apyData }) => ({
+        items={recomendations.map(({ address, token, apyData }) => ({
           header: 'Vault',
           icon: token.icon ?? '',
           name: token.symbol,
           info: formatPercent(apyData, 2),
           infoDetail: 'EYY',
           action: 'Go to Vault',
-          onAction: () => console.log('Go'),
+          onAction: () => history.push(`/vault/${address}`),
         }))}
       />
 
