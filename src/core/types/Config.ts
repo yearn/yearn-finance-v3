@@ -1,4 +1,5 @@
 import { EthereumNetwork, EthereumAddress, Wei } from './Ethereum';
+import { Theme } from '@types';
 
 export interface Config extends Env, Constants {}
 
@@ -32,4 +33,6 @@ export interface Constants {
   SLIPPAGE_OPTIONS: number[];
   DEFAULT_SLIPPAGE: number;
   ZAP_OUT_TOKENS: string[];
+  DEFAULT_THEME: Theme;
+  AVAILABLE_THEMES: Theme[];
 }
