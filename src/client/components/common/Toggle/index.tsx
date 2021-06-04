@@ -26,7 +26,7 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   --toggle-size: 2.6rem;
   --toggle-offset: 0.2rem;
   --toggle-color: ${({ theme }) => theme.colors.secondary};
-  --toggle-background: ${({ theme }) => theme.colors.onSurfaceH1};
+  --toggle-background: ${({ theme }) => theme.colors.primaryVariant};
 
   display: flex;
   align-items: center;
@@ -52,7 +52,7 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   `};
 
   &:hover {
-    filter: brightness(110%);
+    filter: brightness(90%);
   }
 `;
 
