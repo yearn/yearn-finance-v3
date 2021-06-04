@@ -97,20 +97,11 @@ const selectBorrowMarkets = createSelector([selectMarkets], (markets) => {
 
 const selectSummaryData = createSelector(
   [selectLendMarkets, selectBorrowMarkets, selectIronBankData],
-  (lendPositions, borrowPositions, ironBankData) => {
+  (lendMarkets, borrowMarkets, ironBankData) => {
     let totalSupply: BigNumber = new BigNumber('0');
-    if (lendPositions.length) {
-      totalSupply = lendPositions.reduce((total, position) => {
-        return total.plus(position?.userDepositedUsdc ?? '0');
-      }, new BigNumber('0'));
-    }
-
     let totalBorrow: BigNumber = new BigNumber('0');
-    if (lendPositions.length) {
-      totalBorrow = borrowPositions.reduce((total, position) => {
-        return total.plus(position?.userDepositedUsdc ?? '0');
-      }, new BigNumber('0'));
-    }
+    lendMarkets.forEach((lendMarket) => totalSupply.plus(lendMarket.userDepositedUsdc));
+    borrowMarkets.forEach((borrowMarket) => totalSupply.plus(borrowMarket.userDepositedUsdc));
 
     return {
       supplyBalance: totalSupply.toString(),
