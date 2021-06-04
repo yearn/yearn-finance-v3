@@ -6,9 +6,9 @@ import { getConfig } from '@config';
 
 const selectTokensState = (state: RootState) => state.tokens;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
+const selectSelectedTokenAddress = (state: RootState) => state.tokens.selectedTokenAddress;
 const selectTokensUser = (state: RootState) => state.tokens.user;
 const selectUserTokensStatusMap = (state: RootState) => state.tokens.statusMap;
-
 const selectUserTokensAddresses = (state: RootState) => state.tokens.user.userTokensAddresses;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
 
@@ -62,6 +62,7 @@ const selectZapOutTokens = createSelector([selectTokensMap], (tokensMap) => {
 export const TokensSelectors = {
   selectTokensState,
   selectTokensMap,
+  selectSelectedTokenAddress,
   selectTokensUser,
   selectUserTokensStatusMap,
   selectUserTokens,

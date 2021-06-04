@@ -83,6 +83,13 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
   const selectedTargetToken = targetTokensOptionsMap[selectedTargetTokenAddress];
 
   useEffect(() => {
+    return () => {
+      dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: undefined }));
+      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+    };
+  }, []);
+
+  useEffect(() => {
     if (!selectedVault) return;
 
     dispatch(
