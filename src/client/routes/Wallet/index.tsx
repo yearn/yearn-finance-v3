@@ -70,7 +70,7 @@ export const Wallet = () => {
           {
             key: 'icon',
             transform: ({ icon, symbol }) => <TokenIcon icon={icon} symbol={symbol} />,
-            width: '4.8rem',
+            width: '6rem',
           },
           { key: 'name', header: 'Name' },
           { key: 'balance', header: 'Balance' },

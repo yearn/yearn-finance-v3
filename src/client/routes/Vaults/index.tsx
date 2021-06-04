@@ -108,7 +108,7 @@ export const Vaults = () => {
           {
             key: 'icon',
             transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
-            width: '4.8rem',
+            width: '6rem',
           },
           { key: 'name', header: 'Name' },
           { key: 'balance', header: 'Balance' },

@@ -63,7 +63,7 @@ export const IronBank = () => {
           {
             key: 'icon',
             transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
-            width: '4.8rem',
+            width: '6rem',
           },
           { key: 'name', header: 'Name' },
           { key: 'balance', header: 'Balance' },
@@ -107,7 +107,7 @@ export const IronBank = () => {
           {
             key: 'icon',
             transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
-            width: '4.8rem',
+            width: '6rem',
           },
           { key: 'name', header: 'Name' },
           { key: 'balance', header: 'Balance' },
@@ -143,7 +143,7 @@ export const IronBank = () => {
           {
             key: 'icon',
             transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
-            width: '4.8rem',
+            width: '6rem',
           },
           { key: 'name', header: 'Name' },
           { key: 'supplyAPY', header: 'Supply APY' },
