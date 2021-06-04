@@ -78,24 +78,11 @@ export const Layout: FC = ({ children }) => {
   useEffect(() => {
     if (selectedAddress) {
       switch (path) {
-        case 'home':
-          dispatch(VaultsActions.getUserVaultsPositions({}));
+        default:
           dispatch(TokensActions.getUserTokens({}));
-          break;
-        case 'vaults':
           dispatch(VaultsActions.getUserVaultsPositions({}));
-          dispatch(TokensActions.getUserTokens({}));
-          break;
-        case 'wallet':
-          dispatch(VaultsActions.getUserVaultsPositions({}));
-          dispatch(TokensActions.getUserTokens({}));
-          break;
-        case 'ironbank':
           dispatch(IronBankActions.getUserMarketsPositions({}));
           dispatch(IronBankActions.getUserMarketsMetadata({}));
-          dispatch(TokensActions.getUserTokens({}));
-          break;
-        default:
           break;
       }
     }
