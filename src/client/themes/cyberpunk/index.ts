@@ -43,6 +43,14 @@ const cyberpunkTheme: DefaultTheme = {
       background: '#0CA7C9',
       color: '#FBD282',
     },
+
+    modalColors: {
+      background: '#000000',
+      backgroundVariant: '#2B2B2B',
+      primary: '#00D1FF',
+      text: '#888888',
+      textContrast: '#FFFFFF',
+    },
   },
 };
 

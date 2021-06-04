@@ -16,14 +16,14 @@ const StyledLoader = styled.div`
   &,
   &:before,
   &:after {
-    background: #ffffff;
+    background: #006ae3;
     -webkit-animation: loading 1s infinite ease-in-out;
     animation: loading 1s infinite ease-in-out;
     width: 1em;
     height: 4em;
   }
   & {
-    color: #ffffff;
+    color: #006ae3;
     text-indent: -9999em;
     position: relative;
     font-size: 1em;

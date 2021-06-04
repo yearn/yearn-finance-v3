@@ -89,6 +89,7 @@ export interface UserTokenActionsMap {
 export interface TokensState {
   tokensAddresses: string[];
   tokensMap: { [address: string]: Token };
+  selectedTokenAddress: EthereumAddress | undefined;
   user: {
     userTokensAddresses: string[];
     userTokensMap: { [address: string]: Balance };

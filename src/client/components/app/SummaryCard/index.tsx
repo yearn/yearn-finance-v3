@@ -17,9 +17,10 @@ const StyledCardElement = styled(CardElement)`
   overflow: hidden;
 `;
 
-const StyledText = styled(Text)`
+const StyledText = styled(Text)<{ variant?: string }>`
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.onSurfaceH1Contrast};
+  color: ${({ theme, variant }) =>
+    variant === 'secondary' ? theme.colors.onSurfaceH1Contrast : theme.colors.onSurfaceH2};
 `;
 
 interface Item {
@@ -45,7 +46,7 @@ export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, card
           <StyledCardElement
             key={item.header}
             header={item.header}
-            content={<StyledText>{item.content}</StyledText>}
+            content={<StyledText variant={variant}>{item.content}</StyledText>}
           ></StyledCardElement>
         ))}
       </StyledCardContent>

@@ -43,6 +43,14 @@ const lightTheme: DefaultTheme = {
       background: '#006AE3',
       color: '#FFFFFF',
     },
+
+    modalColors: {
+      background: '#000000',
+      backgroundVariant: '#2B2B2B',
+      primary: '#00D1FF',
+      text: '#888888',
+      textContrast: '#FFFFFF',
+    },
   },
 };
 
