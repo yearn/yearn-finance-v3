@@ -3,12 +3,34 @@ import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { ModalsActions, VaultsActions, VaultsSelectors, TokensActions, WalletSelectors } from '@store';
-import { SummaryCard, DetailCard, SearchBar, RecomendationsCard, ActionButtons, TokenIcon } from '@components/app';
+import {
+  SummaryCard,
+  DetailCard,
+  SearchBar,
+  RecomendationsCard,
+  ActionButtons,
+  TokenIcon,
+  InfoCard,
+  ViewContainer,
+} from '@components/app';
 import { formatPercent, humanizeAmount, formatUsd, USDC_DECIMALS } from '@src/utils';
-import { ViewContainer } from '@components/app';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
+  flex-wrap: wrap;
+  grid-column: 1 / 3;
+`;
+
+const StyledInfoCard = styled(InfoCard)`
+  max-width: 100%;
+  flex: 1;
 `;
 
 export const Vaults = () => {
@@ -61,18 +83,22 @@ export const Vaults = () => {
         cardSize="big"
       />
 
-      <RecomendationsCard
-        header="Recommendations"
-        items={recomendations.map(({ token, apyData }) => ({
-          header: 'Vault',
-          icon: token.icon ?? '',
-          name: token.symbol,
-          info: formatPercent(apyData, 2),
-          infoDetail: 'EYY',
-          action: 'Go to Vault',
-          onAction: () => console.log('Go'),
-        }))}
-      />
+      <Row>
+        <RecomendationsCard
+          header="Recommendations"
+          items={recomendations.map(({ token, apyData }) => ({
+            header: 'Vault',
+            icon: token.icon ?? '',
+            name: token.symbol,
+            info: formatPercent(apyData, 2),
+            infoDetail: 'EYY',
+            action: 'Go to Vault',
+            onAction: () => console.log('Go'),
+          }))}
+        />
+
+        <StyledInfoCard header="Onboarding" content="....." />
+      </Row>
 
       <DetailCard
         header="Deposits"

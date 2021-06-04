@@ -7,6 +7,10 @@ const ContainerCard = styled(Card)`
   padding: 1.2rem 1.2rem 0 0;
 `;
 
+const StyledCardContent = styled(CardContent)`
+  justify-content: center;
+`;
+
 const ItemCard = styled(Card)`
   display: flex;
   flex-direction: column;
@@ -18,7 +22,23 @@ const ItemCard = styled(Card)`
 `;
 
 const ItemInfo = styled(Text)`
-  color: ${({ theme }) => theme.colors.onSurfaceH1};
+  color: ${({ theme }) => theme.colors.onSurfaceH2};
+`;
+
+const ItemName = styled(Text)`
+  color: ${({ theme }) => theme.colors.onSurfaceH2};
+`;
+
+const ItemButton = styled(Button)`
+  margin-top: 0.7rem;
+  flex-shrink: 0;
+  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  background-color: ${({ theme }) => theme.colors.background};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.onSurfaceH1};
+    background-color: ${({ theme }) => theme.colors.secondaryVariantA};
+  }
 `;
 
 const InnerBox = styled(Card)`
@@ -29,6 +49,7 @@ const InnerBox = styled(Card)`
   width: 15.6rem;
   padding: 1.2rem 0;
   margin-bottom: 1.6rem;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 const CenterIcon = styled.div`
@@ -67,7 +88,7 @@ export const RecomendationsCard = ({ header, items }: RecommendationsProps) => {
   return (
     <ContainerCard>
       <CardHeader header={header} />
-      <CardContent wrap>
+      <StyledCardContent wrap>
         {items.map((item, i) => (
           <CardElement key={`${i}-${item.name}`}>
             <ItemCard variant="primary">
@@ -75,17 +96,18 @@ export const RecomendationsCard = ({ header, items }: RecommendationsProps) => {
                 {item.header}
                 <CenterIcon>
                   <Icon alt={item.name} src={item.icon} />
-                  {item.name}
+                  <ItemName>{item.name}</ItemName>
                 </CenterIcon>
               </InnerBox>
               <ItemInfo fontSize="2.4rem" fontWeight="600">
                 {item.info}
               </ItemInfo>
-              <Button onClick={item.onAction}>{item.action}</Button>
+
+              <ItemButton onClick={item.onAction}>{item.action}</ItemButton>
             </ItemCard>
           </CardElement>
         ))}
-      </CardContent>
+      </StyledCardContent>
     </ContainerCard>
   );
 };
