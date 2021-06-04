@@ -15,6 +15,7 @@ import {
   ViewContainer,
 } from '@components/app';
 import { formatPercent, humanizeAmount, formatUsd, USDC_DECIMALS } from '@src/utils';
+import { Box, SpinnerLoading } from '../../components/common';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -46,6 +47,8 @@ export const Vaults = () => {
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
 
+  const vaultsStatus = useAppSelector(VaultsSelectors.selectWalletTokensStatus);
+
   useEffect(() => {
     setFilteredVaults(opportunities);
   }, [opportunities]);
@@ -73,102 +76,112 @@ export const Vaults = () => {
         cardSize="big"
       />
 
-      <Row>
-        <RecomendationsCard
-          header="Recommendations"
-          items={recomendations.map(({ address, token, apyData }) => ({
-            header: 'Vault',
-            icon: token.icon ?? '',
-            name: token.symbol,
-            info: formatPercent(apyData, 2),
-            infoDetail: 'EYY',
-            action: 'Go to Vault',
-            onAction: () => history.push(`/vault/${address}`),
-          }))}
-        />
+      {vaultsStatus.loading && (
+        <Box height="100%" width="100%" position="relative" display="flex" center paddingTop="4rem">
+          <SpinnerLoading flex="1" />
+        </Box>
+      )}
 
-        <StyledInfoCard header="Onboarding" content="....." />
-      </Row>
-
-      <DetailCard
-        header="Deposits"
-        metadata={[
-          {
-            key: 'icon',
-            transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
-            width: '6rem',
-          },
-          { key: 'name', header: 'Name' },
-          { key: 'balance', header: 'Balance' },
-          { key: 'value', header: 'Value' },
-          { key: 'apy', header: 'ROI' },
-          {
-            key: 'actions',
-            transform: ({ vaultAddress }) => (
-              <ActionButtons
-                actions={[
-                  { name: 'Invest', handler: () => depositHandler(vaultAddress) },
-                  { name: 'Withdraw', handler: () => withdrawHandler(vaultAddress) },
-                ]}
-              />
-            ),
-            align: 'flex-end',
-            grow: '1',
-          },
-        ]}
-        data={deposits.map((vault) => ({
-          icon: vault.token.icon ?? '',
-          tokenSymbol: vault.token.symbol,
-          name: vault.token.symbol,
-          balance: humanizeAmount(vault.userBalance, parseInt(vault.decimals), 4),
-          value: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
-          apy: formatPercent(vault.apyData, 2),
-          vaultAddress: vault.address,
-        }))}
-      />
-
-      <DetailCard
-        header="Opportunities"
-        metadata={[
-          {
-            key: 'icon',
-            transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
-            width: '6rem',
-          },
-          { key: 'name', header: 'Name', fontWeight: 600 },
-          { key: 'vaultBalanceUsdc', header: 'Value in $' },
-          { key: 'apy', header: 'Growth in %' },
-          {
-            key: 'actions',
-            transform: ({ vaultAddress }) => (
-              <ActionButtons
-                actions={[
-                  { name: 'Deposit', handler: () => depositHandler(vaultAddress), disabled: !walletIsConnected },
-                ]}
-              />
-            ),
-            align: 'flex-end',
-            grow: '1',
-          },
-        ]}
-        data={filteredVaults.map((vault) => ({
-          icon: vault.token.icon ?? '',
-          tokenSymbol: vault.token.symbol,
-          name: vault.token.symbol,
-          vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 0)}`,
-          apy: formatPercent(vault.apyData, 2),
-          vaultAddress: vault.address,
-        }))}
-        SearchBar={
-          <SearchBarContainer>
-            <SearchBar
-              searchableData={opportunities}
-              searchableKeys={['name', 'token.symbol', 'token.name']}
-              onSearch={(data) => setFilteredVaults(data)}
+      {!vaultsStatus.loading && (
+        <>
+          <Row>
+            <RecomendationsCard
+              header="Recommendations"
+              items={recomendations.map(({ address, token, apyData }) => ({
+                header: 'Vault',
+                icon: token.icon ?? '',
+                name: token.symbol,
+                info: formatPercent(apyData, 2),
+                infoDetail: 'EYY',
+                action: 'Go to Vault',
+                onAction: () => history.push(`/vault/${address}`),
+              }))}
             />
-          </SearchBarContainer>
-        }
-      />
+
+            <StyledInfoCard header="Onboarding" content="....." />
+          </Row>
+
+          <DetailCard
+            header="Deposits"
+            metadata={[
+              {
+                key: 'icon',
+                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                width: '6rem',
+              },
+              { key: 'name', header: 'Name' },
+              { key: 'balance', header: 'Balance' },
+              { key: 'value', header: 'Value' },
+              { key: 'apy', header: 'ROI' },
+              {
+                key: 'actions',
+                transform: ({ vaultAddress }) => (
+                  <ActionButtons
+                    actions={[
+                      { name: 'Invest', handler: () => depositHandler(vaultAddress) },
+                      { name: 'Withdraw', handler: () => withdrawHandler(vaultAddress) },
+                    ]}
+                  />
+                ),
+                align: 'flex-end',
+                grow: '1',
+              },
+            ]}
+            data={deposits.map((vault) => ({
+              icon: vault.token.icon ?? '',
+              tokenSymbol: vault.token.symbol,
+              name: vault.token.symbol,
+              balance: humanizeAmount(vault.userBalance, parseInt(vault.decimals), 4),
+              value: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
+              apy: formatPercent(vault.apyData, 2),
+              vaultAddress: vault.address,
+            }))}
+          />
+
+          <DetailCard
+            header="Opportunities"
+            metadata={[
+              {
+                key: 'icon',
+                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                width: '6rem',
+              },
+              { key: 'name', header: 'Name', fontWeight: 600 },
+              { key: 'vaultBalanceUsdc', header: 'Value in $' },
+              { key: 'apy', header: 'Growth in %' },
+              {
+                key: 'actions',
+                transform: ({ vaultAddress }) => (
+                  <ActionButtons
+                    actions={[
+                      { name: 'Deposit', handler: () => depositHandler(vaultAddress), disabled: !walletIsConnected },
+                    ]}
+                  />
+                ),
+                align: 'flex-end',
+                grow: '1',
+              },
+            ]}
+            data={filteredVaults.map((vault) => ({
+              icon: vault.token.icon ?? '',
+              tokenSymbol: vault.token.symbol,
+              name: vault.token.symbol,
+              vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 0)}`,
+              apy: formatPercent(vault.apyData, 2),
+              vaultAddress: vault.address,
+            }))}
+            SearchBar={
+              <SearchBarContainer>
+                <SearchBar
+                  searchableData={opportunities}
+                  searchableKeys={['name', 'token.symbol', 'token.name']}
+                  onSearch={(data) => setFilteredVaults(data)}
+                />
+              </SearchBarContainer>
+            }
+          />
+        </>
+      )}
     </ViewContainer>
   );
 };
