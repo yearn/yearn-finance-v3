@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, VaultsActions, VaultsSelectors, TokensActions, WalletSelectors } from '@store';
+import { ModalsActions, VaultsActions, VaultsSelectors, WalletSelectors } from '@store';
 import {
   SummaryCard,
   DetailCard,
@@ -39,7 +39,6 @@ export const Vaults = () => {
   // const { t } = useAppTranslation('common');
   const history = useHistory();
   const dispatch = useAppDispatch();
-  const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
   const recomendations = useAppSelector(VaultsSelectors.selectRecomendations);
@@ -48,19 +47,8 @@ export const Vaults = () => {
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
 
   useEffect(() => {
-    dispatch(VaultsActions.initiateSaveVaults());
-  }, []);
-
-  useEffect(() => {
     setFilteredVaults(opportunities);
   }, [opportunities]);
-
-  useEffect(() => {
-    if (selectedAddress) {
-      dispatch(VaultsActions.getUserVaultsPositions({}));
-      dispatch(TokensActions.getUserTokens({}));
-    }
-  }, [selectedAddress]);
 
   const depositHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));

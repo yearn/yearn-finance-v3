@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { VaultsActions, WalletSelectors, TokensSelectors, TokensActions, IronBankActions, ModalsActions } from '@store';
+import { WalletSelectors, TokensSelectors, TokensActions, IronBankActions, ModalsActions } from '@store';
 import { Box, SpinnerLoading } from '@components/common';
 import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
 import { humanizeAmount, USDC_DECIMALS } from '@src/utils';
@@ -10,22 +8,10 @@ export const Wallet = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalBalance, tokensAmount } = useAppSelector(TokensSelectors.selectSummaryData);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
-
-  useEffect(() => {
-    dispatch(VaultsActions.initiateSaveVaults());
-  }, []);
-
-  useEffect(() => {
-    if (selectedAddress) {
-      dispatch(VaultsActions.getUserVaultsPositions({}));
-      dispatch(TokensActions.getUserTokens({}));
-    }
-  }, [selectedAddress]);
 
   const actionHandler = (action: string, tokenAddress: string) => {
     switch (action) {

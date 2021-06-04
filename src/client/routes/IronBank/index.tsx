@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 
-import { ModalsActions, IronBankActions, IronBankSelectors, TokensActions, WalletSelectors } from '@store';
+import { ModalsActions, IronBankActions, IronBankSelectors, WalletSelectors } from '@store';
 import { ToggleButton } from '@components/common';
 import { SummaryCard, DetailCard, SearchBar, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
 
@@ -17,7 +17,6 @@ export const IronBank = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { supplyBalance, borrowBalance, borrowUtilizationRatio } = useAppSelector(IronBankSelectors.selectSummaryData);
   const markets = useAppSelector(IronBankSelectors.selectMarkets);
@@ -26,20 +25,8 @@ export const IronBank = () => {
   const [filteredMarkets, setFilteredMarkets] = useState(markets);
 
   useEffect(() => {
-    dispatch(IronBankActions.initiateIronBank());
-  }, []);
-
-  useEffect(() => {
     setFilteredMarkets(markets);
   }, [markets]);
-
-  useEffect(() => {
-    if (selectedAddress) {
-      dispatch(IronBankActions.getUserMarketsPositions({}));
-      dispatch(IronBankActions.getUserMarketsMetadata({}));
-      dispatch(TokensActions.getUserTokens({}));
-    }
-  }, [selectedAddress]);
 
   const actionHandler = (action: string, marketAddress: string) => {
     dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
