@@ -19,7 +19,6 @@ const ToggleCircle = styled.div`
   transition: transform 200ms ease-in-out;
   left: 50%;
 
-  transform: translateX(calc(0% + var(--toggle-offset) / 2));
   transform: translateX(calc(-100% - var(--toggle-offset) / 2));
 `;
 
@@ -40,12 +39,18 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   cursor: pointer;
   height: var(--toggle-size);
   width: calc(var(--toggle-size) * 2 + var(--toggle-offset));
-  transition: filter 200ms ease-in-out;
+  transition: all 200ms ease-in-out;
   position: relative;
 
-  &[selected] {
-    background: lime;
-  }
+  ${({ selected, theme }) =>
+    selected &&
+    `
+      --toggle-background: ${theme.colors.primaryVariant};
+      ${ToggleCircle} {
+        transform: translateX(calc(0% + var(--toggle-offset) / 2));
+      }
+  `};
+
   &:hover {
     filter: brightness(110%);
   }
