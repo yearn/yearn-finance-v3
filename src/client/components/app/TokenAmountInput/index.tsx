@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 import { Card, Text, Input, Box, Button, SimpleDropdown } from '@components/common';
-import { TokenIcon } from '@components/app';
 import { toBN, formatUsd } from '@src/utils';
+import { TokenIcon } from '../TokenIcon';
 
 const Container = styled(Card)`
   width: 100%;
