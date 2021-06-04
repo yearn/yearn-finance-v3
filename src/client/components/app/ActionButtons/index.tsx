@@ -21,7 +21,7 @@ interface ActionButtonsProps {
 export const ActionButtons = ({ actions }: ActionButtonsProps) => (
   <Box display="grid" gridTemplateColumns={`repeat(${actions.length}, 1fr)`} flexDirection="row" alignItems="center">
     {actions.map(({ name, handler, disabled }) => (
-      <ActionButton onClick={handler} disabled={disabled}>
+      <ActionButton key={`action-${name}`} onClick={handler} disabled={disabled}>
         {name}
       </ActionButton>
     ))}
