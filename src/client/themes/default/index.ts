@@ -48,7 +48,8 @@ const sharedTheme: SharedTheme = {
     desktop: 1920,
     desktopL: 2560,
   },
-  globalFont: '"Rubik", sans-serif',
+  // globalFont: '"Rubik", sans-serif',
+  globalFont: '"SF Pro Display", sans-serif',
   globalMaxWidth: '102rem',
 
   sideBar: {
