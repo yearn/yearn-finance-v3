@@ -8,6 +8,7 @@ const Container = styled(Card)`
   width: 100%;
   padding: 0.8rem;
   margin-bottom: 1.6rem;
+  position: relative;
   background-color: ${({ theme }) => theme.colors.modalColors.background};
 `;
 
