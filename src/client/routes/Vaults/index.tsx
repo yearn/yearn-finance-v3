@@ -47,7 +47,7 @@ export const Vaults = () => {
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
 
-  const vaultsStatus = useAppSelector(VaultsSelectors.selectWalletTokensStatus);
+  const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
 
   useEffect(() => {
     setFilteredVaults(opportunities);
