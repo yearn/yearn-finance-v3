@@ -19,7 +19,6 @@ const ToggleCircle = styled.div`
   transition: transform 200ms ease-in-out;
   left: 50%;
 
-  transform: translateX(calc(0% + var(--toggle-offset) / 2));
   transform: translateX(calc(-100% - var(--toggle-offset) / 2));
 `;
 
@@ -27,7 +26,7 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   --toggle-size: 2.6rem;
   --toggle-offset: 0.2rem;
   --toggle-color: ${({ theme }) => theme.colors.secondary};
-  --toggle-background: ${({ theme }) => theme.colors.onSurfaceH1};
+  --toggle-background: ${({ theme }) => theme.colors.primaryVariant};
 
   display: flex;
   align-items: center;
@@ -40,14 +39,20 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   cursor: pointer;
   height: var(--toggle-size);
   width: calc(var(--toggle-size) * 2 + var(--toggle-offset));
-  transition: filter 200ms ease-in-out;
+  transition: all 200ms ease-in-out;
   position: relative;
 
-  &[selected] {
-    background: lime;
-  }
+  ${({ selected, theme }) =>
+    selected &&
+    `
+      --toggle-background: ${theme.colors.primaryVariant};
+      ${ToggleCircle} {
+        transform: translateX(calc(0% + var(--toggle-offset) / 2));
+      }
+  `};
+
   &:hover {
-    filter: brightness(110%);
+    filter: brightness(90%);
   }
 `;
 
