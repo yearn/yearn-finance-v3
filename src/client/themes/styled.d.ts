@@ -1,42 +1,12 @@
 import 'styled-components';
 declare module 'styled-components' {
   export interface SharedTheme {
-    oldColors: {
-      primary: string;
-      card: string;
-      error: string;
-
-      shade0: string;
-      shade20: string;
-      shade30: string;
-      shade40: string;
-      shade90: string;
-      shade100: string;
-    };
-    contrasts: {
-      primary: string;
-      card: string;
-      error: string;
-
-      shade0: string;
-      shade20: string;
-      shade30: string;
-      shade40: string;
-      shade90: string;
-      shade100: string;
-    };
     blade: {
       background: string;
       blur: string;
     };
     navbar: {
-      padding: string;
       height: string;
-    };
-    footer: {
-      padding: string;
-      paddingTop: string;
-      paddingBottom: string;
     };
     chartTheme: any;
     zindex: {
@@ -82,6 +52,7 @@ declare module 'styled-components' {
       onBackground: string;
 
       onSurfaceH1: string;
+      onSurfaceH1Contrast: string;
       onSurfaceH2: string;
       onSurfaceH2Hover: string;
       onSurfaceSH1: string;

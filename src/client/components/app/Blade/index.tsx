@@ -20,13 +20,11 @@ const StyledBlade = styled(Sidemenu)`
 const BladeHeader = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 ${(props) => props.theme.navbar.padding};
 `;
 
 const BladeContent = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 ${(props) => props.theme.navbar.padding};
   margin-top: 3.7rem;
 `;
 
@@ -51,7 +49,7 @@ const AssetDescription = styled.span`
 
 const ActionList = styled.div`
   display: flex;
-  grid-gap: 2.5rem;
+  gap: 2.5rem;
   flex-wrap: wrap;
 `;
 
@@ -76,7 +74,7 @@ const ActionCard = styled.div`
   color: ${({ theme }) => theme.colors.onSurfaceH1};
   border-radius: 1.5rem;
   padding: 1.4rem 1.5rem;
-  grid-gap: 1rem;
+  gap: 1rem;
   flex: 1;
 `;
 

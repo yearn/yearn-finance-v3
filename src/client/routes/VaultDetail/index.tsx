@@ -14,7 +14,7 @@ const DefaultPageContent = styled.div`
   flex-direction: column;
   max-width: ${({ theme }) => theme.globalMaxWidth};
   width: 100%;
-  grid-gap: 2.8rem;
+  gap: 2.8rem;
   padding: 0 4rem;
   margin-top: 2.1rem;
   padding-bottom: 4rem;

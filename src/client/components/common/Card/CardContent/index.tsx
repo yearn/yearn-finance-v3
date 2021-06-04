@@ -12,6 +12,10 @@ interface CardContentProps {
   wrap?: boolean;
 }
 
-export const CardContent: FC<CardContentProps> = ({ children, wrap }) => {
-  return <Container wrap={wrap ? 'wrap' : 'nowrap'}>{children}</Container>;
+export const CardContent: FC<CardContentProps> = ({ children, wrap, ...props }) => {
+  return (
+    <Container wrap={wrap ? 'wrap' : 'nowrap'} {...props}>
+      {children}
+    </Container>
+  );
 };

@@ -1,3 +1,3 @@
 export type Language = 'en' | 'es';
 
-export type Theme = 'default' | 'light' | 'dark' | 'cyberpunk';
+export type Theme = 'light' | 'dark' | 'cyberpunk';
