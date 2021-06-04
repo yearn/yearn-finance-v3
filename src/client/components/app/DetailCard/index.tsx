@@ -5,7 +5,6 @@ import { Card, CardHeader, CardContent, CardElement } from '@components/common';
 
 const StyledCard = styled(Card)`
   padding: 1.2rem 0;
-  margin-bottom: 1.6rem;
 `;
 
 interface Metadata {

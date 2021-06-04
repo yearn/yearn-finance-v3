@@ -11,3 +11,4 @@ export * from './SearchBar';
 export * from './SummaryCard';
 export * from './TokenAmountInput';
 export * from './TransactionSettings';
+export * from './ViewContainer';

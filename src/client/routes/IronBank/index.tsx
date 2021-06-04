@@ -4,12 +4,8 @@ import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { ModalsActions, IronBankActions, IronBankSelectors, TokensActions } from '@store';
 import { Box, Button, ToggleButton } from '@components/common';
-import { SummaryCard, DetailCard, SearchBar } from '@components/app';
+import { SummaryCard, DetailCard, SearchBar, ViewContainer } from '@components/app';
 import { normalizeUsdc, normalizePercent } from '@src/utils';
-
-const Container = styled.div`
-  margin: 1.6rem;
-`;
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -83,7 +79,7 @@ export const IronBank = () => {
   };
 
   return (
-    <Container>
+    <ViewContainer>
       <SummaryCard
         header="Welcome"
         items={[
@@ -218,6 +214,6 @@ export const IronBank = () => {
           </SearchBarContainer>
         }
       />
-    </Container>
+    </ViewContainer>
   );
 };
