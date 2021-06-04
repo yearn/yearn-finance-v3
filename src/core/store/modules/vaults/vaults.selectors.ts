@@ -113,7 +113,7 @@ const selectSelectedVaultActionsStatusMap = createSelector(
 
 const selectSummaryData = createSelector([selectDepositedVaults], (depositedVaults) => {
   let totalDeposited: BigNumber = new BigNumber('0');
-  depositedVaults.forEach((vault) => totalDeposited.plus(vault.userDepositedUsdc));
+  depositedVaults.forEach((vault) => (totalDeposited = totalDeposited.plus(vault.userDepositedUsdc)));
 
   return {
     totalDeposits: totalDeposited.toString(),
