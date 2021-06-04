@@ -27,6 +27,8 @@ const ItemInfo = styled(Text)`
 
 const ItemName = styled(Text)`
   color: ${({ theme }) => theme.colors.onSurfaceH2};
+  margin-top: 0.4rem;
+  font-weight: 600;
 `;
 
 const ItemButton = styled(Button)`
