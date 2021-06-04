@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { VaultsActions, WalletSelectors, TokensSelectors, TokensActions, IronBankActions, ModalsActions } from '@store';
+import { SpinnerLoading } from '@components/common';
 import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
 import { humanizeAmount, USDC_DECIMALS } from '@src/utils';
 
@@ -13,6 +14,7 @@ export const Wallet = () => {
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalBalance, tokensAmount } = useAppSelector(TokensSelectors.selectSummaryData);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
+  const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
 
   useEffect(() => {
     dispatch(VaultsActions.initiateSaveVaults());
@@ -43,6 +45,14 @@ export const Wallet = () => {
         break;
     }
   };
+
+  if (tokensListStatus.loading) {
+    return (
+      <ViewContainer>
+        <SpinnerLoading flex="1" />
+      </ViewContainer>
+    );
+  }
 
   return (
     <ViewContainer>

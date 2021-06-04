@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
-import { RootState, TokenView } from '@types';
+import { RootState, Status, TokenView } from '@types';
 import { getConfig } from '@config';
 
 const selectTokensState = (state: RootState) => state.tokens;
@@ -9,6 +9,9 @@ const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedTokenAddress = (state: RootState) => state.tokens.selectedTokenAddress;
 const selectTokensUser = (state: RootState) => state.tokens.user;
 const selectUserTokensStatusMap = (state: RootState) => state.tokens.statusMap;
+const selectGetTokensStatus = (state: RootState) => state.tokens.statusMap.getTokens;
+const selectGetUserTokensStatus = (state: RootState) => state.tokens.statusMap.user.getUserTokens;
+
 const selectUserTokensAddresses = (state: RootState) => state.tokens.user.userTokensAddresses;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
 
@@ -35,7 +38,7 @@ const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (to
 
 const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
   let totalBalance: BigNumber = new BigNumber('0');
-  userTokens.forEach((userToken) => totalBalance.plus(userToken.balanceUsdc));
+  userTokens.forEach((userToken) => (totalBalance = totalBalance.plus(userToken.balanceUsdc)));
 
   return {
     totalBalance: totalBalance?.toString() ?? '0',
@@ -59,6 +62,16 @@ const selectZapOutTokens = createSelector([selectTokensMap], (tokensMap) => {
   return tokens;
 });
 
+const selectWalletTokensStatus = createSelector(
+  [selectGetTokensStatus, selectGetUserTokensStatus],
+  (getTokensStatus, getUserTokensStatus): Status => {
+    return {
+      loading: getTokensStatus.loading || getUserTokensStatus.loading,
+      error: getTokensStatus.error || getUserTokensStatus.error,
+    };
+  }
+);
+
 export const TokensSelectors = {
   selectTokensState,
   selectTokensMap,
@@ -68,4 +81,5 @@ export const TokensSelectors = {
   selectUserTokens,
   selectSummaryData,
   selectZapOutTokens,
+  selectWalletTokensStatus,
 };
