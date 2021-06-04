@@ -17,7 +17,7 @@ const lightTheme: DefaultTheme = {
     surfaceVariantA: '#E8E8EA',
     surfaceVariantB: '#000000',
 
-    selectionBar: 'rgba(#000000, .1)',
+    selectionBar: 'rgba(0, 0, 0, .1)',
 
     onPrimary: '#B4B4B4',
     onPrimaryVariant: '#000000',

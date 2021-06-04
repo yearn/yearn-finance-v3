@@ -1,13 +1,14 @@
 import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div<{ width?: string; align?: string; grow?: string }>`
+const Container = styled.div<{ width?: string; align?: string; grow?: string; fontWeight?: number }>`
   display: flex;
   flex-direction: column;
   width: ${({ width }) => width ?? '17rem'};
   align-items: ${({ align }) => align ?? 'flex-start'};
   flex-grow: ${({ grow }) => grow ?? '0'};
   margin: 0.825rem 1.2rem;
+  font-weight: ${({ fontWeight }) => fontWeight ?? 400};
 `;
 
 const Header = styled.div`
@@ -31,11 +32,21 @@ interface CardElementProps {
   width?: string;
   align?: 'flex-start' | 'center' | 'flex-end';
   grow?: '1' | '0';
+  fontWeight?: number;
 }
 
-export const CardElement: FC<CardElementProps> = ({ children, header, content, width, align, grow, ...props }) => {
+export const CardElement: FC<CardElementProps> = ({
+  children,
+  header,
+  content,
+  width,
+  align,
+  grow,
+  fontWeight,
+  ...props
+}) => {
   return (
-    <Container width={width} align={align} grow={grow} {...props}>
+    <Container width={width} align={align} grow={grow} fontWeight={fontWeight} {...props}>
       {header && <Header>{header}</Header>}
       {content && <Content>{content}</Content>}
       {children}
