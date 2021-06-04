@@ -95,6 +95,7 @@ export const Vaults = () => {
         variant="secondary"
         cardSize="big"
       />
+
       <RecomendationsCard
         header="Recommendations"
         items={recomendations.map(({ token, apyData }) => ({
@@ -107,6 +108,7 @@ export const Vaults = () => {
           onAction: () => console.log('Go'),
         }))}
       />
+
       <DetailCard
         header="Deposits"
         metadata={[
@@ -118,7 +120,7 @@ export const Vaults = () => {
           { key: 'name', header: 'Name' },
           { key: 'balance', header: 'Balance' },
           { key: 'value', header: 'Value' },
-          { key: 'apy', header: 'Return of Investment' },
+          { key: 'apy', header: 'ROI' },
           {
             key: 'actions',
             transform: ({ vaultAddress }) => (
@@ -143,15 +145,16 @@ export const Vaults = () => {
           vaultAddress: vault.address,
         }))}
       />
+
       <DetailCard
         header="Opportunities"
         metadata={[
           {
             key: 'icon',
             transform: ({ icon, tokenSymbol }) => <Token icon={icon} symbol={tokenSymbol} />,
-            width: '4.8rem',
+            width: '6rem',
           },
-          { key: 'name', header: 'Name' },
+          { key: 'name', header: 'Name', fontWeight: 600 },
           { key: 'vaultBalanceUsdc', header: 'Value in $' },
           { key: 'apy', header: 'Growth in %' },
           {
