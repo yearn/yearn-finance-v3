@@ -14,7 +14,7 @@ import {
   InfoCard,
   ViewContainer,
 } from '@components/app';
-import { formatPercent, humanizeAmount, formatUsd, USDC_DECIMALS } from '@src/utils';
+import { formatPercent, humanizeAmount, normalizePercent, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
 import { Box, SpinnerLoading } from '../../components/common';
 
 const SearchBarContainer = styled.div`
@@ -68,9 +68,9 @@ export const Vaults = () => {
       <SummaryCard
         header="Welcome"
         items={[
-          { header: 'Earnings', content: `${formatUsd(totalEarnings)}` },
-          { header: 'Deposits', content: `${formatUsd(totalDeposits)}` },
-          { header: 'Est. Yearly Yield', content: `${formatUsd(estYearlyYeild)}` },
+          { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
+          { header: 'Deposits', content: `${normalizeUsdc(totalDeposits)}` },
+          { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
         variant="secondary"
         cardSize="big"
