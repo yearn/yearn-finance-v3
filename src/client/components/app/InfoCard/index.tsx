@@ -5,7 +5,7 @@ import { Card, CardHeader, CardContent, CardElement } from '@components/common';
 
 const StyledCard = styled(Card)`
   max-width: max-content;
-  padding: 1.2rem 0;
+  padding: ${({ theme }) => theme.cardPadding} 0;
 `;
 
 interface InfoCardProps {
