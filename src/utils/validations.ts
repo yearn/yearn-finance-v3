@@ -2,14 +2,14 @@ import { Balance, Token, Vault, AllowancesMap } from '@types';
 import BigNumber from 'bignumber.js';
 import { getConstants } from '../config/constants';
 
-interface DepositsChecksProps {
+interface ValidateVaultDepositProps {
   vaultData: Vault;
   sellTokenData: Token;
   userTokenData: Balance;
   amount: BigNumber;
 }
 
-export interface CheckAllowanceProps {
+export interface ValidateVaultAllowanceProps {
   vaultAddress: string;
   sellTokenData: Token;
   amount: BigNumber;
@@ -23,7 +23,7 @@ export interface ValidationResonse {
 
 // Vaults validations
 
-export function validateVaultDeposit(props: DepositsChecksProps): ValidationResonse {
+export function validateVaultDeposit(props: ValidateVaultDepositProps): ValidationResonse {
   const { vaultData, sellTokenData, userTokenData, amount } = props;
   const userTokenBalance = userTokenData?.balance ?? '0';
   const depositLimit = vaultData.metadata.depositLimit ? new BigNumber(vaultData.metadata.depositLimit) : undefined;
@@ -46,7 +46,7 @@ export function validateVaultDeposit(props: DepositsChecksProps): ValidationReso
   return { approved: true };
 }
 
-export function checkAllowance(props: CheckAllowanceProps): ValidationResonse {
+export function checkAllowance(props: ValidateVaultAllowanceProps): ValidationResonse {
   const ZAP_IN_CONTRACT = getConstants().CONTRACT_ADDRESSES.zapIn;
   const { tokenAllowancesMap, amount, vaultAddress, sellTokenData } = props;
   const isETH = sellTokenData.address === getConstants().ETHEREUM_ADDRESS;
