@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';
 import { Position, Vault, VaultDynamic } from '@types';
+import { checkAllowance, validateVaultDeposit } from '@src/utils';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
@@ -67,35 +68,24 @@ const depositVault = createAsyncThunk<
   const { services } = extra;
   const vaultData = getState().vaults.vaultsMap[vaultAddress];
   const tokenData = getState().tokens.tokensMap[tokenAddress];
-  const userTokenBalance = getState().tokens.user.userTokensMap[tokenAddress]?.balance ?? '0';
-  const tokensAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
+  const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
+  const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
   const decimals = new BigNumber(tokenData.decimals);
   const ONE_UNIT = new BigNumber(10).pow(decimals);
-  const depositLimit = vaultData.metadata.depositLimit ? new BigNumber(vaultData.metadata.depositLimit) : undefined;
-  amount = amount.multipliedBy(ONE_UNIT);
+  const { error: depositError } = validateVaultDeposit({ vaultData, userTokenData, sellTokenData: tokenData, amount });
+  const { error: allowanceError } = checkAllowance({
+    vaultAddress,
+    sellTokenData: tokenData,
+    tokenAllowancesMap,
+    amount,
+  });
 
-  if (amount.lte(0)) {
-    throw new Error('INVALID AMOUNT');
-  }
-  if (amount.gt(userTokenBalance)) {
-    throw new Error('INSUFICIENT FUNDS');
-  }
-  if (depositLimit && depositLimit.lt(depositLimit.plus(amount))) {
-    throw new Error('EXCEEDED DEPOSIT LIMIT');
-  }
-  if (vaultData.metadata.emergencyShutdown) {
-    throw new Error('VAULT IS DISABLED');
-  }
+  const error = depositError || allowanceError;
+  if (error) throw new Error(error);
 
-  const allowance = tokensAllowancesMap[vaultAddress] ?? '0';
-  const approved = new BigNumber(allowance).gte(amount);
-  if (!approved) {
-    // await dispatch(approveVault({ vaultAddress, tokenAddress: tokenAddress }));
-    throw new Error('TOKEN AMOUNT NOT APPROVED');
-  }
-
+  const amountInWei = amount.multipliedBy(ONE_UNIT);
   const { vaultService } = services;
-  await vaultService.deposit({ tokenAddress: tokenData.address, vaultAddress, amount: amount.toString() });
+  await vaultService.deposit({ tokenAddress: tokenData.address, vaultAddress, amount: amountInWei.toString() });
   dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
   dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
   dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
@@ -107,14 +97,14 @@ const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: Big
     const { services } = extra;
     const vaultData = getState().vaults.vaultsMap[vaultAddress];
     const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
-    // const userVaultData = getState().user.userVaultsMap[vaultAddress];
+    // const userVaultData = getState().vaults.user.userVaultsPositionsMap[vaultAddress]?.DEPOSIT;
     const decimals = new BigNumber(tokenData.decimals);
     // const ONE_UNIT = new BigNumber(10).pow(decimals);
     // amount = amount.multipliedBy(ONE_UNIT);
     // if (amount.lte(0)) {
     //   throw new Error('INVALID AMOUNT');
     // }
-    // if (amount.gt(userVaultData.depositedBalance)) {
+    // if (amount.gt(userVaultData.balance)) {
     //   throw new Error('INSUFICIENT FUNDS');
     // }
 
