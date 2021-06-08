@@ -59,6 +59,7 @@ const sharedTheme: SharedTheme = {
   },
 
   layoutPadding: '1.6rem',
+  cardPadding: '1.2rem',
 };
 
 export const device = {

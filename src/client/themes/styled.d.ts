@@ -27,6 +27,7 @@ declare module 'styled-components' {
     };
 
     layoutPadding: string;
+    cardPadding: string;
   }
 
   // TODO Restructure theme and generic vars shared between themes

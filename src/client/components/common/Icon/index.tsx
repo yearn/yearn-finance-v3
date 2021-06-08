@@ -19,6 +19,7 @@ import { ReactComponent as ArrowDown } from '@assets/icons/arrow-down.svg';
 import { ReactComponent as CollapseIcon } from '@assets/icons/collapse.svg';
 import { ReactComponent as SettingsIcon } from '@assets/icons/settings.svg';
 import { ReactComponent as ThemesIcon } from '@assets/icons/themes.svg';
+import { ReactComponent as ClockIcon } from '@assets/icons/clock.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
@@ -61,4 +62,5 @@ export {
   CollapseIcon,
   SettingsIcon,
   ThemesIcon,
+  ClockIcon,
 };
