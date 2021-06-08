@@ -1,11 +1,11 @@
-import { Provider, JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
+import { JsonRpcProvider, JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
 
 import { getConfig } from '@config';
 import { ProviderType, Web3Provider as AppWeb3Provider } from '@types';
 import { getJsonRpcProvider } from './';
 
 export class EthersWeb3ProviderImpl implements AppWeb3Provider {
-  private instances: Map<ProviderType, Provider> = new Map<ProviderType, Provider>();
+  private instances: Map<ProviderType, JsonRpcProvider> = new Map<ProviderType, JsonRpcProvider>();
 
   constructor() {
     const { FANTOM_PROVIDER_HTTPS, WEB3_PROVIDER_HTTPS, LOCAL_PROVIDER_HTTPS } = getConfig();
@@ -14,7 +14,7 @@ export class EthersWeb3ProviderImpl implements AppWeb3Provider {
     this.register('local', getJsonRpcProvider(LOCAL_PROVIDER_HTTPS));
   }
 
-  public getInstanceOf(type: ProviderType): Provider {
+  public getInstanceOf(type: ProviderType): JsonRpcProvider {
     const instance = this.instances.get(type);
 
     if (!instance) {
@@ -24,7 +24,7 @@ export class EthersWeb3ProviderImpl implements AppWeb3Provider {
     return instance;
   }
 
-  public register(type: ProviderType, instance: Provider): void {
+  public register(type: ProviderType, instance: JsonRpcProvider): void {
     this.instances.set(type, instance);
   }
 

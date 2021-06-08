@@ -32,13 +32,19 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefin
   'wallet/walletSelect',
   async (walletName, { dispatch, getState, extra }) => {
     const { context, config } = extra;
-    const { wallet, web3Provider } = context;
+    const { wallet, web3Provider, yearnSdk } = context;
     const { ETHEREUM_NETWORK, ALLOW_DEV_MODE } = config;
     const { theme, settings } = getState();
 
     if (!wallet.isCreated) {
       const customSubscriptions: Subscriptions = {
-        wallet: (wallet) => web3Provider.register('wallet', getEthersProvider(wallet.provider)),
+        wallet: (wallet) => {
+          web3Provider.register('wallet', getEthersProvider(wallet.provider));
+          yearnSdk.context.setProvider({
+            read: web3Provider.getInstanceOf('default'),
+            write: web3Provider.getInstanceOf('wallet'),
+          });
+        },
         address: () => {
           if (ALLOW_DEV_MODE && settings.devMode.enabled && isValidAddress(settings.devMode.walletAddressOverride)) {
             dispatch(addressChange({ address: settings.devMode.walletAddressOverride }));

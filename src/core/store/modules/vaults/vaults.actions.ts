@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';
 import { Position, Vault, VaultDynamic } from '@types';
+import { handleTransaction } from '@utils';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
@@ -84,7 +85,13 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
     }
 
     const { vaultService } = services;
-    await vaultService.deposit({ tokenAddress: vaultData.tokenId, vaultAddress, amount: amount.toFixed(0) });
+    const tx = await vaultService.deposit({
+      tokenAddress: vaultData.tokenId,
+      vaultAddress,
+      amount: amount.toFixed(0),
+    });
+    handleTransaction(tx);
+
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
@@ -112,11 +119,13 @@ const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: Big
     const amountOfShares = new BigNumber(amount).dividedBy(sharePrice).decimalPlaces(0).toFixed(0);
 
     const { vaultService } = services;
-    await vaultService.withdraw({
+    const tx = await vaultService.withdraw({
       tokenAddress: vaultData.tokenId,
       vaultAddress,
       amountOfShares,
     });
+    handleTransaction(tx);
+
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
     // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk

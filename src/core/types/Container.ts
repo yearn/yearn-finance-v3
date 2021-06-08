@@ -10,7 +10,6 @@ import {
   IronBankService,
   SubscriptionService,
 } from '@types';
-import { yearnSdkMock } from '../frameworks/yearnSdk/yearnSdkMock';
 
 export interface DIContainer {
   context: ContextContainer;
@@ -33,5 +32,4 @@ export interface ServiceContainer {
 
 export interface ConfigContainer extends Config {}
 
-export type YearnSdk = Yearn<1> & typeof yearnSdkMock; // TODO use only Yearn<1> when sdk ready.
-// export type YearnSdk = Omit<Yearn<1>, 'tokens' | 'vaults'> & typeof yearnSdkMock; // TODO use only Yearn<1> when sdk ready.
+export type YearnSdk = Yearn<1>;
