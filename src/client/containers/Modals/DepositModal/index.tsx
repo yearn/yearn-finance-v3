@@ -143,7 +143,13 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
       VaultsActions.approveVault({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
     );
   const deposit = () =>
-    dispatch(VaultsActions.depositVault({ vaultAddress: selectedVault.address, amount: toBN(amount) }));
+    dispatch(
+      VaultsActions.depositVault({
+        vaultAddress: selectedVault.address,
+        tokenAddress: selectedSellToken.address,
+        amount: toBN(amount),
+      })
+    );
 
   return (
     <StyledModal {...props} onClose={onClose}>
@@ -178,7 +184,9 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
       </TransferContainer>
 
       <ButtonContainer>
-        <StyledButton onClick={() => approve()}>APPROVE</StyledButton>
+        <StyledButton onClick={() => approve()} disabled={isApproved}>
+          APPROVE
+        </StyledButton>
         <StyledButton onClick={() => deposit()} disabled={!isApproved}>
           DEPOSIT
         </StyledButton>
