@@ -5,7 +5,7 @@ import { TokenIcon } from '../TokenIcon';
 
 const ContainerCard = styled(Card)`
   max-width: max-content;
-  padding: 1.2rem 1.2rem 0 0;
+  padding: ${({ theme }) => theme.cardPadding} ${({ theme }) => theme.cardPadding} 0 0;
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -18,7 +18,7 @@ const ItemCard = styled(Card)`
   align-items: center;
   height: 25.6rem;
   width: 18rem;
-  padding: 1.2rem 0;
+  padding: ${({ theme }) => theme.cardPadding} 0;
   margin-bottom: 1.6rem;
 `;
 
@@ -50,7 +50,7 @@ const InnerBox = styled(Card)`
   align-items: center;
   height: 15.6rem;
   width: 15.6rem;
-  padding: 1.2rem 0;
+  padding: ${({ theme }) => theme.cardPadding} 0;
   margin-bottom: 1.6rem;
   background-color: ${({ theme }) => theme.colors.background};
 `;

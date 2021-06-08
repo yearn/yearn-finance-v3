@@ -65,6 +65,7 @@
   },
 
   "settings": {
-    "themes": "Themes"
+    "themes": "Themes",
+    "preferences": "Preferences"
   }
 }
