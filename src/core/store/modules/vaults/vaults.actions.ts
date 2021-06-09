@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
 import { formatUnits } from '@frameworks/ethers';
 import { Position, Vault, VaultDynamic } from '@types';
-import { checkAllowance, validateVaultDeposit } from '@src/utils';
+import { validateVaultAllowance, validateVaultDeposit } from '@src/utils';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
@@ -73,7 +73,7 @@ const depositVault = createAsyncThunk<
   const decimals = new BigNumber(tokenData.decimals);
   const ONE_UNIT = new BigNumber(10).pow(decimals);
   const { error: depositError } = validateVaultDeposit({ vaultData, userTokenData, sellTokenData: tokenData, amount });
-  const { error: allowanceError } = checkAllowance({
+  const { error: allowanceError } = validateVaultAllowance({
     vaultAddress,
     sellTokenData: tokenData,
     tokenAllowancesMap,

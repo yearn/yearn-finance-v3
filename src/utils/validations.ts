@@ -46,7 +46,7 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   return { approved: true };
 }
 
-export function checkAllowance(props: ValidateVaultAllowanceProps): ValidationResonse {
+export function validateVaultAllowance(props: ValidateVaultAllowanceProps): ValidationResonse {
   const ZAP_IN_CONTRACT = getConstants().CONTRACT_ADDRESSES.zapIn;
   const { tokenAllowancesMap, amount, vaultAddress, sellTokenData } = props;
   const isETH = sellTokenData.address === getConstants().ETHEREUM_ADDRESS;
