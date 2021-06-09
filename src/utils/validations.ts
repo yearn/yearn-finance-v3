@@ -1,4 +1,4 @@
-import { Balance, Token, Vault, AllowancesMap } from '@types';
+import { AllowancesMap } from '@types';
 import BigNumber from 'bignumber.js';
 import { getConstants } from '../config/constants';
 
@@ -11,9 +11,11 @@ interface ValidateVaultDepositProps {
 }
 
 export interface ValidateVaultAllowanceProps {
-  vaultAddress: string;
-  sellTokenData: Token;
   amount: BigNumber;
+  tokenDecimals: string;
+  tokenAddress: string;
+  vaultAddress: string;
+  vaultUnderlyingTokenAddress: string;
   tokenAllowancesMap: AllowancesMap;
 }
 
@@ -49,24 +51,24 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
 
 export function validateVaultAllowance(props: ValidateVaultAllowanceProps): ValidationResonse {
   const ZAP_IN_CONTRACT = getConstants().CONTRACT_ADDRESSES.zapIn;
-  const { tokenAllowancesMap, amount, vaultAddress, sellTokenData } = props;
-  const isETH = sellTokenData.address === getConstants().ETHEREUM_ADDRESS;
-  const isZapin = vaultAddress !== sellTokenData.address;
-  const decimals = new BigNumber(sellTokenData.decimals);
-  const ONE_UNIT = new BigNumber(10).pow(decimals);
+  const { amount, tokenAddress, tokenAllowancesMap, tokenDecimals, vaultUnderlyingTokenAddress, vaultAddress } = props;
+
+  const isETH = tokenAddress === getConstants().ETHEREUM_ADDRESS;
+  const isZapin = vaultUnderlyingTokenAddress !== tokenAddress;
+  const ONE_UNIT = new BigNumber(10).pow(tokenDecimals);
   const amountInWei = amount.multipliedBy(ONE_UNIT);
 
   if (isETH) return { approved: true };
 
-  let allowance = '0';
-  let approved = false;
-  if (isZapin) {
-    allowance = tokenAllowancesMap[ZAP_IN_CONTRACT] ?? '0';
-    approved = new BigNumber(allowance).gte(amountInWei);
-  } else {
-    allowance = tokenAllowancesMap[vaultAddress] ?? '0';
-    approved = new BigNumber(allowance).gte(amountInWei);
+  const allowance = isZapin
+    ? new BigNumber(tokenAllowancesMap[ZAP_IN_CONTRACT] ?? '0')
+    : new BigNumber(tokenAllowancesMap[vaultAddress] ?? '0');
+
+  if (amount.isEqualTo(0) && allowance.isEqualTo(0)) {
+    return { error: 'TOKEN NOT APPROVED' };
   }
+
+  const approved = allowance.gte(amountInWei);
   if (!approved) {
     return { error: 'TOKEN AMOUNT NOT APPROVED' };
   }

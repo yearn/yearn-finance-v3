@@ -80,8 +80,10 @@ const depositVault = createAsyncThunk<
     userTokenBalance: userTokenData?.balance ?? '0',
   });
   const { error: allowanceError } = validateVaultAllowance({
-    vaultAddress,
-    sellTokenData: tokenData,
+    vaultUnderlyingTokenAddress: vaultData.tokenId,
+    tokenAddress: tokenAddress,
+    vaultAddress: vaultAddress,
+    tokenDecimals: tokenData.decimals,
     tokenAllowancesMap,
     amount,
   });

@@ -6,7 +6,15 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 import { TokenAmountInput, TransactionSettings, TokenIcon } from '@components/app';
 import { Modal, Card, Text, Box, Button, SimpleDropdown } from '@components/common';
-import { toBN, formatPercent, formatAmount, normalizeAmount, USDC_DECIMALS, validateVaultDeposit } from '@src/utils';
+import {
+  toBN,
+  formatPercent,
+  formatAmount,
+  normalizeAmount,
+  USDC_DECIMALS,
+  validateVaultDeposit,
+  validateVaultAllowance,
+} from '@src/utils';
 import { getConfig } from '@config';
 import BigNumber from 'bignumber.js';
 
@@ -134,8 +142,14 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
   }
 
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress];
-  const allowance = selectedSellToken.allowancesMap[selectedVault.address] ?? '0';
-  const isApproved = toBN(allowance).gte(normalizeAmount(amount, selectedSellToken.decimals)) || true;
+  const { approved: isApproved, error: allowancesError } = validateVaultAllowance({
+    vaultUnderlyingTokenAddress: selectedVault.token.address,
+    tokenAddress: selectedSellTokenAddress,
+    vaultAddress: selectedVault.address,
+    tokenDecimals: selectedSellToken.decimals.toString(),
+    tokenAllowancesMap: selectedSellToken.allowancesMap,
+    amount: amount ? new BigNumber(amount) : new BigNumber('0'),
+  });
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
     amount: amount ? new BigNumber(amount) : new BigNumber('0'),
     depositLimit: selectedVault.depositLimit,
@@ -143,6 +157,7 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
     tokenDecimals: selectedSellToken.decimals.toString(),
     userTokenBalance: selectedSellToken.balance,
   });
+
   const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
 
