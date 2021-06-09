@@ -51,6 +51,7 @@ const selectVaults = createSelector(
         decimals: vaultData.decimals,
         vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
         depositLimit: vaultData.metadata.depositLimit,
+        emergencyShutdown: vaultData.metadata.emergencyShutdown,
         apyData: vaultData.metadata.apy?.recommended.toString() ?? '0',
         allowancesMap: vaultsAllowancesMap[address] ?? {},
         approved: new BigNumber(currentAllowance).gt(0),

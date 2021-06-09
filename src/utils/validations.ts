@@ -3,9 +3,10 @@ import BigNumber from 'bignumber.js';
 import { getConstants } from '../config/constants';
 
 interface ValidateVaultDepositProps {
-  vaultData: Vault;
-  sellTokenData: Token;
-  userTokenData: Balance;
+  depositLimit: string;
+  emergencyShutdown: boolean;
+  userTokenBalance: string;
+  tokenDecimals: string;
   amount: BigNumber;
 }
 
@@ -24,10 +25,10 @@ export interface ValidationResonse {
 // Vaults validations
 
 export function validateVaultDeposit(props: ValidateVaultDepositProps): ValidationResonse {
-  const { vaultData, sellTokenData, userTokenData, amount } = props;
-  const userTokenBalance = userTokenData?.balance ?? '0';
-  const depositLimit = vaultData.metadata.depositLimit ? new BigNumber(vaultData.metadata.depositLimit) : undefined;
-  const decimals = new BigNumber(sellTokenData.decimals);
+  let { amount, depositLimit, emergencyShutdown, tokenDecimals, userTokenBalance } = props;
+  userTokenBalance = userTokenBalance ?? '0';
+  const depositLimitBN = depositLimit ? new BigNumber(depositLimit) : undefined;
+  const decimals = new BigNumber(tokenDecimals);
   const ONE_UNIT = new BigNumber(10).pow(decimals);
   const amountInWei = amount.multipliedBy(ONE_UNIT);
 
@@ -37,10 +38,10 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   if (amountInWei.gt(userTokenBalance)) {
     return { error: 'INSUFICIENT FUNDS' };
   }
-  if (depositLimit && depositLimit.lt(depositLimit.plus(amountInWei))) {
+  if (depositLimitBN && depositLimitBN.lt(depositLimitBN.plus(amountInWei))) {
     return { error: 'EXCEEDED DEPOSIT LIMIT' };
   }
-  if (vaultData.metadata.emergencyShutdown) {
+  if (emergencyShutdown) {
     return { error: 'VAULT IS DISABLED' };
   }
   return { approved: true };

@@ -6,8 +6,9 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 import { TokenAmountInput, TransactionSettings, TokenIcon } from '@components/app';
 import { Modal, Card, Text, Box, Button, SimpleDropdown } from '@components/common';
-import { toBN, formatPercent, formatAmount, normalizeAmount, USDC_DECIMALS } from '@src/utils';
+import { toBN, formatPercent, formatAmount, normalizeAmount, USDC_DECIMALS, validateVaultDeposit } from '@src/utils';
 import { getConfig } from '@config';
+import BigNumber from 'bignumber.js';
 
 const StyledModal = styled(Modal)`
   width: 38.4rem;
@@ -134,7 +135,14 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
 
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress];
   const allowance = selectedSellToken.allowancesMap[selectedVault.address] ?? '0';
-  const isApproved = toBN(allowance).gte(normalizeAmount(amount, selectedSellToken.decimals));
+  const isApproved = toBN(allowance).gte(normalizeAmount(amount, selectedSellToken.decimals)) || true;
+  const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
+    amount: amount ? new BigNumber(amount) : new BigNumber('0'),
+    depositLimit: selectedVault.depositLimit,
+    emergencyShutdown: selectedVault.emergencyShutdown,
+    tokenDecimals: selectedSellToken.decimals.toString(),
+    userTokenBalance: selectedSellToken.balance,
+  });
   const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
 
@@ -187,7 +195,7 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
         <StyledButton onClick={() => approve()} disabled={isApproved}>
           APPROVE
         </StyledButton>
-        <StyledButton onClick={() => deposit()} disabled={!isApproved}>
+        <StyledButton onClick={() => deposit()} disabled={!isApproved || !isValidAmount}>
           DEPOSIT
         </StyledButton>
       </ButtonContainer>

@@ -72,7 +72,13 @@ const depositVault = createAsyncThunk<
   const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
   const decimals = new BigNumber(tokenData.decimals);
   const ONE_UNIT = new BigNumber(10).pow(decimals);
-  const { error: depositError } = validateVaultDeposit({ vaultData, userTokenData, sellTokenData: tokenData, amount });
+  const { error: depositError } = validateVaultDeposit({
+    amount,
+    depositLimit: vaultData?.metadata.depositLimit ?? '0',
+    emergencyShutdown: vaultData?.metadata.emergencyShutdown || false,
+    tokenDecimals: tokenData?.decimals ?? '0',
+    userTokenBalance: userTokenData?.balance ?? '0',
+  });
   const { error: allowanceError } = validateVaultAllowance({
     vaultAddress,
     sellTokenData: tokenData,
