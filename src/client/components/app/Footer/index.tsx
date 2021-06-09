@@ -71,7 +71,7 @@ const StyledIcon = styled(Icon)`
 `;
 
 const AlchemyLogo = styled(AlchemyCertified)`
-  width: 90%;
+  width: 100%;
   fill: ${({ theme }) => theme.colors.onBackground};
 `;
 
