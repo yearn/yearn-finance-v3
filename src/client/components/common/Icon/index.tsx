@@ -1,7 +1,6 @@
 import { ElementType, SVGProps } from 'react';
 import styled from 'styled-components';
 
-import { ReactComponent as BugIcon } from '@assets/icons/bug.svg';
 import { ReactComponent as DeleteIcon } from '@assets/icons/delete.svg';
 import { ReactComponent as DiscordIcon } from '@assets/icons/discord.svg';
 import { ReactComponent as GithubIcon } from '@assets/icons/github.svg';
@@ -44,7 +43,6 @@ export const Icon = styled(({ Component, ...props }: IconProps) => <Component {.
 `;
 
 export {
-  BugIcon,
   DeleteIcon,
   DiscordIcon,
   GithubIcon,
