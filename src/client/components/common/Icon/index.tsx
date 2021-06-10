@@ -1,7 +1,6 @@
 import { ElementType, SVGProps } from 'react';
 import styled from 'styled-components';
 
-import { ReactComponent as BugIcon } from '@assets/icons/bug.svg';
 import { ReactComponent as DeleteIcon } from '@assets/icons/delete.svg';
 import { ReactComponent as DiscordIcon } from '@assets/icons/discord.svg';
 import { ReactComponent as GithubIcon } from '@assets/icons/github.svg';
@@ -19,6 +18,7 @@ import { ReactComponent as ArrowDown } from '@assets/icons/arrow-down.svg';
 import { ReactComponent as CollapseIcon } from '@assets/icons/collapse.svg';
 import { ReactComponent as SettingsIcon } from '@assets/icons/settings.svg';
 import { ReactComponent as ThemesIcon } from '@assets/icons/themes.svg';
+import { ReactComponent as ClockIcon } from '@assets/icons/clock.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
@@ -43,7 +43,6 @@ export const Icon = styled(({ Component, ...props }: IconProps) => <Component {.
 `;
 
 export {
-  BugIcon,
   DeleteIcon,
   DiscordIcon,
   GithubIcon,
@@ -61,4 +60,5 @@ export {
   CollapseIcon,
   SettingsIcon,
   ThemesIcon,
+  ClockIcon,
 };

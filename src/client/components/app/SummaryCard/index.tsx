@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import { Card, CardHeader, CardContent, CardElement, Text } from '@components/common';
 
 const StyledCard = styled(Card)`
-  padding: 1.2rem 0;
-  flex: 1;
+  padding: ${({ theme }) => theme.cardPadding} 0;
   width: 100%;
 `;
 

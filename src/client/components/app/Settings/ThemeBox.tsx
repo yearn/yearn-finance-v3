@@ -21,7 +21,7 @@ const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boole
     props.selected &&
     `
     cursor: default;
-    border-color: ${props.theme.colors.surface};
+    // border-color: ${props.theme.colors.surface};
   `};
 
   * {

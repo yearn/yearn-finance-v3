@@ -3,16 +3,15 @@ import styled from 'styled-components';
 
 import { Card, CardHeader, CardContent, CardElement } from '@components/common';
 
-const cellPadding = '1.2rem';
-
 const StyledCardElement = styled(CardElement)`
   display: flex;
   justify-content: center;
   margin: 0;
   /* width: 100%; */
   height: 4.8rem;
-  padding: 0 ${cellPadding};
+  padding: 0 ${({ theme }) => theme.cardPadding};
   font-size: 1.4rem;
+
   > * {
     margin-top: 0;
     font-size: inherit;
@@ -27,7 +26,7 @@ const TitleCardElement = styled(CardElement)`
   display: flex;
   justify-content: center;
   margin: 0;
-  padding: 0.6rem ${cellPadding};
+  padding: 0.6rem ${({ theme }) => theme.cardPadding};
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -41,8 +40,13 @@ const StyledCardContent = styled(CardContent)`
   } */
 `;
 
+const StyledCardHeader = styled(CardHeader)`
+  margin-bottom: 0.6rem;
+`;
+
 const StyledCard = styled(Card)`
-  padding: ${cellPadding} 0;
+  padding: ${({ theme }) => theme.cardPadding} 0;
+  width: 100%;
 `;
 
 interface Metadata {
@@ -73,7 +77,7 @@ export const DetailCard = ({ header, metadata, data, SearchBar }: DetailCardProp
 
   return (
     <StyledCard>
-      <CardHeader header={header} />
+      <StyledCardHeader header={header} />
       {SearchBar}
 
       <CardContent>

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
-  margin: 0 1.2rem;
+  margin: 0 ${({ theme }) => theme.cardPadding};
 `;
 
 const Header = styled.div`
@@ -15,9 +15,9 @@ interface CardElementProps {
   header?: string;
 }
 
-export const CardHeader: FC<CardElementProps> = ({ children, header }) => {
+export const CardHeader: FC<CardElementProps> = ({ children, header, ...props }) => {
   return (
-    <Container>
+    <Container {...props}>
       {header && <Header>{header}</Header>}
       {children}
     </Container>

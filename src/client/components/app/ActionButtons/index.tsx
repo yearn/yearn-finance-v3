@@ -1,13 +1,19 @@
 import styled from 'styled-components';
 
-import { Box, Button } from '@components/common';
+import { Button } from '@components/common';
+
+const ActionButtonsContainer = styled.div<{ actions: number }>`
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(${({ actions }) => actions}, 1fr);
+  gap: ${({ theme }) => theme.cardPadding};
+`;
 
 const ActionButton = styled(Button)`
   background: ${({ theme }) => theme.colors.vaultActionButton.background};
   color: ${({ theme }) => theme.colors.vaultActionButton.color};
   border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.borderColor};
   padding: 0 1.6rem;
-  margin-left: 1.2rem;
 `;
 
 interface ActionButtonsProps {
@@ -19,11 +25,11 @@ interface ActionButtonsProps {
 }
 
 export const ActionButtons = ({ actions }: ActionButtonsProps) => (
-  <Box display="grid" gridTemplateColumns={`repeat(${actions.length}, 1fr)`} flexDirection="row" alignItems="center">
+  <ActionButtonsContainer actions={actions.length}>
     {actions.map(({ name, handler, disabled }) => (
       <ActionButton key={`action-${name}`} onClick={handler} disabled={disabled}>
         {name}
       </ActionButton>
     ))}
-  </Box>
+  </ActionButtonsContainer>
 );

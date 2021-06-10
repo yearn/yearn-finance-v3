@@ -37,18 +37,7 @@
     "settings": "Settings"
   },
   "footer": {
-    "copyright": "Copyright © yearn 2021. All rights reserved.",
-    "links": {
-      "versions": "Versions:",
-      "v1": "v1",
-      "v2": "v2",
-      "documentation": "Documentation",
-      "github": "Github",
-      "labs": "Labs",
-      "governance": "Governance",
-      "voting": "Voting",
-      "security": "Security"
-    }
+    "copyright": "© Yearn 2021. All rights reserved."
   },
   "landing": {
     "title-1": "THE",
@@ -65,6 +54,7 @@
   },
 
   "settings": {
-    "themes": "Themes"
+    "themes": "Themes",
+    "preferences": "Preferences"
   }
 }
