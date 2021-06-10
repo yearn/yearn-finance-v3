@@ -7,7 +7,7 @@ const ActionButton = styled(Button)`
   color: ${({ theme }) => theme.colors.vaultActionButton.color};
   border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.borderColor};
   padding: 0 1.6rem;
-  margin-left: 1.2rem;
+  margin-left: ${({ theme }) => theme.cardPadding};
 `;
 
 interface ActionButtonsProps {

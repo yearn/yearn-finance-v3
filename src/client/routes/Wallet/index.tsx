@@ -38,12 +38,14 @@ export const Wallet = () => {
         items={[
           { header: 'Balance', content: `$ ${humanizeAmount(totalBalance, USDC_DECIMALS, 2)}` },
           { header: 'Tokens Owned', content: tokensAmount },
+          // { header: 'Investment utilization', content: `${investedPercentageAmount}%` },
         ]}
         variant="secondary"
+        cardSize="big"
       />
 
       {tokensListStatus.loading && (
-        <Box height="100%" width="100%" position="relative" display="flex" center paddingTop="4rem">
+        <Box height="100%" width="100%" position="relative" display="flex" center>
           <SpinnerLoading flex="1" />
         </Box>
       )}
