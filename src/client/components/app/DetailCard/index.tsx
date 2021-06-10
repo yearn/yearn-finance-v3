@@ -11,6 +11,7 @@ const StyledCardElement = styled(CardElement)`
   height: 4.8rem;
   padding: 0 ${({ theme }) => theme.cardPadding};
   font-size: 1.4rem;
+
   > * {
     margin-top: 0;
     font-size: inherit;
@@ -39,8 +40,13 @@ const StyledCardContent = styled(CardContent)`
   } */
 `;
 
+const StyledCardHeader = styled(CardHeader)`
+  margin-bottom: 0.6rem;
+`;
+
 const StyledCard = styled(Card)`
   padding: ${({ theme }) => theme.cardPadding} 0;
+  width: 100%;
 `;
 
 interface Metadata {
@@ -71,7 +77,7 @@ export const DetailCard = ({ header, metadata, data, SearchBar }: DetailCardProp
 
   return (
     <StyledCard>
-      <CardHeader header={header} />
+      <StyledCardHeader header={header} />
       {SearchBar}
 
       <CardContent>

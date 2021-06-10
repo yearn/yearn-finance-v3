@@ -85,7 +85,6 @@ export const Wallet = () => {
                   ]}
                 />
               ),
-              align: 'flex-end',
               grow: '1',
             },
           ]}
