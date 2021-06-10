@@ -5,7 +5,6 @@ import { Card, CardHeader, CardContent, CardElement, Text } from '@components/co
 
 const StyledCard = styled(Card)`
   padding: ${({ theme }) => theme.cardPadding} 0;
-  flex: 1;
   width: 100%;
 `;
 

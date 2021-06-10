@@ -14,7 +14,7 @@ import {
 } from '@store';
 
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
-import { Navigation, Navbar } from '@components/app';
+import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals } from '@containers';
 
 const contentSeparation = '1.6rem';
@@ -106,7 +106,7 @@ export const Layout: FC = ({ children }) => {
           onWalletClick={() => dispatch(WalletActions.walletSelect())}
         />
         {children}
-        {/* <Footer /> */}
+        <Footer />
       </Content>
     </StyledLayout>
   );

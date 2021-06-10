@@ -1,18 +1,8 @@
 import styled from 'styled-components';
 
-import { AlchemyCertified } from '@assets/images';
-import {
-  Logo,
-  SeparatorLine,
-  Icon,
-  MediumIcon,
-  Link,
-  TwitterIcon,
-  DiscordIcon,
-  GithubIcon,
-  TelegramIcon,
-  BugIcon,
-} from '@components/common';
+import { ReactComponent as AlchemyCertified } from '@assets/images/alchemy-certified.svg';
+
+import { Icon, MediumIcon, Link, TwitterIcon, DiscordIcon, GithubIcon, TelegramIcon } from '@components/common';
 import { device } from '@themes/default';
 import { useAppTranslation } from '@hooks';
 
@@ -20,135 +10,53 @@ interface FooterProps {
   className?: string;
 }
 
+const socialLinks = [
+  {
+    link: 'https://twitter.com/iearnfinance',
+    icon: TwitterIcon,
+  },
+  {
+    link: 'https://github.com/yearn/yearn-finance.git',
+    icon: GithubIcon,
+  },
+  {
+    link: 'https://discord.com/invite/6PNv2nF/',
+    icon: DiscordIcon,
+  },
+  {
+    link: 'https://medium.com/iearn',
+    icon: MediumIcon,
+  },
+  {
+    link: 'https://www.google.com',
+    icon: TelegramIcon,
+  },
+];
+
 const StyledFooter = styled.div`
   display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  @media ${device.tablet} {
-    .footer-sections {
-      display: grid;
-      gap: 4rem;
-    }
-
-    .social-section {
-      flex: 1 100%;
-      order: 5;
-
-      .social-icons {
-        margin-top: 3rem;
-      }
-    }
-
-    .link-section {
-      gap: 7rem;
-
-      .separator-line {
-        margin: 0;
-      }
-    }
-  }
-
-  @media ${device.mobile} {
-    padding: 4rem;
-
-    .footer-sections {
-      gap: 3.3rem;
-    }
-
-    .social-section {
-      .logo {
-        display: none;
-      }
-      .social-icons {
-        margin-top: 0;
-      }
-    }
-
-    .social-section {
-      margin-top: 0;
-    }
-
-    .link-section {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-
-      .separator-line {
-        display: none;
-      }
-    }
-
-    & > .separator-line {
-      margin-top: 3rem;
-      margin-bottom: 2rem;
-    }
-
-    .copyright {
-      flex-direction: column;
-      align-items: flex-start;
-      img {
-        order: -1;
-      }
-      span {
-        margin-top: 1.7rem;
-      }
-    }
-  }
-`;
-
-const FooterSections = styled.div`
-  display: flex;
-`;
-
-const LinkSection = styled.div`
-  display: grid;
-  grid-template-columns: 3fr 1fr 3fr 3fr;
-  gap: 11rem;
+  align-items: flex-end;
   justify-content: space-between;
-  flex: 1;
+  width: 100%;
+  gap: 2rem;
+  flex-wrap: wrap;
 `;
 
 const SocialSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex: 1;
-`;
-
-const Section = styled.div`
-  display: grid;
-  grid-auto-rows: minmax(min-content, max-content);
-  gap: 2rem;
-  font-size: 1.4rem;
-  font-weight: 400;
-`;
-
-const StyledLink = styled(Link)`
-  &:before {
-    content: '>';
-    color: grey;
-    margin-right: 0.78rem;
-  }
-`;
-
-const SocialIcons = styled.div`
-  --icon-size: 3.5rem;
+  --icon-size: 3rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, var(--icon-size));
-
   align-items: center;
-  margin-top: 10rem;
-  gap: 1rem;
+  gap: 0.6rem;
   width: 100%;
+  flex: 1;
+  min-width: calc(var(--icon-size) * ${socialLinks.length} + 3rem);
 `;
 
 const StyledIconLink = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--icon-size);
-  height: var(--icon-size);
   border-radius: 100%;
   transition: filter 200ms ease-in-out;
 
@@ -157,113 +65,50 @@ const StyledIconLink = styled(Link)`
   }
 `;
 
-const StyledIcon = styled(Icon)``;
+const StyledIcon = styled(Icon)`
+  width: var(--icon-size);
+  height: var(--icon-size);
+`;
+
+const AlchemyLogo = styled(AlchemyCertified)`
+  width: 100%;
+  fill: ${({ theme }) => theme.colors.onBackground};
+`;
 
 const Copyright = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 1.2rem;
+  align-items: flex-end;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 1.4rem;
 
-  img {
-    width: 18.6rem;
+  span {
+    margin-top: 0.7rem;
   }
 `;
 
-const socialLinks = [
-  {
-    link: 'https://medium.com/iearn',
-    icon: MediumIcon,
-  },
-  {
-    link: 'https://twitter.com/iearnfinance',
-    icon: TwitterIcon,
-  },
-  {
-    link: 'https://discord.com/invite/6PNv2nF/',
-    icon: DiscordIcon,
-  },
-  {
-    link: 'https://github.com/yearn/yearn-finance.git',
-    icon: GithubIcon,
-  },
-  {
-    link: 'https://www.google.com',
-    icon: TelegramIcon,
-  },
-  {
-    link: 'https://www.google.com',
-    icon: BugIcon,
-  },
-];
+const socialIcons = (
+  <SocialSection>
+    {socialLinks.map((social, index) => {
+      return (
+        <StyledIconLink href={social.link} target="_blank" key={index}>
+          <StyledIcon Component={social.icon} />
+        </StyledIconLink>
+      );
+    })}
+  </SocialSection>
+);
 
 export const Footer = ({ className }: FooterProps) => {
   const { t } = useAppTranslation('common');
 
-  const socialIcons = (
-    <SocialIcons className="social-icons">
-      {socialLinks.map((social, index) => {
-        return (
-          <StyledIconLink href={social.link} target="_blank" key={index}>
-            <StyledIcon Component={social.icon} />
-          </StyledIconLink>
-        );
-      })}
-    </SocialIcons>
-  );
-
   return (
     <StyledFooter className={className}>
-      <FooterSections className="footer-sections">
-        <SocialSection className="social-section">
-          <Logo full className="logo" />
-          {socialIcons}
-        </SocialSection>
+      {socialIcons}
 
-        <LinkSection className="link-section">
-          <Section>
-            <strong>{t('footer.links.versions')}</strong>
-            <StyledLink target="_blank" href="https://v1.yearn.finance">
-              {t('footer.links.v1')}
-            </StyledLink>
-            <StyledLink target="_blank" href="https://v2.yearn.finance">
-              {t('footer.links.v2')}
-            </StyledLink>
-          </Section>
-
-          <SeparatorLine className="separator-line vertical" />
-
-          <Section>
-            <StyledLink target="_blank" href="https://docs.yearn.finance">
-              {t('footer.links.documentation')}
-            </StyledLink>
-            <StyledLink target="_blank" href="https://github.com/yearn">
-              {t('footer.links.github')}
-            </StyledLink>
-            <StyledLink target="_blank" href="https://yearn.fi">
-              {t('footer.links.labs')}
-            </StyledLink>
-          </Section>
-
-          <Section>
-            <StyledLink target="_blank" href="https://gov.yearn.finance">
-              {t('footer.links.governance')}
-            </StyledLink>
-            <StyledLink target="_blank" href="https://snapshot.org/#/ybaby.eth">
-              {t('footer.links.voting')}
-            </StyledLink>
-            <StyledLink target="_blank" href="https://github.com/yearn/yearn-security">
-              {t('footer.links.security')}
-            </StyledLink>
-          </Section>
-        </LinkSection>
-      </FooterSections>
-
-      <SeparatorLine className="separator-line" />
-
-      <Copyright className="copyright">
+      <Copyright>
+        <AlchemyLogo />
         <span>{t('footer.copyright')}</span>
-        <img src={AlchemyCertified} alt="Alchemy Certified" />
       </Copyright>
     </StyledFooter>
   );
