@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState, Status, VaultView, VaultActionsStatusMap, VaultRecommendation } from '@types';
+import { RootState, Status, VaultView, VaultActionsStatusMap } from '@types';
 import BigNumber from 'bignumber.js';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
 
@@ -50,8 +50,8 @@ const selectVaults = createSelector(
         vaultBalance: vaultData.underlyingTokenBalance.amount,
         decimals: vaultData.decimals,
         vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
-        depositLimit: vaultData.metadata.depositLimit,
-        emergencyShutdown: vaultData.metadata.emergencyShutdown,
+        depositLimit: vaultData?.metadata.depositLimit ?? '0',
+        emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
         apyData: vaultData.metadata.apy?.recommended.toString() ?? '0',
         allowancesMap: vaultsAllowancesMap[address] ?? {},
         approved: new BigNumber(currentAllowance).gt(0),

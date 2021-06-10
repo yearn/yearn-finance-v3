@@ -40,7 +40,7 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   if (amountInWei.gt(userTokenBalance)) {
     return { error: 'INSUFICIENT FUNDS' };
   }
-  if (depositLimitBN && depositLimitBN.lt(depositLimitBN.plus(amountInWei))) {
+  if (depositLimitBN && depositLimitBN.gt(0) && depositLimitBN.lt(depositLimitBN.plus(amountInWei))) {
     return { error: 'EXCEEDED DEPOSIT LIMIT' };
   }
   if (emergencyShutdown) {
