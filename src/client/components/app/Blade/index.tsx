@@ -116,7 +116,7 @@ export const Blade = () => {
   // const deposit = (vaultAddress: string, amount: string) =>
   //   dispatch(VaultsActions.depositVault({ vaultAddress, amount: new BigNumber(amount) }));
   const withdraw = (vaultAddress: string, amount: string) =>
-    dispatch(VaultsActions.withdrawVault({ vaultAddress, amount: new BigNumber(amount) }));
+    dispatch(VaultsActions.withdrawVault({ vaultAddress, amount: new BigNumber(amount), targetTokenAddress: '' })); // deprecated component
 
   let approveButton;
 

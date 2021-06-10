@@ -153,7 +153,13 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
   const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
 
   const withdraw = () =>
-    dispatch(VaultsActions.withdrawVault({ vaultAddress: selectedVault.address, amount: toBN(amount) }));
+    dispatch(
+      VaultsActions.withdrawVault({
+        vaultAddress: selectedVault.address,
+        amount: toBN(amount),
+        targetTokenAddress: selectedTargetTokenAddress,
+      })
+    );
 
   const approve = () => {
     // TODO
