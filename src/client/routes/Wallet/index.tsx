@@ -43,7 +43,7 @@ export const Wallet = () => {
       />
 
       {tokensListStatus.loading && (
-        <Box height="100%" width="100%" position="relative" display="flex" center paddingTop="4rem">
+        <Box height="100%" width="100%" position="relative" display="flex" center>
           <SpinnerLoading flex="1" />
         </Box>
       )}
