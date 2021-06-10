@@ -1,3 +1,5 @@
+import { TransactionRequest, TransactionResponse, TransactionReceipt } from '@ethersproject/providers';
+
 import {
   Position,
   Asset,
@@ -30,4 +32,7 @@ export type {
   IronBankPosition,
   IronBankMarketDynamic,
   CyTokenUserMetadata,
+  TransactionRequest,
+  TransactionResponse,
+  TransactionReceipt,
 };
