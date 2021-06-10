@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
 import { Position, Vault, VaultDynamic } from '@types';
 import {
+  handleTransaction,
   calculateSharesAmount,
   normalizeAmount,
   toBN,
@@ -11,7 +12,7 @@ import {
   validateVaultDeposit,
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
-} from '@src/utils';
+} from '@utils';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
@@ -73,6 +74,10 @@ const depositVault = createAsyncThunk<
   ThunkAPI
 >('vaults/depositVault', async ({ vaultAddress, tokenAddress, amount }, { extra, getState, dispatch }) => {
   const { services } = extra;
+  const userAddress = getState().wallet.selectedAddress;
+  if (!userAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
   const vaultData = getState().vaults.vaultsMap[vaultAddress];
   const tokenData = getState().tokens.tokensMap[tokenAddress];
   const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
@@ -100,7 +105,13 @@ const depositVault = createAsyncThunk<
 
   const amountInWei = amount.multipliedBy(ONE_UNIT);
   const { vaultService } = services;
-  await vaultService.deposit({ tokenAddress: tokenData.address, vaultAddress, amount: amountInWei.toString() });
+  const tx = await vaultService.deposit({
+    accountAddress: userAddress,
+    tokenAddress: tokenData.address,
+    vaultAddress,
+    amount: amountInWei.toString(),
+  });
+  await handleTransaction(tx);
   dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
   dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
   dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
@@ -112,6 +123,10 @@ const withdrawVault = createAsyncThunk<
   ThunkAPI
 >('vaults/withdrawVault', async ({ vaultAddress, amount, targetTokenAddress }, { extra, getState, dispatch }) => {
   const { services } = extra;
+  const userAddress = getState().wallet.selectedAddress;
+  if (!userAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
   const vaultData = getState().vaults.vaultsMap[vaultAddress];
   const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
   const vaultAllowancesMap = getState().tokens.user.userTokensAllowancesMap[vaultAddress];
@@ -141,11 +156,13 @@ const withdrawVault = createAsyncThunk<
   if (error) throw new Error(error);
 
   const { vaultService } = services;
-  await vaultService.withdraw({
+  const tx = await vaultService.withdraw({
+    accountAddress: userAddress,
     tokenAddress: vaultData.tokenId,
     vaultAddress,
     amountOfShares,
   });
+  await handleTransaction(tx);
   dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
   dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
   // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
