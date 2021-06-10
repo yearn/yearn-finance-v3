@@ -142,7 +142,7 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
   }
 
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress];
-  const { approved: isApproved, error: allowancesError } = validateVaultAllowance({
+  const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
     vaultUnderlyingTokenAddress: selectedVault.token.address,
     tokenAddress: selectedSellTokenAddress,
     vaultAddress: selectedVault.address,

@@ -2,9 +2,8 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
-import { formatUnits } from '@frameworks/ethers';
 import { Position, Vault, VaultDynamic } from '@types';
-import { validateVaultAllowance, validateVaultDeposit } from '@src/utils';
+import { calculateSharesAmount, validateVaultAllowance, validateVaultDeposit } from '@src/utils';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
@@ -106,18 +105,12 @@ const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: Big
     const vaultData = getState().vaults.vaultsMap[vaultAddress];
     const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
     // const userVaultData = getState().vaults.user.userVaultsPositionsMap[vaultAddress]?.DEPOSIT;
-    const decimals = new BigNumber(tokenData.decimals);
-    // const ONE_UNIT = new BigNumber(10).pow(decimals);
-    // amount = amount.multipliedBy(ONE_UNIT);
-    // if (amount.lte(0)) {
-    //   throw new Error('INVALID AMOUNT');
-    // }
-    // if (amount.gt(userVaultData.balance)) {
-    //   throw new Error('INSUFICIENT FUNDS');
-    // }
 
-    const sharePrice = formatUnits(vaultData.metadata.pricePerShare, decimals.toNumber());
-    const amountOfShares = new BigNumber(amount).dividedBy(sharePrice).decimalPlaces(0).toFixed(0);
+    const amountOfShares = calculateSharesAmount({
+      amount,
+      decimals: tokenData.decimals,
+      pricePerShare: vaultData.metadata.pricePerShare,
+    });
 
     const { vaultService } = services;
     await vaultService.withdraw({

@@ -55,6 +55,7 @@ const selectVaults = createSelector(
         apyData: vaultData.metadata.apy?.recommended.toString() ?? '0',
         allowancesMap: vaultsAllowancesMap[address] ?? {},
         approved: new BigNumber(currentAllowance).gt(0),
+        pricePerShare: vaultData?.metadata.pricePerShare,
         DEPOSIT: {
           userBalance: userVaultDataDeposit?.balance ?? '0',
           userDeposited: userVaultDataDeposit?.underlyingTokenBalance.amount ?? '0',

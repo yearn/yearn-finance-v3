@@ -1,6 +1,7 @@
-import { AllowancesMap } from '@types';
+import { AllowancesMap, Wei } from '@types';
 import BigNumber from 'bignumber.js';
 import { getConstants } from '../config/constants';
+import { formatUnits } from '../core/frameworks/ethers';
 
 interface ValidateVaultDepositProps {
   depositLimit: string;
@@ -8,6 +9,18 @@ interface ValidateVaultDepositProps {
   userTokenBalance: string;
   tokenDecimals: string;
   amount: BigNumber;
+}
+interface ValidateVaultWithdrawProps {
+  amount: BigNumber;
+  decimals: string;
+  userYvTokenBalance: string;
+}
+interface ValidateVaultWithdrawAllowanceProps {
+  amount: BigNumber;
+  decimals: string;
+  underlyingTokenAddress: string;
+  targetTokenAddress: string;
+  yvTokenAllowancesMap: AllowancesMap;
 }
 
 export interface ValidateVaultAllowanceProps {
@@ -30,8 +43,7 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   let { amount, depositLimit, emergencyShutdown, tokenDecimals, userTokenBalance } = props;
   userTokenBalance = userTokenBalance ?? '0';
   const depositLimitBN = depositLimit ? new BigNumber(depositLimit) : undefined;
-  const decimals = new BigNumber(tokenDecimals);
-  const ONE_UNIT = new BigNumber(10).pow(decimals);
+  const ONE_UNIT = new BigNumber(10).pow(tokenDecimals);
   const amountInWei = amount.multipliedBy(ONE_UNIT);
 
   if (amountInWei.lte(0)) {
@@ -74,4 +86,52 @@ export function validateVaultAllowance(props: ValidateVaultAllowanceProps): Vali
   }
 
   return { approved };
+}
+
+export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): ValidationResonse {
+  let { amount, decimals, userYvTokenBalance } = props;
+  userYvTokenBalance = userYvTokenBalance ?? '0';
+  const ONE_UNIT = new BigNumber(10).pow(decimals);
+  const amountInWei = amount.multipliedBy(ONE_UNIT);
+
+  if (amountInWei.lte(0)) {
+    return { error: 'INVALID AMOUNT' };
+  }
+  if (amountInWei.gt(userYvTokenBalance)) {
+    return { error: 'INSUFICIENT FUNDS' };
+  }
+
+  return { approved: true };
+}
+
+export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllowanceProps): ValidationResonse {
+  const ZAP_OUT_CONTRACT = getConstants().CONTRACT_ADDRESSES.zapOut;
+  let { amount, decimals, underlyingTokenAddress, targetTokenAddress, yvTokenAllowancesMap } = props;
+  const ONE_UNIT = new BigNumber(10).pow(decimals);
+  const amountInWei = amount.multipliedBy(ONE_UNIT);
+  const isZapOut = targetTokenAddress !== underlyingTokenAddress;
+
+  if (!isZapOut) return { approved: true };
+
+  const allowance = new BigNumber(yvTokenAllowancesMap[ZAP_OUT_CONTRACT] ?? '0');
+  const approved = allowance.gte(amountInWei);
+  if (!approved) {
+    return { error: 'NEED TO APPROVE' };
+  }
+
+  return { approved: true };
+}
+
+interface CalculateSharesAmountProps {
+  decimals: string;
+  pricePerShare: string;
+  amount: BigNumber;
+}
+
+export function calculateSharesAmount(props: CalculateSharesAmountProps): Wei {
+  const { amount, decimals, pricePerShare } = props;
+  if (amount.isNaN()) return '0';
+  const sharePrice = formatUnits(pricePerShare, decimals);
+  const ONE_UNIT = new BigNumber(10).pow(decimals);
+  return amount.dividedBy(sharePrice).multipliedBy(ONE_UNIT).toFixed(0);
 }
