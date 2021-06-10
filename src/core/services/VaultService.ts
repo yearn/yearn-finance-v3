@@ -42,16 +42,14 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async deposit(props: DepositProps): Promise<TransactionResponse> {
-    const { tokenAddress, vaultAddress, amount } = props;
-    const signer = this.web3Provider.getSigner();
+    const { accountAddress, tokenAddress, vaultAddress, amount } = props;
     const yearn = this.yearnSdk;
-    return await yearn.vaults.deposit(vaultAddress, tokenAddress, amount, signer._address);
+    return await yearn.vaults.deposit(vaultAddress, tokenAddress, amount, accountAddress);
   }
 
   public async withdraw(props: WithdrawProps): Promise<TransactionResponse> {
-    const { tokenAddress, vaultAddress, amountOfShares } = props;
-    const signer = this.web3Provider.getSigner();
+    const { accountAddress, tokenAddress, vaultAddress, amountOfShares } = props;
     const yearn = this.yearnSdk;
-    return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, signer._address);
+    return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress);
   }
 }

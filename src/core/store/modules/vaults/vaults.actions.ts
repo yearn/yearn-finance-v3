@@ -64,6 +64,10 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
   'vaults/depositVault',
   async ({ vaultAddress, amount }, { extra, getState, dispatch }) => {
     const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
     const vaultData = getState().vaults.vaultsMap[vaultAddress];
     const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
     // const userTokenData = getState().tokens.user.userTokensMap[vaultData.tokenId];
@@ -86,6 +90,7 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
 
     const { vaultService } = services;
     const tx = await vaultService.deposit({
+      accountAddress: userAddress,
       tokenAddress: vaultData.tokenId,
       vaultAddress,
       amount: amount.toFixed(0),
@@ -102,6 +107,10 @@ const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: Big
   'vaults/withdrawVault',
   async ({ vaultAddress, amount }, { extra, getState, dispatch }) => {
     const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
     const vaultData = getState().vaults.vaultsMap[vaultAddress];
     const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
     // const userVaultData = getState().user.userVaultsMap[vaultAddress];
@@ -120,6 +129,7 @@ const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: Big
 
     const { vaultService } = services;
     const tx = await vaultService.withdraw({
+      accountAddress: userAddress,
       tokenAddress: vaultData.tokenId,
       vaultAddress,
       amountOfShares,

@@ -46,18 +46,21 @@ export interface TokenService {
 }
 
 export interface DepositProps {
+  accountAddress: EthereumAddress;
   tokenAddress: EthereumAddress;
   vaultAddress: EthereumAddress;
   amount: Wei;
 }
 
 export interface WithdrawProps {
+  accountAddress: EthereumAddress;
   tokenAddress: EthereumAddress;
   vaultAddress: EthereumAddress;
   amountOfShares: Wei;
 }
 
 export interface ApproveProps {
+  accountAddress: EthereumAddress;
   tokenAddress: EthereumAddress;
   spenderAddress: EthereumAddress;
   amount: Wei;
