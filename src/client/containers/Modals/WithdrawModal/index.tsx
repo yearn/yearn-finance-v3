@@ -106,26 +106,6 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
   const targetTokensOptionsMap = keyBy(targetTokensOptions, 'address');
   const selectedTargetToken = targetTokensOptionsMap[selectedTargetTokenAddress];
 
-  const yvTokenAmount = calculateSharesAmount({
-    amount: toBN(amount),
-    decimals: selectedVault?.token.decimals?.toString() ?? '0',
-    pricePerShare: selectedVault?.pricePerShare ?? '0',
-  });
-
-  const { approved: isApproved, error: allowanceError } = validateVaultWithdrawAllowance({
-    amount: toBN(normalizeAmount(yvTokenAmount, selectedVault?.token.decimals ?? 1)),
-    targetTokenAddress: selectedTargetToken.address,
-    underlyingTokenAddress: selectedVault?.token.address ?? '',
-    decimals: selectedVault?.token.decimals.toString() ?? '0',
-    yvTokenAllowancesMap: selectedVault?.allowancesMap ?? {},
-  });
-
-  const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
-    amount: toBN(normalizeAmount(yvTokenAmount, selectedVault?.token.decimals ?? 1)),
-    userYvTokenBalance: selectedVault?.DEPOSIT.userBalance ?? '0',
-    decimals: selectedVault?.token.decimals.toString() ?? '0',
-  });
-
   useEffect(() => {
     return () => {
       dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: undefined }));
@@ -147,6 +127,26 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
   if (!selectedVault || !selectedTargetToken || !targetTokensOptions) {
     return null;
   }
+
+  const yvTokenAmount = calculateSharesAmount({
+    amount: toBN(amount),
+    decimals: selectedVault.token.decimals.toString(),
+    pricePerShare: selectedVault.pricePerShare,
+  });
+
+  const { approved: isApproved, error: allowanceError } = validateVaultWithdrawAllowance({
+    amount: toBN(normalizeAmount(yvTokenAmount, selectedVault.token.decimals)),
+    targetTokenAddress: selectedTargetToken.address,
+    underlyingTokenAddress: selectedVault.token.address,
+    decimals: selectedVault.token.decimals.toString(),
+    yvTokenAllowancesMap: selectedVault.allowancesMap,
+  });
+
+  const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
+    amount: toBN(normalizeAmount(yvTokenAmount, selectedVault.token.decimals)),
+    userYvTokenBalance: selectedVault.DEPOSIT.userBalance,
+    decimals: selectedVault.token.decimals.toString(),
+  });
 
   const balance = normalizeAmount(selectedVault.DEPOSIT.userDeposited, selectedVault.token.decimals);
   const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
