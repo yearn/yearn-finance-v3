@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { useAppTranslation } from '@hooks';
+import { useAppTranslation, useWindowDimensions } from '@hooks';
 import { Button } from '@components/common';
 import { device } from '@themes/default';
-import useWindowDimensions from '@hooks/windowDimensions';
 
 import { YearnSplash } from '@assets/images';
 import YearnSplashVideo from '@assets/videos/yearn-splash-video.webm';

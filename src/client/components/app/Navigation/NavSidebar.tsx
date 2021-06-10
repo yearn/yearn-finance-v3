@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
+
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
 
@@ -16,38 +18,6 @@ import {
 
 const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
-
-const StyledSidebar = styled.div<{ collapsed?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  color: ${({ theme }) => theme.colors.primaryVariant};
-  background-color: ${({ theme }) => theme.colors.primary};
-  border-radius: 0.8rem;
-  width: ${({ theme }) => theme.sideBar.width};
-  height: 100%;
-  max-width: 100%;
-  padding: 1rem 1.2rem;
-  position: fixed;
-  max-height: calc(100% - ${({ theme }) => theme.layoutPadding} * 2);
-  transition: width ${({ theme }) => theme.sideBar.animation};
-  overflow: hidden;
-  overflow-y: auto;
-
-  ${(props) =>
-    props.collapsed &&
-    `
-    width: ${props.theme.sideBar.collapsedWidth};
-
-    .link-list span,
-    .copyright-text {
-      display: none;
-    }
-    .copyright {
-      display: block;
-      text-align: center;
-    }
-  `};
-`;
 
 const SidebarHeader = styled.div`
   display: grid;
@@ -75,7 +45,19 @@ const LinkList = styled.div`
   margin-top: 2.3rem;
 `;
 
-const RouterLink = styled(Link)`
+const LinkIcon = styled(Icon)`
+  margin-right: 1.2rem;
+  fill: ${({ theme }) => theme.colors.primaryVariant};
+  cursor: pointer;
+  width: 2.4rem;
+  height: 2.4rem;
+`;
+
+const LinkText = styled.span`
+  white-space: nowrap;
+`;
+
+const RouterLink = styled(Link)<{ selected: boolean }>`
   display: flex;
   align-items: center;
   color: inherit;
@@ -88,14 +70,23 @@ const RouterLink = styled(Link)`
   span {
     transition: ${linkTransition};
   }
+  ${(props) =>
+    props.selected &&
+    `
+    ${LinkIcon} {
+      fill: ${props.theme.colors.secondary};
+    }
+    ${LinkText} {
+      color: ${props.theme.colors.secondary};
+    }
+  `}
 `;
 
-const LinkIcon = styled(Icon)`
-  margin-right: 1.2rem;
-  fill: ${({ theme }) => theme.colors.primaryVariant};
-  cursor: pointer;
-  width: 2.4rem;
-  height: 2.4rem;
+const CopyrightSmall = styled.span`
+  display: none;
+`;
+const CopyrightLarge = styled.span`
+  white-space: nowrap;
 `;
 
 const ToggleSidebarButton = styled(LinkIcon)`
@@ -107,10 +98,45 @@ const ToggleSidebarButton = styled(LinkIcon)`
   margin-right: 0;
 `;
 
+const StyledSidebar = styled.div<{ collapsed?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  color: ${({ theme }) => theme.colors.primaryVariant};
+  background-color: ${({ theme }) => theme.colors.primary};
+  border-radius: 0.8rem;
+  width: ${({ theme }) => theme.sideBar.width};
+  height: 100%;
+  max-width: 100%;
+  padding: 1rem 1.2rem;
+  position: fixed;
+  max-height: calc(100% - ${({ theme }) => theme.layoutPadding} * 2);
+  transition: width ${({ theme }) => theme.sideBar.animation};
+  overflow: hidden;
+  overflow-y: auto;
+
+  ${(props) =>
+    props.collapsed &&
+    `
+    width: ${props.theme.sideBar.collapsedWidth};
+
+    ${LinkText},
+    ${CopyrightLarge} {
+      display: none;
+    }
+    ${CopyrightSmall} {
+      display: block;
+      text-align: center;
+    }
+  `};
+`;
+
 export const NavSidebar = () => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
+
+  const currentPath = '/' + location.pathname.toLowerCase().split('/')[1];
 
   const toggleSidebar = () => dispatch(SettingsActions.toggleSidebar());
 
@@ -120,21 +146,6 @@ export const NavSidebar = () => {
       text: t('navigation.home'),
       icon: HomeIcon,
     },
-    // {
-    //   to: '/invest',
-    //   text: t('navigation.invest'),
-    //   icon: HomeIcon,
-    // },
-    // {
-    //   to: '/save',
-    //   text: t('navigation.save'),
-    //   icon: HomeIcon,
-    // },
-    // {
-    //   to: '/borrow',
-    //   text: t('navigation.borrow'),
-    //   icon: HomeIcon,
-    // },
     {
       to: '/wallet',
       text: t('navigation.wallet'),
@@ -146,7 +157,7 @@ export const NavSidebar = () => {
       icon: VaultIcon,
     },
     {
-      to: '/ironBank',
+      to: '/ironbank',
       text: t('navigation.ironbank'),
       icon: IronBankIcon,
     },
@@ -161,8 +172,8 @@ export const NavSidebar = () => {
     <LinkList className="link-list">
       {navLinks.map((link, index) => {
         return (
-          <RouterLink to={link.to} key={index}>
-            <LinkIcon Component={link.icon} /> <span>{link.text}</span>
+          <RouterLink to={link.to} key={index} selected={currentPath === link.to}>
+            <LinkIcon Component={link.icon} /> <LinkText>{link.text}</LinkText>
           </RouterLink>
         );
       })}
@@ -178,7 +189,8 @@ export const NavSidebar = () => {
 
       <SidebarContent>{linkList}</SidebarContent>
       <SidebarFooter>
-        <span className="copyright">©</span> <span className="copyright-text">Yearn 2021</span>
+        <CopyrightSmall>{t('navigation.copyright.small')}</CopyrightSmall>
+        <CopyrightLarge>{t('navigation.copyright.big')}</CopyrightLarge>
       </SidebarFooter>
     </StyledSidebar>
   );

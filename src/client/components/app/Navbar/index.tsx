@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import useWindowDimensions from '@hooks/windowDimensions';
+import { useWindowDimensions } from '@hooks';
 
 import { ConnectWalletButton } from '@components/app';
 import { Text } from '@components/common';
