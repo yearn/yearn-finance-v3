@@ -95,7 +95,7 @@ const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigN
       vaultAddress,
       amount: amount.toFixed(0),
     });
-    handleTransaction(tx);
+    await handleTransaction(tx);
 
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
@@ -134,7 +134,7 @@ const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: Big
       vaultAddress,
       amountOfShares,
     });
-    handleTransaction(tx);
+    await handleTransaction(tx);
 
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
