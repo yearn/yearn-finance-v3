@@ -113,10 +113,10 @@ export const Blade = () => {
 
   const approve = (vaultAddress: string, tokenAddress: string) =>
     dispatch(VaultsActions.approveVault({ vaultAddress, tokenAddress }));
-  const deposit = (vaultAddress: string, amount: string) =>
-    dispatch(VaultsActions.depositVault({ vaultAddress, amount: new BigNumber(amount) }));
+  // const deposit = (vaultAddress: string, amount: string) =>
+  //   dispatch(VaultsActions.depositVault({ vaultAddress, amount: new BigNumber(amount) }));
   const withdraw = (vaultAddress: string, amount: string) =>
-    dispatch(VaultsActions.withdrawVault({ vaultAddress, amount: new BigNumber(amount) }));
+    dispatch(VaultsActions.withdrawVault({ vaultAddress, amount: new BigNumber(amount), targetTokenAddress: '' })); // deprecated component
 
   let approveButton;
 
@@ -164,13 +164,13 @@ export const Blade = () => {
               </AvailableBalance>
               <Input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} min="0" />
               {approveButton}
-              <ActionButton
+              {/* <ActionButton
                 className="outline"
                 onClick={() => deposit(selectedVault.address!, depositAmount)}
                 disabled={depositStatus.loading || !walletIsConnected}
               >
                 {depositStatus.loading && <StyledSpinnerLoading />} Deposit
-              </ActionButton>
+              </ActionButton> */}
             </ActionCard>
           </ActionCardWrapper>
 
