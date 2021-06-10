@@ -17,7 +17,6 @@ import {
   calculateSharesAmount,
 } from '@src/utils';
 import { getConfig } from '@config';
-import BigNumber from 'bignumber.js';
 
 const StyledModal = styled(Modal)`
   width: 38.4rem;
@@ -108,13 +107,13 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
   const selectedTargetToken = targetTokensOptionsMap[selectedTargetTokenAddress];
 
   const yvTokenAmount = calculateSharesAmount({
-    amount: new BigNumber(amount),
+    amount: toBN(amount),
     decimals: selectedVault?.token.decimals?.toString() ?? '0',
     pricePerShare: selectedVault?.pricePerShare ?? '0',
   });
 
   const { approved: isApproved, error: allowanceError } = validateVaultWithdrawAllowance({
-    amount: new BigNumber(normalizeAmount(yvTokenAmount, selectedVault?.token.decimals ?? 1)),
+    amount: toBN(normalizeAmount(yvTokenAmount, selectedVault?.token.decimals ?? 1)),
     targetTokenAddress: selectedTargetToken.address,
     underlyingTokenAddress: selectedVault?.token.address ?? '',
     decimals: selectedVault?.token.decimals.toString() ?? '0',
@@ -122,7 +121,7 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
-    amount: new BigNumber(normalizeAmount(yvTokenAmount, selectedVault?.token.decimals ?? 1)),
+    amount: toBN(normalizeAmount(yvTokenAmount, selectedVault?.token.decimals ?? 1)),
     userYvTokenBalance: selectedVault?.DEPOSIT.userBalance ?? '0',
     decimals: selectedVault?.token.decimals.toString() ?? '0',
   });

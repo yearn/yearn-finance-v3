@@ -1,7 +1,7 @@
-import { AllowancesMap, Wei } from '@types';
+import { AllowancesMap } from '@types';
 import BigNumber from 'bignumber.js';
 import { getConstants } from '../config/constants';
-import { formatUnits } from '../core/frameworks/ethers';
+import { toBN } from './format';
 
 interface ValidateVaultDepositProps {
   depositLimit: string;
@@ -42,8 +42,8 @@ export interface ValidationResonse {
 export function validateVaultDeposit(props: ValidateVaultDepositProps): ValidationResonse {
   let { amount, depositLimit, emergencyShutdown, tokenDecimals, userTokenBalance } = props;
   userTokenBalance = userTokenBalance ?? '0';
-  const depositLimitBN = depositLimit ? new BigNumber(depositLimit) : undefined;
-  const ONE_UNIT = new BigNumber(10).pow(tokenDecimals);
+  const depositLimitBN = depositLimit ? toBN(depositLimit) : undefined;
+  const ONE_UNIT = toBN('10').pow(tokenDecimals);
   const amountInWei = amount.multipliedBy(ONE_UNIT);
 
   if (amountInWei.lte(0)) {
@@ -67,14 +67,12 @@ export function validateVaultAllowance(props: ValidateVaultAllowanceProps): Vali
 
   const isETH = tokenAddress === getConstants().ETHEREUM_ADDRESS;
   const isZapin = vaultUnderlyingTokenAddress !== tokenAddress;
-  const ONE_UNIT = new BigNumber(10).pow(tokenDecimals);
+  const ONE_UNIT = toBN('10').pow(tokenDecimals);
   const amountInWei = amount.multipliedBy(ONE_UNIT);
 
   if (isETH) return { approved: true };
 
-  const allowance = isZapin
-    ? new BigNumber(tokenAllowancesMap[ZAP_IN_CONTRACT] ?? '0')
-    : new BigNumber(tokenAllowancesMap[vaultAddress] ?? '0');
+  const allowance = isZapin ? toBN(tokenAllowancesMap[ZAP_IN_CONTRACT]) : toBN(tokenAllowancesMap[vaultAddress]);
 
   if (amount.isEqualTo(0) && allowance.isEqualTo(0)) {
     return { error: 'TOKEN NOT APPROVED' };
@@ -91,7 +89,7 @@ export function validateVaultAllowance(props: ValidateVaultAllowanceProps): Vali
 export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): ValidationResonse {
   let { amount, decimals, userYvTokenBalance } = props;
   userYvTokenBalance = userYvTokenBalance ?? '0';
-  const ONE_UNIT = new BigNumber(10).pow(decimals);
+  const ONE_UNIT = toBN('10').pow(decimals);
   const amountInWei = amount.multipliedBy(ONE_UNIT);
 
   if (amountInWei.lte(0)) {
@@ -107,13 +105,13 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
 export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllowanceProps): ValidationResonse {
   const ZAP_OUT_CONTRACT = getConstants().CONTRACT_ADDRESSES.zapOut;
   let { amount, decimals, underlyingTokenAddress, targetTokenAddress, yvTokenAllowancesMap } = props;
-  const ONE_UNIT = new BigNumber(10).pow(decimals);
+  const ONE_UNIT = toBN('10').pow(decimals);
   const amountInWei = amount.multipliedBy(ONE_UNIT);
   const isZapOut = targetTokenAddress !== underlyingTokenAddress;
 
   if (!isZapOut) return { approved: true };
 
-  const allowance = new BigNumber(yvTokenAllowancesMap[ZAP_OUT_CONTRACT] ?? '0');
+  const allowance = toBN(yvTokenAllowancesMap[ZAP_OUT_CONTRACT]);
   const approved = allowance.gte(amountInWei);
   if (!approved) {
     return { error: 'NEED TO APPROVE' };

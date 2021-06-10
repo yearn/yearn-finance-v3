@@ -16,7 +16,6 @@ import {
   validateVaultAllowance,
 } from '@src/utils';
 import { getConfig } from '@config';
-import BigNumber from 'bignumber.js';
 
 const StyledModal = styled(Modal)`
   width: 38.4rem;
@@ -148,10 +147,10 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
     vaultAddress: selectedVault.address,
     tokenDecimals: selectedSellToken.decimals.toString(),
     tokenAllowancesMap: selectedSellToken.allowancesMap,
-    amount: amount ? new BigNumber(amount) : new BigNumber('0'),
+    amount: toBN(amount),
   });
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
-    amount: amount ? new BigNumber(amount) : new BigNumber('0'),
+    amount: toBN(amount),
     depositLimit: selectedVault.depositLimit,
     emergencyShutdown: selectedVault.emergencyShutdown,
     tokenDecimals: selectedSellToken.decimals.toString(),

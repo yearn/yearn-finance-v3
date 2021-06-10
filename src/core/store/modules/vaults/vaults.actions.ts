@@ -6,6 +6,7 @@ import { Position, Vault, VaultDynamic } from '@types';
 import {
   calculateSharesAmount,
   normalizeAmount,
+  toBN,
   validateVaultAllowance,
   validateVaultDeposit,
   validateVaultWithdraw,
@@ -76,8 +77,8 @@ const depositVault = createAsyncThunk<
   const tokenData = getState().tokens.tokensMap[tokenAddress];
   const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
   const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
-  const decimals = new BigNumber(tokenData.decimals);
-  const ONE_UNIT = new BigNumber(10).pow(decimals);
+  const decimals = toBN(tokenData.decimals);
+  const ONE_UNIT = toBN('10').pow(decimals);
   const { error: depositError } = validateVaultDeposit({
     amount,
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
@@ -123,7 +124,7 @@ const withdrawVault = createAsyncThunk<
   });
 
   const { error: allowanceError } = validateVaultWithdrawAllowance({
-    amount: new BigNumber(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    amount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
     targetTokenAddress: targetTokenAddress,
     underlyingTokenAddress: tokenData.address ?? '',
     decimals: tokenData.decimals.toString() ?? '0',
@@ -131,7 +132,7 @@ const withdrawVault = createAsyncThunk<
   });
 
   const { error: withdrawError } = validateVaultWithdraw({
-    amount: new BigNumber(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    amount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
     userYvTokenBalance: userVaultData.balance ?? '0',
     decimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
   });
