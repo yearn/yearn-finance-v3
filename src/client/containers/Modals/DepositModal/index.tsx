@@ -6,7 +6,15 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 import { TokenAmountInput, TransactionSettings, TokenIcon } from '@components/app';
 import { Modal, Card, Text, Box, Button, SimpleDropdown } from '@components/common';
-import { toBN, formatPercent, formatAmount, normalizeAmount, USDC_DECIMALS } from '@src/utils';
+import {
+  toBN,
+  formatPercent,
+  formatAmount,
+  normalizeAmount,
+  USDC_DECIMALS,
+  validateVaultDeposit,
+  validateVaultAllowance,
+} from '@src/utils';
 import { getConfig } from '@config';
 
 const StyledModal = styled(Modal)`
@@ -133,8 +141,22 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
   }
 
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress];
-  const allowance = selectedSellToken.allowancesMap[selectedVault.address] ?? '0';
-  const isApproved = toBN(allowance).gte(normalizeAmount(amount, selectedSellToken.decimals));
+  const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
+    vaultUnderlyingTokenAddress: selectedVault.token.address,
+    tokenAddress: selectedSellTokenAddress,
+    vaultAddress: selectedVault.address,
+    tokenDecimals: selectedSellToken.decimals.toString(),
+    tokenAllowancesMap: selectedSellToken.allowancesMap,
+    amount: toBN(amount),
+  });
+  const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
+    amount: toBN(amount),
+    depositLimit: selectedVault.depositLimit,
+    emergencyShutdown: selectedVault.emergencyShutdown,
+    tokenDecimals: selectedSellToken.decimals.toString(),
+    userTokenBalance: selectedSellToken.balance,
+  });
+
   const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
 
@@ -143,7 +165,13 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
       VaultsActions.approveVault({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
     );
   const deposit = () =>
-    dispatch(VaultsActions.depositVault({ vaultAddress: selectedVault.address, amount: toBN(amount) }));
+    dispatch(
+      VaultsActions.depositVault({
+        vaultAddress: selectedVault.address,
+        tokenAddress: selectedSellToken.address,
+        amount: toBN(amount),
+      })
+    );
 
   return (
     <StyledModal {...props} onClose={onClose}>
@@ -178,8 +206,10 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
       </TransferContainer>
 
       <ButtonContainer>
-        <StyledButton onClick={() => approve()}>APPROVE</StyledButton>
-        <StyledButton onClick={() => deposit()} disabled={!isApproved}>
+        <StyledButton onClick={() => approve()} disabled={isApproved}>
+          APPROVE
+        </StyledButton>
+        <StyledButton onClick={() => deposit()} disabled={!isApproved || !isValidAmount}>
           DEPOSIT
         </StyledButton>
       </ButtonContainer>
