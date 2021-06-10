@@ -29,6 +29,8 @@ export interface Constants {
     lens: string;
     registryV2Adapter: string;
     helper: string;
+    zapIn: string;
+    zapOut: string;
   };
   SLIPPAGE_OPTIONS: number[];
   DEFAULT_SLIPPAGE: number;

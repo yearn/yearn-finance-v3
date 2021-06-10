@@ -2,8 +2,16 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
-import { formatUnits } from '@frameworks/ethers';
 import { Position, Vault, VaultDynamic } from '@types';
+import {
+  calculateSharesAmount,
+  normalizeAmount,
+  toBN,
+  validateVaultAllowance,
+  validateVaultDeposit,
+  validateVaultWithdraw,
+  validateVaultWithdrawAllowance,
+} from '@src/utils';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
@@ -59,69 +67,89 @@ const approveVault = createAsyncThunk<void, { vaultAddress: string; tokenAddress
   }
 );
 
-const depositVault = createAsyncThunk<void, { vaultAddress: string; amount: BigNumber }, ThunkAPI>(
-  'vaults/depositVault',
-  async ({ vaultAddress, amount }, { extra, getState, dispatch }) => {
-    const { services } = extra;
-    const vaultData = getState().vaults.vaultsMap[vaultAddress];
-    const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
-    // const userTokenData = getState().tokens.user.userTokensMap[vaultData.tokenId];
-    const allowancesMap = getState().tokens.user.userTokensAllowancesMap[vaultData.tokenId] ?? {};
-    const decimals = new BigNumber(tokenData.decimals);
-    const ONE_UNIT = new BigNumber(10).pow(decimals);
-    amount = amount.multipliedBy(ONE_UNIT);
-    // if (amount.lte(0)) {
-    //   throw new Error('INVALID AMOUNT');
-    // }
-    // if (amount.gt(userTokenData.balance)) {
-    //   throw new Error('INSUFICIENT FUNDS');
-    // }
+const depositVault = createAsyncThunk<
+  void,
+  { vaultAddress: string; tokenAddress: string; amount: BigNumber },
+  ThunkAPI
+>('vaults/depositVault', async ({ vaultAddress, tokenAddress, amount }, { extra, getState, dispatch }) => {
+  const { services } = extra;
+  const vaultData = getState().vaults.vaultsMap[vaultAddress];
+  const tokenData = getState().tokens.tokensMap[tokenAddress];
+  const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
+  const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
+  const decimals = toBN(tokenData.decimals);
+  const ONE_UNIT = toBN('10').pow(decimals);
+  const { error: depositError } = validateVaultDeposit({
+    amount,
+    depositLimit: vaultData?.metadata.depositLimit ?? '0',
+    emergencyShutdown: vaultData?.metadata.emergencyShutdown || false,
+    tokenDecimals: tokenData?.decimals ?? '0',
+    userTokenBalance: userTokenData?.balance ?? '0',
+  });
+  const { error: allowanceError } = validateVaultAllowance({
+    vaultUnderlyingTokenAddress: vaultData.tokenId,
+    tokenAddress: tokenAddress,
+    vaultAddress: vaultAddress,
+    tokenDecimals: tokenData.decimals,
+    tokenAllowancesMap,
+    amount,
+  });
 
-    const allowance = allowancesMap[vaultAddress] ?? '0';
-    const approved = new BigNumber(allowance).gte(amount);
-    if (!approved) {
-      await dispatch(approveVault({ vaultAddress, tokenAddress: tokenData.address }));
-    }
+  const error = depositError || allowanceError;
+  if (error) throw new Error(error);
 
-    const { vaultService } = services;
-    await vaultService.deposit({ tokenAddress: vaultData.tokenId, vaultAddress, amount: amount.toFixed(0) });
-    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
-    // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
-  }
-);
+  const amountInWei = amount.multipliedBy(ONE_UNIT);
+  const { vaultService } = services;
+  await vaultService.deposit({ tokenAddress: tokenData.address, vaultAddress, amount: amountInWei.toString() });
+  dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+  dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+  dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
+});
 
-const withdrawVault = createAsyncThunk<void, { vaultAddress: string; amount: BigNumber }, ThunkAPI>(
-  'vaults/withdrawVault',
-  async ({ vaultAddress, amount }, { extra, getState, dispatch }) => {
-    const { services } = extra;
-    const vaultData = getState().vaults.vaultsMap[vaultAddress];
-    const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
-    // const userVaultData = getState().user.userVaultsMap[vaultAddress];
-    const decimals = new BigNumber(tokenData.decimals);
-    // const ONE_UNIT = new BigNumber(10).pow(decimals);
-    // amount = amount.multipliedBy(ONE_UNIT);
-    // if (amount.lte(0)) {
-    //   throw new Error('INVALID AMOUNT');
-    // }
-    // if (amount.gt(userVaultData.depositedBalance)) {
-    //   throw new Error('INSUFICIENT FUNDS');
-    // }
+const withdrawVault = createAsyncThunk<
+  void,
+  { vaultAddress: string; amount: BigNumber; targetTokenAddress: string },
+  ThunkAPI
+>('vaults/withdrawVault', async ({ vaultAddress, amount, targetTokenAddress }, { extra, getState, dispatch }) => {
+  const { services } = extra;
+  const vaultData = getState().vaults.vaultsMap[vaultAddress];
+  const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
+  const vaultAllowancesMap = getState().tokens.user.userTokensAllowancesMap[vaultAddress];
+  const userVaultData = getState().vaults.user.userVaultsPositionsMap[vaultAddress]?.DEPOSIT;
 
-    const sharePrice = formatUnits(vaultData.metadata.pricePerShare, decimals.toNumber());
-    const amountOfShares = new BigNumber(amount).dividedBy(sharePrice).decimalPlaces(0).toFixed(0);
+  const amountOfShares = calculateSharesAmount({
+    amount,
+    decimals: tokenData.decimals,
+    pricePerShare: vaultData.metadata.pricePerShare,
+  });
 
-    const { vaultService } = services;
-    await vaultService.withdraw({
-      tokenAddress: vaultData.tokenId,
-      vaultAddress,
-      amountOfShares,
-    });
-    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
-    // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
-  }
-);
+  const { error: allowanceError } = validateVaultWithdrawAllowance({
+    amount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    targetTokenAddress: targetTokenAddress,
+    underlyingTokenAddress: tokenData.address ?? '',
+    decimals: tokenData.decimals.toString() ?? '0',
+    yvTokenAllowancesMap: vaultAllowancesMap ?? {},
+  });
+
+  const { error: withdrawError } = validateVaultWithdraw({
+    amount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    userYvTokenBalance: userVaultData.balance ?? '0',
+    decimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
+  });
+
+  const error = withdrawError || allowanceError;
+  if (error) throw new Error(error);
+
+  const { vaultService } = services;
+  await vaultService.withdraw({
+    tokenAddress: vaultData.tokenId,
+    vaultAddress,
+    amountOfShares,
+  });
+  dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+  dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+  // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
+});
 
 const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   'vaults/initSubscriptions',

@@ -6,7 +6,16 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 import { TokenAmountInput, TransactionSettings } from '@components/app';
 import { Modal, Card, Text, Box, Button, SimpleDropdown } from '@components/common';
-import { toBN, formatPercent, formatAmount, normalizeAmount, USDC_DECIMALS } from '@src/utils';
+import {
+  toBN,
+  formatPercent,
+  formatAmount,
+  normalizeAmount,
+  USDC_DECIMALS,
+  validateVaultWithdraw,
+  validateVaultWithdrawAllowance,
+  calculateSharesAmount,
+} from '@src/utils';
 import { getConfig } from '@config';
 
 const StyledModal = styled(Modal)`
@@ -119,11 +128,42 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
     return null;
   }
 
+  const yvTokenAmount = calculateSharesAmount({
+    amount: toBN(amount),
+    decimals: selectedVault.token.decimals.toString(),
+    pricePerShare: selectedVault.pricePerShare,
+  });
+
+  const { approved: isApproved, error: allowanceError } = validateVaultWithdrawAllowance({
+    amount: toBN(normalizeAmount(yvTokenAmount, selectedVault.token.decimals)),
+    targetTokenAddress: selectedTargetToken.address,
+    underlyingTokenAddress: selectedVault.token.address,
+    decimals: selectedVault.token.decimals.toString(),
+    yvTokenAllowancesMap: selectedVault.allowancesMap,
+  });
+
+  const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
+    amount: toBN(normalizeAmount(yvTokenAmount, selectedVault.token.decimals)),
+    userYvTokenBalance: selectedVault.DEPOSIT.userBalance,
+    decimals: selectedVault.token.decimals.toString(),
+  });
+
   const balance = normalizeAmount(selectedVault.DEPOSIT.userDeposited, selectedVault.token.decimals);
   const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
 
   const withdraw = () =>
-    dispatch(VaultsActions.withdrawVault({ vaultAddress: selectedVault.address, amount: toBN(amount) }));
+    dispatch(
+      VaultsActions.withdrawVault({
+        vaultAddress: selectedVault.address,
+        amount: toBN(amount),
+        targetTokenAddress: selectedTargetTokenAddress,
+      })
+    );
+
+  const approve = () => {
+    // TODO
+    console.log('TO DO');
+  };
 
   return (
     <StyledModal {...props} onClose={onClose}>
@@ -150,7 +190,12 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
         </TargetContainer>
       </TransferContainer>
       <ButtonContainer>
-        <StyledButton onClick={() => withdraw()}>WITHDRAW</StyledButton>
+        <StyledButton onClick={() => approve()} disabled={isApproved}>
+          APPROVED
+        </StyledButton>
+        <StyledButton onClick={() => withdraw()} disabled={!isValidAmount || !isApproved}>
+          WITHDRAW
+        </StyledButton>
       </ButtonContainer>
       <TransactionSettings
         amount={amountValue}

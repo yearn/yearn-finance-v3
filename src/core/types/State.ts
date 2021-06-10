@@ -47,7 +47,7 @@ export interface VaultPositionsMap {
   DEPOSIT: Position;
 }
 
-interface AllowancesMap {
+export interface AllowancesMap {
   [spender: string]: Integer;
 }
 export interface VaultsState {

@@ -26,6 +26,8 @@ export const getConstants = memoize(
         lens: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
         registryV2Adapter: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
         helper: '0x420b1099B9eF5baba6D92029594eF45E19A04A4A',
+        zapIn: '0x92Be6ADB6a12Da0CA607F9d87DB2F9978cD6ec3E',
+        zapOut: '0xA8a3B1A1e09A0f84B2856533DB4eE0Cc88DD4E11',
       },
       SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
       DEFAULT_SLIPPAGE: 0.01,

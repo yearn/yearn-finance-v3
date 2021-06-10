@@ -19,6 +19,7 @@ export interface VaultView {
   vaultBalance: string;
   vaultBalanceUsdc: string;
   depositLimit: string;
+  emergencyShutdown: boolean;
   apyData: any;
   userBalance: string;
   userDeposited: string;
