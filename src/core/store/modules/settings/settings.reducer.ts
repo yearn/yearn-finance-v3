@@ -10,10 +10,13 @@ const initialState: SettingsState = {
   },
 };
 
-const { toggleSidebar, toggleDevMode, changeWalletAddressOverride } = SettingsActions;
+const { toggleSidebar, closeSidebar, toggleDevMode, changeWalletAddressOverride } = SettingsActions;
 
 const settingsReducer = createReducer(initialState, (builder) => {
   builder
+    .addCase(closeSidebar, (state) => {
+      state.sidebarCollapsed = true;
+    })
     .addCase(toggleSidebar, (state) => {
       state.sidebarCollapsed = !state.sidebarCollapsed;
     })

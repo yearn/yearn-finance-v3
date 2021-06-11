@@ -4,6 +4,7 @@ import { WalletActions } from '@store';
 import { isValidAddress } from '@utils';
 
 const toggleSidebar = createAction('settings/toggleSidebar');
+const closeSidebar = createAction('settings/closeSidebar');
 
 const toggleDevMode = createAsyncThunk<{ enable: boolean }, { enable: boolean }, ThunkAPI>(
   'settings/toggleDevMode',
@@ -34,6 +35,7 @@ const changeWalletAddressOverride = createAsyncThunk<void, { address: string }, 
 
 export const SettingsActions = {
   toggleSidebar,
+  closeSidebar,
   toggleDevMode,
   changeWalletAddressOverride,
 };

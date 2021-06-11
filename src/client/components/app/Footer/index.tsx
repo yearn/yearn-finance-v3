@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { ReactComponent as AlchemyCertified } from '@assets/images/alchemy-certified.svg';
 
 import { Icon, MediumIcon, Link, TwitterIcon, DiscordIcon, GithubIcon, TelegramIcon } from '@components/common';
-import { device } from '@themes/default';
 import { useAppTranslation } from '@hooks';
 
 interface FooterProps {
@@ -40,6 +39,7 @@ const StyledFooter = styled.div`
   width: 100%;
   gap: 2rem;
   flex-wrap: wrap;
+  padding-top: 2rem;
 `;
 
 const SocialSection = styled.div`
