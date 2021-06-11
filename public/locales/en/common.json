@@ -34,7 +34,11 @@
     "vaults": "Vaults",
     "wallet": "Wallet",
     "ironbank": "Iron Bank",
-    "settings": "Settings"
+    "settings": "Settings",
+    "copyright": {
+      "small": "©",
+      "big": "© Yearn 2021"
+    }
   },
   "footer": {
     "copyright": "© Yearn 2021. All rights reserved."
