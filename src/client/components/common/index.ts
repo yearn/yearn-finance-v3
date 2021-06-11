@@ -7,6 +7,7 @@ export * from './Link';
 export * from './List';
 export * from './Logo';
 export * from './Modal';
+export * from './SearchInput';
 export * from './SeparatorLine';
 export * from './Sidemenu';
 export * from './SimpleDropdown';

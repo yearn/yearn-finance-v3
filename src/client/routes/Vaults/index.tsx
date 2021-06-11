@@ -7,7 +7,6 @@ import { ModalsActions, VaultsActions, VaultsSelectors, WalletSelectors } from '
 import {
   SummaryCard,
   DetailCard,
-  SearchBar,
   RecomendationsCard,
   ActionButtons,
   TokenIcon,
@@ -15,7 +14,7 @@ import {
   ViewContainer,
 } from '@components/app';
 import { formatPercent, humanizeAmount, normalizePercent, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
-import { Box, SpinnerLoading } from '../../components/common';
+import { Box, SpinnerLoading, SearchInput } from '@components/common';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -172,7 +171,7 @@ export const Vaults = () => {
             }))}
             SearchBar={
               <SearchBarContainer>
-                <SearchBar
+                <SearchInput
                   searchableData={opportunities}
                   searchableKeys={['name', 'token.symbol', 'token.name']}
                   onSearch={(data) => setFilteredVaults(data)}

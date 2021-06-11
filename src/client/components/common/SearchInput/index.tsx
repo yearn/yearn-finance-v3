@@ -2,19 +2,23 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { get } from 'lodash';
 
-import { Box, Input } from '@components/common';
+import { SearchIcon, Input } from '@components/common';
+
+const SearchInputContainer = styled(Input)``;
 
 const StyledInput = styled(Input)`
   width: 100%;
+  background: red !important;
 `;
 
-interface SearchBarProps<T> {
+interface SearchInputProps<T> {
   searchableData: Array<T>;
   searchableKeys: Array<keyof T | string>;
+  placeholder?: string;
   onSearch: (data: Array<T>) => void;
 }
 
-export const SearchBar = <T,>({ searchableData, searchableKeys, onSearch }: SearchBarProps<T>) => {
+export const SearchInput = <T,>({ searchableData, searchableKeys, placeholder, onSearch }: SearchInputProps<T>) => {
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
@@ -32,8 +36,14 @@ export const SearchBar = <T,>({ searchableData, searchableKeys, onSearch }: Sear
   }, [searchText]);
 
   return (
-    <Box width={1}>
-      <StyledInput value={searchText} onChange={(e) => setSearchText(e.target.value)} />
-    </Box>
+    <SearchInputContainer>
+      test
+      <StyledInput
+        value={searchText}
+        placeholder={placeholder}
+        icon={SearchIcon}
+        onChange={(e) => setSearchText(e.target.value)}
+      />
+    </SearchInputContainer>
   );
 };
