@@ -4,12 +4,7 @@ import { get } from 'lodash';
 
 import { SearchIcon, Input } from '@components/common';
 
-const SearchInputContainer = styled(Input)``;
-
-const StyledInput = styled(Input)`
-  width: 100%;
-  background: red !important;
-`;
+const StyledSearchInput = styled(Input)``;
 
 interface SearchInputProps<T> {
   searchableData: Array<T>;
@@ -36,14 +31,11 @@ export const SearchInput = <T,>({ searchableData, searchableKeys, placeholder, o
   }, [searchText]);
 
   return (
-    <SearchInputContainer>
-      test
-      <StyledInput
-        value={searchText}
-        placeholder={placeholder}
-        icon={SearchIcon}
-        onChange={(e) => setSearchText(e.target.value)}
-      />
-    </SearchInputContainer>
+    <StyledSearchInput
+      value={searchText}
+      placeholder={placeholder}
+      icon={SearchIcon}
+      onChange={(e) => setSearchText(e.target.value)}
+    />
   );
 };

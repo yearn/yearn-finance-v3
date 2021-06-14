@@ -175,6 +175,7 @@ export const IronBank = () => {
                 <SearchInput
                   searchableData={markets}
                   searchableKeys={['name', 'token.symbol', 'token.name']}
+                  placeholder="Search"
                   onSearch={(data) => setFilteredMarkets(data)}
                 />
               </SearchBarContainer>

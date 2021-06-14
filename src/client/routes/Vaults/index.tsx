@@ -174,6 +174,7 @@ export const Vaults = () => {
                 <SearchInput
                   searchableData={opportunities}
                   searchableKeys={['name', 'token.symbol', 'token.name']}
+                  placeholder="Search"
                   onSearch={(data) => setFilteredVaults(data)}
                 />
               </SearchBarContainer>
