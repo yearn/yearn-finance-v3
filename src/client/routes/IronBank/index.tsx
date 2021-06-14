@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '@hooks';
 
 import { ModalsActions, IronBankActions, IronBankSelectors, WalletSelectors } from '@store';
-import { Box, SpinnerLoading, ToggleButton } from '@components/common';
-import { SummaryCard, DetailCard, SearchBar, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
+import { Box, SpinnerLoading, ToggleButton, SearchInput } from '@components/common';
+import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
 
 import { normalizeUsdc, normalizePercent } from '@src/utils';
 
@@ -172,9 +172,10 @@ export const IronBank = () => {
             }))}
             SearchBar={
               <SearchBarContainer>
-                <SearchBar
+                <SearchInput
                   searchableData={markets}
                   searchableKeys={['name', 'token.symbol', 'token.name']}
+                  placeholder="Search"
                   onSearch={(data) => setFilteredMarkets(data)}
                 />
               </SearchBarContainer>
