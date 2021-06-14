@@ -43,9 +43,9 @@ const StyledIcon = styled(Icon)`
   margin-right: 0.5rem;
 `;
 
-export const Input: FC<InputProps> = ({ className, color, placeholder, icon, ...props }) => (
+export const Input: FC<InputProps> = ({ className, color, placeholder, Icon, ...props }) => (
   <StyledInputContainer className={className} color={color} {...props}>
-    {icon && <StyledIcon Component={icon} />}
+    {Icon && <StyledIcon Component={Icon} />}
     <StyledInput placeholder={placeholder} />
   </StyledInputContainer>
 );

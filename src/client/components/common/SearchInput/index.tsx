@@ -34,7 +34,7 @@ export const SearchInput = <T,>({ searchableData, searchableKeys, placeholder, o
     <StyledSearchInput
       value={searchText}
       placeholder={placeholder}
-      icon={SearchIcon}
+      Icon={SearchIcon}
       onChange={(e) => setSearchText(e.target.value)}
     />
   );
