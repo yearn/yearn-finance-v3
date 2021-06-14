@@ -12,6 +12,7 @@ const halfWidth = css`
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-auto-rows: min-content;
 `;
 
 const HeaderCard = styled(SummaryCard)`

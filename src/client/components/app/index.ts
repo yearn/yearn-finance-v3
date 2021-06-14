@@ -8,7 +8,6 @@ export * from './InfoCard';
 export * from './Navbar';
 export * from './Navigation';
 export * from './RecommendationsCard';
-export * from './SearchBar';
 export * from './SummaryCard';
 export * from './TokenAmountInput';
 export * from './TokenIcon';
