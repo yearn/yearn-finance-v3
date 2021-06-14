@@ -161,8 +161,7 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
     );
 
   const approve = () => {
-    // TODO
-    console.log('TO DO');
+    dispatch(VaultsActions.approveZapOut({ vaultAddress: selectedVault.address }));
   };
 
   return (

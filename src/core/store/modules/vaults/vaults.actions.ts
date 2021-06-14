@@ -13,6 +13,7 @@ import {
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
 } from '@utils';
+import { getConfig } from '@config';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
@@ -58,9 +59,24 @@ const getUserVaultsPositions = createAsyncThunk<
 
 const approveVault = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveVault',
-  async ({ vaultAddress, tokenAddress }, { getState, dispatch }) => {
+  async ({ vaultAddress, tokenAddress }, { dispatch }) => {
     try {
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: vaultAddress }));
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
+  'vaults/approveZapOut',
+  async ({ vaultAddress }, { dispatch }) => {
+    try {
+      const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
+      const result = await dispatch(
+        TokensActions.approve({ tokenAddress: vaultAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
+      );
       unwrapResult(result);
     } catch (error) {
       throw new Error(error.message);
@@ -200,4 +216,5 @@ export const VaultsActions = {
   getUserVaultsPositions,
   initSubscriptions,
   clearUserData,
+  approveZapOut,
 };
