@@ -6,7 +6,7 @@ import { Icon } from '@components/common';
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   color?: string;
-  icon?: ElementType;
+  Icon?: ElementType;
 }
 
 const StyledInputContainer = styled.div`
