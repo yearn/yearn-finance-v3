@@ -1,23 +1,24 @@
 import { AllowancesMap } from '@types';
 import BigNumber from 'bignumber.js';
-import { getConstants } from '../config/constants';
+import { getConfig } from '@config';
 import { toBN } from './format';
 
 interface ValidateVaultDepositProps {
+  sellTokenAmount: BigNumber;
   depositLimit: string;
   emergencyShutdown: boolean;
   userTokenBalance: string;
-  tokenDecimals: string;
-  amount: BigNumber;
+  sellTokenDecimals: string;
+  vaultUnderlyingBalance: string;
 }
 interface ValidateVaultWithdrawProps {
-  amount: BigNumber;
-  decimals: string;
+  yvTokenAmount: BigNumber;
+  yvTokenDecimals: string;
   userYvTokenBalance: string;
 }
 interface ValidateVaultWithdrawAllowanceProps {
-  amount: BigNumber;
-  decimals: string;
+  yvTokenAmount: BigNumber;
+  yvTokenDecimals: string;
   underlyingTokenAddress: string;
   targetTokenAddress: string;
   yvTokenAllowancesMap: AllowancesMap;
@@ -25,11 +26,11 @@ interface ValidateVaultWithdrawAllowanceProps {
 
 export interface ValidateVaultAllowanceProps {
   amount: BigNumber;
-  tokenDecimals: string;
-  tokenAddress: string;
   vaultAddress: string;
   vaultUnderlyingTokenAddress: string;
-  tokenAllowancesMap: AllowancesMap;
+  sellTokenAddress: string;
+  sellTokenDecimals: string;
+  sellTokenAllowancesMap: AllowancesMap;
 }
 
 export interface ValidationResonse {
@@ -40,11 +41,18 @@ export interface ValidationResonse {
 // Vaults validations
 
 export function validateVaultDeposit(props: ValidateVaultDepositProps): ValidationResonse {
-  let { amount, depositLimit, emergencyShutdown, tokenDecimals, userTokenBalance } = props;
+  let {
+    sellTokenAmount,
+    depositLimit,
+    emergencyShutdown,
+    sellTokenDecimals,
+    userTokenBalance,
+    vaultUnderlyingBalance,
+  } = props;
   userTokenBalance = userTokenBalance ?? '0';
   const depositLimitBN = depositLimit ? toBN(depositLimit) : undefined;
-  const ONE_UNIT = toBN('10').pow(tokenDecimals);
-  const amountInWei = amount.multipliedBy(ONE_UNIT);
+  const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
+  const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
 
   if (amountInWei.lte(0)) {
     return { error: 'INVALID AMOUNT' };
@@ -52,9 +60,12 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   if (amountInWei.gt(userTokenBalance)) {
     return { error: 'INSUFICIENT FUNDS' };
   }
-  if (depositLimitBN && depositLimitBN.gt(0) && depositLimitBN.lt(depositLimitBN.plus(amountInWei))) {
-    return { error: 'EXCEEDED DEPOSIT LIMIT' };
-  }
+
+  // TODO we need to wait until we decide what to do with the convertion rate from sdk.
+  // if (depositLimitBN && depositLimitBN.gt(0) && TODO CHECK IF depositLimit.lt(...)))) {
+  //   return { error: 'EXCEEDED DEPOSIT LIMIT' };
+  // }
+
   if (emergencyShutdown) {
     return { error: 'VAULT IS DISABLED' };
   }
@@ -62,17 +73,26 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
 }
 
 export function validateVaultAllowance(props: ValidateVaultAllowanceProps): ValidationResonse {
-  const ZAP_IN_CONTRACT = getConstants().CONTRACT_ADDRESSES.zapIn;
-  const { amount, tokenAddress, tokenAllowancesMap, tokenDecimals, vaultUnderlyingTokenAddress, vaultAddress } = props;
+  const ZAP_IN_CONTRACT = getConfig().CONTRACT_ADDRESSES.zapIn;
+  const {
+    amount,
+    vaultAddress,
+    vaultUnderlyingTokenAddress,
+    sellTokenAddress,
+    sellTokenDecimals,
+    sellTokenAllowancesMap,
+  } = props;
 
-  const isETH = tokenAddress === getConstants().ETHEREUM_ADDRESS;
-  const isZapin = vaultUnderlyingTokenAddress !== tokenAddress;
-  const ONE_UNIT = toBN('10').pow(tokenDecimals);
+  const isETH = sellTokenAddress === getConfig().ETHEREUM_ADDRESS;
+  const isZapin = vaultUnderlyingTokenAddress !== sellTokenAddress;
+  const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
   const amountInWei = amount.multipliedBy(ONE_UNIT);
 
   if (isETH) return { approved: true };
 
-  const allowance = isZapin ? toBN(tokenAllowancesMap[ZAP_IN_CONTRACT]) : toBN(tokenAllowancesMap[vaultAddress]);
+  const allowance = isZapin
+    ? toBN(sellTokenAllowancesMap[ZAP_IN_CONTRACT])
+    : toBN(sellTokenAllowancesMap[vaultAddress]);
 
   if (amount.isEqualTo(0) && allowance.isEqualTo(0)) {
     return { error: 'TOKEN NOT APPROVED' };
@@ -87,10 +107,10 @@ export function validateVaultAllowance(props: ValidateVaultAllowanceProps): Vali
 }
 
 export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): ValidationResonse {
-  let { amount, decimals, userYvTokenBalance } = props;
+  let { yvTokenAmount, yvTokenDecimals, userYvTokenBalance } = props;
   userYvTokenBalance = userYvTokenBalance ?? '0';
-  const ONE_UNIT = toBN('10').pow(decimals);
-  const amountInWei = amount.multipliedBy(ONE_UNIT);
+  const ONE_UNIT = toBN('10').pow(yvTokenDecimals);
+  const amountInWei = yvTokenAmount.multipliedBy(ONE_UNIT);
 
   if (amountInWei.lte(0)) {
     return { error: 'INVALID AMOUNT' };
@@ -103,15 +123,20 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
 }
 
 export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllowanceProps): ValidationResonse {
-  const ZAP_OUT_CONTRACT = getConstants().CONTRACT_ADDRESSES.zapOut;
-  let { amount, decimals, underlyingTokenAddress, targetTokenAddress, yvTokenAllowancesMap } = props;
-  const ONE_UNIT = toBN('10').pow(decimals);
-  const amountInWei = amount.multipliedBy(ONE_UNIT);
+  const ZAP_OUT_CONTRACT = getConfig().CONTRACT_ADDRESSES.zapOut;
+  let { yvTokenAmount, yvTokenDecimals, underlyingTokenAddress, targetTokenAddress, yvTokenAllowancesMap } = props;
+  const ONE_UNIT = toBN('10').pow(yvTokenDecimals);
+  const amountInWei = yvTokenAmount.multipliedBy(ONE_UNIT);
   const isZapOut = targetTokenAddress !== underlyingTokenAddress;
 
   if (!isZapOut) return { approved: true };
 
   const allowance = toBN(yvTokenAllowancesMap[ZAP_OUT_CONTRACT]);
+
+  if (yvTokenAmount.isEqualTo(0) && allowance.isEqualTo(0)) {
+    return { error: 'TOKEN NOT APPROVED' };
+  }
+
   const approved = allowance.gte(amountInWei);
   if (!approved) {
     return { error: 'NEED TO APPROVE' };

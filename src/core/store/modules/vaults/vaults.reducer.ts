@@ -1,13 +1,21 @@
 import { groupBy, keyBy, union } from 'lodash';
 
 import { createReducer } from '@reduxjs/toolkit';
-import { initialStatus, VaultsState, VaultPositionsMap, Position, UserVaultActionsStatusMap } from '@types';
+import {
+  initialStatus,
+  VaultsState,
+  VaultPositionsMap,
+  Position,
+  UserVaultActionsStatusMap,
+  VaultActionsStatusMap,
+} from '@types';
 import { VaultsActions } from './vaults.actions';
 
-export const initialVaultActionsStatusMap = {
+export const initialVaultActionsStatusMap: VaultActionsStatusMap = {
   approve: initialStatus,
   deposit: initialStatus,
   withdraw: initialStatus,
+  approveZapOut: initialStatus,
   get: initialStatus,
 };
 
@@ -36,6 +44,7 @@ const initialState: VaultsState = {
 
 const {
   approveVault,
+  approveZapOut,
   depositVault,
   getVaults,
   initiateSaveVaults,
@@ -133,6 +142,18 @@ const vaultsReducer = createReducer(initialState, (builder) => {
     .addCase(approveVault.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { error: error.message };
+    })
+    .addCase(approveZapOut.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = { loading: true };
+    })
+    .addCase(approveZapOut.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = {};
+    })
+    .addCase(approveZapOut.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = { error: error.message };
     })
     .addCase(withdrawVault.pending, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
