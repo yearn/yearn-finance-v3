@@ -142,19 +142,20 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
 
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress];
   const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
-    vaultUnderlyingTokenAddress: selectedVault.token.address,
-    tokenAddress: selectedSellTokenAddress,
-    vaultAddress: selectedVault.address,
-    tokenDecimals: selectedSellToken.decimals.toString(),
-    tokenAllowancesMap: selectedSellToken.allowancesMap,
     amount: toBN(amount),
+    vaultAddress: selectedVault.address,
+    vaultUnderlyingTokenAddress: selectedVault.token.address,
+    sellTokenAddress: selectedSellTokenAddress,
+    sellTokenDecimals: selectedSellToken.decimals.toString(),
+    sellTokenAllowancesMap: selectedSellToken.allowancesMap,
   });
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
-    amount: toBN(amount),
+    sellTokenAmount: toBN(amount),
     depositLimit: selectedVault.depositLimit,
     emergencyShutdown: selectedVault.emergencyShutdown,
-    tokenDecimals: selectedSellToken.decimals.toString(),
+    sellTokenDecimals: selectedSellToken.decimals.toString(),
     userTokenBalance: selectedSellToken.balance,
+    vaultUnderlyingBalance: selectedVault.vaultBalance,
   });
 
   const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);

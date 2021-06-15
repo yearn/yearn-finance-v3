@@ -13,6 +13,7 @@ import {
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
 } from '@utils';
+import { getConfig } from '@config';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
@@ -58,9 +59,24 @@ const getUserVaultsPositions = createAsyncThunk<
 
 const approveVault = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveVault',
-  async ({ vaultAddress, tokenAddress }, { getState, dispatch }) => {
+  async ({ vaultAddress, tokenAddress }, { dispatch }) => {
     try {
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: vaultAddress }));
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
+  'vaults/approveZapOut',
+  async ({ vaultAddress }, { dispatch }) => {
+    try {
+      const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
+      const result = await dispatch(
+        TokensActions.approve({ tokenAddress: vaultAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
+      );
       unwrapResult(result);
     } catch (error) {
       throw new Error(error.message);
@@ -85,19 +101,20 @@ const depositVault = createAsyncThunk<
   const decimals = toBN(tokenData.decimals);
   const ONE_UNIT = toBN('10').pow(decimals);
   const { error: depositError } = validateVaultDeposit({
-    amount,
+    sellTokenAmount: amount,
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
     emergencyShutdown: vaultData?.metadata.emergencyShutdown || false,
-    tokenDecimals: tokenData?.decimals ?? '0',
+    sellTokenDecimals: tokenData?.decimals ?? '0',
     userTokenBalance: userTokenData?.balance ?? '0',
+    vaultUnderlyingBalance: vaultData?.underlyingTokenBalance.amount ?? '0',
   });
   const { error: allowanceError } = validateVaultAllowance({
-    vaultUnderlyingTokenAddress: vaultData.tokenId,
-    tokenAddress: tokenAddress,
-    vaultAddress: vaultAddress,
-    tokenDecimals: tokenData.decimals,
-    tokenAllowancesMap,
     amount,
+    vaultAddress: vaultAddress,
+    vaultUnderlyingTokenAddress: vaultData.tokenId,
+    sellTokenAddress: tokenAddress,
+    sellTokenDecimals: tokenData.decimals,
+    sellTokenAllowancesMap: tokenAllowancesMap,
   });
 
   const error = depositError || allowanceError;
@@ -139,17 +156,17 @@ const withdrawVault = createAsyncThunk<
   });
 
   const { error: allowanceError } = validateVaultWithdrawAllowance({
-    amount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
     targetTokenAddress: targetTokenAddress,
     underlyingTokenAddress: tokenData.address ?? '',
-    decimals: tokenData.decimals.toString() ?? '0',
+    yvTokenDecimals: tokenData.decimals.toString() ?? '0',
     yvTokenAllowancesMap: vaultAllowancesMap ?? {},
   });
 
   const { error: withdrawError } = validateVaultWithdraw({
-    amount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
     userYvTokenBalance: userVaultData.balance ?? '0',
-    decimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
+    yvTokenDecimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
   });
 
   const error = withdrawError || allowanceError;
@@ -200,4 +217,5 @@ export const VaultsActions = {
   getUserVaultsPositions,
   initSubscriptions,
   clearUserData,
+  approveZapOut,
 };
