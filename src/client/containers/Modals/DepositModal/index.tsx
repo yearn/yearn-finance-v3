@@ -158,9 +158,6 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
     vaultUnderlyingBalance: selectedVault.vaultBalance,
   });
 
-  console.log({ isValidAmount });
-  console.log({ inputError });
-
   const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
 
