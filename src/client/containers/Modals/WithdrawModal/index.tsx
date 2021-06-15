@@ -130,22 +130,22 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
 
   const yvTokenAmount = calculateSharesAmount({
     amount: toBN(amount),
-    decimals: selectedVault.token.decimals.toString(),
+    decimals: selectedVault.decimals,
     pricePerShare: selectedVault.pricePerShare,
   });
 
   const { approved: isApproved, error: allowanceError } = validateVaultWithdrawAllowance({
-    amount: toBN(normalizeAmount(yvTokenAmount, selectedVault.token.decimals)),
+    yvTokenAmount: toBN(normalizeAmount(yvTokenAmount, selectedVault.token.decimals)),
     targetTokenAddress: selectedTargetToken.address,
     underlyingTokenAddress: selectedVault.token.address,
-    decimals: selectedVault.token.decimals.toString(),
+    yvTokenDecimals: selectedVault.decimals,
     yvTokenAllowancesMap: selectedVault.allowancesMap,
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
-    amount: toBN(normalizeAmount(yvTokenAmount, selectedVault.token.decimals)),
+    yvTokenAmount: toBN(normalizeAmount(yvTokenAmount, selectedVault.token.decimals)),
     userYvTokenBalance: selectedVault.DEPOSIT.userBalance,
-    decimals: selectedVault.token.decimals.toString(),
+    yvTokenDecimals: selectedVault.decimals,
   });
 
   const balance = normalizeAmount(selectedVault.DEPOSIT.userDeposited, selectedVault.token.decimals);

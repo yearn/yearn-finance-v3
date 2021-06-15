@@ -11,13 +11,13 @@ interface ValidateVaultDepositProps {
   amount: BigNumber;
 }
 interface ValidateVaultWithdrawProps {
-  amount: BigNumber;
-  decimals: string;
+  yvTokenAmount: BigNumber;
+  yvTokenDecimals: string;
   userYvTokenBalance: string;
 }
 interface ValidateVaultWithdrawAllowanceProps {
-  amount: BigNumber;
-  decimals: string;
+  yvTokenAmount: BigNumber;
+  yvTokenDecimals: string;
   underlyingTokenAddress: string;
   targetTokenAddress: string;
   yvTokenAllowancesMap: AllowancesMap;
@@ -87,10 +87,10 @@ export function validateVaultAllowance(props: ValidateVaultAllowanceProps): Vali
 }
 
 export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): ValidationResonse {
-  let { amount, decimals, userYvTokenBalance } = props;
+  let { yvTokenAmount, yvTokenDecimals, userYvTokenBalance } = props;
   userYvTokenBalance = userYvTokenBalance ?? '0';
-  const ONE_UNIT = toBN('10').pow(decimals);
-  const amountInWei = amount.multipliedBy(ONE_UNIT);
+  const ONE_UNIT = toBN('10').pow(yvTokenDecimals);
+  const amountInWei = yvTokenAmount.multipliedBy(ONE_UNIT);
 
   if (amountInWei.lte(0)) {
     return { error: 'INVALID AMOUNT' };
@@ -104,16 +104,16 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
 
 export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllowanceProps): ValidationResonse {
   const ZAP_OUT_CONTRACT = getConfig().CONTRACT_ADDRESSES.zapOut;
-  let { amount, decimals, underlyingTokenAddress, targetTokenAddress, yvTokenAllowancesMap } = props;
-  const ONE_UNIT = toBN('10').pow(decimals);
-  const amountInWei = amount.multipliedBy(ONE_UNIT);
+  let { yvTokenAmount, yvTokenDecimals, underlyingTokenAddress, targetTokenAddress, yvTokenAllowancesMap } = props;
+  const ONE_UNIT = toBN('10').pow(yvTokenDecimals);
+  const amountInWei = yvTokenAmount.multipliedBy(ONE_UNIT);
   const isZapOut = targetTokenAddress !== underlyingTokenAddress;
 
   if (!isZapOut) return { approved: true };
 
   const allowance = toBN(yvTokenAllowancesMap[ZAP_OUT_CONTRACT]);
 
-  if (amount.isEqualTo(0) && allowance.isEqualTo(0)) {
+  if (yvTokenAmount.isEqualTo(0) && allowance.isEqualTo(0)) {
     return { error: 'TOKEN NOT APPROVED' };
   }
 

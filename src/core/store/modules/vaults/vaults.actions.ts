@@ -155,17 +155,17 @@ const withdrawVault = createAsyncThunk<
   });
 
   const { error: allowanceError } = validateVaultWithdrawAllowance({
-    amount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
     targetTokenAddress: targetTokenAddress,
     underlyingTokenAddress: tokenData.address ?? '',
-    decimals: tokenData.decimals.toString() ?? '0',
+    yvTokenDecimals: tokenData.decimals.toString() ?? '0',
     yvTokenAllowancesMap: vaultAllowancesMap ?? {},
   });
 
   const { error: withdrawError } = validateVaultWithdraw({
-    amount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
     userYvTokenBalance: userVaultData.balance ?? '0',
-    decimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
+    yvTokenDecimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
   });
 
   const error = withdrawError || allowanceError;
