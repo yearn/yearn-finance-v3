@@ -4,11 +4,12 @@ import { getConfig } from '@config';
 import { toBN } from './format';
 
 interface ValidateVaultDepositProps {
+  sellTokenAmount: BigNumber;
   depositLimit: string;
   emergencyShutdown: boolean;
   userTokenBalance: string;
-  tokenDecimals: string;
-  amount: BigNumber;
+  sellTokenDecimals: string;
+  vaultUnderlyingBalance: string;
 }
 interface ValidateVaultWithdrawProps {
   yvTokenAmount: BigNumber;
@@ -25,11 +26,11 @@ interface ValidateVaultWithdrawAllowanceProps {
 
 export interface ValidateVaultAllowanceProps {
   amount: BigNumber;
-  tokenDecimals: string;
-  tokenAddress: string;
   vaultAddress: string;
   vaultUnderlyingTokenAddress: string;
-  tokenAllowancesMap: AllowancesMap;
+  sellTokenAddress: string;
+  sellTokenDecimals: string;
+  sellTokenAllowancesMap: AllowancesMap;
 }
 
 export interface ValidationResonse {
@@ -40,11 +41,18 @@ export interface ValidationResonse {
 // Vaults validations
 
 export function validateVaultDeposit(props: ValidateVaultDepositProps): ValidationResonse {
-  let { amount, depositLimit, emergencyShutdown, tokenDecimals, userTokenBalance } = props;
+  let {
+    sellTokenAmount,
+    depositLimit,
+    emergencyShutdown,
+    sellTokenDecimals,
+    userTokenBalance,
+    vaultUnderlyingBalance,
+  } = props;
   userTokenBalance = userTokenBalance ?? '0';
   const depositLimitBN = depositLimit ? toBN(depositLimit) : undefined;
-  const ONE_UNIT = toBN('10').pow(tokenDecimals);
-  const amountInWei = amount.multipliedBy(ONE_UNIT);
+  const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
+  const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
 
   if (amountInWei.lte(0)) {
     return { error: 'INVALID AMOUNT' };
@@ -52,9 +60,12 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   if (amountInWei.gt(userTokenBalance)) {
     return { error: 'INSUFICIENT FUNDS' };
   }
-  if (depositLimitBN && depositLimitBN.gt(0) && depositLimitBN.lt(depositLimitBN.plus(amountInWei))) {
-    return { error: 'EXCEEDED DEPOSIT LIMIT' };
-  }
+
+  // TODO we need to wait until we decide what to do with the convertion rate from sdk.
+  // if (depositLimitBN && depositLimitBN.gt(0) && TODO CHECK IF depositLimit.lt(...)))) {
+  //   return { error: 'EXCEEDED DEPOSIT LIMIT' };
+  // }
+
   if (emergencyShutdown) {
     return { error: 'VAULT IS DISABLED' };
   }
@@ -63,16 +74,25 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
 
 export function validateVaultAllowance(props: ValidateVaultAllowanceProps): ValidationResonse {
   const ZAP_IN_CONTRACT = getConfig().CONTRACT_ADDRESSES.zapIn;
-  const { amount, tokenAddress, tokenAllowancesMap, tokenDecimals, vaultUnderlyingTokenAddress, vaultAddress } = props;
+  const {
+    amount,
+    vaultAddress,
+    vaultUnderlyingTokenAddress,
+    sellTokenAddress,
+    sellTokenDecimals,
+    sellTokenAllowancesMap,
+  } = props;
 
-  const isETH = tokenAddress === getConfig().ETHEREUM_ADDRESS;
-  const isZapin = vaultUnderlyingTokenAddress !== tokenAddress;
-  const ONE_UNIT = toBN('10').pow(tokenDecimals);
+  const isETH = sellTokenAddress === getConfig().ETHEREUM_ADDRESS;
+  const isZapin = vaultUnderlyingTokenAddress !== sellTokenAddress;
+  const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
   const amountInWei = amount.multipliedBy(ONE_UNIT);
 
   if (isETH) return { approved: true };
 
-  const allowance = isZapin ? toBN(tokenAllowancesMap[ZAP_IN_CONTRACT]) : toBN(tokenAllowancesMap[vaultAddress]);
+  const allowance = isZapin
+    ? toBN(sellTokenAllowancesMap[ZAP_IN_CONTRACT])
+    : toBN(sellTokenAllowancesMap[vaultAddress]);
 
   if (amount.isEqualTo(0) && allowance.isEqualTo(0)) {
     return { error: 'TOKEN NOT APPROVED' };

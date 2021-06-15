@@ -101,19 +101,20 @@ const depositVault = createAsyncThunk<
   const decimals = toBN(tokenData.decimals);
   const ONE_UNIT = toBN('10').pow(decimals);
   const { error: depositError } = validateVaultDeposit({
-    amount,
+    sellTokenAmount: amount,
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
     emergencyShutdown: vaultData?.metadata.emergencyShutdown || false,
-    tokenDecimals: tokenData?.decimals ?? '0',
+    sellTokenDecimals: tokenData?.decimals ?? '0',
     userTokenBalance: userTokenData?.balance ?? '0',
+    vaultUnderlyingBalance: vaultData?.underlyingTokenBalance.amount ?? '0',
   });
   const { error: allowanceError } = validateVaultAllowance({
-    vaultUnderlyingTokenAddress: vaultData.tokenId,
-    tokenAddress: tokenAddress,
-    vaultAddress: vaultAddress,
-    tokenDecimals: tokenData.decimals,
-    tokenAllowancesMap,
     amount,
+    vaultAddress: vaultAddress,
+    vaultUnderlyingTokenAddress: vaultData.tokenId,
+    sellTokenAddress: tokenAddress,
+    sellTokenDecimals: tokenData.decimals,
+    sellTokenAllowancesMap: tokenAllowancesMap,
   });
 
   const error = depositError || allowanceError;
