@@ -8,6 +8,9 @@ import {
   CyTokenUserMetadata,
   IronBankMarketDynamic,
   IronBankPosition,
+  Lab,
+  LabDynamic,
+  LabUserMetadata,
   TransactionResponse,
   EthereumAddress,
   Integer,
@@ -100,4 +103,23 @@ export interface SubscriptionProps {
 export interface SubscriptionService {
   subscribe: (props: SubscriptionProps) => void;
   unsubscribe: (props: SubscriptionProps) => void;
+}
+
+export interface LabService {
+  getSupportedLabs: () => Promise<Lab[]>;
+  getLabsDynamicData: () => Promise<LabDynamic[]>;
+  getUserLabsPositions: (props: GetUserLabsPositionsProps) => Promise<Position[]>;
+  getUserLabsMetadata: (props: GetUserLabsMetadataProps) => Promise<LabUserMetadata[]>;
+  // deposit: (props: DepositProps) => Promise<TransactionResponse>;
+  // withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
+  // claim
+  // restake
+}
+
+export interface GetUserLabsPositionsProps {
+  userAddress: EthereumAddress;
+}
+
+export interface GetUserLabsMetadataProps {
+  userAddress: EthereumAddress;
 }
