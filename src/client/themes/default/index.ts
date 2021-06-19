@@ -51,6 +51,7 @@ const sharedTheme: SharedTheme = {
   // globalFont: '"Rubik", sans-serif',
   globalFont: '"SF Pro Display", sans-serif',
   globalMaxWidth: '102rem',
+  globalRadius: '0.8rem',
 
   sideBar: {
     width: '16rem',

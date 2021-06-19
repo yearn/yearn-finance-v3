@@ -4,10 +4,34 @@ import { ReactComponent as AlchemyCertified } from '@assets/images/alchemy-certi
 
 import { Icon, MediumIcon, Link, TwitterIcon, DiscordIcon, GithubIcon, TelegramIcon } from '@components/common';
 import { useAppTranslation } from '@hooks';
+import { device } from '@themes/default';
 
 interface FooterProps {
   className?: string;
 }
+
+const footerLinks = [
+  {
+    link: 'https://twitter.com/iearnfinance',
+    name: 'gov',
+  },
+  {
+    link: 'https://twitter.com/iearnfinance',
+    name: 'docs',
+  },
+  {
+    link: 'https://twitter.com/iearnfinance',
+    name: 'security',
+  },
+  {
+    link: 'https://twitter.com/iearnfinance',
+    name: 'v1',
+  },
+  {
+    link: 'https://twitter.com/iearnfinance',
+    name: 'v2',
+  },
+];
 
 const socialLinks = [
   {
@@ -32,16 +56,6 @@ const socialLinks = [
   },
 ];
 
-const StyledFooter = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  width: 100%;
-  gap: 2rem;
-  flex-wrap: wrap;
-  padding-top: 2rem;
-`;
-
 const SocialSection = styled.div`
   --icon-size: 3rem;
   display: grid;
@@ -49,8 +63,21 @@ const SocialSection = styled.div`
   align-items: center;
   gap: 0.6rem;
   width: 100%;
+  min-width: calc(var(--icon-size) * ${socialLinks.length} / 2 + 3rem);
+`;
+
+const LinkSection = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
   flex: 1;
-  min-width: calc(var(--icon-size) * ${socialLinks.length} + 3rem);
+  font-size: 1.8rem;
+  color: ${({ theme }) => theme.colors.secondary};
+`;
+
+const StyledLink = styled(Link)`
+  padding: 1rem;
 `;
 
 const StyledIconLink = styled(Link)`
@@ -58,11 +85,6 @@ const StyledIconLink = styled(Link)`
   align-items: center;
   justify-content: center;
   border-radius: 100%;
-  transition: filter 200ms ease-in-out;
-
-  &:hover {
-    filter: brightness(120%);
-  }
 `;
 
 const StyledIcon = styled(Icon)`
@@ -70,20 +92,45 @@ const StyledIcon = styled(Icon)`
   height: var(--icon-size);
 `;
 
-const AlchemyLogo = styled(AlchemyCertified)`
-  width: 100%;
-  fill: ${({ theme }) => theme.colors.onBackground};
+const LogoSection = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
-const Copyright = styled.div`
-  display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-  font-weight: bold;
-  font-size: 1.4rem;
+const AlchemyLogo = styled(AlchemyCertified)`
+  width: 17.2rem;
+  fill: ${({ theme }) => theme.colors.secondary};
+`;
 
-  span {
-    margin-top: 0.7rem;
+const StyledFooter = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 4rem;
+  border-radius: ${({ theme }) => theme.globalRadius};
+  background-color: ${({ theme }) => theme.colors.surface};
+  max-width: ${({ theme }) => theme.globalMaxWidth};
+  margin-top: ${({ theme }) => theme.layoutPadding};
+
+  @media ${device.tablet} {
+    grid-template-columns: 1fr;
+
+    ${LinkSection},
+    ${LogoSection} {
+      justify-content: flex-start;
+    }
+  }
+
+  ${StyledLink},
+  ${StyledIconLink} {
+    transition: filter 200ms ease-in-out;
+
+    &:hover {
+      filter: brightness(120%);
+    }
   }
 `;
 
@@ -106,10 +153,15 @@ export const Footer = ({ className }: FooterProps) => {
     <StyledFooter className={className}>
       {socialIcons}
 
-      <Copyright>
+      <LinkSection>
+        {footerLinks.map((footerLink) => {
+          return <StyledLink href={footerLink.link}>{t(`footer.links.${footerLink.name}`)}</StyledLink>;
+        })}
+      </LinkSection>
+
+      <LogoSection>
         <AlchemyLogo />
-        <span>{t('footer.copyright')}</span>
-      </Copyright>
+      </LogoSection>
     </StyledFooter>
   );
 };

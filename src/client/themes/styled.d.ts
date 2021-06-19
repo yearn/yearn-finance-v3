@@ -19,6 +19,7 @@ declare module 'styled-components' {
     devices: Devices;
     globalFont: string;
     globalMaxWidth: string;
+    globalRadius: string;
 
     sideBar: {
       width: string;
