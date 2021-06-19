@@ -41,7 +41,13 @@
     }
   },
   "footer": {
-    "copyright": "© Yearn 2021. Todos los derechos reservados."
+    "links": {
+      "gov": "Gov",
+      "docs": "Docs",
+      "security": "Security",
+      "v1": "v1",
+      "v2": "v2"
+    }
   },
   "landing": {
     "title-1": "EL",
