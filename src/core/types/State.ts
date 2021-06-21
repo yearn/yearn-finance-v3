@@ -168,6 +168,7 @@ export interface LabActionsStatusMap {
 }
 export interface UserLabActionsStatusMap {
   get: Status;
+  getPositions: Status;
 }
 
 export interface LabsState {

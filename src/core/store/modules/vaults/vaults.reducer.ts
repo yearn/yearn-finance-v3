@@ -70,14 +70,14 @@ const vaultsReducer = createReducer(initialState, (builder) => {
       state.statusMap.getVaults = { loading: true };
     })
     .addCase(getVaults.fulfilled, (state, { payload: { vaultsData } }) => {
-      const vaultAddress: string[] = [];
+      const vaultsAddresses: string[] = [];
       vaultsData.forEach((vault) => {
-        vaultAddress.push(vault.address);
+        vaultsAddresses.push(vault.address);
         state.vaultsMap[vault.address] = vault;
         state.statusMap.vaultsActionsStatusMap[vault.address] = initialVaultActionsStatusMap;
         state.statusMap.user.userVaultsActionsStatusMap[vault.address] = initialUserVaultsActionsStatusMap;
       });
-      state.vaultsAddresses = union(state.vaultsAddresses, vaultAddress);
+      state.vaultsAddresses = union(state.vaultsAddresses, vaultsAddresses);
       state.statusMap.getVaults = {};
     })
     .addCase(getVaults.rejected, (state, { error }) => {
@@ -186,7 +186,7 @@ const vaultsReducer = createReducer(initialState, (builder) => {
       });
     })
     .addCase(getVaultsDynamic.rejected, (state, { error, meta }) => {
-      const vaultAddresses: string[] = meta.arg.addresses;
+      const vaultAddresses = meta.arg.addresses;
       vaultAddresses.forEach((address) => {
         state.statusMap.vaultsActionsStatusMap[address].get = { error: error.message };
       });
