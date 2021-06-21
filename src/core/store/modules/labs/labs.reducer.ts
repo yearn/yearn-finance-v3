@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { initialStatus, LabsState, UserLabActionsStatusMap, LabActionsStatusMap } from '@types';
+import { union } from 'lodash';
 import { LabsActions } from './labs.actions';
 
 export const initialLabActionsStatusMap: LabActionsStatusMap = {
@@ -29,7 +30,7 @@ const initialState: LabsState = {
   },
 };
 
-const { initiateLabs } = LabsActions;
+const { initiateLabs, getLabs } = LabsActions;
 
 const labsReducer = createReducer(initialState, (builder) => {
   builder
@@ -41,6 +42,23 @@ const labsReducer = createReducer(initialState, (builder) => {
     })
     .addCase(initiateLabs.rejected, (state, { error }) => {
       state.statusMap.initiateLabs = { error: error.message };
+    })
+    .addCase(getLabs.pending, (state) => {
+      state.statusMap.getLabs = { loading: true };
+    })
+    .addCase(getLabs.fulfilled, (state, { payload: { labsData } }) => {
+      const labsAddresses: string[] = [];
+      labsData.forEach((lab) => {
+        labsAddresses.push(lab.address);
+        state.labsMap[lab.address] = lab;
+        state.statusMap.labsActionsStatusMap[lab.address] = initialLabActionsStatusMap;
+        state.statusMap.user.userLabsActionsStatusMap[lab.address] = initialUserLabsActionsStatusMap;
+      });
+      state.labsAddresses = union(state.labsAddresses, labsAddresses);
+      state.statusMap.getLabs = {};
+    })
+    .addCase(getLabs.rejected, (state, { error }) => {
+      state.statusMap.getLabs = { error: error.message };
     });
 });
 
