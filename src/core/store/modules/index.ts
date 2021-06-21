@@ -31,6 +31,10 @@ import ironBankReducer from './ironBank/ironBank.reducer';
 import { IronBankActions } from './ironBank/ironBank.actions';
 import { IronBankSelectors } from './ironBank/ironBank.selectors';
 
+import labsReducer from './labs/labs.reducer';
+import { LabsActions } from './labs/labs.actions';
+import { LabsSelectors } from './labs/labs.selectors';
+
 import settingsReducer from './settings/settings.reducer';
 import { SettingsActions } from './settings/settings.actions';
 import { SettingsSelectors } from './settings/settings.selectors';
@@ -44,6 +48,7 @@ const rootReducer: Reducer<RootState> = combineReducers({
   wallet: walletReducer,
   tokens: tokensReducer,
   ironBank: ironBankReducer,
+  labs: labsReducer,
   settings: settingsReducer,
 });
 
@@ -59,8 +64,17 @@ export {
   WalletActions,
   TokensActions,
   IronBankActions,
+  LabsActions,
   SettingsActions,
 };
 
 // Selectors
-export { ModalSelectors, VaultsSelectors, WalletSelectors, IronBankSelectors, TokensSelectors, SettingsSelectors };
+export {
+  ModalSelectors,
+  VaultsSelectors,
+  WalletSelectors,
+  IronBankSelectors,
+  TokensSelectors,
+  SettingsSelectors,
+  LabsSelectors,
+};
