@@ -27,10 +27,11 @@ export class LabServiceImpl implements LabService {
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { YVECRV, CRV } = CONTRACT_ADDRESSES;
     const provider = this.web3Provider.getInstanceOf('default');
-    const vaultsResponse = await get(YEARN_API);
-    const pricesResponse = await get(
+    const vaultsPromise = get(YEARN_API);
+    const pricesPromise = get(
       'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault&vs_currencies=usd'
     );
+    const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
 
     // **************** BACKSCRATCHER ****************
     const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
@@ -72,17 +73,25 @@ export class LabServiceImpl implements LabService {
     const { YVECRV, THREECRV } = CONTRACT_ADDRESSES;
     const THREECRV_DECIMALS = 18;
     const provider = this.web3Provider.getInstanceOf('default');
-    const vaultsResponse = await get(YEARN_API);
-    const pricesResponse = await get(
+    const vaultsPromise = get(YEARN_API);
+    const pricesPromise = get(
       'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault,lp-3pool-curve&vs_currencies=usd'
     );
+    const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
 
     // **************** BACKSCRATCHER ****************
     const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
-    const index = await backscratcherContract.index();
-    const supplyIndex = await backscratcherContract.supplyIndex(userAddress);
-    const balanceOf = await backscratcherContract.balanceOf(userAddress);
-    const cached = await backscratcherContract.claimable(userAddress);
+    const indexPromise = backscratcherContract.index();
+    const supplyIndexPromise = backscratcherContract.supplyIndex(userAddress);
+    const balanceOfPromise = backscratcherContract.balanceOf(userAddress);
+    const cachedPromise = backscratcherContract.claimable(userAddress);
+    const [index, supplyIndex, balanceOf, cached] = await Promise.all([
+      indexPromise,
+      supplyIndexPromise,
+      balanceOfPromise,
+      cachedPromise,
+    ]);
+
     const claimable = toBN(index.toString())
       .minus(supplyIndex.toString())
       .times(balanceOf.toString())
