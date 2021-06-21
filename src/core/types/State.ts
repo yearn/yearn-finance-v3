@@ -1,6 +1,6 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { Position, Token, Vault, Integer, Balance, IronBankMarket } from '@types';
+import { Position, Token, Vault, Integer, Balance, IronBankMarket, Lab } from '@types';
 import { EthereumAddress } from './Ethereum';
 import { CyTokenUserMetadata, IronBankPosition } from '@yfi/sdk';
 
@@ -13,6 +13,7 @@ export interface RootState {
   wallet: WalletState;
   tokens: TokensState;
   ironBank: IronBankState;
+  labs: LabsState;
   settings: SettingsState;
 }
 
@@ -154,5 +155,36 @@ export interface SettingsState {
   devMode: {
     enabled: boolean;
     walletAddressOverride: EthereumAddress;
+  };
+}
+
+export interface LabsPositionsMap {
+  DEPOSIT: Position;
+  YIELD: Position;
+}
+
+export interface LabActionsStatusMap {
+  get: Status;
+}
+export interface UserLabActionsStatusMap {
+  get: Status;
+}
+
+export interface LabsState {
+  labsAddresses: string[];
+  labsMap: { [address: string]: Lab };
+  selectedLabAddress: EthereumAddress | undefined;
+  user: {
+    userLabsPositionsMap: { [address: string]: LabsPositionsMap };
+    labsAllowancesMap: { [labAddress: string]: AllowancesMap };
+  };
+  statusMap: {
+    initiateLabs: Status;
+    getLabs: Status;
+    labsActionsStatusMap: { [labAddress: string]: LabActionsStatusMap };
+    user: {
+      getUserLabsPositions: Status;
+      userLabsActionsStatusMap: { [labAddress: string]: UserLabActionsStatusMap };
+    };
   };
 }
