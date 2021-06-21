@@ -47,7 +47,7 @@ export class LabServiceImpl implements LabService {
       version: backscratcherData.version,
       symbol: backscratcherData.symbol,
       decimals: backscratcherData.decimals.toString(),
-      tokenId: backscratcherData.token.address,
+      tokenId: CRV,
       // TODO: TBD. BACKSCRATCHER TVL IS NOT CONSISTENT AMONG DIFFERENT SOURCES. FETCH FROM USDC ORACLE
       underlyingTokenBalance: {
         amount: totalSupply.toString(),
@@ -70,7 +70,7 @@ export class LabServiceImpl implements LabService {
   public async getUserLabsPositions(props: GetUserLabsPositionsProps): Promise<Position[]> {
     const { userAddress } = props;
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
-    const { YVECRV, THREECRV } = CONTRACT_ADDRESSES;
+    const { YVECRV, CRV, THREECRV } = CONTRACT_ADDRESSES;
     const THREECRV_DECIMALS = 18;
     const provider = this.web3Provider.getInstanceOf('default');
     const vaultsPromise = get(YEARN_API);
@@ -105,7 +105,7 @@ export class LabServiceImpl implements LabService {
 
     const backscratcherDepositPosition: Position = {
       assetAddress: YVECRV,
-      tokenAddress: backscratcherData.token.address,
+      tokenAddress: CRV,
       typeId: 'DEPOSIT',
       balance: balanceOf.toString(),
       underlyingTokenBalance: {
