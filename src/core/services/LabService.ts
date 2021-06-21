@@ -36,6 +36,7 @@ export class LabServiceImpl implements LabService {
     const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
     const totalSupply = await backscratcherContract.totalSupply();
     const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
+    if (!backscratcherData) throw new Error(`yveCRV vault not found on ${YEARN_API} response`);
     const crvPrice = pricesResponse.data['curve-dao-token']['usd'];
     const backscratcherLab: Lab = {
       address: YVECRV,
@@ -89,6 +90,7 @@ export class LabServiceImpl implements LabService {
       .plus(cached.toString())
       .toFixed(0);
     const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
+    if (!backscratcherData) throw new Error(`yveCRV vault not found on ${YEARN_API} response`);
     const crvPrice = pricesResponse.data['curve-dao-token']['usd'];
     const threeCrvPrice = pricesResponse.data['lp-3pool-curve']['usd'];
 
