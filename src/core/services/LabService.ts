@@ -38,7 +38,7 @@ export class LabServiceImpl implements LabService {
     const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
     const crvPrice = pricesResponse.data['curve-dao-token']['usd'];
     const backscratcherLab: Lab = {
-      address: backscratcherData.address,
+      address: YVECRV,
       typeId: 'LAB',
       token: CRV,
       name: backscratcherData.name,
@@ -48,8 +48,8 @@ export class LabServiceImpl implements LabService {
       tokenId: backscratcherData.token.address,
       // TODO: TBD. BACKSCRATCHER TVL IS NOT CONSISTENT AMONG DIFFERENT SOURCES. FETCH FROM USDC ORACLE
       underlyingTokenBalance: {
-        amount: totalSupply,
-        amountUsdc: toBN(normalizeAmount(totalSupply, backscratcherData.decimals))
+        amount: totalSupply.toString(),
+        amountUsdc: toBN(normalizeAmount(totalSupply.toString(), backscratcherData.decimals))
           .times(crvPrice)
           .times(10 ** USDC_DECIMALS)
           .toFixed(0),
@@ -79,14 +79,14 @@ export class LabServiceImpl implements LabService {
     // **************** BACKSCRATCHER ****************
     const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
     const index = await backscratcherContract.index();
-    const supplyIndex = await backscratcherContract.supplyIndex();
+    const supplyIndex = await backscratcherContract.supplyIndex(userAddress);
     const balanceOf = await backscratcherContract.balanceOf(userAddress);
-    const cached = await backscratcherContract.claimable();
-    const claimable = toBN(index)
-      .minus(supplyIndex)
-      .times(balanceOf)
+    const cached = await backscratcherContract.claimable(userAddress);
+    const claimable = toBN(index.toString())
+      .minus(supplyIndex.toString())
+      .times(balanceOf.toString())
       .div(10 ** 18)
-      .plus(cached)
+      .plus(cached.toString())
       .toFixed(0);
     const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
     const crvPrice = pricesResponse.data['curve-dao-token']['usd'];
@@ -96,10 +96,10 @@ export class LabServiceImpl implements LabService {
       assetAddress: YVECRV,
       tokenAddress: backscratcherData.token.address,
       typeId: 'DEPOSIT',
-      balance: balanceOf,
+      balance: balanceOf.toString(),
       underlyingTokenBalance: {
-        amount: balanceOf,
-        amountUsdc: toBN(normalizeAmount(balanceOf, backscratcherData.decimals))
+        amount: balanceOf.toString(), // TODO: VERIFY IF 1 YVECRV = 1 CRV
+        amountUsdc: toBN(normalizeAmount(balanceOf.toString(), backscratcherData.decimals))
           .times(crvPrice)
           .times(10 ** USDC_DECIMALS)
           .toFixed(0),
@@ -112,10 +112,10 @@ export class LabServiceImpl implements LabService {
       assetAddress: YVECRV,
       tokenAddress: THREECRV,
       typeId: 'YIELD',
-      balance: claimable, // TODO: VERIFY
+      balance: '0', // TODO: NOTE: IF NEEDED, SHOULD HAVE CLAIMABLE 3CRV BALANCE EXPRESSED IN YVECRV
       underlyingTokenBalance: {
-        amount: claimable,
-        amountUsdc: toBN(normalizeAmount(claimable, THREECRV_DECIMALS))
+        amount: claimable.toString(),
+        amountUsdc: toBN(normalizeAmount(claimable.toString(), THREECRV_DECIMALS))
           .times(threeCrvPrice)
           .times(10 ** USDC_DECIMALS)
           .toFixed(0),
