@@ -30,7 +30,7 @@ const initialState: LabsState = {
   },
 };
 
-const { initiateLabs, getLabs } = LabsActions;
+const { initiateLabs, getLabs, getLabsDynamic } = LabsActions;
 
 const labsReducer = createReducer(initialState, (builder) => {
   builder
@@ -59,6 +59,30 @@ const labsReducer = createReducer(initialState, (builder) => {
     })
     .addCase(getLabs.rejected, (state, { error }) => {
       state.statusMap.getLabs = { error: error.message };
+    })
+    .addCase(getLabsDynamic.pending, (state, { meta }) => {
+      const labsAddresses = meta.arg.addresses;
+      labsAddresses.forEach((address) => {
+        state.statusMap.labsActionsStatusMap[address].get = { loading: true };
+      });
+    })
+    .addCase(getLabsDynamic.fulfilled, (state, { meta, payload: { labsDynamicData } }) => {
+      const labsAddresses = meta.arg.addresses;
+      labsAddresses.forEach((address) => (state.statusMap.labsActionsStatusMap[address].get = {}));
+
+      labsDynamicData.forEach((labDynamicData) => {
+        const labAddress = labDynamicData.address;
+        state.labsMap[labAddress] = {
+          ...state.labsMap[labAddress],
+          ...labDynamicData,
+        };
+      });
+    })
+    .addCase(getLabsDynamic.rejected, (state, { error, meta }) => {
+      const labsAddresses = meta.arg.addresses;
+      labsAddresses.forEach((address) => {
+        state.statusMap.labsActionsStatusMap[address].get = { error: error.message };
+      });
     });
 });
 
