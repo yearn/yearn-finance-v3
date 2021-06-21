@@ -20,17 +20,13 @@ export interface Env {
 export interface Constants {
   ETHEREUM_ADDRESS: EthereumAddress;
   MAX_UINT256: Wei;
+  YEARN_API: string;
   WEB3_PROVIDER_HTTPS: string;
   WEB3_PROVIDER_WSS: string;
   FANTOM_PROVIDER_HTTPS: string;
   LOCAL_PROVIDER_HTTPS: string;
   CONTRACT_ADDRESSES: {
-    oracle: string;
-    lens: string;
-    registryV2Adapter: string;
-    helper: string;
-    zapIn: string;
-    zapOut: string;
+    [KEY: string]: string;
   };
   SLIPPAGE_OPTIONS: number[];
   DEFAULT_SLIPPAGE: number;
