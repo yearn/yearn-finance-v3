@@ -1,6 +1,6 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { Position, Token, Vault, Integer, Balance, IronBankMarket } from '@types';
+import { Position, Token, Vault, Integer, Balance, IronBankMarket, Lab } from '@types';
 import { EthereumAddress } from './Ethereum';
 import { CyTokenUserMetadata, IronBankPosition } from '@yfi/sdk';
 
@@ -172,7 +172,7 @@ export interface UserLabActionsStatusMap {
 
 export interface LabsState {
   labsAddresses: string[];
-  labsMap: { [address: string]: any }; // TODO add Lab type when merged with xgambito code.
+  labsMap: { [address: string]: Lab };
   selectedLabAddress: EthereumAddress | undefined;
   user: {
     userLabsPositionsMap: { [address: string]: LabsPositionsMap };
