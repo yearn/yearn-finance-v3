@@ -13,6 +13,7 @@ import {
 } from '@types';
 import { toBN, normalizeAmount, USDC_DECIMALS } from '@utils';
 import backscratcherAbi from './contracts/backscratcher.json';
+import yvBoostAbi from './contracts/yvBoost.json';
 
 export class LabServiceImpl implements LabService {
   private web3Provider: Web3Provider;
@@ -25,7 +26,7 @@ export class LabServiceImpl implements LabService {
 
   public async getSupportedLabs(): Promise<Lab[]> {
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
-    const { YVECRV, CRV } = CONTRACT_ADDRESSES;
+    const { YVECRV, CRV, YVBOOST } = CONTRACT_ADDRESSES;
     const provider = this.web3Provider.getInstanceOf('default');
     const vaultsPromise = get(YEARN_API);
     const pricesPromise = get(
@@ -58,9 +59,35 @@ export class LabServiceImpl implements LabService {
       },
       metadata: {},
     };
+
+    // **************** YVBOOST ****************
+    const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
+    const totalAssets = await yvBoostContract.totalAssets();
+    console.log('YVBOOST????????');
+    const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
+    if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+    const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
+    const yvBoostLab: Lab = {
+      address: YVBOOST,
+      typeId: 'LAB',
+      token: YVECRV,
+      name: yvBoostData.name,
+      version: yvBoostData.version,
+      symbol: yvBoostData.symbol,
+      decimals: yvBoostData.decimals.toString(),
+      tokenId: YVECRV,
+      underlyingTokenBalance: {
+        amount: totalAssets.toString(),
+        amountUsdc: toBN(normalizeAmount(totalAssets.toString(), yvBoostData.decimals))
+          .times(yveCrvPrice)
+          .times(10 ** USDC_DECIMALS)
+          .toFixed(0),
+      },
+      metadata: {},
+    };
     // ********************************
 
-    return [backscratcherLab];
+    return [backscratcherLab, yvBoostLab];
   }
 
   public async getLabsDynamicData(): Promise<LabDynamic[]> {
@@ -70,7 +97,7 @@ export class LabServiceImpl implements LabService {
   public async getUserLabsPositions(props: GetUserLabsPositionsProps): Promise<Position[]> {
     const { userAddress } = props;
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
-    const { YVECRV, CRV, THREECRV } = CONTRACT_ADDRESSES;
+    const { YVECRV, CRV, THREECRV, YVBOOST } = CONTRACT_ADDRESSES;
     const THREECRV_DECIMALS = 18;
     const provider = this.web3Provider.getInstanceOf('default');
     const vaultsPromise = get(YEARN_API);
@@ -136,9 +163,44 @@ export class LabServiceImpl implements LabService {
     };
 
     const backscratcherPosition: Position[] = [backscratcherDepositPosition, backscratcherYieldPosition];
+
+    // **************** YVBOOST ****************
+    const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
+    const yvBoostBalanceOfPromise = yvBoostContract.balanceOf(userAddress);
+    const yvBoostPricePerSharePromise = yvBoostContract.pricePerShare();
+    const [yvBoostBalanceOf, yvBoostPricePerShare] = await Promise.all([
+      yvBoostBalanceOfPromise,
+      yvBoostPricePerSharePromise,
+    ]);
+
+    const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
+    if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+    const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
+    const underlyingBalanceOf = normalizeAmount(
+      toBN(yvBoostBalanceOf.toString()).times(yvBoostPricePerShare.toString()).toFixed(0),
+      yvBoostData.decimals
+    );
+
+    const yvBoostDepositPosition: Position = {
+      assetAddress: YVBOOST,
+      tokenAddress: YVECRV,
+      typeId: 'DEPOSIT',
+      balance: yvBoostBalanceOf.toString(),
+      underlyingTokenBalance: {
+        amount: underlyingBalanceOf,
+        amountUsdc: toBN(normalizeAmount(underlyingBalanceOf, yvBoostData.decimals))
+          .times(yveCrvPrice)
+          .times(10 ** USDC_DECIMALS)
+          .toFixed(0),
+      },
+      assetAllowances: [],
+      tokenAllowances: [],
+    };
+
+    const yvBoostPosition: Position[] = [yvBoostDepositPosition];
     // ********************************
 
-    return [...backscratcherPosition];
+    return [...backscratcherPosition, ...yvBoostPosition];
   }
 
   public async getUserLabsMetadata(props: GetUserLabsMetadataProps): Promise<LabUserMetadata[]> {
