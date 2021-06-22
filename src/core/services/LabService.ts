@@ -63,7 +63,6 @@ export class LabServiceImpl implements LabService {
     // **************** YVBOOST ****************
     const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
     const totalAssets = await yvBoostContract.totalAssets();
-    console.log('YVBOOST????????');
     const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
     if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
     const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
