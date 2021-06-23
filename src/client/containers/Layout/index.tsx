@@ -77,18 +77,30 @@ export const Layout: FC = ({ children }) => {
   // TODO: MOVE THIS LOGIC TO THUNKS
   useEffect(() => {
     if (selectedAddress) {
-      switch (path) {
-        default:
-          // clean old data
-          dispatch(TokensActions.clearUserTokenState());
-          dispatch(VaultsActions.clearUserData());
-          dispatch(IronBankActions.clearUserData());
+      // clean old data
+      dispatch(TokensActions.clearUserTokenState());
+      dispatch(VaultsActions.clearUserData());
+      dispatch(IronBankActions.clearUserData());
 
-          // fetch new data
-          dispatch(TokensActions.getUserTokens({}));
+      // fetch new data
+      dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
+      switch (path) {
+        case 'home':
           dispatch(VaultsActions.getUserVaultsPositions({}));
           dispatch(IronBankActions.getUserMarketsPositions({}));
           dispatch(IronBankActions.getUserMarketsMetadata({}));
+          break;
+        case 'vaults':
+          dispatch(VaultsActions.getUserVaultsPositions({}));
+          break;
+        case 'wallet':
+          dispatch(VaultsActions.getUserVaultsPositions({}));
+          break;
+        case 'ironbank':
+          dispatch(IronBankActions.getUserMarketsPositions({}));
+          dispatch(IronBankActions.getUserMarketsMetadata({}));
+          break;
+        default:
           break;
       }
     }
