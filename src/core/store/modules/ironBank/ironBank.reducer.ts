@@ -26,7 +26,7 @@ export const initialUserMarketsActionsMap: UserMarketActionsStatusMap = {
   getMetadata: initialStatus,
 };
 
-const initialState: IronBankState = {
+export const ironBankInitialState: IronBankState = {
   marketAddresses: [],
   marketsMap: {},
   selectedMarketAddress: '',
@@ -94,7 +94,7 @@ function isRejectedTxAction(action: AnyAction): action is RejectedAction {
   );
 }
 
-const ironBankReducer = createReducer(initialState, (builder) => {
+const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
   builder
     .addCase(initiateIronBank.pending, (state) => {
       state.statusMap.initiateIronBank = { loading: true };
