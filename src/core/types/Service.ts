@@ -21,7 +21,7 @@ import {
 export interface UserService {}
 
 export interface VaultService {
-  getSupportedVaults: () => Promise<Vault[]>;
+  getSupportedVaults: (props: GetSupportedVaultsProps) => Promise<Vault[]>;
   getVaultsDynamicData: (props: any) => Promise<VaultDynamic[]>;
   getUserVaultsPositions: ({
     userAddress,
@@ -48,6 +48,9 @@ export interface TokenService {
   // getTokenRates:
 }
 
+export interface GetSupportedVaultsProps {
+  addresses?: EthereumAddress[];
+}
 export interface DepositProps {
   accountAddress: EthereumAddress;
   tokenAddress: EthereumAddress;
