@@ -25,9 +25,10 @@ const getLabsDynamic = createAsyncThunk<{ labsDynamicData: LabDynamic[] }, { add
   'labs/getLabsDynamic',
   async ({ addresses }, { extra, dispatch }) => {
     const { labService } = extra.services;
-    dispatch(getYveCrvExtraData({ fetchDynamicData: true }));
-    // const labsDynamicData = await labService.getLabsDynamicData(addresses); // TODO pass addresses. waitint to xgaminto to merge his stuff to avoid conficts y lab service
-    const labsDynamicData = await labService.getLabsDynamicData();
+    const [labsDynamicData] = await Promise.all([
+      labService.getLabsDynamicData(), // TODO pass addresses. waitint to xgaminto to merge his stuff to avoid conficts y lab service
+      dispatch(getYveCrvExtraData({ fetchDynamicData: true })),
+    ]);
     return { labsDynamicData };
   }
 );
@@ -42,9 +43,10 @@ const getUserLabsPositions = createAsyncThunk<
   if (!userAddress) {
     throw new Error('WALLET NOT CONNECTED');
   }
-  dispatch(getUserYveCrvExtraData());
-  // const userLabsPositions = await labService.getUserLabsPositions({ userAddress, labsAddresses });
-  const userLabsPositions = await labService.getUserLabsPositions({ userAddress }); // TODO pass addresses. waitint to xgaminto to merge his stuff to avoid conficts y lab service
+  const [userLabsPositions] = await Promise.all([
+    labService.getUserLabsPositions({ userAddress }), // TODO pass addresses. waitint to xgaminto to merge his stuff to avoid conficts y lab service
+    dispatch(getUserYveCrvExtraData()),
+  ]);
   return { userLabsPositions };
 });
 
@@ -53,10 +55,10 @@ const getYveCrvExtraData = createAsyncThunk<void, { fetchDynamicData?: boolean }
   async ({ fetchDynamicData }, { dispatch }) => {
     const YVTHREECRV = getConstants().CONTRACT_ADDRESSES.YVTHREECRV;
     if (fetchDynamicData) {
-      dispatch(VaultsActions.getVaultsDynamic({ addresses: [YVTHREECRV] }));
+      await dispatch(VaultsActions.getVaultsDynamic({ addresses: [YVTHREECRV] }));
       return;
     }
-    dispatch(VaultsActions.getVaults({ addresses: [YVTHREECRV] }));
+    await dispatch(VaultsActions.getVaults({ addresses: [YVTHREECRV] }));
   }
 );
 
@@ -64,7 +66,7 @@ const getUserYveCrvExtraData = createAsyncThunk<void, void, ThunkAPI>(
   'labs/getUserYveCrvExtraData',
   async (_args, { dispatch }) => {
     const YVTHREECRV = getConstants().CONTRACT_ADDRESSES.YVTHREECRV;
-    dispatch(VaultsActions.getUserVaultsPositions({ vaultAddresses: [YVTHREECRV] }));
+    await dispatch(VaultsActions.getUserVaultsPositions({ vaultAddresses: [YVTHREECRV] }));
   }
 );
 
