@@ -9,6 +9,7 @@ import {
   Vault,
   VaultDynamic,
   TransactionResponse,
+  GetSupportedVaultsProps,
 } from '@types';
 
 export class VaultServiceImpl implements VaultService {
@@ -20,9 +21,9 @@ export class VaultServiceImpl implements VaultService {
     this.yearnSdk = yearnSdk;
   }
 
-  public async getSupportedVaults(): Promise<Vault[]> {
+  public async getSupportedVaults({ addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
     const yearn = this.yearnSdk;
-    return await yearn.vaults.get();
+    return await yearn.vaults.get(addresses);
   }
 
   public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamic[]> {
