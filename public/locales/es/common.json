@@ -30,9 +30,10 @@
     "save": "Save",
     "borrow": "Borrow",
     "home": "Inicio",
-    "vault": "Vault",
-    "vaults": "Vaults",
     "wallet": "Billetera",
+    "vaults": "Vaults",
+    "vault": "Vault",
+    "labs": "Labs",
     "ironbank": "Iron Bank",
     "settings": "Ajustes",
     "copyright": {

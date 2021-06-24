@@ -6,14 +6,15 @@ import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
 
 import {
-  HomeIcon,
   Icon,
   Logo,
-  VaultIcon,
-  WalletIcon,
   CollapseIcon,
-  SettingsIcon,
+  HomeIcon,
+  WalletIcon,
+  VaultIcon,
+  LabsIcon,
   IronBankIcon,
+  SettingsIcon,
 } from '@components/common';
 
 const linkHoverFilter = 'brightness(90%)';
@@ -155,6 +156,11 @@ export const NavSidebar = () => {
       to: '/vaults',
       text: t('navigation.vaults'),
       icon: VaultIcon,
+    },
+    {
+      to: '/labs',
+      text: t('navigation.labs'),
+      icon: LabsIcon,
     },
     {
       to: '/ironbank',
