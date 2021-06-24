@@ -21,15 +21,15 @@ const clearUserData = createAction<void>('vaults/clearUserData');
 const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',
   async (_arg, { dispatch }) => {
-    await dispatch(getVaults());
+    await dispatch(getVaults({}));
   }
 );
 
-const getVaults = createAsyncThunk<{ vaultsData: Vault[] }, string | undefined, ThunkAPI>(
+const getVaults = createAsyncThunk<{ vaultsData: Vault[] }, { addresses?: string[] }, ThunkAPI>(
   'vaults/getVaults',
-  async (_arg, { extra }) => {
+  async ({ addresses }, { extra }) => {
     const { vaultService } = extra.services;
-    const vaultsData = await vaultService.getSupportedVaults();
+    const vaultsData = await vaultService.getSupportedVaults({ addresses });
     return { vaultsData };
   }
 );
