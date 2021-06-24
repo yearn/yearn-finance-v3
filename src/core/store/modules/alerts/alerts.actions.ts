@@ -10,9 +10,6 @@ export interface AlertProps {
   timeout?: number;
 }
 
-// const openAlert = createAction<{ modalName: ModalName; modalProps?: any }>('modals/openModal');
-// const closeAlert = createAction('modals/closeModal');
-
 const openAlert = createAsyncThunk<
   { alert: Alert },
   { message: string; type?: AlertTypes; persistent?: boolean; timeout?: number },
