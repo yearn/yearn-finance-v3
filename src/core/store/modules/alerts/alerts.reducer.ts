@@ -15,7 +15,7 @@ const alertsReducer = createReducer(alertsInitialState, (builder) => {
       state.lastId = alert.id;
       state.alertsList.push(alert);
     })
-    .addCase(closeAlert.fulfilled, (state, { payload: { alertId } }) => {
+    .addCase(closeAlert, (state, { payload: { alertId } }) => {
       const alertIndex = state.alertsList.findIndex((alert) => alert.id === alertId);
 
       if (alertIndex > -1) {

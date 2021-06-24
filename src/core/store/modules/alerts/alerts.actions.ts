@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import { Alert, AlertTypes } from '@types';
 import { getConfig } from '@config';
@@ -9,6 +9,8 @@ export interface AlertProps {
   persistent?: boolean;
   timeout?: number;
 }
+
+const closeAlert = createAction<{ alertId: number }>('alerts/closeAlert');
 
 const openAlert = createAsyncThunk<
   { alert: Alert },
@@ -32,13 +34,6 @@ const openAlert = createAsyncThunk<
   }
   return { alert };
 });
-
-const closeAlert = createAsyncThunk<{ alertId: number }, { alertId: number }, ThunkAPI>(
-  'alerts/closeAlert',
-  async ({ alertId }) => {
-    return { alertId };
-  }
-);
 
 export const AlertsActions = {
   openAlert,
