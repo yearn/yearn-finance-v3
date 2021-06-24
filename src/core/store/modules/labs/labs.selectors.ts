@@ -26,7 +26,8 @@ const selectYveCrvLab = createSelector(
     selectCrvTokenAllowancesMap,
   ],
   (labData, userPositions, labAllowances, crvTokenData, userCrvTokenData, crvTokenAllowancesMap) => {
-    const lab = {
+    if (!labData) return undefined;
+    return {
       address: labData.address,
       name: labData.name,
       labBalance: labData.underlyingTokenBalance.amount,
@@ -36,14 +37,14 @@ const selectYveCrvLab = createSelector(
       allowancesMap: labAllowances ?? {},
       pricePerShare: '1', // TODO use labData?.metadata.pricePerShare,
       DEPOSIT: {
-        userBalance: userPositions.DEPOSIT?.balance ?? '0',
-        userDeposited: userPositions.DEPOSIT?.underlyingTokenBalance.amount ?? '0',
-        userDepositedUsdc: userPositions.DEPOSIT?.underlyingTokenBalance.amountUsdc ?? '0',
+        userBalance: userPositions?.DEPOSIT?.balance ?? '0',
+        userDeposited: userPositions?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',
+        userDepositedUsdc: userPositions?.DEPOSIT?.underlyingTokenBalance.amountUsdc ?? '0',
       },
       YIELD: {
-        userBalance: userPositions.YIELD?.balance ?? '0',
-        userDeposited: userPositions.YIELD?.underlyingTokenBalance.amount ?? '0',
-        userDepositedUsdc: userPositions.YIELD?.underlyingTokenBalance.amountUsdc ?? '0',
+        userBalance: userPositions?.YIELD?.balance ?? '0',
+        userDeposited: userPositions?.YIELD?.underlyingTokenBalance.amount ?? '0',
+        userDepositedUsdc: userPositions?.YIELD?.underlyingTokenBalance.amountUsdc ?? '0',
       },
       token: {
         crv: {
