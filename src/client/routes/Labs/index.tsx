@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { VaultsSelectors, WalletSelectors } from '@store';
+import { TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
 import {
   SummaryCard,
   DetailCard,
@@ -15,6 +15,7 @@ import {
 } from '@components/app';
 import { formatPercent, humanizeAmount, normalizePercent, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
 import { Box, SpinnerLoading, SearchInput } from '@components/common';
+import { getConstants } from '../../../config/constants';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -37,6 +38,7 @@ const StyledInfoCard = styled(InfoCard)`
 export const Labs = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
+  const { CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
   const history = useHistory();
   const dispatch = useAppDispatch();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -47,6 +49,12 @@ export const Labs = () => {
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
 
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
+
+  const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
+  const crvToken = tokenSelectorFilter(CRV);
+
+  const vaultSelectorFilter = useAppSelector(VaultsSelectors.selectVault);
+  const yv3CrvVault = vaultSelectorFilter(YVTHREECRV);
 
   useEffect(() => {
     setFilteredVaults(opportunities);

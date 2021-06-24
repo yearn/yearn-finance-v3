@@ -1,6 +1,17 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState, Status, VaultView, VaultActionsStatusMap } from '@types';
+import {
+  RootState,
+  Status,
+  VaultView,
+  VaultActionsStatusMap,
+  Vault,
+  Token,
+  Balance,
+  AllowancesMap,
+  VaultPositionsMap,
+} from '@types';
 import BigNumber from 'bignumber.js';
+import { memoize } from 'lodash';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 const selectVaultsState = (state: RootState) => state.vaults;
@@ -40,39 +51,16 @@ const selectVaults = createSelector(
     const vaults = vaultsAddresses.map((address) => {
       const vaultData = vaultsMap[address];
       const tokenData = tokensMap[vaultData.tokenId];
-      const userVaultDataDeposit = userVaultsPositionsMap[address]?.DEPOSIT;
       const userTokenData = userTokensMap[vaultData.tokenId];
       const allowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
-      const currentAllowance = allowancesMap[address] ?? '0';
-      return {
-        address: vaultData.address,
-        name: vaultData.name,
-        vaultBalance: vaultData.underlyingTokenBalance.amount,
-        decimals: vaultData.decimals,
-        vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
-        depositLimit: vaultData?.metadata.depositLimit ?? '0',
-        emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
-        apyData: vaultData.metadata.apy?.recommended.toString() ?? '0',
-        allowancesMap: vaultsAllowancesMap[address] ?? {},
-        approved: new BigNumber(currentAllowance).gt(0),
-        pricePerShare: vaultData?.metadata.pricePerShare,
-        DEPOSIT: {
-          userBalance: userVaultDataDeposit?.balance ?? '0',
-          userDeposited: userVaultDataDeposit?.underlyingTokenBalance.amount ?? '0',
-          userDepositedUsdc: userVaultDataDeposit?.underlyingTokenBalance.amountUsdc ?? '0',
-        },
-        token: {
-          address: tokenData?.address,
-          name: tokenData?.name,
-          symbol: tokenData?.symbol,
-          decimals: parseInt(tokenData?.decimals),
-          icon: tokenData?.icon,
-          balance: userTokenData?.balance ?? '0',
-          balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-          priceUsdc: tokenData?.priceUsdc ?? '0',
-          allowancesMap: allowancesMap,
-        },
-      };
+      return createVault({
+        vaultData,
+        tokenData,
+        userTokenData,
+        userVaultPositionsMap: userVaultsPositionsMap[address],
+        vaultsAllowancesMap,
+        allowancesMap,
+      });
     });
     return vaults;
   }
@@ -141,6 +129,76 @@ const selectVaultsStatus = createSelector(
   }
 );
 
+const selectVault = createSelector(
+  [
+    selectVaultsMap,
+    selectTokensMap,
+    selectUserVaultsPositionsMap,
+    selectUserTokensMap,
+    selectVaultsAllowancesMap,
+    selectUserTokensAllowancesMap,
+  ],
+  (vaultsMap, tokensMap, userVaultsPositionsMap, userTokensMap, vaultsAllowancesMap, userTokensAllowancesMap) =>
+    memoize((vaultAddress: string) => {
+      const vaultData = vaultsMap[vaultAddress];
+      if (!vaultData) return undefined;
+      const tokenData = tokensMap[vaultData.tokenId];
+      const userTokenData = userTokensMap[vaultData.tokenId];
+      const allowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
+      return createVault({
+        vaultData,
+        tokenData,
+        userTokenData,
+        userVaultPositionsMap: userVaultsPositionsMap[vaultAddress],
+        vaultsAllowancesMap,
+        allowancesMap,
+      });
+    })
+);
+
+interface CreateVaultProps {
+  vaultData: Vault;
+  tokenData: Token;
+  userTokenData: Balance;
+  allowancesMap: AllowancesMap;
+  userVaultPositionsMap: VaultPositionsMap;
+  vaultsAllowancesMap: any;
+}
+function createVault(props: CreateVaultProps) {
+  const { allowancesMap, tokenData, userTokenData, vaultData, vaultsAllowancesMap, userVaultPositionsMap } = props;
+  const vaultAddress = vaultData.address;
+  const currentAllowance = allowancesMap[vaultAddress] ?? '0';
+  return {
+    address: vaultData.address,
+    name: vaultData.name,
+    vaultBalance: vaultData.underlyingTokenBalance.amount,
+    decimals: vaultData.decimals,
+    vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
+    depositLimit: vaultData?.metadata.depositLimit ?? '0',
+    emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
+    apyData: vaultData.metadata.apy?.recommended.toString() ?? '0',
+    allowancesMap: vaultsAllowancesMap[vaultAddress] ?? {},
+    approved: new BigNumber(currentAllowance).gt(0),
+    pricePerShare: vaultData?.metadata.pricePerShare,
+    DEPOSIT: {
+      userBalance: userVaultPositionsMap?.DEPOSIT?.balance ?? '0',
+      userDeposited: userVaultPositionsMap?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',
+      userDepositedUsdc: userVaultPositionsMap?.DEPOSIT?.underlyingTokenBalance.amountUsdc ?? '0',
+    },
+    token: {
+      address: tokenData?.address,
+      name: tokenData?.name,
+      symbol: tokenData?.symbol,
+      decimals: parseInt(tokenData?.decimals),
+      icon: tokenData?.icon,
+      balance: userTokenData?.balance ?? '0',
+      balanceUsdc: userTokenData?.balanceUsdc ?? '0',
+      priceUsdc: tokenData?.priceUsdc ?? '0',
+      allowancesMap: allowancesMap,
+    },
+  };
+}
+
 export const VaultsSelectors = {
   selectVaultsState,
   selectVaults,
@@ -158,4 +216,5 @@ export const VaultsSelectors = {
   selectSummaryData,
   selectRecomendations,
   selectVaultsStatus,
+  selectVault,
 };

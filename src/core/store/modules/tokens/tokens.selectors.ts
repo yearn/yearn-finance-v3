@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 
 import { RootState, Status, TokenView } from '@types';
 import { getConfig } from '@config';
+import { memoize } from 'lodash';
 
 const selectTokensState = (state: RootState) => state.tokens;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
@@ -72,6 +73,28 @@ const selectWalletTokensStatus = createSelector(
   }
 );
 
+const selectToken = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user) =>
+  memoize(
+    (tokenAddress: string): TokenView => {
+      const { userTokensMap, userTokensAllowancesMap } = user; // use specific selectors, is not a big performance improvement in this case
+      const tokenData = tokensMap[tokenAddress];
+      const userTokenData = userTokensMap[tokenAddress];
+      const allowancesMap = userTokensAllowancesMap[tokenAddress] ?? {};
+      return {
+        address: tokenData?.address,
+        name: tokenData?.name,
+        symbol: tokenData?.symbol,
+        decimals: parseInt(tokenData?.decimals),
+        icon: tokenData?.icon,
+        balance: userTokenData?.balance ?? '0',
+        balanceUsdc: userTokenData?.balanceUsdc ?? '0',
+        allowancesMap: allowancesMap,
+        priceUsdc: tokenData?.priceUsdc ?? '0',
+      };
+    }
+  )
+);
+
 export const TokensSelectors = {
   selectTokensState,
   selectTokensMap,
@@ -82,4 +105,5 @@ export const TokensSelectors = {
   selectSummaryData,
   selectZapOutTokens,
   selectWalletTokensStatus,
+  selectToken,
 };
