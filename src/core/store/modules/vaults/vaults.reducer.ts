@@ -23,7 +23,7 @@ export const initialUserVaultsActionsStatusMap: UserVaultActionsStatusMap = {
   getPosition: initialStatus,
 };
 
-const initialState: VaultsState = {
+export const vaultsInitialState: VaultsState = {
   vaultsAddresses: [],
   vaultsMap: {},
   selectedVaultAddress: undefined,
@@ -55,7 +55,7 @@ const {
   clearUserData,
 } = VaultsActions;
 
-const vaultsReducer = createReducer(initialState, (builder) => {
+const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
   builder
     .addCase(initiateSaveVaults.pending, (state) => {
       state.statusMap.initiateSaveVaults = { loading: true };
