@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import { AllowancesMap, Balance, Lab, LabsPositionsMap, RootState, Token } from '@types';
 import { getConstants } from '../../../../config/constants';
 
-const { YVECRV, CRV, YVBOOST } = getConstants().CONTRACT_ADDRESSES;
+const { YVECRV, CRV, YVBOOST, YVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
 
 // general selectors
 const selectCrvTokenData = (state: RootState) => state.tokens.tokensMap[CRV];
@@ -12,6 +12,10 @@ const selectCrvTokenAllowancesMap = (state: RootState) => state.tokens.user.user
 const selectYveCrvTokenData = (state: RootState) => state.tokens.tokensMap[YVECRV];
 const selectUserYveCrvTokenData = (state: RootState) => state.tokens.user.userTokensMap[YVECRV];
 const selectYveCrvTokenAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVECRV];
+
+const selectYvBoostData = (state: RootState) => state.tokens.tokensMap[YVBOOST];
+const selectUserYvBoostData = (state: RootState) => state.tokens.user.userTokensMap[YVBOOST];
+const selectYvBoostAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVBOOST];
 
 // yveCrv selectors
 const selectYveCrvLabData = (state: RootState) => state.labs.labsMap[YVECRV];
@@ -46,6 +50,26 @@ const selectYvBoostLab = createSelector(
     selectYveCrvTokenData,
     selectUserYveCrvTokenData,
     selectYveCrvTokenAllowancesMap,
+  ],
+  (labData, userPositions, labAllowances, tokenData, userTokenData, tokenAllowancesMap) => {
+    if (!labData) return undefined;
+    return createLab({ labAllowances, labData, tokenAllowancesMap, tokenData, userPositions, userTokenData });
+  }
+);
+
+// yvBoost-eth selectors
+const selectYvBoostEthLabData = (state: RootState) => state.labs.labsMap[YVBOOSTETH];
+const selectUserYvBoostEthLabPositions = (state: RootState) => state.labs.user.userLabsPositionsMap[YVBOOSTETH];
+const selectYvBoostEthLabAllowancesMap = (state: RootState) => state.labs.user.labsAllowancesMap[YVBOOSTETH];
+
+const selectYvBoostEthLab = createSelector(
+  [
+    selectYvBoostEthLabData,
+    selectUserYvBoostEthLabPositions,
+    selectYvBoostEthLabAllowancesMap,
+    selectYvBoostData,
+    selectUserYvBoostData,
+    selectYvBoostAllowancesMap,
   ],
   (labData, userPositions, labAllowances, tokenData, userTokenData, tokenAllowancesMap) => {
     if (!labData) return undefined;
@@ -94,4 +118,5 @@ function createLab(props: CreateLabProps) {
 export const LabsSelectors = {
   selectYveCrvLab,
   selectYvBoostLab,
+  selectYvBoostEthLab,
 };
