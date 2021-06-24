@@ -1,11 +1,12 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { Position, Token, Vault, Integer, Balance, IronBankMarket, Lab } from '@types';
+import { Position, Token, Vault, Integer, Balance, IronBankMarket, Lab, Alert } from '@types';
 import { EthereumAddress } from './Ethereum';
 import { CyTokenUserMetadata, IronBankPosition } from '@yfi/sdk';
 
 export interface RootState {
   app: AppState;
+  alerts: AlertsState;
   modals: ModalsState;
   route: RouteState;
   theme: ThemeState;
@@ -26,6 +27,10 @@ export interface AppState {
 export interface ModalsState {
   activeModal: string | undefined;
   modalProps: any | undefined;
+}
+export interface AlertsState {
+  alertsList: Alert[];
+  lastId: number;
 }
 export interface RouteState {
   path: string | undefined;

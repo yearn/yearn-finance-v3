@@ -1,3 +1,4 @@
+export * from './Alerts';
 export * from './Config';
 export * from './Container';
 export * from './Ethereum';
