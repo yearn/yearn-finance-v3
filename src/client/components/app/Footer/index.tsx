@@ -155,7 +155,11 @@ export const Footer = ({ className }: FooterProps) => {
 
       <LinkSection>
         {footerLinks.map((footerLink) => {
-          return <StyledLink href={footerLink.link}>{t(`footer.links.${footerLink.name}`)}</StyledLink>;
+          return (
+            <StyledLink href={footerLink.link} key={footerLink.name}>
+              {t(`footer.links.${footerLink.name}`)}
+            </StyledLink>
+          );
         })}
       </LinkSection>
 

@@ -40,6 +40,7 @@ const sharedTheme: SharedTheme = {
     navSidemenu: 1000,
     modals: 1099,
     onboardModal: 1100,
+    alerts: 1200,
   },
   devices: {
     mobile: 600,
@@ -57,6 +58,25 @@ const sharedTheme: SharedTheme = {
     width: '16rem',
     collapsedWidth: '4.8rem',
     animation: '200ms ease-in-out',
+  },
+
+  alerts: {
+    default: {
+      background: 'black',
+      color: 'white',
+    },
+    info: {
+      background: 'blue',
+      color: 'white',
+    },
+    success: {
+      background: 'green',
+      color: 'white',
+    },
+    error: {
+      background: 'red',
+      color: 'white',
+    },
   },
 
   layoutPadding: '1.6rem',
