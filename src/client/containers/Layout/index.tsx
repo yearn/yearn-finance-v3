@@ -5,9 +5,10 @@ import styled from 'styled-components';
 import {
   AppActions,
   RouteActions,
-  WalletActions,
   TokensActions,
+  WalletActions,
   VaultsActions,
+  LabsActions,
   IronBankActions,
   WalletSelectors,
   SettingsSelectors,
@@ -60,11 +61,14 @@ export const Layout: FC = ({ children }) => {
       case 'home':
         dispatch(VaultsActions.initiateSaveVaults());
         break;
+      case 'wallet':
+        dispatch(VaultsActions.initiateSaveVaults());
+        break;
       case 'vaults':
         dispatch(VaultsActions.initiateSaveVaults());
         break;
-      case 'wallet':
-        dispatch(VaultsActions.initiateSaveVaults());
+      case 'labs':
+        dispatch(LabsActions.initiateLabs());
         break;
       case 'ironbank':
         dispatch(IronBankActions.initiateIronBank());
@@ -90,11 +94,14 @@ export const Layout: FC = ({ children }) => {
           dispatch(IronBankActions.getUserMarketsPositions({}));
           dispatch(IronBankActions.getUserMarketsMetadata({}));
           break;
+        case 'wallet':
+          dispatch(VaultsActions.getUserVaultsPositions({}));
+          break;
         case 'vaults':
           dispatch(VaultsActions.getUserVaultsPositions({}));
           break;
-        case 'wallet':
-          dispatch(VaultsActions.getUserVaultsPositions({}));
+        case 'labs':
+          dispatch(LabsActions.getUserLabsPositions({}));
           break;
         case 'ironbank':
           dispatch(IronBankActions.getUserMarketsPositions({}));
