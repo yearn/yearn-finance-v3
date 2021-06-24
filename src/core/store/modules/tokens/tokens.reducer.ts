@@ -9,7 +9,7 @@ export const initialUserTokenActionsMap: UserTokenActionsMap = {
   getAllowances: { ...initialStatus },
 };
 
-const initialState: TokensState = {
+export const tokensInitialState: TokensState = {
   tokensAddresses: [],
   tokensMap: {},
   selectedTokenAddress: undefined,
@@ -38,7 +38,7 @@ const {
   clearUserTokenState,
 } = TokensActions;
 
-const tokensReducer = createReducer(initialState, (builder) => {
+const tokensReducer = createReducer(tokensInitialState, (builder) => {
   builder
     .addCase(getTokens.pending, (state) => {
       state.statusMap.getTokens = { loading: true };

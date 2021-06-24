@@ -19,7 +19,7 @@ export const initialUserLabsActionsStatusMap: UserLabActionsStatusMap = {
   getPositions: initialStatus,
 };
 
-const initialState: LabsState = {
+export const labsInitialState: LabsState = {
   labsAddresses: [],
   labsMap: {},
   selectedLabAddress: undefined,
@@ -40,7 +40,7 @@ const initialState: LabsState = {
 
 const { initiateLabs, getLabs, getLabsDynamic, getUserLabsPositions } = LabsActions;
 
-const labsReducer = createReducer(initialState, (builder) => {
+const labsReducer = createReducer(labsInitialState, (builder) => {
   builder
     .addCase(initiateLabs.pending, (state) => {
       state.statusMap.initiateLabs = { loading: true };

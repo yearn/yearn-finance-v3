@@ -3,7 +3,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { WalletState } from '@types';
 import { WalletActions } from './wallet.actions';
 
-const initialState: WalletState = {
+export const walletInitialState: WalletState = {
   selectedAddress: undefined,
   networkVersion: undefined,
   balance: undefined,
@@ -15,7 +15,7 @@ const initialState: WalletState = {
 
 const { addressChange, balanceChange, networkChange, walletChange, walletSelect } = WalletActions;
 
-const walletReducer = createReducer(initialState, (builder) => {
+const walletReducer = createReducer(walletInitialState, (builder) => {
   builder
     .addCase(walletChange, (state, { payload: { walletName } }) => {
       state.name = walletName;
