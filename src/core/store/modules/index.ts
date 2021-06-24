@@ -5,6 +5,10 @@ import { RootState } from '@types';
 import appReducer from './app/app.reducer';
 import { AppActions } from './app/app.actions';
 
+import alertsReducer from './alerts/alerts.reducer';
+import { AlertsActions } from './alerts/alerts.actions';
+import { AlertsSelectors } from './alerts/alerts.selectors';
+
 import modalsReducer from './modals/modals.reducer';
 import { ModalsActions } from './modals/modals.actions';
 import { ModalSelectors } from './modals/modals.selectors';
@@ -41,6 +45,7 @@ import { SettingsSelectors } from './settings/settings.selectors';
 
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
+  alerts: alertsReducer,
   modals: modalsReducer,
   route: routeReducer,
   theme: themeReducer,
@@ -57,6 +62,7 @@ export default rootReducer;
 // Actions
 export {
   AppActions,
+  AlertsActions,
   VaultsActions,
   ModalsActions,
   RouteActions,
@@ -70,6 +76,7 @@ export {
 
 // Selectors
 export {
+  AlertsSelectors,
   ModalSelectors,
   VaultsSelectors,
   WalletSelectors,

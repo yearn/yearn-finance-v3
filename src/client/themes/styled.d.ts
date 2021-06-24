@@ -15,6 +15,7 @@ declare module 'styled-components' {
       navSidemenu: number;
       modals: number;
       onboardModal: number;
+      alerts: number;
     };
     devices: Devices;
     globalFont: string;
@@ -25,6 +26,25 @@ declare module 'styled-components' {
       width: string;
       collapsedWidth: string;
       animation: string;
+    };
+
+    alerts: {
+      default: {
+        background: string;
+        color: string;
+      };
+      info: {
+        background: string;
+        color: string;
+      };
+      success: {
+        background: string;
+        color: string;
+      };
+      error: {
+        background: string;
+        color: string;
+      };
     };
 
     layoutPadding: string;

@@ -15,7 +15,7 @@ import {
 
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
-import { Modals } from '@containers';
+import { Modals, Alerts } from '@containers';
 
 const contentSeparation = '1.6rem';
 
@@ -96,6 +96,7 @@ export const Layout: FC = ({ children }) => {
 
   return (
     <StyledLayout>
+      <Alerts />
       <Modals />
       <Navigation />
 

@@ -33,4 +33,5 @@ export interface Constants {
   ZAP_OUT_TOKENS: string[];
   DEFAULT_THEME: Theme;
   AVAILABLE_THEMES: Theme[];
+  DEFAULT_ALERT_TIMEOUT: number;
 }

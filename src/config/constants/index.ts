@@ -40,6 +40,7 @@ export const getConstants = memoize(
       ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
       DEFAULT_THEME: 'light',
       AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk'],
+      DEFAULT_ALERT_TIMEOUT: 3000,
     };
   }
 );

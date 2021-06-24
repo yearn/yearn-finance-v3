@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
-import { ThemeActions, SettingsActions, SettingsSelectors } from '@store';
+import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions } from '@store';
 import { getTheme } from '@themes';
 import { getConfig } from '@config';
-import { Theme } from '@types';
+import { AlertTypes, Theme } from '@types';
 
 import { ModalsActions } from '@store';
 
@@ -96,6 +96,10 @@ export const Settings = () => {
     dispatch(ModalsActions.openModal({ modalName: 'test', modalProps: { testVar: 'test variable' } }));
   };
 
+  const openAlert = (message: string, type?: AlertTypes, persistent?: boolean) => {
+    dispatch(AlertsActions.openAlert({ message, type, persistent }));
+  };
+
   return (
     <SettingsView>
       <SettingsCard>
@@ -138,6 +142,11 @@ export const Settings = () => {
               </SectionTitle>
               <SectionContent>
                 <Button onClick={openTestModal}>Open test modal</Button>
+                <Button onClick={() => openAlert('Default alert')}>Open default alert</Button>
+                <Button onClick={() => openAlert('Success alert', 'success')}>Open Success alert</Button>
+                <Button onClick={() => openAlert('Info alert', 'info')}>Open Info alert</Button>
+                <Button onClick={() => openAlert('Error alert', 'error')}>Open Error alert</Button>
+                <Button onClick={() => openAlert('Persistent alert', 'default', true)}>Open Persistent alert</Button>
               </SectionContent>
             </SettingsSection>
           )}
