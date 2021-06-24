@@ -53,7 +53,7 @@ const selectVaults = createSelector(
       const tokenData = tokensMap[vaultData.tokenId];
       const userTokenData = userTokensMap[vaultData.tokenId];
       const allowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
-      return constructVault({
+      return createVault({
         vaultData,
         tokenData,
         userTokenData,
@@ -145,7 +145,7 @@ const selectVault = memoize((vaultAddress: string) =>
       const tokenData = tokensMap[vaultData.tokenId];
       const userTokenData = userTokensMap[vaultData.tokenId];
       const allowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
-      return constructVault({
+      return createVault({
         vaultData,
         tokenData,
         userTokenData,
@@ -157,7 +157,7 @@ const selectVault = memoize((vaultAddress: string) =>
   )
 );
 
-interface ConstructVaultProps {
+interface CreateVaultProps {
   vaultData: Vault;
   tokenData: Token;
   userTokenData: Balance;
@@ -165,7 +165,7 @@ interface ConstructVaultProps {
   userVaultPositionsMap: VaultPositionsMap;
   vaultsAllowancesMap: any;
 }
-function constructVault(props: ConstructVaultProps) {
+function createVault(props: CreateVaultProps) {
   const { allowancesMap, tokenData, userTokenData, vaultData, vaultsAllowancesMap, userVaultPositionsMap } = props;
   const vaultAddress = vaultData.address;
   const currentAllowance = allowancesMap[vaultAddress] ?? '0';
