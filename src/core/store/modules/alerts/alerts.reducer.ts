@@ -2,14 +2,14 @@ import { createReducer } from '@reduxjs/toolkit';
 import { AlertsState } from '@types';
 import { AlertsActions } from './alerts.actions';
 
-const initialState: AlertsState = {
+export const alertsInitialState: AlertsState = {
   alertsList: [],
   lastId: 0,
 };
 
 const { openAlert, closeAlert } = AlertsActions;
 
-const alertsReducer = createReducer(initialState, (builder) => {
+const alertsReducer = createReducer(alertsInitialState, (builder) => {
   builder
     .addCase(openAlert.fulfilled, (state, { payload: { alert } }) => {
       state.lastId = alert.id;

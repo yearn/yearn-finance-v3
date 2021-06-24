@@ -5,7 +5,7 @@ import { RootState } from '@types';
 import appReducer from './app/app.reducer';
 import { AppActions } from './app/app.actions';
 
-import alertsReducer from './alerts/alerts.reducer';
+import alertsReducer, { alertsInitialState } from './alerts/alerts.reducer';
 import { AlertsActions } from './alerts/alerts.actions';
 import { AlertsSelectors } from './alerts/alerts.selectors';
 
@@ -85,3 +85,6 @@ export {
   SettingsSelectors,
   LabsSelectors,
 };
+
+// initialState
+export { alertsInitialState };
