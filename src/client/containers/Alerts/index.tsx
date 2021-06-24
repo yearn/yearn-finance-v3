@@ -4,6 +4,7 @@ import { AlertsSelectors } from '@core/store';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import { Alert } from './Alert';
+import React from 'react';
 
 const StyledAlerts = styled(TransitionGroup)`
   position: fixed;
@@ -39,14 +40,17 @@ const StyledAlerts = styled(TransitionGroup)`
 
 export const Alerts = () => {
   const alertsList = useAppSelector(AlertsSelectors.selectAlerts);
+  const nodeRef = React.useRef(null);
 
   return (
     <StyledAlerts>
       {alertsList?.map((alert) => (
-        <CSSTransition key={alert.id} timeout={500} classNames="slideBottom">
-          <Alert id={alert.id} type={alert.type}>
-            {alert.message}
-          </Alert>
+        <CSSTransition key={alert.id} nodeRef={nodeRef} timeout={500} classNames="slideBottom">
+          <div ref={nodeRef}>
+            <Alert id={alert.id} type={alert.type}>
+              {alert.message}
+            </Alert>
+          </div>
         </CSSTransition>
       ))}
     </StyledAlerts>
