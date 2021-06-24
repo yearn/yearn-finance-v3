@@ -47,17 +47,15 @@ const selectYveCrvLab = createSelector(
         userDepositedUsdc: userPositions?.YIELD?.underlyingTokenBalance.amountUsdc ?? '0',
       },
       token: {
-        crv: {
-          address: crvTokenData?.address,
-          name: crvTokenData?.name,
-          symbol: crvTokenData?.symbol,
-          decimals: parseInt(crvTokenData?.decimals),
-          icon: crvTokenData?.icon,
-          balance: userCrvTokenData?.balance ?? '0',
-          balanceUsdc: userCrvTokenData?.balanceUsdc ?? '0',
-          priceUsdc: crvTokenData?.priceUsdc ?? '0',
-          allowancesMap: crvTokenAllowancesMap ?? {},
-        },
+        address: crvTokenData?.address,
+        name: crvTokenData?.name,
+        symbol: crvTokenData?.symbol,
+        decimals: parseInt(crvTokenData?.decimals),
+        icon: crvTokenData?.icon,
+        balance: userCrvTokenData?.balance ?? '0',
+        balanceUsdc: userCrvTokenData?.balanceUsdc ?? '0',
+        priceUsdc: crvTokenData?.priceUsdc ?? '0',
+        allowancesMap: crvTokenAllowancesMap ?? {},
       },
     };
   }
