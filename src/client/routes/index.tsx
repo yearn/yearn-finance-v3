@@ -6,8 +6,9 @@ import { Invest } from './Invest';
 import { Home } from './Home';
 import { VaultDetail } from './VaultDetail';
 import { Borrow } from './Borrow';
-import { Vaults } from './Vaults';
 import { Wallet } from './Wallet';
+import { Vaults } from './Vaults';
+import { Labs } from './Labs';
 import { IronBank } from './IronBank';
 import { Settings } from './Settings';
 
@@ -33,12 +34,16 @@ const routesMap = [
     component: Home,
   },
   {
+    path: '/wallet',
+    component: Wallet,
+  },
+  {
     path: '/vaults',
     component: Vaults,
   },
   {
-    path: '/wallet',
-    component: Wallet,
+    path: '/labs',
+    component: Labs,
   },
   {
     path: '/ironBank',
@@ -58,7 +63,6 @@ export const Routes = () => {
           {routesMap.map((route, index) => (
             <Route key={index} exact path={route.path} component={route.component} />
           ))}
-
           <Route path="*">
             <Redirect to="/home" />
           </Route>

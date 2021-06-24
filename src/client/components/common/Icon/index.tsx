@@ -20,6 +20,7 @@ import { ReactComponent as SettingsIcon } from '@assets/icons/settings.svg';
 import { ReactComponent as ThemesIcon } from '@assets/icons/themes.svg';
 import { ReactComponent as ClockIcon } from '@assets/icons/clock.svg';
 import { ReactComponent as SearchIcon } from '@assets/icons/search.svg';
+import { ReactComponent as LabsIcon } from '@assets/icons/labs.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
@@ -63,4 +64,5 @@ export {
   ThemesIcon,
   ClockIcon,
   SearchIcon,
+  LabsIcon,
 };
