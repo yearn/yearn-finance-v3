@@ -1,12 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { SettingsState } from '@types';
+import { getConfig } from '@config';
 import { SettingsActions } from './settings.actions';
 
-const STATE_VERSION = 1;
-
 export const settingsInitialState: SettingsState = {
-  currentStateVersion: STATE_VERSION,
-  persistedStateVersion: STATE_VERSION,
+  stateVersion: getConfig().STATE_VERSION,
   sidebarCollapsed: false,
   devMode: {
     enabled: false,

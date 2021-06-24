@@ -15,7 +15,7 @@ export const getStore = (extraArgument?: any) => {
   };
   const persistConfig = {
     namespace: 'yearn',
-    states: ['theme', 'wallet.name', 'settings.devMode', 'settings.persistedStateVersion'],
+    states: ['theme', 'wallet.name', 'settings.devMode', 'settings.stateVersion'],
   };
   const logger = createLogger({ collapsed: true });
   const middlewareOptions = {
@@ -24,8 +24,8 @@ export const getStore = (extraArgument?: any) => {
     },
   };
   let persistedState = load(persistConfig);
-  const currentStateVersion = initialState.settings.currentStateVersion;
-  const persistedStateVersion = get(persistedState, 'settings.persistedStateVersion');
+  const currentStateVersion = initialState.settings.stateVersion;
+  const persistedStateVersion = get(persistedState, 'settings.stateVersion');
   if (persistedStateVersion && persistedStateVersion < currentStateVersion) {
     // HANDLE STATE BREAKING CHANGES WITH MIGRATIONS HERE OR JUST CLEAR LOCAL STORAGE
     persistedState = {};

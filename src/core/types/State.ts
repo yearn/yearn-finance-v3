@@ -151,8 +151,7 @@ export interface IronBankState {
   };
 }
 export interface SettingsState {
-  currentStateVersion: number;
-  persistedStateVersion: number;
+  stateVersion: number;
   sidebarCollapsed: boolean;
   devMode: {
     enabled: boolean;
