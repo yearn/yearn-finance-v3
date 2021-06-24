@@ -40,19 +40,23 @@ const StyledAlerts = styled(TransitionGroup)`
 
 export const Alerts = () => {
   const alertsList = useAppSelector(AlertsSelectors.selectAlerts);
-  const nodeRef = React.useRef(null);
-
   return (
     <StyledAlerts>
-      {alertsList?.map((alert) => (
-        <CSSTransition key={alert.id} nodeRef={nodeRef} timeout={500} classNames="slideBottom">
-          <div ref={nodeRef}>
-            <Alert id={alert.id} type={alert.type}>
-              {alert.message}
-            </Alert>
-          </div>
-        </CSSTransition>
-      ))}
+      {alertsList?.map((alert) => {
+        // NOTE #N1 NodeRef could be removed, but using it clears a noisy warning in development
+        const nodeRef: { current: null | HTMLDivElement } = React.createRef();
+
+        return (
+          <CSSTransition key={alert.id} timeout={500} classNames="slideBottom" nodeRef={nodeRef}>
+            {/* This div could be removed but read NOTE #N1 */}
+            <div ref={nodeRef}>
+              <Alert id={alert.id} type={alert.type}>
+                {alert.message}
+              </Alert>
+            </div>
+          </CSSTransition>
+        );
+      })}
     </StyledAlerts>
   );
 };
