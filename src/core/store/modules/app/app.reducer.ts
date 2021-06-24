@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { AppState } from '@types';
 import { AppActions } from './app.actions';
 
-const initialState: AppState = {
+export const appInitialState: AppState = {
   isInitialized: false,
   isLoading: false,
   error: undefined,
@@ -10,7 +10,7 @@ const initialState: AppState = {
 
 const { initApp } = AppActions;
 
-const appReducer = createReducer(initialState, (builder) => {
+const appReducer = createReducer(appInitialState, (builder) => {
   builder
     .addCase(initApp.pending, (state) => {
       state.isLoading = true;

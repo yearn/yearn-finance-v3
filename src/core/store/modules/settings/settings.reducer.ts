@@ -1,8 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { SettingsState } from '@types';
+import { getConfig } from '@config';
 import { SettingsActions } from './settings.actions';
 
-const initialState: SettingsState = {
+export const settingsInitialState: SettingsState = {
+  stateVersion: getConfig().STATE_VERSION,
   sidebarCollapsed: false,
   devMode: {
     enabled: false,
@@ -12,7 +14,7 @@ const initialState: SettingsState = {
 
 const { toggleSidebar, closeSidebar, toggleDevMode, changeWalletAddressOverride } = SettingsActions;
 
-const settingsReducer = createReducer(initialState, (builder) => {
+const settingsReducer = createReducer(settingsInitialState, (builder) => {
   builder
     .addCase(closeSidebar, (state) => {
       state.sidebarCollapsed = true;

@@ -1,15 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
-import { save, load } from 'redux-localstorage-simple';
+import { save, load, clear } from 'redux-localstorage-simple';
+import { merge, cloneDeep, get } from 'lodash';
 
-import rootReducer from '@store/modules';
+import rootReducer, { themeInitialState, walletInitialState, settingsInitialState } from '@store/modules';
 import { isDev } from '@utils';
 import { DIContainer } from '@types';
 
 export const getStore = (extraArgument?: any) => {
+  const initialState = {
+    theme: cloneDeep(themeInitialState),
+    wallet: cloneDeep(walletInitialState),
+    settings: cloneDeep(settingsInitialState),
+  };
   const persistConfig = {
     namespace: 'yearn',
-    states: ['theme', 'wallet.name', 'settings'],
+    states: ['theme', 'wallet.name', 'settings.devMode', 'settings.stateVersion'],
   };
   const logger = createLogger({ collapsed: true });
   const middlewareOptions = {
@@ -17,6 +23,17 @@ export const getStore = (extraArgument?: any) => {
       extraArgument,
     },
   };
+  let persistedState = load(persistConfig);
+  const currentStateVersion = initialState.settings.stateVersion;
+  const persistedStateVersion = get(persistedState, 'settings.stateVersion');
+  if (persistedStateVersion && persistedStateVersion < currentStateVersion) {
+    // HANDLE STATE BREAKING CHANGES WITH MIGRATIONS HERE OR JUST CLEAR LOCAL STORAGE
+    persistedState = {};
+    clear({
+      namespace: 'yearn',
+    });
+  }
+
   const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => {
@@ -28,7 +45,7 @@ export const getStore = (extraArgument?: any) => {
       return middleware;
     },
     devTools: isDev(),
-    preloadedState: load(persistConfig),
+    preloadedState: merge(initialState, persistedState),
   });
 
   return store;
