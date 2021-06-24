@@ -129,17 +129,17 @@ const selectVaultsStatus = createSelector(
   }
 );
 
-const selectVault = memoize((vaultAddress: string) =>
-  createSelector(
-    [
-      selectVaultsMap,
-      selectTokensMap,
-      selectUserVaultsPositionsMap,
-      selectUserTokensMap,
-      selectVaultsAllowancesMap,
-      selectUserTokensAllowancesMap,
-    ],
-    (vaultsMap, tokensMap, userVaultsPositionsMap, userTokensMap, vaultsAllowancesMap, userTokensAllowancesMap) => {
+const selectVault = createSelector(
+  [
+    selectVaultsMap,
+    selectTokensMap,
+    selectUserVaultsPositionsMap,
+    selectUserTokensMap,
+    selectVaultsAllowancesMap,
+    selectUserTokensAllowancesMap,
+  ],
+  (vaultsMap, tokensMap, userVaultsPositionsMap, userTokensMap, vaultsAllowancesMap, userTokensAllowancesMap) =>
+    memoize((vaultAddress: string) => {
       const vaultData = vaultsMap[vaultAddress];
       if (!vaultData) return undefined;
       const tokenData = tokensMap[vaultData.tokenId];
@@ -153,8 +153,7 @@ const selectVault = memoize((vaultAddress: string) =>
         vaultsAllowancesMap,
         allowancesMap,
       });
-    }
-  )
+    })
 );
 
 interface CreateVaultProps {

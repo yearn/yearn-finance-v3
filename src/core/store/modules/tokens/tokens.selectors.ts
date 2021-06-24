@@ -73,10 +73,9 @@ const selectWalletTokensStatus = createSelector(
   }
 );
 
-const selectToken = memoize((tokenAddress: string) =>
-  createSelector(
-    [selectTokensMap, selectTokensUser],
-    (tokensMap, user): TokenView => {
+const selectToken = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user) =>
+  memoize(
+    (tokenAddress: string): TokenView => {
       const { userTokensMap, userTokensAllowancesMap } = user; // use specific selectors, is not a big performance improvement in this case
       const tokenData = tokensMap[tokenAddress];
       const userTokenData = userTokensMap[tokenAddress];
