@@ -111,7 +111,7 @@ export const Layout: FC = ({ children }) => {
           break;
       }
     }
-  }, [selectedAddress]);
+  }, [selectedAddress, location]);
 
   return (
     <StyledLayout>
