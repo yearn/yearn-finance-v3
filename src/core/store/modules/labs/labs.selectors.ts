@@ -1,6 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { AllowancesMap, Balance, Lab, LabsPositionsMap, RootState, Token } from '@types';
 import { getConstants } from '../../../../config/constants';
+import { toBN } from '../../../../utils';
+import { GeneralLabView } from '../../../types/Lab';
 
 const { YVECRV, CRV, YVBOOST, YVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
 
@@ -77,6 +79,39 @@ const selectYvBoostEthLab = createSelector(
   }
 );
 
+// General selectors
+const selectLabs = createSelector([selectYveCrvLab, selectYvBoostLab], (yveCrvLab, yvBoostLab) => {
+  const labs: GeneralLabView[] = [];
+  [yveCrvLab, yvBoostLab].forEach((lab) => {
+    if (lab) labs.push(lab);
+  });
+  return labs;
+});
+
+const selectDepositedLabs = createSelector([selectLabs], (labs) => {
+  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).gt(0));
+});
+
+const selectLabsOpportunities = createSelector([selectLabs], (labs) => {
+  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).lte(0));
+});
+
+const selectRecommendations = createSelector([selectLabs], (labs) => {
+  // TODO criteria
+  return labs;
+});
+
+const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) => {
+  let totalDeposited = toBN('0');
+  depositedLabs.forEach((lab) => (totalDeposited = totalDeposited.plus(lab.DEPOSIT.userDepositedUsdc)));
+
+  return {
+    totalDeposits: totalDeposited.toString(),
+    totalEarnings: '0',
+    estYearlyYeild: '0',
+  };
+});
+
 interface CreateLabProps {
   labData: Lab;
   userPositions: LabsPositionsMap;
@@ -85,7 +120,7 @@ interface CreateLabProps {
   userTokenData: Balance;
   tokenAllowancesMap: AllowancesMap;
 }
-function createLab(props: CreateLabProps) {
+function createLab(props: CreateLabProps): GeneralLabView {
   const { labAllowances, labData, tokenAllowancesMap, tokenData, userPositions, userTokenData } = props;
   return {
     address: labData.address,
@@ -100,6 +135,11 @@ function createLab(props: CreateLabProps) {
       userBalance: userPositions?.DEPOSIT?.balance ?? '0',
       userDeposited: userPositions?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',
       userDepositedUsdc: userPositions?.DEPOSIT?.underlyingTokenBalance.amountUsdc ?? '0',
+    },
+    YIELD: {
+      userBalance: userPositions?.YIELD?.balance ?? '0',
+      userDeposited: userPositions?.YIELD?.underlyingTokenBalance.amount ?? '0',
+      userDepositedUsdc: userPositions?.YIELD?.underlyingTokenBalance.amountUsdc ?? '0',
     },
     token: {
       address: tokenData?.address,
@@ -119,4 +159,9 @@ export const LabsSelectors = {
   selectYveCrvLab,
   selectYvBoostLab,
   selectYvBoostEthLab,
+  selectLabs,
+  selectDepositedLabs,
+  selectLabsOpportunities,
+  selectRecommendations,
+  selectSummaryData,
 };

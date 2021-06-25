@@ -71,7 +71,7 @@ const selectDepositedVaults = createSelector([selectVaults], (vaults): VaultView
   return depositVaults.filter((vault) => new BigNumber(vault.userDeposited).gt(0));
 });
 
-const selectVaultsOportunities = createSelector([selectVaults], (vaults): VaultView[] => {
+const selectVaultsOpportunities = createSelector([selectVaults], (vaults): VaultView[] => {
   const depositVaults = vaults.map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
   const opportunities = depositVaults.filter((vault) => new BigNumber(vault.userDeposited).lte(0));
 
@@ -115,7 +115,7 @@ const selectSummaryData = createSelector([selectDepositedVaults], (depositedVaul
   };
 });
 
-const selectRecomendations = createSelector([selectVaults], (vaults) => {
+const selectRecommendations = createSelector([selectVaults], (vaults) => {
   return [vaults[0], vaults[5], vaults[8]].filter((item) => !!item);
 });
 
@@ -212,9 +212,9 @@ export const VaultsSelectors = {
   selectSelectedVault,
   selectSelectedVaultActionsStatusMap,
   selectDepositedVaults,
-  selectVaultsOportunities,
+  selectVaultsOpportunities,
   selectSummaryData,
-  selectRecomendations,
+  selectRecommendations,
   selectVaultsStatus,
   selectVault,
 };
