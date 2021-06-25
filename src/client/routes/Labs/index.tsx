@@ -44,20 +44,19 @@ export const Labs = () => {
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(LabsSelectors.selectSummaryData);
   const recommendations = useAppSelector(LabsSelectors.selectRecommendations);
-  const deposits = useAppSelector(LabsSelectors.selectDepositedLabs);
+  const holdings = useAppSelector(LabsSelectors.selectDepositedLabs);
   const opportunities = useAppSelector(LabsSelectors.selectLabsOpportunities);
-  const [filteredVaults, setFilteredVaults] = useState(opportunities);
+  const [filteredOpportunities, setFilteredOpportunities] = useState(opportunities);
 
-  const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
+  const labsStatus = useAppSelector(LabsSelectors.selectLabsStatus);
 
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const crvToken = tokenSelectorFilter(CRV);
-
   const vaultSelectorFilter = useAppSelector(VaultsSelectors.selectVault);
   const yv3CrvVault = vaultSelectorFilter(YVTHREECRV);
 
   useEffect(() => {
-    setFilteredVaults(opportunities);
+    setFilteredOpportunities(opportunities);
   }, [opportunities]);
 
   const actionHandler = (labAddress: string) => {
@@ -78,24 +77,24 @@ export const Labs = () => {
         cardSize="big"
       />
 
-      {vaultsStatus.loading && (
+      {labsStatus.loading && (
         <Box height="100%" width="100%" position="relative" display="flex" center paddingTop="4rem">
           <SpinnerLoading flex="1" />
         </Box>
       )}
 
-      {!vaultsStatus.loading && (
+      {!labsStatus.loading && (
         <>
           <Row>
             <RecommendationsCard
               header="Recommendations"
               items={recommendations.map(({ address, token, apyData }) => ({
-                header: 'Vault',
+                header: 'Special Token',
                 icon: token.icon ?? '',
                 name: token.symbol,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
-                action: 'Go to Vault',
+                action: '>',
                 onAction: () => history.push(`/vault/${address}`),
               }))}
             />
@@ -124,7 +123,7 @@ export const Labs = () => {
                 grow: '1',
               },
             ]}
-            data={deposits.map((vault) => ({
+            data={holdings.map((vault) => ({
               icon: vault.token.icon ?? '',
               tokenSymbol: vault.token.symbol,
               name: vault.token.symbol,
@@ -158,14 +157,14 @@ export const Labs = () => {
                 grow: '1',
               },
             ]}
-            data={filteredVaults.map((vault) => ({
-              icon: vault.token.icon ?? '',
-              tokenSymbol: vault.token.symbol,
-              name: vault.token.symbol,
-              apy: formatPercent(vault.apyData, 2),
-              vaultBalanceUsdc: `$ ${humanizeAmount(vault.labBalanceUsdc, USDC_DECIMALS, 0)}`,
-              tokenBalanceUsdc: normalizeUsdc(vault.token.balanceUsdc),
-              vaultAddress: vault.address,
+            data={filteredOpportunities.map((lab) => ({
+              icon: lab.token.icon ?? '',
+              tokenSymbol: lab.token.symbol,
+              name: lab.token.symbol,
+              apy: formatPercent(lab.apyData, 2),
+              vaultBalanceUsdc: `$ ${humanizeAmount(lab.labBalanceUsdc, USDC_DECIMALS, 0)}`,
+              tokenBalanceUsdc: normalizeUsdc(lab.token.balanceUsdc),
+              vaultAddress: lab.address,
             }))}
             SearchBar={
               <SearchBarContainer>
@@ -173,7 +172,7 @@ export const Labs = () => {
                   searchableData={opportunities}
                   searchableKeys={['name', 'token.symbol', 'token.name']}
                   placeholder="Search"
-                  onSearch={(data) => setFilteredVaults(data)}
+                  onSearch={(data) => setFilteredOpportunities(data)}
                 />
               </SearchBarContainer>
             }
