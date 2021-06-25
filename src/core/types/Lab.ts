@@ -5,6 +5,7 @@ import { TokenView } from './Token';
 export interface GeneralLabView {
   address: string;
   name: string;
+  icon: string;
   labBalance: string;
   decimals: string;
   labBalanceUsdc: string;

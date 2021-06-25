@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { AllowancesMap, Balance, Lab, LabsPositionsMap, RootState, Token } from '@types';
+import { AllowancesMap, Balance, Lab, LabsPositionsMap, RootState, Token, Status } from '@types';
 import { getConstants } from '../../../../config/constants';
 import { toBN } from '../../../../utils';
 import { GeneralLabView } from '../../../types/Lab';
@@ -18,6 +18,9 @@ const selectYveCrvTokenAllowancesMap = (state: RootState) => state.tokens.user.u
 const selectYvBoostData = (state: RootState) => state.tokens.tokensMap[YVBOOST];
 const selectUserYvBoostData = (state: RootState) => state.tokens.user.userTokensMap[YVBOOST];
 const selectYvBoostAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVBOOST];
+
+const selectGetLabsStatus = (state: RootState) => state.labs.statusMap.getLabs;
+const selectGetUserLabsPositionsStatus = (state: RootState) => state.labs.statusMap.user.getUserLabsPositions;
 
 // yveCrv selectors
 const selectYveCrvLabData = (state: RootState) => state.labs.labsMap[YVECRV];
@@ -112,6 +115,16 @@ const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) 
   };
 });
 
+const selectLabsStatus = createSelector(
+  [selectGetLabsStatus, selectGetUserLabsPositionsStatus],
+  (getLabsStatus, getUserLabsPositionsStatus): Status => {
+    return {
+      loading: getLabsStatus.loading || getUserLabsPositionsStatus.loading,
+      error: getLabsStatus.error || getUserLabsPositionsStatus.error,
+    };
+  }
+);
+
 interface CreateLabProps {
   labData: Lab;
   userPositions: LabsPositionsMap;
@@ -120,17 +133,19 @@ interface CreateLabProps {
   userTokenData: Balance;
   tokenAllowancesMap: AllowancesMap;
 }
+
 function createLab(props: CreateLabProps): GeneralLabView {
   const { labAllowances, labData, tokenAllowancesMap, tokenData, userPositions, userTokenData } = props;
   return {
     address: labData.address,
     name: labData.name,
+    icon: labData.metadata.icon ?? tokenData?.icon ?? '',
     labBalance: labData.underlyingTokenBalance.amount,
     decimals: labData.decimals,
     labBalanceUsdc: labData.underlyingTokenBalance.amountUsdc,
-    apyData: '0', // TODO use labData.metadata.apy?.recommended.toString() ?? '0',
+    apyData: labData.metadata.apy?.recommended.toString() ?? '0',
     allowancesMap: labAllowances ?? {},
-    pricePerShare: '1', // TODO use labData?.metadata.pricePerShare,
+    pricePerShare: labData.metadata.pricePerShare,
     DEPOSIT: {
       userBalance: userPositions?.DEPOSIT?.balance ?? '0',
       userDeposited: userPositions?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',
@@ -164,4 +179,5 @@ export const LabsSelectors = {
   selectLabsOpportunities,
   selectRecommendations,
   selectSummaryData,
+  selectLabsStatus,
 };
