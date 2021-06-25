@@ -78,7 +78,7 @@ interface RecommendationsProps {
   items: Item[];
 }
 
-export const RecomendationsCard = ({ header, items }: RecommendationsProps) => {
+export const RecommendationsCard = ({ header, items }: RecommendationsProps) => {
   if (items.length === 0) {
     return null;
   }
