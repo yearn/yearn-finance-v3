@@ -101,6 +101,11 @@ function createLab(props: CreateLabProps) {
       userDeposited: userPositions?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',
       userDepositedUsdc: userPositions?.DEPOSIT?.underlyingTokenBalance.amountUsdc ?? '0',
     },
+    YIELD: {
+      userBalance: userPositions?.YIELD?.balance ?? '0',
+      userDeposited: userPositions?.YIELD?.underlyingTokenBalance.amount ?? '0',
+      userDepositedUsdc: userPositions?.YIELD?.underlyingTokenBalance.amountUsdc ?? '0',
+    },
     token: {
       address: tokenData?.address,
       name: tokenData?.name,
