@@ -79,6 +79,7 @@ const selectYvBoostEthLab = createSelector(
   }
 );
 
+// General selectors
 const selectLabs = createSelector([selectYveCrvLab, selectYvBoostLab], (yveCrvLab, yvBoostLab) => {
   const labs: GeneralLabView[] = [];
   [yveCrvLab, yvBoostLab].forEach((lab) => {
@@ -93,6 +94,11 @@ const selectDepositedLabs = createSelector([selectLabs], (labs) => {
 
 const selectLabsOpportunities = createSelector([selectLabs], (labs) => {
   return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).lte(0));
+});
+
+const selectRecommendations = createSelector([selectLabs], (labs) => {
+  // TODO criteria
+  return [labs[0], labs[1]];
 });
 
 interface CreateLabProps {
@@ -145,4 +151,5 @@ export const LabsSelectors = {
   selectLabs,
   selectDepositedLabs,
   selectLabsOpportunities,
+  selectRecommendations,
 };

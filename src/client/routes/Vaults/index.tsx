@@ -7,7 +7,7 @@ import { ModalsActions, VaultsActions, VaultsSelectors, WalletSelectors } from '
 import {
   SummaryCard,
   DetailCard,
-  RecomendationsCard,
+  RecommendationsCard,
   ActionButtons,
   TokenIcon,
   InfoCard,
@@ -41,7 +41,7 @@ export const Vaults = () => {
   const dispatch = useAppDispatch();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
-  const recomendations = useAppSelector(VaultsSelectors.selectRecomendations);
+  const recommendations = useAppSelector(VaultsSelectors.selectRecommendations);
   const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOpportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
@@ -84,9 +84,9 @@ export const Vaults = () => {
       {!vaultsStatus.loading && (
         <>
           <Row>
-            <RecomendationsCard
+            <RecommendationsCard
               header="Recommendations"
-              items={recomendations.map(({ address, token, apyData }) => ({
+              items={recommendations.map(({ address, token, apyData }) => ({
                 header: 'Vault',
                 icon: token.icon ?? '',
                 name: token.symbol,

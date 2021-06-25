@@ -115,7 +115,7 @@ const selectSummaryData = createSelector([selectDepositedVaults], (depositedVaul
   };
 });
 
-const selectRecomendations = createSelector([selectVaults], (vaults) => {
+const selectRecommendations = createSelector([selectVaults], (vaults) => {
   return [vaults[0], vaults[5], vaults[8]].filter((item) => !!item);
 });
 
@@ -214,7 +214,7 @@ export const VaultsSelectors = {
   selectDepositedVaults,
   selectVaultsOpportunities,
   selectSummaryData,
-  selectRecomendations,
+  selectRecommendations,
   selectVaultsStatus,
   selectVault,
 };
