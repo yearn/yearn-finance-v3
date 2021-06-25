@@ -14,6 +14,7 @@ import {
   validateVaultWithdrawAllowance,
 } from '@utils';
 import { getConfig } from '@config';
+import { getConstants } from '../../../../config/constants';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
@@ -57,11 +58,14 @@ const getUserVaultsPositions = createAsyncThunk<
   return { userVaultsPositions };
 });
 
-const approveVault = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
-  'vaults/approveVault',
-  async ({ vaultAddress, tokenAddress }, { dispatch }) => {
+const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
+  'vaults/approveDeposit',
+  async ({ vaultAddress, tokenAddress }, { dispatch, getState }) => {
     try {
-      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: vaultAddress }));
+      const vaultData = getState().vaults.vaultsMap[vaultAddress];
+      const isZapin = vaultData.tokenId !== tokenAddress;
+      const spenderAddress = isZapin ? getConstants().CONTRACT_ADDRESSES.zapIn : vaultAddress;
+      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
       unwrapResult(result);
     } catch (error) {
       throw new Error(error.message);
@@ -210,7 +214,7 @@ export const VaultsActions = {
   setSelectedVaultAddress,
   initiateSaveVaults,
   getVaults,
-  approveVault,
+  approveDeposit,
   depositVault,
   withdrawVault,
   getVaultsDynamic,
