@@ -12,6 +12,7 @@ import {
   Address,
   Integer,
   Usdc,
+  Apy,
   VaultStatic,
   IronBankMarket,
   IronBankPosition,
@@ -38,7 +39,11 @@ interface LabDynamic {
   metadata: LabMetadata;
 }
 
-interface LabMetadata {}
+interface LabMetadata {
+  pricePerShare: Integer;
+  apy?: Apy;
+  icon?: string;
+}
 
 interface LabUserMetadata {}
 

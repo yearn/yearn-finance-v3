@@ -65,10 +65,10 @@ export const Vaults = () => {
   return (
     <ViewContainer>
       <SummaryCard
-        header="Welcome"
+        header="Dashboard"
         items={[
+          { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
           { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
-          { header: 'Deposits', content: `${normalizeUsdc(totalDeposits)}` },
           { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
         variant="secondary"
