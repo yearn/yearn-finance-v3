@@ -43,7 +43,7 @@ export const Vaults = () => {
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
   const recomendations = useAppSelector(VaultsSelectors.selectRecomendations);
   const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
-  const opportunities = useAppSelector(VaultsSelectors.selectVaultsOportunities);
+  const opportunities = useAppSelector(VaultsSelectors.selectVaultsOpportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
 
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
+import { LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
 import {
   SummaryCard,
   DetailCard,
@@ -44,8 +44,8 @@ export const Labs = () => {
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
   const recomendations = useAppSelector(VaultsSelectors.selectRecomendations);
-  const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
-  const opportunities = useAppSelector(VaultsSelectors.selectVaultsOportunities);
+  const deposits = useAppSelector(LabsSelectors.selectDepositedLabs);
+  const opportunities = useAppSelector(LabsSelectors.selectLabsOpportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
 
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
@@ -128,8 +128,8 @@ export const Labs = () => {
               icon: vault.token.icon ?? '',
               tokenSymbol: vault.token.symbol,
               name: vault.token.symbol,
-              balance: humanizeAmount(vault.userBalance, parseInt(vault.decimals), 4),
-              value: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
+              balance: humanizeAmount(vault.DEPOSIT.userBalance, parseInt(vault.decimals), 4),
+              value: `$ ${humanizeAmount(vault.DEPOSIT.userDepositedUsdc, USDC_DECIMALS, 2)}`,
               apy: formatPercent(vault.apyData, 2),
               vaultAddress: vault.address,
             }))}
@@ -163,7 +163,7 @@ export const Labs = () => {
               tokenSymbol: vault.token.symbol,
               name: vault.token.symbol,
               apy: formatPercent(vault.apyData, 2),
-              vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 0)}`,
+              vaultBalanceUsdc: `$ ${humanizeAmount(vault.labBalanceUsdc, USDC_DECIMALS, 0)}`,
               tokenBalanceUsdc: normalizeUsdc(vault.token.balanceUsdc),
               vaultAddress: vault.address,
             }))}
