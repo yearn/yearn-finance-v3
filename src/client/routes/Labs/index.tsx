@@ -69,8 +69,8 @@ export const Labs = () => {
       <SummaryCard
         header="Dashboard"
         items={[
-          { header: 'Holdings', content: `${normalizeUsdc(totalEarnings)}` },
-          { header: 'Earnings', content: `${normalizeUsdc(totalDeposits)}` },
+          { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
+          { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
           { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
         variant="secondary"
@@ -88,10 +88,10 @@ export const Labs = () => {
           <Row>
             <RecommendationsCard
               header="Recommendations"
-              items={recommendations.map(({ address, token, apyData }) => ({
+              items={recommendations.map(({ address, name, apyData, icon }) => ({
                 header: 'Special Token',
-                icon: token.icon ?? '',
-                name: token.symbol,
+                icon: icon,
+                name: name,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
                 action: '>',
@@ -116,21 +116,21 @@ export const Labs = () => {
               { key: 'value', header: 'Value' },
               {
                 key: 'actions',
-                transform: ({ vaultAddress }) => (
-                  <ActionButtons actions={[{ name: '>', handler: () => actionHandler(vaultAddress) }]} />
+                transform: ({ labAddress }) => (
+                  <ActionButtons actions={[{ name: '>', handler: () => actionHandler(labAddress) }]} />
                 ),
                 align: 'flex-end',
                 grow: '1',
               },
             ]}
-            data={holdings.map((vault) => ({
-              icon: vault.token.icon ?? '',
-              tokenSymbol: vault.token.symbol,
-              name: vault.token.symbol,
-              balance: humanizeAmount(vault.DEPOSIT.userBalance, parseInt(vault.decimals), 4),
-              value: `$ ${humanizeAmount(vault.DEPOSIT.userDepositedUsdc, USDC_DECIMALS, 2)}`,
-              apy: formatPercent(vault.apyData, 2),
-              vaultAddress: vault.address,
+            data={holdings.map((lab) => ({
+              icon: lab.icon,
+              tokenSymbol: lab.name,
+              name: lab.name,
+              balance: humanizeAmount(lab.DEPOSIT.userBalance, parseInt(lab.decimals), 4),
+              value: `$ ${humanizeAmount(lab.DEPOSIT.userDepositedUsdc, USDC_DECIMALS, 2)}`,
+              apy: formatPercent(lab.apyData, 2),
+              labAddress: lab.address,
             }))}
           />
 
@@ -144,13 +144,13 @@ export const Labs = () => {
               },
               { key: 'name', header: 'Name', fontWeight: 600 },
               { key: 'apy', header: 'APY' },
-              { key: 'vaultBalanceUsdc', header: 'Total Assets' },
+              { key: 'labBalanceUsdc', header: 'Total Assets' },
               { key: 'tokenBalanceUsdc', header: 'Available to Invest' },
               {
                 key: 'actions',
-                transform: ({ vaultAddress }) => (
+                transform: ({ labAddress }) => (
                   <ActionButtons
-                    actions={[{ name: '>', handler: () => actionHandler(vaultAddress), disabled: !walletIsConnected }]}
+                    actions={[{ name: '>', handler: () => actionHandler(labAddress), disabled: !walletIsConnected }]}
                   />
                 ),
                 align: 'flex-end',
@@ -158,13 +158,13 @@ export const Labs = () => {
               },
             ]}
             data={filteredOpportunities.map((lab) => ({
-              icon: lab.token.icon ?? '',
-              tokenSymbol: lab.token.symbol,
-              name: lab.token.symbol,
+              icon: lab.icon,
+              tokenSymbol: lab.name,
+              name: lab.name,
               apy: formatPercent(lab.apyData, 2),
-              vaultBalanceUsdc: `$ ${humanizeAmount(lab.labBalanceUsdc, USDC_DECIMALS, 0)}`,
+              labBalanceUsdc: `$ ${humanizeAmount(lab.labBalanceUsdc, USDC_DECIMALS, 0)}`,
               tokenBalanceUsdc: normalizeUsdc(lab.token.balanceUsdc),
-              vaultAddress: lab.address,
+              labAddress: lab.address,
             }))}
             SearchBar={
               <SearchBarContainer>

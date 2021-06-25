@@ -139,12 +139,13 @@ function createLab(props: CreateLabProps): GeneralLabView {
   return {
     address: labData.address,
     name: labData.name,
+    icon: labData.metadata.icon ?? tokenData?.icon ?? '',
     labBalance: labData.underlyingTokenBalance.amount,
     decimals: labData.decimals,
     labBalanceUsdc: labData.underlyingTokenBalance.amountUsdc,
-    apyData: '0', // TODO use labData.metadata.apy?.recommended.toString() ?? '0',
+    apyData: labData.metadata.apy?.recommended.toString() ?? '0',
     allowancesMap: labAllowances ?? {},
-    pricePerShare: '1', // TODO use labData?.metadata.pricePerShare,
+    pricePerShare: labData.metadata.pricePerShare,
     DEPOSIT: {
       userBalance: userPositions?.DEPOSIT?.balance ?? '0',
       userDeposited: userPositions?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',

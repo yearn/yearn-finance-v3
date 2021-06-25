@@ -57,12 +57,25 @@ export class LabServiceImpl implements LabService {
           .times(10 ** USDC_DECIMALS)
           .toFixed(0),
       },
-      metadata: {},
+      metadata: {
+        pricePerShare: toBN('1')
+          .times(10 ** backscratcherData.decimals)
+          .toFixed(0),
+        apy: {
+          recommended: backscratcherData.apy.composite?.totalApy,
+          composite: false,
+          type: backscratcherData.apy.type,
+          description: '',
+        },
+        icon:
+          'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
+      },
     };
 
     // **************** YVBOOST ****************
     const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
     const totalAssets = await yvBoostContract.totalAssets();
+    const pricePerShare = await yvBoostContract.pricePerShare();
     const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
     if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
     const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
@@ -70,7 +83,7 @@ export class LabServiceImpl implements LabService {
       address: YVBOOST,
       typeId: 'LAB',
       token: YVECRV,
-      name: yvBoostData.name,
+      name: yvBoostData.symbol,
       version: yvBoostData.version,
       symbol: yvBoostData.symbol,
       decimals: yvBoostData.decimals.toString(),
@@ -82,7 +95,17 @@ export class LabServiceImpl implements LabService {
           .times(10 ** USDC_DECIMALS)
           .toFixed(0),
       },
-      metadata: {},
+      metadata: {
+        pricePerShare: pricePerShare.toString(),
+        apy: {
+          recommended: yvBoostData.apy.net_apy,
+          composite: false,
+          type: yvBoostData.apy.type,
+          description: '',
+        },
+        icon:
+          'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+      },
     };
     // ********************************
 
