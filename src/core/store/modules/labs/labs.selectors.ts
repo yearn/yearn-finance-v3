@@ -98,7 +98,7 @@ const selectLabsOpportunities = createSelector([selectLabs], (labs) => {
 
 const selectRecommendations = createSelector([selectLabs], (labs) => {
   // TODO criteria
-  return [labs[0], labs[1]];
+  return labs;
 });
 
 interface CreateLabProps {
