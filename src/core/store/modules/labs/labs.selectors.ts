@@ -101,6 +101,17 @@ const selectRecommendations = createSelector([selectLabs], (labs) => {
   return labs;
 });
 
+const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) => {
+  let totalDeposited = toBN('0');
+  depositedLabs.forEach((lab) => (totalDeposited = totalDeposited.plus(lab.DEPOSIT.userDepositedUsdc)));
+
+  return {
+    totalDeposits: totalDeposited.toString(),
+    totalEarnings: '0',
+    estYearlyYeild: '0',
+  };
+});
+
 interface CreateLabProps {
   labData: Lab;
   userPositions: LabsPositionsMap;
@@ -152,4 +163,5 @@ export const LabsSelectors = {
   selectDepositedLabs,
   selectLabsOpportunities,
   selectRecommendations,
+  selectSummaryData,
 };
