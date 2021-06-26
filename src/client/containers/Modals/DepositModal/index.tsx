@@ -163,7 +163,7 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
 
   const approve = () =>
     dispatch(
-      VaultsActions.approveVault({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
+      VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
     );
   const deposit = () =>
     dispatch(

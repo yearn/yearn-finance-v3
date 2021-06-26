@@ -112,7 +112,7 @@ export const Blade = () => {
   const [withdrawAmount, setWithdrawAmount] = useState('0');
 
   const approve = (vaultAddress: string, tokenAddress: string) =>
-    dispatch(VaultsActions.approveVault({ vaultAddress, tokenAddress }));
+    dispatch(VaultsActions.approveDeposit({ vaultAddress, tokenAddress }));
   // const deposit = (vaultAddress: string, amount: string) =>
   //   dispatch(VaultsActions.depositVault({ vaultAddress, amount: new BigNumber(amount) }));
   const withdraw = (vaultAddress: string, amount: string) =>

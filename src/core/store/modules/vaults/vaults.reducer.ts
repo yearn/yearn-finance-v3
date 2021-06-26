@@ -43,7 +43,7 @@ export const vaultsInitialState: VaultsState = {
 };
 
 const {
-  approveVault,
+  approveDeposit,
   approveZapOut,
   depositVault,
   getVaults,
@@ -131,15 +131,15 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { error: error.message };
     })
-    .addCase(approveVault.pending, (state, { meta }) => {
+    .addCase(approveDeposit.pending, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { loading: true };
     })
-    .addCase(approveVault.fulfilled, (state, { meta }) => {
+    .addCase(approveDeposit.fulfilled, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = {};
     })
-    .addCase(approveVault.rejected, (state, { error, meta }) => {
+    .addCase(approveDeposit.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { error: error.message };
     })
