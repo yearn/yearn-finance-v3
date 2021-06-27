@@ -125,9 +125,19 @@ const yvBoostDeposit = createAsyncThunk<void, YvBoostDepositProps, ThunkAPI>(
   }
 );
 
-const yvBoostApproveZapOut = createAsyncThunk<void, void, ThunkAPI>(
+const yvBoostApproveZapOut = createAsyncThunk<void, { labAddress: string }, ThunkAPI>(
   'labs/yvBoost/yvBoostApproveZapOut',
-  async (_args, { dispatch }) => {}
+  async ({ labAddress }, { dispatch }) => {
+    try {
+      const ZAP_OUT_CONTRACT_ADDRESS = getConstants().CONTRACT_ADDRESSES.zapOut;
+      const result = await dispatch(
+        TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
+      );
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
 );
 const yvBoostWithdraw = createAsyncThunk<void, void, ThunkAPI>(
   'labs/yvBoost/yveCrvWithdraw',

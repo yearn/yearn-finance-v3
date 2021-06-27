@@ -173,6 +173,7 @@ export interface LabActionsStatusMap {
   get: Status;
   approveDeposit: Status;
   deposit: Status;
+  approveZapOut: Status;
 }
 export interface UserLabActionsStatusMap {
   get: Status;

@@ -14,6 +14,7 @@ export const initialLabActionsStatusMap: LabActionsStatusMap = {
   get: initialStatus,
   approveDeposit: initialStatus,
   deposit: initialStatus,
+  approveZapOut: initialStatus,
 };
 
 export const initialUserLabsActionsStatusMap: UserLabActionsStatusMap = {
@@ -41,7 +42,7 @@ export const labsInitialState: LabsState = {
 };
 
 const { initiateLabs, getLabs, getLabsDynamic, getUserLabsPositions, yvBoost } = LabsActions;
-const { yvBoostApproveDeposit, yvBoostDeposit } = yvBoost;
+const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut } = yvBoost;
 
 const labsReducer = createReducer(labsInitialState, (builder) => {
   builder
@@ -151,6 +152,18 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     .addCase(yvBoostDeposit.rejected, (state, { meta, error }) => {
       const labAddress = meta.arg.labAddress;
       state.statusMap.labsActionsStatusMap[labAddress].deposit = { error: error.message };
+    })
+    .addCase(yvBoostApproveZapOut.pending, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].approveZapOut = { loading: true };
+    })
+    .addCase(yvBoostApproveZapOut.fulfilled, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].approveZapOut = {};
+    })
+    .addCase(yvBoostApproveZapOut.rejected, (state, { meta, error }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].approveZapOut = { error: error.message };
     });
 });
 
