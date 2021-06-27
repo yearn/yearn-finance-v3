@@ -1,8 +1,9 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '../../../frameworks/redux';
 import { Lab, LabDynamic, Position } from '@types';
 import { VaultsActions } from '../vaults/vaults.actions';
 import { getConstants } from '../../../../config/constants';
+import { TokensActions } from '../..';
 
 const initiateLabs = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'labs/initiateLabs',
@@ -70,6 +71,35 @@ const getUserYveCrvExtraData = createAsyncThunk<void, void, ThunkAPI>(
   }
 );
 
+const yvBoostApproveDeposit = createAsyncThunk<void, { labAddress: string; tokenAddress: string }, ThunkAPI>(
+  'labs/yvBoost/yvBoostApproveDeposit',
+  async ({ labAddress, tokenAddress }, { dispatch, getState }) => {
+    try {
+      const labData = getState().labs.labsMap[labAddress];
+      const isZapin = labData.tokenId !== tokenAddress;
+      const spenderAddress = isZapin ? getConstants().CONTRACT_ADDRESSES.zapIn : labAddress;
+      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const yvBoostDeposit = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yvBoost/yvBoostDeposit',
+  async (_args, { dispatch }) => {}
+);
+
+const yvBoostApproveZapOut = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yvBoost/yvBoostApproveZapOut',
+  async (_args, { dispatch }) => {}
+);
+const yvBoostWithdraw = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yvBoost/yveCrvWithdraw',
+  async (_args, { dispatch }) => {}
+);
+
 export const LabsActions = {
   initiateLabs,
   getLabs,
@@ -77,4 +107,10 @@ export const LabsActions = {
   getUserLabsPositions,
   getYveCrvExtraData,
   getUserYveCrvExtraData,
+  yvBoost: {
+    yvBoostApproveDeposit,
+    yvBoostDeposit,
+    yvBoostApproveZapOut,
+    yvBoostWithdraw,
+  },
 };
