@@ -15,6 +15,7 @@ export const initialLabActionsStatusMap: LabActionsStatusMap = {
   approveDeposit: initialStatus,
   deposit: initialStatus,
   approveZapOut: initialStatus,
+  withdraw: initialStatus,
 };
 
 export const initialUserLabsActionsStatusMap: UserLabActionsStatusMap = {
@@ -42,7 +43,7 @@ export const labsInitialState: LabsState = {
 };
 
 const { initiateLabs, getLabs, getLabsDynamic, getUserLabsPositions, yvBoost } = LabsActions;
-const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut } = yvBoost;
+const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut, yvBoostWithdraw } = yvBoost;
 
 const labsReducer = createReducer(labsInitialState, (builder) => {
   builder
@@ -164,6 +165,18 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     .addCase(yvBoostApproveZapOut.rejected, (state, { meta, error }) => {
       const labAddress = meta.arg.labAddress;
       state.statusMap.labsActionsStatusMap[labAddress].approveZapOut = { error: error.message };
+    })
+    .addCase(yvBoostWithdraw.pending, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].withdraw = { loading: true };
+    })
+    .addCase(yvBoostWithdraw.fulfilled, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].withdraw = {};
+    })
+    .addCase(yvBoostWithdraw.rejected, (state, { meta, error }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].withdraw = { error: error.message };
     });
 });
 

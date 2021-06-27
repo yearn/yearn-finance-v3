@@ -5,7 +5,7 @@ import { VaultsActions } from '../vaults/vaults.actions';
 import { getConstants } from '../../../../config/constants';
 import { TokensActions } from '../..';
 import BigNumber from 'bignumber.js';
-import { handleTransaction, toBN } from '../../../../utils';
+import { calculateSharesAmount, handleTransaction, toBN } from '../../../../utils';
 
 const initiateLabs = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'labs/initiateLabs',
@@ -139,10 +139,42 @@ const yvBoostApproveZapOut = createAsyncThunk<void, { labAddress: string }, Thun
     }
   }
 );
-const yvBoostWithdraw = createAsyncThunk<void, void, ThunkAPI>(
-  'labs/yvBoost/yveCrvWithdraw',
-  async (_args, { dispatch }) => {}
-);
+const yvBoostWithdraw = createAsyncThunk<
+  void,
+  { labAddress: string; amount: BigNumber; targetTokenAddress: string },
+  ThunkAPI
+>('labs/yvBoost/yveCrvWithdraw', async ({ labAddress, amount, targetTokenAddress }, { dispatch, extra, getState }) => {
+  const { services } = extra;
+  const userAddress = getState().wallet.selectedAddress;
+  if (!userAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
+  const labData = getState().labs.labsMap[labAddress];
+  const tokenData = getState().tokens.tokensMap[labData.tokenId];
+  const labAllowancesMap = getState().tokens.user.userTokensAllowancesMap[labAddress];
+  const userLabData = getState().labs.user.userLabsPositionsMap[labAddress]?.DEPOSIT;
+
+  const amountOfShares = calculateSharesAmount({
+    amount,
+    decimals: tokenData.decimals,
+    pricePerShare: labData.metadata.pricePerShare,
+  });
+
+  // TODO validations
+
+  const { labService } = services;
+  // const tx = await labService.withdraw({
+  //   accountAddress: userAddress,
+  //   tokenAddress: labData.tokenId,
+  //   labAddress,
+  //   amountOfShares,
+  // });
+  // await handleTransaction(tx);
+
+  dispatch(getLabsDynamic({ addresses: [labAddress] }));
+  dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
+  dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, labAddress] }));
+});
 
 export const LabsActions = {
   initiateLabs,
