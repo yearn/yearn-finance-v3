@@ -171,7 +171,8 @@ export interface LabsPositionsMap {
 
 export interface LabActionsStatusMap {
   get: Status;
-  approve: Status;
+  approveDeposit: Status;
+  deposit: Status;
 }
 export interface UserLabActionsStatusMap {
   get: Status;

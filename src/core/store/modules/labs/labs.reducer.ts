@@ -12,7 +12,8 @@ import { LabsActions } from './labs.actions';
 
 export const initialLabActionsStatusMap: LabActionsStatusMap = {
   get: initialStatus,
-  approve: initialStatus,
+  approveDeposit: initialStatus,
+  deposit: initialStatus,
 };
 
 export const initialUserLabsActionsStatusMap: UserLabActionsStatusMap = {
@@ -40,7 +41,7 @@ export const labsInitialState: LabsState = {
 };
 
 const { initiateLabs, getLabs, getLabsDynamic, getUserLabsPositions, yvBoost } = LabsActions;
-const { yvBoostApproveDeposit } = yvBoost;
+const { yvBoostApproveDeposit, yvBoostDeposit } = yvBoost;
 
 const labsReducer = createReducer(labsInitialState, (builder) => {
   builder
@@ -129,15 +130,27 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     })
     .addCase(yvBoostApproveDeposit.pending, (state, { meta }) => {
       const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approve = { loading: true };
+      state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = { loading: true };
     })
     .addCase(yvBoostApproveDeposit.fulfilled, (state, { meta }) => {
       const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approve = {};
+      state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = {};
     })
     .addCase(yvBoostApproveDeposit.rejected, (state, { meta, error }) => {
       const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approve = { error: error.message };
+      state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = { error: error.message };
+    })
+    .addCase(yvBoostDeposit.pending, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].deposit = { loading: true };
+    })
+    .addCase(yvBoostDeposit.fulfilled, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].deposit = {};
+    })
+    .addCase(yvBoostDeposit.rejected, (state, { meta, error }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].deposit = { error: error.message };
     });
 });
 
