@@ -15,5 +15,6 @@ export const getEnv = memoize(
     BLOCKNATIVE_KEY: process.env.REACT_APP_BLOCKNATIVE_KEY,
     FORTMATIC_KEY: process.env.REACT_APP_FORTMATIC_KEY,
     PORTIS_KEY: process.env.REACT_APP_PORTIS_KEY,
+    ZAPPER_API_KEY: process.env.REACT_APP_ZAPPER_API_KEY,
   })
 );
