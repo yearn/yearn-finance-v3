@@ -20,6 +20,7 @@ export const initialLabActionsStatusMap: LabActionsStatusMap = {
   claimReward: initialStatus,
   approveReinvest: initialStatus,
   reinvest: initialStatus,
+  lock: initialStatus,
 };
 
 export const initialUserLabsActionsStatusMap: UserLabActionsStatusMap = {
@@ -48,7 +49,7 @@ export const labsInitialState: LabsState = {
 
 const { initiateLabs, getLabs, getLabsDynamic, getUserLabsPositions, yvBoost, yveCrv } = LabsActions;
 const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut, yvBoostWithdraw } = yvBoost;
-const { yveCrvApproveDeposit, yveCrvDeposit, yveCrvClaimReward, yveCrvApproveReinvest, yveCrvReinvest } = yveCrv;
+const { yveCrvApproveDeposit, yveCrvLock, yveCrvClaimReward, yveCrvApproveReinvest, yveCrvReinvest } = yveCrv;
 
 const { YVECRV } = getConstants().CONTRACT_ADDRESSES;
 const labsReducer = createReducer(labsInitialState, (builder) => {
@@ -196,17 +197,17 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
       const labAddress = meta.arg.labAddress;
       state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = { error: error.message };
     })
-    .addCase(yveCrvDeposit.pending, (state, { meta }) => {
+    .addCase(yveCrvLock.pending, (state, { meta }) => {
       const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].deposit = { loading: true };
+      state.statusMap.labsActionsStatusMap[labAddress].lock = { loading: true };
     })
-    .addCase(yveCrvDeposit.fulfilled, (state, { meta }) => {
+    .addCase(yveCrvLock.fulfilled, (state, { meta }) => {
       const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].deposit = {};
+      state.statusMap.labsActionsStatusMap[labAddress].lock = {};
     })
-    .addCase(yveCrvDeposit.rejected, (state, { meta, error }) => {
+    .addCase(yveCrvLock.rejected, (state, { meta, error }) => {
       const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].deposit = { error: error.message };
+      state.statusMap.labsActionsStatusMap[labAddress].lock = { error: error.message };
     })
     .addCase(yveCrvClaimReward.pending, (state) => {
       state.statusMap.labsActionsStatusMap[YVECRV].claimReward = { loading: true };
