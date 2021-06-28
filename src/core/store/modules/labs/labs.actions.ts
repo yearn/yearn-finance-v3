@@ -7,7 +7,7 @@ import { TokensActions } from '../..';
 import BigNumber from 'bignumber.js';
 import { calculateSharesAmount, handleTransaction, toBN } from '../../../../utils';
 
-const { THREECRV, YVECRV, PICKLE_ZAP_IN } = getConstants().CONTRACT_ADDRESSES;
+const { THREECRV, YVECRV, pickleZapIn, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
 
 const initiateLabs = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'labs/initiateLabs',
@@ -286,7 +286,7 @@ const yvBoostEthApproveInvest = createAsyncThunk<void, { tokenAddress: string },
   'labs/yvBoostEth/yvBoostEthApproveInvest',
   async ({ tokenAddress }, { dispatch }) => {
     try {
-      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: PICKLE_ZAP_IN }));
+      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: pickleZapIn }));
       unwrapResult(result);
     } catch (error) {
       throw new Error(error.message);
@@ -294,9 +294,30 @@ const yvBoostEthApproveInvest = createAsyncThunk<void, { tokenAddress: string },
   }
 );
 
-const yvBoostEthInvest = createAsyncThunk<void, void, ThunkAPI>(
+const yvBoostEthInvest = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthInvest',
-  async (_args, { dispatch, extra, getState }) => {}
+  async ({ labAddress, sellTokenAddress, amount }, { dispatch, extra, getState }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+
+    // TODO validations.
+
+    const { labService } = services;
+    // const tx = await labService.yvBoostEthInvest({
+    //   accountAddress: userAddress,
+    //   tokenAddress: tokenData.address,
+    //   labAddress: PSLPYVBOOSTETH,
+    //   amount: amountInWei.toString(),
+    // });
+    // await handleTransaction(tx);
+
+    dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
+    dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [THREECRV, PSLPYVBOOSTETH] }));
+  }
 );
 
 const yvBoostEthApproveStake = createAsyncThunk<void, void, ThunkAPI>(
