@@ -8,6 +8,7 @@ import {
   LabsPositionsMap,
 } from '@types';
 import { groupBy, keyBy, union } from 'lodash';
+import { getConstants } from '../../../../config/constants';
 import { LabsActions } from './labs.actions';
 
 export const initialLabActionsStatusMap: LabActionsStatusMap = {
@@ -16,6 +17,7 @@ export const initialLabActionsStatusMap: LabActionsStatusMap = {
   deposit: initialStatus,
   approveZapOut: initialStatus,
   withdraw: initialStatus,
+  claimReward: initialStatus,
 };
 
 export const initialUserLabsActionsStatusMap: UserLabActionsStatusMap = {
@@ -44,8 +46,9 @@ export const labsInitialState: LabsState = {
 
 const { initiateLabs, getLabs, getLabsDynamic, getUserLabsPositions, yvBoost, yveCrv } = LabsActions;
 const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut, yvBoostWithdraw } = yvBoost;
-const { yveCrvApproveDeposit, yveCrvDeposit } = yveCrv;
+const { yveCrvApproveDeposit, yveCrvDeposit, yveCrvClaimReward } = yveCrv;
 
+const { YVECRV } = getConstants().CONTRACT_ADDRESSES;
 const labsReducer = createReducer(labsInitialState, (builder) => {
   builder
     .addCase(initiateLabs.pending, (state) => {
@@ -202,6 +205,15 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     .addCase(yveCrvDeposit.rejected, (state, { meta, error }) => {
       const labAddress = meta.arg.labAddress;
       state.statusMap.labsActionsStatusMap[labAddress].deposit = { error: error.message };
+    })
+    .addCase(yveCrvClaimReward.pending, (state) => {
+      state.statusMap.labsActionsStatusMap[YVECRV].claimReward = { loading: true };
+    })
+    .addCase(yveCrvClaimReward.fulfilled, (state) => {
+      state.statusMap.labsActionsStatusMap[YVECRV].claimReward = {};
+    })
+    .addCase(yveCrvClaimReward.rejected, (state, { error }) => {
+      state.statusMap.labsActionsStatusMap[YVECRV].claimReward = { error: error.message };
     });
 });
 

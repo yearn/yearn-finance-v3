@@ -7,6 +7,8 @@ import { TokensActions } from '../..';
 import BigNumber from 'bignumber.js';
 import { calculateSharesAmount, handleTransaction, toBN } from '../../../../utils';
 
+const { THREECRV, YVECRV } = getConstants().CONTRACT_ADDRESSES;
+
 const initiateLabs = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'labs/initiateLabs',
   async (_arg, { dispatch }) => {
@@ -207,7 +209,7 @@ const yveCrvDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
 
     const amountInWei = amount.multipliedBy(ONE_UNIT);
     const { labService } = services;
-    // const tx = await labService.yvBoostDeposit({
+    // const tx = await labService.yveCrvDeposit({
     //   accountAddress: userAddress,
     //   tokenAddress: tokenData.address,
     //   labAddress,
@@ -222,7 +224,24 @@ const yveCrvDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
 
 const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
   'labs/yveCrv/yveCrvClaimReward',
-  async (_args, { dispatch }) => {}
+  async (_args, { dispatch, extra, getState }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+
+    // TODO validations.
+
+    const { labService } = services;
+    // const tx = await labService.yveCrvClaimReward({
+    //   accountAddress: userAddress,
+    // });
+    // await handleTransaction(tx);
+    dispatch(getLabsDynamic({ addresses: [YVECRV] }));
+    dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [THREECRV, YVECRV] }));
+  }
 );
 
 const yveCrvApproveReinvest = createAsyncThunk<void, void, ThunkAPI>(
