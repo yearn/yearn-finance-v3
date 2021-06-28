@@ -7,7 +7,7 @@ import { TokensActions } from '../..';
 import BigNumber from 'bignumber.js';
 import { calculateSharesAmount, handleTransaction, toBN } from '../../../../utils';
 
-const { THREECRV, YVECRV } = getConstants().CONTRACT_ADDRESSES;
+const { THREECRV, YVECRV, PICKLE_ZAP_IN } = getConstants().CONTRACT_ADDRESSES;
 
 const initiateLabs = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'labs/initiateLabs',
@@ -282,23 +282,30 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
   }
 );
 
-const yvBoostEthApproveInvest = createAsyncThunk<void, void, ThunkAPI>(
+const yvBoostEthApproveInvest = createAsyncThunk<void, { tokenAddress: string }, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthApproveInvest',
+  async ({ tokenAddress }, { dispatch }) => {
+    try {
+      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: PICKLE_ZAP_IN }));
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const yvBoostEthInvest = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yvBoostEth/yvBoostEthInvest',
   async (_args, { dispatch, extra, getState }) => {}
 );
 
-const yvBoostInvest = createAsyncThunk<void, void, ThunkAPI>(
-  'labs/yvBoostEth/yvBoostInvest',
+const yvBoostEthApproveStake = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yvBoostEth/yvBoostEthApproveStake',
   async (_args, { dispatch, extra, getState }) => {}
 );
 
-const yvBoostApproveStake = createAsyncThunk<void, void, ThunkAPI>(
-  'labs/yvBoostEth/yvBoostApproveStake',
-  async (_args, { dispatch, extra, getState }) => {}
-);
-
-const yvBoostStake = createAsyncThunk<void, void, ThunkAPI>(
-  'labs/yvBoostEth/yvBoostStake',
+const yvBoostEthStake = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yvBoostEth/yvBoostEthStake',
   async (_args, { dispatch, extra, getState }) => {}
 );
 
@@ -322,5 +329,10 @@ export const LabsActions = {
     yveCrvApproveReinvest,
     yveCrvReinvest,
   },
-  yvBoostEth: {},
+  yvBoostEth: {
+    yvBoostEthApproveInvest,
+    yvBoostEthInvest,
+    yvBoostEthApproveStake,
+    yvBoostEthStake,
+  },
 };
