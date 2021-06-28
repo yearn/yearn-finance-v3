@@ -52,7 +52,8 @@ const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut, yvBoostWith
 const { yveCrvApproveDeposit, yveCrvDeposit, yveCrvClaimReward, yveCrvApproveReinvest, yveCrvReinvest } = yveCrv;
 const { yvBoostEthApproveInvest } = yvBoostEth;
 
-const { YVECRV } = getConstants().CONTRACT_ADDRESSES;
+const { YVECRV, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
+
 const labsReducer = createReducer(labsInitialState, (builder) => {
   builder
     .addCase(initiateLabs.pending, (state) => {
@@ -241,13 +242,13 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
       state.statusMap.labsActionsStatusMap[YVECRV].reinvest = { error: error.message };
     })
     .addCase(yvBoostEthApproveInvest.pending, (state) => {
-      state.statusMap.labsActionsStatusMap['TODO ADD CORRECT ASSET ADDRESS'].approveInvest = { loading: true };
+      state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveInvest = { loading: true };
     })
     .addCase(yvBoostEthApproveInvest.fulfilled, (state) => {
-      state.statusMap.labsActionsStatusMap['TODO ADD CORRECT ASSET ADDRESS'].approveInvest = {};
+      state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveInvest = {};
     })
     .addCase(yvBoostEthApproveInvest.rejected, (state, { error }) => {
-      state.statusMap.labsActionsStatusMap['TODO ADD CORRECT ASSET ADDRESS'].approveInvest = { error: error.message };
+      state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveInvest = { error: error.message };
     });
 });
 
