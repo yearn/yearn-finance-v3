@@ -195,28 +195,28 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
 
     ////// yveCrv //////
     .addCase(yveCrvApproveDeposit.pending, (state, { meta }) => {
-      const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = { loading: true };
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[YVECRV].approveDeposit = { loading: true };
     })
     .addCase(yveCrvApproveDeposit.fulfilled, (state, { meta }) => {
-      const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = {};
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[YVECRV].approveDeposit = {};
     })
     .addCase(yveCrvApproveDeposit.rejected, (state, { meta, error }) => {
-      const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = { error: error.message };
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[YVECRV].approveDeposit = { error: error.message };
     })
     .addCase(yveCrvDeposit.pending, (state, { meta }) => {
-      const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].deposit = { loading: true };
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[YVECRV].deposit = { loading: true };
     })
     .addCase(yveCrvDeposit.fulfilled, (state, { meta }) => {
-      const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].deposit = {};
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[YVECRV].deposit = {};
     })
     .addCase(yveCrvDeposit.rejected, (state, { meta, error }) => {
-      const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].deposit = { error: error.message };
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[YVECRV].deposit = { error: error.message };
     })
     .addCase(yveCrvClaimReward.pending, (state) => {
       state.statusMap.labsActionsStatusMap[YVECRV].claimReward = { loading: true };
@@ -228,16 +228,16 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
       state.statusMap.labsActionsStatusMap[YVECRV].claimReward = { error: error.message };
     })
     .addCase(yveCrvApproveReinvest.pending, (state, { meta }) => {
-      const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approveReinvest = { loading: true };
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[YVECRV].approveReinvest = { loading: true };
     })
     .addCase(yveCrvApproveReinvest.fulfilled, (state, { meta }) => {
-      const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approveReinvest = {};
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[YVECRV].approveReinvest = {};
     })
     .addCase(yveCrvApproveReinvest.rejected, (state, { meta, error }) => {
-      const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approveReinvest = { error: error.message };
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[YVECRV].approveReinvest = { error: error.message };
     })
     .addCase(yveCrvReinvest.pending, (state) => {
       state.statusMap.labsActionsStatusMap[YVECRV].reinvest = { loading: true };
@@ -249,7 +249,7 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
       state.statusMap.labsActionsStatusMap[YVECRV].reinvest = { error: error.message };
     })
 
-    ////// yvBoost-eth //////
+    ////// yveCrv //////
     .addCase(yvBoostEthApproveInvest.pending, (state, { meta }) => {
       // const { labAddress } = meta.arg;
       state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveInvest = { loading: true };
