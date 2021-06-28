@@ -191,8 +191,8 @@ const yveCrvApproveDeposit = createAsyncThunk<void, { labAddress: string; tokenA
   }
 );
 
-const yveCrvLock = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
-  'labs/yveCrv/yveCrvLock',
+const yveCrvDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
+  'labs/yveCrv/yveCrvDeposit',
   async ({ labAddress, sellTokenAddress, amount }, { dispatch, getState, extra }) => {
     const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;
@@ -297,7 +297,7 @@ export const LabsActions = {
   },
   yveCrv: {
     yveCrvApproveDeposit,
-    yveCrvLock,
+    yveCrvDeposit,
     yveCrvClaimReward,
     yveCrvApproveReinvest,
     yveCrvReinvest,

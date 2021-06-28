@@ -178,7 +178,6 @@ export interface LabActionsStatusMap {
   claimReward: Status;
   approveReinvest: Status;
   reinvest: Status;
-  lock: Status;
 }
 export interface UserLabActionsStatusMap {
   get: Status;
