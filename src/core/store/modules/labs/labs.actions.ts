@@ -88,12 +88,12 @@ const yvBoostApproveDeposit = createAsyncThunk<void, { labAddress: string; token
   }
 );
 
-interface YvBoostDepositProps {
+interface LabsDepositProps {
   labAddress: string;
   tokenAddress: string;
   amount: BigNumber;
 }
-const yvBoostDeposit = createAsyncThunk<void, YvBoostDepositProps, ThunkAPI>(
+const yvBoostDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
   'labs/yvBoost/yvBoostDeposit',
   async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
     const { services } = extra;
@@ -188,9 +188,36 @@ const yveCrvApproveDeposit = createAsyncThunk<void, { labAddress: string; tokenA
   }
 );
 
-const yveCrvDeposit = createAsyncThunk<void, void, ThunkAPI>(
+const yveCrvDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
   'labs/yveCrv/yveCrvDeposit',
-  async (_args, { dispatch }) => {}
+  async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+    const labData = getState().labs.labsMap[labAddress];
+    const tokenData = getState().tokens.tokensMap[tokenAddress];
+    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
+    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
+    const decimals = toBN(tokenData.decimals);
+    const ONE_UNIT = toBN('10').pow(decimals);
+
+    // TODO validations
+
+    const amountInWei = amount.multipliedBy(ONE_UNIT);
+    const { labService } = services;
+    // const tx = await labService.yvBoostDeposit({
+    //   accountAddress: userAddress,
+    //   tokenAddress: tokenData.address,
+    //   labAddress,
+    //   amount: amountInWei.toString(),
+    // });
+    // await handleTransaction(tx);
+    dispatch(getLabsDynamic({ addresses: [labAddress] }));
+    dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, labAddress] }));
+  }
 );
 
 const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(

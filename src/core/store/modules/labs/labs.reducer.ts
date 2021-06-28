@@ -44,7 +44,7 @@ export const labsInitialState: LabsState = {
 
 const { initiateLabs, getLabs, getLabsDynamic, getUserLabsPositions, yvBoost, yveCrv } = LabsActions;
 const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut, yvBoostWithdraw } = yvBoost;
-const { yveCrvApproveDeposit } = yveCrv;
+const { yveCrvApproveDeposit, yveCrvDeposit } = yveCrv;
 
 const labsReducer = createReducer(labsInitialState, (builder) => {
   builder
@@ -190,6 +190,18 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     .addCase(yveCrvApproveDeposit.rejected, (state, { meta, error }) => {
       const labAddress = meta.arg.labAddress;
       state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = { error: error.message };
+    })
+    .addCase(yveCrvDeposit.pending, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].deposit = { loading: true };
+    })
+    .addCase(yveCrvDeposit.fulfilled, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].deposit = {};
+    })
+    .addCase(yveCrvDeposit.rejected, (state, { meta, error }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].deposit = { error: error.message };
     });
 });
 
