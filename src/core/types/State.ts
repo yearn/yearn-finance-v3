@@ -167,6 +167,7 @@ export interface SettingsState {
 export interface LabsPositionsMap {
   DEPOSIT: Position;
   YIELD: Position;
+  STAKE: Position;
 }
 
 export interface LabActionsStatusMap {
