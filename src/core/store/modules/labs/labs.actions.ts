@@ -7,7 +7,7 @@ import { TokensActions } from '../..';
 import BigNumber from 'bignumber.js';
 import { calculateSharesAmount, handleTransaction, toBN } from '../../../../utils';
 
-const { THREECRV, YVECRV } = getConstants().CONTRACT_ADDRESSES;
+const { THREECRV, YVECRV, pickleZapIn, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConstants().CONTRACT_ADDRESSES;
 
 const initiateLabs = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'labs/initiateLabs',
@@ -282,6 +282,84 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
   }
 );
 
+const yvBoostEthApproveInvest = createAsyncThunk<void, { labAddress: string; tokenAddress: string }, ThunkAPI>(
+  'labs/yvBoostEth/yvBoostEthApproveInvest',
+  async ({ tokenAddress }, { dispatch }) => {
+    // tokenAddress is anyToken.
+    try {
+      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: pickleZapIn }));
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const yvBoostEthInvest = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
+  'labs/yvBoostEth/yvBoostEthInvest',
+  async ({ labAddress, sellTokenAddress, amount }, { dispatch, extra, getState }) => {
+    // labAddress is PSLPYVBOOSTETH
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+
+    // TODO validations.
+
+    const { labService } = services;
+    // const tx = await labService.yvBoostEthInvest({
+    //   accountAddress: userAddress,
+    //   tokenAddress: tokenData.address,
+    //   amount: amountInWei.toString(),
+    // });
+    // await handleTransaction(tx);
+
+    dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
+    dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [sellTokenAddress, PSLPYVBOOSTETH] }));
+  }
+);
+
+const yvBoostEthApproveStake = createAsyncThunk<void, { labAddress: string }, ThunkAPI>(
+  'labs/yveCrv/yvBoostEthApproveStake',
+  async (args, { dispatch }) => {
+    try {
+      const result = await dispatch(
+        TokensActions.approve({ tokenAddress: PSLPYVBOOSTETH, spenderAddress: PSLPYVBOOSTETH_GAUGE })
+      );
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const yvBoostEthStake = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
+  'labs/yvBoostEth/yvBoostEthStake',
+  async ({ labAddress, amount }, { dispatch, extra, getState }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+
+    // TODO validations.
+
+    const { labService } = services;
+    // const tx = await labService.yvBoostEthStake({
+    //   accountAddress: userAddress,
+    //   tokenAddress: tokenData.address,
+    //   amount: amountInWei.toString(),
+    // });
+    // await handleTransaction(tx);
+
+    dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
+    dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [PSLPYVBOOSTETH] }));
+  }
+);
+
 export const LabsActions = {
   initiateLabs,
   getLabs,
@@ -301,5 +379,11 @@ export const LabsActions = {
     yveCrvClaimReward,
     yveCrvApproveReinvest,
     yveCrvReinvest,
+  },
+  yvBoostEth: {
+    yvBoostEthApproveInvest,
+    yvBoostEthInvest,
+    yvBoostEthApproveStake,
+    yvBoostEthStake,
   },
 };
