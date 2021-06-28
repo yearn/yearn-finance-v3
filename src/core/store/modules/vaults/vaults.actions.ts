@@ -186,7 +186,7 @@ const withdrawVault = createAsyncThunk<
   await handleTransaction(tx);
   dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
   dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
-  // dispatch(getUSerTokensData([vaultData.token])); // TODO use when suported by sdk
+  dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, vaultAddress] }));
 });
 
 const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(

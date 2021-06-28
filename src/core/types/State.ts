@@ -172,6 +172,17 @@ export interface LabsPositionsMap {
 
 export interface LabActionsStatusMap {
   get: Status;
+  approveDeposit: Status;
+  deposit: Status;
+  approveZapOut: Status;
+  withdraw: Status;
+  claimReward: Status;
+  approveReinvest: Status;
+  reinvest: Status;
+  approveInvest: Status;
+  invest: Status;
+  approveStake: Status;
+  stake: Status;
 }
 export interface UserLabActionsStatusMap {
   get: Status;
