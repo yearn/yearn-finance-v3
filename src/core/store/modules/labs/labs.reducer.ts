@@ -142,6 +142,8 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
       });
       state.statusMap.user.getUserLabsPositions = { error: error.message };
     })
+
+    ////// yvBoost //////
     .addCase(yvBoostApproveDeposit.pending, (state, { meta }) => {
       const labAddress = meta.arg.labAddress;
       state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = { loading: true };
@@ -190,6 +192,8 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
       const labAddress = meta.arg.labAddress;
       state.statusMap.labsActionsStatusMap[labAddress].withdraw = { error: error.message };
     })
+
+    ////// yveCrv //////
     .addCase(yveCrvApproveDeposit.pending, (state, { meta }) => {
       const labAddress = meta.arg.labAddress;
       state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = { loading: true };
@@ -245,7 +249,7 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
       state.statusMap.labsActionsStatusMap[YVECRV].reinvest = { error: error.message };
     })
 
-    ////// yveCrv //////
+    ////// yvBoost-eth //////
     .addCase(yvBoostEthApproveInvest.pending, (state, { meta }) => {
       // const { labAddress } = meta.arg;
       state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveInvest = { loading: true };
