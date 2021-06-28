@@ -4,7 +4,7 @@ import { getConstants } from '../../../../config/constants';
 import { toBN } from '../../../../utils';
 import { GeneralLabView } from '../../../types/Lab';
 
-const { YVECRV, CRV, YVBOOST, YVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
+const { YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
 
 // general selectors
 const selectCrvTokenData = (state: RootState) => state.tokens.tokensMap[CRV];
@@ -63,9 +63,9 @@ const selectYvBoostLab = createSelector(
 );
 
 // yvBoost-eth selectors
-const selectYvBoostEthLabData = (state: RootState) => state.labs.labsMap[YVBOOSTETH];
-const selectUserYvBoostEthLabPositions = (state: RootState) => state.labs.user.userLabsPositionsMap[YVBOOSTETH];
-const selectYvBoostEthLabAllowancesMap = (state: RootState) => state.labs.user.labsAllowancesMap[YVBOOSTETH];
+const selectYvBoostEthLabData = (state: RootState) => state.labs.labsMap[PSLPYVBOOSTETH];
+const selectUserYvBoostEthLabPositions = (state: RootState) => state.labs.user.userLabsPositionsMap[PSLPYVBOOSTETH];
+const selectYvBoostEthLabAllowancesMap = (state: RootState) => state.labs.user.labsAllowancesMap[PSLPYVBOOSTETH];
 
 const selectYvBoostEthLab = createSelector(
   [
@@ -83,13 +83,16 @@ const selectYvBoostEthLab = createSelector(
 );
 
 // General selectors
-const selectLabs = createSelector([selectYveCrvLab, selectYvBoostLab], (yveCrvLab, yvBoostLab) => {
-  const labs: GeneralLabView[] = [];
-  [yveCrvLab, yvBoostLab].forEach((lab) => {
-    if (lab) labs.push(lab);
-  });
-  return labs;
-});
+const selectLabs = createSelector(
+  [selectYveCrvLab, selectYvBoostLab, selectYvBoostEthLab],
+  (yveCrvLab, yvBoostLab, yvBoostEthLab) => {
+    const labs: GeneralLabView[] = [];
+    [yveCrvLab, yvBoostLab, yvBoostEthLab].forEach((lab) => {
+      if (lab) labs.push(lab);
+    });
+    return labs;
+  }
+);
 
 const selectDepositedLabs = createSelector([selectLabs], (labs) => {
   return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).gt(0));
