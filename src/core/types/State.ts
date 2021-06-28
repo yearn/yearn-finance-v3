@@ -177,6 +177,7 @@ export interface LabActionsStatusMap {
   withdraw: Status;
   claimReward: Status;
   approveReinvest: Status;
+  reinvest: Status;
 }
 export interface UserLabActionsStatusMap {
   get: Status;

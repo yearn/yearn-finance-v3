@@ -258,7 +258,27 @@ const yveCrvApproveReinvest = createAsyncThunk<void, { labAddress: string; token
 
 const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
   'labs/yveCrv/yveCrvReinvest',
-  async (_args, { dispatch }) => {}
+  async (_args, { dispatch, extra, getState }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+
+    // TODO validations.
+
+    const { labService } = services;
+    // const tx = await labService.yveCrvReinvest({
+    //   accountAddress: userAddress,
+    // });
+    // await handleTransaction(tx);
+
+    dispatch(getLabsDynamic({ addresses: [YVECRV] }));
+    dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [THREECRV] }));
+    dispatch(getYveCrvExtraData({ fetchDynamicData: true }));
+    dispatch(getUserYveCrvExtraData());
+  }
 );
 
 export const LabsActions = {

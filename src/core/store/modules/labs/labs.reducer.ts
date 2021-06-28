@@ -19,6 +19,7 @@ export const initialLabActionsStatusMap: LabActionsStatusMap = {
   withdraw: initialStatus,
   claimReward: initialStatus,
   approveReinvest: initialStatus,
+  reinvest: initialStatus,
 };
 
 export const initialUserLabsActionsStatusMap: UserLabActionsStatusMap = {
@@ -47,7 +48,7 @@ export const labsInitialState: LabsState = {
 
 const { initiateLabs, getLabs, getLabsDynamic, getUserLabsPositions, yvBoost, yveCrv } = LabsActions;
 const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut, yvBoostWithdraw } = yvBoost;
-const { yveCrvApproveDeposit, yveCrvDeposit, yveCrvClaimReward, yveCrvApproveReinvest } = yveCrv;
+const { yveCrvApproveDeposit, yveCrvDeposit, yveCrvClaimReward, yveCrvApproveReinvest, yveCrvReinvest } = yveCrv;
 
 const { YVECRV } = getConstants().CONTRACT_ADDRESSES;
 const labsReducer = createReducer(labsInitialState, (builder) => {
@@ -227,6 +228,15 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     .addCase(yveCrvApproveReinvest.rejected, (state, { meta, error }) => {
       const labAddress = meta.arg.labAddress;
       state.statusMap.labsActionsStatusMap[labAddress].approveReinvest = { error: error.message };
+    })
+    .addCase(yveCrvReinvest.pending, (state) => {
+      state.statusMap.labsActionsStatusMap[YVECRV].reinvest = { loading: true };
+    })
+    .addCase(yveCrvReinvest.fulfilled, (state) => {
+      state.statusMap.labsActionsStatusMap[YVECRV].reinvest = {};
+    })
+    .addCase(yveCrvReinvest.rejected, (state, { error }) => {
+      state.statusMap.labsActionsStatusMap[YVECRV].reinvest = { error: error.message };
     });
 });
 
