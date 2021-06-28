@@ -181,6 +181,7 @@ export interface LabActionsStatusMap {
   reinvest: Status;
   approveInvest: Status;
   invest: Status;
+  approveStake: Status;
 }
 export interface UserLabActionsStatusMap {
   get: Status;

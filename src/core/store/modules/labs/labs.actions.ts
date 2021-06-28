@@ -320,9 +320,16 @@ const yvBoostEthInvest = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
   }
 );
 
-const yvBoostEthApproveStake = createAsyncThunk<void, void, ThunkAPI>(
-  'labs/yvBoostEth/yvBoostEthApproveStake',
-  async (_args, { dispatch, extra, getState }) => {}
+const yvBoostEthApproveStake = createAsyncThunk<void, { labAddress: string; tokenAddress: string }, ThunkAPI>(
+  'labs/yveCrv/yvBoostEthApproveStake',
+  async ({ labAddress, tokenAddress }, { dispatch }) => {
+    try {
+      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: labAddress }));
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
 );
 
 const yvBoostEthStake = createAsyncThunk<void, void, ThunkAPI>(
