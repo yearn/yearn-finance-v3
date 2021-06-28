@@ -176,6 +176,38 @@ const yvBoostWithdraw = createAsyncThunk<
   dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, labAddress] }));
 });
 
+const yveCrvApproveDeposit = createAsyncThunk<void, { labAddress: string; tokenAddress: string }, ThunkAPI>(
+  'labs/yveCrv/yveCrvApproveDeposit',
+  async ({ labAddress, tokenAddress }, { dispatch }) => {
+    try {
+      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: labAddress }));
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const yveCrvDeposit = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yveCrv/yveCrvDeposit',
+  async (_args, { dispatch }) => {}
+);
+
+const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yveCrv/yveCrvClaimReward',
+  async (_args, { dispatch }) => {}
+);
+
+const yveCrvApproveReinvest = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yveCrv/yveCrvApproveReinvest',
+  async (_args, { dispatch }) => {}
+);
+
+const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yveCrv/yveCrvReinvest',
+  async (_args, { dispatch }) => {}
+);
+
 export const LabsActions = {
   initiateLabs,
   getLabs,
@@ -188,5 +220,12 @@ export const LabsActions = {
     yvBoostDeposit,
     yvBoostApproveZapOut,
     yvBoostWithdraw,
+  },
+  yveCrv: {
+    yveCrvApproveDeposit,
+    yveCrvDeposit,
+    yveCrvClaimReward,
+    yveCrvApproveReinvest,
+    yveCrvReinvest,
   },
 };
