@@ -244,13 +244,18 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     .addCase(yveCrvReinvest.rejected, (state, { error }) => {
       state.statusMap.labsActionsStatusMap[YVECRV].reinvest = { error: error.message };
     })
-    .addCase(yvBoostEthApproveInvest.pending, (state) => {
+
+    ////// yveCrv //////
+    .addCase(yvBoostEthApproveInvest.pending, (state, { meta }) => {
+      // const { labAddress } = meta.arg;
       state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveInvest = { loading: true };
     })
-    .addCase(yvBoostEthApproveInvest.fulfilled, (state) => {
+    .addCase(yvBoostEthApproveInvest.fulfilled, (state, { meta }) => {
+      // const { labAddress } = meta.arg;
       state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveInvest = {};
     })
-    .addCase(yvBoostEthApproveInvest.rejected, (state, { error }) => {
+    .addCase(yvBoostEthApproveInvest.rejected, (state, { meta, error }) => {
+      // const { labAddress } = meta.arg;
       state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveInvest = { error: error.message };
     })
     .addCase(yvBoostEthInvest.pending, (state, { meta }) => {
@@ -266,28 +271,28 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
       state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].invest = { error: error.message };
     })
     .addCase(yvBoostEthApproveStake.pending, (state, { meta }) => {
-      const { labAddress } = meta.arg;
-      state.statusMap.labsActionsStatusMap[labAddress].approveStake = { loading: true };
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveStake = { loading: true };
     })
     .addCase(yvBoostEthApproveStake.fulfilled, (state, { meta }) => {
-      const { labAddress } = meta.arg;
-      state.statusMap.labsActionsStatusMap[labAddress].approveStake = {};
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveStake = {};
     })
     .addCase(yvBoostEthApproveStake.rejected, (state, { meta, error }) => {
-      const { labAddress } = meta.arg;
-      state.statusMap.labsActionsStatusMap[labAddress].approveStake = { error: error.message };
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].approveStake = { error: error.message };
     })
     .addCase(yvBoostEthStake.pending, (state, { meta }) => {
-      const { labAddress } = meta.arg;
-      state.statusMap.labsActionsStatusMap[labAddress].stake = { loading: true };
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].stake = { loading: true };
     })
     .addCase(yvBoostEthStake.fulfilled, (state, { meta }) => {
-      const { labAddress } = meta.arg;
-      state.statusMap.labsActionsStatusMap[labAddress].stake = {};
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].stake = {};
     })
     .addCase(yvBoostEthStake.rejected, (state, { meta, error }) => {
-      const { labAddress } = meta.arg;
-      state.statusMap.labsActionsStatusMap[labAddress].stake = { error: error.message };
+      // const { labAddress } = meta.arg;
+      state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].stake = { error: error.message };
     });
 });
 

@@ -282,9 +282,10 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
   }
 );
 
-const yvBoostEthApproveInvest = createAsyncThunk<void, { tokenAddress: string }, ThunkAPI>(
+const yvBoostEthApproveInvest = createAsyncThunk<void, { labAddress: string; tokenAddress: string }, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthApproveInvest',
   async ({ tokenAddress }, { dispatch }) => {
+    // tokenAddress is anyToken.
     try {
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: pickleZapIn }));
       unwrapResult(result);
@@ -297,6 +298,7 @@ const yvBoostEthApproveInvest = createAsyncThunk<void, { tokenAddress: string },
 const yvBoostEthInvest = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthInvest',
   async ({ labAddress, sellTokenAddress, amount }, { dispatch, extra, getState }) => {
+    // labAddress is PSLPYVBOOSTETH
     const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;
     if (!userAddress) {
