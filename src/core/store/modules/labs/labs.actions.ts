@@ -282,6 +282,26 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
   }
 );
 
+const yvBoostEthApproveInvest = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yvBoostEth/yvBoostEthApproveInvest',
+  async (_args, { dispatch, extra, getState }) => {}
+);
+
+const yvBoostInvest = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yvBoostEth/yvBoostInvest',
+  async (_args, { dispatch, extra, getState }) => {}
+);
+
+const yvBoostApproveStake = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yvBoostEth/yvBoostApproveStake',
+  async (_args, { dispatch, extra, getState }) => {}
+);
+
+const yvBoostStake = createAsyncThunk<void, void, ThunkAPI>(
+  'labs/yvBoostEth/yvBoostStake',
+  async (_args, { dispatch, extra, getState }) => {}
+);
+
 export const LabsActions = {
   initiateLabs,
   getLabs,
@@ -302,4 +322,5 @@ export const LabsActions = {
     yveCrvApproveReinvest,
     yveCrvReinvest,
   },
+  yvBoostEth: {},
 };
