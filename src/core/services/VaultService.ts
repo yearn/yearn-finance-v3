@@ -10,7 +10,10 @@ import {
   VaultDynamic,
   TransactionResponse,
   GetSupportedVaultsProps,
+  GetExpectedTransactionOutcomeProps,
+  TransactionOutcome,
 } from '@types';
+import { toBN } from '@src/utils';
 
 export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;
@@ -40,6 +43,21 @@ export class VaultServiceImpl implements VaultService {
   }): Promise<Position[]> {
     const yearn = this.yearnSdk;
     return await yearn.vaults.positionsOf(userAddress, vaultAddresses);
+  }
+
+  public async getExpectedTransactionOutcome(props: GetExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {
+    const { sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = props;
+    // TODO: REMOVE MOCK DATA AFTER SDK IMPLEMENTATION FINISHED
+    const expectedOutcome: TransactionOutcome = {
+      sourceTokenAddress,
+      sourceTokenAmount,
+      targetTokenAddress,
+      targetTokenAmount: toBN(sourceTokenAmount).times(1.5).toFixed(0),
+      conversionRate: 1.5,
+      slippage: 0.01,
+    };
+
+    return expectedOutcome;
   }
 
   public async deposit(props: DepositProps): Promise<TransactionResponse> {
