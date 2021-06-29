@@ -25,6 +25,8 @@ const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedVaultAddress = (state: RootState) => state.vaults.selectedVaultAddress;
 const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMap.vaultsActionsStatusMap;
 const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
+const selectExpectedTxOutcome = (state: RootState) => state.vaults.transaction.expectedOutcome;
+const selectExpectedTxOutcomeStatus = (state: RootState) => state.vaults.statusMap.getExpectedTransactionOutcome;
 
 const selectGetVaultsStatus = (state: RootState) => state.vaults.statusMap.getVaults;
 const selectGetUserVaultsPositionsStatus = (state: RootState) => state.vaults.statusMap.user.getUserVaultsPositions;
@@ -217,4 +219,6 @@ export const VaultsSelectors = {
   selectRecommendations,
   selectVaultsStatus,
   selectVault,
+  selectExpectedTxOutcome,
+  selectExpectedTxOutcomeStatus,
 };
