@@ -47,6 +47,15 @@ interface LabMetadata {
 
 interface LabUserMetadata {}
 
+interface TransactionOutcome {
+  sourceTokenAddress: Address;
+  sourceTokenAmount: Integer;
+  targetTokenAddress: Address;
+  targetTokenAmount: Integer;
+  conversionRate: number;
+  slippage: number;
+}
+
 export type {
   Position,
   Asset,
@@ -70,4 +79,5 @@ export type {
   TransactionRequest,
   TransactionResponse,
   TransactionReceipt,
+  TransactionOutcome,
 };

@@ -16,6 +16,7 @@ import {
   Integer,
   Wei,
   Balance,
+  TransactionOutcome,
 } from '@types';
 
 export interface UserService {}
@@ -30,11 +31,10 @@ export interface VaultService {
     userAddress: EthereumAddress;
     vaultAddresses?: string[];
   }) => Promise<Position[]>;
+  getExpectedTransactionOutcome: (props: GetExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
+  // approve:
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
-  // approveZapIn:
-  // zapIn:
-  // zapOut:
   // approveMigrate:
   // migrate:
 }
@@ -51,6 +51,15 @@ export interface TokenService {
 export interface GetSupportedVaultsProps {
   addresses?: EthereumAddress[];
 }
+
+export interface GetExpectedTransactionOutcomeProps {
+  transactionType: 'DEPOSIT' | 'WITHDRAW';
+  sourceTokenAddress: EthereumAddress;
+  sourceTokenAmount: Wei;
+  targetTokenAddress: EthereumAddress;
+  slippageTolerance?: number;
+}
+
 export interface DepositProps {
   accountAddress: EthereumAddress;
   tokenAddress: EthereumAddress;
