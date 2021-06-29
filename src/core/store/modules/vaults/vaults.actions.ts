@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
-import { Position, Vault, VaultDynamic } from '@types';
+import { Position, Vault, VaultDynamic, GetExpectedTransactionOutcomeProps, TransactionOutcome } from '@types';
 import {
   handleTransaction,
   calculateSharesAmount,
@@ -18,6 +18,7 @@ import { getConstants } from '../../../../config/constants';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
+const clearTransactionData = createAction<void>('vaults/clearTransactionData');
 
 const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',
@@ -210,6 +211,16 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   }
 );
 
+const getExpectedTransactionOutcome = createAsyncThunk<
+  { txOutcome: TransactionOutcome },
+  GetExpectedTransactionOutcomeProps,
+  ThunkAPI
+>('vaults/getExpectedTransactionOutcome', async (exptedTxOutcomeProps, { dispatch, extra }) => {
+  const { vaultService } = extra.services;
+  const txOutcome = await vaultService.getExpectedTransactionOutcome(exptedTxOutcomeProps);
+  return { txOutcome };
+});
+
 export const VaultsActions = {
   setSelectedVaultAddress,
   initiateSaveVaults,
@@ -222,4 +233,6 @@ export const VaultsActions = {
   initSubscriptions,
   clearUserData,
   approveZapOut,
+  getExpectedTransactionOutcome,
+  clearTransactionData,
 };

@@ -3,6 +3,7 @@ import { Status } from './Status';
 import { Position, Token, Vault, Integer, Balance, IronBankMarket, Lab, Alert } from '@types';
 import { EthereumAddress } from './Ethereum';
 import { CyTokenUserMetadata, IronBankPosition } from '@yfi/sdk';
+import { TransactionOutcome } from './Yearn-Sdk';
 
 export interface RootState {
   app: AppState;
@@ -57,10 +58,15 @@ export interface VaultPositionsMap {
 export interface AllowancesMap {
   [spender: string]: Integer;
 }
+
+export interface VaultTransaction {
+  expectedOutcome: TransactionOutcome | undefined;
+}
 export interface VaultsState {
   vaultsAddresses: string[];
   vaultsMap: { [address: string]: Vault };
   selectedVaultAddress: EthereumAddress | undefined;
+  transaction: VaultTransaction;
   user: {
     userVaultsPositionsMap: { [address: string]: VaultPositionsMap };
     vaultsAllowancesMap: { [vaultAddress: string]: AllowancesMap };
@@ -69,6 +75,7 @@ export interface VaultsState {
     initiateSaveVaults: Status;
     getVaults: Status;
     vaultsActionsStatusMap: { [vaultAddress: string]: VaultActionsStatusMap };
+    getExpectedTransactionOutcome: Status;
     user: {
       getUserVaultsPositions: Status;
       userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };

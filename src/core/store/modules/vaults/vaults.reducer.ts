@@ -8,6 +8,7 @@ import {
   Position,
   UserVaultActionsStatusMap,
   VaultActionsStatusMap,
+  VaultTransaction,
 } from '@types';
 import { VaultsActions } from './vaults.actions';
 
@@ -23,20 +24,26 @@ export const initialUserVaultsActionsStatusMap: UserVaultActionsStatusMap = {
   getPosition: initialStatus,
 };
 
+export const initialTransaction: VaultTransaction = {
+  expectedOutcome: undefined,
+};
+
 export const vaultsInitialState: VaultsState = {
   vaultsAddresses: [],
   vaultsMap: {},
   selectedVaultAddress: undefined,
+  transaction: initialTransaction,
   user: {
     userVaultsPositionsMap: {},
     vaultsAllowancesMap: {},
   },
   statusMap: {
-    initiateSaveVaults: { loading: false, error: null },
-    getVaults: { loading: false, error: null },
+    initiateSaveVaults: initialStatus,
+    getVaults: initialStatus,
     vaultsActionsStatusMap: {},
+    getExpectedTransactionOutcome: initialStatus,
     user: {
-      getUserVaultsPositions: { loading: false, error: null },
+      getUserVaultsPositions: initialStatus,
       userVaultsActionsStatusMap: {},
     },
   },
@@ -53,6 +60,8 @@ const {
   getVaultsDynamic,
   getUserVaultsPositions,
   clearUserData,
+  getExpectedTransactionOutcome,
+  clearTransactionData,
 } = VaultsActions;
 
 const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
@@ -194,6 +203,19 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(clearUserData, (state) => {
       state.user.userVaultsPositionsMap = {};
       state.user.vaultsAllowancesMap = {};
+    })
+    .addCase(getExpectedTransactionOutcome.pending, (state) => {
+      state.statusMap.getExpectedTransactionOutcome = { loading: true };
+    })
+    .addCase(getExpectedTransactionOutcome.fulfilled, (state, { payload: { txOutcome } }) => {
+      state.transaction.expectedOutcome = txOutcome;
+      state.statusMap.getExpectedTransactionOutcome = {};
+    })
+    .addCase(getExpectedTransactionOutcome.rejected, (state, { error }) => {
+      state.statusMap.getExpectedTransactionOutcome = { error: error.message };
+    })
+    .addCase(clearTransactionData, (state) => {
+      state.transaction = initialTransaction;
     });
 });
 
