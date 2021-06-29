@@ -32,17 +32,20 @@ export class TokenServiceImpl implements TokenService {
 
   public async getSupportedTokens(): Promise<Token[]> {
     const yearn = this.yearnSdk;
-    const [zapperTokens, vaultsTokens, ironBankTokens, labsTokens]: [
-      Token[],
-      Token[],
-      Token[],
-      Token[]
-    ] = await Promise.all([
+    const [zapperTokens, vaultsTokens, ironBankTokens]: [Token[], Token[], Token[]] = await Promise.all([
       yearn.tokens.supported(),
       yearn.vaults.tokens(),
       yearn.ironBank.tokens(),
-      this.getLabsTokens(),
     ]);
+
+    // We separated this because request is broken outside of this repo so we need to handle it separated
+    // so we get the rest of the tokens.
+    let labsTokens: Token[] = [];
+    try {
+      labsTokens = await this.getLabsTokens();
+    } catch (error) {
+      console.log({ error });
+    }
 
     const tokens = unionBy(vaultsTokens, ironBankTokens, 'address');
     tokens.push(...labsTokens);
