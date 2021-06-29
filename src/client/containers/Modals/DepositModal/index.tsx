@@ -102,6 +102,8 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   const [selectedSlippage, setSelectedSlippage] = useState(slippageOptions[0]);
+  const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
+  const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
 
   const sellTokensOptions = selectedVault
     ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
