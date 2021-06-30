@@ -103,7 +103,7 @@ export interface IronBankService {
   getSupportedMarkets: () => Promise<IronBankMarket[]>;
   getUserMarketsPositions: (props: IronBankGenericGetUserDataProps) => Promise<Position[]>;
   getUserMarketsMetadata: (props: IronBankGenericGetUserDataProps) => Promise<CyTokenUserMetadata[]>;
-  getIronBankData: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankPosition>;
+  getUserIronBankSummary: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankPosition>;
   getMarketsDynamicData: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
   executeTransaction: (props: IronBankTransactionProps) => Promise<any>;
   enterMarkets: (props: EnterMarketsProps) => Promise<any>;
