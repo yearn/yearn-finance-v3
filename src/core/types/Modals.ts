@@ -1,1 +1,1 @@
-export type ModalName = 'test' | 'deposit' | 'withdraw';
+export type ModalName = 'test' | 'deposit' | 'withdraw' | 'testTx' | 'depositTx';

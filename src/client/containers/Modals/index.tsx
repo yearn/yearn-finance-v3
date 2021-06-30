@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { ModalsActions, ModalSelectors } from '@core/store';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import { TestModal } from './TestModal';
 import { DepositModal } from './DepositModal';
 import { WithdrawModal } from './WithdrawModal';
+import { TestTxModal } from './TestTxModal';
+import { DepositTxModal } from './DepositTxModal';
 
-const StyledModals = styled.div`
+const StyledModals = styled(TransitionGroup)`
   position: fixed;
   top: 0;
   left: 0;
@@ -17,6 +20,33 @@ const StyledModals = styled.div`
   justify-content: center;
   pointer-events: none;
   z-index: ${({ theme }) => theme.zindex.modals};
+
+  .slideBottom-enter {
+    opacity: 0;
+    transform: translate3d(0, 100vh, 0);
+    transition: all 200ms ease;
+  }
+  .slideBottom-enter-active {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  .slideBottom-exit-active {
+    opacity: 0;
+    transform: translate3d(0, 100vh, 0);
+    transition: all 200ms cubic-bezier(1, 0.5, 0.8, 1);
+  }
+
+  .opacity-enter {
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+  }
+  .opacity-enter-active {
+    opacity: 1;
+  }
+  .opacity-exit-active {
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+  }
 `;
 
 const StyledBackdrop = styled.div`
@@ -35,6 +65,8 @@ const StyledBackdrop = styled.div`
 `;
 
 // TODO dynamic modals list
+// This will fix the development warning for strict mode if we apply nodeRef like
+// in alerts
 // const MODALS = [
 //   {
 //     name: 'test',
@@ -65,10 +97,39 @@ export const Modals = () => {
 
   return (
     <StyledModals>
-      {activeModal === 'test' && <TestModal modalProps={modalProps} onClose={closeModal} />}
-      {activeModal === 'deposit' && <DepositModal onClose={closeModal} />}
-      {activeModal === 'withdraw' && <WithdrawModal onClose={closeModal} />}
-      {backdrop}
+      {activeModal === 'test' && (
+        <CSSTransition key={'test'} timeout={500} classNames="slideBottom">
+          <TestModal modalProps={modalProps} onClose={closeModal} />
+        </CSSTransition>
+      )}
+      {activeModal === 'deposit' && (
+        <CSSTransition key={'deposit'} timeout={500} classNames="slideBottom">
+          <DepositModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+      {activeModal === 'withdraw' && (
+        <CSSTransition key={'withdraw'} timeout={500} classNames="slideBottom">
+          <WithdrawModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'testTx' && (
+        <CSSTransition key={'testTx'} timeout={500} classNames="slideBottom">
+          <TestTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'depositTx' && (
+        <CSSTransition key={'depositTx'} timeout={500} classNames="slideBottom">
+          <DepositTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {backdrop && (
+        <CSSTransition key={'backdrop'} timeout={500} classNames="opacity">
+          {backdrop}
+        </CSSTransition>
+      )}
     </StyledModals>
   );
 };

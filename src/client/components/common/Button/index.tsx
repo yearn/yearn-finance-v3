@@ -19,6 +19,7 @@ const StyledButton = styled.button`
   border-radius: 0.8rem;
   background: ${(props) => props.theme.colors.secondary};
   color: ${(props) => props.theme.colors.background};
+  font-family: inherit;
   cursor: pointer;
   user-select: none;
   font-size: 1.4rem;
