@@ -66,7 +66,7 @@ const getUserVaultsPositions = createAsyncThunk<
   return { userVaultsPositions };
 });
 
-const getUserVaultsSummary = createAsyncThunk<{ userVaultsSumary: UserVaultsSummary }, void, ThunkAPI>(
+const getUserVaultsSummary = createAsyncThunk<{ userVaultsSummary: UserVaultsSummary }, void, ThunkAPI>(
   'vaults/getUserVaultsSummary',
   async (args, { extra, getState }) => {
     const { services } = extra;
@@ -74,8 +74,8 @@ const getUserVaultsSummary = createAsyncThunk<{ userVaultsSumary: UserVaultsSumm
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const userVaultsSumary = await services.vaultService.getUserVaultsSumary({ userAddress });
-    return { userVaultsSumary };
+    const userVaultsSummary = await services.vaultService.getUserVaultsSummary({ userAddress });
+    return { userVaultsSummary };
   }
 );
 

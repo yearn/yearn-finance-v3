@@ -45,7 +45,7 @@ export const vaultsInitialState: VaultsState = {
     vaultsActionsStatusMap: {},
     getExpectedTransactionOutcome: initialStatus,
     user: {
-      getUserVaultsSumary: initialStatus,
+      getUserVaultsSummary: initialStatus,
       getUserVaultsPositions: initialStatus,
       userVaultsActionsStatusMap: {},
     },
@@ -133,14 +133,14 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.selectedVaultAddress = vaultAddress;
     })
     .addCase(getUserVaultsSummary.pending, (state) => {
-      state.statusMap.user.getUserVaultsSumary = { loading: true };
+      state.statusMap.user.getUserVaultsSummary = { loading: true };
     })
-    .addCase(getUserVaultsSummary.fulfilled, (state, { payload: { userVaultsSumary } }) => {
-      state.user.userVaultsSummary = userVaultsSumary;
-      state.statusMap.user.getUserVaultsSumary = {};
+    .addCase(getUserVaultsSummary.fulfilled, (state, { payload: { userVaultsSummary } }) => {
+      state.user.userVaultsSummary = userVaultsSummary;
+      state.statusMap.user.getUserVaultsSummary = {};
     })
     .addCase(getUserVaultsSummary.rejected, (state, { error }) => {
-      state.statusMap.user.getUserVaultsSumary = { error: error.message };
+      state.statusMap.user.getUserVaultsSummary = { error: error.message };
     })
     .addCase(depositVault.pending, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;

@@ -32,7 +32,7 @@ export interface VaultService {
     userAddress: EthereumAddress;
     vaultAddresses?: string[];
   }) => Promise<Position[]>;
-  getUserVaultsSumary: (props: GetUserVaultsSumaryProps) => Promise<UserVaultsSummary>;
+  getUserVaultsSummary: (props: GetUserVaultsSummaryProps) => Promise<UserVaultsSummary>;
   getExpectedTransactionOutcome: (props: GetExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
   // approve:
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
@@ -137,6 +137,6 @@ export interface GetUserLabsPositionsProps {
 export interface GetUserLabsMetadataProps {
   userAddress: EthereumAddress;
 }
-export interface GetUserVaultsSumaryProps {
+export interface GetUserVaultsSummaryProps {
   userAddress: EthereumAddress;
 }

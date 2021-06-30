@@ -27,6 +27,8 @@ const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMa
 const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 const selectExpectedTxOutcome = (state: RootState) => state.vaults.transaction.expectedOutcome;
 const selectExpectedTxOutcomeStatus = (state: RootState) => state.vaults.statusMap.getExpectedTransactionOutcome;
+const selectUserVaultsSummary = (state: RootState) => state.vaults.user.userVaultsSummary;
+const selectUserVaultsSummaryStatus = (state: RootState) => state.vaults.statusMap.user.getUserVaultsSummary;
 
 const selectGetVaultsStatus = (state: RootState) => state.vaults.statusMap.getVaults;
 const selectGetUserVaultsPositionsStatus = (state: RootState) => state.vaults.statusMap.user.getUserVaultsPositions;
@@ -157,7 +159,6 @@ const selectVault = createSelector(
       });
     })
 );
-
 interface CreateVaultProps {
   vaultData: Vault;
   tokenData: Token;

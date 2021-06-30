@@ -12,7 +12,7 @@ import {
   GetSupportedVaultsProps,
   GetExpectedTransactionOutcomeProps,
   TransactionOutcome,
-  GetUserVaultsSumaryProps,
+  GetUserVaultsSummaryProps,
   UserVaultsSummary,
 } from '@types';
 import { toBN } from '@src/utils';
@@ -47,9 +47,9 @@ export class VaultServiceImpl implements VaultService {
     return await yearn.vaults.positionsOf(userAddress, vaultAddresses);
   }
 
-  public async getUserVaultsSumary({ userAddress }: GetUserVaultsSumaryProps): Promise<UserVaultsSummary> {
+  public async getUserVaultsSummary({ userAddress }: GetUserVaultsSummaryProps): Promise<UserVaultsSummary> {
     const yearn = this.yearnSdk;
-    // return await yearn.vaults.getUserVaultsSumary(userAddress); TODO use when sdk ready.
+    // return await yearn.vaults.getUserVaultsSummary(userAddress); TODO use when sdk ready.
     return { holdings: '9999999', earnings: '9999999', EYY: '9999999', apyAverage: '99' };
   }
 

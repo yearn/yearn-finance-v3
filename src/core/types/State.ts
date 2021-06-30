@@ -92,7 +92,7 @@ export interface VaultsState {
     vaultsActionsStatusMap: { [vaultAddress: string]: VaultActionsStatusMap };
     getExpectedTransactionOutcome: Status;
     user: {
-      getUserVaultsSumary: Status;
+      getUserVaultsSummary: Status;
       getUserVaultsPositions: Status;
       userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };
     };
