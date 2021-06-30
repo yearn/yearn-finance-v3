@@ -38,10 +38,10 @@ export const ironBankInitialState: IronBankState = {
   },
   statusMap: {
     initiateIronBank: { ...initialStatus },
-    getIronBankData: { ...initialStatus },
     getMarkets: { ...initialStatus },
     marketsActionsMap: {},
     user: {
+      getUserIronBankSummary: { ...initialStatus },
       getUserMarketsPositions: { ...initialStatus },
       getUserMarketsMetadata: { ...initialStatus },
       userMarketsActionsMap: {},
@@ -106,14 +106,14 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
       state.statusMap.initiateIronBank = { error: error.message };
     })
     .addCase(getIronBankSummary.pending, (state) => {
-      state.statusMap.getIronBankData = { loading: true };
+      state.statusMap.user.getUserIronBankSummary = { loading: true };
     })
     .addCase(getIronBankSummary.fulfilled, (state, { payload: { userIronBankSummary } }) => {
       state.user.userIronBankSummary = userIronBankSummary;
-      state.statusMap.getIronBankData = {};
+      state.statusMap.user.getUserIronBankSummary = {};
     })
     .addCase(getIronBankSummary.rejected, (state, { error }) => {
-      state.statusMap.getIronBankData = { error: error.message };
+      state.statusMap.user.getUserIronBankSummary = { error: error.message };
     })
     .addCase(getMarkets.pending, (state) => {
       state.statusMap.getMarkets = { loading: true };

@@ -171,10 +171,10 @@ export interface IronBankState {
   };
   statusMap: {
     initiateIronBank: Status;
-    getIronBankData: Status;
     getMarkets: Status;
     marketsActionsMap: { [marketAddress: string]: MarketActionsStatusMap };
     user: {
+      getUserIronBankSummary: Status;
       getUserMarketsPositions: Status;
       getUserMarketsMetadata: Status;
       userMarketsActionsMap: { [marketAddress: string]: UserMarketActionsStatusMap };
