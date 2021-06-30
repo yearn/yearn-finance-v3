@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
-import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions } from '@store';
+import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions, TokensActions } from '@store';
 import { getTheme } from '@themes';
 import { getConfig } from '@config';
-import { AlertTypes, Theme } from '@types';
+import { AlertTypes, ModalName, Theme } from '@types';
 
 import { ModalsActions } from '@store';
 
@@ -49,6 +49,17 @@ const SettingsSection = styled.div`
   gap: 1.5rem;
 `;
 
+const SectionContent = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+
+  ${SettingsSection}:not(:first-child) & {
+    padding-top: ${sectionsGap};
+  }
+`;
+
 const SectionTitle = styled.div`
   display: flex;
   align-items: flex-start;
@@ -75,15 +86,6 @@ const SectionIcon = styled(Icon)`
   margin-right: 0.7rem;
 `;
 
-const SectionContent = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
-
-  padding-top: ${sectionsGap};
-`;
-
 export const Settings = () => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
@@ -92,8 +94,16 @@ export const Settings = () => {
   const { ALLOW_DEV_MODE, AVAILABLE_THEMES } = getConfig();
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
-  const openTestModal = () => {
-    dispatch(ModalsActions.openModal({ modalName: 'test', modalProps: { testVar: 'test variable' } }));
+  const openModal = (modalName: ModalName, modalProps?: any) => {
+    dispatch(ModalsActions.openModal({ modalName, modalProps }));
+  };
+
+  const openDepositModal = () => {
+    // NOTE Hardcoded token address for depositTx testing
+    const tokenAddress = '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e';
+    // dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
+    dispatch(ModalsActions.openModal({ modalName: 'depositTx' }));
   };
 
   const openAlert = (message: string, type?: AlertTypes, persistent?: boolean) => {
@@ -138,10 +148,24 @@ export const Settings = () => {
             <SettingsSection>
               <SectionTitle>
                 <SectionIcon Component={ThemesIcon} />
-                Testing space
+                Modals testing
               </SectionTitle>
               <SectionContent>
-                <Button onClick={openTestModal}>Open test modal</Button>
+                <Button onClick={() => openModal('test', { testVar: 'test variable' })}>Open test modal</Button>
+                <Button onClick={() => openModal('testTx')}>Open TestTx modal</Button>
+                <Button onClick={() => openDepositModal()}>Open DepositTx modal</Button>
+              </SectionContent>
+            </SettingsSection>
+          )}
+
+          {/* Only on development for testing! */}
+          {ALLOW_DEV_MODE && (
+            <SettingsSection>
+              <SectionTitle>
+                <SectionIcon Component={ThemesIcon} />
+                Alerts testing
+              </SectionTitle>
+              <SectionContent>
                 <Button onClick={() => openAlert('Default alert')}>Open default alert</Button>
                 <Button onClick={() => openAlert('Success alert', 'success')}>Open Success alert</Button>
                 <Button onClick={() => openAlert('Info alert', 'info')}>Open Info alert</Button>

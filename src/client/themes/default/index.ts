@@ -49,7 +49,6 @@ const sharedTheme: SharedTheme = {
     desktop: 1920,
     desktopL: 2560,
   },
-  // globalFont: '"Rubik", sans-serif',
   globalFont: '"SF Pro Display", sans-serif',
   globalMaxWidth: '102rem',
   globalRadius: '0.8rem',
@@ -77,6 +76,11 @@ const sharedTheme: SharedTheme = {
       background: 'red',
       color: 'white',
     },
+  },
+
+  txModal: {
+    width: '38.4rem',
+    gap: '1.2rem',
   },
 
   layoutPadding: '1.6rem',

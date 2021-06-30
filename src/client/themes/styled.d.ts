@@ -47,6 +47,11 @@ declare module 'styled-components' {
       };
     };
 
+    txModal: {
+      width: string;
+      gap: string;
+    };
+
     layoutPadding: string;
     cardPadding: string;
   }
@@ -94,10 +99,15 @@ declare module 'styled-components' {
         color: string;
       };
 
-      modalColors: {
+      txModalColors: {
         background: string;
         backgroundVariant: string;
+        onBackgroundVariant: string;
+        onBackgroundVariantColor: string;
         primary: string;
+        loading: string;
+        error: string;
+        success: string;
         text: string;
         textContrast: string;
       };

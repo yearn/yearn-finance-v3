@@ -11,7 +11,7 @@ const Container = styled(Card)`
   font-size: 1.6rem;
   margin-bottom: 0.8rem;
   grid-gap: 0.5rem;
-  background-color: ${({ theme }) => theme.colors.modalColors.backgroundVariant};
+  background-color: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
 `;
 
 const Row = styled.div`
@@ -22,16 +22,16 @@ const Row = styled.div`
 `;
 
 const StyledText = styled(Text)`
-  color: ${({ theme }) => theme.colors.modalColors.textContrast};
+  color: ${({ theme }) => theme.colors.txModalColors.textContrast};
 `;
 
 const StyledSimpleDropdown = styled(SimpleDropdown)`
-  --dropdown-background: ${({ theme }) => theme.colors.modalColors.background};
-  --dropdown-color: ${({ theme }) => theme.colors.modalColors.textContrast};
-  --dropdown-hover-color: ${({ theme }) => theme.colors.modalColors.primary};
-  --dropdown-selected-color: ${({ theme }) => theme.colors.modalColors.primary};
+  --dropdown-background: ${({ theme }) => theme.colors.txModalColors.background};
+  --dropdown-color: ${({ theme }) => theme.colors.txModalColors.textContrast};
+  --dropdown-hover-color: ${({ theme }) => theme.colors.txModalColors.primary};
+  --dropdown-selected-color: ${({ theme }) => theme.colors.txModalColors.primary};
 
-  color: ${({ theme }) => theme.colors.modalColors.textContrast};
+  color: ${({ theme }) => theme.colors.txModalColors.textContrast};
 `;
 
 interface SlippageOption {

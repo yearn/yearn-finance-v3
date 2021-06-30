@@ -21,6 +21,10 @@ import { ReactComponent as ThemesIcon } from '@assets/icons/themes.svg';
 import { ReactComponent as ClockIcon } from '@assets/icons/clock.svg';
 import { ReactComponent as SearchIcon } from '@assets/icons/search.svg';
 import { ReactComponent as LabsIcon } from '@assets/icons/labs.svg';
+import { ReactComponent as CheckRoundIcon } from '@assets/icons/check-round.svg';
+import { ReactComponent as WarningIcon } from '@assets/icons/warning.svg';
+import { ReactComponent as ChevronRightIcon } from '@assets/icons/chevron-right.svg';
+import { ReactComponent as StatusArrowIcon } from '@assets/icons/status-arrow.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
@@ -65,4 +69,8 @@ export {
   ClockIcon,
   SearchIcon,
   LabsIcon,
+  CheckRoundIcon,
+  WarningIcon,
+  ChevronRightIcon,
+  StatusArrowIcon,
 };
