@@ -2,7 +2,15 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
-import { Position, Vault, VaultDynamic, GetExpectedTransactionOutcomeProps, TransactionOutcome } from '@types';
+import {
+  Position,
+  Vault,
+  VaultDynamic,
+  GetExpectedTransactionOutcomeProps,
+  TransactionOutcome,
+  UserVaultsSummary,
+  VaultUserMetadata,
+} from '@types';
 import {
   handleTransaction,
   calculateSharesAmount,
@@ -57,6 +65,34 @@ const getUserVaultsPositions = createAsyncThunk<
   }
   const userVaultsPositions = await services.vaultService.getUserVaultsPositions({ userAddress, vaultAddresses });
   return { userVaultsPositions };
+});
+
+const getUserVaultsSummary = createAsyncThunk<{ userVaultsSummary: UserVaultsSummary }, void, ThunkAPI>(
+  'vaults/getUserVaultsSummary',
+  async (args, { extra, getState }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+    const userVaultsSummary = await services.vaultService.getUserVaultsSummary({ userAddress });
+    return { userVaultsSummary };
+  }
+);
+
+const getUserVaultsMetadata = createAsyncThunk<
+  { userVaultsMetadata: VaultUserMetadata[] },
+  { vaultsAddresses?: string[] },
+  ThunkAPI
+>('vaults/getUserVaultsMetadata', async ({ vaultsAddresses }, { extra, getState }) => {
+  const { vaultService } = extra.services;
+  const userAddress = getState().wallet.selectedAddress;
+  if (!userAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
+  const userVaultsMetadata = await vaultService.getUserVaultsMetadata({ userAddress, vaultsAddresses });
+
+  return { userVaultsMetadata };
 });
 
 const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
@@ -135,7 +171,9 @@ const depositVault = createAsyncThunk<
   });
   await handleTransaction(tx);
   dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+  dispatch(getUserVaultsSummary());
   dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+  dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
   dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
 });
 
@@ -186,7 +224,9 @@ const withdrawVault = createAsyncThunk<
   });
   await handleTransaction(tx);
   dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+  dispatch(getUserVaultsSummary());
   dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+  dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
   dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, vaultAddress] }));
 });
 
@@ -205,7 +245,9 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
       module: 'vaults',
       event: 'positionsOf',
       action: (vaultAddresses: string[]) => {
+        dispatch(getUserVaultsSummary());
         dispatch(getUserVaultsPositions({ vaultAddresses }));
+        dispatch(getUserVaultsMetadata({ vaultsAddresses: vaultAddresses }));
       },
     });
   }
@@ -235,4 +277,6 @@ export const VaultsActions = {
   approveZapOut,
   getExpectedTransactionOutcome,
   clearTransactionData,
+  getUserVaultsSummary,
+  getUserVaultsMetadata,
 };

@@ -9,6 +9,7 @@ import {
   Balance,
   AllowancesMap,
   VaultPositionsMap,
+  VaultUserMetadata,
 } from '@types';
 import BigNumber from 'bignumber.js';
 import { memoize } from 'lodash';
@@ -16,6 +17,7 @@ import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 const selectVaultsState = (state: RootState) => state.vaults;
 const selectUserVaultsPositionsMap = (state: RootState) => state.vaults.user.userVaultsPositionsMap;
+const selectUserVaultsMetadataMap = (state: RootState) => state.vaults.user.userVaultsMetadataMap;
 const selectVaultsMap = (state: RootState) => state.vaults.vaultsMap;
 const selectVaultsAddresses = (state: RootState) => state.vaults.vaultsAddresses;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
@@ -27,6 +29,8 @@ const selectVaultsActionsStatusMap = (state: RootState) => state.vaults.statusMa
 const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 const selectExpectedTxOutcome = (state: RootState) => state.vaults.transaction.expectedOutcome;
 const selectExpectedTxOutcomeStatus = (state: RootState) => state.vaults.statusMap.getExpectedTransactionOutcome;
+const selectUserVaultsSummary = (state: RootState) => state.vaults.user.userVaultsSummary;
+const selectUserVaultsSummaryStatus = (state: RootState) => state.vaults.statusMap.user.getUserVaultsSummary;
 
 const selectGetVaultsStatus = (state: RootState) => state.vaults.statusMap.getVaults;
 const selectGetUserVaultsPositionsStatus = (state: RootState) => state.vaults.statusMap.user.getUserVaultsPositions;
@@ -37,6 +41,7 @@ const selectVaults = createSelector(
     selectVaultsAddresses,
     selectTokensMap,
     selectUserVaultsPositionsMap,
+    selectUserVaultsMetadataMap,
     selectUserTokensMap,
     selectVaultsAllowancesMap,
     selectUserTokensAllowancesMap,
@@ -46,6 +51,7 @@ const selectVaults = createSelector(
     vaultsAddresses,
     tokensMap,
     userVaultsPositionsMap,
+    userVaultsMetadataMap,
     userTokensMap,
     vaultsAllowancesMap,
     userTokensAllowancesMap
@@ -60,6 +66,7 @@ const selectVaults = createSelector(
         tokenData,
         userTokenData,
         userVaultPositionsMap: userVaultsPositionsMap[address],
+        userVaultsMetadataMap: userVaultsMetadataMap[address],
         vaultsAllowancesMap,
         allowancesMap,
       });
@@ -106,14 +113,12 @@ const selectSelectedVaultActionsStatusMap = createSelector(
   }
 );
 
-const selectSummaryData = createSelector([selectDepositedVaults], (depositedVaults) => {
-  let totalDeposited: BigNumber = new BigNumber('0');
-  depositedVaults.forEach((vault) => (totalDeposited = totalDeposited.plus(vault.userDepositedUsdc)));
-
+const selectSummaryData = createSelector([selectUserVaultsSummary], (userVaultsSummary) => {
   return {
-    totalDeposits: totalDeposited.toString(),
-    totalEarnings: '0',
-    estYearlyYeild: '0',
+    totalDeposits: userVaultsSummary?.holdings ?? '0',
+    totalEarnings: userVaultsSummary?.earnings ?? '0',
+    estYearlyYeild: userVaultsSummary?.EYY ?? '0',
+    apy: userVaultsSummary?.apyAverage ?? '0',
   };
 });
 
@@ -136,11 +141,20 @@ const selectVault = createSelector(
     selectVaultsMap,
     selectTokensMap,
     selectUserVaultsPositionsMap,
+    selectUserVaultsMetadataMap,
     selectUserTokensMap,
     selectVaultsAllowancesMap,
     selectUserTokensAllowancesMap,
   ],
-  (vaultsMap, tokensMap, userVaultsPositionsMap, userTokensMap, vaultsAllowancesMap, userTokensAllowancesMap) =>
+  (
+    vaultsMap,
+    tokensMap,
+    userVaultsPositionsMap,
+    userVaultsMetadataMap,
+    userTokensMap,
+    vaultsAllowancesMap,
+    userTokensAllowancesMap
+  ) =>
     memoize((vaultAddress: string) => {
       const vaultData = vaultsMap[vaultAddress];
       if (!vaultData) return undefined;
@@ -152,22 +166,31 @@ const selectVault = createSelector(
         tokenData,
         userTokenData,
         userVaultPositionsMap: userVaultsPositionsMap[vaultAddress],
+        userVaultsMetadataMap: userVaultsMetadataMap[vaultAddress],
         vaultsAllowancesMap,
         allowancesMap,
       });
     })
 );
-
 interface CreateVaultProps {
   vaultData: Vault;
   tokenData: Token;
   userTokenData: Balance;
   allowancesMap: AllowancesMap;
   userVaultPositionsMap: VaultPositionsMap;
+  userVaultsMetadataMap: VaultUserMetadata;
   vaultsAllowancesMap: any;
 }
 function createVault(props: CreateVaultProps) {
-  const { allowancesMap, tokenData, userTokenData, vaultData, vaultsAllowancesMap, userVaultPositionsMap } = props;
+  const {
+    allowancesMap,
+    tokenData,
+    userTokenData,
+    vaultData,
+    vaultsAllowancesMap,
+    userVaultPositionsMap,
+    userVaultsMetadataMap,
+  } = props;
   const vaultAddress = vaultData.address;
   const currentAllowance = allowancesMap[vaultAddress] ?? '0';
   return {
@@ -182,6 +205,7 @@ function createVault(props: CreateVaultProps) {
     allowancesMap: vaultsAllowancesMap[vaultAddress] ?? {},
     approved: new BigNumber(currentAllowance).gt(0),
     pricePerShare: vaultData?.metadata.pricePerShare,
+    earned: userVaultsMetadataMap?.earned ?? '0',
     DEPOSIT: {
       userBalance: userVaultPositionsMap?.DEPOSIT?.balance ?? '0',
       userDeposited: userVaultPositionsMap?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',

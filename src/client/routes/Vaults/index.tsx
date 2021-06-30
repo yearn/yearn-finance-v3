@@ -112,6 +112,7 @@ export const Vaults = () => {
               { key: 'balance', header: 'Balance' },
               { key: 'value', header: 'Value' },
               { key: 'apy', header: 'ROI' },
+              { key: 'earned', header: 'Earned' },
               {
                 key: 'actions',
                 transform: ({ vaultAddress }) => (
@@ -133,6 +134,7 @@ export const Vaults = () => {
               balance: humanizeAmount(vault.userBalance, parseInt(vault.decimals), 4),
               value: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
               apy: formatPercent(vault.apyData, 2),
+              earned: `$ ${humanizeAmount(vault.earned, USDC_DECIMALS, 2)}`,
               vaultAddress: vault.address,
             }))}
           />
