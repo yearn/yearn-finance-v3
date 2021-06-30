@@ -46,8 +46,7 @@ export class IronBankServiceImpl implements IronBankService {
     marketAddresses,
   }: IronBankGenericGetUserDataProps): Promise<CyTokenUserMetadata[]> {
     const yearn = this.yearnSdk;
-    return await yearn.ironBank.userMetadata(userAddress);
-    // return await yearn.ironBank.userMetadata(userAddress, marketAddresses); // TODO use when sdk updated to receive marketAddresses
+    return await yearn.ironBank.userMetadata(userAddress, marketAddresses);
   }
 
   public async executeTransaction({

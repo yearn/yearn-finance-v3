@@ -1,4 +1,5 @@
 import { EthereumAddress } from '@types';
+import { Usdc } from '@yfi/sdk';
 import { TokenView } from './Token';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
@@ -24,6 +25,7 @@ export interface VaultView {
   userBalance: string;
   userDeposited: string;
   userDepositedUsdc: string;
+  earned: Usdc;
   allowancesMap: { [vaultAddress: string]: string };
   approved: boolean;
   token: TokenView;

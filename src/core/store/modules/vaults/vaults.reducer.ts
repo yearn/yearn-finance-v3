@@ -22,6 +22,7 @@ export const initialVaultActionsStatusMap: VaultActionsStatusMap = {
 
 export const initialUserVaultsActionsStatusMap: UserVaultActionsStatusMap = {
   getPosition: initialStatus,
+  getMetadata: initialStatus,
 };
 
 export const initialTransaction: VaultTransaction = {
@@ -34,7 +35,9 @@ export const vaultsInitialState: VaultsState = {
   selectedVaultAddress: undefined,
   transaction: initialTransaction,
   user: {
+    userVaultsSummary: undefined,
     userVaultsPositionsMap: {},
+    userVaultsMetadataMap: {},
     vaultsAllowancesMap: {},
   },
   statusMap: {
@@ -43,7 +46,9 @@ export const vaultsInitialState: VaultsState = {
     vaultsActionsStatusMap: {},
     getExpectedTransactionOutcome: initialStatus,
     user: {
+      getUserVaultsSummary: initialStatus,
       getUserVaultsPositions: initialStatus,
+      getUserVaultsMetadata: initialStatus,
       userVaultsActionsStatusMap: {},
     },
   },
@@ -62,6 +67,8 @@ const {
   clearUserData,
   getExpectedTransactionOutcome,
   clearTransactionData,
+  getUserVaultsSummary,
+  getUserVaultsMetadata,
 } = VaultsActions;
 
 const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
@@ -127,6 +134,43 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     })
     .addCase(setSelectedVaultAddress, (state, { payload: { vaultAddress } }) => {
       state.selectedVaultAddress = vaultAddress;
+    })
+    .addCase(getUserVaultsSummary.pending, (state) => {
+      state.statusMap.user.getUserVaultsSummary = { loading: true };
+    })
+    .addCase(getUserVaultsSummary.fulfilled, (state, { payload: { userVaultsSummary } }) => {
+      state.user.userVaultsSummary = userVaultsSummary;
+      state.statusMap.user.getUserVaultsSummary = {};
+    })
+    .addCase(getUserVaultsSummary.rejected, (state, { error }) => {
+      state.statusMap.user.getUserVaultsSummary = { error: error.message };
+    })
+    .addCase(getUserVaultsMetadata.pending, (state, { meta }) => {
+      const vaultsAddresses = meta.arg.vaultsAddresses || [];
+      vaultsAddresses.forEach((address) => {
+        checkAndInitUserVaultStatus(state, address);
+        state.statusMap.user.userVaultsActionsStatusMap[address].getMetadata = { loading: true };
+      });
+      state.statusMap.user.getUserVaultsMetadata = { loading: true };
+    })
+    .addCase(getUserVaultsMetadata.fulfilled, (state, { meta, payload: { userVaultsMetadata } }) => {
+      const vaultsAddresses = meta.arg.vaultsAddresses || [];
+      vaultsAddresses.forEach((address) => {
+        checkAndInitUserVaultStatus(state, address);
+        state.statusMap.user.userVaultsActionsStatusMap[address].getMetadata = {};
+      });
+
+      userVaultsMetadata.forEach((metadata) => {
+        state.user.userVaultsMetadataMap[metadata.assetAddress] = metadata;
+      });
+      state.statusMap.user.getUserVaultsMetadata = {};
+    })
+    .addCase(getUserVaultsMetadata.rejected, (state, { meta, error }) => {
+      const vaultsAddresses = meta.arg.vaultsAddresses || [];
+      vaultsAddresses.forEach((address) => {
+        state.statusMap.user.userVaultsActionsStatusMap[address].getMetadata = {};
+      });
+      state.statusMap.user.getUserVaultsMetadata = { error: error.message };
     })
     .addCase(depositVault.pending, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
