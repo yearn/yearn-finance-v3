@@ -93,6 +93,8 @@ export const Layout: FC = ({ children }) => {
           dispatch(VaultsActions.getUserVaultsSummary());
           dispatch(VaultsActions.getUserVaultsPositions({}));
           dispatch(VaultsActions.getUserVaultsMetadata({}));
+
+          dispatch(IronBankActions.getIronBankSummary());
           dispatch(IronBankActions.getUserMarketsPositions({}));
           dispatch(IronBankActions.getUserMarketsMetadata({}));
           break;
@@ -108,6 +110,7 @@ export const Layout: FC = ({ children }) => {
           dispatch(LabsActions.getUserLabsPositions({}));
           break;
         case 'ironbank':
+          dispatch(IronBankActions.getIronBankSummary());
           dispatch(IronBankActions.getUserMarketsPositions({}));
           dispatch(IronBankActions.getUserMarketsMetadata({}));
           break;

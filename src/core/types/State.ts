@@ -163,18 +163,18 @@ export interface IronBankState {
   marketAddresses: EthereumAddress[];
   marketsMap: { [marketAddress: string]: IronBankMarket };
   selectedMarketAddress: EthereumAddress;
-  ironBankData: IronBankPosition | undefined;
   user: {
+    userIronBankSummary: IronBankPosition | undefined;
     userMarketsPositionsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
     userMarketsMetadataMap: { [marketAddress: string]: CyTokenUserMetadata };
     marketsAllowancesMap: { [marketAddress: string]: AllowancesMap };
   };
   statusMap: {
     initiateIronBank: Status;
-    getIronBankData: Status;
     getMarkets: Status;
     marketsActionsMap: { [marketAddress: string]: MarketActionsStatusMap };
     user: {
+      getUserIronBankSummary: Status;
       getUserMarketsPositions: Status;
       getUserMarketsMetadata: Status;
       userMarketsActionsMap: { [marketAddress: string]: UserMarketActionsStatusMap };

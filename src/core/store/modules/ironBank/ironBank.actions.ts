@@ -10,20 +10,19 @@ const clearUserData = createAction<void>('ironbank/clearUserData');
 const initiateIronBank = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'ironBank/initiateIronBank',
   async (_arg, { dispatch }) => {
-    await dispatch(getIronBankData());
     await dispatch(getMarkets());
   }
 );
 
-const getIronBankData = createAsyncThunk<{ ironBankData: IronBankPosition }, undefined, ThunkAPI>(
-  'ironBank/getIronBankData',
+const getIronBankSummary = createAsyncThunk<{ userIronBankSummary: IronBankPosition }, undefined, ThunkAPI>(
+  'ironBank/getIronBankSummary',
   async (_arg, { extra, getState }) => {
     const userAddress = getState().wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { ironBankService } = extra.services;
-    const ironBankData = await ironBankService.getIronBankData({ userAddress });
-    return { ironBankData };
+    const userIronBankSummary = await ironBankService.getUserIronBankSummary({ userAddress });
+    return { userIronBankSummary };
   }
 );
 
@@ -213,7 +212,7 @@ export const IronBankActions = {
   initiateIronBank,
   getMarkets,
   getMarketsDynamic,
-  getIronBankData,
+  getIronBankSummary,
   getUserMarketsPositions,
   getUserMarketsMetadata,
   setSelectedMarketAddress,

@@ -18,7 +18,7 @@ export class IronBankServiceImpl implements IronBankService {
     this.yearnSdk = yearnSdk;
   }
 
-  public async getIronBankData({ userAddress }: { userAddress: string }): Promise<IronBankPosition> {
+  public async getUserIronBankSummary({ userAddress }: { userAddress: string }): Promise<IronBankPosition> {
     const yearn = this.yearnSdk;
     return await yearn.ironBank.generalPositionOf(userAddress);
   }

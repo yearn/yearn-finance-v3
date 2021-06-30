@@ -30,18 +30,18 @@ export const ironBankInitialState: IronBankState = {
   marketAddresses: [],
   marketsMap: {},
   selectedMarketAddress: '',
-  ironBankData: undefined,
   user: {
+    userIronBankSummary: undefined,
     userMarketsPositionsMap: {},
     userMarketsMetadataMap: {},
     marketsAllowancesMap: {},
   },
   statusMap: {
     initiateIronBank: { ...initialStatus },
-    getIronBankData: { ...initialStatus },
     getMarkets: { ...initialStatus },
     marketsActionsMap: {},
     user: {
+      getUserIronBankSummary: { ...initialStatus },
       getUserMarketsPositions: { ...initialStatus },
       getUserMarketsMetadata: { ...initialStatus },
       userMarketsActionsMap: {},
@@ -52,7 +52,7 @@ export const ironBankInitialState: IronBankState = {
 const {
   initiateIronBank,
   getMarkets,
-  getIronBankData,
+  getIronBankSummary,
   getUserMarketsPositions,
   getUserMarketsMetadata,
   setSelectedMarketAddress,
@@ -105,15 +105,15 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
     .addCase(initiateIronBank.rejected, (state, { error }) => {
       state.statusMap.initiateIronBank = { error: error.message };
     })
-    .addCase(getIronBankData.pending, (state) => {
-      state.statusMap.getIronBankData = { loading: true };
+    .addCase(getIronBankSummary.pending, (state) => {
+      state.statusMap.user.getUserIronBankSummary = { loading: true };
     })
-    .addCase(getIronBankData.fulfilled, (state, { payload: { ironBankData } }) => {
-      state.ironBankData = ironBankData;
-      state.statusMap.getIronBankData = {};
+    .addCase(getIronBankSummary.fulfilled, (state, { payload: { userIronBankSummary } }) => {
+      state.user.userIronBankSummary = userIronBankSummary;
+      state.statusMap.user.getUserIronBankSummary = {};
     })
-    .addCase(getIronBankData.rejected, (state, { error }) => {
-      state.statusMap.getIronBankData = { error: error.message };
+    .addCase(getIronBankSummary.rejected, (state, { error }) => {
+      state.statusMap.user.getUserIronBankSummary = { error: error.message };
     })
     .addCase(getMarkets.pending, (state) => {
       state.statusMap.getMarkets = { loading: true };
