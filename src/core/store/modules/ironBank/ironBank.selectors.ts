@@ -8,9 +8,9 @@ const selectMarketsAddresses = (state: RootState) => state.ironBank.marketAddres
 const selectMarketsAllowancesMap = (state: RootState) => state.ironBank.user.marketsAllowancesMap;
 const selectUserMarketsPositionsMap = (state: RootState) => state.ironBank.user.userMarketsPositionsMap;
 const selectUserMarketsMetadataMap = (state: RootState) => state.ironBank.user.userMarketsMetadataMap;
-const selectIronBankData = (state: RootState) => state.ironBank.user.userIronBankSummary;
+const selectUserIronBankSummary = (state: RootState) => state.ironBank.user.userIronBankSummary;
 
-const selectGetIronBankDataStatus = (state: RootState) => state.ironBank.statusMap.user.getUserIronBankSummary;
+const selectGetUserIronBankSummaryStatus = (state: RootState) => state.ironBank.statusMap.user.getUserIronBankSummary;
 const selectGetMarketsStatus = (state: RootState) => state.ironBank.statusMap.getMarkets;
 const selectGetUserMarketsPositionsStatus = (state: RootState) => state.ironBank.statusMap.user.getUserMarketsPositions;
 const selectGetUserMarketsMetadataStatus = (state: RootState) => state.ironBank.statusMap.user.getUserMarketsMetadata;
@@ -30,7 +30,7 @@ const selectMarkets = createSelector(
     selectUserTokensMap,
     selectMarketsAllowancesMap,
     selectUserTokensAllowancesMap,
-    selectIronBankData,
+    selectUserIronBankSummary,
   ],
   (
     marketsMap,
@@ -41,7 +41,7 @@ const selectMarkets = createSelector(
     userTokensMap,
     marketsAllowancesMap,
     userTokensAllowancesMap,
-    ironBankData
+    userIronBankSummary
   ) => {
     const markets = marketAddresses.map((address) => {
       const marketData = marketsMap[address];
@@ -62,7 +62,7 @@ const selectMarkets = createSelector(
         reserveFactor: marketData.metadata.reserveFactor,
         isActive: marketData.metadata.isActive,
         exchangeRate: marketData.metadata.exchangeRate,
-        borrowLimit: ironBankData?.borrowLimitUsdc ?? '0',
+        borrowLimit: userIronBankSummary?.borrowLimitUsdc ?? '0',
         allowancesMap: marketsAllowancesMap[address] ?? {},
         enteredMarket: userMarketMetadata?.enteredMarket ?? false,
         LEND: {
@@ -101,8 +101,8 @@ const selectBorrowMarkets = createSelector([selectMarkets], (markets) => {
 });
 
 const selectSummaryData = createSelector(
-  [selectLendMarkets, selectBorrowMarkets, selectIronBankData],
-  (lendMarkets, borrowMarkets, ironBankData) => {
+  [selectLendMarkets, selectBorrowMarkets, selectUserIronBankSummary],
+  (lendMarkets, borrowMarkets, userIronBankSummary) => {
     let totalSupply: BigNumber = new BigNumber('0');
     let totalBorrow: BigNumber = new BigNumber('0');
     lendMarkets.forEach((lendMarket) => (totalSupply = totalSupply.plus(lendMarket.userDepositedUsdc)));
@@ -111,7 +111,7 @@ const selectSummaryData = createSelector(
     return {
       supplyBalance: totalSupply.toString(),
       borrowBalance: totalBorrow.toString(),
-      borrowUtilizationRatio: ironBankData?.utilizationRatioBips ?? '0',
+      borrowUtilizationRatio: userIronBankSummary?.utilizationRatioBips ?? '0',
       // TODO: Calc for NET APY
       netAPY: '0',
     };
@@ -120,20 +120,25 @@ const selectSummaryData = createSelector(
 
 const selectIronBankStatus = createSelector(
   [
-    selectGetIronBankDataStatus,
+    selectGetUserIronBankSummaryStatus,
     selectGetMarketsStatus,
     selectGetUserMarketsPositionsStatus,
     selectGetUserMarketsMetadataStatus,
   ],
-  (getIronBankDataStatis, getMarketsStatus, getUserMarketsPositionsStatus, getUserMarketsMetadataStatus): Status => {
+  (
+    getUserIronBankSummaryStatus,
+    getMarketsStatus,
+    getUserMarketsPositionsStatus,
+    getUserMarketsMetadataStatus
+  ): Status => {
     return {
       loading:
-        getIronBankDataStatis.loading ||
+        getUserIronBankSummaryStatus.loading ||
         getMarketsStatus.loading ||
         getUserMarketsPositionsStatus.loading ||
         getUserMarketsMetadataStatus.loading,
       error:
-        getIronBankDataStatis.error ||
+        getUserIronBankSummaryStatus.error ||
         getMarketsStatus.error ||
         getUserMarketsPositionsStatus.error ||
         getUserMarketsMetadataStatus.error,
@@ -143,7 +148,7 @@ const selectIronBankStatus = createSelector(
 
 export const IronBankSelectors = {
   selectMarkets,
-  selectIronBankData,
+  selectUserIronBankSummary,
   selectLendMarkets,
   selectBorrowMarkets,
   selectSummaryData,
