@@ -8,73 +8,52 @@ const StyledSpinnerLoading = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 2.2rem;
+  gap: 0.5em;
+  position: relative;
+
   ${styledSystem}
 `;
 
 const StyledLoader = styled.div`
-  &,
-  &:before,
-  &:after {
-    background: #006ae3;
-    -webkit-animation: loading 1s infinite ease-in-out;
-    animation: loading 1s infinite ease-in-out;
-    width: 1em;
-    height: 4em;
+  animation: dots-loading 1s infinite ease-in-out alternate;
+  animation-delay: 0.5s;
+
+  background-color: currentColor;
+  border-radius: 1em;
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  box-sizing: border-box;
+  opacity: 0.4;
+  transform: scale(0.8, 0.8);
+
+  &:first-child {
+    animation-delay: 0s;
   }
-  & {
-    color: #006ae3;
-    text-indent: -9999em;
-    position: relative;
-    font-size: 1em;
-    -webkit-transform: translateZ(0);
-    -ms-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-animation-delay: -0.16s;
-    animation-delay: -0.16s;
+
+  &:last-child {
+    animation-delay: 1s;
   }
-  &:before,
-  &:after {
-    position: absolute;
-    top: 0;
-    content: '';
-  }
-  &:before {
-    left: -1.5em;
-    -webkit-animation-delay: -0.32s;
-    animation-delay: -0.32s;
-  }
-  &:after {
-    left: 1.5em;
-  }
-  @-webkit-keyframes loading {
-    0%,
-    80%,
+
+  @keyframes dots-loading {
+    0% {
+      opacity: 0.4;
+      transform: scale(0.8, 0.8);
+    }
+
+    50%,
     100% {
-      box-shadow: 0 0;
-      height: 4em;
-    }
-    40% {
-      box-shadow: 0 -2em;
-      height: 5em;
-    }
-  }
-  @keyframes loading {
-    0%,
-    80%,
-    100% {
-      box-shadow: 0 0;
-      height: 4em;
-    }
-    40% {
-      box-shadow: 0 -2em;
-      height: 5em;
+      opacity: 1;
+      transform: scale(1, 1);
     }
   }
 `;
 
 export const SpinnerLoading: FC<SpinnerLoadingProps> = ({ ...props }) => (
   <StyledSpinnerLoading {...props}>
+    <StyledLoader />
+    <StyledLoader />
     <StyledLoader />
   </StyledSpinnerLoading>
 );

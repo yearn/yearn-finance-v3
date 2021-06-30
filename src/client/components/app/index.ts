@@ -11,5 +11,6 @@ export * from './RecommendationsCard';
 export * from './SummaryCard';
 export * from './TokenAmountInput';
 export * from './TokenIcon';
+export * from './Transactions';
 export * from './TransactionSettings';
 export * from './ViewContainer';

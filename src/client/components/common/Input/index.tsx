@@ -32,6 +32,9 @@ const StyledInput = styled.input`
   height: 100%;
   width: 100%;
   border: none;
+  text-align: inherit;
+  font-size: inherit;
+  font-weight: inherit;
 
   &::placeholder {
     color: ${(props) => props.theme.colors.onSurfaceH2};

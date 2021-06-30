@@ -30,7 +30,7 @@ const TransferContainer = styled(Card)`
   align-items: center;
   width: 100%;
   margin-bottom: 1.6rem;
-  background-color: ${({ theme }) => theme.colors.modalColors.backgroundVariant};
+  background-color: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
 `;
 
 const BalanceContainer = styled(Card)`
@@ -41,7 +41,7 @@ const BalanceContainer = styled(Card)`
   margin-bottom: 1.6rem;
   font-size: 1.6rem;
   margin-bottom: 0.8rem;
-  background-color: ${({ theme }) => theme.colors.modalColors.background};
+  background-color: ${({ theme }) => theme.colors.txModalColors.background};
 `;
 
 const TargetContainer = styled(Card)`
@@ -50,7 +50,7 @@ const TargetContainer = styled(Card)`
   justify-content: center;
   align-items: center;
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.modalColors.background};
+  background-color: ${({ theme }) => theme.colors.txModalColors.background};
 `;
 
 const ButtonContainer = styled(Box)`
@@ -64,16 +64,16 @@ const ButtonContainer = styled(Box)`
 `;
 
 const StyledSimpleDropdown = styled(SimpleDropdown)`
-  --dropdown-background: ${({ theme }) => theme.colors.modalColors.backgroundVariant};
-  --dropdown-color: ${({ theme }) => theme.colors.modalColors.textContrast};
-  --dropdown-hover-color: ${({ theme }) => theme.colors.modalColors.primary};
-  --dropdown-selected-color: ${({ theme }) => theme.colors.modalColors.primary};
+  --dropdown-background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
+  --dropdown-color: ${({ theme }) => theme.colors.txModalColors.textContrast};
+  --dropdown-hover-color: ${({ theme }) => theme.colors.txModalColors.primary};
+  --dropdown-selected-color: ${({ theme }) => theme.colors.txModalColors.primary};
 `;
 
 const StyledButton = styled(Button)`
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.modalColors.primary};
-  color: ${({ theme }) => theme.colors.modalColors.background};
+  background-color: ${({ theme }) => theme.colors.txModalColors.primary};
+  color: ${({ theme }) => theme.colors.txModalColors.background};
   text-transform: uppercase;
   font-weight: 500;
   height: 4rem;

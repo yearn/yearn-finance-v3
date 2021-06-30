@@ -1,23 +1,34 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+
+import { ViewContainer } from '@components/app';
+import { Card } from '@components/common';
 import { LineChart } from '@components/common/Charts';
+import { DepositTx } from '@components/app/Transactions';
 
 // import { useAppTranslation } from '@hooks';
 
-const VaultDetailView = styled.div`
-  display: flex;
-  justify-content: center;
+const VaultChart = styled(Card)`
+  flex: 1 100%;
+  width: 100%;
 `;
 
-const DefaultPageContent = styled.div`
+const VaultActions = styled(Card)`
   display: flex;
   flex-direction: column;
-  max-width: ${({ theme }) => theme.globalMaxWidth};
-  width: 100%;
-  gap: 2.8rem;
-  padding: 0 4rem;
-  margin-top: 2.1rem;
-  padding-bottom: 4rem;
+  width: 41.6rem;
+`;
+
+const VaultOverview = styled(Card)`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-self: stretch;
+`;
+const VaultDetailView = styled(ViewContainer)`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 `;
 
 export interface VaultDetailRouteParams {
@@ -25,6 +36,8 @@ export interface VaultDetailRouteParams {
 }
 
 export const VaultDetail = () => {
+  // TODO Set selectedVault or token for the DepositTx
+
   // const { t } = useAppTranslation('common');
   const { vaultId } = useParams<VaultDetailRouteParams>();
   const data = [
@@ -140,12 +153,20 @@ export const VaultDetail = () => {
 
   return (
     <VaultDetailView>
-      <DefaultPageContent>
-        <span>Vault: {vaultId}</span>
+      <VaultOverview>
+        Vault overview data
+        <h3>Vault: {vaultId}</h3>
+      </VaultOverview>
 
-        <h4>Earnings over time</h4>
+      <VaultActions>
+        Actions tabs
+        <DepositTx />
+      </VaultActions>
+
+      <VaultChart>
+        Performance
         <LineChart chartData={data} />
-      </DefaultPageContent>
+      </VaultChart>
     </VaultDetailView>
   );
 };

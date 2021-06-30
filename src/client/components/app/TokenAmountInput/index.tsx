@@ -9,7 +9,7 @@ const Container = styled(Card)`
   padding: 0.8rem;
   margin-bottom: 1.6rem;
   position: relative;
-  background-color: ${({ theme }) => theme.colors.modalColors.background};
+  background-color: ${({ theme }) => theme.colors.txModalColors.background};
 `;
 
 const StyledInput = styled(Input)`
@@ -24,7 +24,7 @@ const StyledInput = styled(Input)`
   padding-right: 3.2rem;
   &,
   &::placeholder {
-    color: ${({ theme }) => theme.colors.modalColors.textContrast};
+    color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   }
   :focus {
     outline: none !important;
@@ -32,10 +32,10 @@ const StyledInput = styled(Input)`
 `;
 
 const StyledSimpleDropdown = styled(SimpleDropdown)`
-  --dropdown-background: ${({ theme }) => theme.colors.modalColors.backgroundVariant};
-  --dropdown-color: ${({ theme }) => theme.colors.modalColors.textContrast};
-  --dropdown-hover-color: ${({ theme }) => theme.colors.modalColors.primary};
-  --dropdown-selected-color: ${({ theme }) => theme.colors.modalColors.primary};
+  --dropdown-background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
+  --dropdown-color: ${({ theme }) => theme.colors.txModalColors.textContrast};
+  --dropdown-hover-color: ${({ theme }) => theme.colors.txModalColors.primary};
+  --dropdown-selected-color: ${({ theme }) => theme.colors.txModalColors.primary};
 `;
 
 const InputControls = styled(Box)`
@@ -51,12 +51,12 @@ const SellTokenIcon = styled(TokenIcon)`
 `;
 
 const StyledText = styled(Text)`
-  color: ${({ theme }) => theme.colors.modalColors.text};
+  color: ${({ theme }) => theme.colors.txModalColors.text};
 `;
 
 const StyledButton = styled(Button)`
-  background-color: ${({ theme }) => theme.colors.modalColors.primary};
-  color: ${({ theme }) => theme.colors.modalColors.background};
+  background-color: ${({ theme }) => theme.colors.txModalColors.primary};
+  color: ${({ theme }) => theme.colors.txModalColors.background};
 `;
 
 interface Token {
