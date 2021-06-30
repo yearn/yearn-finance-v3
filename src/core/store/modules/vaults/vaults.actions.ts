@@ -171,7 +171,9 @@ const depositVault = createAsyncThunk<
   });
   await handleTransaction(tx);
   dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+  dispatch(getUserVaultsSummary());
   dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+  dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
   dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
 });
 
@@ -222,7 +224,9 @@ const withdrawVault = createAsyncThunk<
   });
   await handleTransaction(tx);
   dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+  dispatch(getUserVaultsSummary());
   dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+  dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
   dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, vaultAddress] }));
 });
 
@@ -241,7 +245,9 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
       module: 'vaults',
       event: 'positionsOf',
       action: (vaultAddresses: string[]) => {
+        dispatch(getUserVaultsSummary());
         dispatch(getUserVaultsPositions({ vaultAddresses }));
+        dispatch(getUserVaultsMetadata({ vaultsAddresses: vaultAddresses }));
       },
     });
   }
