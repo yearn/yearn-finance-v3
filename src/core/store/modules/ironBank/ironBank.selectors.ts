@@ -8,7 +8,7 @@ const selectMarketsAddresses = (state: RootState) => state.ironBank.marketAddres
 const selectMarketsAllowancesMap = (state: RootState) => state.ironBank.user.marketsAllowancesMap;
 const selectUserMarketsPositionsMap = (state: RootState) => state.ironBank.user.userMarketsPositionsMap;
 const selectUserMarketsMetadataMap = (state: RootState) => state.ironBank.user.userMarketsMetadataMap;
-const selectIronBankData = (state: RootState) => state.ironBank.ironBankData;
+const selectIronBankData = (state: RootState) => state.ironBank.user.userIronBankSummary;
 
 const selectGetIronBankDataStatus = (state: RootState) => state.ironBank.statusMap.getIronBankData;
 const selectGetMarketsStatus = (state: RootState) => state.ironBank.statusMap.getMarkets;

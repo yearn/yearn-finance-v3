@@ -30,8 +30,8 @@ export const ironBankInitialState: IronBankState = {
   marketAddresses: [],
   marketsMap: {},
   selectedMarketAddress: '',
-  ironBankData: undefined,
   user: {
+    userIronBankSummary: undefined,
     userMarketsPositionsMap: {},
     userMarketsMetadataMap: {},
     marketsAllowancesMap: {},
@@ -109,7 +109,7 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
       state.statusMap.getIronBankData = { loading: true };
     })
     .addCase(getIronBankData.fulfilled, (state, { payload: { ironBankData } }) => {
-      state.ironBankData = ironBankData;
+      state.user.userIronBankSummary = ironBankData;
       state.statusMap.getIronBankData = {};
     })
     .addCase(getIronBankData.rejected, (state, { error }) => {
