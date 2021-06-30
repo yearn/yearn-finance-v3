@@ -22,7 +22,7 @@ const getIronBankSummary = createAsyncThunk<{ userIronBankSummary: IronBankPosit
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { ironBankService } = extra.services;
-    const userIronBankSummary = await ironBankService.getIronBankData({ userAddress });
+    const userIronBankSummary = await ironBankService.getUserIronBankSummary({ userAddress });
     return { userIronBankSummary };
   }
 );
