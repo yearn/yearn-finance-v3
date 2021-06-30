@@ -14,6 +14,8 @@ import {
   TransactionOutcome,
   GetUserVaultsSummaryProps,
   UserVaultsSummary,
+  GetUserVaultsMetadataProps,
+  VaultUserMetadata,
 } from '@types';
 import { toBN } from '@src/utils';
 
@@ -51,6 +53,15 @@ export class VaultServiceImpl implements VaultService {
     const yearn = this.yearnSdk;
     // return await yearn.vaults.getUserVaultsSummary(userAddress); TODO use when sdk ready.
     return { holdings: '9999999', earnings: '9999999', EYY: '9999999', apyAverage: '99' };
+  }
+
+  public async getUserVaultsMetadata(props: GetUserVaultsMetadataProps): Promise<VaultUserMetadata[]> {
+    const { userAddress, vaultsAddresses } = props;
+    const yearn = this.yearnSdk;
+    // return await yearn.vaults.userMetadata(userAddress, vaultsAddresses); TODO use when sdk ready.
+    const yvYfiAddress = '0xe14d13d8b3b85af791b2aadd661cdbd5e6097db1';
+    const obj: VaultUserMetadata = { assetAddress: yvYfiAddress, earned: '99999999' };
+    return [obj];
   }
 
   public async getExpectedTransactionOutcome(props: GetExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {

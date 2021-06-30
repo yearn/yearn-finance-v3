@@ -9,6 +9,7 @@ import {
   GetExpectedTransactionOutcomeProps,
   TransactionOutcome,
   UserVaultsSummary,
+  VaultUserMetadata,
 } from '@types';
 import {
   handleTransaction,
@@ -78,6 +79,21 @@ const getUserVaultsSummary = createAsyncThunk<{ userVaultsSummary: UserVaultsSum
     return { userVaultsSummary };
   }
 );
+
+const getUserVaultsMetadata = createAsyncThunk<
+  { userVaultsMetadata: VaultUserMetadata[] },
+  { vaultsAddresses?: string[] },
+  ThunkAPI
+>('vaults/getUserVaultsMetadata', async ({ vaultsAddresses }, { extra, getState }) => {
+  const { vaultService } = extra.services;
+  const userAddress = getState().wallet.selectedAddress;
+  if (!userAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
+  const userVaultsMetadata = await vaultService.getUserVaultsMetadata({ userAddress, vaultsAddresses });
+
+  return { userVaultsMetadata };
+});
 
 const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveDeposit',
@@ -256,4 +272,5 @@ export const VaultsActions = {
   getExpectedTransactionOutcome,
   clearTransactionData,
   getUserVaultsSummary,
+  getUserVaultsMetadata,
 };

@@ -90,8 +90,9 @@ export const Layout: FC = ({ children }) => {
       dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
       switch (path) {
         case 'home':
-          dispatch(VaultsActions.getUserVaultsPositions({}));
           dispatch(VaultsActions.getUserVaultsSummary());
+          dispatch(VaultsActions.getUserVaultsPositions({}));
+          dispatch(VaultsActions.getUserVaultsMetadata({}));
           dispatch(IronBankActions.getUserMarketsPositions({}));
           dispatch(IronBankActions.getUserMarketsMetadata({}));
           break;
@@ -101,6 +102,7 @@ export const Layout: FC = ({ children }) => {
         case 'vaults':
           dispatch(VaultsActions.getUserVaultsSummary());
           dispatch(VaultsActions.getUserVaultsPositions({}));
+          dispatch(VaultsActions.getUserVaultsMetadata({}));
           break;
         case 'labs':
           dispatch(LabsActions.getUserLabsPositions({}));

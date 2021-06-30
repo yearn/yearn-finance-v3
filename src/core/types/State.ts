@@ -50,6 +50,7 @@ export interface VaultActionsStatusMap {
 }
 export interface UserVaultActionsStatusMap {
   getPosition: Status;
+  getMetadata: Status;
 }
 export interface VaultPositionsMap {
   DEPOSIT: Position;
@@ -72,7 +73,8 @@ export interface UserVaultsSummary {
 }
 
 // TODO import from sdk when ready
-export interface UserVaultMetadata {
+export interface VaultUserMetadata {
+  assetAddress: EthereumAddress;
   earned: Usdc;
 }
 export interface VaultsState {
@@ -83,7 +85,7 @@ export interface VaultsState {
   user: {
     userVaultsSummary: UserVaultsSummary | undefined;
     userVaultsPositionsMap: { [address: string]: VaultPositionsMap };
-    userVaultsMetadataMap: { [address: string]: UserVaultMetadata };
+    userVaultsMetadataMap: { [address: string]: VaultUserMetadata };
     vaultsAllowancesMap: { [vaultAddress: string]: AllowancesMap };
   };
   statusMap: {
@@ -94,6 +96,7 @@ export interface VaultsState {
     user: {
       getUserVaultsSummary: Status;
       getUserVaultsPositions: Status;
+      getUserVaultsMetadata: Status;
       userVaultsActionsStatusMap: { [vaultAddress: string]: UserVaultActionsStatusMap };
     };
   };
