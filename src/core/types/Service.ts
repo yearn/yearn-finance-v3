@@ -18,6 +18,7 @@ import {
   Balance,
   TransactionOutcome,
 } from '@types';
+import { UserVaultsSummary } from './State';
 
 export interface UserService {}
 
@@ -31,6 +32,7 @@ export interface VaultService {
     userAddress: EthereumAddress;
     vaultAddresses?: string[];
   }) => Promise<Position[]>;
+  getUserVaultsSumary: (props: GetUserVaultsSumaryProps) => Promise<UserVaultsSummary>;
   getExpectedTransactionOutcome: (props: GetExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
   // approve:
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
@@ -133,5 +135,8 @@ export interface GetUserLabsPositionsProps {
 }
 
 export interface GetUserLabsMetadataProps {
+  userAddress: EthereumAddress;
+}
+export interface GetUserVaultsSumaryProps {
   userAddress: EthereumAddress;
 }

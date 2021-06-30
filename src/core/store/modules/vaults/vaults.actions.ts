@@ -2,7 +2,14 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import BigNumber from 'bignumber.js';
 import { TokensActions } from '@store';
-import { Position, Vault, VaultDynamic, GetExpectedTransactionOutcomeProps, TransactionOutcome } from '@types';
+import {
+  Position,
+  Vault,
+  VaultDynamic,
+  GetExpectedTransactionOutcomeProps,
+  TransactionOutcome,
+  UserVaultsSummary,
+} from '@types';
 import {
   handleTransaction,
   calculateSharesAmount,
@@ -58,6 +65,19 @@ const getUserVaultsPositions = createAsyncThunk<
   const userVaultsPositions = await services.vaultService.getUserVaultsPositions({ userAddress, vaultAddresses });
   return { userVaultsPositions };
 });
+
+const getUserVaultsSummary = createAsyncThunk<{ userVaultsSumary: UserVaultsSummary }, void, ThunkAPI>(
+  'vaults/getUserVaultsSummary',
+  async (args, { extra, getState }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+    const userVaultsSumary = await services.vaultService.getUserVaultsSumary({ userAddress });
+    return { userVaultsSumary };
+  }
+);
 
 const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveDeposit',
@@ -235,4 +255,5 @@ export const VaultsActions = {
   approveZapOut,
   getExpectedTransactionOutcome,
   clearTransactionData,
+  getUserVaultsSummary,
 };

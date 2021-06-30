@@ -91,6 +91,7 @@ export const Layout: FC = ({ children }) => {
       switch (path) {
         case 'home':
           dispatch(VaultsActions.getUserVaultsPositions({}));
+          dispatch(VaultsActions.getUserVaultsSummary());
           dispatch(IronBankActions.getUserMarketsPositions({}));
           dispatch(IronBankActions.getUserMarketsMetadata({}));
           break;
@@ -98,6 +99,7 @@ export const Layout: FC = ({ children }) => {
           dispatch(VaultsActions.getUserVaultsPositions({}));
           break;
         case 'vaults':
+          dispatch(VaultsActions.getUserVaultsSummary());
           dispatch(VaultsActions.getUserVaultsPositions({}));
           break;
         case 'labs':
