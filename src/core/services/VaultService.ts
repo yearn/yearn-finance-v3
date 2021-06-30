@@ -59,7 +59,7 @@ export class VaultServiceImpl implements VaultService {
     const { userAddress, vaultsAddresses } = props;
     const yearn = this.yearnSdk;
     // return await yearn.vaults.userMetadata(userAddress, vaultsAddresses); TODO use when sdk ready.
-    const yvYfiAddress = '0xe14d13d8b3b85af791b2aadd661cdbd5e6097db1';
+    const yvYfiAddress = '0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1';
     const obj: VaultUserMetadata = { assetAddress: yvYfiAddress, earned: '99999999' };
     return [obj];
   }
