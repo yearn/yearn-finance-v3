@@ -100,23 +100,15 @@ const selectBorrowMarkets = createSelector([selectMarkets], (markets) => {
   return borrowMarkets.filter((market) => new BigNumber(market.userDeposited).gt(0));
 });
 
-const selectSummaryData = createSelector(
-  [selectLendMarkets, selectBorrowMarkets, selectUserIronBankSummary],
-  (lendMarkets, borrowMarkets, userIronBankSummary) => {
-    let totalSupply: BigNumber = new BigNumber('0');
-    let totalBorrow: BigNumber = new BigNumber('0');
-    lendMarkets.forEach((lendMarket) => (totalSupply = totalSupply.plus(lendMarket.userDepositedUsdc)));
-    borrowMarkets.forEach((borrowMarket) => (totalBorrow = totalBorrow.plus(borrowMarket.userDepositedUsdc)));
-
-    return {
-      supplyBalance: totalSupply.toString(),
-      borrowBalance: totalBorrow.toString(),
-      borrowUtilizationRatio: userIronBankSummary?.utilizationRatioBips ?? '0',
-      // TODO: Calc for NET APY
-      netAPY: '0',
-    };
-  }
-);
+const selectSummaryData = createSelector([selectUserIronBankSummary], (userIronBankSummary) => {
+  return {
+    supplyBalance: userIronBankSummary?.supplyBalanceUsdc ?? '0',
+    borrowBalance: userIronBankSummary?.borrowBalanceUsdc ?? '0',
+    borrowUtilizationRatio: userIronBankSummary?.utilizationRatioBips ?? '0',
+    // TODO: Calc for NET APY
+    netAPY: '0',
+  };
+});
 
 const selectIronBankStatus = createSelector(
   [
