@@ -10,7 +10,6 @@ const clearUserData = createAction<void>('ironbank/clearUserData');
 const initiateIronBank = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'ironBank/initiateIronBank',
   async (_arg, { dispatch }) => {
-    await dispatch(getIronBankSummary());
     await dispatch(getMarkets());
   }
 );
