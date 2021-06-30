@@ -113,14 +113,12 @@ const selectSelectedVaultActionsStatusMap = createSelector(
   }
 );
 
-const selectSummaryData = createSelector([selectDepositedVaults], (depositedVaults) => {
-  let totalDeposited: BigNumber = new BigNumber('0');
-  depositedVaults.forEach((vault) => (totalDeposited = totalDeposited.plus(vault.userDepositedUsdc)));
-
+const selectSummaryData = createSelector([selectUserVaultsSummary], (userVaultsSummary) => {
   return {
-    totalDeposits: totalDeposited.toString(),
-    totalEarnings: '0',
-    estYearlyYeild: '0',
+    totalDeposits: userVaultsSummary?.holdings ?? '0',
+    totalEarnings: userVaultsSummary?.earnings ?? '0',
+    estYearlyYeild: userVaultsSummary?.EYY ?? '0',
+    apy: userVaultsSummary?.apyAverage ?? '0',
   };
 });
 
