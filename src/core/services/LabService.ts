@@ -115,19 +115,16 @@ export class LabServiceImpl implements LabService {
     const pJarTotalSupplyPromise = pSLPyvBoostEthContract.totalSupply();
     const pJarRatioPromise = pSLPyvBoostEthContract.getRatio();
     const picklePoolsPromise = get('https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/pools');
-    const performancePromise = get(
-      'https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/jar/yvboost-eth/performance'
-    );
-    const [pJarTotalSupply, pJarRatio, picklePoolsResponse, performanceResponse] = await Promise.all([
+    const [pJarTotalSupply, pJarRatio, picklePoolsResponse] = await Promise.all([
       pJarTotalSupplyPromise,
       pJarRatioPromise,
       picklePoolsPromise,
-      performancePromise,
     ]);
-    const liquidityLocked = picklePoolsResponse.data.find(
+    const pJarPool = picklePoolsResponse.data.find(
       ({ identifier }: { identifier: string }) => identifier === 'yvboost-eth'
-    )?.liquidity_locked;
-    const performance = performanceResponse.data.sevenDayFarm;
+    );
+    const liquidityLocked = pJarPool?.liquidity_locked;
+    const performance = pJarPool?.apy;
 
     // USE YVBOOST DATA AS BASE DATA SOURCE
     const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
