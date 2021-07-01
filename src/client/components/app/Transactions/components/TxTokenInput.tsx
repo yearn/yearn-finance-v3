@@ -13,7 +13,7 @@ const StyledButton = styled(Button)`
   border-radius: 1em;
 `;
 
-const StyledInput = styled.input`
+const StyledAmountInput = styled.input`
   font-size: 3.6rem;
   font-weight: 600;
   width: 100%;
@@ -23,6 +23,7 @@ const StyledInput = styled.input`
   border: none;
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   padding: 0;
+  font-family: inherit;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.txModalColors.text};
@@ -158,7 +159,11 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
 
         <TokenData>
           <StyledText>{inputText || 'Balance'}</StyledText>
-          <StyledInput value={amount} onChange={(e) => onAmountChange(e.target.value)} placeholder="000000000.00" />
+          <StyledAmountInput
+            value={amount}
+            onChange={(e) => onAmountChange(e.target.value)}
+            placeholder="000000000.00"
+          />
           <TokenExtras>
             {amountValue && <StyledText>≈ {formatUsd(amountValue)}</StyledText>}
             {maxAmount && <StyledButton onClick={() => onAmountChange(maxAmount)}>Max</StyledButton>}
