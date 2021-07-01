@@ -60,8 +60,8 @@ export class LabServiceImpl implements LabService {
           .toFixed(0),
       },
       metadata: {
-        depositLimit: '0',
-        emergencyShutdown: false,
+        depositLimit: '0', // yvecrv doestn have
+        emergencyShutdown: false, // yvecrv doesnt have
         pricePerShare: toBN('1')
           .times(10 ** backscratcherData.decimals)
           .toFixed(0),
@@ -156,8 +156,8 @@ export class LabServiceImpl implements LabService {
           .toFixed(0),
       },
       metadata: {
-        depositLimit: '0',
-        emergencyShutdown: false,
+        depositLimit: '0', // yvboost-eth doestn have
+        emergencyShutdown: false, // yvboost-eth doestn have
         pricePerShare: pJarRatio.toString(),
         apy: {
           recommended: toBN(performance.toString()).dividedBy(100).toNumber(),
