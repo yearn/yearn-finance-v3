@@ -43,6 +43,8 @@ interface LabMetadata {
   pricePerShare: Integer;
   apy?: Apy;
   icon?: string;
+  depositLimit: string;
+  emergencyShutdown: boolean;
 }
 
 interface LabUserMetadata {}
