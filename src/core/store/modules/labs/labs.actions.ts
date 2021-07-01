@@ -8,9 +8,12 @@ import BigNumber from 'bignumber.js';
 import {
   calculateSharesAmount,
   handleTransaction,
+  normalizeAmount,
   toBN,
   validateVaultAllowance,
   validateVaultDeposit,
+  validateVaultWithdraw,
+  validateVaultWithdrawAllowance,
 } from '../../../../utils';
 
 const { THREECRV, YVECRV, pickleZapIn, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConstants().CONTRACT_ADDRESSES;
@@ -116,7 +119,6 @@ const yvBoostDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
 
-    // TODO validations
     const { error: allowanceError } = validateVaultAllowance({
       amount,
       vaultAddress: labAddress,
@@ -188,7 +190,19 @@ const yvBoostWithdraw = createAsyncThunk<
     pricePerShare: labData.metadata.pricePerShare,
   });
 
-  // TODO validations
+  const { error: allowanceError } = validateVaultWithdrawAllowance({
+    yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    targetTokenAddress: targetTokenAddress,
+    underlyingTokenAddress: tokenData.address ?? '',
+    yvTokenDecimals: tokenData.decimals.toString() ?? '0',
+    yvTokenAllowancesMap: labAllowancesMap ?? {},
+  });
+
+  const { error: withdrawError } = validateVaultWithdraw({
+    yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    userYvTokenBalance: userLabData.balance ?? '0',
+    yvTokenDecimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
+  });
 
   const { labService } = services;
   // const tx = await labService.withdraw({
