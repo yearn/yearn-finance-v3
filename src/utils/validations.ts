@@ -58,7 +58,7 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
     return { error: 'INVALID AMOUNT' };
   }
   if (amountInWei.gt(userTokenBalance)) {
-    return { error: 'INSUFICIENT FUNDS' };
+    return { error: 'INSUFFICIENT FUNDS' };
   }
 
   // TODO we need to wait until we decide what to do with the convertion rate from sdk.
