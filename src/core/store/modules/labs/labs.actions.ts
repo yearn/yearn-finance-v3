@@ -204,6 +204,9 @@ const yvBoostWithdraw = createAsyncThunk<
     yvTokenDecimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
   });
 
+  const error = withdrawError || allowanceError;
+  if (error) throw new Error(error);
+
   const { labService } = services;
   // const tx = await labService.withdraw({
   //   accountAddress: userAddress,
