@@ -60,6 +60,8 @@ export class LabServiceImpl implements LabService {
           .toFixed(0),
       },
       metadata: {
+        depositLimit: '0',
+        emergencyShutdown: false,
         pricePerShare: toBN('1')
           .times(10 ** backscratcherData.decimals)
           .toFixed(0),
@@ -76,8 +78,12 @@ export class LabServiceImpl implements LabService {
 
     // **************** YVBOOST ****************
     const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
-    const totalAssets = await yvBoostContract.totalAssets();
-    const pricePerShare = await yvBoostContract.pricePerShare();
+    const [totalAssets, pricePerShare, depositLimit, emergencyShutdown] = await Promise.all([
+      yvBoostContract.totalAssets(),
+      yvBoostContract.pricePerShare(),
+      yvBoostContract.depositLimit(),
+      yvBoostContract.emergencyShutdown(),
+    ]);
     const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
     if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
     const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
@@ -98,6 +104,8 @@ export class LabServiceImpl implements LabService {
           .toFixed(0),
       },
       metadata: {
+        depositLimit: depositLimit.toString(),
+        emergencyShutdown: emergencyShutdown,
         pricePerShare: pricePerShare.toString(),
         apy: {
           recommended: yvBoostData.apy.net_apy,
@@ -148,6 +156,8 @@ export class LabServiceImpl implements LabService {
           .toFixed(0),
       },
       metadata: {
+        depositLimit: '0',
+        emergencyShutdown: false,
         pricePerShare: pJarRatio.toString(),
         apy: {
           recommended: toBN(performance.toString()).dividedBy(100).toNumber(),

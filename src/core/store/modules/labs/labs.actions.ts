@@ -5,7 +5,13 @@ import { VaultsActions } from '../vaults/vaults.actions';
 import { getConstants } from '../../../../config/constants';
 import { TokensActions } from '../..';
 import BigNumber from 'bignumber.js';
-import { calculateSharesAmount, handleTransaction, toBN } from '../../../../utils';
+import {
+  calculateSharesAmount,
+  handleTransaction,
+  toBN,
+  validateVaultAllowance,
+  validateVaultDeposit,
+} from '../../../../utils';
 
 const { THREECRV, YVECRV, pickleZapIn, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConstants().CONTRACT_ADDRESSES;
 
@@ -111,6 +117,25 @@ const yvBoostDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
     const ONE_UNIT = toBN('10').pow(decimals);
 
     // TODO validations
+    const { error: allowanceError } = validateVaultAllowance({
+      amount,
+      vaultAddress: labAddress,
+      vaultUnderlyingTokenAddress: labData.tokenId,
+      sellTokenAddress: sellTokenAddress,
+      sellTokenDecimals: tokenData.decimals,
+      sellTokenAllowancesMap: tokenAllowancesMap,
+    });
+
+    const { error: depositError } = validateVaultDeposit({
+      sellTokenAmount: amount,
+      depositLimit: labData?.metadata.depositLimit ?? '0',
+      emergencyShutdown: labData?.metadata.emergencyShutdown || false,
+      sellTokenDecimals: tokenData?.decimals ?? '0',
+      userTokenBalance: userTokenData?.balance ?? '0',
+      vaultUnderlyingBalance: labData?.underlyingTokenBalance.amount ?? '0',
+    });
+    const error = allowanceError || depositError;
+    if (error) throw new Error(error);
 
     const amountInWei = amount.multipliedBy(ONE_UNIT);
     const { labService } = services;
