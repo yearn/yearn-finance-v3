@@ -26,8 +26,12 @@ const StyledAmountInput = styled.input`
   font-family: inherit;
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.txModalColors.text};
+    color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
   }
+`;
+
+const ContrastText = styled.span`
+  color: ${({ theme }) => theme.colors.txModalColors.success};
 `;
 
 const StyledText = styled(Text)`
@@ -52,6 +56,7 @@ const TokenData = styled.div`
   flex-direction: column;
   align-items: flex-end;
   overflow: hidden;
+  font-size: 1.4rem;
 `;
 
 const TokenName = styled.div``;
@@ -74,7 +79,7 @@ const TokenSelector = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   width: 8.4rem;
   height: 9.2rem;
   border-radius: ${({ theme }) => theme.globalRadius};
@@ -82,18 +87,20 @@ const TokenSelector = styled.div`
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   fill: currentColor;
   flex-shrink: 0;
+  padding: 0.7rem;
+  gap: 0.7rem;
 `;
 
 const TokenInfo = styled.div`
   display: flex;
-  gap: 0.8rem;
+  gap: ${({ theme }) => theme.txModal.gap};
 `;
 
 const Header = styled.div`
   font-weight: 600;
   font-size: 1.4rem;
   text-transform: capitalize;
-  color: ${({ theme }) => theme.colors.txModalColors.textContrast};
+  color: ${({ theme }) => theme.colors.txModalColors.text};
 `;
 
 const StyledTxTokenInput = styled.div`
@@ -121,6 +128,7 @@ export interface TxTokenInputProps {
   onAmountChange: (amount: string) => void;
   price?: string;
   maxAmount?: string;
+  yieldPercent?: string;
   tokenOptions?: Token[];
 }
 
@@ -131,6 +139,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   onAmountChange,
   price,
   maxAmount,
+  yieldPercent,
   tokenOptions,
   children,
   ...props
@@ -162,11 +171,16 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <StyledAmountInput
             value={amount}
             onChange={(e) => onAmountChange(e.target.value)}
-            placeholder="000000000.00"
+            placeholder="00000000.00"
           />
           <TokenExtras>
             {amountValue && <StyledText>≈ {formatUsd(amountValue)}</StyledText>}
             {maxAmount && <StyledButton onClick={() => onAmountChange(maxAmount)}>Max</StyledButton>}
+            {yieldPercent && (
+              <StyledText>
+                Yield <ContrastText>{yieldPercent}%</ContrastText>
+              </StyledText>
+            )}
           </TokenExtras>
         </TokenData>
       </TokenInfo>

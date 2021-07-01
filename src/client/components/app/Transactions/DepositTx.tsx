@@ -135,7 +135,14 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
       <TxArrowStatus status={txStatus} />
 
-      <TxTokenInput headerText="To vault" amount={amount} onAmountChange={setAmount} />
+      <TxTokenInput
+        headerText="To vault"
+        inputText={`Balance ${formatAmount(balance, 4)} ${selectedSellToken.symbol}`}
+        amount={amount}
+        onAmountChange={setAmount}
+        yieldPercent="20.32"
+        price={normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)}
+      />
 
       {/* <TxError errorText="Test error" /> */}
 
