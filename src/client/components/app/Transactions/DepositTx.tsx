@@ -130,7 +130,6 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const expectedAmountValue = toBN(amount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount.amountUsdc, USDC_DECIMALS)
     : '0';
-  console.log({ val: expectedTxOutcome?.targetUnderlyingTokenAmount.amountUsdc, expectedAmountValue });
 
   const approve = () =>
     dispatch(
