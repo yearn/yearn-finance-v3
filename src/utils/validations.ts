@@ -89,9 +89,9 @@ export function validateVaultAllowance(props: ValidateVaultAllowanceProps): Vali
   if (isETH) return { approved: true }; // TODO this check should be moved to validateAllowance().
 
   return validateAllowance({
-    sellTokenAmount: amount,
-    sellTokenDecimals,
-    sellTokenAllowancesMap,
+    tokenAmount: amount,
+    tokenDecimals: sellTokenDecimals,
+    tokenAllowancesMap: sellTokenAllowancesMap,
     spenderAddress: isZapin ? ZAP_IN_CONTRACT : vaultAddress,
   });
 }
@@ -120,9 +120,9 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
   if (!isZapOut) return { approved: true };
 
   return validateAllowance({
-    sellTokenAmount: yvTokenAmount,
-    sellTokenDecimals: yvTokenDecimals,
-    sellTokenAllowancesMap: yvTokenAllowancesMap,
+    tokenAmount: yvTokenAmount,
+    tokenDecimals: yvTokenDecimals,
+    tokenAllowancesMap: yvTokenAllowancesMap,
     spenderAddress: ZAP_OUT_CONTRACT,
   });
 }
@@ -137,28 +137,40 @@ interface ValidateYvBoostEthAllowanceProps {
 
 export function validateYvBoostEthInvestAllowance(props: ValidateYvBoostEthAllowanceProps): ValidationResonse {
   const PICKLE_ZAP_IN = getConfig().CONTRACT_ADDRESSES.pickleZapIn;
-  return validateAllowance({ ...props, spenderAddress: PICKLE_ZAP_IN });
+  const { sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap } = props;
+  return validateAllowance({
+    tokenAmount: sellTokenAmount,
+    tokenDecimals: sellTokenDecimals,
+    tokenAllowancesMap: sellTokenAllowancesMap,
+    spenderAddress: PICKLE_ZAP_IN,
+  });
 }
 
 export function validateYvBoostEthStakeAllowance(props: ValidateYvBoostEthAllowanceProps): ValidationResonse {
   const { PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
-  return validateAllowance({ ...props, spenderAddress: PSLPYVBOOSTETH_GAUGE });
+  const { sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap } = props;
+  return validateAllowance({
+    tokenAmount: sellTokenAmount,
+    tokenDecimals: sellTokenDecimals,
+    tokenAllowancesMap: sellTokenAllowancesMap,
+    spenderAddress: PSLPYVBOOSTETH_GAUGE,
+  });
 }
 
 interface ValidateAllowanceProps {
-  sellTokenAmount: BigNumber;
-  sellTokenDecimals: string;
-  sellTokenAllowancesMap: AllowancesMap;
+  tokenAmount: BigNumber;
+  tokenDecimals: string;
+  tokenAllowancesMap: AllowancesMap;
   spenderAddress: string;
 }
 export function validateAllowance(props: ValidateAllowanceProps): ValidationResonse {
-  const { sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap, spenderAddress } = props;
-  const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
-  const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
+  const { tokenAmount, tokenDecimals, tokenAllowancesMap, spenderAddress } = props;
+  const ONE_UNIT = toBN('10').pow(tokenDecimals);
+  const amountInWei = tokenAmount.multipliedBy(ONE_UNIT);
 
-  const allowance = toBN(sellTokenAllowancesMap[spenderAddress]);
+  const allowance = toBN(tokenAllowancesMap[spenderAddress]);
 
-  if (sellTokenAmount.isEqualTo(0) && allowance.isEqualTo(0)) {
+  if (tokenAmount.isEqualTo(0) && allowance.isEqualTo(0)) {
     return { error: 'TOKEN NOT APPROVED' };
   }
 
