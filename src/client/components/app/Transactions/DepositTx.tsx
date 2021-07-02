@@ -18,6 +18,7 @@ import {
   formatPercent,
   formatAmount,
   normalizeAmount,
+  toWei,
   USDC_DECIMALS,
   validateVaultDeposit,
   validateVaultAllowance,
@@ -44,11 +45,14 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   const [selectedSlippage, setSelectedSlippage] = useState(slippageOptions[0]);
+  const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
+  const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
 
   const sellTokensOptions = selectedVault
     ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
+  const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
 
   useEffect(() => {
     if (!selectedSellTokenAddress && selectedVault) {
@@ -78,6 +82,22 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     );
   }, [selectedSellTokenAddress]);
 
+  useEffect(() => {
+    if (!selectedVault || !selectedSellTokenAddress) return;
+
+    if (toBN(amount).gt(0)) {
+      dispatch(
+        VaultsActions.getExpectedTransactionOutcome({
+          transactionType: 'DEPOSIT',
+          sourceTokenAddress: selectedSellTokenAddress,
+          sourceTokenAmount: toWei(amount, selectedSellToken.decimals),
+          targetTokenAddress: selectedVault.address,
+          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
+        })
+      );
+    }
+  }, [amount, selectedSellTokenAddress, selectedVault]);
+
   // TODO If there are no vaults initialized, selectedVault will always be undefined
   // Note workaround for testing: open vaults and then settings>DepositTx
 
@@ -85,7 +105,6 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     return null;
   }
 
-  const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress];
   const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
     amount: toBN(amount),
     vaultAddress: selectedVault.address,
@@ -105,6 +124,13 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
   const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
+  const expectedAmount = toBN(amount).gt(0)
+    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount.amount, selectedVault?.token.decimals)
+    : '0';
+  const expectedAmountValue = toBN(amount).gt(0)
+    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount.amountUsdc, USDC_DECIMALS)
+    : '0';
+  console.log({ val: expectedTxOutcome?.targetUnderlyingTokenAmount.amountUsdc, expectedAmountValue });
 
   const approve = () =>
     dispatch(
@@ -128,7 +154,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         inputText={`Balance ${formatAmount(balance, 4)} ${selectedSellToken.symbol}`}
         amount={amount}
         onAmountChange={setAmount}
-        price={normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)}
+        amountValue={amountValue}
         maxAmount={balance}
         tokenOptions={allowVaultSelect ? undefined : sellTokensOptions}
       />
@@ -138,10 +164,10 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
       <TxTokenInput
         headerText="To vault"
         inputText={`Balance ${formatAmount(balance, 4)} ${selectedSellToken.symbol}`}
-        amount={amount}
-        onAmountChange={setAmount}
+        amount={expectedAmount}
+        onAmountChange={() => console.log('INPUT DISABLED')}
+        amountValue={expectedAmountValue}
         yieldPercent="20.32"
-        price={normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)}
       />
 
       {/* <TxError errorText="Test error" /> */}

@@ -126,7 +126,7 @@ export interface TxTokenInputProps {
   inputText?: string;
   amount: string;
   onAmountChange: (amount: string) => void;
-  price?: string;
+  amountValue?: string;
   maxAmount?: string;
   yieldPercent?: string;
   tokenOptions?: Token[];
@@ -137,7 +137,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   inputText,
   amount,
   onAmountChange,
-  price,
+  amountValue,
   maxAmount,
   yieldPercent,
   tokenOptions,
@@ -145,10 +145,6 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   ...props
 }) => {
   const openTokenDropdown = () => console.log('open dropdown');
-  let amountValue;
-  if (price) {
-    amountValue = toBN(amount).times(price).toString();
-  }
 
   return (
     <StyledTxTokenInput {...props}>

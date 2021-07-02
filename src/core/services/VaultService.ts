@@ -17,7 +17,7 @@ import {
   GetUserVaultsMetadataProps,
   VaultUserMetadata,
 } from '@types';
-import { toBN } from '@src/utils';
+import { toBN, normalizeAmount, USDC_DECIMALS } from '@src/utils';
 
 export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;
@@ -72,6 +72,14 @@ export class VaultServiceImpl implements VaultService {
       sourceTokenAmount,
       targetTokenAddress,
       targetTokenAmount: toBN(sourceTokenAmount).times(1.5).toFixed(0),
+      targetUnderlyingTokenAddress: '',
+      targetUnderlyingTokenAmount: {
+        amount: toBN(sourceTokenAmount).times(1.5).toFixed(0),
+        amountUsdc: toBN(normalizeAmount(sourceTokenAmount, 18))
+          .times(2)
+          .times(10 ** USDC_DECIMALS)
+          .toFixed(0),
+      },
       conversionRate: 1.5,
       slippage: 0.01,
     };

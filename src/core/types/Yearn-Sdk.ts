@@ -54,6 +54,8 @@ interface TransactionOutcome {
   sourceTokenAmount: Integer;
   targetTokenAddress: Address;
   targetTokenAmount: Integer;
+  targetUnderlyingTokenAddress: Address;
+  targetUnderlyingTokenAmount: TokenAmount;
   conversionRate: number;
   slippage: number;
 }
