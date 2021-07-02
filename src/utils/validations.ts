@@ -17,6 +17,7 @@ interface ValidateVaultWithdrawProps {
   userYvTokenBalance: string;
 }
 interface ValidateVaultWithdrawAllowanceProps {
+  yvTokenAddress: string;
   yvTokenAmount: BigNumber;
   yvTokenDecimals: string;
   underlyingTokenAddress: string;
@@ -83,27 +84,15 @@ export function validateVaultAllowance(props: ValidateVaultAllowanceProps): Vali
     sellTokenAllowancesMap,
   } = props;
 
-  const isETH = sellTokenAddress === getConfig().ETHEREUM_ADDRESS;
   const isZapin = vaultUnderlyingTokenAddress !== sellTokenAddress;
-  const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
-  const amountInWei = amount.multipliedBy(ONE_UNIT);
 
-  if (isETH) return { approved: true };
-
-  const allowance = isZapin
-    ? toBN(sellTokenAllowancesMap[ZAP_IN_CONTRACT])
-    : toBN(sellTokenAllowancesMap[vaultAddress]);
-
-  if (amount.isEqualTo(0) && allowance.isEqualTo(0)) {
-    return { error: 'TOKEN NOT APPROVED' };
-  }
-
-  const approved = allowance.gte(amountInWei);
-  if (!approved) {
-    return { error: 'TOKEN AMOUNT NOT APPROVED' };
-  }
-
-  return { approved };
+  return validateAllowance({
+    tokenAddress: sellTokenAddress,
+    tokenAmount: amount,
+    tokenDecimals: sellTokenDecimals,
+    tokenAllowancesMap: sellTokenAllowancesMap,
+    spenderAddress: isZapin ? ZAP_IN_CONTRACT : vaultAddress,
+  });
 }
 
 export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): ValidationResonse {
@@ -124,16 +113,74 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
 
 export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllowanceProps): ValidationResonse {
   const ZAP_OUT_CONTRACT = getConfig().CONTRACT_ADDRESSES.zapOut;
-  let { yvTokenAmount, yvTokenDecimals, underlyingTokenAddress, targetTokenAddress, yvTokenAllowancesMap } = props;
-  const ONE_UNIT = toBN('10').pow(yvTokenDecimals);
-  const amountInWei = yvTokenAmount.multipliedBy(ONE_UNIT);
+  let {
+    yvTokenAddress,
+    yvTokenAmount,
+    yvTokenDecimals,
+    underlyingTokenAddress,
+    targetTokenAddress,
+    yvTokenAllowancesMap,
+  } = props;
   const isZapOut = targetTokenAddress !== underlyingTokenAddress;
 
   if (!isZapOut) return { approved: true };
 
-  const allowance = toBN(yvTokenAllowancesMap[ZAP_OUT_CONTRACT]);
+  return validateAllowance({
+    tokenAddress: yvTokenAddress,
+    tokenAmount: yvTokenAmount,
+    tokenDecimals: yvTokenDecimals,
+    tokenAllowancesMap: yvTokenAllowancesMap,
+    spenderAddress: ZAP_OUT_CONTRACT,
+  });
+}
 
-  if (yvTokenAmount.isEqualTo(0) && allowance.isEqualTo(0)) {
+// ********************* Labs *********************
+
+interface ValidateYvBoostEthActionsAllowanceProps {
+  sellTokenAddress: string;
+  sellTokenAmount: BigNumber;
+  sellTokenDecimals: string;
+  sellTokenAllowancesMap: AllowancesMap;
+  action: 'INVEST' | 'STAKE';
+}
+
+export function validateYvBoostEthActionsAllowance(props: ValidateYvBoostEthActionsAllowanceProps): ValidationResonse {
+  const { PSLPYVBOOSTETH_GAUGE, pickleZapIn: PICKLE_ZAP_IN, PSLPYVBOOSTETH } = getConfig().CONTRACT_ADDRESSES;
+  const { sellTokenAddress, sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap, action } = props;
+  let spenderAddress: string = '';
+
+  if (action === 'INVEST') spenderAddress = PICKLE_ZAP_IN;
+  if (action === 'STAKE') {
+    spenderAddress = PSLPYVBOOSTETH_GAUGE;
+    if (sellTokenAddress !== PSLPYVBOOSTETH) throw new Error('Only PSLPYVBOOSTETH token is supported for STAKE action');
+  }
+
+  return validateAllowance({
+    tokenAddress: sellTokenAddress,
+    tokenAmount: sellTokenAmount,
+    tokenDecimals: sellTokenDecimals,
+    tokenAllowancesMap: sellTokenAllowancesMap,
+    spenderAddress,
+  });
+}
+
+interface ValidateAllowanceProps {
+  tokenAddress: string;
+  tokenAmount: BigNumber;
+  tokenDecimals: string;
+  tokenAllowancesMap: AllowancesMap;
+  spenderAddress: string;
+}
+export function validateAllowance(props: ValidateAllowanceProps): ValidationResonse {
+  const { tokenAddress, tokenAmount, tokenDecimals, tokenAllowancesMap, spenderAddress } = props;
+  const ONE_UNIT = toBN('10').pow(tokenDecimals);
+  const amountInWei = tokenAmount.multipliedBy(ONE_UNIT);
+  const isETH = tokenAddress === getConfig().ETHEREUM_ADDRESS;
+  if (isETH) return { approved: true };
+
+  const allowance = toBN(tokenAllowancesMap[spenderAddress]);
+
+  if (tokenAmount.isEqualTo(0) && allowance.isEqualTo(0)) {
     return { error: 'TOKEN NOT APPROVED' };
   }
 
