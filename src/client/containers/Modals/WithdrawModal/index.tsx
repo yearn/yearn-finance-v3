@@ -135,6 +135,7 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
   });
 
   const { approved: isApproved, error: allowanceError } = validateVaultWithdrawAllowance({
+    yvTokenAddress: selectedVault.address,
     yvTokenAmount: toBN(normalizeAmount(yvTokenAmount, selectedVault.token.decimals)),
     targetTokenAddress: selectedTargetToken.address,
     underlyingTokenAddress: selectedVault.token.address,
