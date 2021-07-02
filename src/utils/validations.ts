@@ -136,34 +136,31 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
 
 // ********************* Labs *********************
 
-interface ValidateYvBoostEthAllowanceProps {
-  sellTokenAdress: string;
+interface ValidateYvBoostEthActionsAllowanceProps {
+  sellTokenAddress: string;
   sellTokenAmount: BigNumber;
   sellTokenDecimals: string;
   sellTokenAllowancesMap: AllowancesMap;
+  action: 'INVEST' | 'STAKE';
 }
 
-export function validateYvBoostEthInvestAllowance(props: ValidateYvBoostEthAllowanceProps): ValidationResonse {
-  const PICKLE_ZAP_IN = getConfig().CONTRACT_ADDRESSES.pickleZapIn;
-  const { sellTokenAdress, sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap } = props;
+export function validateYvBoostEthActionsAllowance(props: ValidateYvBoostEthActionsAllowanceProps): ValidationResonse {
+  const { PSLPYVBOOSTETH_GAUGE, pickleZapIn: PICKLE_ZAP_IN, PSLPYVBOOSTETH } = getConfig().CONTRACT_ADDRESSES;
+  const { sellTokenAddress, sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap, action } = props;
+  let spenderAddress: string = '';
+
+  if (action === 'INVEST') spenderAddress = PICKLE_ZAP_IN;
+  if (action === 'STAKE') {
+    spenderAddress = PSLPYVBOOSTETH_GAUGE;
+    if (sellTokenAddress === PSLPYVBOOSTETH) throw new Error('Only PSLPYVBOOSTETH token is supported for STAKE action');
+  }
+
   return validateAllowance({
-    tokenAddress: sellTokenAdress,
+    tokenAddress: sellTokenAddress,
     tokenAmount: sellTokenAmount,
     tokenDecimals: sellTokenDecimals,
     tokenAllowancesMap: sellTokenAllowancesMap,
-    spenderAddress: PICKLE_ZAP_IN,
-  });
-}
-
-export function validateYvBoostEthStakeAllowance(props: ValidateYvBoostEthAllowanceProps): ValidationResonse {
-  const { PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
-  const { sellTokenAdress, sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap } = props;
-  return validateAllowance({
-    tokenAddress: sellTokenAdress,
-    tokenAmount: sellTokenAmount,
-    tokenDecimals: sellTokenDecimals,
-    tokenAllowancesMap: sellTokenAllowancesMap,
-    spenderAddress: PSLPYVBOOSTETH_GAUGE,
+    spenderAddress,
   });
 }
 
