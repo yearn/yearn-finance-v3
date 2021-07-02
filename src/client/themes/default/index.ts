@@ -85,6 +85,7 @@ const sharedTheme: SharedTheme = {
 
   searchList: {
     primary: '#00A3FF',
+    primaryVariant: '#006AE3',
     primaryHover: '#00D1FF',
     onPrimary: '#FFFFFF',
   },

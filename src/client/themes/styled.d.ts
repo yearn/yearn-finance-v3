@@ -54,6 +54,7 @@ declare module 'styled-components' {
 
     searchList: {
       primary: string;
+      primaryVariant: string;
       primaryHover: string;
       onPrimary: string;
     };

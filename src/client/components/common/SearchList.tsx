@@ -33,12 +33,22 @@ const List = styled.div`
   flex: 1;
   margin-top: 0.8rem;
   font-size: 1.4rem;
-  padding: 0.8rem;
+  padding: 0 0.8rem;
   overflow: hidden;
   overflow-y: auto;
 `;
 
-const StyledSearchInput = styled(SearchInput)``;
+const StyledSearchInput = styled(SearchInput)`
+  background: blue;
+  background-color: ${({ theme }) => theme.searchList.primaryVariant};
+  color: ${({ theme }) => theme.searchList.primaryHover};
+  fill: ${({ theme }) => theme.searchList.primaryHover};
+  border: 0;
+
+  ::placeholder {
+    color: ${({ theme }) => theme.searchList.primaryHover};
+  }
+`;
 
 const BackButton = styled(Icon)`
   fill: inherit;
@@ -125,10 +135,7 @@ export const SearchList: FC<SearchListProps> = ({ headerText, list, selected, se
           (item: SearchListItem) =>
             item && (
               <ListItem key={item.id} onClick={() => selectItem(item)} selected={item.id === selected.id}>
-                <TokenIcon
-                  icon="https://zapper.fi/images/networks/ethereum/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490.png"
-                  symbol="ETH"
-                />
+                <TokenIcon icon={item.icon} symbol={item.label} />
                 <ItemLabel>{item.label}</ItemLabel>
                 {item.value}
               </ListItem>

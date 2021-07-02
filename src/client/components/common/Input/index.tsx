@@ -44,6 +44,7 @@ const StyledInput = styled.input`
 const StyledIcon = styled(Icon)`
   width: 1.6rem;
   margin-right: 0.5rem;
+  fill: inherit;
 `;
 
 export const Input: FC<InputProps> = ({ className, color, placeholder, Icon, ...props }) => (
