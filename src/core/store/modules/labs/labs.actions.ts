@@ -412,8 +412,33 @@ const yvBoostEthStake = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+    const sellTokenAddress = PSLPYVBOOSTETH;
+    const labData = getState().labs.labsMap[labAddress];
+    const tokenData = getState().tokens.tokensMap[sellTokenAddress];
+    const userTokenData = getState().tokens.user.userTokensMap[sellTokenAddress];
+    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[sellTokenAddress] ?? {};
+    const decimals = toBN(tokenData.decimals);
+    const ONE_UNIT = toBN('10').pow(decimals);
 
-    // TODO validations.
+    const { error: allowanceError } = validateYvBoostEthActionsAllowance({
+      action: 'STAKE',
+      sellTokenAddress,
+      sellTokenAmount: amount,
+      sellTokenDecimals: tokenData.decimals,
+      sellTokenAllowancesMap: tokenAllowancesMap,
+    });
+
+    const { error: depositError } = validateVaultDeposit({
+      sellTokenAmount: amount,
+      sellTokenDecimals: tokenData?.decimals ?? '0',
+      userTokenBalance: userTokenData?.balance ?? '0',
+      vaultUnderlyingBalance: labData?.underlyingTokenBalance.amount ?? '0',
+      depositLimit: labData?.metadata.depositLimit ?? '0',
+      emergencyShutdown: labData?.metadata.emergencyShutdown || false,
+    });
+
+    const error = allowanceError || depositError;
+    if (error) throw new Error(error);
 
     const { labService } = services;
     // const tx = await labService.yvBoostEthStake({
