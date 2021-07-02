@@ -83,12 +83,10 @@ export function validateVaultAllowance(props: ValidateVaultAllowanceProps): Vali
     sellTokenAllowancesMap,
   } = props;
 
-  const isETH = sellTokenAddress === getConfig().ETHEREUM_ADDRESS;
   const isZapin = vaultUnderlyingTokenAddress !== sellTokenAddress;
 
-  if (isETH) return { approved: true }; // TODO this check should be moved to validateAllowance().
-
   return validateAllowance({
+    tokenAddress: sellTokenAddress,
     tokenAmount: amount,
     tokenDecimals: sellTokenDecimals,
     tokenAllowancesMap: sellTokenAllowancesMap,
@@ -120,6 +118,7 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
   if (!isZapOut) return { approved: true };
 
   return validateAllowance({
+    tokenAddress: targetTokenAddress,
     tokenAmount: yvTokenAmount,
     tokenDecimals: yvTokenDecimals,
     tokenAllowancesMap: yvTokenAllowancesMap,
@@ -130,6 +129,7 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
 // ********************* Labs *********************
 
 interface ValidateYvBoostEthAllowanceProps {
+  sellTokenAdress: string;
   sellTokenAmount: BigNumber;
   sellTokenDecimals: string;
   sellTokenAllowancesMap: AllowancesMap;
@@ -137,8 +137,9 @@ interface ValidateYvBoostEthAllowanceProps {
 
 export function validateYvBoostEthInvestAllowance(props: ValidateYvBoostEthAllowanceProps): ValidationResonse {
   const PICKLE_ZAP_IN = getConfig().CONTRACT_ADDRESSES.pickleZapIn;
-  const { sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap } = props;
+  const { sellTokenAdress, sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap } = props;
   return validateAllowance({
+    tokenAddress: sellTokenAdress,
     tokenAmount: sellTokenAmount,
     tokenDecimals: sellTokenDecimals,
     tokenAllowancesMap: sellTokenAllowancesMap,
@@ -148,8 +149,9 @@ export function validateYvBoostEthInvestAllowance(props: ValidateYvBoostEthAllow
 
 export function validateYvBoostEthStakeAllowance(props: ValidateYvBoostEthAllowanceProps): ValidationResonse {
   const { PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
-  const { sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap } = props;
+  const { sellTokenAdress, sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap } = props;
   return validateAllowance({
+    tokenAddress: sellTokenAdress,
     tokenAmount: sellTokenAmount,
     tokenDecimals: sellTokenDecimals,
     tokenAllowancesMap: sellTokenAllowancesMap,
@@ -158,15 +160,18 @@ export function validateYvBoostEthStakeAllowance(props: ValidateYvBoostEthAllowa
 }
 
 interface ValidateAllowanceProps {
+  tokenAddress: string;
   tokenAmount: BigNumber;
   tokenDecimals: string;
   tokenAllowancesMap: AllowancesMap;
   spenderAddress: string;
 }
 export function validateAllowance(props: ValidateAllowanceProps): ValidationResonse {
-  const { tokenAmount, tokenDecimals, tokenAllowancesMap, spenderAddress } = props;
+  const { tokenAddress, tokenAmount, tokenDecimals, tokenAllowancesMap, spenderAddress } = props;
   const ONE_UNIT = toBN('10').pow(tokenDecimals);
   const amountInWei = tokenAmount.multipliedBy(ONE_UNIT);
+  const isETH = tokenAddress === getConfig().ETHEREUM_ADDRESS;
+  if (isETH) return { approved: true };
 
   const allowance = toBN(tokenAllowancesMap[spenderAddress]);
 
