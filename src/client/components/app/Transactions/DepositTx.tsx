@@ -123,6 +123,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   });
 
   const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
+  const vaultBalance = normalizeAmount(selectedVault.DEPOSIT.userDeposited, selectedVault.token.decimals);
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(amount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount.amount, selectedVault?.token.decimals)
@@ -164,12 +165,16 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
       <TxTokenInput
         headerText="To vault"
-        inputText={`Balance ${formatAmount(balance, 4)} ${selectedSellToken.symbol}`}
+        inputText={`Balance ${formatAmount(vaultBalance, 4)} ${selectedVault.token.symbol}`}
         amount={expectedAmount}
         onAmountChange={() => console.log('INPUT DISABLED')}
         amountValue={expectedAmountValue}
-        selectedToken={selectedSellToken}
-        yieldPercent="20.32"
+        selectedToken={selectedVault.token}
+        onSelectedTokenChange={(tokenAddress) =>
+          dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: tokenAddress }))
+        }
+        tokenOptions={allowVaultSelect ? vaults.map(({ token }) => token) : [selectedVault.token]}
+        yieldPercent={formatPercent(selectedVault.apyData, 2)}
       />
 
       {/* <TxError errorText="Test error" /> */}

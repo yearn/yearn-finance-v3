@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { TokenIcon } from '@components/app';
 import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from '@components/common';
 
-import { toBN, formatUsd } from '@src/utils';
+import { formatUsd, humanizeAmount } from '@src/utils';
 
 const StyledButton = styled(Button)`
   background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
@@ -128,6 +128,8 @@ interface Token {
   symbol: string;
   priceUsdc: string;
   icon?: string;
+  balance: string;
+  decimals: number;
 }
 
 export interface TxTokenInputProps {
@@ -162,7 +164,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
     id: selectedToken.address,
     icon: selectedToken.icon,
     label: selectedToken.symbol,
-    value: selectedToken.priceUsdc,
+    value: humanizeAmount(selectedToken.balance, selectedToken.decimals, 4),
   };
 
   if (tokenOptions && tokenOptions.length > 1) {
@@ -171,7 +173,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         id: item.address,
         icon: item.icon,
         label: item.symbol,
-        value: item.priceUsdc,
+        value: humanizeAmount(item.balance, item.decimals, 4),
       };
     });
   }
@@ -201,13 +203,10 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
       <TokenInfo>
         <TokenSelector onClick={openSearchList}>
           <TokenIconContainer>
-            <TokenIcon
-              icon="https://zapper.fi/images/networks/ethereum/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490.png"
-              symbol="ETH"
-            />
+            <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} />
             {listItems && listItems.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
           </TokenIconContainer>
-          <TokenName>ETH</TokenName>
+          <TokenName>{selectedItem.label}</TokenName>
         </TokenSelector>
 
         <TokenData>
@@ -222,7 +221,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
             {maxAmount && <StyledButton onClick={() => onAmountChange(maxAmount)}>Max</StyledButton>}
             {yieldPercent && (
               <StyledText>
-                Yield <ContrastText>{yieldPercent}%</ContrastText>
+                Yield <ContrastText>{yieldPercent}</ContrastText>
               </StyledText>
             )}
           </TokenExtras>
