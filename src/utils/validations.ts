@@ -152,7 +152,7 @@ export function validateYvBoostEthActionsAllowance(props: ValidateYvBoostEthActi
   if (action === 'INVEST') spenderAddress = PICKLE_ZAP_IN;
   if (action === 'STAKE') {
     spenderAddress = PSLPYVBOOSTETH_GAUGE;
-    if (sellTokenAddress === PSLPYVBOOSTETH) throw new Error('Only PSLPYVBOOSTETH token is supported for STAKE action');
+    if (sellTokenAddress !== PSLPYVBOOSTETH) throw new Error('Only PSLPYVBOOSTETH token is supported for STAKE action');
   }
 
   return validateAllowance({
