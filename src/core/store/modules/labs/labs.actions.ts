@@ -191,6 +191,7 @@ const yvBoostWithdraw = createAsyncThunk<
   });
 
   const { error: allowanceError } = validateVaultWithdrawAllowance({
+    yvTokenAddress: labAddress,
     yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
     targetTokenAddress: targetTokenAddress,
     underlyingTokenAddress: tokenData.address ?? '',

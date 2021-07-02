@@ -17,6 +17,7 @@ interface ValidateVaultWithdrawProps {
   userYvTokenBalance: string;
 }
 interface ValidateVaultWithdrawAllowanceProps {
+  yvTokenAddress: string;
   yvTokenAmount: BigNumber;
   yvTokenDecimals: string;
   underlyingTokenAddress: string;
@@ -112,13 +113,20 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
 
 export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllowanceProps): ValidationResonse {
   const ZAP_OUT_CONTRACT = getConfig().CONTRACT_ADDRESSES.zapOut;
-  let { yvTokenAmount, yvTokenDecimals, underlyingTokenAddress, targetTokenAddress, yvTokenAllowancesMap } = props;
+  let {
+    yvTokenAddress,
+    yvTokenAmount,
+    yvTokenDecimals,
+    underlyingTokenAddress,
+    targetTokenAddress,
+    yvTokenAllowancesMap,
+  } = props;
   const isZapOut = targetTokenAddress !== underlyingTokenAddress;
 
   if (!isZapOut) return { approved: true };
 
   return validateAllowance({
-    tokenAddress: targetTokenAddress,
+    tokenAddress: yvTokenAddress,
     tokenAmount: yvTokenAmount,
     tokenDecimals: yvTokenDecimals,
     tokenAllowancesMap: yvTokenAllowancesMap,
