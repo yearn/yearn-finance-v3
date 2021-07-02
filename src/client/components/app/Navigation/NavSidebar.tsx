@@ -104,7 +104,7 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   flex-direction: column;
   color: ${({ theme }) => theme.colors.primaryVariant};
   background-color: ${({ theme }) => theme.colors.primary};
-  border-radius: 0.8rem;
+  border-radius: ${({ theme }) => theme.globalRadius};
   width: ${({ theme }) => theme.sideBar.width};
   height: 100%;
   max-width: 100%;
