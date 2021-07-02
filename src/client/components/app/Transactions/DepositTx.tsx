@@ -155,6 +155,8 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         onAmountChange={setAmount}
         amountValue={amountValue}
         maxAmount={balance}
+        selectedToken={selectedSellToken}
+        onSelectedTokenChange={(tokenAddress) => dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }))}
         tokenOptions={allowVaultSelect ? undefined : sellTokensOptions}
       />
 
@@ -166,6 +168,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         amount={expectedAmount}
         onAmountChange={() => console.log('INPUT DISABLED')}
         amountValue={expectedAmountValue}
+        selectedToken={selectedSellToken}
         yieldPercent="20.32"
       />
 

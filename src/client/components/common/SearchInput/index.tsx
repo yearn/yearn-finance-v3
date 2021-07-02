@@ -13,7 +13,13 @@ interface SearchInputProps<T> {
   onSearch: (data: Array<T>) => void;
 }
 
-export const SearchInput = <T,>({ searchableData, searchableKeys, placeholder, onSearch }: SearchInputProps<T>) => {
+export const SearchInput = <T,>({
+  searchableData,
+  searchableKeys,
+  placeholder,
+  onSearch,
+  ...props
+}: SearchInputProps<T>) => {
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
@@ -36,6 +42,7 @@ export const SearchInput = <T,>({ searchableData, searchableKeys, placeholder, o
       placeholder={placeholder}
       Icon={SearchIcon}
       onChange={(e) => setSearchText(e.target.value)}
+      {...props}
     />
   );
 };

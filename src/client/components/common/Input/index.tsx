@@ -10,11 +10,14 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const StyledInputContainer = styled.div`
+  --input-placeholder: ${(props) => props.theme.colors.onSurfaceH2};
+
   display: flex;
   height: 2.8rem;
   background: ${(props) => props.theme.colors.background};
   color: ${(props) => props.theme.colors.secondary};
-  border-radius: 0.8rem;
+  fill: ${(props) => props.theme.colors.secondary};
+  border-radius: ${({ theme }) => theme.globalRadius};
   padding: 0 1rem;
   transition: border 200ms ease-in-out;
   border: 2px solid ${(props) => props.theme.colors.onSurfaceSH1};
@@ -37,13 +40,14 @@ const StyledInput = styled.input`
   font-weight: inherit;
 
   &::placeholder {
-    color: ${(props) => props.theme.colors.onSurfaceH2};
+    color: var(--input-placeholder);
   }
 `;
 
 const StyledIcon = styled(Icon)`
   width: 1.6rem;
   margin-right: 0.5rem;
+  fill: inherit;
 `;
 
 export const Input: FC<InputProps> = ({ className, color, placeholder, Icon, ...props }) => (

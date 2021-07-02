@@ -16,7 +16,7 @@ const StyledButton = styled.button`
   padding: 0 1rem;
   height: 2.8rem;
   border: 2px solid transparent;
-  border-radius: 0.8rem;
+  border-radius: ${({ theme }) => theme.globalRadius};
   background: ${(props) => props.theme.colors.secondary};
   color: ${(props) => props.theme.colors.background};
   font-family: inherit;

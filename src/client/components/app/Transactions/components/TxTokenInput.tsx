@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 
 import { TokenIcon } from '@components/app';
-import { Input, Text, Icon, ChevronRightIcon, Button } from '@components/common';
+import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from '@components/common';
 
 import { toBN, formatUsd } from '@src/utils';
 
@@ -89,11 +89,20 @@ const TokenSelector = styled.div`
   flex-shrink: 0;
   padding: 0.7rem;
   gap: 0.7rem;
+  user-select: none;
 `;
 
 const TokenInfo = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.txModal.gap};
+`;
+
+const StyledSearchList = styled(SearchList)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
 `;
 
 const Header = styled.div`
@@ -128,6 +137,8 @@ export interface TxTokenInputProps {
   onAmountChange: (amount: string) => void;
   amountValue?: string;
   maxAmount?: string;
+  selectedToken: Token;
+  onSelectedTokenChange?: (address: string) => void;
   yieldPercent?: string;
   tokenOptions?: Token[];
 }
@@ -139,25 +150,62 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   onAmountChange,
   amountValue,
   maxAmount,
+  selectedToken,
+  onSelectedTokenChange,
   yieldPercent,
   tokenOptions,
   children,
   ...props
 }) => {
-  const openTokenDropdown = () => console.log('open dropdown');
+  let listItems: SearchListItem[] = [];
+  let selectedItem: SearchListItem = {
+    id: selectedToken.address,
+    icon: selectedToken.icon,
+    label: selectedToken.symbol,
+    value: selectedToken.priceUsdc,
+  };
+
+  if (tokenOptions && tokenOptions.length > 1) {
+    listItems = tokenOptions.map((item) => {
+      return {
+        id: item.address,
+        icon: item.icon,
+        label: item.symbol,
+        value: item.priceUsdc,
+      };
+    });
+  }
+
+  const openSearchList = () => {
+    if (listItems && listItems.length > 1) {
+      setOpenedSearch(true);
+    }
+  };
+
+  const [openedSearch, setOpenedSearch] = useState(false);
 
   return (
     <StyledTxTokenInput {...props}>
       {headerText && <Header>{headerText}</Header>}
 
+      {listItems && onSelectedTokenChange && openedSearch && (
+        <StyledSearchList
+          list={listItems}
+          headerText="Select a token"
+          selected={selectedItem}
+          setSelected={(item) => onSelectedTokenChange(item.id)}
+          onCloseList={() => setOpenedSearch(false)}
+        />
+      )}
+
       <TokenInfo>
-        <TokenSelector onClick={openTokenDropdown}>
+        <TokenSelector onClick={openSearchList}>
           <TokenIconContainer>
             <TokenIcon
               icon="https://zapper.fi/images/networks/ethereum/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490.png"
               symbol="ETH"
             />
-            {tokenOptions && <TokenListIcon Component={ChevronRightIcon} />}
+            {listItems && listItems.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
           </TokenIconContainer>
           <TokenName>ETH</TokenName>
         </TokenSelector>
@@ -180,19 +228,6 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           </TokenExtras>
         </TokenData>
       </TokenInfo>
-
-      {/* TODO implement new dropdownList */}
-      {/*
-      <StyledSimpleDropdown
-        selected={{ label: selectedToken.symbol, value: selectedToken.address }}
-        setSelected={(selected) => {
-          if (onSelectedTokenChange) {
-            onSelectedTokenChange(selected.value);
-          }
-          onAmountChange('');
-        }}
-        options={availableTokenOptions.map(({ address, symbol }) => ({ label: symbol, value: address }))}
-      /> */}
     </StyledTxTokenInput>
   );
 };
