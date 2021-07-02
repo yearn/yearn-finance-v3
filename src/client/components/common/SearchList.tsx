@@ -39,15 +39,11 @@ const List = styled.div`
 `;
 
 const StyledSearchInput = styled(SearchInput)`
-  background: blue;
+  --input-placeholder: ${({ theme }) => theme.searchList.primaryHover};
   background-color: ${({ theme }) => theme.searchList.primaryVariant};
   color: ${({ theme }) => theme.searchList.primaryHover};
   fill: ${({ theme }) => theme.searchList.primaryHover};
   border: 0;
-
-  ::placeholder {
-    color: ${({ theme }) => theme.searchList.primaryHover};
-  }
 `;
 
 const BackButton = styled(Icon)`
