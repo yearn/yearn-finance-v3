@@ -12,7 +12,7 @@ const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number; 
   background: var(--dropdown-background);
   color: var(--dropdown-color);
   user-select: none;
-  border-radius: 0.8rem;
+  border-radius: ${({ theme }) => theme.globalRadius};
   position: relative;
   font-size: 1.4rem;
   cursor: ${({ selectable }) => (selectable ? 'pointer' : null)};
@@ -67,7 +67,7 @@ const DropdownOptions = styled.div<{ open?: boolean }>`
   left: 0;
   bottom: 0.8rem;
   transform: translateY(100%);
-  border-radius: 0.8rem;
+  border-radius: ${({ theme }) => theme.globalRadius};
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   padding: 0.8rem;

@@ -14,7 +14,7 @@ const StyledInputContainer = styled.div`
   height: 2.8rem;
   background: ${(props) => props.theme.colors.background};
   color: ${(props) => props.theme.colors.secondary};
-  border-radius: 0.8rem;
+  border-radius: ${({ theme }) => theme.globalRadius};
   padding: 0 1rem;
   transition: border 200ms ease-in-out;
   border: 2px solid ${(props) => props.theme.colors.onSurfaceSH1};

@@ -52,6 +52,12 @@ declare module 'styled-components' {
       gap: string;
     };
 
+    searchList: {
+      primary: string;
+      primaryHover: string;
+      onPrimary: string;
+    };
+
     layoutPadding: string;
     cardPadding: string;
   }

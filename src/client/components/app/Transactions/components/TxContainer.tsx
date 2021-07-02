@@ -37,6 +37,15 @@ const HeaderTitle = styled.div`
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
 `;
 
+const TxContainerContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: ${({ theme }) => theme.txModal.gap};
+  position: relative;
+  border-radius: ${({ theme }) => theme.globalRadius};
+`;
+
 const TxContainerHeader = styled.div`
   display: flex;
   align-items: center;
@@ -74,7 +83,7 @@ export const TxContainer: FC<TxContainerProps> = ({ header, onClose, children, .
         <HeaderActions>{closeButton}</HeaderActions>
       </TxContainerHeader>
 
-      {children}
+      <TxContainerContent>{children}</TxContainerContent>
     </StyledTxContainer>
   );
 };
