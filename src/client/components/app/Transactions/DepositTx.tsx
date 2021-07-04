@@ -97,9 +97,6 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     }
   }, [amount, selectedSellTokenAddress, selectedVault]);
 
-  // TODO If there are no vaults initialized, selectedVault will always be undefined
-  // Note workaround for testing: open vaults and then settings>DepositTx
-
   if (!selectedVault || !selectedSellTokenAddress || !sellTokensOptions) {
     return null;
   }
@@ -112,6 +109,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     sellTokenDecimals: selectedSellToken.decimals.toString(),
     sellTokenAllowancesMap: selectedSellToken.allowancesMap,
   });
+
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
     sellTokenAmount: toBN(amount),
     depositLimit: selectedVault.depositLimit,
@@ -120,6 +118,8 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     userTokenBalance: selectedSellToken.balance,
     vaultUnderlyingBalance: selectedVault.vaultBalance,
   });
+
+  const error = allowanceError || inputError;
 
   const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
   const vaultBalance = normalizeAmount(selectedVault.DEPOSIT.userDeposited, selectedVault.token.decimals);
@@ -135,6 +135,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     dispatch(
       VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
     );
+
   const deposit = () =>
     dispatch(
       VaultsActions.depositVault({
@@ -144,6 +145,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         slippageTolerance: toBN(selectedSlippage.value).toNumber(),
       })
     );
+
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
@@ -165,7 +167,8 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         tokenOptions={allowVaultSelect ? undefined : sellTokensOptions}
       />
 
-      <TxArrowStatus status={txStatus} />
+      {!error && <TxArrowStatus status={txStatus} />}
+      {error && <TxError errorText={error} />}
 
       <TxTokenInput
         headerText="To vault"
@@ -181,8 +184,6 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         yieldPercent={formatPercent(selectedVault.apyData, 2)}
       />
 
-      {/* <TxError errorText="Test error" /> */}
-
       <TxActions>
         <TxActionButton onClick={() => approve()} disabled={isApproved}>
           <Text>Approve</Text>
@@ -191,17 +192,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         <TxActionButton onClick={() => deposit()} disabled={!isApproved || !isValidAmount}>
           <Text>Deposit</Text>
         </TxActionButton>
-
-        {/* <TxActionButton onClick={() => console.log('pending action')} pending>
-          <TxSpinnerLoading />
-        </TxActionButton> */}
       </TxActions>
-
-      {/* <TxActions>
-        <TxActionButton onClick={() => console.log('exit')} success>
-          <Text>Exit</Text>
-        </TxActionButton>
-      </TxActions> */}
     </StyledDepositTx>
   );
 };
