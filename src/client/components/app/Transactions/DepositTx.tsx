@@ -47,6 +47,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const [selectedSlippage, setSelectedSlippage] = useState(slippageOptions[0]);
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
+  const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
 
   const sellTokensOptions = selectedVault
     ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
@@ -197,12 +198,16 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
       />
 
       <TxActions>
-        <TxActionButton onClick={() => approve()} disabled={isApproved}>
-          <Text>Approve</Text>
+        <TxActionButton onClick={() => approve()} disabled={isApproved} pending={actionsStatus.approve.loading}>
+          {actionsStatus.approve.loading ? <TxSpinnerLoading /> : <Text>Approve</Text>}
         </TxActionButton>
 
-        <TxActionButton onClick={() => deposit()} disabled={!isApproved || !isValidAmount}>
-          <Text>Deposit</Text>
+        <TxActionButton
+          onClick={() => deposit()}
+          disabled={!isApproved || !isValidAmount}
+          pending={actionsStatus.deposit.loading}
+        >
+          {actionsStatus.deposit.loading ? <TxSpinnerLoading /> : <Text>Deposit</Text>}
         </TxActionButton>
       </TxActions>
     </StyledDepositTx>
