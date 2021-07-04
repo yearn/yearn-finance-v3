@@ -92,7 +92,6 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
           sourceTokenAddress: selectedSellTokenAddress,
           sourceTokenAmount: toWei(amount, selectedSellToken.decimals),
           targetTokenAddress: selectedVault.address,
-          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
         })
       );
     }
@@ -126,11 +125,11 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const vaultBalance = normalizeAmount(selectedVault.DEPOSIT.userDeposited, selectedVault.token.decimals);
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(amount).gt(0)
-    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount.amount, selectedVault?.token.decimals)
+    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedVault?.token.decimals)
     : '0';
-  const expectedAmountValue = toBN(amount).gt(0)
-    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount.amountUsdc, USDC_DECIMALS)
-    : '0';
+  const expectedAmountValue = toBN(expectedAmount)
+    .times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS))
+    .toString();
 
   const approve = () =>
     dispatch(
@@ -142,6 +141,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         vaultAddress: selectedVault.address,
         tokenAddress: selectedSellToken.address,
         amount: toBN(amount),
+        slippageTolerance: toBN(selectedSlippage.value).toNumber(),
       })
     );
 

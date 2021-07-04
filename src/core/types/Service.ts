@@ -57,6 +57,7 @@ export interface GetSupportedVaultsProps {
 
 export interface GetExpectedTransactionOutcomeProps {
   transactionType: 'DEPOSIT' | 'WITHDRAW';
+  accountAddress: EthereumAddress;
   sourceTokenAddress: EthereumAddress;
   sourceTokenAmount: Wei;
   targetTokenAddress: EthereumAddress;
@@ -68,6 +69,7 @@ export interface DepositProps {
   tokenAddress: EthereumAddress;
   vaultAddress: EthereumAddress;
   amount: Wei;
+  slippageTolerance?: number;
 }
 
 export interface WithdrawProps {
@@ -75,6 +77,7 @@ export interface WithdrawProps {
   tokenAddress: EthereumAddress;
   vaultAddress: EthereumAddress;
   amountOfShares: Wei;
+  slippageTolerance?: number;
 }
 
 export interface ApproveProps {
