@@ -25,6 +25,8 @@ import {
 import { getConfig } from '@config';
 import { getConstants } from '../../../../config/constants';
 
+const ETHEREUM_ADDRESS_ZAPPER = '0x0000000000000000000000000000000000000000';
+
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
 const clearTransactionData = createAction<void>('vaults/clearTransactionData');
@@ -167,11 +169,9 @@ const depositVault = createAsyncThunk<
 
     const amountInWei = amount.multipliedBy(ONE_UNIT);
     const { vaultService } = services;
-    console.log({ amountWei: amountInWei.toString() });
     const tx = await vaultService.deposit({
       accountAddress: userAddress,
-      tokenAddress:
-        tokenData.address === ETHEREUM_ADDRESS ? '0x0000000000000000000000000000000000000000' : tokenData.address, // TODO: FIX ON SDK
+      tokenAddress: tokenData.address === ETHEREUM_ADDRESS ? ETHEREUM_ADDRESS_ZAPPER : tokenData.address, // TODO: FIX ON SDK
       vaultAddress,
       amount: amountInWei.toString(),
       slippageTolerance,
@@ -290,8 +290,7 @@ const getExpectedTransactionOutcome = createAsyncThunk<
   const txOutcome = await vaultService.getExpectedTransactionOutcome({
     transactionType,
     accountAddress,
-    sourceTokenAddress:
-      sourceTokenAddress === ETHEREUM_ADDRESS ? '0x0000000000000000000000000000000000000000' : sourceTokenAddress, // TODO: FIX ON SDK
+    sourceTokenAddress: sourceTokenAddress === ETHEREUM_ADDRESS ? ETHEREUM_ADDRESS_ZAPPER : sourceTokenAddress, // TODO: FIX ON SDK
     sourceTokenAmount,
     targetTokenAddress,
   });
