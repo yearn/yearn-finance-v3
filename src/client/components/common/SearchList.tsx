@@ -110,6 +110,9 @@ export const SearchList: FC<SearchListProps> = ({ headerText, list, selected, se
 
   const selectItem = (item: SearchListItem) => {
     setSelected(item);
+    if (onCloseList) {
+      onCloseList();
+    }
   };
 
   return (

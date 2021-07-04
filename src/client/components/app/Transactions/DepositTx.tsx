@@ -126,7 +126,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(amount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedVault?.token.decimals)
-    : '0';
+    : '';
   const expectedAmountValue = toBN(expectedAmount)
     .times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS))
     .toString();
@@ -144,6 +144,10 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         slippageTolerance: toBN(selectedSlippage.value).toNumber(),
       })
     );
+  const onSelectedSellTokenChange = (tokenAddress: string) => {
+    setAmount('');
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
+  };
 
   const txStatus: TxArrowStatusTypes = 'preparing';
 
@@ -157,7 +161,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         amountValue={amountValue}
         maxAmount={balance}
         selectedToken={selectedSellToken}
-        onSelectedTokenChange={(tokenAddress) => dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }))}
+        onSelectedTokenChange={onSelectedSellTokenChange}
         tokenOptions={allowVaultSelect ? undefined : sellTokensOptions}
       />
 
