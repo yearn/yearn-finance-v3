@@ -126,7 +126,6 @@ const StyledTxTokenInput = styled.div`
 interface Token {
   address: string;
   symbol: string;
-  priceUsdc: string;
   icon?: string;
   balance: string;
   decimals: number;

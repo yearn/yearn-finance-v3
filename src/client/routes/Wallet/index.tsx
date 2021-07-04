@@ -17,7 +17,7 @@ export const Wallet = () => {
     switch (action) {
       case 'invest':
         dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
-        dispatch(ModalsActions.openModal({ modalName: 'deposit' }));
+        dispatch(ModalsActions.openModal({ modalName: 'depositTx' }));
         break;
       case 'supply':
       case 'borrow':

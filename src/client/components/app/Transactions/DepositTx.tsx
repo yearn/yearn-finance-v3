@@ -53,6 +53,13 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  const vaultsOptions = vaults.map(({ address, name, DEPOSIT, token }) => ({
+    address,
+    symbol: name,
+    icon: token.icon,
+    balance: DEPOSIT.userDeposited,
+    decimals: token.decimals,
+  }));
 
   useEffect(() => {
     if (!selectedSellTokenAddress && selectedVault) {
@@ -151,6 +158,11 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
   };
 
+  const onSelectedVaultChange = (vaultAddress: string) => {
+    setAmount('');
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+  };
+
   const txStatus: TxArrowStatusTypes = 'preparing';
 
   return (
@@ -177,10 +189,10 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         onAmountChange={() => console.log('INPUT DISABLED')}
         amountValue={expectedAmountValue}
         selectedToken={selectedVault.token}
-        onSelectedTokenChange={(tokenAddress) =>
-          dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: tokenAddress }))
+        onSelectedTokenChange={onSelectedVaultChange}
+        tokenOptions={
+          allowVaultSelect ? vaultsOptions : vaultsOptions.filter(({ address }) => selectedVault.address === address)
         }
-        tokenOptions={allowVaultSelect ? vaults.map(({ token }) => token) : [selectedVault.token]}
         yieldPercent={formatPercent(selectedVault.apyData, 2)}
       />
 
