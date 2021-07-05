@@ -61,19 +61,19 @@ const sharedTheme: SharedTheme = {
 
   alerts: {
     default: {
-      background: 'black',
+      background: '#191919',
       color: 'white',
     },
     info: {
-      background: 'blue',
+      background: '#00A3FF',
       color: 'white',
     },
     success: {
-      background: 'green',
-      color: 'white',
+      background: '#C6E11E',
+      color: 'black',
     },
     error: {
-      background: 'red',
+      background: '#FF005E',
       color: 'white',
     },
   },
