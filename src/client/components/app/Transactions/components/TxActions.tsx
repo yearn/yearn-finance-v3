@@ -56,6 +56,8 @@ export interface TxActionButtonProps {
   onClick?: () => void;
 }
 
-export const TxActionButton: FC<TxActionButtonProps> = ({ pending, children, ...props }) => (
-  <StyledTxActionButton {...props}>{pending ? <TxSpinnerLoading /> : children}</StyledTxActionButton>
+export const TxActionButton: FC<TxActionButtonProps> = ({ pending, success, disabled, children, ...props }) => (
+  <StyledTxActionButton pending={pending} success={success} disabled={disabled} {...props}>
+    {pending ? <TxSpinnerLoading /> : children}
+  </StyledTxActionButton>
 );
