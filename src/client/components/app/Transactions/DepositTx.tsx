@@ -180,6 +180,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         selectedToken={selectedSellToken}
         onSelectedTokenChange={onSelectedSellTokenChange}
         tokenOptions={allowVaultSelect ? undefined : sellTokensOptions}
+        inputError={!!error?.length}
       />
 
       {!error && <TxArrowStatus status={txStatus} />}
@@ -199,7 +200,6 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         yieldPercent={formatPercent(selectedVault.apyData, 2)}
         readOnly
       />
-
       <TxActions>
         <TxActionButton onClick={() => approve()} disabled={isApproved} pending={actionsStatus.approve.loading}>
           Approve

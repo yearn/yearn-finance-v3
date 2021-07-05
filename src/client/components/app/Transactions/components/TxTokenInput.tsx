@@ -13,7 +13,7 @@ const StyledButton = styled(Button)`
   border-radius: 1em;
 `;
 
-const StyledAmountInput = styled.input<{ readOnly?: boolean }>`
+const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   font-size: 3.6rem;
   font-weight: 600;
   width: 100%;
@@ -24,6 +24,7 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean }>`
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   padding: 0;
   font-family: inherit;
+  appearance: textfield;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
@@ -34,6 +35,13 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean }>`
     color: ${theme.colors.txModalColors.onBackgroundVariant};
     cursor: default;
   `}
+  ${({ error, theme }) => error && `color: ${theme.colors.txModalColors.error};`}
+
+  ::-webkit-outer-spin-button,
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 `;
 
 const ContrastText = styled.span`
@@ -141,6 +149,7 @@ interface Token {
 export interface TxTokenInputProps {
   headerText?: string;
   inputText?: string;
+  inputError?: boolean;
   amount: string;
   onAmountChange?: (amount: string) => void;
   amountValue?: string;
@@ -155,6 +164,7 @@ export interface TxTokenInputProps {
 export const TxTokenInput: FC<TxTokenInputProps> = ({
   headerText,
   inputText,
+  inputError,
   amount,
   onAmountChange,
   amountValue,
@@ -222,6 +232,8 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
             onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
             placeholder="00000000.00"
             readOnly={readOnly}
+            error={inputError}
+            type="number"
           />
           <TokenExtras>
             {amountValue && <StyledText>≈ {formatUsd(amountValue)}</StyledText>}

@@ -163,6 +163,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
             decimals: selectedVault.token.decimals,
           },
         ]}
+        inputError={!!error?.length}
       />
 
       {!error && <TxArrowStatus status={txStatus} />}
