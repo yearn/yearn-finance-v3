@@ -6,10 +6,11 @@ import {
   Position,
   Vault,
   VaultDynamic,
-  GetExpectedTransactionOutcomeProps,
   TransactionOutcome,
   UserVaultsSummary,
   VaultUserMetadata,
+  EthereumAddress,
+  Wei,
 } from '@types';
 import {
   handleTransaction,
@@ -23,6 +24,8 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { getConstants } from '../../../../config/constants';
+
+const ETHEREUM_ADDRESS_ZAPPER = '0x0000000000000000000000000000000000000000';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
@@ -127,109 +130,118 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>
 
 const depositVault = createAsyncThunk<
   void,
-  { vaultAddress: string; tokenAddress: string; amount: BigNumber },
+  { vaultAddress: string; tokenAddress: string; amount: BigNumber; slippageTolerance?: number },
   ThunkAPI
->('vaults/depositVault', async ({ vaultAddress, tokenAddress, amount }, { extra, getState, dispatch }) => {
-  const { services } = extra;
-  const userAddress = getState().wallet.selectedAddress;
-  if (!userAddress) {
-    throw new Error('WALLET NOT CONNECTED');
+>(
+  'vaults/depositVault',
+  async ({ vaultAddress, tokenAddress, amount, slippageTolerance }, { extra, getState, dispatch }) => {
+    const { services, config } = extra;
+    const { ETHEREUM_ADDRESS } = config;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+    const vaultData = getState().vaults.vaultsMap[vaultAddress];
+    const tokenData = getState().tokens.tokensMap[tokenAddress];
+    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
+    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
+    const decimals = toBN(tokenData.decimals);
+    const ONE_UNIT = toBN('10').pow(decimals);
+    const { error: depositError } = validateVaultDeposit({
+      sellTokenAmount: amount,
+      depositLimit: vaultData?.metadata.depositLimit ?? '0',
+      emergencyShutdown: vaultData?.metadata.emergencyShutdown || false,
+      sellTokenDecimals: tokenData?.decimals ?? '0',
+      userTokenBalance: userTokenData?.balance ?? '0',
+      vaultUnderlyingBalance: vaultData?.underlyingTokenBalance.amount ?? '0',
+    });
+    const { error: allowanceError } = validateVaultAllowance({
+      amount,
+      vaultAddress: vaultAddress,
+      vaultUnderlyingTokenAddress: vaultData.tokenId,
+      sellTokenAddress: tokenAddress,
+      sellTokenDecimals: tokenData.decimals,
+      sellTokenAllowancesMap: tokenAllowancesMap,
+    });
+
+    const error = depositError || allowanceError;
+    if (error) throw new Error(error);
+
+    const amountInWei = amount.multipliedBy(ONE_UNIT);
+    const { vaultService } = services;
+    const tx = await vaultService.deposit({
+      accountAddress: userAddress,
+      tokenAddress: tokenData.address === ETHEREUM_ADDRESS ? ETHEREUM_ADDRESS_ZAPPER : tokenData.address, // TODO: FIX ON SDK
+      vaultAddress,
+      amount: amountInWei.toString(),
+      slippageTolerance,
+    });
+    await handleTransaction(tx);
+    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+    dispatch(getUserVaultsSummary());
+    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+    dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
   }
-  const vaultData = getState().vaults.vaultsMap[vaultAddress];
-  const tokenData = getState().tokens.tokensMap[tokenAddress];
-  const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
-  const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
-  const decimals = toBN(tokenData.decimals);
-  const ONE_UNIT = toBN('10').pow(decimals);
-  const { error: depositError } = validateVaultDeposit({
-    sellTokenAmount: amount,
-    depositLimit: vaultData?.metadata.depositLimit ?? '0',
-    emergencyShutdown: vaultData?.metadata.emergencyShutdown || false,
-    sellTokenDecimals: tokenData?.decimals ?? '0',
-    userTokenBalance: userTokenData?.balance ?? '0',
-    vaultUnderlyingBalance: vaultData?.underlyingTokenBalance.amount ?? '0',
-  });
-  const { error: allowanceError } = validateVaultAllowance({
-    amount,
-    vaultAddress: vaultAddress,
-    vaultUnderlyingTokenAddress: vaultData.tokenId,
-    sellTokenAddress: tokenAddress,
-    sellTokenDecimals: tokenData.decimals,
-    sellTokenAllowancesMap: tokenAllowancesMap,
-  });
-
-  const error = depositError || allowanceError;
-  if (error) throw new Error(error);
-
-  const amountInWei = amount.multipliedBy(ONE_UNIT);
-  const { vaultService } = services;
-  const tx = await vaultService.deposit({
-    accountAddress: userAddress,
-    tokenAddress: tokenData.address,
-    vaultAddress,
-    amount: amountInWei.toString(),
-  });
-  await handleTransaction(tx);
-  dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-  dispatch(getUserVaultsSummary());
-  dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
-  dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
-  dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
-});
+);
 
 const withdrawVault = createAsyncThunk<
   void,
-  { vaultAddress: string; amount: BigNumber; targetTokenAddress: string },
+  { vaultAddress: string; amount: BigNumber; targetTokenAddress: string; slippageTolerance?: number },
   ThunkAPI
->('vaults/withdrawVault', async ({ vaultAddress, amount, targetTokenAddress }, { extra, getState, dispatch }) => {
-  const { services } = extra;
-  const userAddress = getState().wallet.selectedAddress;
-  if (!userAddress) {
-    throw new Error('WALLET NOT CONNECTED');
+>(
+  'vaults/withdrawVault',
+  async ({ vaultAddress, amount, targetTokenAddress, slippageTolerance }, { extra, getState, dispatch }) => {
+    const { services } = extra;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+    const vaultData = getState().vaults.vaultsMap[vaultAddress];
+    const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
+    const vaultAllowancesMap = getState().tokens.user.userTokensAllowancesMap[vaultAddress];
+    const userVaultData = getState().vaults.user.userVaultsPositionsMap[vaultAddress]?.DEPOSIT;
+
+    const amountOfShares = calculateSharesAmount({
+      amount,
+      decimals: tokenData.decimals,
+      pricePerShare: vaultData.metadata.pricePerShare,
+    });
+
+    const { error: allowanceError } = validateVaultWithdrawAllowance({
+      yvTokenAddress: vaultAddress,
+      yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+      targetTokenAddress: targetTokenAddress,
+      underlyingTokenAddress: tokenData.address ?? '',
+      yvTokenDecimals: tokenData.decimals.toString() ?? '0',
+      yvTokenAllowancesMap: vaultAllowancesMap ?? {},
+    });
+
+    const { error: withdrawError } = validateVaultWithdraw({
+      yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+      userYvTokenBalance: userVaultData.balance ?? '0',
+      yvTokenDecimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
+    });
+
+    const error = withdrawError || allowanceError;
+    if (error) throw new Error(error);
+
+    const { vaultService } = services;
+    const tx = await vaultService.withdraw({
+      accountAddress: userAddress,
+      tokenAddress: vaultData.tokenId,
+      vaultAddress,
+      amountOfShares,
+      slippageTolerance,
+    });
+    await handleTransaction(tx);
+    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+    dispatch(getUserVaultsSummary());
+    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+    dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, vaultAddress] }));
   }
-  const vaultData = getState().vaults.vaultsMap[vaultAddress];
-  const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
-  const vaultAllowancesMap = getState().tokens.user.userTokensAllowancesMap[vaultAddress];
-  const userVaultData = getState().vaults.user.userVaultsPositionsMap[vaultAddress]?.DEPOSIT;
-
-  const amountOfShares = calculateSharesAmount({
-    amount,
-    decimals: tokenData.decimals,
-    pricePerShare: vaultData.metadata.pricePerShare,
-  });
-
-  const { error: allowanceError } = validateVaultWithdrawAllowance({
-    yvTokenAddress: vaultAddress,
-    yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
-    targetTokenAddress: targetTokenAddress,
-    underlyingTokenAddress: tokenData.address ?? '',
-    yvTokenDecimals: tokenData.decimals.toString() ?? '0',
-    yvTokenAllowancesMap: vaultAllowancesMap ?? {},
-  });
-
-  const { error: withdrawError } = validateVaultWithdraw({
-    yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
-    userYvTokenBalance: userVaultData.balance ?? '0',
-    yvTokenDecimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
-  });
-
-  const error = withdrawError || allowanceError;
-  if (error) throw new Error(error);
-
-  const { vaultService } = services;
-  const tx = await vaultService.withdraw({
-    accountAddress: userAddress,
-    tokenAddress: vaultData.tokenId,
-    vaultAddress,
-    amountOfShares,
-  });
-  await handleTransaction(tx);
-  dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-  dispatch(getUserVaultsSummary());
-  dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
-  dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
-  dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, vaultAddress] }));
-});
+);
 
 const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   'vaults/initSubscriptions',
@@ -254,13 +266,34 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   }
 );
 
+export interface GetExpectedTransactionOutcomeProps {
+  transactionType: 'DEPOSIT' | 'WITHDRAW';
+  sourceTokenAddress: EthereumAddress;
+  sourceTokenAmount: Wei;
+  targetTokenAddress: EthereumAddress;
+}
+
 const getExpectedTransactionOutcome = createAsyncThunk<
   { txOutcome: TransactionOutcome },
   GetExpectedTransactionOutcomeProps,
   ThunkAPI
->('vaults/getExpectedTransactionOutcome', async (exptedTxOutcomeProps, { dispatch, extra }) => {
-  const { vaultService } = extra.services;
-  const txOutcome = await vaultService.getExpectedTransactionOutcome(exptedTxOutcomeProps);
+>('vaults/getExpectedTransactionOutcome', async (getExpectedTxOutcomeProps, { dispatch, getState, extra }) => {
+  const { services, config } = extra;
+  const { vaultService } = services;
+  const { ETHEREUM_ADDRESS } = config;
+  const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
+  const accountAddress = getState().wallet.selectedAddress;
+  if (!accountAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
+
+  const txOutcome = await vaultService.getExpectedTransactionOutcome({
+    transactionType,
+    accountAddress,
+    sourceTokenAddress: sourceTokenAddress === ETHEREUM_ADDRESS ? ETHEREUM_ADDRESS_ZAPPER : sourceTokenAddress, // TODO: FIX ON SDK
+    sourceTokenAmount,
+    targetTokenAddress,
+  });
   return { txOutcome };
 });
 

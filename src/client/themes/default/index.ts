@@ -83,6 +83,13 @@ const sharedTheme: SharedTheme = {
     gap: '1.2rem',
   },
 
+  searchList: {
+    primary: '#00A3FF',
+    primaryVariant: '#006AE3',
+    primaryHover: '#00D1FF',
+    onPrimary: '#FFFFFF',
+  },
+
   layoutPadding: '1.6rem',
   cardPadding: '1.2rem',
 };

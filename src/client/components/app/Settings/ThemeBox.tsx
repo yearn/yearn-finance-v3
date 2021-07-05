@@ -10,7 +10,7 @@ const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boole
   min-width: 10rem;
   width: 24rem;
   height: 12rem;
-  border-radius: 0.8rem;
+  border-radius: ${({ theme }) => theme.globalRadius};
   overflow: hidden;
   border: 2px solid transparent;
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
