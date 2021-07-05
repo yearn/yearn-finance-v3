@@ -7,3 +7,4 @@ export * from './components/TxTokenInput';
 
 export * from './DepositTx';
 export * from './TestTx';
+export * from './WithdrawTx';
