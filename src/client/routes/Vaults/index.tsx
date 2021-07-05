@@ -54,7 +54,7 @@ export const Vaults = () => {
 
   const depositHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
-    dispatch(ModalsActions.openModal({ modalName: 'deposit' }));
+    dispatch(ModalsActions.openModal({ modalName: 'depositTx' }));
   };
 
   const withdrawHandler = (vaultAddress: string) => {

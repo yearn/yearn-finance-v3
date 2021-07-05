@@ -32,7 +32,7 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   align-items: center;
   justify-content: center;
   background: var(--toggle-background);
-  border-radius: 999rem;
+  border-radius: 1em;
   outline: none;
   border: 0;
   padding: 0;

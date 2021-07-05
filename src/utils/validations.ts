@@ -55,7 +55,7 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
   const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
 
-  if (amountInWei.lte(0)) {
+  if (amountInWei.lt(0)) {
     return { error: 'INVALID AMOUNT' };
   }
   if (amountInWei.gt(userTokenBalance)) {
@@ -181,12 +181,12 @@ export function validateAllowance(props: ValidateAllowanceProps): ValidationReso
   const allowance = toBN(tokenAllowancesMap[spenderAddress]);
 
   if (tokenAmount.isEqualTo(0) && allowance.isEqualTo(0)) {
-    return { error: 'TOKEN NOT APPROVED' };
+    return { approved: false };
   }
 
   const approved = allowance.gte(amountInWei);
   if (!approved) {
-    return { error: 'NEED TO APPROVE' };
+    return { approved: false };
   }
 
   return { approved: true };

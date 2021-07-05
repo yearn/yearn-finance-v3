@@ -173,6 +173,7 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
         vaultAddress: selectedVault.address,
         tokenAddress: selectedSellToken.address,
         amount: toBN(amount),
+        slippageTolerance: toBN(selectedSlippage.value).toNumber(),
       })
     );
 

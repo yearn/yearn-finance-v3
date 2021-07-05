@@ -17,7 +17,6 @@ import {
   GetUserVaultsMetadataProps,
   VaultUserMetadata,
 } from '@types';
-import { toBN } from '@src/utils';
 
 export class VaultServiceImpl implements VaultService {
   private web3Provider: Web3Provider;
@@ -65,29 +64,51 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async getExpectedTransactionOutcome(props: GetExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {
-    const { sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = props;
-    // TODO: REMOVE MOCK DATA AFTER SDK IMPLEMENTATION FINISHED
-    const expectedOutcome: TransactionOutcome = {
-      sourceTokenAddress,
-      sourceTokenAmount,
-      targetTokenAddress,
-      targetTokenAmount: toBN(sourceTokenAmount).times(1.5).toFixed(0),
-      conversionRate: 1.5,
-      slippage: 0.01,
-    };
+    const { transactionType, accountAddress, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = props;
+    const DEFAULT_SLIPPAGE_SIMULATION = 0.99;
+    const yearn = this.yearnSdk;
+    let expectedOutcome: TransactionOutcome;
+    switch (transactionType) {
+      case 'DEPOSIT':
+        expectedOutcome = await yearn.services.simulation.deposit(
+          accountAddress,
+          sourceTokenAddress,
+          sourceTokenAmount,
+          targetTokenAddress,
+          DEFAULT_SLIPPAGE_SIMULATION
+        );
+        break;
+      case 'WITHDRAW':
+        expectedOutcome = await yearn.services.simulation.withdraw(
+          accountAddress,
+          sourceTokenAddress,
+          sourceTokenAmount,
+          targetTokenAddress,
+          DEFAULT_SLIPPAGE_SIMULATION
+        );
+        break;
+      default:
+        throw new Error(`getExpectedTransactionOutcome for '${transactionType}' not defined`);
+    }
+
+    console.log({ expectedOutcome });
 
     return expectedOutcome;
   }
 
   public async deposit(props: DepositProps): Promise<TransactionResponse> {
-    const { accountAddress, tokenAddress, vaultAddress, amount } = props;
+    const { accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;
     const yearn = this.yearnSdk;
-    return await yearn.vaults.deposit(vaultAddress, tokenAddress, amount, accountAddress);
+    return await yearn.vaults.deposit(vaultAddress, tokenAddress, amount, accountAddress, {
+      slippage: slippageTolerance,
+    });
   }
 
   public async withdraw(props: WithdrawProps): Promise<TransactionResponse> {
-    const { accountAddress, tokenAddress, vaultAddress, amountOfShares } = props;
+    const { accountAddress, tokenAddress, vaultAddress, amountOfShares, slippageTolerance } = props;
     const yearn = this.yearnSdk;
-    return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress);
+    return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
+      slippage: slippageTolerance,
+    });
   }
 }

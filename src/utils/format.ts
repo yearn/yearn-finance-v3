@@ -27,7 +27,10 @@ export const formatAmount = (amount: string, decimals: number) => {
 
 export const weiToUnits = (amount: string, decimals: number) => formatUnits(EthersBN.from(amount), decimals);
 
-export const normalizeAmount = (amount: string, decimals: number) => {
+export const normalizeAmount = (amount: string | undefined, decimals: number) => {
+  if (!amount || amount === '') {
+    amount = '0';
+  }
   const ONE_UNIT = new BigNumber(10).pow(decimals);
   return new BigNumber(amount).div(ONE_UNIT).toString();
 };
@@ -61,4 +64,9 @@ export const normalizeUsdc = (amount?: string, decimals = 2) => {
   }
   const units = weiToUnits(amount, USDC_DECIMALS);
   return formatUsd(units, decimals);
+};
+
+export const toWei = (amount: string, decimals: number) => {
+  const ONE_UNIT = new BigNumber(10).pow(decimals);
+  return new BigNumber(amount).times(ONE_UNIT).toString();
 };
