@@ -201,7 +201,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
       <TxActions>
         <TxActionButton onClick={() => approve()} disabled={isApproved} pending={actionsStatus.approve.loading}>
-          {actionsStatus.approve.loading ? <TxSpinnerLoading /> : <Text>Approve</Text>}
+          Approve
         </TxActionButton>
 
         <TxActionButton
@@ -209,7 +209,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
           disabled={!isApproved || !isValidAmount}
           pending={actionsStatus.deposit.loading}
         >
-          {actionsStatus.deposit.loading ? <TxSpinnerLoading /> : <Text>Deposit</Text>}
+          Deposit
         </TxActionButton>
       </TxActions>
     </StyledDepositTx>

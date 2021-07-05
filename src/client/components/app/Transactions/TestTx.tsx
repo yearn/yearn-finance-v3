@@ -28,21 +28,17 @@ export const TestTx: FC<TestTxProps> = ({ onClose, children, ...props }) => {
 
       <TxActions>
         <TxActionButton onClick={() => console.log('approve')} disabled>
-          <Text>Approve</Text>
+          Approve
         </TxActionButton>
 
-        <TxActionButton onClick={() => console.log('deposit')}>
-          <Text>Deposit</Text>
-        </TxActionButton>
+        <TxActionButton onClick={() => console.log('deposit')}>Deposit</TxActionButton>
 
-        <TxActionButton onClick={() => console.log('withdraw')} pending>
-          <TxSpinnerLoading />
-        </TxActionButton>
+        <TxActionButton onClick={() => console.log('withdraw')} pending></TxActionButton>
       </TxActions>
 
       <TxActions>
         <TxActionButton onClick={() => console.log('exit')} success>
-          <Text>Exit</Text>
+          Exit
         </TxActionButton>
       </TxActions>
     </StyledTestTx>
