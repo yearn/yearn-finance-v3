@@ -189,14 +189,15 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
         headerText="To vault"
         inputText={`Balance ${formatAmount(vaultBalance, 4)} ${selectedVault.token.symbol}`}
         amount={expectedAmount}
-        onAmountChange={() => console.log('INPUT DISABLED')}
         amountValue={expectedAmountValue}
         selectedToken={selectedVault.token}
         onSelectedTokenChange={onSelectedVaultChange}
+        // TODO Make this logic outside html
         tokenOptions={
           allowVaultSelect ? vaultsOptions : vaultsOptions.filter(({ address }) => selectedVault.address === address)
         }
         yieldPercent={formatPercent(selectedVault.apyData, 2)}
+        readOnly
       />
 
       <TxActions>

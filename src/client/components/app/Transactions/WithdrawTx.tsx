@@ -172,11 +172,11 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
         headerText="To wallet"
         inputText={`Balance ${formatAmount(balance, 4)} ${selectedTargetToken.symbol}`}
         amount={expectedAmount}
-        onAmountChange={() => console.log('INPUT DISABLED')}
         amountValue={expectedAmountValue}
         selectedToken={selectedTargetToken}
         onSelectedTokenChange={onSelectedTargetTokenChange}
         tokenOptions={targetTokensOptions}
+        readOnly
       />
 
       <TxActions>

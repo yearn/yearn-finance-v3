@@ -13,7 +13,7 @@ const StyledButton = styled(Button)`
   border-radius: 1em;
 `;
 
-const StyledAmountInput = styled.input`
+const StyledAmountInput = styled.input<{ readOnly?: boolean }>`
   font-size: 3.6rem;
   font-weight: 600;
   width: 100%;
@@ -28,6 +28,12 @@ const StyledAmountInput = styled.input`
   &::placeholder {
     color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
   }
+  ${({ readOnly, theme }) =>
+    readOnly &&
+    `
+    color: ${theme.colors.txModalColors.onBackgroundVariant};
+    cursor: default;
+  `}
 `;
 
 const ContrastText = styled.span`
@@ -136,13 +142,14 @@ export interface TxTokenInputProps {
   headerText?: string;
   inputText?: string;
   amount: string;
-  onAmountChange: (amount: string) => void;
+  onAmountChange?: (amount: string) => void;
   amountValue?: string;
   maxAmount?: string;
   selectedToken: Token;
   onSelectedTokenChange?: (address: string) => void;
   yieldPercent?: string;
   tokenOptions?: Token[];
+  readOnly?: boolean;
 }
 
 export const TxTokenInput: FC<TxTokenInputProps> = ({
@@ -156,6 +163,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   onSelectedTokenChange,
   yieldPercent,
   tokenOptions,
+  readOnly,
   children,
   ...props
 }) => {
@@ -211,12 +219,15 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <StyledText>{inputText || 'Balance'}</StyledText>
           <StyledAmountInput
             value={amount}
-            onChange={(e) => onAmountChange(e.target.value)}
+            onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
             placeholder="00000000.00"
+            readOnly={readOnly}
           />
           <TokenExtras>
             {amountValue && <StyledText>≈ {formatUsd(amountValue)}</StyledText>}
-            {maxAmount && <StyledButton onClick={() => onAmountChange(maxAmount)}>Max</StyledButton>}
+            {maxAmount && (
+              <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>Max</StyledButton>
+            )}
             {yieldPercent && (
               <StyledText>
                 Yield <ContrastText>{yieldPercent}</ContrastText>
