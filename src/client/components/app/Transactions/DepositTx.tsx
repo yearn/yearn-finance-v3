@@ -74,6 +74,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     }
 
     return () => {
+      // TODO: CREATE A CLEAR SELECTED VAULT/TOKEN ADDRESS ACTION
       dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: undefined }));
       dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
     };
@@ -127,7 +128,8 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     vaultUnderlyingBalance: selectedVault.vaultBalance,
   });
 
-  const error = allowanceError || inputError;
+  // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
+  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.deposit.error;
 
   const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
   const vaultBalance = normalizeAmount(selectedVault.DEPOSIT.userDeposited, selectedVault.token.decimals);
