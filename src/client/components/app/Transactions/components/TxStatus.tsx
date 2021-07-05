@@ -8,5 +8,5 @@ const StyledTxStatus = styled.div`
 `;
 
 export const TxStatus: FC<TxStatusProps> = ({ children, ...props }) => (
-  <StyledTxStatus {...props}>Status{children}</StyledTxStatus>
+  <StyledTxStatus {...props}>Status test{children}</StyledTxStatus>
 );
