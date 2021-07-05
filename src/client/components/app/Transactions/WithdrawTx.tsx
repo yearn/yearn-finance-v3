@@ -181,7 +181,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
 
       <TxActions>
         <TxActionButton onClick={() => approve()} disabled={isApproved} pending={actionsStatus.approveZapOut.loading}>
-          {actionsStatus.approveZapOut.loading ? <TxSpinnerLoading /> : <Text>Approve</Text>}
+          Approve
         </TxActionButton>
 
         <TxActionButton
@@ -189,7 +189,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
           disabled={!isApproved || !isValidAmount}
           pending={actionsStatus.withdraw.loading}
         >
-          {actionsStatus.withdraw.loading ? <TxSpinnerLoading /> : <Text>Withdraw</Text>}
+          Withdraw
         </TxActionButton>
       </TxActions>
     </StyledWithdrawTx>

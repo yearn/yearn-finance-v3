@@ -179,9 +179,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   }
 
   const openSearchList = () => {
-    if (listItems && listItems.length > 1) {
-      setOpenedSearch(true);
-    }
+    setOpenedSearch(true);
   };
 
   const [openedSearch, setOpenedSearch] = useState(false);
