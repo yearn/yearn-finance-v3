@@ -1,11 +1,17 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { Icon, WarningIcon } from '@components/common';
+import { Icon, Text, WarningIcon } from '@components/common';
 
-export interface TxErrorProps {
-  errorText?: string;
-}
+const StyledIcon = styled(Icon)`
+  width: 4rem;
+  fill: ${({ theme }) => theme.colors.txModalColors.textContrast};
+  flex-shrink: 0;
+`;
+
+const StyledText = styled(Text)`
+  color: inherit;
+`;
 
 const StyledTxError = styled.div`
   display: flex;
@@ -19,18 +25,17 @@ const StyledTxError = styled.div`
   font-size: 1.4rem;
   border-radius: ${({ theme }) => theme.globalRadius};
   text-transform: uppercase;
-
-  ${Icon} {
-    width: 4rem;
-    fill: ${({ theme }) => theme.colors.txModalColors.textContrast};
-    flex-shrink: 0;
-  }
+  min-height: 7.8rem;
 `;
+
+export interface TxErrorProps {
+  errorText?: string;
+}
 
 export const TxError: FC<TxErrorProps> = ({ errorText, children, ...props }) => (
   <StyledTxError {...props}>
-    <Icon Component={WarningIcon} />
+    <StyledIcon Component={WarningIcon} />
 
-    {errorText || 'Unknown error'}
+    <StyledText>{errorText || 'Unknown error'}</StyledText>
   </StyledTxError>
 );

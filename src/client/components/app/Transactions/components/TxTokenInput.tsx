@@ -63,7 +63,7 @@ const TokenName = styled.div``;
 
 const TokenListIcon = styled(Icon)`
   position: absolute;
-  right: 0.65rem;
+  right: 0;
   fill: inherit;
 `;
 
@@ -75,7 +75,7 @@ const TokenIconContainer = styled.div`
   width: 100%;
 `;
 
-const TokenSelector = styled.div`
+const TokenSelector = styled.div<{ onClick?: () => void }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,11 +85,12 @@ const TokenSelector = styled.div`
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
-  fill: currentColor;
+  fill: ${({ theme }) => theme.colors.txModalColors.text};
   flex-shrink: 0;
   padding: 0.7rem;
   gap: 0.7rem;
   user-select: none;
+  ${({ onClick }) => onClick && 'cursor: pointer;'}
 `;
 
 const TokenInfo = styled.div`
@@ -200,10 +201,10 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
       )}
 
       <TokenInfo>
-        <TokenSelector onClick={openSearchList}>
+        <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
           <TokenIconContainer>
             <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} />
-            {listItems && listItems.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
+            {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
           </TokenIconContainer>
           <TokenName>{selectedItem.label}</TokenName>
         </TokenSelector>
