@@ -76,7 +76,7 @@ export const Home = () => {
         items={[
           {
             header: 'Available to Invest',
-            content: `$ ${humanizeAmount(walletSummary.totalBalance, USDC_DECIMALS, 2)}`,
+            content: `${normalizeUsdc(walletSummary.totalBalance)}`,
           },
         ]}
         cardSize="small"
