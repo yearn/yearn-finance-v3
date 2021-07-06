@@ -5,8 +5,6 @@ import { CheckRoundIcon, Text, Icon } from '@components/common';
 
 import { TxActionButton, TxActions } from './TxActions';
 
-export interface TxStatusProps {}
-
 const StyledIcon = styled(Icon)`
   width: 8.4rem;
   fill: inherit;
@@ -24,7 +22,10 @@ const TxStatusContent = styled.div`
   align-items: center;
   justify-content: center;
   color: ${({ theme }) => theme.colors.txModalColors.success};
-  background: ${({ theme }) => theme.colors.txModalColors.background};
+  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
+  border-radius: ${({ theme }) => theme.globalRadius};
+  padding-top: 6.4rem;
+  padding-bottom: 16.8rem;
   fill: currentColor;
   gap: 6.9rem;
 `;
@@ -35,9 +36,11 @@ const StyledTxStatus = styled.div`
   gap: 1.2rem;
 `;
 
-export const TxStatus: FC<TxStatusProps> = ({ children, ...props }) => {
-  const exit = () => console.log('exit');
+export interface TxStatusProps {
+  exit: () => void;
+}
 
+export const TxStatus: FC<TxStatusProps> = ({ exit, children, ...props }) => {
   return (
     <StyledTxStatus {...props}>
       <TxStatusContent>

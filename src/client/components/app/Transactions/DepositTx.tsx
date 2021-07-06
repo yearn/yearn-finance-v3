@@ -178,7 +178,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   if (txCompleted) {
     return (
       <StyledDepositTx onClose={onClose} header="Invest" {...props}>
-        <TxStatus />
+        <TxStatus exit={() => setTxCompleted(false)} />
       </StyledDepositTx>
     );
   }
