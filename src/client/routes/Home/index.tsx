@@ -86,7 +86,7 @@ export const Home = () => {
         header="Vaults"
         items={[
           { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
-          { header: 'APY', content: `${apy}%` },
+          { header: 'APY', content: `${normalizePercent(apy, 2)}%` }, // TODO check if normalizePercent is needed.
         ]}
         cardSize="small"
       />
