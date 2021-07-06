@@ -25,8 +25,6 @@ import {
 import { getConfig } from '@config';
 import { getConstants } from '../../../../config/constants';
 
-const ETHEREUM_ADDRESS_ZAPPER = '0x0000000000000000000000000000000000000000';
-
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
 const clearTransactionData = createAction<void>('vaults/clearTransactionData');
@@ -135,8 +133,7 @@ const depositVault = createAsyncThunk<
 >(
   'vaults/depositVault',
   async ({ vaultAddress, tokenAddress, amount, slippageTolerance }, { extra, getState, dispatch }) => {
-    const { services, config } = extra;
-    const { ETHEREUM_ADDRESS } = config;
+    const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
@@ -171,7 +168,7 @@ const depositVault = createAsyncThunk<
     const { vaultService } = services;
     const tx = await vaultService.deposit({
       accountAddress: userAddress,
-      tokenAddress: tokenData.address === ETHEREUM_ADDRESS ? ETHEREUM_ADDRESS_ZAPPER : tokenData.address, // TODO: FIX ON SDK
+      tokenAddress: tokenData.address,
       vaultAddress,
       amount: amountInWei.toString(),
       slippageTolerance,
@@ -278,9 +275,8 @@ const getExpectedTransactionOutcome = createAsyncThunk<
   GetExpectedTransactionOutcomeProps,
   ThunkAPI
 >('vaults/getExpectedTransactionOutcome', async (getExpectedTxOutcomeProps, { dispatch, getState, extra }) => {
-  const { services, config } = extra;
+  const { services } = extra;
   const { vaultService } = services;
-  const { ETHEREUM_ADDRESS } = config;
   const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
   const accountAddress = getState().wallet.selectedAddress;
   if (!accountAddress) {
@@ -290,7 +286,7 @@ const getExpectedTransactionOutcome = createAsyncThunk<
   const txOutcome = await vaultService.getExpectedTransactionOutcome({
     transactionType,
     accountAddress,
-    sourceTokenAddress: sourceTokenAddress === ETHEREUM_ADDRESS ? ETHEREUM_ADDRESS_ZAPPER : sourceTokenAddress, // TODO: FIX ON SDK
+    sourceTokenAddress,
     sourceTokenAmount,
     targetTokenAddress,
   });
