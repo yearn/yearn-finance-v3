@@ -81,44 +81,55 @@ export const Layout: FC = ({ children }) => {
   // TODO: MOVE THIS LOGIC TO THUNKS
   useEffect(() => {
     if (selectedAddress) {
-      // clean old data
-      dispatch(TokensActions.clearUserTokenState());
-      dispatch(VaultsActions.clearUserData());
-      dispatch(IronBankActions.clearUserData());
-
-      // fetch new data
-      dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
-      switch (path) {
-        case 'home':
-          dispatch(VaultsActions.getUserVaultsSummary());
-          dispatch(VaultsActions.getUserVaultsPositions({}));
-          dispatch(VaultsActions.getUserVaultsMetadata({}));
-
-          dispatch(IronBankActions.getIronBankSummary());
-          dispatch(IronBankActions.getUserMarketsPositions({}));
-          dispatch(IronBankActions.getUserMarketsMetadata({}));
-          break;
-        case 'wallet':
-          dispatch(VaultsActions.getUserVaultsPositions({}));
-          break;
-        case 'vaults':
-          dispatch(VaultsActions.getUserVaultsSummary());
-          dispatch(VaultsActions.getUserVaultsPositions({}));
-          dispatch(VaultsActions.getUserVaultsMetadata({}));
-          break;
-        case 'labs':
-          dispatch(LabsActions.getUserLabsPositions({}));
-          break;
-        case 'ironbank':
-          dispatch(IronBankActions.getIronBankSummary());
-          dispatch(IronBankActions.getUserMarketsPositions({}));
-          dispatch(IronBankActions.getUserMarketsMetadata({}));
-          break;
-        default:
-          break;
-      }
+      clearUserData();
+      fetchUserData(path);
     }
-  }, [selectedAddress, location]);
+  }, [selectedAddress]);
+
+  useEffect(() => {
+    if (selectedAddress) {
+      fetchUserData(path);
+    }
+  }, [location]);
+
+  function clearUserData() {
+    dispatch(TokensActions.clearUserTokenState());
+    dispatch(VaultsActions.clearUserData());
+    dispatch(IronBankActions.clearUserData());
+  }
+
+  function fetchUserData(path: string) {
+    dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
+    switch (path) {
+      case 'home':
+        dispatch(VaultsActions.getUserVaultsSummary());
+        dispatch(VaultsActions.getUserVaultsPositions({}));
+        dispatch(VaultsActions.getUserVaultsMetadata({}));
+
+        dispatch(IronBankActions.getIronBankSummary());
+        dispatch(IronBankActions.getUserMarketsPositions({}));
+        dispatch(IronBankActions.getUserMarketsMetadata({}));
+        break;
+      case 'wallet':
+        dispatch(VaultsActions.getUserVaultsPositions({}));
+        break;
+      case 'vaults':
+        dispatch(VaultsActions.getUserVaultsSummary());
+        dispatch(VaultsActions.getUserVaultsPositions({}));
+        dispatch(VaultsActions.getUserVaultsMetadata({}));
+        break;
+      case 'labs':
+        dispatch(LabsActions.getUserLabsPositions({}));
+        break;
+      case 'ironbank':
+        dispatch(IronBankActions.getIronBankSummary());
+        dispatch(IronBankActions.getUserMarketsPositions({}));
+        dispatch(IronBankActions.getUserMarketsMetadata({}));
+        break;
+      default:
+        break;
+    }
+  }
 
   return (
     <StyledLayout>
