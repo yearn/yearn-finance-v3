@@ -70,7 +70,7 @@ export class VaultServiceImpl implements VaultService {
     let expectedOutcome: TransactionOutcome;
     switch (transactionType) {
       case 'DEPOSIT':
-        expectedOutcome = await yearn.services.simulation.deposit(
+        expectedOutcome = await yearn.simulation.deposit(
           accountAddress,
           sourceTokenAddress,
           sourceTokenAmount,
@@ -79,7 +79,7 @@ export class VaultServiceImpl implements VaultService {
         );
         break;
       case 'WITHDRAW':
-        expectedOutcome = await yearn.services.simulation.withdraw(
+        expectedOutcome = await yearn.simulation.withdraw(
           accountAddress,
           sourceTokenAddress,
           sourceTokenAmount,
