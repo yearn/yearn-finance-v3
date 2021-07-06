@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import { useAppSelector } from '@hooks';
 import { TokensSelectors, VaultsSelectors, IronBankSelectors } from '@store';
 import { SummaryCard, InfoCard, ViewContainer } from '@components/app';
-import { formatUsd, humanizeAmount, normalizeUsdc, normalizePercent, USDC_DECIMALS } from '@src/utils';
+import { formatUsd, humanizeAmount, normalizeUsdc, normalizePercent, USDC_DECIMALS, toBN } from '@src/utils';
 
 const halfWidth = css`
   max-width: calc(${({ theme }) => theme.globalMaxWidth} / 2 - ${({ theme }) => theme.layoutPadding} / 2);
@@ -43,15 +43,16 @@ export const Home = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const { totalDeposits, totalEarnings, estYearlyYeild, apy } = useAppSelector(VaultsSelectors.selectSummaryData);
-  const { supplyBalance, borrowUtilizationRatio } = useAppSelector(IronBankSelectors.selectSummaryData);
+  // const { supplyBalance, borrowUtilizationRatio } = useAppSelector(IronBankSelectors.selectSummaryData);
   const walletSummary = useAppSelector(TokensSelectors.selectSummaryData);
 
+  const netWorth = toBN(totalDeposits).plus(walletSummary.totalBalance).toString();
   return (
     <StyledViewContainer>
       <HeaderCard
         header="Welcome"
         items={[
-          { header: 'Net Worth', content: `${normalizeUsdc(totalDeposits)}` }, // TODO: ADD IB + VAULTS SUM
+          { header: 'Net Worth', content: `${normalizeUsdc(netWorth)}` },
           { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
           { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
