@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 
 import { TxActionButton, TxActions } from './components/TxActions';
@@ -40,7 +39,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const dispatch = useAppDispatch();
   const [allowVaultSelect, setAllowVaultSelect] = useState(false);
   const [amount, setAmount] = useState('');
-  const [txCompleted, setTxCompleted] = useState(true);
+  const [txCompleted, setTxCompleted] = useState(false);
   const vaults = useAppSelector(VaultsSelectors.selectVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
