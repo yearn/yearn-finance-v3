@@ -47,16 +47,19 @@ const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
   };
 });
 
-const selectZapOutTokens = createSelector([selectTokensMap], (tokensMap) => {
+const selectZapOutTokens = createSelector([selectTokensMap, selectUserTokensMap], (tokensMap, userTokensMap) => {
   const { ZAP_OUT_TOKENS } = getConfig();
   const tokens = ZAP_OUT_TOKENS.map((address) => {
     const tokenData = tokensMap[address];
+    const userTokenData = userTokensMap[address];
     return {
       address: tokenData?.address,
       name: tokenData?.name,
       symbol: tokenData?.symbol,
       decimals: parseInt(tokenData?.decimals),
       icon: tokenData?.icon,
+      balance: userTokenData?.balance ?? '0',
+      balanceUsdc: userTokenData?.balanceUsdc ?? '0',
       priceUsdc: tokenData?.priceUsdc ?? '0',
     };
   });

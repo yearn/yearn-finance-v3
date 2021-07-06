@@ -16,7 +16,7 @@ const StyledTxArrowStatus = styled.div<{ status?: TxArrowStatusTypes }>`
   padding: 1.5rem;
 
   ${Icon} {
-    height: 4.9rem;
+    height: 4.8rem;
     fill: ${({ theme }) => theme.colors.txModalColors.text};
     flex-shrink: 0;
   }

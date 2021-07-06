@@ -13,7 +13,7 @@ const StyledButton = styled(Button)`
   border-radius: 1em;
 `;
 
-const StyledAmountInput = styled.input`
+const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   font-size: 3.6rem;
   font-weight: 600;
   width: 100%;
@@ -24,9 +24,23 @@ const StyledAmountInput = styled.input`
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   padding: 0;
   font-family: inherit;
+  appearance: textfield;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
+  }
+  ${({ readOnly, theme }) =>
+    readOnly &&
+    `
+    color: ${theme.colors.txModalColors.onBackgroundVariant};
+    cursor: default;
+  `}
+  ${({ error, theme }) => error && `color: ${theme.colors.txModalColors.error};`}
+
+  ::-webkit-outer-spin-button,
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 `;
 
@@ -63,7 +77,7 @@ const TokenName = styled.div``;
 
 const TokenListIcon = styled(Icon)`
   position: absolute;
-  right: 0.65rem;
+  right: 0;
   fill: inherit;
 `;
 
@@ -75,7 +89,7 @@ const TokenIconContainer = styled.div`
   width: 100%;
 `;
 
-const TokenSelector = styled.div`
+const TokenSelector = styled.div<{ onClick?: () => void }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,11 +99,12 @@ const TokenSelector = styled.div`
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
-  fill: currentColor;
+  fill: ${({ theme }) => theme.colors.txModalColors.text};
   flex-shrink: 0;
   padding: 0.7rem;
   gap: 0.7rem;
   user-select: none;
+  ${({ onClick }) => onClick && 'cursor: pointer;'}
 `;
 
 const TokenInfo = styled.div`
@@ -134,19 +149,22 @@ interface Token {
 export interface TxTokenInputProps {
   headerText?: string;
   inputText?: string;
+  inputError?: boolean;
   amount: string;
-  onAmountChange: (amount: string) => void;
+  onAmountChange?: (amount: string) => void;
   amountValue?: string;
   maxAmount?: string;
   selectedToken: Token;
   onSelectedTokenChange?: (address: string) => void;
   yieldPercent?: string;
   tokenOptions?: Token[];
+  readOnly?: boolean;
 }
 
 export const TxTokenInput: FC<TxTokenInputProps> = ({
   headerText,
   inputText,
+  inputError,
   amount,
   onAmountChange,
   amountValue,
@@ -155,6 +173,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   onSelectedTokenChange,
   yieldPercent,
   tokenOptions,
+  readOnly,
   children,
   ...props
 }) => {
@@ -178,9 +197,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   }
 
   const openSearchList = () => {
-    if (listItems && listItems.length > 1) {
-      setOpenedSearch(true);
-    }
+    setOpenedSearch(true);
   };
 
   const [openedSearch, setOpenedSearch] = useState(false);
@@ -200,10 +217,10 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
       )}
 
       <TokenInfo>
-        <TokenSelector onClick={openSearchList}>
+        <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
           <TokenIconContainer>
             <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} />
-            {listItems && listItems.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
+            {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
           </TokenIconContainer>
           <TokenName>{selectedItem.label}</TokenName>
         </TokenSelector>
@@ -212,12 +229,17 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <StyledText>{inputText || 'Balance'}</StyledText>
           <StyledAmountInput
             value={amount}
-            onChange={(e) => onAmountChange(e.target.value)}
+            onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
             placeholder="00000000.00"
+            readOnly={readOnly}
+            error={inputError}
+            type="number"
           />
           <TokenExtras>
             {amountValue && <StyledText>≈ {formatUsd(amountValue)}</StyledText>}
-            {maxAmount && <StyledButton onClick={() => onAmountChange(maxAmount)}>Max</StyledButton>}
+            {maxAmount && (
+              <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>Max</StyledButton>
+            )}
             {yieldPercent && (
               <StyledText>
                 Yield <ContrastText>{yieldPercent}</ContrastText>

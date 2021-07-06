@@ -8,6 +8,7 @@ import { DepositModal } from './DepositModal';
 import { WithdrawModal } from './WithdrawModal';
 import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
+import { WithdrawTxModal } from './WithdrawTxModal';
 
 const StyledModals = styled(TransitionGroup)`
   position: fixed;
@@ -122,6 +123,12 @@ export const Modals = () => {
       {activeModal === 'depositTx' && (
         <CSSTransition key={'depositTx'} timeout={500} classNames="slideBottom">
           <DepositTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'withdrawTx' && (
+        <CSSTransition key={'withdrawTx'} timeout={500} classNames="slideBottom">
+          <WithdrawTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
