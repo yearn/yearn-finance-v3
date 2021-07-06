@@ -27,13 +27,13 @@ const HeaderAction = styled.div`
   }
 `;
 
-const HeaderActions = styled.div`
+const TxHeaderActions = styled.div`
   display: flex;
   align-items: center;
   margin: -${actionsPadding};
 `;
 
-const HeaderTitle = styled.div`
+const TxHeaderTitle = styled.div`
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
 `;
 
@@ -46,7 +46,7 @@ const TxContainerContent = styled.div`
   border-radius: ${({ theme }) => theme.globalRadius};
 `;
 
-const TxContainerHeader = styled.div`
+const TxHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -78,10 +78,10 @@ export const TxContainer: FC<TxContainerProps> = ({ header, onClose, children, .
 
   return (
     <StyledTxContainer {...props}>
-      <TxContainerHeader>
-        <HeaderTitle>{header}</HeaderTitle>
-        <HeaderActions>{closeButton}</HeaderActions>
-      </TxContainerHeader>
+      <TxHeader>
+        <TxHeaderTitle>{header}</TxHeaderTitle>
+        <TxHeaderActions>{closeButton}</TxHeaderActions>
+      </TxHeader>
 
       <TxContainerContent>{children}</TxContainerContent>
     </StyledTxContainer>
