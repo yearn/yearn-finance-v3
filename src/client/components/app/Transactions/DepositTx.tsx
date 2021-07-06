@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { Text } from '@components/common';
 
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 
-import { TxActionButton, TxActions, TxSpinnerLoading } from './components/TxActions';
+import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
+import { TxStatus } from './components/TxStatus';
 import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
 
 import {
@@ -40,6 +40,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const dispatch = useAppDispatch();
   const [allowVaultSelect, setAllowVaultSelect] = useState(false);
   const [amount, setAmount] = useState('');
+  const [txCompleted, setTxCompleted] = useState(true);
   const vaults = useAppSelector(VaultsSelectors.selectVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
@@ -146,15 +147,21 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
       VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
     );
 
-  const deposit = () =>
-    dispatch(
-      VaultsActions.depositVault({
-        vaultAddress: selectedVault.address,
-        tokenAddress: selectedSellToken.address,
-        amount: toBN(amount),
-        slippageTolerance: toBN(selectedSlippage.value).toNumber(),
-      })
-    );
+  const deposit = () => {
+    try {
+      dispatch(
+        VaultsActions.depositVault({
+          vaultAddress: selectedVault.address,
+          tokenAddress: selectedSellToken.address,
+          amount: toBN(amount),
+          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
+        })
+      );
+      setTxCompleted(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -167,6 +174,14 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   };
 
   const txStatus: TxArrowStatusTypes = 'preparing';
+
+  if (txCompleted) {
+    return (
+      <StyledDepositTx onClose={onClose} header="Invest" {...props}>
+        <TxStatus />
+      </StyledDepositTx>
+    );
+  }
 
   return (
     <StyledDepositTx onClose={onClose} header="Invest" {...props}>
