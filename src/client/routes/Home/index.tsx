@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import { useAppSelector } from '@hooks';
 import { TokensSelectors, VaultsSelectors, IronBankSelectors } from '@store';
 import { SummaryCard, InfoCard, ViewContainer } from '@components/app';
-import { formatUsd, humanizeAmount, normalizeUsdc, normalizePercent, USDC_DECIMALS, toBN } from '@src/utils';
+import { normalizeUsdc, normalizePercent, toBN } from '@src/utils';
 
 const halfWidth = css`
   max-width: calc(${({ theme }) => theme.globalMaxWidth} / 2 - ${({ theme }) => theme.layoutPadding} / 2);
