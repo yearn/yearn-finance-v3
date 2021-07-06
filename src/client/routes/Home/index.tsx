@@ -51,8 +51,8 @@ export const Home = () => {
       <HeaderCard
         header="Welcome"
         items={[
-          { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
           { header: 'Net Worth', content: `${normalizeUsdc(totalDeposits)}` }, // TODO: ADD IB + VAULTS SUM
+          { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
           { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
         variant="secondary"
@@ -94,7 +94,7 @@ export const Home = () => {
         header="Iron Bank"
         items={[
           { header: 'Supply Balance', content: `${normalizeUsdc(supplyBalance)}` },
-          { header: 'Utilization Ratio', content: `${normalizePercent(borrowUtilizationRatio, 2)}` },
+          { header: 'Borrow Limit Used', content: `${normalizePercent(borrowUtilizationRatio, 2)}` },
         ]}
         cardSize="small"
       />
