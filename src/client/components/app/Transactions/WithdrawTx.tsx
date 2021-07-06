@@ -3,14 +3,13 @@ import styled from 'styled-components';
 import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { Text } from '@components/common';
-
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 
-import { TxActionButton, TxActions, TxSpinnerLoading } from './components/TxActions';
+import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
+import { TxStatus } from './components/TxStatus';
 import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
 
 import {
@@ -39,6 +38,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   }));
   const dispatch = useAppDispatch();
   const [amount, setAmount] = useState('');
+  const [txCompleted, setTxCompleted] = useState(false);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
   const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedVault?.token.address ?? '');
@@ -127,15 +127,21 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
 
   const approve = () => dispatch(VaultsActions.approveZapOut({ vaultAddress: selectedVault.address }));
 
-  const withdraw = () =>
-    dispatch(
-      VaultsActions.withdrawVault({
-        vaultAddress: selectedVault.address,
-        amount: toBN(amount),
-        targetTokenAddress: selectedTargetTokenAddress,
-        slippageTolerance: toBN(selectedSlippage.value).toNumber(),
-      })
-    );
+  const withdraw = () => {
+    try {
+      dispatch(
+        VaultsActions.withdrawVault({
+          vaultAddress: selectedVault.address,
+          amount: toBN(amount),
+          targetTokenAddress: selectedTargetTokenAddress,
+          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
+        })
+      );
+      setTxCompleted(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -143,6 +149,14 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   };
 
   const txStatus: TxArrowStatusTypes = 'preparing';
+
+  if (txCompleted) {
+    return (
+      <StyledWithdrawTx onClose={onClose} header="Invest" {...props}>
+        <TxStatus exit={() => setTxCompleted(false)} />
+      </StyledWithdrawTx>
+    );
+  }
 
   return (
     <StyledWithdrawTx onClose={onClose} header="Withdraw" {...props}>
