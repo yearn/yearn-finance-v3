@@ -2,14 +2,14 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 import { WalletSelectors, TokensSelectors, TokensActions, IronBankActions, ModalsActions } from '@store';
 import { Box, SpinnerLoading } from '@components/common';
 import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
-import { humanizeAmount, USDC_DECIMALS } from '@src/utils';
+import { humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
 
 export const Wallet = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
-  const { totalBalance, tokensAmount } = useAppSelector(TokensSelectors.selectSummaryData);
+  const { totalBalance } = useAppSelector(TokensSelectors.selectSummaryData);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
 
@@ -35,11 +35,7 @@ export const Wallet = () => {
   return (
     <ViewContainer>
       <SummaryCard
-        items={[
-          { header: 'Balance', content: `$ ${humanizeAmount(totalBalance, USDC_DECIMALS, 2)}` },
-          { header: 'Tokens Owned', content: tokensAmount },
-          // { header: 'Investment utilization', content: `${investedPercentageAmount}%` },
-        ]}
+        items={[{ header: 'Available to Invest', content: `${normalizeUsdc(totalBalance)}` }]}
         variant="secondary"
         cardSize="big"
       />
@@ -72,16 +68,17 @@ export const Wallet = () => {
                       handler: () => actionHandler('invest', tokenAddress),
                       disabled: !walletIsConnected,
                     },
-                    {
-                      name: 'Supply',
-                      handler: () => actionHandler('supply', tokenAddress),
-                      disabled: !walletIsConnected,
-                    },
-                    {
-                      name: 'Borrow',
-                      handler: () => actionHandler('borrow', tokenAddress),
-                      disabled: !walletIsConnected,
-                    },
+                    // NOTE: hide for alpha
+                    // {
+                    //   name: 'Supply',
+                    //   handler: () => actionHandler('supply', tokenAddress),
+                    //   disabled: !walletIsConnected,
+                    // },
+                    // {
+                    //   name: 'Borrow',
+                    //   handler: () => actionHandler('borrow', tokenAddress),
+                    //   disabled: !walletIsConnected,
+                    // },
                   ]}
                 />
               ),
