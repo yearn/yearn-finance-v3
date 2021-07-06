@@ -70,8 +70,8 @@ export const Labs = () => {
         header="Dashboard"
         items={[
           { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
-          { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
-          { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
+          // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
+          // { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
         variant="secondary"
         cardSize="big"
@@ -99,7 +99,10 @@ export const Labs = () => {
               }))}
             />
 
-            <StyledInfoCard header="Onboarding" content="....." />
+            <StyledInfoCard
+              header="Welcome to the Lab!"
+              content="Ready to get a little experimental? The lab is the place for you. Emerging strategies with unconventional methods of generating yield live here. Be sure to read the “About” sections carefully as “Lab” offers don’t behave like normal “Vaults” and could have token locking, impermanent loss, or other risks. Check out the opportunities below and select your first experiment, guinea pig!"
+            />
           </Row>
 
           <DetailCard
@@ -114,14 +117,14 @@ export const Labs = () => {
               { key: 'apy', header: 'ROI' },
               { key: 'balance', header: 'Balance' },
               { key: 'value', header: 'Value' },
-              {
-                key: 'actions',
-                transform: ({ labAddress }) => (
-                  <ActionButtons actions={[{ name: '>', handler: () => actionHandler(labAddress) }]} />
-                ),
-                align: 'flex-end',
-                grow: '1',
-              },
+              // {
+              //   key: 'actions',
+              //   transform: ({ labAddress }) => (
+              //     <ActionButtons actions={[{ name: '>', handler: () => actionHandler(labAddress) }]} />
+              //   ),
+              //   align: 'flex-end',
+              //   grow: '1',
+              // },
             ]}
             data={holdings.map((lab) => ({
               icon: lab.icon,
@@ -146,16 +149,16 @@ export const Labs = () => {
               { key: 'apy', header: 'APY' },
               { key: 'labBalanceUsdc', header: 'Total Assets' },
               { key: 'tokenBalanceUsdc', header: 'Available to Invest' },
-              {
-                key: 'actions',
-                transform: ({ labAddress }) => (
-                  <ActionButtons
-                    actions={[{ name: '>', handler: () => actionHandler(labAddress), disabled: !walletIsConnected }]}
-                  />
-                ),
-                align: 'flex-end',
-                grow: '1',
-              },
+              // {
+              //   key: 'actions',
+              //   transform: ({ labAddress }) => (
+              //     <ActionButtons
+              //       actions={[{ name: '>', handler: () => actionHandler(labAddress), disabled: !walletIsConnected }]}
+              //     />
+              //   ),
+              //   align: 'flex-end',
+              //   grow: '1',
+              // },
             ]}
             data={filteredOpportunities.map((lab) => ({
               icon: lab.icon,
@@ -171,7 +174,7 @@ export const Labs = () => {
                 <SearchInput
                   searchableData={opportunities}
                   searchableKeys={['name', 'token.symbol', 'token.name']}
-                  placeholder="Search"
+                  placeholder=""
                   onSearch={(data) => setFilteredOpportunities(data)}
                 />
               </SearchBarContainer>
