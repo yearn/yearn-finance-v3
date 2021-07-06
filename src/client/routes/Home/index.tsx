@@ -90,14 +90,14 @@ export const Home = () => {
         cardSize="small"
       />
 
-      <StyledSummaryCard
+      {/* <StyledSummaryCard
         header="Iron Bank"
         items={[
           { header: 'Supply Balance', content: `${normalizeUsdc(supplyBalance)}` },
           { header: 'Borrow Limit Used', content: `${normalizePercent(borrowUtilizationRatio, 2)}` },
         ]}
         cardSize="small"
-      />
+      /> */}
     </StyledViewContainer>
   );
 };
