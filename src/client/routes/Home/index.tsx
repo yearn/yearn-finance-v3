@@ -42,7 +42,7 @@ const StyledSummaryCard = styled(SummaryCard)`
 export const Home = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
-  const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
+  const { totalDeposits, totalEarnings, estYearlyYeild, apy } = useAppSelector(VaultsSelectors.selectSummaryData);
   const { supplyBalance, borrowUtilizationRatio } = useAppSelector(IronBankSelectors.selectSummaryData);
   const walletSummary = useAppSelector(TokensSelectors.selectSummaryData);
 
@@ -60,15 +60,23 @@ export const Home = () => {
       />
 
       <Row>
-        <StyledInfoCard header="Onboarding" content="....." />
-        <StyledInfoCard header="Promo" content="......" />
+        <StyledInfoCard
+          header="Welcome to Your Yearn Home Screen"
+          content="There are many like it, but this one is yours. You can always return here to see a birds eye view of your most important statistics. The sections below show the total balance and utilization of your wallet, and a new section is added for every Yearn product you use, each showing your holdings and performance. Not sure where to start? Check out Vaults!"
+        />
+        <StyledInfoCard
+          header="Yearn passes $5B TVL!"
+          content="Total Value Locked (TVL) is a key indicator of the scale of Yearn and DeFi. With $5B TVL, Yearn is the 8th largest DeFi protocol. Yearn is not a bank, but fun fact: the average US bank has $3.1B in deposits according to mx.com.  --------- Over $5B in holdings have been deposited into the Yearn suite of products."
+        />
       </Row>
 
       <StyledSummaryCard
         header="Wallet"
         items={[
-          { header: 'Balance', content: `$ ${humanizeAmount(walletSummary.totalBalance, USDC_DECIMALS, 2)}` },
-          { header: 'Supported Tokens', content: walletSummary.tokensAmount },
+          {
+            header: 'Available to Invest',
+            content: `$ ${humanizeAmount(walletSummary.totalBalance, USDC_DECIMALS, 2)}`,
+          },
         ]}
         cardSize="small"
       />
@@ -76,8 +84,8 @@ export const Home = () => {
       <StyledSummaryCard
         header="Vaults"
         items={[
-          { header: 'Total Deposits', content: `${normalizeUsdc(totalDeposits)}` },
-          { header: 'Total Yield Claimed', content: `${formatUsd(totalEarnings)}` },
+          { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
+          { header: 'APY', content: `${apy}%` },
         ]}
         cardSize="small"
       />
