@@ -174,7 +174,8 @@ export const Vaults = () => {
               vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 0)}`,
               apy: formatPercent(vault.apyData, 2),
               vaultAddress: vault.address,
-              userTokenBalance: humanizeAmount(vault.token.balance, vault.token.decimals, 4),
+              userTokenBalance:
+                vault.token.balance === '0' ? '-' : humanizeAmount(vault.token.balance, vault.token.decimals, 4),
             }))}
             SearchBar={
               <SearchBarContainer>

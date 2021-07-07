@@ -148,7 +148,7 @@ export const Labs = () => {
               { key: 'name', header: 'Name', fontWeight: 600 },
               { key: 'apy', header: 'APY' },
               { key: 'labBalanceUsdc', header: 'Total Assets' },
-              { key: 'tokenBalanceUsdc', header: 'Available to Invest' },
+              { key: 'userTokenBalance', header: 'Available to Invest' },
               // {
               //   key: 'actions',
               //   transform: ({ labAddress }) => (
@@ -166,7 +166,8 @@ export const Labs = () => {
               name: lab.name,
               apy: formatPercent(lab.apyData, 2),
               labBalanceUsdc: `$ ${humanizeAmount(lab.labBalanceUsdc, USDC_DECIMALS, 0)}`,
-              tokenBalanceUsdc: normalizeUsdc(lab.token.balanceUsdc),
+              userTokenBalance:
+                lab.token.balance === '0' ? '-' : humanizeAmount(lab.token.balance, lab.token.decimals, 4),
               labAddress: lab.address,
             }))}
             SearchBar={
