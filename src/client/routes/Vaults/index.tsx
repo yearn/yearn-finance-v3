@@ -103,6 +103,8 @@ export const Vaults = () => {
             />
           </Row>
 
+          {!walletIsConnected && <StyledInfoCard header="" content="Wallet Not Connected" />}
+
           <DetailCard
             header="Deposits"
             metadata={[
