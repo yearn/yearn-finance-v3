@@ -7,7 +7,7 @@ import { ModalsActions, IronBankActions, IronBankSelectors, WalletSelectors } fr
 import { Box, SpinnerLoading, ToggleButton, SearchInput } from '@components/common';
 import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
 
-import { normalizeUsdc, normalizePercent } from '@src/utils';
+import { normalizeUsdc, normalizePercent, humanizeAmount } from '@src/utils';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -18,7 +18,9 @@ export const IronBank = () => {
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
-  const { supplyBalance, borrowBalance, borrowUtilizationRatio } = useAppSelector(IronBankSelectors.selectSummaryData);
+  const { supplyBalance, borrowBalance, borrowUtilizationRatio, netAPY } = useAppSelector(
+    IronBankSelectors.selectSummaryData
+  );
   const markets = useAppSelector(IronBankSelectors.selectMarkets);
   const supplied = useAppSelector(IronBankSelectors.selectLendMarkets);
   const borrowed = useAppSelector(IronBankSelectors.selectBorrowMarkets);
@@ -38,11 +40,12 @@ export const IronBank = () => {
   return (
     <ViewContainer>
       <SummaryCard
-        header="Welcome"
+        header="Dashboard"
         items={[
-          { header: 'Supply Balance', content: `${normalizeUsdc(supplyBalance)}` },
-          { header: 'Borrow Balance', content: `${normalizeUsdc(borrowBalance)}` },
-          { header: 'Borrow Utilization Ratio', content: `${normalizePercent(borrowUtilizationRatio, 2)}` },
+          { header: 'Supplied', content: `${normalizeUsdc(supplyBalance)}` },
+          { header: 'Borrowed', content: `${normalizeUsdc(borrowBalance)}` },
+          { header: 'Borrow Limit Used', content: `${normalizePercent(borrowUtilizationRatio, 2)}` },
+          // { header: 'Net APY', content: `${normalizePercent(netAPY, 2)}` }, // TODO netAPY calc in selector
         ]}
         variant="secondary"
       />
@@ -64,9 +67,9 @@ export const IronBank = () => {
                 width: '6rem',
               },
               { key: 'name', header: 'Name' },
-              { key: 'balance', header: 'Balance' },
               { key: 'apy', header: 'APY' },
-              { key: 'supplied', header: 'Supplied' },
+              { key: 'balance', header: 'Balance' },
+              { key: 'suppliedUsdc', header: 'Value' },
               {
                 key: 'collateral',
                 header: 'Collateral',
@@ -92,9 +95,9 @@ export const IronBank = () => {
               icon: market.token.icon ?? '',
               tokenSymbol: market.token.symbol,
               name: market.token.symbol,
-              balance: normalizeUsdc(market.token.balanceUsdc),
+              balance: humanizeAmount(market.userBalance, parseInt(market.decimals), 4),
               apy: normalizePercent(market.lendApy, 2),
-              supplied: normalizeUsdc(market.userDepositedUsdc),
+              suppliedUsdc: normalizeUsdc(market.userDepositedUsdc),
               collateral: market.enteredMarket ? 'true' : 'false',
               address: market.address,
             }))}
@@ -108,9 +111,9 @@ export const IronBank = () => {
                 width: '6rem',
               },
               { key: 'name', header: 'Name' },
-              { key: 'balance', header: 'Balance' },
               { key: 'apy', header: 'APY' },
-              { key: 'borrowed', header: 'Borrowed' },
+              { key: 'balance', header: 'Balance' },
+              { key: 'borrowedUsdc', header: 'Value' },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -129,9 +132,9 @@ export const IronBank = () => {
               icon: market.token.icon ?? '',
               tokenSymbol: market.token.symbol,
               name: market.token.symbol,
-              balance: normalizeUsdc(market.token.balanceUsdc),
-              apy: normalizePercent(market.lendApy, 2),
-              borrowed: normalizeUsdc(market.userDepositedUsdc),
+              balance: humanizeAmount(market.userBalance, parseInt(market.decimals), 4),
+              apy: normalizePercent(market.borrowApy, 2),
+              borrowedUsdc: normalizeUsdc(market.userDepositedUsdc),
               address: market.address,
             }))}
           />
@@ -144,9 +147,10 @@ export const IronBank = () => {
                 width: '6rem',
               },
               { key: 'name', header: 'Name' },
-              { key: 'supplyAPY', header: 'Supply APY' },
+              { key: 'supplyAPY', header: 'Lend APY' },
               { key: 'borrowAPY', header: 'Borrow APY' },
-              { key: 'liquidity', header: 'Liquidity' },
+              { key: 'liquidity', header: 'Market Liquidity' },
+              { key: 'userTokenBalance', header: 'Available to Invest' },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -168,6 +172,8 @@ export const IronBank = () => {
               supplyAPY: normalizePercent(market.lendApy, 2),
               borrowAPY: normalizePercent(market.borrowApy, 2),
               liquidity: normalizeUsdc(market.liquidity, 0),
+              userTokenBalance:
+                market.token.balance === '0' ? '-' : humanizeAmount(market.token.balance, market.token.decimals, 4),
               address: market.address,
             }))}
             SearchBar={
@@ -175,7 +181,7 @@ export const IronBank = () => {
                 <SearchInput
                   searchableData={markets}
                   searchableKeys={['name', 'token.symbol', 'token.name']}
-                  placeholder="Search"
+                  placeholder=""
                   onSearch={(data) => setFilteredMarkets(data)}
                 />
               </SearchBarContainer>

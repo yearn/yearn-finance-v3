@@ -66,10 +66,12 @@ const selectMarkets = createSelector(
         allowancesMap: marketsAllowancesMap[address] ?? {},
         enteredMarket: userMarketMetadata?.enteredMarket ?? false,
         LEND: {
+          userBalance: userMarketPositionData?.LEND?.balance ?? '0',
           userDeposited: userMarketPositionData?.LEND?.underlyingTokenBalance.amount ?? '0',
           userDepositedUsdc: userMarketPositionData?.LEND?.underlyingTokenBalance.amountUsdc ?? '0',
         },
         BORROW: {
+          userBalance: userMarketPositionData?.BORROW?.balance ?? '0',
           userDeposited: userMarketPositionData?.BORROW?.underlyingTokenBalance.amount ?? '0',
           userDepositedUsdc: userMarketPositionData?.BORROW?.underlyingTokenBalance.amountUsdc ?? '0',
         },
