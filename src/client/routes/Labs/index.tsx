@@ -105,6 +105,8 @@ export const Labs = () => {
             />
           </Row>
 
+          {!walletIsConnected && <StyledInfoCard header="" content="Wallet Not Connected" />}
+
           <DetailCard
             header="Holdings"
             metadata={[
