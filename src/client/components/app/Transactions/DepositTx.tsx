@@ -1,21 +1,11 @@
 import { FC, useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
-
-import { TxActionButton, TxActions } from './components/TxActions';
-import { TxContainer } from './components/TxContainer';
-import { TxTokenInput } from './components/TxTokenInput';
-import { TxError } from './components/TxError';
-import { TxStatus } from './components/TxStatus';
-import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
-
 import {
   toBN,
   formatPercent,
-  formatAmount,
   normalizeAmount,
   toWei,
   USDC_DECIMALS,
@@ -24,11 +14,11 @@ import {
 } from '@src/utils';
 import { getConfig } from '@config';
 
+import { Transaction } from './Transaction';
+
 export interface DepositTxProps {
   onClose?: () => void;
 }
-
-const StyledDepositTx = styled(TxContainer)``;
 
 export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) => {
   const { SLIPPAGE_OPTIONS } = getConfig();
@@ -37,6 +27,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     label: formatPercent(value.toString(), 0),
   }));
   const dispatch = useAppDispatch();
+  const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [allowVaultSelect, setAllowVaultSelect] = useState(false);
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
@@ -54,13 +45,6 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
-  const vaultsOptions = vaults.map(({ address, name, DEPOSIT, token }) => ({
-    address,
-    symbol: name,
-    icon: token.icon,
-    balance: DEPOSIT.userDeposited,
-    decimals: token.decimals,
-  }));
 
   useEffect(() => {
     if (!selectedSellTokenAddress && selectedVault) {
@@ -131,8 +115,17 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
   const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.deposit.error;
 
-  const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
-  const vaultBalance = normalizeAmount(selectedVault.DEPOSIT.userDeposited, selectedVault.token.decimals);
+  const vaultsOptions = vaults
+    .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
+    .map(({ address, DEPOSIT, token }) => ({
+      address,
+      symbol: token.name,
+      icon: token.icon,
+      balance: DEPOSIT.userDeposited,
+      decimals: token.decimals,
+    }));
+  const selectedVaultOption = vaultsOptions.find(({ address }) => address === selectedVault.address)!;
+
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(amount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedVault?.token.decimals)
@@ -140,27 +133,6 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const expectedAmountValue = toBN(expectedAmount)
     .times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS))
     .toString();
-
-  const approve = () =>
-    dispatch(
-      VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
-    );
-
-  const deposit = () => {
-    try {
-      dispatch(
-        VaultsActions.depositVault({
-          vaultAddress: selectedVault.address,
-          tokenAddress: selectedSellToken.address,
-          amount: toBN(amount),
-          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
-        })
-      );
-      setTxCompleted(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -172,61 +144,67 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
   };
 
-  const txStatus: TxArrowStatusTypes = 'preparing';
+  const onTransactionCompletedDismissed = () => {
+    if (onClose) onClose();
+  };
 
-  if (txCompleted) {
-    return (
-      <StyledDepositTx onClose={onClose} header="Invest" {...props}>
-        <TxStatus exit={() => setTxCompleted(false)} />
-      </StyledDepositTx>
+  const approve = async () => {
+    await dispatch(
+      VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
     );
-  }
+  };
+
+  const deposit = async () => {
+    try {
+      await dispatchAndUnwrap(
+        VaultsActions.depositVault({
+          vaultAddress: selectedVault.address,
+          tokenAddress: selectedSellToken.address,
+          amount: toBN(amount),
+          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
+        })
+      );
+    } catch (error) {}
+  };
+
+  const txActions = [
+    {
+      label: 'Approve',
+      onAction: approve,
+      status: actionsStatus.approve,
+      disabled: isApproved,
+    },
+    {
+      label: 'Deposit',
+      onAction: deposit,
+      status: actionsStatus.deposit,
+      disabled: !isApproved || !isValidAmount,
+    },
+  ];
 
   return (
-    <StyledDepositTx onClose={onClose} header="Invest" {...props}>
-      <TxTokenInput
-        headerText="From wallet"
-        inputText={`Balance ${formatAmount(balance, 4)} ${selectedSellToken.symbol}`}
-        amount={amount}
-        onAmountChange={setAmount}
-        amountValue={amountValue}
-        maxAmount={balance}
-        selectedToken={selectedSellToken}
-        onSelectedTokenChange={onSelectedSellTokenChange}
-        tokenOptions={allowVaultSelect ? undefined : sellTokensOptions}
-        inputError={!!error?.length}
-      />
-
-      {!error && <TxArrowStatus status={txStatus} />}
-      {error && <TxError errorText={error} />}
-
-      <TxTokenInput
-        headerText="To vault"
-        inputText={`Balance ${formatAmount(vaultBalance, 4)} ${selectedVault.token.symbol}`}
-        amount={expectedAmount}
-        amountValue={expectedAmountValue}
-        selectedToken={selectedVault.token}
-        onSelectedTokenChange={onSelectedVaultChange}
-        // TODO Make this logic outside html
-        tokenOptions={
-          allowVaultSelect ? vaultsOptions : vaultsOptions.filter(({ address }) => selectedVault.address === address)
-        }
-        yieldPercent={formatPercent(selectedVault.apyData, 2)}
-        readOnly
-      />
-      <TxActions>
-        <TxActionButton onClick={() => approve()} disabled={isApproved} pending={actionsStatus.approve.loading}>
-          Approve
-        </TxActionButton>
-
-        <TxActionButton
-          onClick={() => deposit()}
-          disabled={!isApproved || !isValidAmount}
-          pending={actionsStatus.deposit.loading}
-        >
-          Deposit
-        </TxActionButton>
-      </TxActions>
-    </StyledDepositTx>
+    <Transaction
+      transactionLabel="Invest"
+      transactionCompleted={txCompleted}
+      transactionCompletedLabel="Exit"
+      onTransactionCompletedDismissed={onTransactionCompletedDismissed}
+      sourceHeader="From wallet"
+      sourceAssetOptions={allowVaultSelect ? [selectedSellToken] : sellTokensOptions}
+      selectedSourceAsset={selectedSellToken}
+      onSelectedSourceAssetChange={onSelectedSellTokenChange}
+      sourceAmount={amount}
+      sourceAmountValue={amountValue}
+      onSourceAmountChange={setAmount}
+      targetHeader="To vault"
+      targetAssetOptions={vaultsOptions}
+      selectedTargetAsset={selectedVaultOption}
+      onSelectedTargetAssetChange={onSelectedVaultChange}
+      targetAmount={expectedAmount}
+      targetAmountValue={expectedAmountValue}
+      targetAmountStatus={expectedTxOutcomeStatus}
+      actions={txActions}
+      status={{ error }}
+      onClose={onClose}
+    />
   );
 };

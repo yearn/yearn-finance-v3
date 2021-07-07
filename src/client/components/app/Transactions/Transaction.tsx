@@ -8,24 +8,24 @@ import { TxError } from './components/TxError';
 import { TxStatus } from './components/TxStatus';
 import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
 
-import { formatAmount } from '@src/utils';
+import { formatAmount, normalizeAmount } from '@src/utils';
 
 interface Status {
   loading?: boolean;
-  error?: string;
+  error?: string | null;
 }
 
 interface Action {
   label: string;
   onAction: () => void;
   status: Status;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 interface Asset {
   address: string;
   symbol: string;
-  icon: string;
+  icon?: string;
   balance: string;
   decimals: number;
   yield?: string;
@@ -82,6 +82,9 @@ export const Transaction: FC<TransactionProps> = (props) => {
     onClose,
   } = props;
 
+  const sourceBalance = normalizeAmount(selectedSourceAsset.balance, selectedSourceAsset.decimals);
+  const targetBalance = normalizeAmount(selectedTargetAsset.balance, selectedTargetAsset.decimals);
+
   const txStatus: TxArrowStatusTypes = 'preparing';
 
   if (transactionCompleted) {
@@ -96,11 +99,11 @@ export const Transaction: FC<TransactionProps> = (props) => {
     <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
       <TxTokenInput
         headerText={sourceHeader}
-        inputText={`Balance ${formatAmount(selectedSourceAsset.balance, 4)} ${selectedSourceAsset.symbol}`}
+        inputText={`Balance ${formatAmount(sourceBalance, 4)} ${selectedSourceAsset.symbol}`}
         amount={sourceAmount}
         onAmountChange={onSourceAmountChange}
         amountValue={sourceAmountValue}
-        maxAmount={selectedSourceAsset.balance}
+        maxAmount={sourceBalance}
         selectedToken={selectedSourceAsset}
         tokenOptions={sourceAssetOptions}
         onSelectedTokenChange={onSelectedSourceAssetChange}
@@ -112,7 +115,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
 
       <TxTokenInput
         headerText={targetHeader}
-        inputText={`Balance ${formatAmount(selectedTargetAsset.balance, 4)} ${selectedTargetAsset.symbol}`}
+        inputText={`Balance ${formatAmount(targetBalance, 4)} ${selectedTargetAsset.symbol}`}
         amount={targetAmount}
         amountValue={targetAmountValue}
         selectedToken={selectedTargetAsset}
