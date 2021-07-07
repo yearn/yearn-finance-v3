@@ -29,7 +29,8 @@ export class VaultServiceImpl implements VaultService {
 
   public async getSupportedVaults({ addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
     const yearn = this.yearnSdk;
-    return await yearn.vaults.get(addresses);
+    const vaults = await yearn.vaults.get(addresses);
+    return vaults.filter((vault) => !vault.metadata.migrationAvailable); // removing old v2 vaults.
   }
 
   public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamic[]> {
