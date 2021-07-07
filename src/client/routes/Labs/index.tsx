@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
+import { LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors, ModalsActions } from '@store';
 import {
   SummaryCard,
   DetailCard,
@@ -38,7 +38,7 @@ const StyledInfoCard = styled(InfoCard)`
 export const Labs = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
-  const { CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
+  const { YVECRV, CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
   const history = useHistory();
   const dispatch = useAppDispatch();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -50,18 +50,32 @@ export const Labs = () => {
 
   const labsStatus = useAppSelector(LabsSelectors.selectLabsStatus);
 
-  const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
-  const crvToken = tokenSelectorFilter(CRV);
-  const vaultSelectorFilter = useAppSelector(VaultsSelectors.selectVault);
-  const yv3CrvVault = vaultSelectorFilter(YVTHREECRV);
+  // const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
+  // const crvToken = tokenSelectorFilter(CRV);
+  // const vaultSelectorFilter = useAppSelector(VaultsSelectors.selectVault);
+  // const yv3CrvVault = vaultSelectorFilter(YVTHREECRV);
 
   useEffect(() => {
     setFilteredOpportunities(opportunities);
   }, [opportunities]);
 
-  const actionHandler = (labAddress: string) => {
-    // dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-    history.push(`/vault/${labAddress}`);
+  const LabActions = ({ labAddress }: { labAddress: string }) => {
+    switch (labAddress) {
+      case YVECRV:
+        return (
+          <ActionButtons
+            actions={[
+              {
+                name: 'Lock',
+                handler: () => dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' })),
+                disabled: !walletIsConnected,
+              },
+            ]}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   return (
@@ -148,17 +162,13 @@ export const Labs = () => {
               { key: 'name', header: 'Name', fontWeight: 600 },
               { key: 'apy', header: 'APY' },
               { key: 'labBalanceUsdc', header: 'Total Assets' },
-              { key: 'userTokenBalance', header: 'Available to Invest' },
-              // {
-              //   key: 'actions',
-              //   transform: ({ labAddress }) => (
-              //     <ActionButtons
-              //       actions={[{ name: '>', handler: () => actionHandler(labAddress), disabled: !walletIsConnected }]}
-              //     />
-              //   ),
-              //   align: 'flex-end',
-              //   grow: '1',
-              // },
+              { key: 'tokenBalanceUsdc', header: 'Available to Invest' },
+              {
+                key: 'actions',
+                transform: ({ labAddress }) => <LabActions labAddress={labAddress} />,
+                align: 'flex-end',
+                grow: '1',
+              },
             ]}
             data={filteredOpportunities.map((lab) => ({
               icon: lab.icon,

@@ -152,7 +152,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
 
   if (txCompleted) {
     return (
-      <StyledWithdrawTx onClose={onClose} header="Invest" {...props}>
+      <StyledWithdrawTx onClose={onClose} header="Withdraw" {...props}>
         <TxStatus exit={() => setTxCompleted(false)} />
       </StyledWithdrawTx>
     );
