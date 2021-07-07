@@ -13,6 +13,7 @@ export interface IronBankMarketView {
   isActive: boolean;
   exchangeRate: string;
   // user
+  userBalance: string;
   userDeposited: string;
   userDepositedUsdc: string;
   allowancesMap: { [spenderAddress: string]: string };

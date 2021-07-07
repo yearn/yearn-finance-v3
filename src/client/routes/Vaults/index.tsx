@@ -97,7 +97,10 @@ export const Vaults = () => {
               }))}
             />
 
-            <StyledInfoCard header="Onboarding" content="....." />
+            <StyledInfoCard
+              header="Set it and forget it."
+              content="Yearn Vaults are a passive investing strategy, like supercharged savings accounts. “Recommendations” shows best offers and “Opportunities” lists all available options. Remember, your capital is not locked and is always available for withdrawal. Yearn does the work for you. We identify the optimal opportunities in the market and shift capital, auto-compound, and reblance to maximize your yield. Click ‘Invest’ to get started!"
+            />
           </Row>
 
           <DetailCard
@@ -109,9 +112,9 @@ export const Vaults = () => {
                 width: '6rem',
               },
               { key: 'name', header: 'Name' },
+              { key: 'apy', header: 'APY' },
               { key: 'balance', header: 'Balance' },
               { key: 'value', header: 'Value' },
-              { key: 'apy', header: 'ROI' },
               { key: 'earned', header: 'Earned' },
               {
                 key: 'actions',
@@ -148,14 +151,15 @@ export const Vaults = () => {
                 width: '6rem',
               },
               { key: 'name', header: 'Name', fontWeight: 600 },
-              { key: 'vaultBalanceUsdc', header: 'Value in $' },
-              { key: 'apy', header: 'Growth in %' },
+              { key: 'apy', header: 'APY' },
+              { key: 'vaultBalanceUsdc', header: 'Total Assets' },
+              { key: 'userTokenBalance', header: 'Available to Invest' },
               {
                 key: 'actions',
                 transform: ({ vaultAddress }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Deposit', handler: () => depositHandler(vaultAddress), disabled: !walletIsConnected },
+                      { name: 'Invest', handler: () => depositHandler(vaultAddress), disabled: !walletIsConnected },
                     ]}
                   />
                 ),
@@ -170,13 +174,15 @@ export const Vaults = () => {
               vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 0)}`,
               apy: formatPercent(vault.apyData, 2),
               vaultAddress: vault.address,
+              userTokenBalance:
+                vault.token.balance === '0' ? '-' : humanizeAmount(vault.token.balance, vault.token.decimals, 4),
             }))}
             SearchBar={
               <SearchBarContainer>
                 <SearchInput
                   searchableData={opportunities}
                   searchableKeys={['name', 'token.symbol', 'token.name']}
-                  placeholder="Search"
+                  placeholder=""
                   onSearch={(data) => setFilteredVaults(data)}
                 />
               </SearchBarContainer>

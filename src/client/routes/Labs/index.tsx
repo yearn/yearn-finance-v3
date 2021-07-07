@@ -84,8 +84,8 @@ export const Labs = () => {
         header="Dashboard"
         items={[
           { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
-          { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
-          { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
+          // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
+          // { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
         variant="secondary"
         cardSize="big"
@@ -113,7 +113,10 @@ export const Labs = () => {
               }))}
             />
 
-            <StyledInfoCard header="Onboarding" content="....." />
+            <StyledInfoCard
+              header="Welcome to the Lab!"
+              content="Ready to get a little experimental? The lab is the place for you. Emerging strategies with unconventional methods of generating yield live here. Be sure to read the “About” sections carefully as “Lab” offers don’t behave like normal “Vaults” and could have token locking, impermanent loss, or other risks. Check out the opportunities below and select your first experiment, guinea pig!"
+            />
           </Row>
 
           <DetailCard
@@ -173,7 +176,8 @@ export const Labs = () => {
               name: lab.name,
               apy: formatPercent(lab.apyData, 2),
               labBalanceUsdc: `$ ${humanizeAmount(lab.labBalanceUsdc, USDC_DECIMALS, 0)}`,
-              tokenBalanceUsdc: normalizeUsdc(lab.token.balanceUsdc),
+              userTokenBalance:
+                lab.token.balance === '0' ? '-' : humanizeAmount(lab.token.balance, lab.token.decimals, 4),
               labAddress: lab.address,
             }))}
             SearchBar={
@@ -181,7 +185,7 @@ export const Labs = () => {
                 <SearchInput
                   searchableData={opportunities}
                   searchableKeys={['name', 'token.symbol', 'token.name']}
-                  placeholder="Search"
+                  placeholder=""
                   onSearch={(data) => setFilteredOpportunities(data)}
                 />
               </SearchBarContainer>
