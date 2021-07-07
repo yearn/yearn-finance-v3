@@ -13,6 +13,7 @@ import {
 } from '@types';
 import BigNumber from 'bignumber.js';
 import { memoize } from 'lodash';
+import { toBN } from '../../../../utils';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 const selectVaultsState = (state: RootState) => state.vaults;
@@ -123,7 +124,33 @@ const selectSummaryData = createSelector([selectUserVaultsSummary], (userVaultsS
 });
 
 const selectRecommendations = createSelector([selectVaults], (vaults) => {
-  return [vaults[0], vaults[5], vaults[8]].filter((item) => !!item);
+  // const stableCoinsSymbols = ['DAI', 'USDC', 'USDT', 'sUSD'];
+  // const stableVaults: GeneralVaultView[] = [];
+  // stableCoinsSymbols.forEach((symbol) => {
+  //   const vault = vaults.find((vault) => vault.token.symbol === symbol);
+  //   if (!vault) return;
+  //   stableVaults.push(vault);
+  // });
+
+  // let max = toBN('0');
+  // let stableVault: GeneralVaultView = stableVaults[0];
+  // stableVaults.forEach((vault) => {
+  //   if (max.gte(vault.apyData)) return;
+  //   max = toBN(vault.apyData);
+  //   stableVault = vault;
+  // });
+
+  // const derivativeVaults = differenceBy(vaults, stableVaults, 'address');
+
+  // derivativeVaults.sort((a, b) => {
+  //   return toBN(b.apyData).minus(a.apyData).toNumber();
+  // });
+
+  // return [stableVault, derivativeVaults[1], derivativeVaults[0]].filter((item) => !!item);
+  vaults.sort((a, b) => {
+    return toBN(b.apyData).minus(a.apyData).toNumber();
+  });
+  return [vaults[2], vaults[1], vaults[0]].filter((item) => !!item);
 });
 
 const selectVaultsStatus = createSelector(
