@@ -164,6 +164,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
           slippageTolerance: toBN(selectedSlippage.value).toNumber(),
         })
       );
+      setTxCompleted(true);
     } catch (error) {}
   };
 
