@@ -150,7 +150,7 @@ export const IronBank = () => {
               { key: 'supplyAPY', header: 'Lend APY' },
               { key: 'borrowAPY', header: 'Borrow APY' },
               { key: 'liquidity', header: 'Market Liquidity' },
-              { key: 'balanceToInvest', header: 'Available to Invest' },
+              { key: 'userTokenBalance', header: 'Available to Invest' },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -172,7 +172,7 @@ export const IronBank = () => {
               supplyAPY: normalizePercent(market.lendApy, 2),
               borrowAPY: normalizePercent(market.borrowApy, 2),
               liquidity: normalizeUsdc(market.liquidity, 0),
-              balanceToInvest:
+              userTokenBalance:
                 market.token.balance === '0' ? '-' : humanizeAmount(market.token.balance, market.token.decimals, 4),
               address: market.address,
             }))}
