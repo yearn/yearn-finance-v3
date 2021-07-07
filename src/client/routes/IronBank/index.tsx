@@ -113,7 +113,7 @@ export const IronBank = () => {
               { key: 'name', header: 'Name' },
               { key: 'apy', header: 'APY' },
               { key: 'balance', header: 'Balance' },
-              { key: 'borrowed', header: 'Borrowed' },
+              { key: 'borrowedUsdc', header: 'Value' },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -132,9 +132,9 @@ export const IronBank = () => {
               icon: market.token.icon ?? '',
               tokenSymbol: market.token.symbol,
               name: market.token.symbol,
-              balance: normalizeUsdc(market.token.balanceUsdc),
-              apy: normalizePercent(market.lendApy, 2),
-              borrowed: normalizeUsdc(market.userDepositedUsdc),
+              balance: humanizeAmount(market.userBalance, parseInt(market.decimals), 4),
+              apy: normalizePercent(market.borrowApy, 2),
+              borrowedUsdc: normalizeUsdc(market.userDepositedUsdc),
               address: market.address,
             }))}
           />
@@ -147,9 +147,10 @@ export const IronBank = () => {
                 width: '6rem',
               },
               { key: 'name', header: 'Name' },
-              { key: 'supplyAPY', header: 'Supply APY' },
+              { key: 'supplyAPY', header: 'Lend APY' },
               { key: 'borrowAPY', header: 'Borrow APY' },
-              { key: 'liquidity', header: 'Liquidity' },
+              { key: 'liquidity', header: 'Market Liquidity' },
+              { key: 'balanceToInvest', header: 'Available to Invest' },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -171,6 +172,8 @@ export const IronBank = () => {
               supplyAPY: normalizePercent(market.lendApy, 2),
               borrowAPY: normalizePercent(market.borrowApy, 2),
               liquidity: normalizeUsdc(market.liquidity, 0),
+              balanceToInvest:
+                market.token.balance === '0' ? '-' : humanizeAmount(market.token.balance, market.token.decimals, 4),
               address: market.address,
             }))}
             SearchBar={
@@ -178,7 +181,7 @@ export const IronBank = () => {
                 <SearchInput
                   searchableData={markets}
                   searchableKeys={['name', 'token.symbol', 'token.name']}
-                  placeholder="Search"
+                  placeholder=""
                   onSearch={(data) => setFilteredMarkets(data)}
                 />
               </SearchBarContainer>
