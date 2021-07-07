@@ -40,12 +40,14 @@ export const Wallet = () => {
         cardSize="big"
       />
 
-      {tokensListStatus.loading && (
+      {!walletIsConnected && <span>wallet not connect</span>}
+
+      {tokensListStatus.loading && walletIsConnected && (
         <Box height="100%" width="100%" position="relative" display="flex" center>
           <SpinnerLoading flex="1" />
         </Box>
       )}
-      {!tokensListStatus.loading && (
+      {!tokensListStatus.loading && walletIsConnected && (
         <DetailCard
           header="Tokens"
           metadata={[
