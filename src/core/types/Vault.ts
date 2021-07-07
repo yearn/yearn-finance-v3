@@ -30,6 +30,25 @@ export interface VaultView {
   approved: boolean;
   token: TokenView;
 }
+export interface GeneralVaultView {
+  address: EthereumAddress;
+  name: string;
+  decimals: string;
+  vaultBalance: string;
+  vaultBalanceUsdc: string;
+  depositLimit: string;
+  emergencyShutdown: boolean;
+  apyData: any;
+  DEPOSIT: {
+    userBalance: string;
+    userDeposited: string;
+    userDepositedUsdc: string;
+  };
+  earned: Usdc;
+  allowancesMap: { [vaultAddress: string]: string };
+  approved: boolean;
+  token: TokenView;
+}
 
 export interface VaultDynamicData {
   address: EthereumAddress;
