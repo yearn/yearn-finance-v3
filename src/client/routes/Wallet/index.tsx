@@ -35,6 +35,7 @@ export const Wallet = () => {
   return (
     <ViewContainer>
       <SummaryCard
+        header="Dashboard"
         items={[{ header: 'Available to Invest', content: `${normalizeUsdc(totalBalance)}` }]}
         variant="secondary"
         cardSize="big"
