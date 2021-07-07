@@ -69,8 +69,8 @@ interface Item {
   name: string;
   info: string;
   infoDetail?: string;
-  action: string;
-  onAction: () => void;
+  action?: string;
+  onAction?: () => void;
 }
 
 interface RecommendationsProps {
@@ -101,7 +101,7 @@ export const RecommendationsCard = ({ header, items }: RecommendationsProps) => 
                 {item.info}
               </ItemInfo>
 
-              <ItemButton onClick={item.onAction}>{item.action}</ItemButton>
+              {item.action && <ItemButton onClick={item.onAction}>{item.action}</ItemButton>}
             </ItemCard>
           </CardElement>
         ))}

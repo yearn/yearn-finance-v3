@@ -58,6 +58,8 @@ export const IronBank = () => {
 
       {!ironBankStatus.loading && (
         <>
+          {!walletIsConnected && <span>Wallet Not Connected</span>}
+
           <DetailCard
             header="Supplied"
             metadata={[
