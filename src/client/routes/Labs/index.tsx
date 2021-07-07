@@ -94,8 +94,8 @@ export const Labs = () => {
                 name: name,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
-                action: '>',
-                onAction: () => history.push(`/vault/${address}`),
+                // action: '>',
+                // onAction: () => history.push(`/vault/${address}`),
               }))}
             />
 

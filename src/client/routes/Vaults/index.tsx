@@ -92,8 +92,8 @@ export const Vaults = () => {
                 name: token.symbol,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
-                action: 'Go to Vault',
-                onAction: () => history.push(`/vault/${address}`),
+                // action: 'Go to Vault',
+                // onAction: () => history.push(`/vault/${address}`),
               }))}
             />
 
