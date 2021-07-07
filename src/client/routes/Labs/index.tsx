@@ -108,8 +108,8 @@ export const Labs = () => {
                 name: name,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
-                action: '>',
-                onAction: () => history.push(`/vault/${address}`),
+                // action: '>',
+                // onAction: () => history.push(`/vault/${address}`),
               }))}
             />
 
@@ -118,6 +118,8 @@ export const Labs = () => {
               content="Ready to get a little experimental? The lab is the place for you. Emerging strategies with unconventional methods of generating yield live here. Be sure to read the “About” sections carefully as “Lab” offers don’t behave like normal “Vaults” and could have token locking, impermanent loss, or other risks. Check out the opportunities below and select your first experiment, guinea pig!"
             />
           </Row>
+
+          {!walletIsConnected && <StyledInfoCard header="" content="Wallet Not Connected" />}
 
           <DetailCard
             header="Holdings"

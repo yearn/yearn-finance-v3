@@ -92,8 +92,8 @@ export const Vaults = () => {
                 name: token.symbol,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
-                action: 'Go to Vault',
-                onAction: () => history.push(`/vault/${address}`),
+                // action: 'Go to Vault',
+                // onAction: () => history.push(`/vault/${address}`),
               }))}
             />
 
@@ -102,6 +102,8 @@ export const Vaults = () => {
               content="Yearn Vaults are a passive investing strategy, like supercharged savings accounts. “Recommendations” shows best offers and “Opportunities” lists all available options. Remember, your capital is not locked and is always available for withdrawal. Yearn does the work for you. We identify the optimal opportunities in the market and shift capital, auto-compound, and reblance to maximize your yield. Click ‘Invest’ to get started!"
             />
           </Row>
+
+          {!walletIsConnected && <StyledInfoCard header="" content="Wallet Not Connected" />}
 
           <DetailCard
             header="Deposits"

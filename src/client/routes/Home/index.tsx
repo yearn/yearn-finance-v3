@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import { useAppSelector } from '@hooks';
-import { TokensSelectors, VaultsSelectors, IronBankSelectors } from '@store';
+import { TokensSelectors, VaultsSelectors, IronBankSelectors, WalletSelectors } from '@store';
 import { SummaryCard, InfoCard, ViewContainer } from '@components/app';
 import { normalizeUsdc, normalizePercent, toBN } from '@src/utils';
 
@@ -45,12 +45,13 @@ export const Home = () => {
   const { totalDeposits, totalEarnings, estYearlyYeild, apy } = useAppSelector(VaultsSelectors.selectSummaryData);
   // const { supplyBalance, borrowUtilizationRatio } = useAppSelector(IronBankSelectors.selectSummaryData);
   const walletSummary = useAppSelector(TokensSelectors.selectSummaryData);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
 
   const netWorth = toBN(totalDeposits).plus(walletSummary.totalBalance).toString();
   return (
     <StyledViewContainer>
       <HeaderCard
-        header="Welcome"
+        header="Dashboard"
         items={[
           { header: 'Net Worth', content: `${normalizeUsdc(netWorth)}` },
           { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
@@ -59,7 +60,6 @@ export const Home = () => {
         variant="secondary"
         cardSize="big"
       />
-
       <Row>
         <StyledInfoCard
           header="Welcome to Your Yearn Home Screen"
@@ -71,27 +71,29 @@ export const Home = () => {
         />
       </Row>
 
-      <StyledSummaryCard
-        header="Wallet"
-        items={[
-          {
-            header: 'Available to Invest',
-            content: `${normalizeUsdc(walletSummary.totalBalance)}`,
-          },
-        ]}
-        cardSize="small"
-      />
+      {walletIsConnected && (
+        <>
+          <StyledSummaryCard
+            header="Wallet"
+            items={[
+              {
+                header: 'Available to Invest',
+                content: `${normalizeUsdc(walletSummary.totalBalance)}`,
+              },
+            ]}
+            cardSize="small"
+          />
 
-      <StyledSummaryCard
-        header="Vaults"
-        items={[
-          { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
-          { header: 'APY', content: `${normalizePercent(apy, 2)}%` }, // TODO check if normalizePercent is needed.
-        ]}
-        cardSize="small"
-      />
+          <StyledSummaryCard
+            header="Vaults"
+            items={[
+              { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
+              { header: 'APY', content: normalizePercent(apy, 2) }, // TODO check if normalizePercent is needed.
+            ]}
+            cardSize="small"
+          />
 
-      {/* <StyledSummaryCard
+          {/* <StyledSummaryCard
         header="Iron Bank"
         items={[
           { header: 'Supply Balance', content: `${normalizeUsdc(supplyBalance)}` },
@@ -99,6 +101,10 @@ export const Home = () => {
         ]}
         cardSize="small"
       /> */}
+        </>
+      )}
+
+      {!walletIsConnected && <StyledInfoCard header="" content="No Wallet Connected" />}
     </StyledViewContainer>
   );
 };
