@@ -164,6 +164,16 @@ export function validateYvBoostEthActionsAllowance(props: ValidateYvBoostEthActi
   });
 }
 
+export function validateLabActionsAllowance(): ValidationResonse {
+  // TODO: GENERAL VALIDATION FOR LABS BASED ON LAB ADDRESS AND ACTION
+  return {};
+}
+
+export function validateLabActions(): ValidationResonse {
+  // TODO: GENERAL VALIDATION FOR LABS BASED ON LAB ADDRESS AND ACTION
+  return {};
+}
+
 interface ValidateAllowanceProps {
   tokenAddress: string;
   tokenAmount: BigNumber;
