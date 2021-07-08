@@ -88,7 +88,7 @@ export const Labs = () => {
           // { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
         variant="secondary"
-        cardSize="big"
+        cardSize="small"
       />
 
       {labsStatus.loading && (

@@ -38,7 +38,7 @@ export const Wallet = () => {
         header="Dashboard"
         items={[{ header: 'Available to Invest', content: `${normalizeUsdc(totalBalance)}` }]}
         variant="secondary"
-        cardSize="big"
+        cardSize="small"
       />
 
       {!walletIsConnected && <span>wallet not connect</span>}
