@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { VaultsSelectors, TokensActions, LabsSelectors, LabsActions } from '@store';
+import { TokensActions, LabsSelectors, LabsActions } from '@store';
 import { toBN, normalizeAmount, USDC_DECIMALS, validateVaultDeposit, validateVaultAllowance } from '@src/utils';
 
 import { Transaction } from '../Transaction';
@@ -16,7 +16,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedLab = useAppSelector(LabsSelectors.selectYveCrvLab);
-  const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap); // TODO: REPLACE WITH LAB SELECTOR
+  const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
   const selectedSellTokenAddress = selectedLab?.token.address;
   const selectedSellToken = selectedLab?.token;
 
@@ -55,7 +55,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   });
 
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.deposit.error;
+  const error = allowanceError || inputError || actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
 
   const selectedLabOption = {
     address: selectedLab.address,
@@ -100,7 +100,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     {
       label: 'Approve',
       onAction: approve,
-      status: actionsStatus.approve,
+      status: actionsStatus.approveDeposit,
       disabled: isApproved,
     },
     {

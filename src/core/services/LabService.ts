@@ -187,7 +187,7 @@ export class LabServiceImpl implements LabService {
     const provider = this.web3Provider.getInstanceOf('default');
     const vaultsPromise = get(YEARN_API);
     const pricesPromise = get(
-      'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault,lp-3pool-curve&vs_currencies=usd'
+      'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault,lp-3pool-curve,yvboost&vs_currencies=usd'
     );
     const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
 
@@ -212,7 +212,7 @@ export class LabServiceImpl implements LabService {
       .toFixed(0);
     const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
     if (!backscratcherData) throw new Error(`yveCRV vault not found on ${YEARN_API} response`);
-    const crvPrice = pricesResponse.data['curve-dao-token']['usd'];
+    const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
     const threeCrvPrice = pricesResponse.data['lp-3pool-curve']['usd'];
 
     const backscratcherDepositPosition: Position = {
@@ -223,7 +223,7 @@ export class LabServiceImpl implements LabService {
       underlyingTokenBalance: {
         amount: balanceOf.toString(), // TODO: VERIFY IF 1 YVECRV = 1 CRV
         amountUsdc: toBN(normalizeAmount(balanceOf.toString(), backscratcherData.decimals))
-          .times(crvPrice)
+          .times(yveCrvPrice)
           .times(10 ** USDC_DECIMALS)
           .toFixed(0),
       },
@@ -260,11 +260,13 @@ export class LabServiceImpl implements LabService {
 
     const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
     if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-    const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
-    const underlyingBalanceOf = normalizeAmount(
-      toBN(yvBoostBalanceOf.toString()).times(yvBoostPricePerShare.toString()).toFixed(0),
-      yvBoostData.decimals
-    );
+    const yvBoostPrice = pricesResponse.data['yvboost']['usd'];
+    const underlyingBalanceOf = toBN(
+      normalizeAmount(
+        toBN(yvBoostBalanceOf.toString()).times(yvBoostPricePerShare.toString()).toFixed(0),
+        yvBoostData.decimals
+      )
+    ).toFixed(0);
 
     const yvBoostDepositPosition: Position = {
       assetAddress: YVBOOST,
@@ -273,8 +275,8 @@ export class LabServiceImpl implements LabService {
       balance: yvBoostBalanceOf.toString(),
       underlyingTokenBalance: {
         amount: underlyingBalanceOf,
-        amountUsdc: toBN(normalizeAmount(underlyingBalanceOf, yvBoostData.decimals))
-          .times(yveCrvPrice)
+        amountUsdc: toBN(normalizeAmount(yvBoostBalanceOf.toString(), yvBoostData.decimals))
+          .times(yvBoostPrice)
           .times(10 ** USDC_DECIMALS)
           .toFixed(0),
       },

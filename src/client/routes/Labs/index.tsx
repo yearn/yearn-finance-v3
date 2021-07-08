@@ -59,7 +59,52 @@ export const Labs = () => {
     setFilteredOpportunities(opportunities);
   }, [opportunities]);
 
-  const LabActions = ({ labAddress }: { labAddress: string }) => {
+  const LabHoldingsActions = ({ labAddress }: { labAddress: string }) => {
+    switch (labAddress) {
+      case YVECRV:
+        return (
+          <ActionButtons
+            actions={[
+              {
+                name: 'Lock',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+            ]}
+          />
+        );
+      case YVBOOST:
+        return (
+          <ActionButtons
+            actions={[
+              {
+                name: 'Invest',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+              {
+                name: 'Withdraw',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'labWithdrawTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+            ]}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  const LabOpportunitiesActions = ({ labAddress }: { labAddress: string }) => {
     switch (labAddress) {
       case YVECRV:
         return (
@@ -151,14 +196,12 @@ export const Labs = () => {
               { key: 'apy', header: 'ROI' },
               { key: 'balance', header: 'Balance' },
               { key: 'value', header: 'Value' },
-              // {
-              //   key: 'actions',
-              //   transform: ({ labAddress }) => (
-              //     <ActionButtons actions={[{ name: '>', handler: () => actionHandler(labAddress) }]} />
-              //   ),
-              //   align: 'flex-end',
-              //   grow: '1',
-              // },
+              {
+                key: 'actions',
+                transform: ({ labAddress }) => <LabHoldingsActions labAddress={labAddress} />,
+                align: 'flex-end',
+                grow: '1',
+              },
             ]}
             data={holdings.map((lab) => ({
               icon: lab.icon,
@@ -185,7 +228,7 @@ export const Labs = () => {
               { key: 'tokenBalanceUsdc', header: 'Available to Invest' },
               {
                 key: 'actions',
-                transform: ({ labAddress }) => <LabActions labAddress={labAddress} />,
+                transform: ({ labAddress }) => <LabOpportunitiesActions labAddress={labAddress} />,
                 align: 'flex-end',
                 grow: '1',
               },
