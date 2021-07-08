@@ -1,8 +1,18 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { AllowancesMap, Balance, Lab, LabsPositionsMap, RootState, Token, Status } from '@types';
-import { getConstants } from '../../../../config/constants';
-import { toBN } from '../../../../utils';
-import { GeneralLabView } from '../../../types/Lab';
+import {
+  AllowancesMap,
+  Balance,
+  Lab,
+  LabsPositionsMap,
+  RootState,
+  Token,
+  Status,
+  GeneralLabView,
+  LabActionsStatusMap,
+} from '@types';
+import { getConstants } from '@config/constants';
+import { toBN } from '@utils';
+import { initialLabActionsStatusMap } from './labs.reducer';
 
 const { YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
 
@@ -21,6 +31,7 @@ const selectYvBoostAllowancesMap = (state: RootState) => state.tokens.user.userT
 
 const selectSelectedLabAddress = (state: RootState) => state.labs.selectedLabAddress;
 const selectGetLabsStatus = (state: RootState) => state.labs.statusMap.getLabs;
+const selectLabsActionsStatusMap = (state: RootState) => state.labs.statusMap.labsActionsStatusMap;
 const selectGetUserLabsPositionsStatus = (state: RootState) => state.labs.statusMap.user.getUserLabsPositions;
 
 // yveCrv selectors
@@ -136,6 +147,13 @@ const selectLabsStatus = createSelector(
   }
 );
 
+const selectSelectedLabActionsStatusMap = createSelector(
+  [selectLabsActionsStatusMap, selectSelectedLabAddress],
+  (labsActionsStatusMap, selectedLabAddress): LabActionsStatusMap => {
+    return selectedLabAddress ? labsActionsStatusMap[selectedLabAddress] : initialLabActionsStatusMap;
+  }
+);
+
 interface CreateLabProps {
   labData: Lab;
   userPositions: LabsPositionsMap;
@@ -192,4 +210,5 @@ export const LabsSelectors = {
   selectSelectedLab,
   selectSummaryData,
   selectLabsStatus,
+  selectSelectedLabActionsStatusMap,
 };
