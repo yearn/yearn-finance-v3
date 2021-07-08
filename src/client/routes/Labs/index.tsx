@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors, ModalsActions } from '@store';
+import { LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors, ModalsActions, LabsActions } from '@store';
 import {
   SummaryCard,
   DetailCard,
@@ -38,7 +38,7 @@ const StyledInfoCard = styled(InfoCard)`
 export const Labs = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
-  const { YVECRV, CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
+  const { YVECRV, YVBOOST, CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
   const history = useHistory();
   const dispatch = useAppDispatch();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -67,7 +67,25 @@ export const Labs = () => {
             actions={[
               {
                 name: 'Lock',
-                handler: () => dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' })),
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+            ]}
+          />
+        );
+      case YVBOOST:
+        return (
+          <ActionButtons
+            actions={[
+              {
+                name: 'Invest',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                },
                 disabled: !walletIsConnected,
               },
             ]}
