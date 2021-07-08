@@ -17,8 +17,9 @@ import {
   Wei,
   Balance,
   TransactionOutcome,
+  VaultsUserSummary,
 } from '@types';
-import { UserVaultsSummary, VaultUserMetadata } from './State';
+import { VaultUserMetadata } from './State';
 
 export interface UserService {}
 
@@ -32,7 +33,7 @@ export interface VaultService {
     userAddress: EthereumAddress;
     vaultAddresses?: string[];
   }) => Promise<Position[]>;
-  getUserVaultsSummary: (props: GetUserVaultsSummaryProps) => Promise<UserVaultsSummary>;
+  getUserVaultsSummary: (props: GetUserVaultsSummaryProps) => Promise<VaultsUserSummary>;
   getUserVaultsMetadata: (props: GetUserVaultsMetadataProps) => Promise<VaultUserMetadata[]>;
   getExpectedTransactionOutcome: (props: GetExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
   // approve:

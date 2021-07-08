@@ -1,6 +1,6 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { Position, Token, Vault, Integer, Balance, IronBankMarket, Lab, Alert } from '@types';
+import { Position, Token, Vault, Integer, Balance, IronBankMarket, Lab, Alert, VaultsUserSummary } from '@types';
 import { EthereumAddress } from './Ethereum';
 import { CyTokenUserMetadata, IronBankUserSummary, Usdc } from '@yfi/sdk';
 import { TransactionOutcome } from './Yearn-Sdk';
@@ -65,14 +65,6 @@ export interface VaultTransaction {
 }
 
 // TODO import from sdk when ready
-export interface UserVaultsSummary {
-  holdings: Usdc;
-  earnings: Usdc;
-  EYY: Usdc;
-  apyAverage: string;
-}
-
-// TODO import from sdk when ready
 export interface VaultUserMetadata {
   assetAddress: EthereumAddress;
   earned: Usdc;
@@ -83,7 +75,7 @@ export interface VaultsState {
   selectedVaultAddress: EthereumAddress | undefined;
   transaction: VaultTransaction;
   user: {
-    userVaultsSummary: UserVaultsSummary | undefined;
+    userVaultsSummary: VaultsUserSummary | undefined;
     userVaultsPositionsMap: { [address: string]: VaultPositionsMap };
     userVaultsMetadataMap: { [address: string]: VaultUserMetadata };
     vaultsAllowancesMap: { [vaultAddress: string]: AllowancesMap };
