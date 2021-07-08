@@ -19,6 +19,7 @@ const selectYvBoostData = (state: RootState) => state.tokens.tokensMap[YVBOOST];
 const selectUserYvBoostData = (state: RootState) => state.tokens.user.userTokensMap[YVBOOST];
 const selectYvBoostAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVBOOST];
 
+const selectSelectedLabAddress = (state: RootState) => state.labs.selectedLabAddress;
 const selectGetLabsStatus = (state: RootState) => state.labs.statusMap.getLabs;
 const selectGetUserLabsPositionsStatus = (state: RootState) => state.labs.statusMap.user.getUserLabsPositions;
 
@@ -107,6 +108,13 @@ const selectRecommendations = createSelector([selectLabs], (labs) => {
   return labs;
 });
 
+const selectSelectedLab = createSelector([selectLabs, selectSelectedLabAddress], (labs, selectedLabAddress) => {
+  if (!selectedLabAddress) {
+    return undefined;
+  }
+  return labs.find((lab) => lab.address === selectedLabAddress);
+});
+
 const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) => {
   let totalDeposited = toBN('0');
   depositedLabs.forEach((lab) => (totalDeposited = totalDeposited.plus(lab.DEPOSIT.userDepositedUsdc)));
@@ -181,6 +189,7 @@ export const LabsSelectors = {
   selectDepositedLabs,
   selectLabsOpportunities,
   selectRecommendations,
+  selectSelectedLab,
   selectSummaryData,
   selectLabsStatus,
 };

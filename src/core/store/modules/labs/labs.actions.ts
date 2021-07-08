@@ -1,4 +1,4 @@
-import { createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '../../../frameworks/redux';
 import { Lab, LabDynamic, Position } from '@types';
 import { VaultsActions } from '../vaults/vaults.actions';
@@ -18,6 +18,8 @@ import {
 } from '../../../../utils';
 
 const { THREECRV, YVECRV, pickleZapIn, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConstants().CONTRACT_ADDRESSES;
+
+const setSelectedLabAddress = createAction<{ labAddress?: string }>('labs/setSelectedLabAddress');
 
 const initiateLabs = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'labs/initiateLabs',
@@ -461,6 +463,7 @@ export const LabsActions = {
   getUserLabsPositions,
   getYveCrvExtraData,
   getUserYveCrvExtraData,
+  setSelectedLabAddress,
   yvBoost: {
     yvBoostApproveDeposit,
     yvBoostDeposit,

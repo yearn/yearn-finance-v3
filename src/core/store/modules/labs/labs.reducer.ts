@@ -50,7 +50,16 @@ export const labsInitialState: LabsState = {
   },
 };
 
-const { initiateLabs, getLabs, getLabsDynamic, getUserLabsPositions, yvBoost, yveCrv, yvBoostEth } = LabsActions;
+const {
+  initiateLabs,
+  getLabs,
+  getLabsDynamic,
+  getUserLabsPositions,
+  setSelectedLabAddress,
+  yvBoost,
+  yveCrv,
+  yvBoostEth,
+} = LabsActions;
 const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut, yvBoostWithdraw } = yvBoost;
 const { yveCrvApproveDeposit, yveCrvDeposit, yveCrvClaimReward, yveCrvApproveReinvest, yveCrvReinvest } = yveCrv;
 const { yvBoostEthApproveInvest, yvBoostEthInvest, yvBoostEthApproveStake, yvBoostEthStake } = yvBoostEth;
@@ -141,6 +150,9 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
         state.statusMap.user.userLabsActionsStatusMap[address].getPositions = {};
       });
       state.statusMap.user.getUserLabsPositions = { error: error.message };
+    })
+    .addCase(setSelectedLabAddress, (state, { payload: { labAddress } }) => {
+      state.selectedLabAddress = labAddress;
     })
 
     ////// yvBoost //////
