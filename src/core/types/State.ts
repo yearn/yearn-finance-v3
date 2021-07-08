@@ -1,8 +1,19 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { Position, Token, Vault, Integer, Balance, IronBankMarket, Lab, Alert, VaultsUserSummary } from '@types';
+import {
+  Position,
+  Token,
+  Vault,
+  Integer,
+  Balance,
+  IronBankMarket,
+  Lab,
+  Alert,
+  VaultsUserSummary,
+  VaultUserMetadata,
+} from '@types';
 import { EthereumAddress } from './Ethereum';
-import { CyTokenUserMetadata, IronBankUserSummary, Usdc } from '@yfi/sdk';
+import { CyTokenUserMetadata, IronBankUserSummary } from '@yfi/sdk';
 import { TransactionOutcome } from './Yearn-Sdk';
 
 export interface RootState {
@@ -64,11 +75,6 @@ export interface VaultTransaction {
   expectedOutcome: TransactionOutcome | undefined;
 }
 
-// TODO import from sdk when ready
-export interface VaultUserMetadata {
-  assetAddress: EthereumAddress;
-  earned: Usdc;
-}
 export interface VaultsState {
   vaultsAddresses: string[];
   vaultsMap: { [address: string]: Vault };

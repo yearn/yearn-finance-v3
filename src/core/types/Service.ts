@@ -18,8 +18,8 @@ import {
   Balance,
   TransactionOutcome,
   VaultsUserSummary,
+  VaultUserMetadata,
 } from '@types';
-import { VaultUserMetadata } from './State';
 
 export interface UserService {}
 

@@ -52,16 +52,12 @@ export class VaultServiceImpl implements VaultService {
   public async getUserVaultsSummary({ userAddress }: GetUserVaultsSummaryProps): Promise<VaultsUserSummary> {
     const yearn = this.yearnSdk;
     return await yearn.vaults.summaryOf(userAddress);
-    // return { holdings: '9999999', earnings: '9999999', EYY: '9999999', apyAverage: '99' };
   }
 
   public async getUserVaultsMetadata(props: GetUserVaultsMetadataProps): Promise<VaultUserMetadata[]> {
     const { userAddress, vaultsAddresses } = props;
     const yearn = this.yearnSdk;
-    // return await yearn.vaults.userMetadata(userAddress, vaultsAddresses); TODO use when sdk ready.
-    const yvYfiAddress = '0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1';
-    const obj: VaultUserMetadata = { assetAddress: yvYfiAddress, earned: '99999999' };
-    return [obj];
+    return await yearn.vaults.metadataOf(userAddress, vaultsAddresses);
   }
 
   public async getExpectedTransactionOutcome(props: GetExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {

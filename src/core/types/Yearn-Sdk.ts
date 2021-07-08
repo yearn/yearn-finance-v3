@@ -19,6 +19,7 @@ import {
   VaultsUserSummary,
   IronBankMarketDynamic,
   CyTokenUserMetadata,
+  VaultUserMetadata,
 } from '@yfi/sdk';
 
 declare type Lab = LabStatic & LabDynamic;
@@ -86,4 +87,5 @@ export type {
   TransactionResponse,
   TransactionReceipt,
   TransactionOutcome,
+  VaultUserMetadata,
 };
