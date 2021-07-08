@@ -1,34 +1,18 @@
 import { FC, useState, useEffect } from 'react';
-import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { VaultsSelectors, TokensActions, LabsSelectors, LabsActions } from '@store';
+import { toBN, normalizeAmount, USDC_DECIMALS, validateVaultDeposit, validateVaultAllowance } from '@src/utils';
 
-import { TxActionButton, TxActions } from '../components/TxActions';
-import { TxContainer } from '../components/TxContainer';
-import { TxTokenInput } from '../components/TxTokenInput';
-import { TxError } from '../components/TxError';
-import { TxStatus } from '../components/TxStatus';
-import { TxArrowStatus, TxArrowStatusTypes } from '../components/TxArrowStatus';
-
-import {
-  toBN,
-  formatPercent,
-  formatAmount,
-  normalizeAmount,
-  USDC_DECIMALS,
-  validateVaultDeposit,
-  validateVaultAllowance,
-} from '@src/utils';
+import { Transaction } from '../Transaction';
 
 export interface BackscratcherLockTxProps {
   onClose?: () => void;
 }
 
-const StyledBackscratcherLockTx = styled(TxContainer)``;
-
 export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, children, ...props }) => {
   const dispatch = useAppDispatch();
+  const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedLab = useAppSelector(LabsSelectors.selectYveCrvLab);
@@ -73,23 +57,33 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
   const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.deposit.error;
 
-  const balance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
-  const LabBalance = normalizeAmount(selectedLab.DEPOSIT.userDeposited, selectedLab.token.decimals);
+  const selectedLabOption = {
+    address: selectedLab.address,
+    symbol: selectedLab.name,
+    icon: selectedLab.icon,
+    balance: selectedLab.DEPOSIT.userDeposited,
+    decimals: selectedLab.token.decimals,
+  };
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = amount;
   const expectedAmountValue = amountValue;
 
-  const approve = () =>
-    dispatch(
+  const onTransactionCompletedDismissed = () => {
+    if (onClose) onClose();
+  };
+
+  const approve = async () => {
+    await dispatch(
       LabsActions.yveCrv.yveCrvApproveDeposit({
         labAddress: selectedLab.address,
         tokenAddress: selectedSellToken.address,
       })
     );
+  };
 
-  const lock = () => {
+  const lock = async () => {
     try {
-      dispatch(
+      await dispatchAndUnwrap(
         LabsActions.yveCrv.yveCrvDeposit({
           labAddress: selectedLab.address,
           sellTokenAddress: selectedSellToken.address,
@@ -102,54 +96,41 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     }
   };
 
-  const txStatus: TxArrowStatusTypes = 'preparing';
-
-  if (txCompleted) {
-    return (
-      <StyledBackscratcherLockTx onClose={onClose} header="Lock" {...props}>
-        <TxStatus exit={() => setTxCompleted(false)} />
-      </StyledBackscratcherLockTx>
-    );
-  }
+  const txActions = [
+    {
+      label: 'Approve',
+      onAction: approve,
+      status: actionsStatus.approve,
+      disabled: isApproved,
+    },
+    {
+      label: 'Lock',
+      onAction: lock,
+      status: actionsStatus.deposit,
+      disabled: !isApproved || !isValidAmount,
+    },
+  ];
 
   return (
-    <StyledBackscratcherLockTx onClose={onClose} header="Lock" {...props}>
-      <TxTokenInput
-        headerText="From wallet"
-        inputText={`Balance ${formatAmount(balance, 4)} ${selectedSellToken.symbol}`}
-        amount={amount}
-        onAmountChange={setAmount}
-        amountValue={amountValue}
-        maxAmount={balance}
-        selectedToken={selectedSellToken}
-        inputError={!!error?.length}
-      />
-
-      {!error && <TxArrowStatus status={txStatus} />}
-      {error && <TxError errorText={error} />}
-
-      <TxTokenInput
-        headerText="To vault"
-        inputText={`Balance ${formatAmount(LabBalance, 4)} ${selectedLab.token.symbol}`}
-        amount={expectedAmount}
-        amountValue={expectedAmountValue}
-        selectedToken={{ ...selectedLab.token, icon: selectedLab.icon }}
-        yieldPercent={formatPercent(selectedLab.apyData, 2)}
-        readOnly
-      />
-      <TxActions>
-        <TxActionButton onClick={() => approve()} disabled={isApproved} pending={actionsStatus.approve.loading}>
-          Approve
-        </TxActionButton>
-
-        <TxActionButton
-          onClick={() => lock()}
-          disabled={!isApproved || !isValidAmount}
-          pending={actionsStatus.deposit.loading}
-        >
-          Lock
-        </TxActionButton>
-      </TxActions>
-    </StyledBackscratcherLockTx>
+    <Transaction
+      transactionLabel="Lock"
+      transactionCompleted={txCompleted}
+      transactionCompletedLabel="Exit"
+      onTransactionCompletedDismissed={onTransactionCompletedDismissed}
+      sourceHeader="From wallet"
+      sourceAssetOptions={[selectedSellToken]}
+      selectedSourceAsset={selectedSellToken}
+      sourceAmount={amount}
+      sourceAmountValue={amountValue}
+      onSourceAmountChange={setAmount}
+      targetHeader="To vault"
+      targetAssetOptions={[selectedLabOption]}
+      selectedTargetAsset={selectedLabOption}
+      targetAmount={expectedAmount}
+      targetAmountValue={expectedAmountValue}
+      targetAmountStatus={{}}
+      actions={txActions}
+      status={{ error }}
+    />
   );
 };
