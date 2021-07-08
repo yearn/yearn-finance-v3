@@ -15,7 +15,7 @@ import {
   Apy,
   VaultStatic,
   IronBankMarket,
-  IronBankPosition,
+  IronBankUserSummary,
   IronBankMarketDynamic,
   CyTokenUserMetadata,
 } from '@yfi/sdk';
@@ -72,7 +72,7 @@ export type {
   Usdc,
   VaultStatic,
   IronBankMarket,
-  IronBankPosition,
+  IronBankUserSummary,
   IronBankMarketDynamic,
   CyTokenUserMetadata,
   Lab,

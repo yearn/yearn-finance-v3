@@ -2,7 +2,7 @@ import { Theme } from './Settings';
 import { Status } from './Status';
 import { Position, Token, Vault, Integer, Balance, IronBankMarket, Lab, Alert } from '@types';
 import { EthereumAddress } from './Ethereum';
-import { CyTokenUserMetadata, IronBankPosition, Usdc } from '@yfi/sdk';
+import { CyTokenUserMetadata, IronBankUserSummary, Usdc } from '@yfi/sdk';
 import { TransactionOutcome } from './Yearn-Sdk';
 
 export interface RootState {
@@ -164,7 +164,7 @@ export interface IronBankState {
   marketsMap: { [marketAddress: string]: IronBankMarket };
   selectedMarketAddress: EthereumAddress;
   user: {
-    userIronBankSummary: IronBankPosition | undefined;
+    userIronBankSummary: IronBankUserSummary | undefined;
     userMarketsPositionsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
     userMarketsMetadataMap: { [marketAddress: string]: CyTokenUserMetadata };
     marketsAllowancesMap: { [marketAddress: string]: AllowancesMap };
