@@ -46,6 +46,11 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
 
+  const onExit = () => {
+    dispatch(VaultsActions.clearSelectedVaultAndStatus());
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+  };
+
   useEffect(() => {
     if (!selectedSellTokenAddress && selectedVault) {
       dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedVault.token.address }));
@@ -164,11 +169,6 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
       );
       setTxCompleted(true);
     } catch (error) {}
-  };
-
-  const onExit = () => {
-    dispatch(VaultsActions.clearSelectedVaultAndStatus());
-    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
 
   const txActions = [

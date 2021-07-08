@@ -49,6 +49,11 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   });
   const yvTokenAmountNormalized = normalizeAmount(yvTokenAmount, toBN(selectedVault?.decimals).toNumber());
 
+  const onExit = () => {
+    dispatch(VaultsActions.clearSelectedVaultAndStatus());
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+  };
+
   useEffect(() => {
     return () => {
       onExit();
@@ -143,11 +148,6 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
       );
       setTxCompleted(true);
     } catch (error) {}
-  };
-
-  const onExit = () => {
-    dispatch(VaultsActions.clearSelectedVaultAndStatus());
-    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
 
   const txActions = [
