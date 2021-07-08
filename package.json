@@ -32,7 +32,7 @@
     "@types/redux-logger": "^3.0.8",
     "@types/styled-components": "^5.1.9",
     "@types/styled-system": "^5.1.10",
-    "@yfi/sdk": "0.0.40",
+    "@yfi/sdk": "0.0.42",
     "awilix": "^4.3.3",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
