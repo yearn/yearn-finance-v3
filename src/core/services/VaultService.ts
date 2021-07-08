@@ -78,9 +78,9 @@ export class VaultServiceImpl implements VaultService {
       case 'WITHDRAW':
         expectedOutcome = await yearn.simulation.withdraw(
           accountAddress,
-          sourceTokenAddress,
-          sourceTokenAmount,
           targetTokenAddress,
+          sourceTokenAmount,
+          sourceTokenAddress,
           DEFAULT_SLIPPAGE_SIMULATION
         );
         break;
