@@ -51,9 +51,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
 
   useEffect(() => {
     return () => {
-      // TODO: CREATE A CLEAR SELECTED VAULT/TOKEN ADDRESS ACTION
-      dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: undefined }));
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+      onExit();
     };
   }, []);
 
@@ -145,6 +143,11 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
       );
       setTxCompleted(true);
     } catch (error) {}
+  };
+
+  const onExit = () => {
+    dispatch(VaultsActions.clearSelectedVaultAndStatus());
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
 
   const txActions = [

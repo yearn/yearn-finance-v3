@@ -28,6 +28,7 @@ import { getConstants } from '../../../../config/constants';
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
 const clearTransactionData = createAction<void>('vaults/clearTransactionData');
+const clearSelectedVaultAndStatus = createAction<void>('vaults/clearSelectedVaultAndStatus');
 
 const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',
@@ -309,4 +310,5 @@ export const VaultsActions = {
   clearTransactionData,
   getUserVaultsSummary,
   getUserVaultsMetadata,
+  clearSelectedVaultAndStatus,
 };
