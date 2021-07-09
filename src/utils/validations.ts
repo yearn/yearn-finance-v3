@@ -136,6 +136,28 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
 
 // ********************* Labs *********************
 
+// TODO: IMPLEMENT GENERIC LAB VALIDATIONS
+
+// type LabAction = 'DEPOSIT' | 'WITHDRAW' | 'STAKE' | 'CLAIM' | 'REINVEST';
+
+// interface ValidateLabActionProps extends ValidateVaultDepositProps {
+//   action: LabAction;
+// }
+
+// interface ValidateLabActionAllowanceProps extends ValidateVaultAllowanceProps {
+//   action: LabAction;
+// }
+
+// export function validateLabActionsAllowance(): ValidationResonse {
+//   // TODO: GENERAL VALIDATION FOR LABS BASED ON LAB ADDRESS AND ACTION
+//   return {};
+// }
+
+// export function validateLabActions(): ValidationResonse {
+//   // TODO: GENERAL VALIDATION FOR LABS BASED ON LAB ADDRESS AND ACTION
+//   return {};
+// }
+
 interface ValidateYvBoostEthActionsAllowanceProps {
   sellTokenAddress: string;
   sellTokenAmount: BigNumber;
@@ -162,16 +184,6 @@ export function validateYvBoostEthActionsAllowance(props: ValidateYvBoostEthActi
     tokenAllowancesMap: sellTokenAllowancesMap,
     spenderAddress,
   });
-}
-
-export function validateLabActionsAllowance(): ValidationResonse {
-  // TODO: GENERAL VALIDATION FOR LABS BASED ON LAB ADDRESS AND ACTION
-  return {};
-}
-
-export function validateLabActions(): ValidationResonse {
-  // TODO: GENERAL VALIDATION FOR LABS BASED ON LAB ADDRESS AND ACTION
-  return {};
 }
 
 interface ValidateAllowanceProps {

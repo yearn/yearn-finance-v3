@@ -9,8 +9,8 @@ import {
   normalizeAmount,
   toWei,
   USDC_DECIMALS,
-  validateLabActions,
-  validateLabActionsAllowance,
+  validateVaultDeposit,
+  validateVaultAllowance,
 } from '@src/utils';
 import { getConfig } from '@config';
 
@@ -88,12 +88,27 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
     return null;
   }
 
-  // TODO: UPDATE VALIDATION PARAMS
-  const { approved: isApproved, error: allowanceError } = validateLabActionsAllowance();
-  const { approved: isValidAmount, error: inputError } = validateLabActions();
+  // TODO: USE LAB VALIDATIONS
+  const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
+    amount: toBN(amount),
+    vaultAddress: selectedLab.address,
+    vaultUnderlyingTokenAddress: selectedLab.token.address,
+    sellTokenAddress: selectedSellTokenAddress,
+    sellTokenDecimals: selectedSellToken.decimals.toString(),
+    sellTokenAllowancesMap: selectedSellToken.allowancesMap,
+  });
+
+  const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
+    sellTokenAmount: toBN(amount),
+    depositLimit: '0',
+    emergencyShutdown: false,
+    sellTokenDecimals: selectedSellToken.decimals.toString(),
+    userTokenBalance: selectedSellToken.balance,
+    vaultUnderlyingBalance: selectedLab.labBalance,
+  });
 
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError; // || actionsStatus.approve.error || actionsStatus.deposit.error;
+  const error = allowanceError || inputError || actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
 
   const selectedLabOption = {
     address: selectedLab.address,
