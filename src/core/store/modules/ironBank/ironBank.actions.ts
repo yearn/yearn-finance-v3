@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
-import { CyTokenUserMetadata, IronBankMarket, IronBankMarketDynamic, IronBankPosition, Position } from '@types';
+import { CyTokenUserMetadata, IronBankMarket, IronBankMarketDynamic, IronBankUserSummary, Position } from '@types';
 import { TokensActions } from '@store';
 import BigNumber from 'bignumber.js';
 
@@ -14,7 +14,7 @@ const initiateIronBank = createAsyncThunk<void, string | undefined, ThunkAPI>(
   }
 );
 
-const getIronBankSummary = createAsyncThunk<{ userIronBankSummary: IronBankPosition }, undefined, ThunkAPI>(
+const getIronBankSummary = createAsyncThunk<{ userIronBankSummary: IronBankUserSummary }, undefined, ThunkAPI>(
   'ironBank/getIronBankSummary',
   async (_arg, { extra, getState }) => {
     const userAddress = getState().wallet.selectedAddress;
