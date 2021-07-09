@@ -51,13 +51,13 @@ export class VaultServiceImpl implements VaultService {
 
   public async getUserVaultsSummary({ userAddress }: GetUserVaultsSummaryProps): Promise<VaultsUserSummary> {
     const yearn = this.yearnSdk;
-    return await yearn.vaults.summaryOf(userAddress.toLowerCase()); // TODO remove toLowerCase when sdk ready
+    return await yearn.vaults.summaryOf(userAddress);
   }
 
   public async getUserVaultsMetadata(props: GetUserVaultsMetadataProps): Promise<VaultUserMetadata[]> {
     const { userAddress, vaultsAddresses } = props;
     const yearn = this.yearnSdk;
-    return await yearn.vaults.metadataOf(userAddress.toLowerCase(), vaultsAddresses); // TODO remove toLowerCase when sdk ready
+    return await yearn.vaults.metadataOf(userAddress, vaultsAddresses);
   }
 
   public async getExpectedTransactionOutcome(props: GetExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {
