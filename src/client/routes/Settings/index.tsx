@@ -21,6 +21,7 @@ import {
 } from '@components/common';
 import { ThemeBox } from '@components/app/Settings';
 import { ViewContainer } from '@components/app';
+import { formatPercent } from '@utils';
 
 const sectionsGap = '2.2rem';
 const sectionsBorderRadius = '0.8rem';
@@ -148,7 +149,7 @@ export const Settings = () => {
             <SectionContent>
               {availableSlippages.map((slippage) => (
                 <SlippageOption onClick={() => changeSlippage(slippage)} active={slippage === defaultSlippage}>
-                  {slippage * 100}%
+                  {formatPercent(slippage.toString(), 0)}
                 </SlippageOption>
               ))}
             </SectionContent>
