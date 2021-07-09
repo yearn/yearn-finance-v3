@@ -2,14 +2,10 @@ import styled, { css } from 'styled-components';
 
 import { useAppSelector } from '@hooks';
 import { TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
-import { SummaryCard, InfoCard, ViewContainer } from '@components/app';
+import { SummaryCard, InfoCard, ViewContainer, NoWalletCard } from '@components/app';
 import { Text } from '@components/common';
 
-import { normalizeUsdc, normalizePercent, toBN } from '@src/utils';
-
-const halfWidth = css`
-  max-width: calc(${({ theme }) => theme.globalMaxWidth} / 2 - ${({ theme }) => theme.layoutPadding} / 2);
-`;
+import { normalizeUsdc, normalizePercent, toBN, halfWidthCss } from '@src/utils';
 
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
@@ -35,10 +31,15 @@ const StyledInfoCard = styled(InfoCard)`
   flex: 1;
 `;
 
+const StyledNoWalletCard = styled(NoWalletCard)`
+  grid-column: 1 / 3;
+  ${halfWidthCss}
+`;
+
 const StyledSummaryCard = styled(SummaryCard)`
   width: 100%;
   grid-column: 1 / 3;
-  ${halfWidth};
+  ${halfWidthCss};
 `;
 
 export const Home = () => {
@@ -119,7 +120,7 @@ export const Home = () => {
         </>
       )}
 
-      {!walletIsConnected && <StyledInfoCard header="" content="No Wallet Connected" />}
+      {!walletIsConnected && <StyledNoWalletCard />}
     </StyledViewContainer>
   );
 };
