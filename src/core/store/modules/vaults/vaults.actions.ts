@@ -7,7 +7,7 @@ import {
   Vault,
   VaultDynamic,
   TransactionOutcome,
-  UserVaultsSummary,
+  VaultsUserSummary,
   VaultUserMetadata,
   EthereumAddress,
   Wei,
@@ -69,7 +69,7 @@ const getUserVaultsPositions = createAsyncThunk<
   return { userVaultsPositions };
 });
 
-const getUserVaultsSummary = createAsyncThunk<{ userVaultsSummary: UserVaultsSummary }, void, ThunkAPI>(
+const getUserVaultsSummary = createAsyncThunk<{ userVaultsSummary: VaultsUserSummary }, void, ThunkAPI>(
   'vaults/getUserVaultsSummary',
   async (args, { extra, getState }) => {
     const { services } = extra;
