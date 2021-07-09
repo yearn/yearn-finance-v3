@@ -6,13 +6,15 @@ import { SettingsActions } from './settings.actions';
 export const settingsInitialState: SettingsState = {
   stateVersion: getConfig().STATE_VERSION,
   sidebarCollapsed: false,
+  defaultSlippage: getConfig().DEFAULT_SLIPPAGE,
+  availableSlippages: getConfig().SLIPPAGE_OPTIONS,
   devMode: {
     enabled: false,
     walletAddressOverride: '',
   },
 };
 
-const { toggleSidebar, closeSidebar, toggleDevMode, changeWalletAddressOverride } = SettingsActions;
+const { toggleSidebar, closeSidebar, setDefaultSlippage, toggleDevMode, changeWalletAddressOverride } = SettingsActions;
 
 const settingsReducer = createReducer(settingsInitialState, (builder) => {
   builder
@@ -21,6 +23,9 @@ const settingsReducer = createReducer(settingsInitialState, (builder) => {
     })
     .addCase(toggleSidebar, (state) => {
       state.sidebarCollapsed = !state.sidebarCollapsed;
+    })
+    .addCase(setDefaultSlippage.fulfilled, (state, { payload: { slippage } }) => {
+      state.defaultSlippage = slippage;
     })
     .addCase(toggleDevMode.fulfilled, (state, { payload: { enable } }) => {
       state.devMode.enabled = enable;

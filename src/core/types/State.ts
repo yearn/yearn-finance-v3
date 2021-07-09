@@ -181,9 +181,12 @@ export interface IronBankState {
     };
   };
 }
+
 export interface SettingsState {
   stateVersion: number;
   sidebarCollapsed: boolean;
+  defaultSlippage: number;
+  availableSlippages: number[];
   devMode: {
     enabled: boolean;
     walletAddressOverride: EthereumAddress;
