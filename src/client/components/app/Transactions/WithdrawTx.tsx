@@ -117,10 +117,10 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   };
   const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(amount).gt(0)
-    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedVault?.token.decimals)
+    ? normalizeAmount(expectedTxOutcome?.targetTokenAmount, selectedTargetToken?.decimals)
     : '';
   const expectedAmountValue = toBN(expectedAmount)
-    .times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS))
+    .times(normalizeAmount(selectedTargetToken.priceUsdc, USDC_DECIMALS))
     .toString();
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
