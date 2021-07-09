@@ -2,10 +2,9 @@ import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
+import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions, SettingsSelectors } from '@store';
 import {
   toBN,
-  formatPercent,
   normalizeAmount,
   USDC_DECIMALS,
   validateVaultWithdraw,
@@ -20,11 +19,7 @@ export interface WithdrawTxProps {
 }
 
 export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props }) => {
-  const { SLIPPAGE_OPTIONS, CONTRACT_ADDRESSES } = getConfig();
-  const slippageOptions = SLIPPAGE_OPTIONS.map((value) => ({
-    value: value.toString(),
-    label: formatPercent(value.toString(), 0),
-  }));
+  const { CONTRACT_ADDRESSES } = getConfig();
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
@@ -32,7 +27,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
   const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedVault?.token.address ?? '');
-  const [selectedSlippage, setSelectedSlippage] = useState(slippageOptions[0]);
+  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
   const targetTokensOptions = selectedVault
     ? [selectedVault.token, ...zapOutTokens.filter(({ address }) => address !== selectedVault.token.address)]
     : zapOutTokens;
@@ -143,7 +138,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
           vaultAddress: selectedVault.address,
           amount: toBN(amount),
           targetTokenAddress: selectedTargetTokenAddress,
-          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
+          slippageTolerance: toBN(selectedSlippage).toNumber(),
         })
       );
       setTxCompleted(true);

@@ -2,17 +2,8 @@ import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions } from '@store';
-import {
-  toBN,
-  formatPercent,
-  normalizeAmount,
-  toWei,
-  USDC_DECIMALS,
-  validateVaultDeposit,
-  validateVaultAllowance,
-} from '@src/utils';
-import { getConfig } from '@config';
+import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions, SettingsSelectors } from '@store';
+import { toBN, normalizeAmount, toWei, USDC_DECIMALS, validateVaultDeposit, validateVaultAllowance } from '@src/utils';
 
 import { Transaction } from './Transaction';
 
@@ -21,11 +12,6 @@ export interface DepositTxProps {
 }
 
 export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) => {
-  const { SLIPPAGE_OPTIONS } = getConfig();
-  const slippageOptions = SLIPPAGE_OPTIONS.map((value) => ({
-    value: value.toString(),
-    label: formatPercent(value.toString(), 0),
-  }));
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [allowVaultSelect, setAllowVaultSelect] = useState(false);
@@ -35,7 +21,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
-  const [selectedSlippage, setSelectedSlippage] = useState(slippageOptions[0]);
+  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
@@ -164,7 +150,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
           vaultAddress: selectedVault.address,
           tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
-          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
+          slippageTolerance: toBN(selectedSlippage).toNumber(),
         })
       );
       setTxCompleted(true);
