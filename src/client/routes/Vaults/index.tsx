@@ -27,6 +27,7 @@ const Row = styled.div`
   grid-gap: ${({ theme }) => theme.layoutPadding};
   flex-wrap: wrap;
   grid-column: 1 / 3;
+  width: 100%;
 `;
 
 const StyledInfoCard = styled(InfoCard)`
@@ -72,7 +73,7 @@ export const Vaults = () => {
           { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
         variant="secondary"
-        cardSize="big"
+        cardSize="small"
       />
 
       {vaultsStatus.loading && (

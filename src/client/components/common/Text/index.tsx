@@ -18,7 +18,6 @@ export const Text: FC<TextProps> = ({ center, textColor, ...props }) => (
     justifyContent={center ? 'center' : null}
     alignItems={center ? 'center' : null}
     textAlign={center ? 'center' : null}
-    textColor={textColor ?? 'onPrimary'}
     {...props}
   />
 );

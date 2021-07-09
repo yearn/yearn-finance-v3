@@ -48,6 +48,7 @@ export const IronBank = () => {
           // { header: 'Net APY', content: `${normalizePercent(netAPY, 2)}` }, // TODO netAPY calc in selector
         ]}
         variant="secondary"
+        cardSize="small"
       />
 
       {ironBankStatus.loading && (
