@@ -115,7 +115,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     balance: selectedLab.DEPOSIT.userBalance,
     decimals: toBN(selectedLab.decimals).toNumber(),
   };
-  console.log('......>', selectedLabOption, selectedLabToken);
+
   const amountValue = toBN(amount).times(normalizeAmount(selectedLabToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(amount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedLab?.token.decimals)
