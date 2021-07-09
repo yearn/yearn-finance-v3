@@ -93,15 +93,16 @@ const SlippageOption = styled.div<{ active?: boolean }>`
   justify-content: center;
   width: 6.4rem;
   height: 6.4rem;
-  border: 2px solid black;
+  border: 2px solid ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.secondary};
   border-radius: ${({ theme }) => theme.globalRadius};
   cursor: pointer;
 
-  ${({ active }) =>
+  ${({ active, theme }) =>
     active &&
     `
-    background-color: black;
-    color: white;
+    background-color: ${theme.colors.secondary};
+    color: ${theme.colors.surface};
   `}
 `;
 
