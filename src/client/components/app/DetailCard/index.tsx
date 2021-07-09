@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Card, CardHeader, CardContent, CardElement } from '@components/common';
 
-const StyledCardElement = styled(CardElement)<{ strips?: boolean }>`
+const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
   display: flex;
   justify-content: center;
   margin: 0;
@@ -17,8 +17,8 @@ const StyledCardElement = styled(CardElement)<{ strips?: boolean }>`
     font-size: inherit;
   }
 
-  ${({ strips, theme }) =>
-    strips &&
+  ${({ stripes, theme }) =>
+    stripes &&
     `
     &:nth-child(even) {
       background-color: ${theme.colors.surfaceVariantA};
@@ -71,11 +71,11 @@ interface DetailCardProps {
   header: string;
   metadata: Metadata[];
   data: Data[];
-  strips?: boolean;
+  stripes?: boolean;
   SearchBar?: ReactNode;
 }
 
-export const DetailCard = ({ header, metadata, data, strips, SearchBar }: DetailCardProps) => {
+export const DetailCard = ({ header, metadata, data, stripes, SearchBar }: DetailCardProps) => {
   if (data.length === 0 && !SearchBar) {
     return null;
   }
@@ -101,7 +101,7 @@ export const DetailCard = ({ header, metadata, data, strips, SearchBar }: Detail
               width={width}
               align={align}
               grow={grow}
-              strips={strips}
+              stripes={stripes}
             >
               {transform && transform(item)}
             </StyledCardElement>
