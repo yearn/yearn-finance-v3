@@ -165,9 +165,7 @@ export class LabServiceImpl implements LabService {
           type: pJarData.apy.type,
           description: '',
         },
-        // TODO: ADD ICON ON YEARN-ASSETS
-        icon:
-          'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+        icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
       },
     };
     // ********************************
@@ -302,7 +300,7 @@ export class LabServiceImpl implements LabService {
     const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
     if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
     const pJarPricePerToken = pJarPricePerTokenResponse.data.find(
-      ({ address }: { address: string }) => address === PSLPYVBOOSTETH
+      ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
     )?.pricePerToken;
 
     const yvBoostEthDepositPosition: Position = {

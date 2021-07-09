@@ -130,8 +130,9 @@ export class TokenServiceImpl implements TokenService {
       pSLPyvBoostEthContract.symbol(),
       get(`https://api.zapper.fi/v1/vault-stats/pickle?api_key=${ZAPPER_API_KEY}`),
     ]);
-    const pJarPricePerToken = pricesResponse.data.find(({ address }: { address: string }) => address === PSLPYVBOOSTETH)
-      ?.pricePerToken;
+    const pJarPricePerToken = pricesResponse.data.find(
+      ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
+    )?.pricePerToken;
     return {
       address: pSLPyvBoostEthContract.address,
       decimals: decimals.toString(),
@@ -143,8 +144,7 @@ export class TokenServiceImpl implements TokenService {
         zapper: false,
       },
       symbol,
-      icon:
-        'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png', // TODO USE PROPER ICON WHEN READY
+      icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
     };
   }
 }
