@@ -5,12 +5,17 @@ import { useAppSelector, useAppDispatch } from '@hooks';
 
 import { ModalsActions, IronBankActions, IronBankSelectors, WalletSelectors } from '@store';
 import { Box, SpinnerLoading, ToggleButton, SearchInput } from '@components/common';
-import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
+import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, NoWalletCard } from '@components/app';
 
-import { normalizeUsdc, normalizePercent, humanizeAmount } from '@src/utils';
+import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss } from '@src/utils';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
+`;
+
+const StyledNoWalletCard = styled(NoWalletCard)`
+  width: 100%;
+  ${halfWidthCss}
 `;
 
 export const IronBank = () => {
@@ -59,7 +64,7 @@ export const IronBank = () => {
 
       {!ironBankStatus.loading && (
         <>
-          {!walletIsConnected && <span>Wallet Not Connected</span>}
+          {!walletIsConnected && <StyledNoWalletCard />}
 
           <DetailCard
             header="Supplied"
