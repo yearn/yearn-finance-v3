@@ -86,7 +86,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
       await dispatchAndUnwrap(
         LabsActions.yveCrv.yveCrvDeposit({
           labAddress: selectedLab.address,
-          sellTokenAddress: selectedSellToken.address,
+          tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
         })
       );

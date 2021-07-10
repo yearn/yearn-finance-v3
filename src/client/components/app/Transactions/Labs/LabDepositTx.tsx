@@ -142,9 +142,9 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
 
   const approve = async () => {
     await dispatch(
-      LabsActions.yvBoost.yvBoostApproveDeposit({
+      LabsActions.approveDeposit({
         labAddress: selectedLab.address,
-        sellTokenAddress: selectedSellToken.address,
+        tokenAddress: selectedSellToken.address,
       })
     );
   };
@@ -152,9 +152,9 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
   const deposit = async () => {
     try {
       await dispatchAndUnwrap(
-        LabsActions.yvBoost.yvBoostDeposit({
+        LabsActions.deposit({
           labAddress: selectedLab.address,
-          sellTokenAddress: selectedSellToken.address,
+          tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
         })
       );

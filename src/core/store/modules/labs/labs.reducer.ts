@@ -15,7 +15,7 @@ export const initialLabActionsStatusMap: LabActionsStatusMap = {
   get: initialStatus,
   approveDeposit: initialStatus,
   deposit: initialStatus,
-  approveZapOut: initialStatus,
+  approveWithdraw: initialStatus,
   withdraw: initialStatus,
   claimReward: initialStatus,
   approveReinvest: initialStatus,
@@ -56,6 +56,10 @@ const {
   getLabsDynamic,
   getUserLabsPositions,
   setSelectedLabAddress,
+  approveDeposit,
+  deposit,
+  approveWithdraw,
+  withdraw,
   yvBoost,
   yveCrv,
   yvBoostEth,
@@ -154,6 +158,55 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     .addCase(setSelectedLabAddress, (state, { payload: { labAddress } }) => {
       state.selectedLabAddress = labAddress;
     })
+    ////// GENERAL //////
+    .addCase(approveDeposit.pending, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = { loading: true };
+    })
+    .addCase(approveDeposit.fulfilled, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = {};
+    })
+    .addCase(approveDeposit.rejected, (state, { meta, error }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].approveDeposit = { error: error.message };
+    })
+    .addCase(deposit.pending, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].deposit = { loading: true };
+    })
+    .addCase(deposit.fulfilled, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].deposit = {};
+    })
+    .addCase(deposit.rejected, (state, { meta, error }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].deposit = { error: error.message };
+    })
+    .addCase(approveWithdraw.pending, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].approveWithdraw = { loading: true };
+    })
+    .addCase(approveWithdraw.fulfilled, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].approveWithdraw = {};
+    })
+    .addCase(approveWithdraw.rejected, (state, { meta, error }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].approveWithdraw = { error: error.message };
+    })
+    .addCase(withdraw.pending, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].withdraw = { loading: true };
+    })
+    .addCase(withdraw.fulfilled, (state, { meta }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].withdraw = {};
+    })
+    .addCase(withdraw.rejected, (state, { meta, error }) => {
+      const labAddress = meta.arg.labAddress;
+      state.statusMap.labsActionsStatusMap[labAddress].withdraw = { error: error.message };
+    })
 
     ////// yvBoost //////
     .addCase(yvBoostApproveDeposit.pending, (state, { meta }) => {
@@ -182,15 +235,15 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     })
     .addCase(yvBoostApproveZapOut.pending, (state, { meta }) => {
       const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approveZapOut = { loading: true };
+      state.statusMap.labsActionsStatusMap[labAddress].approveWithdraw = { loading: true };
     })
     .addCase(yvBoostApproveZapOut.fulfilled, (state, { meta }) => {
       const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approveZapOut = {};
+      state.statusMap.labsActionsStatusMap[labAddress].approveWithdraw = {};
     })
     .addCase(yvBoostApproveZapOut.rejected, (state, { meta, error }) => {
       const labAddress = meta.arg.labAddress;
-      state.statusMap.labsActionsStatusMap[labAddress].approveZapOut = { error: error.message };
+      state.statusMap.labsActionsStatusMap[labAddress].approveWithdraw = { error: error.message };
     })
     .addCase(yvBoostWithdraw.pending, (state, { meta }) => {
       const labAddress = meta.arg.labAddress;

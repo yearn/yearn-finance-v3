@@ -38,7 +38,7 @@ const StyledInfoCard = styled(InfoCard)`
 export const Labs = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
-  const { YVECRV, YVBOOST, CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
+  const { YVECRV, YVBOOST, PSLPYVBOOSTETH, CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
   const history = useHistory();
   const dispatch = useAppDispatch();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -99,6 +99,30 @@ export const Labs = () => {
             ]}
           />
         );
+      case PSLPYVBOOSTETH:
+        return (
+          <ActionButtons
+            actions={[
+              {
+                name: 'Invest',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+              {
+                name: 'Stake',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  console.log('TODO: PSLPYVBOOSTETH STAKE MODAL');
+                  // dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+            ]}
+          />
+        );
       default:
         return null;
     }
@@ -122,6 +146,7 @@ export const Labs = () => {
           />
         );
       case YVBOOST:
+      case PSLPYVBOOSTETH:
         return (
           <ActionButtons
             actions={[

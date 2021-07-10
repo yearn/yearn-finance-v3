@@ -106,7 +106,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   });
 
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError || actionsStatus.approveZapOut.error || actionsStatus.withdraw.error;
+  const error = allowanceError || inputError || actionsStatus.approveWithdraw.error || actionsStatus.withdraw.error;
 
   const selectedLabOption = {
     address: selectedLab.address,
@@ -134,16 +134,16 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   };
 
   const approve = async () => {
-    await dispatch(LabsActions.yvBoost.yvBoostApproveZapOut({ labAddress: selectedLab.address }));
+    await dispatch(LabsActions.approveWithdraw({ labAddress: selectedLab.address }));
   };
 
   const withdraw = async () => {
     try {
       await dispatchAndUnwrap(
-        LabsActions.yvBoost.yvBoostWithdraw({
+        LabsActions.withdraw({
           labAddress: selectedLab.address,
           amount: toBN(amount),
-          targetTokenAddress: selectedTargetTokenAddress,
+          tokenAddress: selectedTargetTokenAddress,
           //   slippageTolerance: toBN(selectedSlippage.value).toNumber(),
         })
       );
@@ -155,7 +155,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     {
       label: 'Approve',
       onAction: approve,
-      status: actionsStatus.approveZapOut,
+      status: actionsStatus.approveWithdraw,
       disabled: isApproved,
     },
     {

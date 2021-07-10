@@ -1,10 +1,8 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
-import { ThunkAPI } from '../../../frameworks/redux';
-import { Lab, LabDynamic, Position } from '@types';
-import { VaultsActions } from '../vaults/vaults.actions';
-import { getConstants } from '../../../../config/constants';
-import { TokensActions } from '../..';
 import BigNumber from 'bignumber.js';
+
+import { ThunkAPI } from '@frameworks/redux';
+import { Lab, LabDynamic, Position } from '@types';
 import {
   calculateSharesAmount,
   handleTransaction,
@@ -15,9 +13,15 @@ import {
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
   validateYvBoostEthActionsAllowance,
-} from '../../../../utils';
+} from '@utils';
+import { getConfig } from '@config';
 
-const { THREECRV, YVECRV, pickleZapIn, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConstants().CONTRACT_ADDRESSES;
+import { VaultsActions } from '../vaults/vaults.actions';
+import { TokensActions } from '../..';
+
+const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE, zapIn, pickleZapIn } = getConfig().CONTRACT_ADDRESSES;
+
+const getZapInContractAddress = (labAddress: string) => (labAddress === PSLPYVBOOSTETH ? pickleZapIn : zapIn);
 
 const setSelectedLabAddress = createAction<{ labAddress?: string }>('labs/setSelectedLabAddress');
 
@@ -70,7 +74,7 @@ const getUserLabsPositions = createAsyncThunk<
 const getYveCrvExtraData = createAsyncThunk<void, { fetchDynamicData?: boolean }, ThunkAPI>(
   'labs/getYveCrvExtraData',
   async ({ fetchDynamicData }, { dispatch }) => {
-    const YVTHREECRV = getConstants().CONTRACT_ADDRESSES.YVTHREECRV;
+    const YVTHREECRV = getConfig().CONTRACT_ADDRESSES.YVTHREECRV;
     if (fetchDynamicData) {
       await dispatch(VaultsActions.getVaultsDynamic({ addresses: [YVTHREECRV] }));
       return;
@@ -82,19 +86,106 @@ const getYveCrvExtraData = createAsyncThunk<void, { fetchDynamicData?: boolean }
 const getUserYveCrvExtraData = createAsyncThunk<void, void, ThunkAPI>(
   'labs/getUserYveCrvExtraData',
   async (_args, { dispatch }) => {
-    const YVTHREECRV = getConstants().CONTRACT_ADDRESSES.YVTHREECRV;
+    const YVTHREECRV = getConfig().CONTRACT_ADDRESSES.YVTHREECRV;
     await dispatch(VaultsActions.getUserVaultsPositions({ vaultAddresses: [YVTHREECRV] }));
   }
 );
 
-const yvBoostApproveDeposit = createAsyncThunk<void, { labAddress: string; sellTokenAddress: string }, ThunkAPI>(
-  'labs/yvBoost/yvBoostApproveDeposit',
-  async ({ labAddress, sellTokenAddress }, { dispatch, getState }) => {
+// -------------------- GENERAL ACTIONS --------------------
+
+interface ApproveDepositProps {
+  labAddress: string;
+  tokenAddress: string;
+}
+
+interface DepositProps {
+  labAddress: string;
+  tokenAddress: string;
+  amount: BigNumber;
+}
+
+interface ApproveWithdrawProps {
+  labAddress: string;
+}
+
+interface WithdrawProps {
+  labAddress: string;
+  tokenAddress: string;
+  amount: BigNumber;
+}
+
+const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
+  'labs/approveDeposit',
+  async ({ labAddress, tokenAddress }, { dispatch, getState, extra }) => {
+    const { labs } = getState();
+    const labData = labs.labsMap[labAddress];
+    const isZapin = tokenAddress !== labData.token || labAddress === PSLPYVBOOSTETH;
+    const spenderAddress = isZapin ? getZapInContractAddress(labAddress) : labAddress;
+    const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
+    unwrapResult(result);
+  }
+);
+
+const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
+  'labs/deposit',
+  async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
+    const { services } = extra;
+    const { labService } = services;
+    const { wallet, labs, tokens } = getState();
+
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const labData = labs.labsMap[labAddress];
+    const tokenData = tokens.tokensMap[tokenAddress];
+    const userTokenData = tokens.user.userTokensMap[tokenAddress];
+    const tokenAllowancesMap = tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
+    const decimals = toBN(tokenData.decimals);
+    const ONE_UNIT = toBN('10').pow(decimals);
+    const amountInWei = amount.multipliedBy(ONE_UNIT);
+
+    const { error: allowanceError } = validateVaultAllowance({
+      amount,
+      vaultAddress: labAddress,
+      vaultUnderlyingTokenAddress: labData.tokenId,
+      sellTokenAddress: tokenAddress,
+      sellTokenDecimals: tokenData.decimals,
+      sellTokenAllowancesMap: tokenAllowancesMap,
+    });
+
+    const { error: depositError } = validateVaultDeposit({
+      sellTokenAmount: amount,
+      depositLimit: labData?.metadata.depositLimit ?? '0',
+      emergencyShutdown: labData?.metadata.emergencyShutdown || false,
+      sellTokenDecimals: tokenData?.decimals ?? '0',
+      userTokenBalance: userTokenData?.balance ?? '0',
+      vaultUnderlyingBalance: labData?.underlyingTokenBalance.amount ?? '0',
+    });
+
+    const error = allowanceError || depositError;
+    if (error) throw new Error(error);
+
+    // const tx = await labService.yvBoostDeposit({
+    //   accountAddress: userAddress,
+    //   tokenAddress: tokenData.address,
+    //   labAddress,
+    //   amount: amountInWei.toString(),
+    // });
+    // await handleTransaction(tx);
+    dispatch(getLabsDynamic({ addresses: [labAddress] }));
+    dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, labAddress] }));
+  }
+);
+
+const approveWithdraw = createAsyncThunk<void, ApproveWithdrawProps, ThunkAPI>(
+  'labs/approveWithdraw',
+  async ({ labAddress }, { dispatch }) => {
     try {
-      const labData = getState().labs.labsMap[labAddress];
-      const isZapin = labData.tokenId !== sellTokenAddress;
-      const spenderAddress = isZapin ? getConstants().CONTRACT_ADDRESSES.zapIn : labAddress;
-      const result = await dispatch(TokensActions.approve({ tokenAddress: sellTokenAddress, spenderAddress }));
+      const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
+      const result = await dispatch(
+        TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
+      );
       unwrapResult(result);
     } catch (error) {
       throw new Error(error.message);
@@ -102,23 +193,88 @@ const yvBoostApproveDeposit = createAsyncThunk<void, { labAddress: string; sellT
   }
 );
 
-interface LabsDepositProps {
-  labAddress: string;
-  sellTokenAddress: string;
-  amount: BigNumber;
-}
-const yvBoostDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
+const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
+  'labs/withdraw',
+  async ({ labAddress, amount, tokenAddress }, { dispatch, extra, getState }) => {
+    const { services } = extra;
+    const { labService } = services;
+    const { wallet, labs, tokens } = getState();
+
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const labData = labs.labsMap[labAddress];
+    const tokenData = tokens.tokensMap[labData.tokenId];
+    const labAllowancesMap = tokens.user.userTokensAllowancesMap[labAddress];
+    const userLabData = labs.user.userLabsPositionsMap[labAddress]?.DEPOSIT;
+
+    const amountOfShares = calculateSharesAmount({
+      amount,
+      decimals: tokenData.decimals,
+      pricePerShare: labData.metadata.pricePerShare,
+    });
+
+    const { error: allowanceError } = validateVaultWithdrawAllowance({
+      yvTokenAddress: labAddress,
+      yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+      targetTokenAddress: tokenAddress,
+      underlyingTokenAddress: tokenData.address ?? '',
+      yvTokenDecimals: tokenData.decimals.toString() ?? '0',
+      yvTokenAllowancesMap: labAllowancesMap ?? {},
+    });
+
+    const { error: withdrawError } = validateVaultWithdraw({
+      yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+      userYvTokenBalance: userLabData.balance ?? '0',
+      yvTokenDecimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
+    });
+
+    const error = withdrawError || allowanceError;
+    if (error) throw new Error(error);
+
+    // const tx = await labService.withdraw({
+    //   accountAddress: userAddress,
+    //   tokenAddress: labData.tokenId,
+    //   labAddress,
+    //   amountOfShares,
+    // });
+    // await handleTransaction(tx);
+
+    dispatch(getLabsDynamic({ addresses: [labAddress] }));
+    dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, labAddress] }));
+  }
+);
+
+// -------------------- YVBOOST --------------------
+
+const yvBoostApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
+  'labs/yvBoost/yvBoostApproveDeposit',
+  async ({ labAddress, tokenAddress }, { dispatch, getState }) => {
+    try {
+      const labData = getState().labs.labsMap[labAddress];
+      const isZapin = labData.tokenId !== tokenAddress;
+      const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : labAddress;
+      const result = await dispatch(TokensActions.approve({ tokenAddress: tokenAddress, spenderAddress }));
+      unwrapResult(result);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+);
+
+const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoost/yvBoostDeposit',
-  async ({ labAddress, sellTokenAddress, amount }, { dispatch, getState, extra }) => {
+  async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
     const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
     const labData = getState().labs.labsMap[labAddress];
-    const tokenData = getState().tokens.tokensMap[sellTokenAddress];
-    const userTokenData = getState().tokens.user.userTokensMap[sellTokenAddress];
-    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[sellTokenAddress] ?? {};
+    const tokenData = getState().tokens.tokensMap[tokenAddress];
+    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
+    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
 
@@ -126,7 +282,7 @@ const yvBoostDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
       amount,
       vaultAddress: labAddress,
       vaultUnderlyingTokenAddress: labData.tokenId,
-      sellTokenAddress: sellTokenAddress,
+      sellTokenAddress: tokenAddress,
       sellTokenDecimals: tokenData.decimals,
       sellTokenAllowancesMap: tokenAllowancesMap,
     });
@@ -153,7 +309,7 @@ const yvBoostDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
     // await handleTransaction(tx);
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [sellTokenAddress, labAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, labAddress] }));
   }
 );
 
@@ -161,7 +317,7 @@ const yvBoostApproveZapOut = createAsyncThunk<void, { labAddress: string }, Thun
   'labs/yvBoost/yvBoostApproveZapOut',
   async ({ labAddress }, { dispatch }) => {
     try {
-      const ZAP_OUT_CONTRACT_ADDRESS = getConstants().CONTRACT_ADDRESSES.zapOut;
+      const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
       const result = await dispatch(
         TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
@@ -225,7 +381,9 @@ const yvBoostWithdraw = createAsyncThunk<
   dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, labAddress] }));
 });
 
-const yveCrvApproveDeposit = createAsyncThunk<void, { labAddress: string; tokenAddress: string }, ThunkAPI>(
+// -------------------- BACKSCRATCHER --------------------
+
+const yveCrvApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
   'labs/yveCrv/yveCrvApproveDeposit',
   async ({ labAddress, tokenAddress }, { dispatch }) => {
     try {
@@ -237,18 +395,18 @@ const yveCrvApproveDeposit = createAsyncThunk<void, { labAddress: string; tokenA
   }
 );
 
-const yveCrvDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
+const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yveCrv/yveCrvDeposit',
-  async ({ labAddress, sellTokenAddress, amount }, { dispatch, getState, extra }) => {
+  async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
     const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
     const labData = getState().labs.labsMap[labAddress];
-    const tokenData = getState().tokens.tokensMap[sellTokenAddress];
-    const userTokenData = getState().tokens.user.userTokensMap[sellTokenAddress];
-    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[sellTokenAddress] ?? {};
+    const tokenData = getState().tokens.tokensMap[tokenAddress];
+    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
+    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
 
@@ -265,7 +423,7 @@ const yveCrvDeposit = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
     // await handleTransaction(tx);
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [sellTokenAddress, labAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, labAddress] }));
   }
 );
 
@@ -328,7 +486,9 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
   }
 );
 
-const yvBoostEthApproveInvest = createAsyncThunk<void, { labAddress: string; tokenAddress: string }, ThunkAPI>(
+// -------------------- YVBOOST-ETH --------------------
+
+const yvBoostEthApproveInvest = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthApproveInvest',
   async ({ tokenAddress }, { dispatch }) => {
     // tokenAddress is anyToken.
@@ -341,9 +501,9 @@ const yvBoostEthApproveInvest = createAsyncThunk<void, { labAddress: string; tok
   }
 );
 
-const yvBoostEthInvest = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
+const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthInvest',
-  async ({ labAddress, sellTokenAddress, amount }, { dispatch, extra, getState }) => {
+  async ({ labAddress, tokenAddress, amount }, { dispatch, extra, getState }) => {
     // labAddress is PSLPYVBOOSTETH
     const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;
@@ -352,15 +512,15 @@ const yvBoostEthInvest = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
     }
 
     const labData = getState().labs.labsMap[labAddress];
-    const tokenData = getState().tokens.tokensMap[sellTokenAddress];
-    const userTokenData = getState().tokens.user.userTokensMap[sellTokenAddress];
-    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[sellTokenAddress] ?? {};
+    const tokenData = getState().tokens.tokensMap[tokenAddress];
+    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
+    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
 
     const { error: allowanceError } = validateYvBoostEthActionsAllowance({
       action: 'INVEST',
-      sellTokenAddress,
+      sellTokenAddress: tokenAddress,
       sellTokenAmount: amount,
       sellTokenDecimals: tokenData.decimals,
       sellTokenAllowancesMap: tokenAllowancesMap,
@@ -388,7 +548,7 @@ const yvBoostEthInvest = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
 
     dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
     dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [sellTokenAddress, PSLPYVBOOSTETH] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, PSLPYVBOOSTETH] }));
   }
 );
 
@@ -406,7 +566,7 @@ const yvBoostEthApproveStake = createAsyncThunk<void, { labAddress: string }, Th
   }
 );
 
-const yvBoostEthStake = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
+const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthStake',
   async ({ labAddress, amount }, { dispatch, extra, getState }) => {
     const { services } = extra;
@@ -414,17 +574,17 @@ const yvBoostEthStake = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const sellTokenAddress = PSLPYVBOOSTETH;
+    const tokenAddress = PSLPYVBOOSTETH;
     const labData = getState().labs.labsMap[labAddress];
-    const tokenData = getState().tokens.tokensMap[sellTokenAddress];
-    const userTokenData = getState().tokens.user.userTokensMap[sellTokenAddress];
-    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[sellTokenAddress] ?? {};
+    const tokenData = getState().tokens.tokensMap[tokenAddress];
+    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
+    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
 
     const { error: allowanceError } = validateYvBoostEthActionsAllowance({
       action: 'STAKE',
-      sellTokenAddress,
+      sellTokenAddress: tokenAddress,
       sellTokenAmount: amount,
       sellTokenDecimals: tokenData.decimals,
       sellTokenAllowancesMap: tokenAllowancesMap,
@@ -456,6 +616,8 @@ const yvBoostEthStake = createAsyncThunk<void, LabsDepositProps, ThunkAPI>(
   }
 );
 
+// ----------------------------------------
+
 export const LabsActions = {
   initiateLabs,
   getLabs,
@@ -464,6 +626,10 @@ export const LabsActions = {
   getYveCrvExtraData,
   getUserYveCrvExtraData,
   setSelectedLabAddress,
+  approveDeposit,
+  deposit,
+  approveWithdraw,
+  withdraw,
   yvBoost: {
     yvBoostApproveDeposit,
     yvBoostDeposit,
