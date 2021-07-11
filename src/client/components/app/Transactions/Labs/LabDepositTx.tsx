@@ -11,6 +11,7 @@ import {
   USDC_DECIMALS,
   validateVaultDeposit,
   validateVaultAllowance,
+  getZapInContractAddress,
 } from '@src/utils';
 import { getConfig } from '@config';
 
@@ -60,10 +61,13 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
 
+    const isZap = selectedSellTokenAddress === selectedLab.token.address;
+    const spenderAddress = isZap ? getZapInContractAddress(selectedLab.token.address) : selectedLab.address;
+
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedSellTokenAddress,
-        spenderAddress: selectedLab.address,
+        spenderAddress,
       })
     );
   }, [selectedSellTokenAddress]);

@@ -13,15 +13,14 @@ import {
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
   validateYvBoostEthActionsAllowance,
+  getZapInContractAddress,
 } from '@utils';
 import { getConfig } from '@config';
 
 import { VaultsActions } from '../vaults/vaults.actions';
 import { TokensActions } from '../..';
 
-const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE, zapIn, pickleZapIn } = getConfig().CONTRACT_ADDRESSES;
-
-const getZapInContractAddress = (labAddress: string) => (labAddress === PSLPYVBOOSTETH ? pickleZapIn : zapIn);
+const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
 
 const setSelectedLabAddress = createAction<{ labAddress?: string }>('labs/setSelectedLabAddress');
 
@@ -493,7 +492,9 @@ const yvBoostEthApproveInvest = createAsyncThunk<void, ApproveDepositProps, Thun
   async ({ tokenAddress }, { dispatch }) => {
     // tokenAddress is anyToken.
     try {
-      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: pickleZapIn }));
+      const result = await dispatch(
+        TokensActions.approve({ tokenAddress, spenderAddress: getZapInContractAddress(PSLPYVBOOSTETH) })
+      );
       unwrapResult(result);
     } catch (error) {
       throw new Error(error.message);

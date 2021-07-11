@@ -11,6 +11,7 @@ import {
   USDC_DECIMALS,
   validateVaultDeposit,
   validateVaultAllowance,
+  getZapInContractAddress,
 } from '@src/utils';
 import { getConfig } from '@config';
 
@@ -67,10 +68,12 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   useEffect(() => {
     if (!selectedVault || !selectedSellTokenAddress) return;
 
+    const isZap = selectedSellTokenAddress === selectedVault.token.address;
+    const spenderAddress = isZap ? getZapInContractAddress(selectedVault.token.address) : selectedVault.address;
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedSellTokenAddress,
-        spenderAddress: selectedVault.address,
+        spenderAddress,
       })
     );
   }, [selectedSellTokenAddress]);

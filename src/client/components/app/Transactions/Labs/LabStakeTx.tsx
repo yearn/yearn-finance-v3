@@ -9,6 +9,7 @@ import {
   USDC_DECIMALS,
   validateVaultDeposit,
   validateYvBoostEthActionsAllowance,
+  getStakingContractAddress,
 } from '@src/utils';
 
 import { Transaction } from '../Transaction';
@@ -42,10 +43,11 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
 
+    const spenderAddress = getStakingContractAddress(selectedLab.address);
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedSellTokenAddress,
-        spenderAddress: selectedLab.address,
+        spenderAddress,
       })
     );
   }, [selectedSellTokenAddress]);
