@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors, ModalsActions, LabsActions } from '@store';
+import { LabsSelectors, WalletSelectors, ModalsActions, LabsActions } from '@store';
 import {
   SummaryCard,
   DetailCard,
@@ -13,7 +13,7 @@ import {
   InfoCard,
   ViewContainer,
 } from '@components/app';
-import { formatPercent, humanizeAmount, normalizePercent, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
+import { formatPercent, humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
 import { Box, SpinnerLoading, SearchInput } from '@components/common';
 import { getConstants } from '../../../config/constants';
 
@@ -115,8 +115,7 @@ export const Labs = () => {
                 name: 'Stake',
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  console.log('TODO: PSLPYVBOOSTETH STAKE MODAL');
-                  // dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                  dispatch(ModalsActions.openModal({ modalName: 'labStakeTx' }));
                 },
                 disabled: !walletIsConnected,
               },

@@ -1,55 +1,37 @@
 import { FC, useState, useEffect } from 'react';
-import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { TokensSelectors, LabsSelectors, LabsActions, TokensActions, VaultsActions, VaultsSelectors } from '@store';
+import { TokensSelectors, LabsSelectors, LabsActions, TokensActions, VaultsActions } from '@store';
 import {
   toBN,
-  formatPercent,
   normalizeAmount,
   toWei,
   USDC_DECIMALS,
   validateVaultDeposit,
-  validateVaultAllowance,
+  validateYvBoostEthActionsAllowance,
 } from '@src/utils';
-import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
 
-export interface LabDepositTxProps {
+export interface LabStakeTxProps {
   onClose?: () => void;
 }
 
-export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...props }) => {
-  const { SLIPPAGE_OPTIONS } = getConfig();
-  const slippageOptions = SLIPPAGE_OPTIONS.map((value) => ({
-    value: value.toString(),
-    label: formatPercent(value.toString(), 0),
-  }));
+export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props }) => {
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
-  const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
-  const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
-  const [selectedSlippage, setSelectedSlippage] = useState(slippageOptions[0]);
-  // TODO: ADD EXPECTED OUTCOME TO LABS
-  const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
-  const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
+  const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
+  const selectedSellToken = tokenSelectorFilter(selectedLab?.address ?? '');
+  selectedSellToken.balance = selectedLab?.DEPOSIT.userBalance ?? '0';
+  selectedSellToken.balanceUsdc = selectedLab?.DEPOSIT.userDepositedUsdc ?? '0';
+  const selectedSellTokenAddress = selectedSellToken.address;
+  const sellTokensOptions = [selectedSellToken];
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
 
-  const sellTokensOptions = selectedLab
-    ? [selectedLab.token, ...userTokens.filter(({ address }) => address !== selectedLab.token.address)]
-    : userTokens;
-  const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
-  const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
-
   useEffect(() => {
-    if (!selectedSellTokenAddress && selectedLab) {
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedLab.token.address }));
-    }
-
     return () => {
       // TODO: CREATE A CLEAR SELECTED LAB/TOKEN ADDRESS ACTION
       dispatch(LabsActions.setSelectedLabAddress({ labAddress: undefined }));
@@ -84,18 +66,17 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
     }
   }, [amount, selectedSellTokenAddress, selectedLab]);
 
-  if (!selectedLab || !selectedSellTokenAddress || !sellTokensOptions) {
+  if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken) {
     return null;
   }
 
-  // TODO: USE LAB VALIDATIONS
-  const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
-    amount: toBN(amount),
-    vaultAddress: selectedLab.address,
-    vaultUnderlyingTokenAddress: selectedLab.token.address,
+  // TODO: USE LAB GENERAL VALIDATIONS
+  const { approved: isApproved, error: allowanceError } = validateYvBoostEthActionsAllowance({
+    sellTokenAmount: toBN(amount),
     sellTokenAddress: selectedSellTokenAddress,
     sellTokenDecimals: selectedSellToken.decimals.toString(),
     sellTokenAllowancesMap: selectedSellToken.allowancesMap,
+    action: 'STAKE',
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
@@ -114,17 +95,13 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
     address: selectedLab.address,
     symbol: selectedLab.name,
     icon: selectedLab.icon,
-    balance: selectedLab.DEPOSIT.userBalance,
+    balance: selectedLab.STAKE.userDeposited,
     decimals: toBN(selectedLab.decimals).toNumber(),
   };
 
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
-  const expectedAmount = toBN(amount).gt(0)
-    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedLab?.token.decimals)
-    : '';
-  const expectedAmountValue = toBN(expectedAmount)
-    .times(normalizeAmount(selectedLab.token.priceUsdc, USDC_DECIMALS))
-    .toString();
+  const expectedAmount = amount;
+  const expectedAmountValue = amountValue;
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -142,9 +119,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
 
   const approve = async () => {
     await dispatch(
-      LabsActions.approveDeposit({
+      LabsActions.yvBoostEth.yvBoostEthApproveStake({
         labAddress: selectedLab.address,
-        tokenAddress: selectedSellToken.address,
       })
     );
   };
@@ -152,7 +128,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
   const deposit = async () => {
     try {
       await dispatchAndUnwrap(
-        LabsActions.deposit({
+        LabsActions.yvBoostEth.yvBoostEthStake({
           labAddress: selectedLab.address,
           tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
@@ -166,20 +142,20 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
     {
       label: 'Approve',
       onAction: approve,
-      status: actionsStatus.approveDeposit,
+      status: actionsStatus.approveStake,
       disabled: isApproved,
     },
     {
       label: 'Deposit',
       onAction: deposit,
-      status: actionsStatus.deposit,
+      status: actionsStatus.stake,
       disabled: !isApproved || !isValidAmount,
     },
   ];
 
   return (
     <Transaction
-      transactionLabel="Invest"
+      transactionLabel="Stake"
       transactionCompleted={txCompleted}
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
@@ -190,13 +166,13 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To Vault"
+      targetHeader="To Gauge"
       targetAssetOptions={[selectedLabOption]}
       selectedTargetAsset={selectedLabOption}
       onSelectedTargetAssetChange={onSelectedLabChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedTxOutcomeStatus}
+      targetAmountStatus={{}}
       actions={txActions}
       status={{ error }}
       onClose={onClose}

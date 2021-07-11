@@ -12,6 +12,7 @@ import { WithdrawTxModal } from './WithdrawTxModal';
 import { BackscratcherLockTxModal } from './Backscratcher';
 import { LabDepositTxModal } from './LabDepositTxModal';
 import { LabWithdrawTxModal } from './LabWithdrawTxModal';
+import { LabStakeTxModal } from './LabStakeTxModal';
 
 const StyledModals = styled(TransitionGroup)`
   position: fixed;
@@ -150,6 +151,12 @@ export const Modals = () => {
       {activeModal === 'labWithdrawTx' && (
         <CSSTransition key={'labWithdrawTx'} timeout={500} classNames="slideBottom">
           <LabWithdrawTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'labStakeTx' && (
+        <CSSTransition key={'labStakeTx'} timeout={500} classNames="slideBottom">
+          <LabStakeTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

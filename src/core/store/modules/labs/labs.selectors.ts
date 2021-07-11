@@ -107,11 +107,11 @@ const selectLabs = createSelector(
 );
 
 const selectDepositedLabs = createSelector([selectLabs], (labs) => {
-  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).gt(0));
+  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).plus(lab?.STAKE.userBalance).gt(0));
 });
 
 const selectLabsOpportunities = createSelector([selectLabs], (labs) => {
-  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).lte(0));
+  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).plus(lab?.STAKE.userBalance).lte(0));
 });
 
 const selectRecommendations = createSelector([selectLabs], (labs) => {
@@ -128,7 +128,9 @@ const selectSelectedLab = createSelector([selectLabs, selectSelectedLabAddress],
 
 const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) => {
   let totalDeposited = toBN('0');
-  depositedLabs.forEach((lab) => (totalDeposited = totalDeposited.plus(lab.DEPOSIT.userDepositedUsdc)));
+  depositedLabs.forEach(
+    (lab) => (totalDeposited = totalDeposited.plus(lab.DEPOSIT.userDepositedUsdc).plus(lab.STAKE.userDepositedUsdc))
+  );
 
   return {
     totalDeposits: totalDeposited.toString(),
@@ -184,6 +186,11 @@ function createLab(props: CreateLabProps): GeneralLabView {
       userBalance: userPositions?.YIELD?.balance ?? '0',
       userDeposited: userPositions?.YIELD?.underlyingTokenBalance.amount ?? '0',
       userDepositedUsdc: userPositions?.YIELD?.underlyingTokenBalance.amountUsdc ?? '0',
+    },
+    STAKE: {
+      userBalance: userPositions?.STAKE?.balance ?? '0',
+      userDeposited: userPositions?.STAKE?.underlyingTokenBalance.amount ?? '0',
+      userDepositedUsdc: userPositions?.STAKE?.underlyingTokenBalance.amountUsdc ?? '0',
     },
     token: {
       address: tokenData?.address,
