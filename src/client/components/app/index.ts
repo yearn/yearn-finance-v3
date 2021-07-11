@@ -7,6 +7,7 @@ export * from './Footer';
 export * from './InfoCard';
 export * from './Navbar';
 export * from './Navigation';
+export * from './NoWalletCard';
 export * from './RecommendationsCard';
 export * from './SummaryCard';
 export * from './TokenAmountInput';

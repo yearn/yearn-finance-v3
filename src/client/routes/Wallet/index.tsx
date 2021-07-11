@@ -1,8 +1,15 @@
+import styled, { css } from 'styled-components';
+
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { WalletSelectors, TokensSelectors, TokensActions, IronBankActions, ModalsActions } from '@store';
+import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, NoWalletCard } from '@components/app';
 import { Box, SpinnerLoading } from '@components/common';
-import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon } from '@components/app';
-import { humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
+import { halfWidthCss, humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
+
+const StyledNoWalletCard = styled(NoWalletCard)`
+  ${halfWidthCss}
+  width: 100%;
+`;
 
 export const Wallet = () => {
   // TODO: Add translation
@@ -41,7 +48,7 @@ export const Wallet = () => {
         cardSize="small"
       />
 
-      {!walletIsConnected && <span>wallet not connect</span>}
+      {!walletIsConnected && <StyledNoWalletCard />}
 
       {tokensListStatus.loading && walletIsConnected && (
         <Box height="100%" width="100%" position="relative" display="flex" center>

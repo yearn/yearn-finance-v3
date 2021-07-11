@@ -12,8 +12,16 @@ import {
   TokenIcon,
   InfoCard,
   ViewContainer,
+  NoWalletCard,
 } from '@components/app';
-import { formatPercent, humanizeAmount, normalizePercent, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
+import {
+  formatPercent,
+  halfWidthCss,
+  humanizeAmount,
+  normalizePercent,
+  normalizeUsdc,
+  USDC_DECIMALS,
+} from '@src/utils';
 import { Box, SpinnerLoading, SearchInput } from '@components/common';
 import { getConstants } from '../../../config/constants';
 
@@ -33,6 +41,11 @@ const Row = styled.div`
 const StyledInfoCard = styled(InfoCard)`
   max-width: 100%;
   flex: 1;
+`;
+
+const StyledNoWalletCard = styled(NoWalletCard)`
+  width: 100%;
+  ${halfWidthCss}
 `;
 
 export const Labs = () => {
@@ -119,7 +132,7 @@ export const Labs = () => {
             />
           </Row>
 
-          {!walletIsConnected && <StyledInfoCard header="" content="Wallet Not Connected" />}
+          {!walletIsConnected && <StyledNoWalletCard />}
 
           <DetailCard
             header="Holdings"

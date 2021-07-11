@@ -1,8 +1,19 @@
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { Position, Token, Vault, Integer, Balance, IronBankMarket, Lab, Alert } from '@types';
+import {
+  Position,
+  Token,
+  Vault,
+  Integer,
+  Balance,
+  IronBankMarket,
+  Lab,
+  Alert,
+  VaultsUserSummary,
+  VaultUserMetadata,
+} from '@types';
 import { EthereumAddress } from './Ethereum';
-import { CyTokenUserMetadata, IronBankPosition, Usdc } from '@yfi/sdk';
+import { CyTokenUserMetadata, IronBankUserSummary } from '@yfi/sdk';
 import { TransactionOutcome } from './Yearn-Sdk';
 
 export interface RootState {
@@ -64,26 +75,13 @@ export interface VaultTransaction {
   expectedOutcome: TransactionOutcome | undefined;
 }
 
-// TODO import from sdk when ready
-export interface UserVaultsSummary {
-  holdings: Usdc;
-  earnings: Usdc;
-  EYY: Usdc;
-  apyAverage: string;
-}
-
-// TODO import from sdk when ready
-export interface VaultUserMetadata {
-  assetAddress: EthereumAddress;
-  earned: Usdc;
-}
 export interface VaultsState {
   vaultsAddresses: string[];
   vaultsMap: { [address: string]: Vault };
   selectedVaultAddress: EthereumAddress | undefined;
   transaction: VaultTransaction;
   user: {
-    userVaultsSummary: UserVaultsSummary | undefined;
+    userVaultsSummary: VaultsUserSummary | undefined;
     userVaultsPositionsMap: { [address: string]: VaultPositionsMap };
     userVaultsMetadataMap: { [address: string]: VaultUserMetadata };
     vaultsAllowancesMap: { [vaultAddress: string]: AllowancesMap };
@@ -164,7 +162,7 @@ export interface IronBankState {
   marketsMap: { [marketAddress: string]: IronBankMarket };
   selectedMarketAddress: EthereumAddress;
   user: {
-    userIronBankSummary: IronBankPosition | undefined;
+    userIronBankSummary: IronBankUserSummary | undefined;
     userMarketsPositionsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
     userMarketsMetadataMap: { [marketAddress: string]: CyTokenUserMetadata };
     marketsAllowancesMap: { [marketAddress: string]: AllowancesMap };

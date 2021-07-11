@@ -54,22 +54,23 @@ const selectVaults = createSelector(
     userVaultsPositionsMap,
     userVaultsMetadataMap,
     userTokensMap,
-    vaultsAllowancesMap,
+    vaultsAllowancesMap, // NOTE: For now we are gonna get the allowance from TokenState.user.tokenAllowances[]
     userTokensAllowancesMap
   ) => {
     const vaults = vaultsAddresses.map((address) => {
       const vaultData = vaultsMap[address];
       const tokenData = tokensMap[vaultData.tokenId];
       const userTokenData = userTokensMap[vaultData.tokenId];
-      const allowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
+      const tokenAllowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
+      const vaultAllowancesMap = userTokensAllowancesMap[address] ?? {};
       return createVault({
         vaultData,
         tokenData,
         userTokenData,
         userVaultPositionsMap: userVaultsPositionsMap[address],
         userVaultsMetadataMap: userVaultsMetadataMap[address],
-        vaultsAllowancesMap,
-        allowancesMap,
+        vaultAllowancesMap,
+        tokenAllowancesMap,
       });
     });
     return vaults;
@@ -118,8 +119,9 @@ const selectSummaryData = createSelector([selectUserVaultsSummary], (userVaultsS
   return {
     totalDeposits: userVaultsSummary?.holdings ?? '0',
     totalEarnings: userVaultsSummary?.earnings ?? '0',
-    estYearlyYeild: userVaultsSummary?.EYY ?? '0',
-    apy: userVaultsSummary?.apyAverage ?? '0',
+    estYearlyYeild: userVaultsSummary?.estimatedYearlyYield ?? '0',
+    apy: '99999',
+    // apy: userVaultsSummary?.apyAverage ?? '0',
   };
 });
 
@@ -179,7 +181,7 @@ const selectVault = createSelector(
     userVaultsPositionsMap,
     userVaultsMetadataMap,
     userTokensMap,
-    vaultsAllowancesMap,
+    vaultsAllowancesMap, // NOTE: For now we are gonna get the allowance from TokenState.user.tokenAllowances[]
     userTokensAllowancesMap
   ) =>
     memoize((vaultAddress: string) => {
@@ -187,15 +189,16 @@ const selectVault = createSelector(
       if (!vaultData) return undefined;
       const tokenData = tokensMap[vaultData.tokenId];
       const userTokenData = userTokensMap[vaultData.tokenId];
-      const allowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
+      const tokenAllowancesMap = userTokensAllowancesMap[vaultData.token] ?? {};
+      const vaultAllowancesMap = userTokensAllowancesMap[vaultAddress] ?? {};
       return createVault({
         vaultData,
         tokenData,
         userTokenData,
         userVaultPositionsMap: userVaultsPositionsMap[vaultAddress],
         userVaultsMetadataMap: userVaultsMetadataMap[vaultAddress],
-        vaultsAllowancesMap,
-        allowancesMap,
+        vaultAllowancesMap,
+        tokenAllowancesMap,
       });
     })
 );
@@ -203,23 +206,23 @@ interface CreateVaultProps {
   vaultData: Vault;
   tokenData: Token;
   userTokenData: Balance;
-  allowancesMap: AllowancesMap;
+  tokenAllowancesMap: AllowancesMap;
   userVaultPositionsMap: VaultPositionsMap;
   userVaultsMetadataMap: VaultUserMetadata;
-  vaultsAllowancesMap: any;
+  vaultAllowancesMap: AllowancesMap;
 }
 function createVault(props: CreateVaultProps) {
   const {
-    allowancesMap,
+    tokenAllowancesMap,
     tokenData,
     userTokenData,
     vaultData,
-    vaultsAllowancesMap,
+    vaultAllowancesMap,
     userVaultPositionsMap,
     userVaultsMetadataMap,
   } = props;
   const vaultAddress = vaultData.address;
-  const currentAllowance = allowancesMap[vaultAddress] ?? '0';
+  const currentAllowance = tokenAllowancesMap[vaultAddress] ?? '0';
   return {
     address: vaultData.address,
     name: vaultData.name,
@@ -229,7 +232,7 @@ function createVault(props: CreateVaultProps) {
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
     emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
     apyData: vaultData.metadata.apy?.recommended.toString() ?? '0',
-    allowancesMap: vaultsAllowancesMap[vaultAddress] ?? {},
+    allowancesMap: vaultAllowancesMap ?? {},
     approved: new BigNumber(currentAllowance).gt(0),
     pricePerShare: vaultData?.metadata.pricePerShare,
     earned: userVaultsMetadataMap?.earned ?? '0',
@@ -247,7 +250,7 @@ function createVault(props: CreateVaultProps) {
       balance: userTokenData?.balance ?? '0',
       balanceUsdc: userTokenData?.balanceUsdc ?? '0',
       priceUsdc: tokenData?.priceUsdc ?? '0',
-      allowancesMap: allowancesMap,
+      allowancesMap: tokenAllowancesMap,
     },
   };
 }
