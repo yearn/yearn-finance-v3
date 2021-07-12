@@ -63,6 +63,7 @@ const {
   yvBoost,
   yveCrv,
   yvBoostEth,
+  clearSelectedLabAndStatus,
 } = LabsActions;
 const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut, yvBoostWithdraw } = yvBoost;
 const { yveCrvApproveDeposit, yveCrvDeposit, yveCrvClaimReward, yveCrvApproveReinvest, yveCrvReinvest } = yveCrv;
@@ -362,6 +363,12 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     .addCase(yvBoostEthStake.rejected, (state, { meta, error }) => {
       // const { labAddress } = meta.arg;
       state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].stake = { error: error.message };
+    })
+    .addCase(clearSelectedLabAndStatus, (state) => {
+      if (!state.selectedLabAddress) return;
+      const currentAddress = state.selectedLabAddress;
+      state.statusMap.labsActionsStatusMap[currentAddress] = initialLabActionsStatusMap;
+      state.selectedLabAddress = undefined;
     });
 });
 

@@ -31,11 +31,14 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
   const sellTokensOptions = [selectedSellToken];
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
 
+  const onExit = () => {
+    dispatch(LabsActions.clearSelectedLabAndStatus());
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+  };
+
   useEffect(() => {
     return () => {
-      // TODO: CREATE A CLEAR SELECTED LAB/TOKEN ADDRESS ACTION
-      dispatch(LabsActions.setSelectedLabAddress({ labAddress: undefined }));
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+      onExit();
     };
   }, []);
 
