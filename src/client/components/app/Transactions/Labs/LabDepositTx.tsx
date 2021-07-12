@@ -49,15 +49,18 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
 
+  const onExit = () => {
+    dispatch(LabsActions.clearSelectedLabAndStatus());
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+  };
+
   useEffect(() => {
     if (!selectedSellTokenAddress && selectedLab) {
       dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedLab.token.address }));
     }
 
     return () => {
-      // TODO: CREATE A CLEAR SELECTED LAB/TOKEN ADDRESS ACTION
-      dispatch(LabsActions.setSelectedLabAddress({ labAddress: undefined }));
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+      onExit();
     };
   }, []);
 
