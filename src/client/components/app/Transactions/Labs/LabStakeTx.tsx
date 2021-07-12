@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { TokensSelectors, LabsSelectors, LabsActions, TokensActions } from '@store';
+import { TokensSelectors, LabsSelectors, LabsActions, TokensActions, VaultsActions } from '@store';
 import {
   toBN,
   normalizeAmount,
@@ -33,6 +33,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
 
   const onExit = () => {
     dispatch(LabsActions.clearSelectedLabAndStatus());
+    dispatch(VaultsActions.clearTransactionData());
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
 

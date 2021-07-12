@@ -250,6 +250,7 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.user.vaultsAllowancesMap = {};
     })
     .addCase(getExpectedTransactionOutcome.pending, (state) => {
+      state.transaction = initialTransaction;
       state.statusMap.getExpectedTransactionOutcome = { loading: true };
     })
     .addCase(getExpectedTransactionOutcome.fulfilled, (state, { payload: { txOutcome } }) => {

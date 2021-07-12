@@ -53,6 +53,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
 
   const onExit = () => {
     dispatch(LabsActions.clearSelectedLabAndStatus());
+    dispatch(VaultsActions.clearTransactionData());
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
 

@@ -51,6 +51,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   const onExit = () => {
     dispatch(LabsActions.clearSelectedLabAndStatus());
+    dispatch(VaultsActions.clearTransactionData());
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
 
