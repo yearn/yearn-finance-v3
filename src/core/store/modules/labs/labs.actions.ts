@@ -101,6 +101,7 @@ interface DepositProps {
   labAddress: string;
   tokenAddress: string;
   amount: BigNumber;
+  slippageTolerance?: number;
 }
 
 interface ApproveWithdrawProps {
@@ -111,6 +112,7 @@ interface WithdrawProps {
   labAddress: string;
   tokenAddress: string;
   amount: BigNumber;
+  slippageTolerance?: number;
 }
 
 const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
@@ -127,7 +129,7 @@ const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
 
 const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/deposit',
-  async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
+  async ({ labAddress, tokenAddress, amount, slippageTolerance }, { dispatch, getState, extra }) => {
     const { services } = extra;
     const { labService } = services;
     const { wallet, labs, tokens } = getState();
@@ -164,13 +166,15 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const error = allowanceError || depositError;
     if (error) throw new Error(error);
 
-    // const tx = await labService.yvBoostDeposit({
-    //   accountAddress: userAddress,
-    //   tokenAddress: tokenData.address,
-    //   labAddress,
-    //   amount: amountInWei.toString(),
-    // });
-    // await handleTransaction(tx);
+    const tx = await labService.deposit({
+      accountAddress: userAddress,
+      tokenAddress: tokenData.address,
+      vaultAddress: labAddress,
+      amount: amountInWei.toString(),
+      slippageTolerance,
+    });
+    await handleTransaction(tx);
+
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, labAddress] }));
@@ -194,7 +198,7 @@ const approveWithdraw = createAsyncThunk<void, ApproveWithdrawProps, ThunkAPI>(
 
 const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
   'labs/withdraw',
-  async ({ labAddress, amount, tokenAddress }, { dispatch, extra, getState }) => {
+  async ({ labAddress, amount, tokenAddress, slippageTolerance }, { dispatch, extra, getState }) => {
     const { services } = extra;
     const { labService } = services;
     const { wallet, labs, tokens } = getState();
@@ -231,13 +235,14 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
     const error = withdrawError || allowanceError;
     if (error) throw new Error(error);
 
-    // const tx = await labService.withdraw({
-    //   accountAddress: userAddress,
-    //   tokenAddress: labData.tokenId,
-    //   labAddress,
-    //   amountOfShares,
-    // });
-    // await handleTransaction(tx);
+    const tx = await labService.withdraw({
+      accountAddress: userAddress,
+      tokenAddress: labData.tokenId,
+      vaultAddress: labAddress,
+      amountOfShares,
+      slippageTolerance,
+    });
+    await handleTransaction(tx);
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));

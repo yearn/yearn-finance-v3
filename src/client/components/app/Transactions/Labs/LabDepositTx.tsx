@@ -17,11 +17,13 @@ import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
 
+const isZapDisabled = (labAddress?: string) => labAddress === getConfig().CONTRACT_ADDRESSES.PSLPYVBOOST;
+
 export interface LabDepositTxProps {
   onClose?: () => void;
 }
 
-export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...props }) => {
+export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const { SLIPPAGE_OPTIONS } = getConfig();
   const slippageOptions = SLIPPAGE_OPTIONS.map((value) => ({
     value: value.toString(),
@@ -40,9 +42,10 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
 
-  const sellTokensOptions = selectedLab
-    ? [selectedLab.token, ...userTokens.filter(({ address }) => address !== selectedLab.token.address)]
-    : userTokens;
+  const sellTokensOptions = isZapDisabled(selectedLab?.address)
+    ? userTokens.filter(({ address }) => address !== selectedLab?.token.address)
+    : [];
+  if (selectedLab) sellTokensOptions.unshift(selectedLab.token);
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
 
@@ -160,6 +163,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose, children, ...prop
           labAddress: selectedLab.address,
           tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
+          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
         })
       );
       setTxCompleted(true);

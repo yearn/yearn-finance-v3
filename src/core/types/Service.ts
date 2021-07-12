@@ -128,8 +128,8 @@ export interface LabService {
   getLabsDynamicData: () => Promise<LabDynamic[]>;
   getUserLabsPositions: (props: GetUserLabsPositionsProps) => Promise<Position[]>;
   getUserLabsMetadata: (props: GetUserLabsMetadataProps) => Promise<LabUserMetadata[]>;
-  // deposit: (props: DepositProps) => Promise<TransactionResponse>;
-  // withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
+  deposit: (props: DepositProps) => Promise<TransactionResponse>;
+  withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
   // claim
   // restake
 }

@@ -144,7 +144,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
           labAddress: selectedLab.address,
           amount: toBN(amount),
           tokenAddress: selectedTargetTokenAddress,
-          //   slippageTolerance: toBN(selectedSlippage.value).toNumber(),
+          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
         })
       );
       setTxCompleted(true);

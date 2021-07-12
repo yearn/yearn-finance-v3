@@ -10,6 +10,10 @@ import {
   LabDynamic,
   LabUserMetadata,
   Config,
+  DepositProps,
+  WithdrawProps,
+  TransactionResponse,
+  YearnSdk,
 } from '@types';
 import { toBN, normalizeAmount, USDC_DECIMALS } from '@utils';
 import backscratcherAbi from './contracts/backscratcher.json';
@@ -18,11 +22,13 @@ import pickleJarAbi from './contracts/pickleJar.json';
 import pickleGaugeAbi from './contracts/pickleGauge.json';
 
 export class LabServiceImpl implements LabService {
+  private yearnSdk: YearnSdk;
   private web3Provider: Web3Provider;
   private config: Config;
 
-  constructor({ web3Provider, config }: { web3Provider: Web3Provider; config: Config }) {
+  constructor({ web3Provider, yearnSdk, config }: { web3Provider: Web3Provider; yearnSdk: YearnSdk; config: Config }) {
     this.web3Provider = web3Provider;
+    this.yearnSdk = yearnSdk;
     this.config = config;
   }
 
@@ -344,5 +350,23 @@ export class LabServiceImpl implements LabService {
 
   public async getUserLabsMetadata(props: GetUserLabsMetadataProps): Promise<LabUserMetadata[]> {
     throw Error('Not Implemented');
+  }
+
+  // ********** WRITE ACTIONS **********
+
+  public async deposit(props: DepositProps): Promise<TransactionResponse> {
+    const { accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;
+    const yearn = this.yearnSdk;
+    return await yearn.vaults.deposit(vaultAddress, tokenAddress, amount, accountAddress, {
+      slippage: slippageTolerance,
+    });
+  }
+
+  public async withdraw(props: WithdrawProps): Promise<TransactionResponse> {
+    const { accountAddress, tokenAddress, vaultAddress, amountOfShares, slippageTolerance } = props;
+    const yearn = this.yearnSdk;
+    return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
+      slippage: slippageTolerance,
+    });
   }
 }
