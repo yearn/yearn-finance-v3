@@ -587,6 +587,7 @@ const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
+    const amountInWei = amount.multipliedBy(ONE_UNIT);
 
     const { error: allowanceError } = validateYvBoostEthActionsAllowance({
       action: 'STAKE',
@@ -609,12 +610,13 @@ const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
     if (error) throw new Error(error);
 
     const { labService } = services;
-    // const tx = await labService.yvBoostEthStake({
-    //   accountAddress: userAddress,
-    //   tokenAddress: tokenData.address,
-    //   amount: amountInWei.toString(),
-    // });
-    // await handleTransaction(tx);
+    const tx = await labService.stake({
+      accountAddress: userAddress,
+      tokenAddress: tokenData.address,
+      vaultAddress: labAddress,
+      amount: amountInWei.toString(),
+    });
+    await handleTransaction(tx);
 
     dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
     dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));

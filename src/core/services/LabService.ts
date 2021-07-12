@@ -374,7 +374,7 @@ export class LabServiceImpl implements LabService {
   public async stake(props: StakeProps): Promise<TransactionResponse> {
     const { vaultAddress, amount } = props;
 
-    const provider = this.web3Provider.getInstanceOf('default');
+    const provider = this.web3Provider.getSigner();
     const stakeContract = getContract(
       getStakingContractAddress(vaultAddress),
       this.getStakingContractAbi(vaultAddress),
