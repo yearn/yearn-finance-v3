@@ -1,4 +1,3 @@
-import { notify } from '@frameworks/blocknative';
 import {
   TokenService,
   YearnSdk,
@@ -9,6 +8,7 @@ import {
   Token,
   Integer,
   Config,
+  TransactionResponse,
 } from '@types';
 import { getContract } from '@frameworks/ethers';
 import erc20Abi from './contracts/erc20.json';
@@ -74,15 +74,11 @@ export class TokenServiceImpl implements TokenService {
     return allowance.toString();
   }
 
-  public async approve(props: ApproveProps): Promise<void> {
+  public async approve(props: ApproveProps): Promise<TransactionResponse> {
     const { tokenAddress, spenderAddress, amount } = props;
     const signer = this.web3Provider.getSigner();
     const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
-    const transaction = await erc20Contract.approve(spenderAddress, amount);
-    console.log('Transaction: ', transaction);
-    notify.hash(transaction.hash);
-    const receipt = await transaction.wait(1);
-    console.log('Receipt: ', receipt);
+    return await erc20Contract.approve(spenderAddress, amount);
   }
 
   public async getLabsTokens(): Promise<Token[]> {

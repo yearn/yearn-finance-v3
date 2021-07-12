@@ -47,7 +47,7 @@ export interface TokenService {
   getTokensDynamicData: (props: string[]) => Promise<TokenDynamicData[]>;
   getUserTokensData: (accountAddress: string, tokenAddress?: string[]) => Promise<Balance[]>;
   getTokenAllowance: (accountAddress: string, tokenAddress: string, spenderAddress: string) => Promise<Integer>;
-  approve: (props: ApproveProps) => Promise<void>;
+  approve: (props: ApproveProps) => Promise<TransactionResponse>;
   // getTokenRates:
 }
 
