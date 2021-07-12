@@ -413,18 +413,19 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
-
-    // TODO validations
-
     const amountInWei = amount.multipliedBy(ONE_UNIT);
+
+    // TODO: validations
+
     const { labService } = services;
-    // const tx = await labService.yveCrvDeposit({
-    //   accountAddress: userAddress,
-    //   tokenAddress: tokenData.address,
-    //   labAddress,
-    //   amount: amountInWei.toString(),
-    // });
-    // await handleTransaction(tx);
+    const tx = await labService.lock({
+      accountAddress: userAddress,
+      tokenAddress: tokenData.address,
+      vaultAddress: labAddress,
+      amount: amountInWei.toString(),
+    });
+    await handleTransaction(tx);
+
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, labAddress] }));

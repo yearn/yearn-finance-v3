@@ -88,6 +88,13 @@ export interface StakeProps {
   amount: Wei;
 }
 
+export interface LockProps {
+  accountAddress: EthereumAddress;
+  tokenAddress: EthereumAddress;
+  vaultAddress: EthereumAddress;
+  amount: Wei;
+}
+
 export interface ApproveProps {
   accountAddress: EthereumAddress;
   tokenAddress: EthereumAddress;
@@ -139,6 +146,7 @@ export interface LabService {
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
   stake: (props: StakeProps) => Promise<TransactionResponse>;
+  lock: (props: LockProps) => Promise<TransactionResponse>;
   // claim
   // restake
 }

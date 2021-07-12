@@ -383,6 +383,14 @@ export class LabServiceImpl implements LabService {
     return await stakeContract.deposit(amount);
   }
 
+  public async lock(props: StakeProps): Promise<TransactionResponse> {
+    const { vaultAddress, amount } = props;
+
+    const provider = this.web3Provider.getSigner();
+    const lockContract = getContract(vaultAddress, backscratcherAbi, provider);
+    return await lockContract.deposit(amount);
+  }
+
   private getStakingContractAbi(address: string) {
     // TODO: CREATE UTIL IF MORE STAKING CONTRACTS (MOVE TO SDK)
     return pickleGaugeAbi;
