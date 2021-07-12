@@ -51,11 +51,14 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   });
   const yvTokenAmountNormalized = normalizeAmount(yvTokenAmount, toBN(selectedLab?.decimals).toNumber());
 
+  const onExit = () => {
+    dispatch(LabsActions.clearSelectedLabAndStatus());
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+  };
+
   useEffect(() => {
     return () => {
-      // TODO: CREATE A CLEAR SELECTED VAULT/TOKEN ADDRESS ACTION
-      dispatch(LabsActions.setSelectedLabAddress({ labAddress: undefined }));
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+      onExit();
     };
   }, []);
 

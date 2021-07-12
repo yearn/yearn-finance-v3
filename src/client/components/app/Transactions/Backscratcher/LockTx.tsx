@@ -20,6 +20,17 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   const selectedSellTokenAddress = selectedLab?.token.address;
   const selectedSellToken = selectedLab?.token;
 
+  const onExit = () => {
+    dispatch(LabsActions.clearSelectedLabAndStatus());
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+  };
+
+  useEffect(() => {
+    return () => {
+      onExit();
+    };
+  }, []);
+
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
 

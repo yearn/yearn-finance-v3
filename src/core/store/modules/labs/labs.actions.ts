@@ -23,6 +23,7 @@ import { TokensActions } from '../..';
 const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
 
 const setSelectedLabAddress = createAction<{ labAddress?: string }>('labs/setSelectedLabAddress');
+const clearSelectedLabAndStatus = createAction<void>('labs/clearSelectedLabAndStatus');
 
 const initiateLabs = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'labs/initiateLabs',
@@ -639,6 +640,7 @@ export const LabsActions = {
   deposit,
   approveWithdraw,
   withdraw,
+  clearSelectedLabAndStatus,
   yvBoost: {
     yvBoostApproveDeposit,
     yvBoostDeposit,
