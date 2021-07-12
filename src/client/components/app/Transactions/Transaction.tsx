@@ -85,7 +85,19 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const sourceBalance = normalizeAmount(selectedSourceAsset.balance, selectedSourceAsset.decimals);
   const targetBalance = normalizeAmount(selectedTargetAsset.balance, selectedTargetAsset.decimals);
 
-  const txStatus: TxArrowStatusTypes = 'preparing';
+  let txArrowStatus: TxArrowStatusTypes = 'preparing';
+
+  if (actions.length && actions.length > 1) {
+    if (!actions[0].disabled && !actions[0].status.loading) {
+      txArrowStatus = 'preparing';
+    } else if (actions[0].status.loading) {
+      txArrowStatus = 'firstPending';
+    } else if (!actions[1].status.loading) {
+      txArrowStatus = 'secondPreparing';
+    } else if (actions[1].status.loading) {
+      txArrowStatus = 'secondPending';
+    }
+  }
 
   if (transactionCompleted) {
     return (
@@ -110,7 +122,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         inputError={!!status.error}
       />
 
-      {!status.error && <TxArrowStatus status={txStatus} />}
+      {!status.error && <TxArrowStatus status={txArrowStatus} />}
       {status.error && <TxError errorText={status.error} />}
 
       <TxTokenInput
