@@ -1,8 +1,18 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { AllowancesMap, Balance, Lab, LabsPositionsMap, RootState, Token, Status } from '@types';
-import { getConstants } from '../../../../config/constants';
-import { toBN } from '../../../../utils';
-import { GeneralLabView } from '../../../types/Lab';
+import {
+  AllowancesMap,
+  Balance,
+  Lab,
+  LabsPositionsMap,
+  RootState,
+  Token,
+  Status,
+  GeneralLabView,
+  LabActionsStatusMap,
+} from '@types';
+import { getConstants } from '@config/constants';
+import { toBN } from '@utils';
+import { initialLabActionsStatusMap } from './labs.reducer';
 
 const { YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
 
@@ -19,7 +29,9 @@ const selectYvBoostData = (state: RootState) => state.tokens.tokensMap[YVBOOST];
 const selectUserYvBoostData = (state: RootState) => state.tokens.user.userTokensMap[YVBOOST];
 const selectYvBoostAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVBOOST];
 
+const selectSelectedLabAddress = (state: RootState) => state.labs.selectedLabAddress;
 const selectGetLabsStatus = (state: RootState) => state.labs.statusMap.getLabs;
+const selectLabsActionsStatusMap = (state: RootState) => state.labs.statusMap.labsActionsStatusMap;
 const selectGetUserLabsPositionsStatus = (state: RootState) => state.labs.statusMap.user.getUserLabsPositions;
 
 // yveCrv selectors
@@ -95,11 +107,11 @@ const selectLabs = createSelector(
 );
 
 const selectDepositedLabs = createSelector([selectLabs], (labs) => {
-  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).gt(0));
+  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).plus(lab?.STAKE.userBalance).gt(0));
 });
 
 const selectLabsOpportunities = createSelector([selectLabs], (labs) => {
-  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).lte(0));
+  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).plus(lab?.STAKE.userBalance).lte(0));
 });
 
 const selectRecommendations = createSelector([selectLabs], (labs) => {
@@ -107,9 +119,18 @@ const selectRecommendations = createSelector([selectLabs], (labs) => {
   return labs;
 });
 
+const selectSelectedLab = createSelector([selectLabs, selectSelectedLabAddress], (labs, selectedLabAddress) => {
+  if (!selectedLabAddress) {
+    return undefined;
+  }
+  return labs.find((lab) => lab.address === selectedLabAddress);
+});
+
 const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) => {
   let totalDeposited = toBN('0');
-  depositedLabs.forEach((lab) => (totalDeposited = totalDeposited.plus(lab.DEPOSIT.userDepositedUsdc)));
+  depositedLabs.forEach(
+    (lab) => (totalDeposited = totalDeposited.plus(lab.DEPOSIT.userDepositedUsdc).plus(lab.STAKE.userDepositedUsdc))
+  );
 
   return {
     totalDeposits: totalDeposited.toString(),
@@ -125,6 +146,13 @@ const selectLabsStatus = createSelector(
       loading: getLabsStatus.loading || getUserLabsPositionsStatus.loading,
       error: getLabsStatus.error || getUserLabsPositionsStatus.error,
     };
+  }
+);
+
+const selectSelectedLabActionsStatusMap = createSelector(
+  [selectLabsActionsStatusMap, selectSelectedLabAddress],
+  (labsActionsStatusMap, selectedLabAddress): LabActionsStatusMap => {
+    return selectedLabAddress ? labsActionsStatusMap[selectedLabAddress] : initialLabActionsStatusMap;
   }
 );
 
@@ -159,6 +187,11 @@ function createLab(props: CreateLabProps): GeneralLabView {
       userDeposited: userPositions?.YIELD?.underlyingTokenBalance.amount ?? '0',
       userDepositedUsdc: userPositions?.YIELD?.underlyingTokenBalance.amountUsdc ?? '0',
     },
+    STAKE: {
+      userBalance: userPositions?.STAKE?.balance ?? '0',
+      userDeposited: userPositions?.STAKE?.underlyingTokenBalance.amount ?? '0',
+      userDepositedUsdc: userPositions?.STAKE?.underlyingTokenBalance.amountUsdc ?? '0',
+    },
     token: {
       address: tokenData?.address,
       name: tokenData?.name,
@@ -181,6 +214,8 @@ export const LabsSelectors = {
   selectDepositedLabs,
   selectLabsOpportunities,
   selectRecommendations,
+  selectSelectedLab,
   selectSummaryData,
   selectLabsStatus,
+  selectSelectedLabActionsStatusMap,
 };

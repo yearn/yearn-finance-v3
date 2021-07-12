@@ -1,6 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import { TokenDynamicData, Token, Balance, Integer } from '@types';
+import { handleTransaction } from '@src/utils';
 
 const setSelectedTokenAddress = createAction<{ tokenAddress?: string }>('tokens/setSelectedTokenAddress');
 const clearUserTokenState = createAction<void>('tokens/clearUserTokenState');
@@ -64,7 +65,8 @@ const approve = createAsyncThunk<
   if (!accountAddress) {
     throw new Error('WALLET NOT CONNECTED');
   }
-  await tokenService.approve({ accountAddress, tokenAddress, spenderAddress, amount });
+  const tx = await tokenService.approve({ accountAddress, tokenAddress, spenderAddress, amount });
+  await handleTransaction(tx);
 
   return { amount };
 });

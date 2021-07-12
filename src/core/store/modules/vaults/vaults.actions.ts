@@ -145,6 +145,7 @@ const depositVault = createAsyncThunk<
     const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
+
     const { error: depositError } = validateVaultDeposit({
       sellTokenAmount: amount,
       depositLimit: vaultData?.metadata.depositLimit ?? '0',
@@ -153,6 +154,7 @@ const depositVault = createAsyncThunk<
       userTokenBalance: userTokenData?.balance ?? '0',
       vaultUnderlyingBalance: vaultData?.underlyingTokenBalance.amount ?? '0',
     });
+
     const { error: allowanceError } = validateVaultAllowance({
       amount,
       vaultAddress: vaultAddress,

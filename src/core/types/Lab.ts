@@ -22,5 +22,10 @@ export interface GeneralLabView {
     userDeposited: string;
     userDepositedUsdc: string;
   };
+  STAKE: {
+    userBalance: string;
+    userDeposited: string;
+    userDepositedUsdc: string;
+  };
   token: TokenView;
 }

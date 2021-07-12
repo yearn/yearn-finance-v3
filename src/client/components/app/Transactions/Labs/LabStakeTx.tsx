@@ -1,32 +1,52 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { TokensActions, LabsSelectors, LabsActions } from '@store';
-import { toBN, normalizeAmount, USDC_DECIMALS, validateVaultDeposit, validateVaultAllowance } from '@src/utils';
+import { TokensSelectors, LabsSelectors, LabsActions, TokensActions } from '@store';
+import {
+  toBN,
+  normalizeAmount,
+  USDC_DECIMALS,
+  validateVaultDeposit,
+  validateYvBoostEthActionsAllowance,
+  getStakingContractAddress,
+} from '@src/utils';
 
 import { Transaction } from '../Transaction';
 
-export interface BackscratcherLockTxProps {
+export interface LabStakeTxProps {
   onClose?: () => void;
 }
 
-export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, children, ...props }) => {
+export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props }) => {
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
-  const selectedLab = useAppSelector(LabsSelectors.selectYveCrvLab);
+  const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
+  const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
+  const selectedSellToken = tokenSelectorFilter(selectedLab?.address ?? '');
+  selectedSellToken.balance = selectedLab?.DEPOSIT.userBalance ?? '0';
+  selectedSellToken.balanceUsdc = selectedLab?.DEPOSIT.userDepositedUsdc ?? '0';
+  const selectedSellTokenAddress = selectedSellToken.address;
+  const sellTokensOptions = [selectedSellToken];
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
-  const selectedSellTokenAddress = selectedLab?.token.address;
-  const selectedSellToken = selectedLab?.token;
+
+  useEffect(() => {
+    return () => {
+      // TODO: CREATE A CLEAR SELECTED LAB/TOKEN ADDRESS ACTION
+      dispatch(LabsActions.setSelectedLabAddress({ labAddress: undefined }));
+      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+    };
+  }, []);
 
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
 
+    const spenderAddress = getStakingContractAddress(selectedLab.address);
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedSellTokenAddress,
-        spenderAddress: selectedLab.address,
+        spenderAddress,
       })
     );
   }, [selectedSellTokenAddress]);
@@ -35,14 +55,13 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     return null;
   }
 
-  // TODO: REPLACE WITH LAB VALIDATIONS
-  const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
-    amount: toBN(amount),
-    vaultAddress: selectedLab.address,
-    vaultUnderlyingTokenAddress: selectedLab.token.address,
+  // TODO: USE LAB GENERAL VALIDATIONS
+  const { approved: isApproved, error: allowanceError } = validateYvBoostEthActionsAllowance({
+    sellTokenAmount: toBN(amount),
     sellTokenAddress: selectedSellTokenAddress,
     sellTokenDecimals: selectedSellToken.decimals.toString(),
     sellTokenAllowancesMap: selectedSellToken.allowancesMap,
+    action: 'STAKE',
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
@@ -61,12 +80,23 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     address: selectedLab.address,
     symbol: selectedLab.name,
     icon: selectedLab.icon,
-    balance: selectedLab.DEPOSIT.userDeposited,
-    decimals: selectedLab.token.decimals,
+    balance: selectedLab.STAKE.userDeposited,
+    decimals: toBN(selectedLab.decimals).toNumber(),
   };
+
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = amount;
   const expectedAmountValue = amountValue;
+
+  const onSelectedSellTokenChange = (tokenAddress: string) => {
+    setAmount('');
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
+  };
+
+  const onSelectedLabChange = (labAddress: string) => {
+    setAmount('');
+    dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+  };
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -74,63 +104,63 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
 
   const approve = async () => {
     await dispatch(
-      LabsActions.yveCrv.yveCrvApproveDeposit({
+      LabsActions.yvBoostEth.yvBoostEthApproveStake({
         labAddress: selectedLab.address,
-        tokenAddress: selectedSellToken.address,
       })
     );
   };
 
-  const lock = async () => {
+  const deposit = async () => {
     try {
       await dispatchAndUnwrap(
-        LabsActions.yveCrv.yveCrvDeposit({
+        LabsActions.yvBoostEth.yvBoostEthStake({
           labAddress: selectedLab.address,
           tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
         })
       );
       setTxCompleted(true);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const txActions = [
     {
       label: 'Approve',
       onAction: approve,
-      status: actionsStatus.approveDeposit,
+      status: actionsStatus.approveStake,
       disabled: isApproved,
     },
     {
-      label: 'Lock',
-      onAction: lock,
-      status: actionsStatus.deposit,
+      label: 'Deposit',
+      onAction: deposit,
+      status: actionsStatus.stake,
       disabled: !isApproved || !isValidAmount,
     },
   ];
 
   return (
     <Transaction
-      transactionLabel="Lock"
+      transactionLabel="Stake"
       transactionCompleted={txCompleted}
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader="From Wallet"
-      sourceAssetOptions={[selectedSellToken]}
+      sourceAssetOptions={sellTokensOptions}
       selectedSourceAsset={selectedSellToken}
+      onSelectedSourceAssetChange={onSelectedSellTokenChange}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To Vault"
+      targetHeader="To Gauge"
       targetAssetOptions={[selectedLabOption]}
       selectedTargetAsset={selectedLabOption}
+      onSelectedTargetAssetChange={onSelectedLabChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
       targetAmountStatus={{}}
       actions={txActions}
       status={{ error }}
+      onClose={onClose}
     />
   );
 };

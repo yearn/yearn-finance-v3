@@ -68,5 +68,5 @@ export const normalizeUsdc = (amount?: string, decimals = 2) => {
 
 export const toWei = (amount: string, decimals: number) => {
   const ONE_UNIT = new BigNumber(10).pow(decimals);
-  return new BigNumber(amount).times(ONE_UNIT).toString();
+  return new BigNumber(amount).times(ONE_UNIT).toFixed(0);
 };
