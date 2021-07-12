@@ -49,11 +49,14 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   });
   const yvTokenAmountNormalized = normalizeAmount(yvTokenAmount, toBN(selectedVault?.decimals).toNumber());
 
+  const onExit = () => {
+    dispatch(VaultsActions.clearSelectedVaultAndStatus());
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+  };
+
   useEffect(() => {
     return () => {
-      // TODO: CREATE A CLEAR SELECTED VAULT/TOKEN ADDRESS ACTION
-      dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: undefined }));
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
+      onExit();
     };
   }, []);
 
@@ -114,10 +117,10 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   };
   const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(amount).gt(0)
-    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedVault?.token.decimals)
+    ? normalizeAmount(expectedTxOutcome?.targetTokenAmount, selectedTargetToken?.decimals)
     : '';
   const expectedAmountValue = toBN(expectedAmount)
-    .times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS))
+    .times(normalizeAmount(selectedTargetToken.priceUsdc, USDC_DECIMALS))
     .toString();
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {

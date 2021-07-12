@@ -26,6 +26,7 @@ import { ReactComponent as WarningIcon } from '@assets/icons/warning.svg';
 import { ReactComponent as ChevronRightIcon } from '@assets/icons/chevron-right.svg';
 import { ReactComponent as ChevronLeftIcon } from '@assets/icons/chevron-left.svg';
 import { ReactComponent as StatusArrowIcon } from '@assets/icons/status-arrow.svg';
+import { ReactComponent as WalletMissingIcon } from '@assets/icons/wallet-missing.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
@@ -75,4 +76,5 @@ export {
   ChevronRightIcon,
   ChevronLeftIcon,
   StatusArrowIcon,
+  WalletMissingIcon,
 };

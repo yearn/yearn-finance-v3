@@ -15,9 +15,11 @@ import {
   Apy,
   VaultStatic,
   IronBankMarket,
-  IronBankPosition,
+  IronBankUserSummary,
+  VaultsUserSummary,
   IronBankMarketDynamic,
   CyTokenUserMetadata,
+  VaultUserMetadata,
 } from '@yfi/sdk';
 
 declare type Lab = LabStatic & LabDynamic;
@@ -72,7 +74,8 @@ export type {
   Usdc,
   VaultStatic,
   IronBankMarket,
-  IronBankPosition,
+  IronBankUserSummary,
+  VaultsUserSummary,
   IronBankMarketDynamic,
   CyTokenUserMetadata,
   Lab,
@@ -84,4 +87,5 @@ export type {
   TransactionResponse,
   TransactionReceipt,
   TransactionOutcome,
+  VaultUserMetadata,
 };

@@ -3,7 +3,7 @@ import {
   YearnSdk,
   IronBankMarket,
   Position,
-  IronBankPosition,
+  IronBankUserSummary,
   IronBankMarketDynamic,
   CyTokenUserMetadata,
   EnterMarketsProps,
@@ -18,9 +18,9 @@ export class IronBankServiceImpl implements IronBankService {
     this.yearnSdk = yearnSdk;
   }
 
-  public async getUserIronBankSummary({ userAddress }: { userAddress: string }): Promise<IronBankPosition> {
+  public async getUserIronBankSummary({ userAddress }: { userAddress: string }): Promise<IronBankUserSummary> {
     const yearn = this.yearnSdk;
-    return await yearn.ironBank.generalPositionOf(userAddress);
+    return await yearn.ironBank.summaryOf(userAddress);
   }
 
   public async getSupportedMarkets(): Promise<IronBankMarket[]> {
@@ -46,7 +46,7 @@ export class IronBankServiceImpl implements IronBankService {
     marketAddresses,
   }: IronBankGenericGetUserDataProps): Promise<CyTokenUserMetadata[]> {
     const yearn = this.yearnSdk;
-    return await yearn.ironBank.userMetadata(userAddress, marketAddresses);
+    return await yearn.ironBank.metadataOf(userAddress, marketAddresses);
   }
 
   public async executeTransaction({

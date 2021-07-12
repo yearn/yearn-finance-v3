@@ -7,7 +7,7 @@ import {
   Vault,
   VaultDynamic,
   TransactionOutcome,
-  UserVaultsSummary,
+  VaultsUserSummary,
   VaultUserMetadata,
   EthereumAddress,
   Wei,
@@ -28,6 +28,7 @@ import { getConstants } from '../../../../config/constants';
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearUserData = createAction<void>('vaults/clearUserData');
 const clearTransactionData = createAction<void>('vaults/clearTransactionData');
+const clearSelectedVaultAndStatus = createAction<void>('vaults/clearSelectedVaultAndStatus');
 
 const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',
@@ -68,7 +69,7 @@ const getUserVaultsPositions = createAsyncThunk<
   return { userVaultsPositions };
 });
 
-const getUserVaultsSummary = createAsyncThunk<{ userVaultsSummary: UserVaultsSummary }, void, ThunkAPI>(
+const getUserVaultsSummary = createAsyncThunk<{ userVaultsSummary: VaultsUserSummary }, void, ThunkAPI>(
   'vaults/getUserVaultsSummary',
   async (args, { extra, getState }) => {
     const { services } = extra;
@@ -311,4 +312,5 @@ export const VaultsActions = {
   clearTransactionData,
   getUserVaultsSummary,
   getUserVaultsMetadata,
+  clearSelectedVaultAndStatus,
 };

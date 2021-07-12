@@ -1,13 +1,11 @@
 import styled, { css } from 'styled-components';
 
 import { useAppSelector } from '@hooks';
-import { TokensSelectors, VaultsSelectors, IronBankSelectors, WalletSelectors } from '@store';
-import { SummaryCard, InfoCard, ViewContainer } from '@components/app';
-import { normalizeUsdc, normalizePercent, toBN } from '@src/utils';
+import { TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
+import { SummaryCard, InfoCard, ViewContainer, NoWalletCard } from '@components/app';
+import { Text } from '@components/common';
 
-const halfWidth = css`
-  max-width: calc(${({ theme }) => theme.globalMaxWidth} / 2 - ${({ theme }) => theme.layoutPadding} / 2);
-`;
+import { normalizeUsdc, normalizePercent, toBN, halfWidthCss } from '@src/utils';
 
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
@@ -33,10 +31,15 @@ const StyledInfoCard = styled(InfoCard)`
   flex: 1;
 `;
 
+const StyledNoWalletCard = styled(NoWalletCard)`
+  grid-column: 1 / 3;
+  ${halfWidthCss}
+`;
+
 const StyledSummaryCard = styled(SummaryCard)`
   width: 100%;
   grid-column: 1 / 3;
-  ${halfWidth};
+  ${halfWidthCss};
 `;
 
 export const Home = () => {
@@ -58,16 +61,29 @@ export const Home = () => {
           { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
         variant="secondary"
-        cardSize="big"
+        cardSize="small"
       />
+
       <Row>
         <StyledInfoCard
           header="Welcome to Your Yearn Home Screen"
           content="There are many like it, but this one is yours. You can always return here to see a birds eye view of your most important statistics. The sections below show the total balance and utilization of your wallet, and a new section is added for every Yearn product you use, each showing your holdings and performance. Not sure where to start? Check out Vaults!"
+          cardSize="big"
         />
+
         <StyledInfoCard
           header="Yearn passes $5B TVL!"
-          content="Total Value Locked (TVL) is a key indicator of the scale of Yearn and DeFi. With $5B TVL, Yearn is the 8th largest DeFi protocol. Yearn is not a bank, but fun fact: the average US bank has $3.1B in deposits according to mx.com.  --------- Over $5B in holdings have been deposited into the Yearn suite of products."
+          Component={
+            <Text>
+              Total Value Locked (TVL) is a key indicator of the scale of Yearn and DeFi. <br />
+              With $5B TVL, Yearn is the 8th largest DeFi protocol. Yearn is not a bank, but fun fact: the average US
+              bank has $3.1B in deposits according to mx.com.
+              <br />
+              <br />
+              Over $5B in holdings have been deposited into the Yearn suite of products.
+            </Text>
+          }
+          cardSize="big"
         />
       </Row>
 
@@ -104,7 +120,7 @@ export const Home = () => {
         </>
       )}
 
-      {!walletIsConnected && <StyledInfoCard header="" content="No Wallet Connected" />}
+      {!walletIsConnected && <StyledNoWalletCard />}
     </StyledViewContainer>
   );
 };

@@ -7,7 +7,7 @@ import {
   IronBankMarket,
   CyTokenUserMetadata,
   IronBankMarketDynamic,
-  IronBankPosition,
+  IronBankUserSummary,
   Lab,
   LabDynamic,
   LabUserMetadata,
@@ -17,8 +17,9 @@ import {
   Wei,
   Balance,
   TransactionOutcome,
+  VaultsUserSummary,
+  VaultUserMetadata,
 } from '@types';
-import { UserVaultsSummary, VaultUserMetadata } from './State';
 
 export interface UserService {}
 
@@ -32,7 +33,7 @@ export interface VaultService {
     userAddress: EthereumAddress;
     vaultAddresses?: string[];
   }) => Promise<Position[]>;
-  getUserVaultsSummary: (props: GetUserVaultsSummaryProps) => Promise<UserVaultsSummary>;
+  getUserVaultsSummary: (props: GetUserVaultsSummaryProps) => Promise<VaultsUserSummary>;
   getUserVaultsMetadata: (props: GetUserVaultsMetadataProps) => Promise<VaultUserMetadata[]>;
   getExpectedTransactionOutcome: (props: GetExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
   // approve:
@@ -113,7 +114,7 @@ export interface IronBankService {
   getSupportedMarkets: () => Promise<IronBankMarket[]>;
   getUserMarketsPositions: (props: IronBankGenericGetUserDataProps) => Promise<Position[]>;
   getUserMarketsMetadata: (props: IronBankGenericGetUserDataProps) => Promise<CyTokenUserMetadata[]>;
-  getUserIronBankSummary: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankPosition>;
+  getUserIronBankSummary: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankUserSummary>;
   getMarketsDynamicData: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
   executeTransaction: (props: IronBankTransactionProps) => Promise<any>;
   enterMarkets: (props: EnterMarketsProps) => Promise<any>;

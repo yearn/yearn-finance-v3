@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
@@ -12,8 +12,16 @@ import {
   TokenIcon,
   InfoCard,
   ViewContainer,
+  NoWalletCard,
 } from '@components/app';
-import { formatPercent, humanizeAmount, normalizePercent, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
+import {
+  formatPercent,
+  humanizeAmount,
+  normalizePercent,
+  normalizeUsdc,
+  USDC_DECIMALS,
+  halfWidthCss,
+} from '@src/utils';
 import { Box, SpinnerLoading, SearchInput } from '@components/common';
 
 const SearchBarContainer = styled.div`
@@ -27,11 +35,18 @@ const Row = styled.div`
   grid-gap: ${({ theme }) => theme.layoutPadding};
   flex-wrap: wrap;
   grid-column: 1 / 3;
+  width: 100%;
 `;
 
 const StyledInfoCard = styled(InfoCard)`
   max-width: 100%;
   flex: 1;
+  ${halfWidthCss}
+`;
+
+const StyledNoWalletCard = styled(NoWalletCard)`
+  width: 100%;
+  ${halfWidthCss}
 `;
 
 export const Vaults = () => {
@@ -72,7 +87,7 @@ export const Vaults = () => {
           { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
         ]}
         variant="secondary"
-        cardSize="big"
+        cardSize="small"
       />
 
       {vaultsStatus.loading && (
@@ -103,7 +118,7 @@ export const Vaults = () => {
             />
           </Row>
 
-          {!walletIsConnected && <StyledInfoCard header="" content="Wallet Not Connected" />}
+          {!walletIsConnected && <StyledNoWalletCard />}
 
           <DetailCard
             header="Deposits"

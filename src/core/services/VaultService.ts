@@ -13,7 +13,7 @@ import {
   GetExpectedTransactionOutcomeProps,
   TransactionOutcome,
   GetUserVaultsSummaryProps,
-  UserVaultsSummary,
+  VaultsUserSummary,
   GetUserVaultsMetadataProps,
   VaultUserMetadata,
 } from '@types';
@@ -49,19 +49,15 @@ export class VaultServiceImpl implements VaultService {
     return await yearn.vaults.positionsOf(userAddress, vaultAddresses);
   }
 
-  public async getUserVaultsSummary({ userAddress }: GetUserVaultsSummaryProps): Promise<UserVaultsSummary> {
+  public async getUserVaultsSummary({ userAddress }: GetUserVaultsSummaryProps): Promise<VaultsUserSummary> {
     const yearn = this.yearnSdk;
-    // return await yearn.vaults.getUserVaultsSummary(userAddress); TODO use when sdk ready.
-    return { holdings: '9999999', earnings: '9999999', EYY: '9999999', apyAverage: '99' };
+    return await yearn.vaults.summaryOf(userAddress);
   }
 
   public async getUserVaultsMetadata(props: GetUserVaultsMetadataProps): Promise<VaultUserMetadata[]> {
     const { userAddress, vaultsAddresses } = props;
     const yearn = this.yearnSdk;
-    // return await yearn.vaults.userMetadata(userAddress, vaultsAddresses); TODO use when sdk ready.
-    const yvYfiAddress = '0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1';
-    const obj: VaultUserMetadata = { assetAddress: yvYfiAddress, earned: '99999999' };
-    return [obj];
+    return await yearn.vaults.metadataOf(userAddress, vaultsAddresses);
   }
 
   public async getExpectedTransactionOutcome(props: GetExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {
@@ -82,9 +78,9 @@ export class VaultServiceImpl implements VaultService {
       case 'WITHDRAW':
         expectedOutcome = await yearn.simulation.withdraw(
           accountAddress,
-          sourceTokenAddress,
-          sourceTokenAmount,
           targetTokenAddress,
+          sourceTokenAmount,
+          sourceTokenAddress,
           DEFAULT_SLIPPAGE_SIMULATION
         );
         break;

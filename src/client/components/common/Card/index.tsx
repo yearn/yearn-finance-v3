@@ -7,11 +7,11 @@ import { CardElement } from './CardElement';
 import { styledSystem, StyledSystemProps } from '../styledSystem';
 
 const bigSize = css`
-  min-height: 17.2rem;
+  min-height: 17.6rem;
 `;
 
 const smallSize = css`
-  min-height: 13.2rem;
+  min-height: 12.8rem;
 `;
 
 const defaultVariant = css`
@@ -52,12 +52,12 @@ const variantStyle = ({ variant }: CardProps) => {
 };
 
 type CardVariant = 'primary' | 'secondary';
-type CardSize = 'small' | 'big';
+export type CardSizeType = 'small' | 'big';
 
 export interface CardProps extends StyledSystemProps {
   onClick?: () => void;
   variant?: CardVariant;
-  cardSize?: CardSize;
+  cardSize?: CardSizeType;
 }
 
 const StyledDiv = styled.div<CardProps>`
