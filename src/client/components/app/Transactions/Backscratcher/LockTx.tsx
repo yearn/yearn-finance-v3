@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { TokensActions, LabsSelectors, LabsActions } from '@store';
+import { TokensActions, LabsSelectors, LabsActions, VaultsActions } from '@store';
 import { toBN, normalizeAmount, USDC_DECIMALS, validateVaultDeposit, validateVaultAllowance } from '@src/utils';
 
 import { Transaction } from '../Transaction';
@@ -22,6 +22,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
 
   const onExit = () => {
     dispatch(LabsActions.clearSelectedLabAndStatus());
+    dispatch(VaultsActions.clearTransactionData());
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
 

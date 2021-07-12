@@ -49,6 +49,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
   const onExit = () => {
     dispatch(VaultsActions.clearSelectedVaultAndStatus());
+    dispatch(VaultsActions.clearTransactionData());
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
 

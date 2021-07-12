@@ -51,6 +51,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
 
   const onExit = () => {
     dispatch(VaultsActions.clearSelectedVaultAndStatus());
+    dispatch(VaultsActions.clearTransactionData());
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
 
