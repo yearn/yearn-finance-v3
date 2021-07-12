@@ -37,7 +37,7 @@ const selectGetUserLabsPositionsStatus = (state: RootState) => state.labs.status
 // yveCrv selectors
 const selectYveCrvLabData = (state: RootState) => state.labs.labsMap[YVECRV];
 const selectUserYveCrvLabPositions = (state: RootState) => state.labs.user.userLabsPositionsMap[YVECRV];
-const selectYveCrvLabAllowancesMap = (state: RootState) => state.labs.user.labsAllowancesMap[YVECRV];
+const selectYveCrvLabAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVECRV];
 
 const selectYveCrvLab = createSelector(
   [
@@ -57,7 +57,7 @@ const selectYveCrvLab = createSelector(
 // yvBoost selectors
 const selectYvBoostLabData = (state: RootState) => state.labs.labsMap[YVBOOST];
 const selectUserYvBoostLabPositions = (state: RootState) => state.labs.user.userLabsPositionsMap[YVBOOST];
-const selectYvBoostLabAllowancesMap = (state: RootState) => state.labs.user.labsAllowancesMap[YVBOOST];
+const selectYvBoostLabAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVBOOST];
 
 const selectYvBoostLab = createSelector(
   [
@@ -77,7 +77,8 @@ const selectYvBoostLab = createSelector(
 // yvBoost-eth selectors
 const selectYvBoostEthLabData = (state: RootState) => state.labs.labsMap[PSLPYVBOOSTETH];
 const selectUserYvBoostEthLabPositions = (state: RootState) => state.labs.user.userLabsPositionsMap[PSLPYVBOOSTETH];
-const selectYvBoostEthLabAllowancesMap = (state: RootState) => state.labs.user.labsAllowancesMap[PSLPYVBOOSTETH];
+const selectYvBoostEthLabAllowancesMap = (state: RootState) =>
+  state.tokens.user.userTokensAllowancesMap[PSLPYVBOOSTETH];
 
 const selectYvBoostEthLab = createSelector(
   [
