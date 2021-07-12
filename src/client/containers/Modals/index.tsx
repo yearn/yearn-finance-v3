@@ -11,6 +11,8 @@ import { DepositTxModal } from './DepositTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
 import { BackscratcherLockTxModal } from './Backscratcher';
 
+const modalTimeout = 300;
+
 const StyledModals = styled(TransitionGroup)`
   position: fixed;
   top: 0;
@@ -26,7 +28,7 @@ const StyledModals = styled(TransitionGroup)`
   .slideBottom-enter {
     opacity: 0;
     transform: translate3d(0, 100vh, 0);
-    transition: all 200ms ease;
+    transition: opacity ${modalTimeout}ms ease, transform ${modalTimeout}ms ease;
   }
   .slideBottom-enter-active {
     opacity: 1;
@@ -35,19 +37,19 @@ const StyledModals = styled(TransitionGroup)`
   .slideBottom-exit-active {
     opacity: 0;
     transform: translate3d(0, 100vh, 0);
-    transition: all 200ms cubic-bezier(1, 0.5, 0.8, 1);
+    transition: opacity ${modalTimeout}ms ease, transform ${modalTimeout}ms cubic-bezier(1, 0.5, 0.8, 1);
   }
 
   .opacity-enter {
     opacity: 0;
-    transition: opacity 200ms ease-in-out;
+    transition: opacity ${modalTimeout}ms ease-in-out;
   }
   .opacity-enter-active {
     opacity: 1;
   }
   .opacity-exit-active {
     opacity: 0;
-    transition: opacity 200ms ease-in-out;
+    transition: opacity ${modalTimeout}ms ease-in-out;
   }
 `;
 
@@ -100,47 +102,47 @@ export const Modals = () => {
   return (
     <StyledModals>
       {activeModal === 'test' && (
-        <CSSTransition key={'test'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'test'} timeout={modalTimeout} classNames="slideBottom">
           <TestModal modalProps={modalProps} onClose={closeModal} />
         </CSSTransition>
       )}
       {activeModal === 'deposit' && (
-        <CSSTransition key={'deposit'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'deposit'} timeout={modalTimeout} classNames="slideBottom">
           <DepositModal onClose={closeModal} />
         </CSSTransition>
       )}
       {activeModal === 'withdraw' && (
-        <CSSTransition key={'withdraw'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'withdraw'} timeout={modalTimeout} classNames="slideBottom">
           <WithdrawModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'testTx' && (
-        <CSSTransition key={'testTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'testTx'} timeout={modalTimeout} classNames="slideBottom">
           <TestTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'depositTx' && (
-        <CSSTransition key={'depositTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'depositTx'} timeout={modalTimeout} classNames="slideBottom">
           <DepositTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'withdrawTx' && (
-        <CSSTransition key={'withdrawTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'withdrawTx'} timeout={modalTimeout} classNames="slideBottom">
           <WithdrawTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'backscratcherLockTx' && (
-        <CSSTransition key={'backscratcherLockTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'backscratcherLockTx'} timeout={modalTimeout} classNames="slideBottom">
           <BackscratcherLockTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {backdrop && (
-        <CSSTransition key={'backdrop'} timeout={500} classNames="opacity">
+        <CSSTransition key={'backdrop'} timeout={modalTimeout} classNames="opacity">
           {backdrop}
         </CSSTransition>
       )}

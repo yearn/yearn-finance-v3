@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { TokenIcon } from '@components/app';
 import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from '@components/common';
@@ -118,6 +119,7 @@ const StyledSearchList = styled(SearchList)`
   height: 100%;
   left: 0;
   top: 0;
+  transform-origin: bottom left;
 `;
 
 const Header = styled.div`
@@ -126,6 +128,8 @@ const Header = styled.div`
   text-transform: capitalize;
   color: ${({ theme }) => theme.colors.txModalColors.text};
 `;
+
+const scaleTransitionTime = 300;
 
 const StyledTxTokenInput = styled.div`
   display: flex;
@@ -136,6 +140,25 @@ const StyledTxTokenInput = styled.div`
   border-radius: ${({ theme }) => theme.globalRadius};
   padding: ${({ theme }) => theme.txModal.gap};
   gap: 0.8rem;
+
+  .scale-enter {
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity ${scaleTransitionTime}ms ease, transform ${scaleTransitionTime}ms ease;
+  }
+  .scale-enter-active {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .scale-exit {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .scale-exit-active {
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity ${scaleTransitionTime}ms ease, transform ${scaleTransitionTime}ms cubic-bezier(1, 0.5, 0.8, 1);
+  }
 `;
 
 interface Token {
@@ -206,15 +229,19 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
     <StyledTxTokenInput {...props}>
       {headerText && <Header>{headerText}</Header>}
 
-      {listItems && onSelectedTokenChange && openedSearch && (
-        <StyledSearchList
-          list={listItems}
-          headerText="Select a token"
-          selected={selectedItem}
-          setSelected={(item) => onSelectedTokenChange(item.id)}
-          onCloseList={() => setOpenedSearch(false)}
-        />
-      )}
+      <TransitionGroup>
+        {openedSearch && (
+          <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
+            <StyledSearchList
+              list={listItems}
+              headerText="Select a token"
+              selected={selectedItem}
+              setSelected={(item) => (onSelectedTokenChange ? onSelectedTokenChange(item.id) : undefined)}
+              onCloseList={() => setOpenedSearch(false)}
+            />
+          </CSSTransition>
+        )}
+      </TransitionGroup>
 
       <TokenInfo>
         <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>

@@ -13,10 +13,14 @@ const modalsReducer = createReducer(modalsInitialState, (builder) => {
   builder.addCase(openModal, (state, { payload: { modalName, modalProps } }) => {
     state.activeModal = modalName;
     state.modalProps = modalProps || {};
+    // TODO Move scroll lock into the actions or an effect watcher in react component
+    document.body.style.overflowY = 'hidden';
   });
   builder.addCase(closeModal, (state) => {
     state.activeModal = '';
     state.modalProps = {};
+    // TODO Move scroll lock into the actions or an effect watcher in react component
+    document.body.style.overflowY = '';
   });
 });
 
