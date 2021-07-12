@@ -445,10 +445,11 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
     // TODO validations.
 
     const { labService } = services;
-    // const tx = await labService.yveCrvClaimReward({
-    //   accountAddress: userAddress,
-    // });
-    // await handleTransaction(tx);
+    const tx = await labService.claim({
+      accountAddress: userAddress,
+    });
+    await handleTransaction(tx);
+
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
     dispatch(TokensActions.getUserTokens({ addresses: [THREECRV, YVECRV] }));

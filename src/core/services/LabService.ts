@@ -13,6 +13,7 @@ import {
   DepositProps,
   WithdrawProps,
   StakeProps,
+  ClaimProps,
   TransactionResponse,
   YearnSdk,
 } from '@types';
@@ -389,6 +390,15 @@ export class LabServiceImpl implements LabService {
     const provider = this.web3Provider.getSigner();
     const lockContract = getContract(vaultAddress, backscratcherAbi, provider);
     return await lockContract.deposit(amount);
+  }
+
+  public async claim(props: ClaimProps): Promise<TransactionResponse> {
+    const { CONTRACT_ADDRESSES } = this.config;
+    const { YVECRV } = CONTRACT_ADDRESSES;
+
+    const provider = this.web3Provider.getSigner();
+    const lockContract = getContract(YVECRV, backscratcherAbi, provider);
+    return await lockContract.claim();
   }
 
   private getStakingContractAbi(address: string) {
