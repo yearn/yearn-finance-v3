@@ -10,19 +10,26 @@ import {
   LabDynamic,
   LabUserMetadata,
   Config,
+  DepositProps,
+  WithdrawProps,
+  StakeProps,
+  TransactionResponse,
+  YearnSdk,
 } from '@types';
-import { toBN, normalizeAmount, USDC_DECIMALS } from '@utils';
+import { toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress } from '@utils';
 import backscratcherAbi from './contracts/backscratcher.json';
 import yvBoostAbi from './contracts/yvBoost.json';
 import pickleJarAbi from './contracts/pickleJar.json';
 import pickleGaugeAbi from './contracts/pickleGauge.json';
 
 export class LabServiceImpl implements LabService {
+  private yearnSdk: YearnSdk;
   private web3Provider: Web3Provider;
   private config: Config;
 
-  constructor({ web3Provider, config }: { web3Provider: Web3Provider; config: Config }) {
+  constructor({ web3Provider, yearnSdk, config }: { web3Provider: Web3Provider; yearnSdk: YearnSdk; config: Config }) {
     this.web3Provider = web3Provider;
+    this.yearnSdk = yearnSdk;
     this.config = config;
   }
 
@@ -165,9 +172,7 @@ export class LabServiceImpl implements LabService {
           type: pJarData.apy.type,
           description: '',
         },
-        // TODO: ADD ICON ON YEARN-ASSETS
-        icon:
-          'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+        icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
       },
     };
     // ********************************
@@ -187,7 +192,7 @@ export class LabServiceImpl implements LabService {
     const provider = this.web3Provider.getInstanceOf('default');
     const vaultsPromise = get(YEARN_API);
     const pricesPromise = get(
-      'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault,lp-3pool-curve&vs_currencies=usd'
+      'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault,lp-3pool-curve,yvboost&vs_currencies=usd'
     );
     const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
 
@@ -212,7 +217,7 @@ export class LabServiceImpl implements LabService {
       .toFixed(0);
     const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
     if (!backscratcherData) throw new Error(`yveCRV vault not found on ${YEARN_API} response`);
-    const crvPrice = pricesResponse.data['curve-dao-token']['usd'];
+    const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
     const threeCrvPrice = pricesResponse.data['lp-3pool-curve']['usd'];
 
     const backscratcherDepositPosition: Position = {
@@ -223,7 +228,7 @@ export class LabServiceImpl implements LabService {
       underlyingTokenBalance: {
         amount: balanceOf.toString(), // TODO: VERIFY IF 1 YVECRV = 1 CRV
         amountUsdc: toBN(normalizeAmount(balanceOf.toString(), backscratcherData.decimals))
-          .times(crvPrice)
+          .times(yveCrvPrice)
           .times(10 ** USDC_DECIMALS)
           .toFixed(0),
       },
@@ -260,11 +265,13 @@ export class LabServiceImpl implements LabService {
 
     const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
     if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-    const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
-    const underlyingBalanceOf = normalizeAmount(
-      toBN(yvBoostBalanceOf.toString()).times(yvBoostPricePerShare.toString()).toFixed(0),
-      yvBoostData.decimals
-    );
+    const yvBoostPrice = pricesResponse.data['yvboost']['usd'];
+    const underlyingBalanceOf = toBN(
+      normalizeAmount(
+        toBN(yvBoostBalanceOf.toString()).times(yvBoostPricePerShare.toString()).toFixed(0),
+        yvBoostData.decimals
+      )
+    ).toFixed(0);
 
     const yvBoostDepositPosition: Position = {
       assetAddress: YVBOOST,
@@ -273,8 +280,8 @@ export class LabServiceImpl implements LabService {
       balance: yvBoostBalanceOf.toString(),
       underlyingTokenBalance: {
         amount: underlyingBalanceOf,
-        amountUsdc: toBN(normalizeAmount(underlyingBalanceOf, yvBoostData.decimals))
-          .times(yveCrvPrice)
+        amountUsdc: toBN(normalizeAmount(yvBoostBalanceOf.toString(), yvBoostData.decimals))
+          .times(yvBoostPrice)
           .times(10 ** USDC_DECIMALS)
           .toFixed(0),
       },
@@ -300,7 +307,7 @@ export class LabServiceImpl implements LabService {
     const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
     if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
     const pJarPricePerToken = pJarPricePerTokenResponse.data.find(
-      ({ address }: { address: string }) => address === PSLPYVBOOSTETH
+      ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
     )?.pricePerToken;
 
     const yvBoostEthDepositPosition: Position = {
@@ -344,5 +351,48 @@ export class LabServiceImpl implements LabService {
 
   public async getUserLabsMetadata(props: GetUserLabsMetadataProps): Promise<LabUserMetadata[]> {
     throw Error('Not Implemented');
+  }
+
+  // ********** WRITE ACTIONS **********
+
+  public async deposit(props: DepositProps): Promise<TransactionResponse> {
+    const { accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;
+    const yearn = this.yearnSdk;
+    return await yearn.vaults.deposit(vaultAddress, tokenAddress, amount, accountAddress, {
+      slippage: slippageTolerance,
+    });
+  }
+
+  public async withdraw(props: WithdrawProps): Promise<TransactionResponse> {
+    const { accountAddress, tokenAddress, vaultAddress, amountOfShares, slippageTolerance } = props;
+    const yearn = this.yearnSdk;
+    return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
+      slippage: slippageTolerance,
+    });
+  }
+
+  public async stake(props: StakeProps): Promise<TransactionResponse> {
+    const { vaultAddress, amount } = props;
+
+    const provider = this.web3Provider.getSigner();
+    const stakeContract = getContract(
+      getStakingContractAddress(vaultAddress),
+      this.getStakingContractAbi(vaultAddress),
+      provider
+    );
+    return await stakeContract.deposit(amount);
+  }
+
+  public async lock(props: StakeProps): Promise<TransactionResponse> {
+    const { vaultAddress, amount } = props;
+
+    const provider = this.web3Provider.getSigner();
+    const lockContract = getContract(vaultAddress, backscratcherAbi, provider);
+    return await lockContract.deposit(amount);
+  }
+
+  private getStakingContractAbi(address: string) {
+    // TODO: CREATE UTIL IF MORE STAKING CONTRACTS (MOVE TO SDK)
+    return pickleGaugeAbi;
   }
 }

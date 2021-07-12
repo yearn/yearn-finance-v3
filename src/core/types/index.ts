@@ -3,6 +3,7 @@ export * from './Config';
 export * from './Container';
 export * from './Ethereum';
 export * from './IronBank';
+export * from './Lab';
 export * from './Modals';
 export * from './Service';
 export * from './Settings';
