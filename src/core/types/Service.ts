@@ -80,6 +80,13 @@ export interface WithdrawProps {
   slippageTolerance?: number;
 }
 
+export interface StakeProps {
+  accountAddress: EthereumAddress;
+  tokenAddress: EthereumAddress;
+  vaultAddress: EthereumAddress;
+  amount: Wei;
+}
+
 export interface ApproveProps {
   accountAddress: EthereumAddress;
   tokenAddress: EthereumAddress;
@@ -130,6 +137,7 @@ export interface LabService {
   getUserLabsMetadata: (props: GetUserLabsMetadataProps) => Promise<LabUserMetadata[]>;
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
+  stake: (props: StakeProps) => Promise<TransactionResponse>;
   // claim
   // restake
 }

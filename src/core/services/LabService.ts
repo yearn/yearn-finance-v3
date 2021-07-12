@@ -12,10 +12,11 @@ import {
   Config,
   DepositProps,
   WithdrawProps,
+  StakeProps,
   TransactionResponse,
   YearnSdk,
 } from '@types';
-import { toBN, normalizeAmount, USDC_DECIMALS } from '@utils';
+import { toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress } from '@utils';
 import backscratcherAbi from './contracts/backscratcher.json';
 import yvBoostAbi from './contracts/yvBoost.json';
 import pickleJarAbi from './contracts/pickleJar.json';
@@ -368,5 +369,22 @@ export class LabServiceImpl implements LabService {
     return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
       slippage: slippageTolerance,
     });
+  }
+
+  public async stake(props: StakeProps): Promise<TransactionResponse> {
+    const { vaultAddress, amount } = props;
+
+    const provider = this.web3Provider.getInstanceOf('default');
+    const stakeContract = getContract(
+      getStakingContractAddress(vaultAddress),
+      this.getStakingContractAbi(vaultAddress),
+      provider
+    );
+    return await stakeContract.deposit(amount);
+  }
+
+  private getStakingContractAbi(address: string) {
+    // TODO: CREATE UTIL IF MORE STAKING CONTRACTS (MOVE TO SDK)
+    return pickleGaugeAbi;
   }
 }
