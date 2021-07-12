@@ -1,11 +1,10 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { TokensSelectors, LabsSelectors, LabsActions, TokensActions, VaultsActions } from '@store';
+import { TokensSelectors, LabsSelectors, LabsActions, TokensActions } from '@store';
 import {
   toBN,
   normalizeAmount,
-  toWei,
   USDC_DECIMALS,
   validateVaultDeposit,
   validateYvBoostEthActionsAllowance,
@@ -51,22 +50,6 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
       })
     );
   }, [selectedSellTokenAddress]);
-
-  // TODO: SET LABS SIMULATION
-  useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress) return;
-
-    if (toBN(amount).gt(0)) {
-      dispatch(
-        VaultsActions.getExpectedTransactionOutcome({
-          transactionType: 'DEPOSIT',
-          sourceTokenAddress: selectedSellTokenAddress,
-          sourceTokenAmount: toWei(amount, selectedSellToken.decimals),
-          targetTokenAddress: selectedLab.address,
-        })
-      );
-    }
-  }, [amount, selectedSellTokenAddress, selectedLab]);
 
   if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken) {
     return null;
