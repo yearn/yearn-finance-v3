@@ -9,7 +9,7 @@ import { WithdrawModal } from './WithdrawModal';
 import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
-import { BackscratcherLockTxModal } from './Backscratcher';
+import { BackscratcherLockTxModal, BackscratcherClaimTxModal } from './Backscratcher';
 import { LabDepositTxModal } from './LabDepositTxModal';
 import { LabWithdrawTxModal } from './LabWithdrawTxModal';
 import { LabStakeTxModal } from './LabStakeTxModal';
@@ -139,6 +139,12 @@ export const Modals = () => {
       {activeModal === 'backscratcherLockTx' && (
         <CSSTransition key={'backscratcherLockTx'} timeout={500} classNames="slideBottom">
           <BackscratcherLockTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'backscratcherClaimTx' && (
+        <CSSTransition key={'backscratcherClaimTx'} timeout={500} classNames="slideBottom">
+          <BackscratcherClaimTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
