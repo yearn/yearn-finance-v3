@@ -33,7 +33,7 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   ${({ readOnly, theme }) =>
     readOnly &&
     `
-    color: ${theme.colors.txModalColors.onBackgroundVariant};
+    color: ${theme.colors.txModalColors.onBackgroundVariantColor};
     cursor: default;
   `}
   ${({ error, theme }) => error && `color: ${theme.colors.txModalColors.error};`}
