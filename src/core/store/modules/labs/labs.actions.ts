@@ -438,9 +438,7 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
   async (_args, { dispatch, extra, getState }) => {
     const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     // TODO validations.
 
@@ -471,17 +469,15 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
   async (_args, { dispatch, extra, getState }) => {
     const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     // TODO validations.
 
     const { labService } = services;
-    // const tx = await labService.yveCrvReinvest({
-    //   accountAddress: userAddress,
-    // });
-    // await handleTransaction(tx);
+    const tx = await labService.reinvest({
+      accountAddress: userAddress,
+    });
+    await handleTransaction(tx);
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
