@@ -459,12 +459,10 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
 const yveCrvApproveReinvest = createAsyncThunk<void, { labAddress: string; tokenAddress: string }, ThunkAPI>(
   'labs/yveCrv/yveCrvApproveReinvest',
   async ({ labAddress, tokenAddress }, { dispatch }) => {
-    try {
-      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: labAddress }));
-      unwrapResult(result);
-    } catch (error) {
-      throw new Error(error.message);
-    }
+    const { CONTRACT_ADDRESSES } = getConfig();
+    const { THREECRV, y3CrvBackZapper } = CONTRACT_ADDRESSES;
+    const result = await dispatch(TokensActions.approve({ tokenAddress: THREECRV, spenderAddress: y3CrvBackZapper }));
+    unwrapResult(result);
   }
 );
 

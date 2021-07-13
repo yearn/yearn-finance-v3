@@ -87,6 +87,14 @@ export const Labs = () => {
                 },
                 disabled: !walletIsConnected,
               },
+              {
+                name: 'Reinvest',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherReinvestTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
             ]}
           />
         );
