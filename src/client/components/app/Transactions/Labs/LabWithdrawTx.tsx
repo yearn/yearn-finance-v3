@@ -2,7 +2,15 @@ import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { TokensSelectors, LabsSelectors, LabsActions, VaultsSelectors, VaultsActions, TokensActions } from '@store';
+import {
+  TokensSelectors,
+  LabsSelectors,
+  LabsActions,
+  VaultsSelectors,
+  VaultsActions,
+  TokensActions,
+  SettingsSelectors,
+} from '@store';
 import {
   toBN,
   formatPercent,
@@ -20,11 +28,7 @@ export interface LabWithdrawTxProps {
 }
 
 export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...props }) => {
-  const { SLIPPAGE_OPTIONS, CONTRACT_ADDRESSES } = getConfig();
-  const slippageOptions = SLIPPAGE_OPTIONS.map((value) => ({
-    value: value.toString(),
-    label: formatPercent(value.toString(), 0),
-  }));
+  const { CONTRACT_ADDRESSES } = getConfig();
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
@@ -34,7 +38,8 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const selectedLabToken = tokenSelectorFilter(selectedLab?.address ?? '');
   const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
   const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedLab?.token.address ?? '');
-  const [selectedSlippage, setSelectedSlippage] = useState(slippageOptions[0]);
+  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
+
   const targetTokensOptions = selectedLab
     ? [selectedLab.token, ...zapOutTokens.filter(({ address }) => address !== selectedLab.token.address)]
     : zapOutTokens;
@@ -148,7 +153,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
           labAddress: selectedLab.address,
           amount: toBN(amount),
           tokenAddress: selectedTargetTokenAddress,
-          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
+          slippageTolerance: toBN(selectedSlippage).toNumber(),
         })
       );
       setTxCompleted(true);
@@ -167,6 +172,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isApproved || !isValidAmount,
+      contrast: true,
     },
   ];
 

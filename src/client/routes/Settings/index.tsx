@@ -21,6 +21,7 @@ import {
 } from '@components/common';
 import { ThemeBox } from '@components/app/Settings';
 import { ViewContainer } from '@components/app';
+import { formatPercent } from '@utils';
 
 const sectionsGap = '2.2rem';
 const sectionsBorderRadius = '0.8rem';
@@ -52,7 +53,7 @@ const SettingsSection = styled.div`
 const SectionContent = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.2rem;
   align-items: center;
 
   ${SettingsSection}:not(:first-child) & {
@@ -86,13 +87,38 @@ const SectionIcon = styled(Icon)`
   margin-right: 0.7rem;
 `;
 
+const SlippageOption = styled.div<{ active?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6.4rem;
+  height: 6.4rem;
+  border: 2px solid ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.secondary};
+  border-radius: ${({ theme }) => theme.globalRadius};
+  cursor: pointer;
+
+  ${({ active, theme }) =>
+    active &&
+    `
+    background-color: ${theme.colors.secondary};
+    color: ${theme.colors.surface};
+  `}
+`;
+
 export const Settings = () => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
+  const defaultSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
+  const availableSlippages = getConfig().SLIPPAGE_OPTIONS;
   const { ALLOW_DEV_MODE, AVAILABLE_THEMES } = getConfig();
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
+
+  const changeSlippage = (slippage: number) => {
+    dispatch(SettingsActions.setDefaultSlippage({ slippage }));
+  };
 
   const openModal = (modalName: ModalName, modalProps?: any) => {
     dispatch(ModalsActions.openModal({ modalName, modalProps }));
@@ -119,9 +145,15 @@ export const Settings = () => {
           <SettingsSection>
             <SectionTitle>
               <SectionIcon Component={ClockIcon} />
-              Slipped tolerance
+              Slippage Tolerance
             </SectionTitle>
-            <SectionContent>TBD</SectionContent>
+            <SectionContent>
+              {availableSlippages.map((slippage) => (
+                <SlippageOption onClick={() => changeSlippage(slippage)} active={slippage === defaultSlippage}>
+                  {formatPercent(slippage.toString(), 0)}
+                </SlippageOption>
+              ))}
+            </SectionContent>
           </SettingsSection>
 
           <SettingsSection>
