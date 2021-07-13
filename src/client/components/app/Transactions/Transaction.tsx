@@ -20,6 +20,7 @@ interface Action {
   onAction: () => void;
   status: Status;
   disabled?: boolean;
+  contrast?: boolean;
 }
 
 interface Asset {
@@ -138,8 +139,14 @@ export const Transaction: FC<TransactionProps> = (props) => {
       />
 
       <TxActions>
-        {actions.map(({ label, onAction, status, disabled }) => (
-          <TxActionButton key={label} onClick={onAction} disabled={disabled} pending={status.loading}>
+        {actions.map(({ label, onAction, status, disabled, contrast }) => (
+          <TxActionButton
+            key={label}
+            onClick={onAction}
+            disabled={disabled}
+            contrast={contrast}
+            isLoading={status.loading}
+          >
             {label}
           </TxActionButton>
         ))}

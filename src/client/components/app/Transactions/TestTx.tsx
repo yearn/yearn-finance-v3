@@ -33,7 +33,7 @@ export const TestTx: FC<TestTxProps> = ({ onClose, children, ...props }) => {
 
         <TxActionButton onClick={() => console.log('deposit')}>Deposit</TxActionButton>
 
-        <TxActionButton onClick={() => console.log('withdraw')} pending></TxActionButton>
+        <TxActionButton onClick={() => console.log('withdraw')} contrast></TxActionButton>
       </TxActions>
 
       <TxActions>

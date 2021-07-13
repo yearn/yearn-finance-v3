@@ -8,7 +8,7 @@ export const TxSpinnerLoading = styled(SpinnerLoading)`
   font-size: 0.8rem;
 `;
 
-export const StyledTxActionButton = styled(Button)<{ pending?: boolean | undefined; success?: boolean }>`
+export const StyledTxActionButton = styled(Button)<{ contrast?: boolean; success?: boolean; disabled?: boolean }>`
   height: 4rem;
   flex: 1;
   font-size: 1.4rem;
@@ -26,13 +26,15 @@ export const StyledTxActionButton = styled(Button)<{ pending?: boolean | undefin
   `}
 
   ${(props) =>
-    props.pending &&
+    props.contrast &&
+    !props.disabled &&
     `
     background-color: ${props.theme.colors.txModalColors.loading};
   `}
 
   ${(props) =>
     props.success &&
+    !props.disabled &&
     `
     background-color: ${props.theme.colors.txModalColors.success};
   `}
@@ -50,14 +52,22 @@ export const TxActions: FC<TxActionsProps> = ({ children, ...props }) => (
 );
 
 export interface TxActionButtonProps {
-  pending?: boolean;
+  isLoading?: boolean;
+  contrast?: boolean;
   success?: boolean;
   disabled?: boolean;
   onClick?: () => void;
 }
 
-export const TxActionButton: FC<TxActionButtonProps> = ({ pending, success, disabled, children, ...props }) => (
-  <StyledTxActionButton pending={pending} success={success} disabled={disabled} {...props}>
-    {pending ? <TxSpinnerLoading /> : children}
+export const TxActionButton: FC<TxActionButtonProps> = ({
+  isLoading,
+  contrast,
+  success,
+  disabled,
+  children,
+  ...props
+}) => (
+  <StyledTxActionButton contrast={contrast} success={success} disabled={disabled} {...props}>
+    {isLoading ? <TxSpinnerLoading /> : children}
   </StyledTxActionButton>
 );

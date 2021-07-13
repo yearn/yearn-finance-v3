@@ -172,6 +172,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isApproved || !isValidAmount,
+      contrast: true,
     },
   ];
 

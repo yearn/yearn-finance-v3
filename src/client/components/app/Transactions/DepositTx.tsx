@@ -180,6 +180,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
       onAction: deposit,
       status: actionsStatus.deposit,
       disabled: !isApproved || !isValidAmount,
+      contrast: true,
     },
   ];
 

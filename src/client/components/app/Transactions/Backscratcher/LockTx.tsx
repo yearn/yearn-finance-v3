@@ -120,6 +120,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
       onAction: lock,
       status: actionsStatus.deposit,
       disabled: !isApproved || !isValidAmount,
+      contrast: true,
     },
   ];
 

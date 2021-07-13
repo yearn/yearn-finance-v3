@@ -190,6 +190,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       onAction: deposit,
       status: actionsStatus.deposit,
       disabled: !isApproved || !isValidAmount,
+      contrast: true,
     },
   ];
 

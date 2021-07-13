@@ -158,6 +158,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isApproved || !isValidAmount,
+      contrast: true,
     },
   ];
 
