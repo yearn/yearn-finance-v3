@@ -398,8 +398,8 @@ export class LabServiceImpl implements LabService {
     const { YVECRV } = CONTRACT_ADDRESSES;
 
     const provider = this.web3Provider.getSigner();
-    const lockContract = getContract(YVECRV, backscratcherAbi, provider);
-    return await lockContract.claim();
+    const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
+    return await backscratcherContract.claim();
   }
 
   public async reinvest(props: ClaimProps): Promise<TransactionResponse> {
@@ -407,8 +407,8 @@ export class LabServiceImpl implements LabService {
     const { y3CrvBackZapper } = CONTRACT_ADDRESSES;
 
     const provider = this.web3Provider.getSigner();
-    const reinvestContract = getContract(y3CrvBackZapper, y3CrvBackZapperAbi, provider);
-    return await reinvestContract.zap();
+    const y3CrvBackZapperContract = getContract(y3CrvBackZapper, y3CrvBackZapperAbi, provider);
+    return await y3CrvBackZapperContract.zap();
   }
 
   private getStakingContractAbi(address: string) {
