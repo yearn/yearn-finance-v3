@@ -438,17 +438,16 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
   async (_args, { dispatch, extra, getState }) => {
     const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     // TODO validations.
 
     const { labService } = services;
-    // const tx = await labService.yveCrvClaimReward({
-    //   accountAddress: userAddress,
-    // });
-    // await handleTransaction(tx);
+    const tx = await labService.claim({
+      accountAddress: userAddress,
+    });
+    await handleTransaction(tx);
+
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
     dispatch(TokensActions.getUserTokens({ addresses: [THREECRV, YVECRV] }));
@@ -458,12 +457,10 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
 const yveCrvApproveReinvest = createAsyncThunk<void, { labAddress: string; tokenAddress: string }, ThunkAPI>(
   'labs/yveCrv/yveCrvApproveReinvest',
   async ({ labAddress, tokenAddress }, { dispatch }) => {
-    try {
-      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: labAddress }));
-      unwrapResult(result);
-    } catch (error) {
-      throw new Error(error.message);
-    }
+    const { CONTRACT_ADDRESSES } = getConfig();
+    const { THREECRV, y3CrvBackZapper } = CONTRACT_ADDRESSES;
+    const result = await dispatch(TokensActions.approve({ tokenAddress: THREECRV, spenderAddress: y3CrvBackZapper }));
+    unwrapResult(result);
   }
 );
 
@@ -472,17 +469,15 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
   async (_args, { dispatch, extra, getState }) => {
     const { services } = extra;
     const userAddress = getState().wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     // TODO validations.
 
     const { labService } = services;
-    // const tx = await labService.yveCrvReinvest({
-    //   accountAddress: userAddress,
-    // });
-    // await handleTransaction(tx);
+    const tx = await labService.reinvest({
+      accountAddress: userAddress,
+    });
+    await handleTransaction(tx);
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));

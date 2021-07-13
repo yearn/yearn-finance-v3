@@ -43,7 +43,7 @@ interface TransactionProps {
   onSelectedSourceAssetChange?: (assetAddress: string) => void;
   sourceAmount: string;
   sourceAmountValue?: string;
-  onSourceAmountChange: (amount: string) => void;
+  onSourceAmountChange?: (amount: string) => void;
   targetHeader: string;
   targetAssetOptions: Asset[];
   selectedTargetAsset: Asset;
@@ -116,11 +116,12 @@ export const Transaction: FC<TransactionProps> = (props) => {
         amount={sourceAmount}
         onAmountChange={onSourceAmountChange}
         amountValue={sourceAmountValue}
-        maxAmount={sourceBalance}
+        maxAmount={onSourceAmountChange ? sourceBalance : undefined}
         selectedToken={selectedSourceAsset}
         tokenOptions={sourceAssetOptions}
         onSelectedTokenChange={onSelectedSourceAssetChange}
         inputError={!!status.error}
+        readOnly={!onSourceAmountChange}
       />
 
       {!status.error && <TxArrowStatus status={txArrowStatus} />}

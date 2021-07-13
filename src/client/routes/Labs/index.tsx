@@ -79,6 +79,22 @@ export const Labs = () => {
                 },
                 disabled: !walletIsConnected,
               },
+              {
+                name: 'Claim',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherClaimTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+              {
+                name: 'Reinvest',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherReinvestTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
             ]}
           />
         );
