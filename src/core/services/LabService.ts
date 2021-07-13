@@ -13,11 +13,13 @@ import {
   DepositProps,
   WithdrawProps,
   StakeProps,
+  ClaimProps,
   TransactionResponse,
   YearnSdk,
 } from '@types';
 import { toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress } from '@utils';
 import backscratcherAbi from './contracts/backscratcher.json';
+import y3CrvBackZapperAbi from './contracts/y3CrvBackZapper.json';
 import yvBoostAbi from './contracts/yvBoost.json';
 import pickleJarAbi from './contracts/pickleJar.json';
 import pickleGaugeAbi from './contracts/pickleGauge.json';
@@ -389,6 +391,24 @@ export class LabServiceImpl implements LabService {
     const provider = this.web3Provider.getSigner();
     const lockContract = getContract(vaultAddress, backscratcherAbi, provider);
     return await lockContract.deposit(amount);
+  }
+
+  public async claim(props: ClaimProps): Promise<TransactionResponse> {
+    const { CONTRACT_ADDRESSES } = this.config;
+    const { YVECRV } = CONTRACT_ADDRESSES;
+
+    const provider = this.web3Provider.getSigner();
+    const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
+    return await backscratcherContract.claim();
+  }
+
+  public async reinvest(props: ClaimProps): Promise<TransactionResponse> {
+    const { CONTRACT_ADDRESSES } = this.config;
+    const { y3CrvBackZapper } = CONTRACT_ADDRESSES;
+
+    const provider = this.web3Provider.getSigner();
+    const y3CrvBackZapperContract = getContract(y3CrvBackZapper, y3CrvBackZapperAbi, provider);
+    return await y3CrvBackZapperContract.zap();
   }
 
   private getStakingContractAbi(address: string) {

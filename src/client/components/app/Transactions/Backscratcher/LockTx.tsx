@@ -66,7 +66,6 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     vaultUnderlyingBalance: selectedLab.labBalance,
   });
 
-  // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
   const error = allowanceError || inputError || actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
 
   const selectedLabOption = {
