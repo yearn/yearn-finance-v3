@@ -6,6 +6,8 @@ export * from './components/TxStatus';
 export * from './components/TxTokenInput';
 
 export * from './Backscratcher';
+export * from './Labs';
+
 export * from './DepositTx';
 export * from './TestTx';
 export * from './WithdrawTx';

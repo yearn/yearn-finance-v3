@@ -139,7 +139,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
 
       <TxActions>
         {actions.map(({ label, onAction, status, disabled }) => (
-          <TxActionButton onClick={onAction} disabled={disabled} pending={status.loading}>
+          <TxActionButton key={label} onClick={onAction} disabled={disabled} pending={status.loading}>
             {label}
           </TxActionButton>
         ))}

@@ -200,7 +200,7 @@ export interface LabActionsStatusMap {
   get: Status;
   approveDeposit: Status;
   deposit: Status;
-  approveZapOut: Status;
+  approveWithdraw: Status;
   withdraw: Status;
   claimReward: Status;
   approveReinvest: Status;

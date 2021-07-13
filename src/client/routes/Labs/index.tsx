@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors, ModalsActions } from '@store';
+import { LabsSelectors, WalletSelectors, ModalsActions, LabsActions } from '@store';
 import {
   SummaryCard,
   DetailCard,
@@ -14,14 +14,7 @@ import {
   ViewContainer,
   NoWalletCard,
 } from '@components/app';
-import {
-  formatPercent,
-  halfWidthCss,
-  humanizeAmount,
-  normalizePercent,
-  normalizeUsdc,
-  USDC_DECIMALS,
-} from '@src/utils';
+import { formatPercent, halfWidthCss, humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
 import { Box, SpinnerLoading, SearchInput } from '@components/common';
 import { getConstants } from '../../../config/constants';
 
@@ -51,7 +44,7 @@ const StyledNoWalletCard = styled(NoWalletCard)`
 export const Labs = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
-  const { YVECRV, CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
+  const { YVECRV, YVBOOST, PSLPYVBOOSTETH, CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
   const history = useHistory();
   const dispatch = useAppDispatch();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -72,7 +65,7 @@ export const Labs = () => {
     setFilteredOpportunities(opportunities);
   }, [opportunities]);
 
-  const LabActions = ({ labAddress }: { labAddress: string }) => {
+  const LabHoldingsActions = ({ labAddress }: { labAddress: string }) => {
     switch (labAddress) {
       case YVECRV:
         return (
@@ -80,7 +73,94 @@ export const Labs = () => {
             actions={[
               {
                 name: 'Lock',
-                handler: () => dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' })),
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+            ]}
+          />
+        );
+      case YVBOOST:
+        return (
+          <ActionButtons
+            actions={[
+              {
+                name: 'Invest',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+              {
+                name: 'Withdraw',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'labWithdrawTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+            ]}
+          />
+        );
+      case PSLPYVBOOSTETH:
+        return (
+          <ActionButtons
+            actions={[
+              {
+                name: 'Invest',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+              {
+                name: 'Stake',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'labStakeTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+            ]}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  const LabOpportunitiesActions = ({ labAddress }: { labAddress: string }) => {
+    switch (labAddress) {
+      case YVECRV:
+        return (
+          <ActionButtons
+            actions={[
+              {
+                name: 'Lock',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' }));
+                },
+                disabled: !walletIsConnected,
+              },
+            ]}
+          />
+        );
+      case YVBOOST:
+      case PSLPYVBOOSTETH:
+        return (
+          <ActionButtons
+            actions={[
+              {
+                name: 'Invest',
+                handler: () => {
+                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                },
                 disabled: !walletIsConnected,
               },
             ]}
@@ -146,14 +226,12 @@ export const Labs = () => {
               { key: 'apy', header: 'ROI' },
               { key: 'balance', header: 'Balance' },
               { key: 'value', header: 'Value' },
-              // {
-              //   key: 'actions',
-              //   transform: ({ labAddress }) => (
-              //     <ActionButtons actions={[{ name: '>', handler: () => actionHandler(labAddress) }]} />
-              //   ),
-              //   align: 'flex-end',
-              //   grow: '1',
-              // },
+              {
+                key: 'actions',
+                transform: ({ labAddress }) => <LabHoldingsActions labAddress={labAddress} />,
+                align: 'flex-end',
+                grow: '1',
+              },
             ]}
             data={holdings.map((lab) => ({
               icon: lab.icon,
@@ -180,7 +258,7 @@ export const Labs = () => {
               { key: 'tokenBalanceUsdc', header: 'Available to Invest' },
               {
                 key: 'actions',
-                transform: ({ labAddress }) => <LabActions labAddress={labAddress} />,
+                transform: ({ labAddress }) => <LabOpportunitiesActions labAddress={labAddress} />,
                 align: 'flex-end',
                 grow: '1',
               },

@@ -2,9 +2,10 @@ import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions, SettingsSelectors } from '@store';
+import { TokensSelectors, LabsSelectors, LabsActions, VaultsSelectors, VaultsActions, TokensActions } from '@store';
 import {
   toBN,
+  formatPercent,
   normalizeAmount,
   USDC_DECIMALS,
   validateVaultWithdraw,
@@ -13,39 +14,45 @@ import {
 } from '@src/utils';
 import { getConfig } from '@config';
 
-import { Transaction } from './Transaction';
-export interface WithdrawTxProps {
+import { Transaction } from '../Transaction';
+export interface LabWithdrawTxProps {
   onClose?: () => void;
 }
 
-export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props }) => {
-  const { CONTRACT_ADDRESSES } = getConfig();
+export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...props }) => {
+  const { SLIPPAGE_OPTIONS, CONTRACT_ADDRESSES } = getConfig();
+  const slippageOptions = SLIPPAGE_OPTIONS.map((value) => ({
+    value: value.toString(),
+    label: formatPercent(value.toString(), 0),
+  }));
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
-  const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
+  const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
+  const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
+  const selectedLabToken = tokenSelectorFilter(selectedLab?.address ?? '');
   const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
-  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedVault?.token.address ?? '');
-  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
-  const targetTokensOptions = selectedVault
-    ? [selectedVault.token, ...zapOutTokens.filter(({ address }) => address !== selectedVault.token.address)]
+  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedLab?.token.address ?? '');
+  const [selectedSlippage, setSelectedSlippage] = useState(slippageOptions[0]);
+  const targetTokensOptions = selectedLab
+    ? [selectedLab.token, ...zapOutTokens.filter(({ address }) => address !== selectedLab.token.address)]
     : zapOutTokens;
   const targetTokensOptionsMap = keyBy(targetTokensOptions, 'address');
   const selectedTargetToken = targetTokensOptionsMap[selectedTargetTokenAddress];
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
-  const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
+  const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
 
   const yvTokenAmount = calculateSharesAmount({
     amount: toBN(amount),
-    decimals: selectedVault!.decimals,
-    pricePerShare: selectedVault!.pricePerShare,
+    decimals: selectedLab!.decimals,
+    pricePerShare: selectedLab!.pricePerShare,
   });
-  const yvTokenAmountNormalized = normalizeAmount(yvTokenAmount, toBN(selectedVault?.decimals).toNumber());
+  const yvTokenAmountNormalized = normalizeAmount(yvTokenAmount, toBN(selectedLab?.decimals).toNumber());
 
   const onExit = () => {
-    dispatch(VaultsActions.clearSelectedVaultAndStatus());
+    dispatch(LabsActions.clearSelectedLabAndStatus());
     dispatch(VaultsActions.clearTransactionData());
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
@@ -57,66 +64,68 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   }, []);
 
   useEffect(() => {
-    if (!selectedVault) return;
+    if (!selectedLab) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
-        tokenAddress: selectedVault.address,
+        tokenAddress: selectedLab.address,
         spenderAddress: CONTRACT_ADDRESSES.zapOut,
       })
     );
   }, [selectedTargetTokenAddress]);
 
   useEffect(() => {
-    if (!selectedVault || !selectedTargetTokenAddress) return;
+    if (!selectedLab || !selectedTargetTokenAddress) return;
 
     if (toBN(amount).gt(0)) {
       dispatch(
         VaultsActions.getExpectedTransactionOutcome({
           transactionType: 'WITHDRAW',
-          sourceTokenAddress: selectedVault.address,
+          sourceTokenAddress: selectedLab.address,
           sourceTokenAmount: yvTokenAmount,
           targetTokenAddress: selectedTargetTokenAddress,
         })
       );
     }
-  }, [amount, selectedTargetTokenAddress, selectedVault]);
+  }, [amount, selectedTargetTokenAddress, selectedLab]);
 
-  if (!selectedVault || !selectedTargetToken || !targetTokensOptions) {
+  if (!selectedLab || !selectedTargetToken || !targetTokensOptions) {
     return null;
   }
 
+  // TODO: FIX WITH CORRECT LAB VALIDATIONS
   const { approved: isApproved, error: allowanceError } = validateVaultWithdrawAllowance({
-    yvTokenAddress: selectedVault.address,
+    yvTokenAddress: selectedLab.address,
     yvTokenAmount: toBN(yvTokenAmountNormalized),
-    yvTokenDecimals: selectedVault.decimals,
-    underlyingTokenAddress: selectedVault.token.address,
+    yvTokenDecimals: selectedLab.decimals,
+    underlyingTokenAddress: selectedLab.token.address,
     targetTokenAddress: selectedTargetTokenAddress,
-    yvTokenAllowancesMap: selectedVault.allowancesMap,
+    yvTokenAllowancesMap: selectedLab.allowancesMap,
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
     yvTokenAmount: toBN(yvTokenAmountNormalized),
-    yvTokenDecimals: selectedVault.decimals,
-    userYvTokenBalance: selectedVault.DEPOSIT.userBalance,
+    yvTokenDecimals: selectedLab.decimals,
+    userYvTokenBalance: selectedLab.DEPOSIT.userBalance,
   });
 
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError || actionsStatus.approveZapOut.error || actionsStatus.withdraw.error;
+  const error = allowanceError || inputError || actionsStatus.approveWithdraw.error || actionsStatus.withdraw.error;
 
-  const selectedVaultOption = {
-    address: selectedVault.address,
-    symbol: selectedVault.token.name,
-    icon: selectedVault.token.icon,
-    balance: selectedVault.DEPOSIT.userDeposited,
-    decimals: selectedVault.token.decimals,
+  const selectedLabOption = {
+    address: selectedLab.address,
+    symbol: selectedLab.name,
+    icon: selectedLab.icon,
+    balance: selectedLab.DEPOSIT.userBalance,
+    decimals: toBN(selectedLab.decimals).toNumber(),
   };
-  const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
+
+  const amountValue = toBN(amount).times(normalizeAmount(selectedLabToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(amount).gt(0)
-    ? normalizeAmount(expectedTxOutcome?.targetTokenAmount, selectedTargetToken?.decimals)
+    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedLab?.token.decimals)
     : '';
   const expectedAmountValue = toBN(expectedAmount)
-    .times(normalizeAmount(selectedTargetToken.priceUsdc, USDC_DECIMALS))
+    .times(normalizeAmount(selectedLab.token.priceUsdc, USDC_DECIMALS))
     .toString();
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
@@ -129,17 +138,17 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   };
 
   const approve = async () => {
-    await dispatch(VaultsActions.approveZapOut({ vaultAddress: selectedVault.address }));
+    await dispatch(LabsActions.approveWithdraw({ labAddress: selectedLab.address }));
   };
 
   const withdraw = async () => {
     try {
       await dispatchAndUnwrap(
-        VaultsActions.withdrawVault({
-          vaultAddress: selectedVault.address,
+        LabsActions.withdraw({
+          labAddress: selectedLab.address,
           amount: toBN(amount),
-          targetTokenAddress: selectedTargetTokenAddress,
-          slippageTolerance: toBN(selectedSlippage).toNumber(),
+          tokenAddress: selectedTargetTokenAddress,
+          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
         })
       );
       setTxCompleted(true);
@@ -150,7 +159,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
     {
       label: 'Approve',
       onAction: approve,
-      status: actionsStatus.approveZapOut,
+      status: actionsStatus.approveWithdraw,
       disabled: isApproved,
     },
     {
@@ -167,13 +176,13 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
       transactionCompleted={txCompleted}
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="From vault"
-      sourceAssetOptions={[selectedVaultOption]}
-      selectedSourceAsset={selectedVaultOption}
+      sourceHeader="From Vault"
+      sourceAssetOptions={[selectedLabOption]}
+      selectedSourceAsset={selectedLabOption}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To wallet"
+      targetHeader="To Wallet"
       targetAssetOptions={targetTokensOptions}
       selectedTargetAsset={selectedTargetToken}
       onSelectedTargetAssetChange={onSelectedTargetTokenChange}

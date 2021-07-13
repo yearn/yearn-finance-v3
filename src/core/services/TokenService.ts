@@ -1,4 +1,3 @@
-import { notify } from '@frameworks/blocknative';
 import {
   TokenService,
   YearnSdk,
@@ -9,14 +8,12 @@ import {
   Token,
   Integer,
   Config,
+  TransactionResponse,
 } from '@types';
 import { getContract } from '@frameworks/ethers';
 import erc20Abi from './contracts/erc20.json';
 import { unionBy } from 'lodash';
 import { getConstants } from '../../config/constants';
-import yvBoostAbi from './contracts/yvBoost.json';
-import pickleJarAbi from './contracts/pickleJar.json';
-import { JsonRpcProvider } from '@ethersproject/providers';
 import { get, toBN, USDC_DECIMALS } from '../../utils';
 
 export class TokenServiceImpl implements TokenService {
@@ -77,74 +74,55 @@ export class TokenServiceImpl implements TokenService {
     return allowance.toString();
   }
 
-  public async approve(props: ApproveProps): Promise<void> {
+  public async approve(props: ApproveProps): Promise<TransactionResponse> {
     const { tokenAddress, spenderAddress, amount } = props;
     const signer = this.web3Provider.getSigner();
     const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
-    const transaction = await erc20Contract.approve(spenderAddress, amount);
-    console.log('Transaction: ', transaction);
-    notify.hash(transaction.hash);
-    const receipt = await transaction.wait(1);
-    console.log('Receipt: ', receipt);
+    return await erc20Contract.approve(spenderAddress, amount);
   }
 
   public async getLabsTokens(): Promise<Token[]> {
     return await Promise.all([this.getYvBoostToken(), this.getPSLPyvBoostEthToken()]);
   }
 
-  public async getYvBoostToken(): Promise<Token> {
-    const provider = this.web3Provider.getInstanceOf('default');
+  private async getYvBoostToken(): Promise<Token> {
     const { YVBOOST } = getConstants().CONTRACT_ADDRESSES;
-    const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
-    const [decimals, name, symbol, pricesResponse] = await Promise.all([
-      yvBoostContract.decimals(),
-      yvBoostContract.name(),
-      yvBoostContract.symbol(),
-      get('https://api.coingecko.com/api/v3/simple/price?ids=yvboost&vs_currencies=usd'),
-    ]);
+    const pricesResponse = await get('https://api.coingecko.com/api/v3/simple/price?ids=yvboost&vs_currencies=usd');
     const yvBoostPrice = pricesResponse.data['yvboost']['usd'];
     return {
-      address: yvBoostContract.address,
-      decimals: decimals.toString(),
-      name,
+      address: YVBOOST,
+      decimals: '18',
+      name: 'yvBOOST',
       priceUsdc: toBN(yvBoostPrice)
         .multipliedBy(10 ** USDC_DECIMALS)
         .toString(),
       supported: {
         zapper: false,
       },
-      symbol,
-      icon:
-        'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+      symbol: 'yvBOOST',
+      icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVBOOST}/logo-128.png`,
     };
   }
 
-  public async getPSLPyvBoostEthToken(): Promise<Token> {
-    const provider = this.web3Provider.getInstanceOf('default');
+  private async getPSLPyvBoostEthToken(): Promise<Token> {
     const { ZAPPER_API_KEY } = this.config;
     const { PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
-    const pSLPyvBoostEthContract = getContract(PSLPYVBOOSTETH, pickleJarAbi, provider);
-    const [decimals, name, symbol, pricesResponse] = await Promise.all([
-      pSLPyvBoostEthContract.decimals(),
-      pSLPyvBoostEthContract.name(),
-      pSLPyvBoostEthContract.symbol(),
-      get(`https://api.zapper.fi/v1/vault-stats/pickle?api_key=${ZAPPER_API_KEY}`),
-    ]);
-    const pJarPricePerToken = pricesResponse.data.find(({ address }: { address: string }) => address === PSLPYVBOOSTETH)
-      ?.pricePerToken;
+    const pricesResponse = await get(`https://api.zapper.fi/v1/vault-stats/pickle?api_key=${ZAPPER_API_KEY}`);
+    const pJarPricePerToken = pricesResponse.data.find(
+      ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
+    )?.pricePerToken;
     return {
-      address: pSLPyvBoostEthContract.address,
-      decimals: decimals.toString(),
-      name,
+      address: PSLPYVBOOSTETH,
+      decimals: '18',
+      name: 'pSLPyvBOOST-ETH',
       priceUsdc: toBN(pJarPricePerToken)
         .multipliedBy(10 ** USDC_DECIMALS)
         .toString(),
       supported: {
         zapper: false,
       },
-      symbol,
-      icon:
-        'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png', // TODO USE PROPER ICON WHEN READY
+      symbol: 'pSLPyvBOOST-ETH',
+      icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
     };
   }
 }

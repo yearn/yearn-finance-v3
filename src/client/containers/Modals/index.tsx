@@ -10,6 +10,9 @@ import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
 import { BackscratcherLockTxModal } from './Backscratcher';
+import { LabDepositTxModal } from './LabDepositTxModal';
+import { LabWithdrawTxModal } from './LabWithdrawTxModal';
+import { LabStakeTxModal } from './LabStakeTxModal';
 
 const modalTimeout = 300;
 
@@ -138,6 +141,24 @@ export const Modals = () => {
       {activeModal === 'backscratcherLockTx' && (
         <CSSTransition key={'backscratcherLockTx'} timeout={modalTimeout} classNames="slideBottom">
           <BackscratcherLockTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'labDepositTx' && (
+        <CSSTransition key={'labDepositTx'} timeout={500} classNames="slideBottom">
+          <LabDepositTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'labWithdrawTx' && (
+        <CSSTransition key={'labWithdrawTx'} timeout={500} classNames="slideBottom">
+          <LabWithdrawTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'labStakeTx' && (
+        <CSSTransition key={'labStakeTx'} timeout={500} classNames="slideBottom">
+          <LabStakeTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

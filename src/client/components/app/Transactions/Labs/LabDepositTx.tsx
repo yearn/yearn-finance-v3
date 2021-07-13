@@ -2,9 +2,10 @@ import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions, SettingsSelectors } from '@store';
+import { TokensSelectors, LabsSelectors, LabsActions, TokensActions, VaultsActions, VaultsSelectors } from '@store';
 import {
   toBN,
+  formatPercent,
   normalizeAmount,
   toWei,
   USDC_DECIMALS,
@@ -12,49 +13,51 @@ import {
   validateVaultAllowance,
   getZapInContractAddress,
 } from '@src/utils';
+import { getConfig } from '@config';
 
-import { Transaction } from './Transaction';
+import { Transaction } from '../Transaction';
 
-export interface DepositTxProps {
+const isZapDisabled = (labAddress?: string) => labAddress === getConfig().CONTRACT_ADDRESSES.PSLPYVBOOST;
+
+export interface LabDepositTxProps {
   onClose?: () => void;
 }
 
-export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) => {
+export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
+  const { SLIPPAGE_OPTIONS } = getConfig();
+  const slippageOptions = SLIPPAGE_OPTIONS.map((value) => ({
+    value: value.toString(),
+    label: formatPercent(value.toString(), 0),
+  }));
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const [allowVaultSelect, setAllowVaultSelect] = useState(false);
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
-  const vaults = useAppSelector(VaultsSelectors.selectVaults);
-  const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
+  const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
-  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
+  const [selectedSlippage, setSelectedSlippage] = useState(slippageOptions[0]);
+  // TODO: ADD EXPECTED OUTCOME TO LABS
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
-  const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
+  const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
 
-  const sellTokensOptions = selectedVault
-    ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
-    : userTokens;
+  const sellTokensOptions = isZapDisabled(selectedLab?.address)
+    ? userTokens.filter(({ address }) => address !== selectedLab?.token.address)
+    : [];
+  if (selectedLab) sellTokensOptions.unshift(selectedLab.token);
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
 
   const onExit = () => {
-    dispatch(VaultsActions.clearSelectedVaultAndStatus());
+    dispatch(LabsActions.clearSelectedLabAndStatus());
     dispatch(VaultsActions.clearTransactionData());
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
 
   useEffect(() => {
-    if (!selectedSellTokenAddress && selectedVault) {
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedVault.token.address }));
-    }
-
-    if (!selectedVault) {
-      // TODO: DEFINE DEFAULT SELECTED VAULT ADDRESS CRITERIA
-      dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: '0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1' }));
-      setAllowVaultSelect(true);
+    if (!selectedSellTokenAddress && selectedLab) {
+      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedLab.token.address }));
     }
 
     return () => {
@@ -63,10 +66,11 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   }, []);
 
   useEffect(() => {
-    if (!selectedVault || !selectedSellTokenAddress) return;
+    if (!selectedLab || !selectedSellTokenAddress) return;
 
-    const isZap = selectedSellTokenAddress === selectedVault.token.address;
-    const spenderAddress = isZap ? getZapInContractAddress(selectedVault.token.address) : selectedVault.address;
+    const isZap = selectedSellTokenAddress === selectedLab.token.address;
+    const spenderAddress = isZap ? getZapInContractAddress(selectedLab.token.address) : selectedLab.address;
+
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedSellTokenAddress,
@@ -75,8 +79,9 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     );
   }, [selectedSellTokenAddress]);
 
+  // TODO: SET LABS SIMULATION
   useEffect(() => {
-    if (!selectedVault || !selectedSellTokenAddress) return;
+    if (!selectedLab || !selectedSellTokenAddress) return;
 
     if (toBN(amount).gt(0)) {
       dispatch(
@@ -84,20 +89,21 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
           transactionType: 'DEPOSIT',
           sourceTokenAddress: selectedSellTokenAddress,
           sourceTokenAmount: toWei(amount, selectedSellToken.decimals),
-          targetTokenAddress: selectedVault.address,
+          targetTokenAddress: selectedLab.address,
         })
       );
     }
-  }, [amount, selectedSellTokenAddress, selectedVault]);
+  }, [amount, selectedSellTokenAddress, selectedLab]);
 
-  if (!selectedVault || !selectedSellTokenAddress || !sellTokensOptions) {
+  if (!selectedLab || !selectedSellTokenAddress || !sellTokensOptions) {
     return null;
   }
 
+  // TODO: USE LAB VALIDATIONS
   const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
     amount: toBN(amount),
-    vaultAddress: selectedVault.address,
-    vaultUnderlyingTokenAddress: selectedVault.token.address,
+    vaultAddress: selectedLab.address,
+    vaultUnderlyingTokenAddress: selectedLab.token.address,
     sellTokenAddress: selectedSellTokenAddress,
     sellTokenDecimals: selectedSellToken.decimals.toString(),
     sellTokenAllowancesMap: selectedSellToken.allowancesMap,
@@ -105,33 +111,30 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
     sellTokenAmount: toBN(amount),
-    depositLimit: selectedVault.depositLimit,
-    emergencyShutdown: selectedVault.emergencyShutdown,
+    depositLimit: '0',
+    emergencyShutdown: false,
     sellTokenDecimals: selectedSellToken.decimals.toString(),
     userTokenBalance: selectedSellToken.balance,
-    vaultUnderlyingBalance: selectedVault.vaultBalance,
+    vaultUnderlyingBalance: selectedLab.labBalance,
   });
 
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.deposit.error;
+  const error = allowanceError || inputError || actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
 
-  const vaultsOptions = vaults
-    .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
-    .map(({ address, DEPOSIT, token }) => ({
-      address,
-      symbol: token.name,
-      icon: token.icon,
-      balance: DEPOSIT.userDeposited,
-      decimals: token.decimals,
-    }));
-  const selectedVaultOption = vaultsOptions.find(({ address }) => address === selectedVault.address)!;
+  const selectedLabOption = {
+    address: selectedLab.address,
+    symbol: selectedLab.name,
+    icon: selectedLab.icon,
+    balance: selectedLab.DEPOSIT.userBalance,
+    decimals: toBN(selectedLab.decimals).toNumber(),
+  };
 
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(amount).gt(0)
-    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedVault?.token.decimals)
+    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedLab?.token.decimals)
     : '';
   const expectedAmountValue = toBN(expectedAmount)
-    .times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS))
+    .times(normalizeAmount(selectedLab.token.priceUsdc, USDC_DECIMALS))
     .toString();
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
@@ -139,9 +142,9 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
   };
 
-  const onSelectedVaultChange = (vaultAddress: string) => {
+  const onSelectedLabChange = (labAddress: string) => {
     setAmount('');
-    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+    dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
   };
 
   const onTransactionCompletedDismissed = () => {
@@ -150,18 +153,21 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
   const approve = async () => {
     await dispatch(
-      VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
+      LabsActions.approveDeposit({
+        labAddress: selectedLab.address,
+        tokenAddress: selectedSellToken.address,
+      })
     );
   };
 
   const deposit = async () => {
     try {
       await dispatchAndUnwrap(
-        VaultsActions.depositVault({
-          vaultAddress: selectedVault.address,
+        LabsActions.deposit({
+          labAddress: selectedLab.address,
           tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
-          slippageTolerance: toBN(selectedSlippage).toNumber(),
+          slippageTolerance: toBN(selectedSlippage.value).toNumber(),
         })
       );
       setTxCompleted(true);
@@ -172,7 +178,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     {
       label: 'Approve',
       onAction: approve,
-      status: actionsStatus.approve,
+      status: actionsStatus.approveDeposit,
       disabled: isApproved,
     },
     {
@@ -189,17 +195,17 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
       transactionCompleted={txCompleted}
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="From wallet"
-      sourceAssetOptions={allowVaultSelect ? [selectedSellToken] : sellTokensOptions}
+      sourceHeader="From Wallet"
+      sourceAssetOptions={sellTokensOptions}
       selectedSourceAsset={selectedSellToken}
       onSelectedSourceAssetChange={onSelectedSellTokenChange}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To vault"
-      targetAssetOptions={vaultsOptions}
-      selectedTargetAsset={selectedVaultOption}
-      onSelectedTargetAssetChange={onSelectedVaultChange}
+      targetHeader="To Vault"
+      targetAssetOptions={[selectedLabOption]}
+      selectedTargetAsset={selectedLabOption}
+      onSelectedTargetAssetChange={onSelectedLabChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
       targetAmountStatus={expectedTxOutcomeStatus}
