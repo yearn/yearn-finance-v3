@@ -13,7 +13,6 @@ import {
 } from '@store';
 import {
   toBN,
-  formatPercent,
   normalizeAmount,
   toWei,
   USDC_DECIMALS,
@@ -25,7 +24,7 @@ import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
 
-const isZapDisabled = (labAddress?: string) => labAddress === getConfig().CONTRACT_ADDRESSES.PSLPYVBOOST;
+const isZapDisabled = (labAddress?: string) => labAddress === getConfig().CONTRACT_ADDRESSES.YVBOOST;
 
 export interface LabDepositTxProps {
   onClose?: () => void;
@@ -47,8 +46,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
 
   const sellTokensOptions = isZapDisabled(selectedLab?.address)
-    ? userTokens.filter(({ address }) => address !== selectedLab?.token.address)
-    : [];
+    ? []
+    : userTokens.filter(({ address }) => address !== selectedLab?.token.address);
   if (selectedLab) sellTokensOptions.unshift(selectedLab.token);
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
