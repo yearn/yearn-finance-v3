@@ -74,7 +74,11 @@ const TokenData = styled.div`
   font-size: 1.4rem;
 `;
 
-const TokenName = styled.div``;
+const TokenName = styled.div`
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
 
 const TokenListIcon = styled(Icon)`
   position: absolute;
