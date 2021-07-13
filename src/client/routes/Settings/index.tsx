@@ -112,7 +112,7 @@ export const Settings = () => {
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
   const defaultSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
-  const availableSlippages = useAppSelector(SettingsSelectors.selectAvailableSlippages);
+  const availableSlippages = getConfig().SLIPPAGE_OPTIONS;
   const { ALLOW_DEV_MODE, AVAILABLE_THEMES } = getConfig();
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 

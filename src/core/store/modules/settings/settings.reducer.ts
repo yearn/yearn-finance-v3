@@ -7,7 +7,6 @@ export const settingsInitialState: SettingsState = {
   stateVersion: getConfig().STATE_VERSION,
   sidebarCollapsed: false,
   defaultSlippage: getConfig().DEFAULT_SLIPPAGE,
-  availableSlippages: getConfig().SLIPPAGE_OPTIONS,
   devMode: {
     enabled: false,
     walletAddressOverride: '',
