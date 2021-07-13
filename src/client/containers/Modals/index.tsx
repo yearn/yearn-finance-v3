@@ -4,8 +4,8 @@ import { ModalsActions, ModalSelectors } from '@core/store';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import { TestModal } from './TestModal';
-import { DepositModal } from './DepositModal';
-import { WithdrawModal } from './WithdrawModal';
+import { DepositModal } from './DepositModal_old';
+import { WithdrawModal } from './WithdrawModal_old';
 import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
