@@ -30,12 +30,6 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
   };
 
   useEffect(() => {
-    return () => {
-      onExit();
-    };
-  }, []);
-
-  useEffect(() => {
     if (!selectedTargetToken) return;
 
     dispatch(
@@ -44,6 +38,10 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
         spenderAddress: y3CrvBackZapper,
       })
     );
+
+    return () => {
+      onExit();
+    };
   }, []);
 
   if (!selectedLab || !selectedTargetVault || !selectedTargetToken) {
