@@ -273,7 +273,7 @@ export const Labs = () => {
               { key: 'name', header: 'Name', fontWeight: 600 },
               { key: 'apy', header: 'APY' },
               { key: 'labBalanceUsdc', header: 'Total Assets' },
-              { key: 'tokenBalanceUsdc', header: 'Available to Invest' },
+              { key: 'userTokenBalance', header: 'Available to Invest' },
               {
                 key: 'actions',
                 transform: ({ labAddress }) => <LabOpportunitiesActions labAddress={labAddress} />,
