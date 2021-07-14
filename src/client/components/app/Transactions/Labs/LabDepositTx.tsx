@@ -20,11 +20,13 @@ import {
   validateVaultAllowance,
   getZapInContractAddress,
 } from '@src/utils';
-import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
 
-const isZapDisabled = (labAddress?: string) => labAddress === getConfig().CONTRACT_ADDRESSES.YVBOOST;
+const isZapDisabled = (labAddress?: string) => {
+  // TODO: DISABLE ZAPS THROUGH METADATA
+  return false; // NO LAB ADDRESS DISABLED NOW
+};
 
 export interface LabDepositTxProps {
   onClose?: () => void;
