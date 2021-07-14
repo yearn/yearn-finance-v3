@@ -46,140 +46,159 @@ export class LabServiceImpl implements LabService {
     const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
 
     // **************** BACKSCRATCHER ****************
-    const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
-    const totalSupply = await backscratcherContract.totalSupply();
-    const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
-    if (!backscratcherData) throw new Error(`yveCRV vault not found on ${YEARN_API} response`);
-    const crvPrice = pricesResponse.data['curve-dao-token']['usd'];
-    const backscratcherLab: Lab = {
-      address: YVECRV,
-      typeId: 'LAB',
-      token: CRV,
-      name: backscratcherData.name,
-      version: backscratcherData.version,
-      symbol: backscratcherData.symbol,
-      decimals: backscratcherData.decimals.toString(),
-      tokenId: CRV,
-      // TODO: TBD. BACKSCRATCHER TVL IS NOT CONSISTENT AMONG DIFFERENT SOURCES. FETCH FROM USDC ORACLE
-      underlyingTokenBalance: {
-        amount: totalSupply.toString(),
-        amountUsdc: toBN(normalizeAmount(totalSupply.toString(), backscratcherData.decimals))
-          .times(crvPrice)
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      metadata: {
-        depositLimit: '0', // yvecrv doestn have
-        emergencyShutdown: false, // yvecrv doesnt have
-        pricePerShare: toBN('1')
-          .times(10 ** backscratcherData.decimals)
-          .toFixed(0),
-        apy: {
-          recommended: backscratcherData.apy.composite?.totalApy,
-          composite: false,
-          type: backscratcherData.apy.type,
-          description: '',
+    let backscratcherLab: Lab | undefined;
+    try {
+      const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
+      const totalSupply = await backscratcherContract.totalSupply();
+      const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
+      if (!backscratcherData) throw new Error(`yveCRV vault not found on ${YEARN_API} response`);
+      const crvPrice = pricesResponse.data['curve-dao-token']['usd'];
+      backscratcherLab = {
+        address: YVECRV,
+        typeId: 'LAB',
+        token: CRV,
+        name: backscratcherData.name,
+        version: backscratcherData.version,
+        symbol: backscratcherData.symbol,
+        decimals: backscratcherData.decimals.toString(),
+        tokenId: CRV,
+        // TODO: TBD. BACKSCRATCHER TVL IS NOT CONSISTENT AMONG DIFFERENT SOURCES. FETCH FROM USDC ORACLE
+        underlyingTokenBalance: {
+          amount: totalSupply.toString(),
+          amountUsdc: toBN(normalizeAmount(totalSupply.toString(), backscratcherData.decimals))
+            .times(crvPrice)
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
         },
-        icon:
-          'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
-      },
-    };
+        metadata: {
+          depositLimit: '0', // yvecrv doestn have
+          emergencyShutdown: false, // yvecrv doesnt have
+          pricePerShare: toBN('1')
+            .times(10 ** backscratcherData.decimals)
+            .toFixed(0),
+          apy: {
+            recommended: backscratcherData.apy.composite?.totalApy,
+            composite: false,
+            type: backscratcherData.apy.type,
+            description: '',
+          },
+          icon:
+            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
+        },
+      };
+    } catch (error) {
+      // TODO handle error
+    }
 
     // **************** YVBOOST ****************
-    const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
-    const [totalAssets, pricePerShare, depositLimit, emergencyShutdown] = await Promise.all([
-      yvBoostContract.totalAssets(),
-      yvBoostContract.pricePerShare(),
-      yvBoostContract.depositLimit(),
-      yvBoostContract.emergencyShutdown(),
-    ]);
-    const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-    if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-    const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
-    const yvBoostLab: Lab = {
-      address: YVBOOST,
-      typeId: 'LAB',
-      token: YVECRV,
-      name: yvBoostData.symbol,
-      version: yvBoostData.version,
-      symbol: yvBoostData.symbol,
-      decimals: yvBoostData.decimals.toString(),
-      tokenId: YVECRV,
-      underlyingTokenBalance: {
-        amount: totalAssets.toString(),
-        amountUsdc: toBN(normalizeAmount(totalAssets.toString(), yvBoostData.decimals))
-          .times(yveCrvPrice)
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      metadata: {
-        depositLimit: depositLimit.toString(),
-        emergencyShutdown: emergencyShutdown,
-        pricePerShare: pricePerShare.toString(),
-        apy: {
-          recommended: yvBoostData.apy.net_apy,
-          composite: false,
-          type: yvBoostData.apy.type,
-          description: '',
+    let yvBoostLab: Lab | undefined;
+    try {
+      const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
+      const [totalAssets, pricePerShare, depositLimit, emergencyShutdown] = await Promise.all([
+        yvBoostContract.totalAssets(),
+        yvBoostContract.pricePerShare(),
+        yvBoostContract.depositLimit(),
+        yvBoostContract.emergencyShutdown(),
+      ]);
+      const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
+      if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
+      yvBoostLab = {
+        address: YVBOOST,
+        typeId: 'LAB',
+        token: YVECRV,
+        name: yvBoostData.symbol,
+        version: yvBoostData.version,
+        symbol: yvBoostData.symbol,
+        decimals: yvBoostData.decimals.toString(),
+        tokenId: YVECRV,
+        underlyingTokenBalance: {
+          amount: totalAssets.toString(),
+          amountUsdc: toBN(normalizeAmount(totalAssets.toString(), yvBoostData.decimals))
+            .times(yveCrvPrice)
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
         },
-        icon:
-          'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
-      },
-    };
+        metadata: {
+          depositLimit: depositLimit.toString(),
+          emergencyShutdown: emergencyShutdown,
+          pricePerShare: pricePerShare.toString(),
+          apy: {
+            recommended: yvBoostData.apy.net_apy,
+            composite: false,
+            type: yvBoostData.apy.type,
+            description: '',
+          },
+          icon:
+            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+        },
+      };
+    } catch (error) {
+      // TODO handle error
+    }
 
     // **************** YVBOOST-ETH ****************
-    const pSLPyvBoostEthContract = getContract(PSLPYVBOOSTETH, pickleJarAbi, provider);
-    const pJarTotalSupplyPromise = pSLPyvBoostEthContract.totalSupply();
-    const pJarRatioPromise = pSLPyvBoostEthContract.getRatio();
-    const picklePoolsPromise = get('https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/pools');
-    const [pJarTotalSupply, pJarRatio, picklePoolsResponse] = await Promise.all([
-      pJarTotalSupplyPromise,
-      pJarRatioPromise,
-      picklePoolsPromise,
-    ]);
-    const pJarPool = picklePoolsResponse.data.find(
-      ({ identifier }: { identifier: string }) => identifier === 'yvboost-eth'
-    );
-    const liquidityLocked = pJarPool?.liquidity_locked;
-    const performance = pJarPool?.apy;
+    let pSLPyvBoostEthLab: Lab | undefined;
+    try {
+      const pSLPyvBoostEthContract = getContract(PSLPYVBOOSTETH, pickleJarAbi, provider);
+      const pJarTotalSupplyPromise = pSLPyvBoostEthContract.totalSupply();
+      const pJarRatioPromise = pSLPyvBoostEthContract.getRatio();
+      const picklePoolsPromise = get('https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/pools');
+      const [pJarTotalSupply, pJarRatio, picklePoolsResponse] = await Promise.all([
+        pJarTotalSupplyPromise,
+        pJarRatioPromise,
+        picklePoolsPromise,
+      ]);
+      const pJarPool = picklePoolsResponse.data.find(
+        ({ identifier }: { identifier: string }) => identifier === 'yvboost-eth'
+      );
+      const liquidityLocked = pJarPool?.liquidity_locked;
+      const performance = pJarPool?.apy;
 
-    // USE YVBOOST DATA AS BASE DATA SOURCE
-    const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-    if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-    const pSLPyvBoostEthLab: Lab = {
-      address: PSLPYVBOOSTETH,
-      typeId: 'LAB',
-      token: YVBOOST,
-      name: 'pSLPyvBOOST-ETH',
-      version: pJarData.version,
-      symbol: 'pSLPyvBOOST-ETH',
-      decimals: pJarData.decimals.toString(),
-      tokenId: YVBOOST,
-      underlyingTokenBalance: {
-        // TODO: FIX, AMOUNT IS IN SLPYVBOOSTETH, NOT YVBOOST
-        amount: toBN(normalizeAmount(pJarTotalSupply.toString(), pJarData.decimals.toString()))
-          .times(pJarRatio.toString())
-          .toFixed(0),
-        amountUsdc: toBN(liquidityLocked.toString())
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      metadata: {
-        depositLimit: '0', // yvboost-eth doestn have
-        emergencyShutdown: false, // yvboost-eth doestn have
-        pricePerShare: pJarRatio.toString(),
-        apy: {
-          recommended: toBN(performance.toString()).dividedBy(100).toNumber(),
-          composite: false,
-          type: pJarData.apy.type,
-          description: '',
+      // USE YVBOOST DATA AS BASE DATA SOURCE
+      const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
+      if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      pSLPyvBoostEthLab = {
+        address: PSLPYVBOOSTETH,
+        typeId: 'LAB',
+        token: YVBOOST,
+        name: 'pSLPyvBOOST-ETH',
+        version: pJarData.version,
+        symbol: 'pSLPyvBOOST-ETH',
+        decimals: pJarData.decimals.toString(),
+        tokenId: YVBOOST,
+        underlyingTokenBalance: {
+          // TODO: FIX, AMOUNT IS IN SLPYVBOOSTETH, NOT YVBOOST
+          amount: toBN(normalizeAmount(pJarTotalSupply.toString(), pJarData.decimals.toString()))
+            .times(pJarRatio.toString())
+            .toFixed(0),
+          amountUsdc: toBN(liquidityLocked.toString())
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
         },
-        icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
-      },
-    };
-    // ********************************
+        metadata: {
+          depositLimit: '0', // yvboost-eth doestn have
+          emergencyShutdown: false, // yvboost-eth doestn have
+          pricePerShare: pJarRatio.toString(),
+          apy: {
+            recommended: toBN(performance.toString()).dividedBy(100).toNumber(),
+            composite: false,
+            type: pJarData.apy.type,
+            description: '',
+          },
+          icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
+        },
+      };
+    } catch (error) {
+      // TODO handle error.
+    }
 
-    return [backscratcherLab, yvBoostLab, pSLPyvBoostEthLab];
+    // ********************************
+    const finalLabs: Lab[] = [];
+    [backscratcherLab, yvBoostLab, pSLPyvBoostEthLab].forEach((lab) => {
+      if (lab) finalLabs.push(lab);
+    });
+    return finalLabs;
   }
 
   public async getLabsDynamicData(): Promise<LabDynamic[]> {
