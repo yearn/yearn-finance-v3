@@ -103,6 +103,10 @@ const selectLabs = createSelector(
     [yveCrvLab, yvBoostLab, yvBoostEthLab].forEach((lab) => {
       if (lab) labs.push(lab);
     });
+
+    labs.sort((a, b) => {
+      return toBN(b.token.balance).minus(a.token.balance).toNumber();
+    });
     return labs;
   }
 );
