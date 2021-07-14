@@ -91,10 +91,12 @@ export const Transaction: FC<TransactionProps> = (props) => {
   if (actions.length && actions.length > 1) {
     if (!actions[0].disabled && !actions[0].status.loading) {
       txArrowStatus = 'preparing';
+      if (targetAmountStatus.loading) txArrowStatus = 'firstPending';
     } else if (actions[0].status.loading) {
       txArrowStatus = 'firstPending';
     } else if (!actions[1].status.loading) {
       txArrowStatus = 'secondPreparing';
+      if (targetAmountStatus.loading) txArrowStatus = 'firstPending';
     } else if (actions[1].status.loading) {
       txArrowStatus = 'secondPending';
     }

@@ -179,7 +179,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
       label: 'Deposit',
       onAction: deposit,
       status: actionsStatus.deposit,
-      disabled: !isApproved || !isValidAmount,
+      disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading,
       contrast: true,
     },
   ];
