@@ -4,7 +4,7 @@ import { save, load, clear } from 'redux-localstorage-simple';
 import { merge, cloneDeep, get } from 'lodash';
 
 import rootReducer, { themeInitialState, walletInitialState, settingsInitialState } from '@store/modules';
-import { isDev } from '@utils';
+import { enableDevTools } from '@utils';
 import { DIContainer } from '@types';
 
 export const getStore = (extraArgument?: any) => {
@@ -39,12 +39,12 @@ export const getStore = (extraArgument?: any) => {
     middleware: (getDefaultMiddleware) => {
       let middleware = getDefaultMiddleware(middlewareOptions);
       middleware.push(save(persistConfig));
-      if (isDev()) {
+      if (enableDevTools()) {
         middleware.push(logger);
       }
       return middleware;
     },
-    devTools: isDev(),
+    devTools: enableDevTools(),
     preloadedState: merge(initialState, persistedState),
   });
 
