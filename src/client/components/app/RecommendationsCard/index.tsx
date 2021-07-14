@@ -44,10 +44,20 @@ const ItemHeader = styled(Text)`
 
 const ItemInfo = styled(Text)`
   color: ${({ theme }) => theme.colors.onSurfaceH2};
-  font-size: 2.4rem;
+  font-size: 1.6rem;
   font-weight: 600;
   padding-bottom: 0.4rem;
   margin-top: 2.3rem;
+  position: relative;
+`;
+
+const ItemInfoLabel = styled(Text)`
+  font-size: 0.8rem;
+  font-weight: 400;
+  position: absolute;
+  top: 0;
+  right: -0.5rem;
+  transform: translateX(100%);
 `;
 
 const ItemName = styled(Text)`
@@ -115,7 +125,10 @@ export const RecommendationsCard = ({ header, items, ...props }: Recommendations
 
             <ItemName>{item.name}</ItemName>
 
-            <ItemInfo>{item.info}</ItemInfo>
+            <ItemInfo>
+              {item.info}
+              <ItemInfoLabel>APY</ItemInfoLabel>
+            </ItemInfo>
           </ItemCard>
         ))}
       </StyledCardContent>
