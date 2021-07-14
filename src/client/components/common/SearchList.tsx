@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { Icon, ChevronLeftIcon, SearchInput } from '@components/common';
-import { TokenIcon } from '../app';
+import { TokenIcon } from '@components/app';
 
 const ItemLabel = styled.div`
   flex: 1;
@@ -134,7 +134,7 @@ export const SearchList: FC<SearchListProps> = ({ headerText, list, selected, se
           (item: SearchListItem) =>
             item && (
               <ListItem key={item.id} onClick={() => selectItem(item)} selected={item.id === selected.id}>
-                <TokenIcon icon={item.icon} symbol={item.label} />
+                <TokenIcon icon={item.icon} symbol={item.label} size="big" />
                 <ItemLabel>{item.label}</ItemLabel>
                 {item.value}
               </ListItem>
