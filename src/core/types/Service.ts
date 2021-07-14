@@ -147,7 +147,7 @@ export interface SubscriptionService {
 }
 
 export interface LabService {
-  getSupportedLabs: () => Promise<Lab[]>;
+  getSupportedLabs: () => Promise<{ labsData: Lab[]; errors: string[] }>;
   getLabsDynamicData: () => Promise<LabDynamic[]>;
   getUserLabsPositions: (props: GetUserLabsPositionsProps) => Promise<Position[]>;
   getUserLabsMetadata: (props: GetUserLabsMetadataProps) => Promise<LabUserMetadata[]>;

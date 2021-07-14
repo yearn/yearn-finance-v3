@@ -35,7 +35,8 @@ export class LabServiceImpl implements LabService {
     this.config = config;
   }
 
-  public async getSupportedLabs(): Promise<Lab[]> {
+  public async getSupportedLabs() {
+    const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
     const provider = this.web3Provider.getInstanceOf('default');
@@ -88,6 +89,7 @@ export class LabServiceImpl implements LabService {
       };
     } catch (error) {
       // TODO handle error
+      errors.push('YveCrv Lab Error');
     }
 
     // **************** YVBOOST ****************
@@ -101,7 +103,7 @@ export class LabServiceImpl implements LabService {
         yvBoostContract.emergencyShutdown(),
       ]);
       const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-      if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      if (!yvBoostData || true) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
       const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
       yvBoostLab = {
         address: YVBOOST,
@@ -134,7 +136,7 @@ export class LabServiceImpl implements LabService {
         },
       };
     } catch (error) {
-      // TODO handle error
+      errors.push('YvBoost Lab Error');
     }
 
     // **************** YVBOOST-ETH ****************
@@ -190,15 +192,15 @@ export class LabServiceImpl implements LabService {
         },
       };
     } catch (error) {
-      // TODO handle error.
+      errors.push('YvBoost-Eth Lab Error');
     }
 
     // ********************************
-    const finalLabs: Lab[] = [];
+    const labsData: Lab[] = [];
     [backscratcherLab, yvBoostLab, pSLPyvBoostEthLab].forEach((lab) => {
-      if (lab) finalLabs.push(lab);
+      if (lab) labsData.push(lab);
     });
-    return finalLabs;
+    return { labsData, errors };
   }
 
   public async getLabsDynamicData(): Promise<LabDynamic[]> {

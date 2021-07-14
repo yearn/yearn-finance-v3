@@ -18,7 +18,7 @@ import {
 import { getConfig } from '@config';
 
 import { VaultsActions } from '../vaults/vaults.actions';
-import { TokensActions } from '../..';
+import { AlertsActions, TokensActions } from '../..';
 
 const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
 
@@ -37,7 +37,10 @@ const getLabs = createAsyncThunk<{ labsData: Lab[] }, void, ThunkAPI>(
   async (_arg, { extra, dispatch }) => {
     const { labService } = extra.services;
     dispatch(getYveCrvExtraData({}));
-    const labsData = await labService.getSupportedLabs();
+    const { labsData, errors } = await labService.getSupportedLabs();
+    errors.forEach((error) => {
+      dispatch(AlertsActions.openAlert({ message: error, type: 'error', persistent: true }));
+    });
     return { labsData };
   }
 );
