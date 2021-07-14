@@ -1,58 +1,81 @@
 import styled from 'styled-components';
 
-import { Card, CardHeader, CardContent, CardElement, Text, Button } from '@components/common';
-import { TokenIcon } from '../TokenIcon';
+import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@components/common';
+import { TokenIcon } from '@components/app';
 
 const ContainerCard = styled(Card)`
-  max-width: max-content;
-  padding: ${({ theme }) => theme.cardPadding} ${({ theme }) => theme.cardPadding} 0 0;
+  padding: ${({ theme }) => theme.cardPadding} 0;
+  width: 100%;
 `;
 
 const StyledCardContent = styled(CardContent)`
+  align-items: stretch;
   justify-content: center;
+  flex-wrap: wrap;
+  grid-gap: ${({ theme }) => theme.cardPadding};
+  margin-top: ${({ theme }) => theme.cardPadding};
+  padding: 0 ${({ theme }) => theme.cardPadding};
 `;
 
-const ItemCard = styled(Card)`
+const ItemCard = styled(Card)<{ onClick: any }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 25.6rem;
-  width: 18rem;
-  padding: ${({ theme }) => theme.cardPadding} 0;
-  margin-bottom: 1.6rem;
+  max-width: 18rem;
+  min-width: 15rem;
+  flex: 1;
+  padding: 0.8rem;
+  background-color: ${({ theme }) => theme.colors.background};
+  transition: filter 200ms ease-in-out;
+
+  ${({ onClick }) =>
+    onClick &&
+    `
+    cursor: pointer;
+    &:hover {
+      filter: brightness(85%);
+    }
+  `};
+`;
+
+const ItemHeader = styled(Text)`
+  font-size: 1.4rem;
 `;
 
 const ItemInfo = styled(Text)`
   color: ${({ theme }) => theme.colors.onSurfaceH2};
+  font-size: 1.6rem;
+  font-weight: 600;
+  padding-bottom: 0.4rem;
+  margin-top: 2.3rem;
+  position: relative;
+`;
+
+const ItemInfoLabel = styled(Text)`
+  font-size: 0.8rem;
+  font-weight: 400;
+  position: absolute;
+  top: 0;
+  right: -0.5rem;
+  transform: translateX(100%);
 `;
 
 const ItemName = styled(Text)`
   color: ${({ theme }) => theme.colors.onSurfaceH2};
-  margin-top: 0.4rem;
+  font-size: 1.4rem;
   font-weight: 600;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.4rem;
+  text-align: center;
+  flex: 1;
 `;
 
-const ItemButton = styled(Button)`
-  margin-top: 0.7rem;
-  flex-shrink: 0;
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
-  background-color: ${({ theme }) => theme.colors.background};
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.onSurfaceH1};
-    background-color: ${({ theme }) => theme.colors.secondaryVariantA};
-  }
-`;
-
-const InnerBox = styled(Card)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 15.6rem;
-  width: 15.6rem;
-  padding: ${({ theme }) => theme.cardPadding} 0;
-  margin-bottom: 1.6rem;
-  background-color: ${({ theme }) => theme.colors.background};
+const TokenListIcon = styled(Icon)`
+  position: absolute;
+  right: 0;
+  fill: currentColor;
 `;
 
 const CenterIcon = styled.div`
@@ -60,7 +83,10 @@ const CenterIcon = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 15.6rem;
+  margin-top: 3.4rem;
+  width: 100%;
+  text-align: center;
+  position: relative;
 `;
 
 interface Item {
@@ -78,32 +104,32 @@ interface RecommendationsProps {
   items: Item[];
 }
 
-export const RecommendationsCard = ({ header, items }: RecommendationsProps) => {
+export const RecommendationsCard = ({ header, items, ...props }: RecommendationsProps) => {
   if (items.length === 0) {
     return null;
   }
 
   return (
-    <ContainerCard>
+    <ContainerCard {...props}>
       <CardHeader header={header} />
-      <StyledCardContent wrap>
-        {items.map((item, i) => (
-          <CardElement key={`${i}-${item.name}`}>
-            <ItemCard variant="primary">
-              <InnerBox>
-                {item.header}
-                <CenterIcon>
-                  <TokenIcon symbol={item.name} icon={item.icon} />
-                  <ItemName>{item.name}</ItemName>
-                </CenterIcon>
-              </InnerBox>
-              <ItemInfo fontSize="2.4rem" fontWeight="600">
-                {item.info}
-              </ItemInfo>
 
-              {item.action && <ItemButton onClick={item.onAction}>{item.action}</ItemButton>}
-            </ItemCard>
-          </CardElement>
+      <StyledCardContent>
+        {items.map((item, i) => (
+          <ItemCard key={`${i}-${item.name}`} variant="primary" onClick={item.onAction ? item.onAction : undefined}>
+            <ItemHeader>{item.header}</ItemHeader>
+
+            <CenterIcon>
+              <TokenIcon symbol={item.name} icon={item.icon} size="big" />
+              {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}
+            </CenterIcon>
+
+            <ItemName>{item.name}</ItemName>
+
+            <ItemInfo>
+              {item.info}
+              <ItemInfoLabel>APY</ItemInfoLabel>
+            </ItemInfo>
+          </ItemCard>
         ))}
       </StyledCardContent>
     </ContainerCard>

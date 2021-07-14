@@ -85,6 +85,7 @@ const TokenListIcon = styled(Icon)`
   position: absolute;
   right: 0;
   fill: inherit;
+  color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
 `;
 
 const TokenIconContainer = styled.div`
@@ -251,7 +252,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
       <TokenInfo>
         <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
           <TokenIconContainer>
-            <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} />
+            <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
             {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
           </TokenIconContainer>
           <TokenName>{selectedItem.label}</TokenName>

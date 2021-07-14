@@ -34,8 +34,11 @@ const Row = styled.div`
   justify-content: flex-start;
   grid-gap: ${({ theme }) => theme.layoutPadding};
   flex-wrap: wrap;
-  grid-column: 1 / 3;
   width: 100%;
+`;
+
+const StyledRecommendationsCard = styled(RecommendationsCard)`
+  ${halfWidthCss}
 `;
 
 const StyledInfoCard = styled(InfoCard)`
@@ -99,7 +102,7 @@ export const Vaults = () => {
       {!vaultsStatus.loading && (
         <>
           <Row>
-            <RecommendationsCard
+            <StyledRecommendationsCard
               header="Recommendations"
               items={recommendations.map(({ address, token, apyData }) => ({
                 header: 'Vault',
@@ -107,7 +110,6 @@ export const Vaults = () => {
                 name: token.symbol,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
-                // action: 'Go to Vault',
                 // onAction: () => history.push(`/vault/${address}`),
               }))}
             />
