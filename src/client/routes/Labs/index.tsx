@@ -16,7 +16,7 @@ import {
 } from '@components/app';
 import { formatPercent, halfWidthCss, humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
 import { Box, SpinnerLoading, SearchInput } from '@components/common';
-import { getConstants } from '../../../config/constants';
+import { getConstants } from '@config/constants';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -28,7 +28,10 @@ const Row = styled.div`
   justify-content: flex-start;
   grid-gap: ${({ theme }) => theme.layoutPadding};
   flex-wrap: wrap;
-  grid-column: 1 / 3;
+`;
+
+const StyledRecommendationsCard = styled(RecommendationsCard)`
+  ${halfWidthCss}
 `;
 
 const StyledInfoCard = styled(InfoCard)`
@@ -209,7 +212,7 @@ export const Labs = () => {
       {!labsStatus.loading && (
         <>
           <Row>
-            <RecommendationsCard
+            <StyledRecommendationsCard
               header="Recommendations"
               items={recommendations.map(({ address, name, apyData, icon }) => ({
                 header: 'Special Token',
@@ -217,7 +220,6 @@ export const Labs = () => {
                 name: name,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
-                // action: '>',
                 // onAction: () => history.push(`/vault/${address}`),
               }))}
             />
