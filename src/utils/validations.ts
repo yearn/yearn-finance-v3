@@ -55,6 +55,8 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
   const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
 
+  if (sellTokenAmount.isZero()) return {};
+
   if (amountInWei.lt(0)) {
     return { error: 'INVALID AMOUNT' };
   }
@@ -100,6 +102,8 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
   userYvTokenBalance = userYvTokenBalance ?? '0';
   const ONE_UNIT = toBN('10').pow(yvTokenDecimals);
   const amountInWei = yvTokenAmount.multipliedBy(ONE_UNIT);
+
+  if (yvTokenAmount.isZero()) return {};
 
   if (amountInWei.lt(0)) {
     return { error: 'INVALID AMOUNT' };
