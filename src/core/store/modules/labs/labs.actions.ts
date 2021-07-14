@@ -67,11 +67,13 @@ const getUserLabsPositions = createAsyncThunk<
   if (!userAddress) {
     throw new Error('WALLET NOT CONNECTED');
   }
-  const [userLabsPositions] = await Promise.all([
+  const [userLabsPositionsResponse] = await Promise.all([
     labService.getUserLabsPositions({ userAddress }), // TODO pass addresses. waitint to xgaminto to merge his stuff to avoid conficts y lab service
     dispatch(getUserYveCrvExtraData()),
   ]);
-  return { userLabsPositions };
+  const { positions, errors } = userLabsPositionsResponse;
+  errors.forEach((error) => dispatch(AlertsActions.openAlert({ message: error, type: 'error', persistent: true })));
+  return { userLabsPositions: positions };
 });
 
 const getYveCrvExtraData = createAsyncThunk<void, { fetchDynamicData?: boolean }, ThunkAPI>(

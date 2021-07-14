@@ -103,7 +103,7 @@ export class LabServiceImpl implements LabService {
         yvBoostContract.emergencyShutdown(),
       ]);
       const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-      if (!yvBoostData || true) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
       const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
       yvBoostLab = {
         address: YVBOOST,
@@ -207,7 +207,7 @@ export class LabServiceImpl implements LabService {
     throw Error('Not Implemented');
   }
 
-  public async getUserLabsPositions(props: GetUserLabsPositionsProps): Promise<Position[]> {
+  public async getUserLabsPositions(props: GetUserLabsPositionsProps) {
     const { userAddress } = props;
     const { YEARN_API, ZAPPER_API_KEY, CONTRACT_ADDRESSES } = this.config;
     const { YVECRV, CRV, THREECRV, YVBOOST, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = CONTRACT_ADDRESSES;
@@ -218,6 +218,8 @@ export class LabServiceImpl implements LabService {
       'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault,lp-3pool-curve,yvboost&vs_currencies=usd'
     );
     const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
+
+    const errors: string[] = [];
 
     // **************** BACKSCRATCHER ****************
     let backscratcherPositions: Position[] | undefined;
@@ -278,7 +280,9 @@ export class LabServiceImpl implements LabService {
       };
 
       backscratcherPositions = [backscratcherDepositPosition, backscratcherYieldPosition];
-    } catch (error) {}
+    } catch (error) {
+      errors.push('YveCrv positions error');
+    }
 
     // **************** YVBOOST ****************
     let yvBoostPositions: Position[] | undefined;
@@ -318,7 +322,9 @@ export class LabServiceImpl implements LabService {
       };
 
       yvBoostPositions = [yvBoostDepositPosition];
-    } catch (error) {}
+    } catch (error) {
+      errors.push('YvBoost positions error');
+    }
 
     // **************** YVBOOST-ETH ****************
     let yvBoostEthPositions: Position[] | undefined;
@@ -376,7 +382,7 @@ export class LabServiceImpl implements LabService {
 
       yvBoostEthPositions = [yvBoostEthDepositPosition, yvBoostEthStakePosition];
     } catch (error) {
-      // TODO handle error.
+      errors.push('YvBoost-Eth positions error');
     }
 
     // ********************************
@@ -385,7 +391,7 @@ export class LabServiceImpl implements LabService {
       if (!assetPositions) return;
       positions.push(...assetPositions);
     });
-    return positions;
+    return { positions, errors };
   }
 
   public async getUserLabsMetadata(props: GetUserLabsMetadataProps): Promise<LabUserMetadata[]> {

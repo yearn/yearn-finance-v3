@@ -149,7 +149,7 @@ export interface SubscriptionService {
 export interface LabService {
   getSupportedLabs: () => Promise<{ labsData: Lab[]; errors: string[] }>;
   getLabsDynamicData: () => Promise<LabDynamic[]>;
-  getUserLabsPositions: (props: GetUserLabsPositionsProps) => Promise<Position[]>;
+  getUserLabsPositions: (props: GetUserLabsPositionsProps) => Promise<{ positions: Position[]; errors: string[] }>;
   getUserLabsMetadata: (props: GetUserLabsMetadataProps) => Promise<LabUserMetadata[]>;
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
