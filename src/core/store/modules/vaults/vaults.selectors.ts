@@ -73,6 +73,10 @@ const selectVaults = createSelector(
         tokenAllowancesMap,
       });
     });
+
+    vaults.sort((a, b) => {
+      return toBN(b.token.balance).minus(a.token.balance).toNumber();
+    });
     return vaults;
   }
 );

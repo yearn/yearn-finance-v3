@@ -2,6 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { RootState, IronBankMarketView, Status } from '@types';
 import BigNumber from 'bignumber.js';
+import { toBN } from '../../../../utils';
 
 const selectMarketsMap = (state: RootState) => state.ironBank.marketsMap;
 const selectMarketsAddresses = (state: RootState) => state.ironBank.marketAddresses;
@@ -87,6 +88,10 @@ const selectMarkets = createSelector(
           allowancesMap: tokenAllowancesMap,
         },
       };
+    });
+
+    markets.sort((a, b) => {
+      return toBN(b.token.balance).minus(a.token.balance).toNumber();
     });
     return markets;
   }
