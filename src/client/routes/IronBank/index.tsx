@@ -39,7 +39,7 @@ export const IronBank = () => {
 
   const actionHandler = (action: string, marketAddress: string) => {
     dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
-    dispatch(ModalsActions.openModal({ modalName: 'test' }));
+    dispatch(ModalsActions.openModal({ modalName: 'comingSoon' }));
   };
 
   return (
