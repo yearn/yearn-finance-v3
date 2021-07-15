@@ -124,14 +124,6 @@ export const Settings = () => {
     dispatch(ModalsActions.openModal({ modalName, modalProps }));
   };
 
-  const openDepositModal = () => {
-    // NOTE Hardcoded token address for depositTx testing
-    const tokenAddress = '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e';
-    // dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
-    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
-    dispatch(ModalsActions.openModal({ modalName: 'depositTx' }));
-  };
-
   const openAlert = (message: string, type?: AlertTypes, persistent?: boolean) => {
     dispatch(AlertsActions.openAlert({ message, type, persistent }));
   };
@@ -175,38 +167,6 @@ export const Settings = () => {
             </SectionContent>
           </SettingsSection>
 
-          {/* Only on development for testing! */}
-          {ALLOW_DEV_MODE && (
-            <SettingsSection>
-              <SectionTitle>
-                <SectionIcon Component={ThemesIcon} />
-                Modals testing
-              </SectionTitle>
-              <SectionContent>
-                <Button onClick={() => openModal('test', { testVar: 'test variable' })}>Open test modal</Button>
-                <Button onClick={() => openModal('testTx')}>Open TestTx modal</Button>
-                <Button onClick={() => openDepositModal()}>Open DepositTx modal</Button>
-              </SectionContent>
-            </SettingsSection>
-          )}
-
-          {/* Only on development for testing! */}
-          {ALLOW_DEV_MODE && (
-            <SettingsSection>
-              <SectionTitle>
-                <SectionIcon Component={ThemesIcon} />
-                Alerts testing
-              </SectionTitle>
-              <SectionContent>
-                <Button onClick={() => openAlert('Default alert')}>Open default alert</Button>
-                <Button onClick={() => openAlert('Success alert', 'success')}>Open Success alert</Button>
-                <Button onClick={() => openAlert('Info alert', 'info')}>Open Info alert</Button>
-                <Button onClick={() => openAlert('Error alert', 'error')}>Open Error alert</Button>
-                <Button onClick={() => openAlert('Persistent alert', 'default', true)}>Open Persistent alert</Button>
-              </SectionContent>
-            </SettingsSection>
-          )}
-
           {ALLOW_DEV_MODE && (
             <>
               <SettingsSection>
@@ -222,20 +182,48 @@ export const Settings = () => {
                   />
                 </SectionContent>
               </SettingsSection>
-              {devModeSettings.enabled && (
-                <SettingsSection>
-                  <SectionTitle />
-                  <SectionContent>
-                    Wallet Address Override
-                    <Input
-                      value={devModeSettings.walletAddressOverride}
-                      onChange={(e) =>
-                        dispatch(SettingsActions.changeWalletAddressOverride({ address: e.target.value }))
-                      }
-                    />
-                  </SectionContent>
-                </SettingsSection>
-              )}
+            </>
+          )}
+
+          {/* Only on development settings for testing! */}
+          {ALLOW_DEV_MODE && devModeSettings.enabled && (
+            <>
+              <SettingsSection>
+                <SectionTitle />
+                <SectionContent>
+                  Wallet Address Override
+                  <Input
+                    value={devModeSettings.walletAddressOverride}
+                    onChange={(e) => dispatch(SettingsActions.changeWalletAddressOverride({ address: e.target.value }))}
+                  />
+                </SectionContent>
+              </SettingsSection>
+
+              <SettingsSection>
+                <SectionTitle>
+                  <SectionIcon Component={ThemesIcon} />
+                  Modals testing
+                </SectionTitle>
+                <SectionContent>
+                  <Button onClick={() => openModal('test', { testVar: 'test variable' })}>Open test modal</Button>
+                  <Button onClick={() => openModal('testTx')}>Open TestTx modal</Button>
+                  <Button onClick={() => openModal('comingSoon')}>Open ComingSoon modal</Button>
+                </SectionContent>
+              </SettingsSection>
+
+              <SettingsSection>
+                <SectionTitle>
+                  <SectionIcon Component={ThemesIcon} />
+                  Alerts testing
+                </SectionTitle>
+                <SectionContent>
+                  <Button onClick={() => openAlert('Default alert')}>Open default alert</Button>
+                  <Button onClick={() => openAlert('Success alert', 'success')}>Open Success alert</Button>
+                  <Button onClick={() => openAlert('Info alert', 'info')}>Open Info alert</Button>
+                  <Button onClick={() => openAlert('Error alert', 'error')}>Open Error alert</Button>
+                  <Button onClick={() => openAlert('Persistent alert', 'default', true)}>Open Persistent alert</Button>
+                </SectionContent>
+              </SettingsSection>
             </>
           )}
         </SettingsCardContent>
