@@ -8,6 +8,7 @@ import { AppContextProvider, BladeContextProvider, NavSideMenuContextProvider } 
 import { Routes } from '@routes';
 import { Themable } from '@containers';
 import '@i18n';
+import '@assets/fonts/SFProDisplayFont.css'; // Tell webpack that Button.js uses these styles
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -18,14 +19,6 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     font-size: 62.5%;
-    // TODO import font file
-    @font-face {
-      font-family:'SF Pro Display';
-      font-style:normal;
-      font-weight:500;
-      src:local('☺︎'), url("http://www.apple.com/wss/fonts/SF-Pro-Display/v1/sf-pro-display_medium.woff") format("woff"), url("http://www.apple.com/wss/fonts/SF-Pro-Display/v1/sf-pro-display_medium.ttf") format("truetype");
-      /* (C) 2015 Apple Inc. All rights reserved.*/
-    }
   }
 
   * {
