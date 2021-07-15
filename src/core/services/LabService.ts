@@ -35,7 +35,8 @@ export class LabServiceImpl implements LabService {
     this.config = config;
   }
 
-  public async getSupportedLabs(): Promise<Lab[]> {
+  public async getSupportedLabs() {
+    const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
     const provider = this.web3Provider.getInstanceOf('default');
@@ -46,147 +47,167 @@ export class LabServiceImpl implements LabService {
     const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
 
     // **************** BACKSCRATCHER ****************
-    const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
-    const totalSupply = await backscratcherContract.totalSupply();
-    const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
-    if (!backscratcherData) throw new Error(`yveCRV vault not found on ${YEARN_API} response`);
-    const crvPrice = pricesResponse.data['curve-dao-token']['usd'];
-    const backscratcherLab: Lab = {
-      address: YVECRV,
-      typeId: 'LAB',
-      token: CRV,
-      name: backscratcherData.name,
-      version: backscratcherData.version,
-      symbol: backscratcherData.symbol,
-      decimals: backscratcherData.decimals.toString(),
-      tokenId: CRV,
-      // TODO: TBD. BACKSCRATCHER TVL IS NOT CONSISTENT AMONG DIFFERENT SOURCES. FETCH FROM USDC ORACLE
-      underlyingTokenBalance: {
-        amount: totalSupply.toString(),
-        amountUsdc: toBN(normalizeAmount(totalSupply.toString(), backscratcherData.decimals))
-          .times(crvPrice)
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      metadata: {
-        depositLimit: '0', // yvecrv doestn have
-        emergencyShutdown: false, // yvecrv doesnt have
-        pricePerShare: toBN('1')
-          .times(10 ** backscratcherData.decimals)
-          .toFixed(0),
-        apy: {
-          recommended: backscratcherData.apy.composite?.totalApy,
-          composite: false,
-          type: backscratcherData.apy.type,
-          description: '',
+    let backscratcherLab: Lab | undefined;
+    try {
+      const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
+      const totalSupply = await backscratcherContract.totalSupply();
+      const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
+      if (!backscratcherData) throw new Error(`yveCRV vault not found on ${YEARN_API} response`);
+      const crvPrice = pricesResponse.data['curve-dao-token']['usd'];
+      backscratcherLab = {
+        address: YVECRV,
+        typeId: 'LAB',
+        token: CRV,
+        name: backscratcherData.name,
+        version: backscratcherData.version,
+        symbol: backscratcherData.symbol,
+        decimals: backscratcherData.decimals.toString(),
+        tokenId: CRV,
+        // TODO: TBD. BACKSCRATCHER TVL IS NOT CONSISTENT AMONG DIFFERENT SOURCES. FETCH FROM USDC ORACLE
+        underlyingTokenBalance: {
+          amount: totalSupply.toString(),
+          amountUsdc: toBN(normalizeAmount(totalSupply.toString(), backscratcherData.decimals))
+            .times(crvPrice)
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
         },
-        icon:
-          'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
-      },
-    };
+        metadata: {
+          depositLimit: '0', // yvecrv doestn have
+          emergencyShutdown: false, // yvecrv doesnt have
+          pricePerShare: toBN('1')
+            .times(10 ** backscratcherData.decimals)
+            .toFixed(0),
+          apy: {
+            recommended: backscratcherData.apy.composite?.totalApy,
+            composite: false,
+            type: backscratcherData.apy.type,
+            description: '',
+          },
+          icon:
+            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
+        },
+      };
+    } catch (error) {
+      // TODO handle error
+      errors.push('YveCrv Lab Error');
+    }
 
     // **************** YVBOOST ****************
-    const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
-    const [totalAssets, pricePerShare, depositLimit, emergencyShutdown] = await Promise.all([
-      yvBoostContract.totalAssets(),
-      yvBoostContract.pricePerShare(),
-      yvBoostContract.depositLimit(),
-      yvBoostContract.emergencyShutdown(),
-    ]);
-    const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-    if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-    const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
-    const yvBoostLab: Lab = {
-      address: YVBOOST,
-      typeId: 'LAB',
-      token: YVECRV,
-      name: yvBoostData.symbol,
-      version: yvBoostData.version,
-      symbol: yvBoostData.symbol,
-      decimals: yvBoostData.decimals.toString(),
-      tokenId: YVECRV,
-      underlyingTokenBalance: {
-        amount: totalAssets.toString(),
-        amountUsdc: toBN(normalizeAmount(totalAssets.toString(), yvBoostData.decimals))
-          .times(yveCrvPrice)
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      metadata: {
-        depositLimit: depositLimit.toString(),
-        emergencyShutdown: emergencyShutdown,
-        pricePerShare: pricePerShare.toString(),
-        apy: {
-          recommended: yvBoostData.apy.net_apy,
-          composite: false,
-          type: yvBoostData.apy.type,
-          description: '',
+    let yvBoostLab: Lab | undefined;
+    try {
+      const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
+      const [totalAssets, pricePerShare, depositLimit, emergencyShutdown] = await Promise.all([
+        yvBoostContract.totalAssets(),
+        yvBoostContract.pricePerShare(),
+        yvBoostContract.depositLimit(),
+        yvBoostContract.emergencyShutdown(),
+      ]);
+      const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
+      if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
+      yvBoostLab = {
+        address: YVBOOST,
+        typeId: 'LAB',
+        token: YVECRV,
+        name: yvBoostData.symbol,
+        version: yvBoostData.version,
+        symbol: yvBoostData.symbol,
+        decimals: yvBoostData.decimals.toString(),
+        tokenId: YVECRV,
+        underlyingTokenBalance: {
+          amount: totalAssets.toString(),
+          amountUsdc: toBN(normalizeAmount(totalAssets.toString(), yvBoostData.decimals))
+            .times(yveCrvPrice)
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
         },
-        icon:
-          'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
-      },
-    };
+        metadata: {
+          depositLimit: depositLimit.toString(),
+          emergencyShutdown: emergencyShutdown,
+          pricePerShare: pricePerShare.toString(),
+          apy: {
+            recommended: yvBoostData.apy.net_apy,
+            composite: false,
+            type: yvBoostData.apy.type,
+            description: '',
+          },
+          icon:
+            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+        },
+      };
+    } catch (error) {
+      errors.push('YvBoost Lab Error');
+    }
 
     // **************** YVBOOST-ETH ****************
-    const pSLPyvBoostEthContract = getContract(PSLPYVBOOSTETH, pickleJarAbi, provider);
-    const pJarTotalSupplyPromise = pSLPyvBoostEthContract.totalSupply();
-    const pJarRatioPromise = pSLPyvBoostEthContract.getRatio();
-    const picklePoolsPromise = get('https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/pools');
-    const [pJarTotalSupply, pJarRatio, picklePoolsResponse] = await Promise.all([
-      pJarTotalSupplyPromise,
-      pJarRatioPromise,
-      picklePoolsPromise,
-    ]);
-    const pJarPool = picklePoolsResponse.data.find(
-      ({ identifier }: { identifier: string }) => identifier === 'yvboost-eth'
-    );
-    const liquidityLocked = pJarPool?.liquidity_locked;
-    const performance = pJarPool?.apy;
+    let pSLPyvBoostEthLab: Lab | undefined;
+    try {
+      const pSLPyvBoostEthContract = getContract(PSLPYVBOOSTETH, pickleJarAbi, provider);
+      const pJarTotalSupplyPromise = pSLPyvBoostEthContract.totalSupply();
+      const pJarRatioPromise = pSLPyvBoostEthContract.getRatio();
+      const picklePoolsPromise = get('https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/pools');
+      const [pJarTotalSupply, pJarRatio, picklePoolsResponse] = await Promise.all([
+        pJarTotalSupplyPromise,
+        pJarRatioPromise,
+        picklePoolsPromise,
+      ]);
+      const pJarPool = picklePoolsResponse.data.find(
+        ({ identifier }: { identifier: string }) => identifier === 'yvboost-eth'
+      );
+      const liquidityLocked = pJarPool?.liquidity_locked;
+      const performance = pJarPool?.apy;
 
-    // USE YVBOOST DATA AS BASE DATA SOURCE
-    const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-    if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-    const pSLPyvBoostEthLab: Lab = {
-      address: PSLPYVBOOSTETH,
-      typeId: 'LAB',
-      token: YVBOOST,
-      name: 'pSLPyvBOOST-ETH',
-      version: pJarData.version,
-      symbol: 'pSLPyvBOOST-ETH',
-      decimals: pJarData.decimals.toString(),
-      tokenId: YVBOOST,
-      underlyingTokenBalance: {
-        // TODO: FIX, AMOUNT IS IN SLPYVBOOSTETH, NOT YVBOOST
-        amount: toBN(normalizeAmount(pJarTotalSupply.toString(), pJarData.decimals.toString()))
-          .times(pJarRatio.toString())
-          .toFixed(0),
-        amountUsdc: toBN(liquidityLocked.toString())
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      metadata: {
-        depositLimit: '0', // yvboost-eth doestn have
-        emergencyShutdown: false, // yvboost-eth doestn have
-        pricePerShare: pJarRatio.toString(),
-        apy: {
-          recommended: toBN(performance.toString()).dividedBy(100).toNumber(),
-          composite: false,
-          type: pJarData.apy.type,
-          description: '',
+      // USE YVBOOST DATA AS BASE DATA SOURCE
+      const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
+      if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      pSLPyvBoostEthLab = {
+        address: PSLPYVBOOSTETH,
+        typeId: 'LAB',
+        token: YVBOOST,
+        name: 'pSLPyvBOOST-ETH',
+        version: pJarData.version,
+        symbol: 'pSLPyvBOOST-ETH',
+        decimals: pJarData.decimals.toString(),
+        tokenId: YVBOOST,
+        underlyingTokenBalance: {
+          // TODO: FIX, AMOUNT IS IN SLPYVBOOSTETH, NOT YVBOOST
+          amount: toBN(normalizeAmount(pJarTotalSupply.toString(), pJarData.decimals.toString()))
+            .times(pJarRatio.toString())
+            .toFixed(0),
+          amountUsdc: toBN(liquidityLocked.toString())
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
         },
-        icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
-      },
-    };
-    // ********************************
+        metadata: {
+          depositLimit: '0', // yvboost-eth doestn have
+          emergencyShutdown: false, // yvboost-eth doestn have
+          pricePerShare: pJarRatio.toString(),
+          apy: {
+            recommended: toBN(performance.toString()).dividedBy(100).toNumber(),
+            composite: false,
+            type: pJarData.apy.type,
+            description: '',
+          },
+          icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
+        },
+      };
+    } catch (error) {
+      errors.push('YvBoost-Eth Lab Error');
+    }
 
-    return [backscratcherLab, yvBoostLab, pSLPyvBoostEthLab];
+    // ********************************
+    const labsData: Lab[] = [];
+    [backscratcherLab, yvBoostLab, pSLPyvBoostEthLab].forEach((lab) => {
+      if (lab) labsData.push(lab);
+    });
+    return { labsData, errors };
   }
 
   public async getLabsDynamicData(): Promise<LabDynamic[]> {
     throw Error('Not Implemented');
   }
 
-  public async getUserLabsPositions(props: GetUserLabsPositionsProps): Promise<Position[]> {
+  public async getUserLabsPositions(props: GetUserLabsPositionsProps) {
     const { userAddress } = props;
     const { YEARN_API, ZAPPER_API_KEY, CONTRACT_ADDRESSES } = this.config;
     const { YVECRV, CRV, THREECRV, YVBOOST, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = CONTRACT_ADDRESSES;
@@ -198,157 +219,179 @@ export class LabServiceImpl implements LabService {
     );
     const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
 
+    const errors: string[] = [];
+
     // **************** BACKSCRATCHER ****************
-    const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
-    const indexPromise = backscratcherContract.index();
-    const supplyIndexPromise = backscratcherContract.supplyIndex(userAddress);
-    const balanceOfPromise = backscratcherContract.balanceOf(userAddress);
-    const cachedPromise = backscratcherContract.claimable(userAddress);
-    const [index, supplyIndex, balanceOf, cached] = await Promise.all([
-      indexPromise,
-      supplyIndexPromise,
-      balanceOfPromise,
-      cachedPromise,
-    ]);
+    let backscratcherPositions: Position[] | undefined;
+    try {
+      const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
+      const indexPromise = backscratcherContract.index();
+      const supplyIndexPromise = backscratcherContract.supplyIndex(userAddress);
+      const balanceOfPromise = backscratcherContract.balanceOf(userAddress);
+      const cachedPromise = backscratcherContract.claimable(userAddress);
+      const [index, supplyIndex, balanceOf, cached] = await Promise.all([
+        indexPromise,
+        supplyIndexPromise,
+        balanceOfPromise,
+        cachedPromise,
+      ]);
 
-    const claimable = toBN(index.toString())
-      .minus(supplyIndex.toString())
-      .times(balanceOf.toString())
-      .div(10 ** 18)
-      .plus(cached.toString())
-      .toFixed(0);
-    const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
-    if (!backscratcherData) throw new Error(`yveCRV vault not found on ${YEARN_API} response`);
-    const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
-    const threeCrvPrice = pricesResponse.data['lp-3pool-curve']['usd'];
+      const claimable = toBN(index.toString())
+        .minus(supplyIndex.toString())
+        .times(balanceOf.toString())
+        .div(10 ** 18)
+        .plus(cached.toString())
+        .toFixed(0);
+      const backscratcherData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVECRV);
+      if (!backscratcherData) throw new Error(`yveCRV vault not found on ${YEARN_API} response`);
+      const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
+      const threeCrvPrice = pricesResponse.data['lp-3pool-curve']['usd'];
 
-    const backscratcherDepositPosition: Position = {
-      assetAddress: YVECRV,
-      tokenAddress: CRV,
-      typeId: 'DEPOSIT',
-      balance: balanceOf.toString(),
-      underlyingTokenBalance: {
-        amount: balanceOf.toString(), // TODO: VERIFY IF 1 YVECRV = 1 CRV
-        amountUsdc: toBN(normalizeAmount(balanceOf.toString(), backscratcherData.decimals))
-          .times(yveCrvPrice)
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      assetAllowances: [],
-      tokenAllowances: [],
-    };
+      const backscratcherDepositPosition: Position = {
+        assetAddress: YVECRV,
+        tokenAddress: CRV,
+        typeId: 'DEPOSIT',
+        balance: balanceOf.toString(),
+        underlyingTokenBalance: {
+          amount: balanceOf.toString(), // TODO: VERIFY IF 1 YVECRV = 1 CRV
+          amountUsdc: toBN(normalizeAmount(balanceOf.toString(), backscratcherData.decimals))
+            .times(yveCrvPrice)
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
+        },
+        assetAllowances: [],
+        tokenAllowances: [],
+      };
 
-    const backscratcherYieldPosition: Position = {
-      assetAddress: YVECRV,
-      tokenAddress: THREECRV,
-      typeId: 'YIELD',
-      balance: '0', // TODO: NOTE: IF NEEDED, SHOULD HAVE CLAIMABLE 3CRV BALANCE EXPRESSED IN YVECRV
-      underlyingTokenBalance: {
-        amount: claimable.toString(),
-        amountUsdc: toBN(normalizeAmount(claimable.toString(), THREECRV_DECIMALS))
-          .times(threeCrvPrice)
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      assetAllowances: [],
-      tokenAllowances: [],
-    };
+      const backscratcherYieldPosition: Position = {
+        assetAddress: YVECRV,
+        tokenAddress: THREECRV,
+        typeId: 'YIELD',
+        balance: '0', // TODO: NOTE: IF NEEDED, SHOULD HAVE CLAIMABLE 3CRV BALANCE EXPRESSED IN YVECRV
+        underlyingTokenBalance: {
+          amount: claimable.toString(),
+          amountUsdc: toBN(normalizeAmount(claimable.toString(), THREECRV_DECIMALS))
+            .times(threeCrvPrice)
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
+        },
+        assetAllowances: [],
+        tokenAllowances: [],
+      };
 
-    const backscratcherPosition: Position[] = [backscratcherDepositPosition, backscratcherYieldPosition];
+      backscratcherPositions = [backscratcherDepositPosition, backscratcherYieldPosition];
+    } catch (error) {
+      errors.push('YveCrv positions error');
+    }
 
     // **************** YVBOOST ****************
-    const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
-    const yvBoostBalanceOfPromise = yvBoostContract.balanceOf(userAddress);
-    const yvBoostPricePerSharePromise = yvBoostContract.pricePerShare();
-    const [yvBoostBalanceOf, yvBoostPricePerShare] = await Promise.all([
-      yvBoostBalanceOfPromise,
-      yvBoostPricePerSharePromise,
-    ]);
+    let yvBoostPositions: Position[] | undefined;
+    try {
+      const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
+      const yvBoostBalanceOfPromise = yvBoostContract.balanceOf(userAddress);
+      const yvBoostPricePerSharePromise = yvBoostContract.pricePerShare();
+      const [yvBoostBalanceOf, yvBoostPricePerShare] = await Promise.all([
+        yvBoostBalanceOfPromise,
+        yvBoostPricePerSharePromise,
+      ]);
 
-    const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-    if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-    const yvBoostPrice = pricesResponse.data['yvboost']['usd'];
-    const underlyingBalanceOf = toBN(
-      normalizeAmount(
-        toBN(yvBoostBalanceOf.toString()).times(yvBoostPricePerShare.toString()).toFixed(0),
-        yvBoostData.decimals
-      )
-    ).toFixed(0);
+      const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
+      if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      const yvBoostPrice = pricesResponse.data['yvboost']['usd'];
+      const underlyingBalanceOf = toBN(
+        normalizeAmount(
+          toBN(yvBoostBalanceOf.toString()).times(yvBoostPricePerShare.toString()).toFixed(0),
+          yvBoostData.decimals
+        )
+      ).toFixed(0);
 
-    const yvBoostDepositPosition: Position = {
-      assetAddress: YVBOOST,
-      tokenAddress: YVECRV,
-      typeId: 'DEPOSIT',
-      balance: yvBoostBalanceOf.toString(),
-      underlyingTokenBalance: {
-        amount: underlyingBalanceOf,
-        amountUsdc: toBN(normalizeAmount(yvBoostBalanceOf.toString(), yvBoostData.decimals))
-          .times(yvBoostPrice)
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      assetAllowances: [],
-      tokenAllowances: [],
-    };
+      const yvBoostDepositPosition: Position = {
+        assetAddress: YVBOOST,
+        tokenAddress: YVECRV,
+        typeId: 'DEPOSIT',
+        balance: yvBoostBalanceOf.toString(),
+        underlyingTokenBalance: {
+          amount: underlyingBalanceOf,
+          amountUsdc: toBN(normalizeAmount(yvBoostBalanceOf.toString(), yvBoostData.decimals))
+            .times(yvBoostPrice)
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
+        },
+        assetAllowances: [],
+        tokenAllowances: [],
+      };
 
-    const yvBoostPosition: Position[] = [yvBoostDepositPosition];
+      yvBoostPositions = [yvBoostDepositPosition];
+    } catch (error) {
+      errors.push('YvBoost positions error');
+    }
 
     // **************** YVBOOST-ETH ****************
-    const pSLPyvBoostEthContract = getContract(PSLPYVBOOSTETH, pickleJarAbi, provider);
-    const pickleGaugeContract = getContract(PSLPYVBOOSTETH_GAUGE, pickleGaugeAbi, provider);
-    const pJarBalanceOfPromise = pSLPyvBoostEthContract.balanceOf(userAddress);
-    const pGaugeBalanceOfPromise = pickleGaugeContract.balanceOf(userAddress);
-    const pJarPricePerTokenPromise = get(`https://api.zapper.fi/v1/vault-stats/pickle?api_key=${ZAPPER_API_KEY}`);
-    const [pJarBalanceOf, pGaugeBalanceOf, pJarPricePerTokenResponse] = await Promise.all([
-      pJarBalanceOfPromise,
-      pGaugeBalanceOfPromise,
-      pJarPricePerTokenPromise,
-    ]);
+    let yvBoostEthPositions: Position[] | undefined;
+    try {
+      const pSLPyvBoostEthContract = getContract(PSLPYVBOOSTETH, pickleJarAbi, provider);
+      const pickleGaugeContract = getContract(PSLPYVBOOSTETH_GAUGE, pickleGaugeAbi, provider);
+      const pJarBalanceOfPromise = pSLPyvBoostEthContract.balanceOf(userAddress);
+      const pGaugeBalanceOfPromise = pickleGaugeContract.balanceOf(userAddress);
+      const pJarPricePerTokenPromise = get(`https://api.zapper.fi/v1/vault-stats/pickle?api_key=${ZAPPER_API_KEY}`);
+      const [pJarBalanceOf, pGaugeBalanceOf, pJarPricePerTokenResponse] = await Promise.all([
+        pJarBalanceOfPromise,
+        pGaugeBalanceOfPromise,
+        pJarPricePerTokenPromise,
+      ]);
 
-    // USE YVBOOST DATA AS BASE DATA SOURCE
-    const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-    if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-    const pJarPricePerToken = pJarPricePerTokenResponse.data.find(
-      ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
-    )?.pricePerToken;
+      // USE YVBOOST DATA AS BASE DATA SOURCE
+      const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
+      if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      const pJarPricePerToken = pJarPricePerTokenResponse.data.find(
+        ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
+      )?.pricePerToken;
 
-    const yvBoostEthDepositPosition: Position = {
-      assetAddress: PSLPYVBOOSTETH,
-      tokenAddress: YVBOOST,
-      typeId: 'DEPOSIT',
-      balance: pJarBalanceOf.toString(),
-      underlyingTokenBalance: {
-        // TBD. CONVERSION RATE FOR YVBOOST:PSLPYVBOOSTETH
-        amount: '0',
-        amountUsdc: toBN(normalizeAmount(pJarBalanceOf.toString(), pJarData.decimals))
-          .times(pJarPricePerToken)
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      assetAllowances: [],
-      tokenAllowances: [],
-    };
+      const yvBoostEthDepositPosition: Position = {
+        assetAddress: PSLPYVBOOSTETH,
+        tokenAddress: YVBOOST,
+        typeId: 'DEPOSIT',
+        balance: pJarBalanceOf.toString(),
+        underlyingTokenBalance: {
+          // TBD. CONVERSION RATE FOR YVBOOST:PSLPYVBOOSTETH
+          amount: '0',
+          amountUsdc: toBN(normalizeAmount(pJarBalanceOf.toString(), pJarData.decimals))
+            .times(pJarPricePerToken)
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
+        },
+        assetAllowances: [],
+        tokenAllowances: [],
+      };
 
-    const yvBoostEthStakePosition: Position = {
-      assetAddress: PSLPYVBOOSTETH,
-      tokenAddress: PSLPYVBOOSTETH_GAUGE,
-      typeId: 'STAKE',
-      balance: pGaugeBalanceOf.toString(),
-      underlyingTokenBalance: {
-        amount: pGaugeBalanceOf.toString(),
-        amountUsdc: toBN(normalizeAmount(pGaugeBalanceOf.toString(), pJarData.decimals))
-          .times(pJarPricePerToken)
-          .times(10 ** USDC_DECIMALS)
-          .toFixed(0),
-      },
-      assetAllowances: [],
-      tokenAllowances: [],
-    };
+      const yvBoostEthStakePosition: Position = {
+        assetAddress: PSLPYVBOOSTETH,
+        tokenAddress: PSLPYVBOOSTETH_GAUGE,
+        typeId: 'STAKE',
+        balance: pGaugeBalanceOf.toString(),
+        underlyingTokenBalance: {
+          amount: pGaugeBalanceOf.toString(),
+          amountUsdc: toBN(normalizeAmount(pGaugeBalanceOf.toString(), pJarData.decimals))
+            .times(pJarPricePerToken)
+            .times(10 ** USDC_DECIMALS)
+            .toFixed(0),
+        },
+        assetAllowances: [],
+        tokenAllowances: [],
+      };
 
-    const yvBoostEthPosition: Position[] = [yvBoostEthDepositPosition, yvBoostEthStakePosition];
+      yvBoostEthPositions = [yvBoostEthDepositPosition, yvBoostEthStakePosition];
+    } catch (error) {
+      errors.push('YvBoost-Eth positions error');
+    }
+
     // ********************************
-
-    return [...backscratcherPosition, ...yvBoostPosition, ...yvBoostEthPosition];
+    const positions: Position[] = [];
+    [backscratcherPositions, yvBoostPositions, yvBoostEthPositions].forEach((assetPositions) => {
+      if (!assetPositions) return;
+      positions.push(...assetPositions);
+    });
+    return { positions, errors };
   }
 
   public async getUserLabsMetadata(props: GetUserLabsMetadataProps): Promise<LabUserMetadata[]> {

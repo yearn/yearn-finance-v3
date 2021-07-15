@@ -18,7 +18,7 @@ import {
 import { getConfig } from '@config';
 
 import { VaultsActions } from '../vaults/vaults.actions';
-import { TokensActions } from '../..';
+import { AlertsActions, TokensActions } from '../..';
 
 const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
 
@@ -37,7 +37,10 @@ const getLabs = createAsyncThunk<{ labsData: Lab[] }, void, ThunkAPI>(
   async (_arg, { extra, dispatch }) => {
     const { labService } = extra.services;
     dispatch(getYveCrvExtraData({}));
-    const labsData = await labService.getSupportedLabs();
+    const { labsData, errors } = await labService.getSupportedLabs();
+    errors.forEach((error) => {
+      dispatch(AlertsActions.openAlert({ message: error, type: 'error', persistent: true }));
+    });
     return { labsData };
   }
 );
@@ -64,11 +67,13 @@ const getUserLabsPositions = createAsyncThunk<
   if (!userAddress) {
     throw new Error('WALLET NOT CONNECTED');
   }
-  const [userLabsPositions] = await Promise.all([
+  const [userLabsPositionsResponse] = await Promise.all([
     labService.getUserLabsPositions({ userAddress }), // TODO pass addresses. waitint to xgaminto to merge his stuff to avoid conficts y lab service
     dispatch(getUserYveCrvExtraData()),
   ]);
-  return { userLabsPositions };
+  const { positions, errors } = userLabsPositionsResponse;
+  errors.forEach((error) => dispatch(AlertsActions.openAlert({ message: error, type: 'error', persistent: true })));
+  return { userLabsPositions: positions };
 });
 
 const getYveCrvExtraData = createAsyncThunk<void, { fetchDynamicData?: boolean }, ThunkAPI>(
