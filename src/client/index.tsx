@@ -8,7 +8,7 @@ import { AppContextProvider, BladeContextProvider, NavSideMenuContextProvider } 
 import { Routes } from '@routes';
 import { Themable } from '@containers';
 import '@i18n';
-import '@assets/fonts/SFProDisplayFont.css'; // Tell webpack that Button.js uses these styles
+import '@assets/fonts/SFProDisplayFont.css';
 
 const GlobalStyle = createGlobalStyle`
   html, body {
