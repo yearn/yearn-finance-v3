@@ -45,6 +45,7 @@ export const Layout: FC = ({ children }) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
+  const addressEnsName = useAppSelector(WalletSelectors.selectAddressEnsName);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
   // const path = useAppSelector(({ route }) => route.path);
@@ -142,6 +143,7 @@ export const Layout: FC = ({ children }) => {
         <Navbar
           title={t(`navigation.${path}`)}
           walletAddress={selectedAddress}
+          addressEnsName={addressEnsName}
           onWalletClick={() => dispatch(WalletActions.walletSelect())}
         />
         {children}

@@ -29,6 +29,7 @@ const toggleDevMode = createAsyncThunk<{ enable: boolean }, { enable: boolean },
 
     if (ALLOW_DEV_MODE && !enable && context.wallet.isConnected && context.wallet.selectedAddress) {
       dispatch(WalletActions.addressChange({ address: context.wallet.selectedAddress }));
+      dispatch(WalletActions.getAddressEnsName({ address: context.wallet.selectedAddress }));
     }
 
     return { enable };
@@ -44,6 +45,7 @@ const changeWalletAddressOverride = createAsyncThunk<void, { address: string }, 
 
     if (ALLOW_DEV_MODE && settings.devMode.enabled && isValidAddress(address)) {
       dispatch(WalletActions.addressChange({ address }));
+      dispatch(WalletActions.getAddressEnsName({ address }));
     }
   }
 );
