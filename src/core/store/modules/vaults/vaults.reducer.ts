@@ -249,6 +249,8 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(clearUserData, (state) => {
       state.user.userVaultsPositionsMap = {};
       state.user.vaultsAllowancesMap = {};
+      state.user.userVaultsMetadataMap = {};
+      state.user.userVaultsSummary = undefined;
     })
     .addCase(getExpectedTransactionOutcome.pending, (state) => {
       state.transaction = initialTransaction;
