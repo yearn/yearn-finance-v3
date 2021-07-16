@@ -89,6 +89,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
 
+    dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
+
     const timeOutId = setTimeout(() => {
       if (toBN(amount).gt(0)) {
         dispatch(
