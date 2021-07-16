@@ -8,6 +8,7 @@ interface NavbarProps {
   className?: string;
   title?: string;
   walletAddress?: string;
+  addressEnsName?: string;
   onWalletClick?: () => void;
 }
 
@@ -36,9 +37,13 @@ const StyledNavbar = styled.nav`
   z-index: ${(props) => props.theme.zindex.navbar};
 `;
 
-export const Navbar = ({ className, title, walletAddress, onWalletClick }: NavbarProps) => {
+export const Navbar = ({ className, title, walletAddress, addressEnsName, onWalletClick }: NavbarProps) => {
   const connectWalletButton = (
-    <ConnectWalletButton address={walletAddress} onClick={() => onWalletClick && onWalletClick()} />
+    <ConnectWalletButton
+      address={walletAddress}
+      ensName={addressEnsName}
+      onClick={() => onWalletClick && onWalletClick()}
+    />
   );
 
   return (

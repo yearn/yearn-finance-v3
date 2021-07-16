@@ -16,6 +16,7 @@ const getSubscriptions = (dispatch: AppDispatch, customSubscriptions?: Subscript
   },
   address: (address: string) => {
     dispatch(addressChange({ address }));
+    dispatch(getAddressEnsName({ address }));
     if (customSubscriptions && customSubscriptions.address) customSubscriptions.address(address);
   },
   network: (network: number) => {
@@ -27,6 +28,15 @@ const getSubscriptions = (dispatch: AppDispatch, customSubscriptions?: Subscript
     if (customSubscriptions && customSubscriptions.balance) customSubscriptions.balance(balance);
   },
 });
+
+const getAddressEnsName = createAsyncThunk<{ addressEnsName: string }, { address: string }, ThunkAPI>(
+  'wallet/getAddressEnsName',
+  async ({ address }, { extra }) => {
+    const { userService } = extra.services;
+    const addressEnsName = await userService.getAddressEnsName({ address });
+    return { addressEnsName };
+  }
+);
 
 const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefined, ThunkAPI>(
   'wallet/walletSelect',
@@ -48,6 +58,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefin
         address: () => {
           if (ALLOW_DEV_MODE && settings.devMode.enabled && isValidAddress(settings.devMode.walletAddressOverride)) {
             dispatch(addressChange({ address: settings.devMode.walletAddressOverride }));
+            dispatch(getAddressEnsName({ address: settings.devMode.walletAddressOverride }));
           }
         },
       };
@@ -77,4 +88,5 @@ export const WalletActions = {
   balanceChange,
   walletSelect,
   changeWalletTheme,
+  getAddressEnsName,
 };
