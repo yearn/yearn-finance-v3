@@ -25,6 +25,7 @@ const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConfig().C
 const setSelectedLabAddress = createAction<{ labAddress?: string }>('labs/setSelectedLabAddress');
 const clearSelectedLabAndStatus = createAction<void>('labs/clearSelectedLabAndStatus');
 const clearLabStatus = createAction<{ labAddress: string }>('labs/clearLabStatus');
+const clearUserData = createAction<void>('labs/clearUserData');
 
 const initiateLabs = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'labs/initiateLabs',
@@ -643,6 +644,7 @@ export const LabsActions = {
   withdraw,
   clearSelectedLabAndStatus,
   clearLabStatus,
+  clearUserData,
   yvBoost: {
     yvBoostApproveDeposit,
     yvBoostDeposit,
