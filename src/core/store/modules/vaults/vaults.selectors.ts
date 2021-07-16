@@ -124,8 +124,7 @@ const selectSummaryData = createSelector([selectUserVaultsSummary], (userVaultsS
     totalDeposits: userVaultsSummary?.holdings ?? '0',
     totalEarnings: userVaultsSummary?.earnings ?? '0',
     estYearlyYeild: userVaultsSummary?.estimatedYearlyYield ?? '0',
-    apy: '99999',
-    // apy: userVaultsSummary?.apyAverage ?? '0',
+    apy: userVaultsSummary?.grossApy.toString() ?? '0',
   };
 });
 

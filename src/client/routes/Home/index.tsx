@@ -5,7 +5,7 @@ import { TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
 import { SummaryCard, InfoCard, ViewContainer, NoWalletCard } from '@components/app';
 import { Text } from '@components/common';
 
-import { normalizeUsdc, normalizePercent, toBN, halfWidthCss } from '@src/utils';
+import { normalizeUsdc, normalizePercent, toBN, halfWidthCss, formatPercent } from '@src/utils';
 
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
@@ -104,7 +104,7 @@ export const Home = () => {
             header="Vaults"
             items={[
               { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
-              { header: 'APY', content: normalizePercent(apy, 2) }, // TODO check if normalizePercent is needed.
+              { header: 'APY', content: formatPercent(apy, 2) }, // TODO check if normalizePercent is needed.
             ]}
             cardSize="small"
           />
