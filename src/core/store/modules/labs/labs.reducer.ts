@@ -64,6 +64,7 @@ const {
   yveCrv,
   yvBoostEth,
   clearSelectedLabAndStatus,
+  clearLabStatus,
 } = LabsActions;
 const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut, yvBoostWithdraw } = yvBoost;
 const { yveCrvApproveDeposit, yveCrvDeposit, yveCrvClaimReward, yveCrvApproveReinvest, yveCrvReinvest } = yveCrv;
@@ -369,6 +370,9 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
       const currentAddress = state.selectedLabAddress;
       state.statusMap.labsActionsStatusMap[currentAddress] = initialLabActionsStatusMap;
       state.selectedLabAddress = undefined;
+    })
+    .addCase(clearLabStatus, (state, { payload: { labAddress } }) => {
+      state.statusMap.labsActionsStatusMap[labAddress] = initialLabActionsStatusMap;
     });
 });
 

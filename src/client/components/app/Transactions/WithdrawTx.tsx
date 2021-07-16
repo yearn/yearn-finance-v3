@@ -69,6 +69,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
 
   useEffect(() => {
     if (!selectedVault || !selectedTargetTokenAddress) return;
+    dispatch(VaultsActions.clearVaultStatus({ vaultAddress: selectedVault.address }));
 
     const timeOutId = setTimeout(() => {
       if (toBN(amount).gt(0)) {

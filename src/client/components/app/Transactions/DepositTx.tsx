@@ -77,6 +77,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
   useEffect(() => {
     if (!selectedVault || !selectedSellTokenAddress) return;
+    dispatch(VaultsActions.clearVaultStatus({ vaultAddress: selectedVault.address }));
 
     const timeOutId = setTimeout(() => {
       if (toBN(amount).gt(0)) {
