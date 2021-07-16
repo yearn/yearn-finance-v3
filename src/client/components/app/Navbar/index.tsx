@@ -37,15 +37,9 @@ const StyledNavbar = styled.nav`
 `;
 
 export const Navbar = ({ className, title, walletAddress, onWalletClick }: NavbarProps) => {
-  const { isMobile } = useWindowDimensions();
-
-  let connectWalletButton;
-
-  if (!isMobile) {
-    connectWalletButton = (
-      <ConnectWalletButton address={walletAddress} onClick={() => onWalletClick && onWalletClick()} />
-    );
-  }
+  const connectWalletButton = (
+    <ConnectWalletButton address={walletAddress} onClick={() => onWalletClick && onWalletClick()} />
+  );
 
   return (
     <StyledNavbar className={className}>

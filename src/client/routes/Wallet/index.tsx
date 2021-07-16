@@ -6,6 +6,25 @@ import { WalletSelectors, TokensSelectors, TokensActions, IronBankActions, Modal
 import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, NoWalletCard } from '@components/app';
 import { SpinnerLoading } from '@components/common';
 import { halfWidthCss, humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
+import { device } from '@themes/default';
+
+const TokensCard = styled(DetailCard)`
+  @media (max-width: 800px) {
+    .col-price {
+      display: none;
+    }
+  }
+  @media (max-width: 700px) {
+    .col-name {
+      width: 7rem;
+    }
+  }
+  @media ${device.mobile} {
+    .col-balance {
+      display: none;
+    }
+  }
+`;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
   ${halfWidthCss}
@@ -53,18 +72,20 @@ export const Wallet = () => {
 
       {tokensListStatus.loading && walletIsConnected && <SpinnerLoading flex="1" width="100%" />}
       {!tokensListStatus.loading && walletIsConnected && (
-        <DetailCard
+        <TokensCard
           header="Tokens"
+          wrap
           metadata={[
             {
               key: 'icon',
               transform: ({ icon, symbol }) => <TokenIcon icon={icon} symbol={symbol} />,
               width: '6rem',
+              className: 'col-icon',
             },
-            { key: 'name', header: 'Name' },
-            { key: 'balance', header: 'Balance' },
-            { key: 'price', header: 'Price' },
-            { key: 'value', header: 'Value' },
+            { key: 'name', header: 'Name', width: '17rem', className: 'col-name' },
+            { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
+            { key: 'price', header: 'Price', width: '10rem', className: 'col-price' },
+            { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
             {
               key: 'actions',
               transform: ({ tokenAddress }) => (
@@ -89,6 +110,8 @@ export const Wallet = () => {
                   ]}
                 />
               ),
+              align: 'flex-end',
+              width: 'auto',
               grow: '1',
             },
           ]}

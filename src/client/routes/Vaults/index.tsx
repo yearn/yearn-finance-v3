@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { ModalsActions, VaultsActions, VaultsSelectors, WalletSelectors } from '@store';
 
+import { device } from '@themes/default';
+
 import {
   SummaryCard,
   DetailCard,
@@ -53,11 +55,67 @@ const StyledNoWalletCard = styled(NoWalletCard)`
   ${halfWidthCss}
 `;
 
+const OpportunitiesCard = styled(DetailCard)`
+  @media ${device.tablet} {
+    .col-name {
+      width: 10rem;
+    }
+  }
+  @media (max-width: 750px) {
+    .col-assets {
+      display: none;
+    }
+  }
+  @media ${device.mobile} {
+    .col-name {
+      width: 7rem;
+    }
+    .col-available {
+      width: 10rem;
+    }
+  }
+  @media (max-width: 450px) {
+    .col-available {
+      display: none;
+    }
+  }
+`;
+
+const DepositsCard = styled(DetailCard)`
+  @media ${device.tablet} {
+    .col-name {
+      width: 10rem;
+    }
+    .col-balance {
+      width: 10rem;
+    }
+  }
+  @media (max-width: 650px) {
+    .col-value {
+      display: none;
+    }
+  }
+  @media ${device.mobile} {
+    .col-name {
+      width: 7rem;
+    }
+    .col-apy {
+      display: none;
+    }
+  }
+  @media (max-width: 500px) {
+    .col-earned {
+      display: none;
+    }
+  }
+`;
+
 export const Vaults = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const history = useHistory();
   const dispatch = useAppDispatch();
+  // const { isTablet, isMobile, width: DWidth } = useWindowDimensions();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
   const recommendations = useAppSelector(VaultsSelectors.selectRecommendations);
@@ -119,19 +177,21 @@ export const Vaults = () => {
 
           {!walletIsConnected && <StyledNoWalletCard />}
 
-          <DetailCard
+          <DepositsCard
             header="Deposits"
+            wrap
             metadata={[
               {
                 key: 'icon',
                 transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
                 width: '6rem',
+                className: 'col-icon',
               },
-              { key: 'name', header: 'Name' },
-              { key: 'apy', header: 'APY' },
-              { key: 'balance', header: 'Balance' },
-              { key: 'value', header: 'Value' },
-              { key: 'earned', header: 'Earned' },
+              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', width: '7rem', className: 'col-apy' },
+              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
+              { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
+              { key: 'earned', header: 'Earned', width: '10rem', className: 'col-earned' },
               {
                 key: 'actions',
                 transform: ({ vaultAddress }) => (
@@ -143,6 +203,7 @@ export const Vaults = () => {
                   />
                 ),
                 align: 'flex-end',
+                width: 'auto',
                 grow: '1',
               },
             ]}
@@ -158,18 +219,23 @@ export const Vaults = () => {
             }))}
           />
 
-          <DetailCard
+          <OpportunitiesCard
             header="Opportunities"
+            wrap
             metadata={[
               {
                 key: 'icon',
                 transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
                 width: '6rem',
+                className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600 },
-              { key: 'apy', header: 'APY' },
-              { key: 'vaultBalanceUsdc', header: 'Total Assets' },
-              { key: 'userTokenBalance', header: 'Available to Invest' },
+              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', width: '7rem', className: 'col-apy' },
+              { key: 'vaultBalanceUsdc', header: 'Total Assets', width: '15rem', className: 'col-assets' },
+              { key: 'userTokenBalance', header: 'Available to Invest', width: '15rem', className: 'col-available' },
+              // { key: 'apy', header: 'APY', hide: DWidth <= 400 },
+              // { key: 'vaultBalanceUsdc', header: 'Total Assets', hide: isTablet },
+              // { key: 'userTokenBalance', header: 'Available to Invest', hide: isTablet },
               {
                 key: 'actions',
                 transform: ({ vaultAddress }) => (
@@ -180,6 +246,7 @@ export const Vaults = () => {
                   />
                 ),
                 align: 'flex-end',
+                width: 'auto',
                 grow: '1',
               },
             ]}

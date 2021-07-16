@@ -7,6 +7,7 @@ import { ModalsActions, IronBankActions, IronBankSelectors, WalletSelectors } fr
 import { SpinnerLoading, ToggleButton, SearchInput } from '@components/common';
 import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, NoWalletCard } from '@components/app';
 import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss } from '@src/utils';
+import { device } from '@themes/default';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -15,6 +16,28 @@ const SearchBarContainer = styled.div`
 const StyledNoWalletCard = styled(NoWalletCard)`
   width: 100%;
   ${halfWidthCss}
+`;
+const OpportunitiesCard = styled(DetailCard)`
+  @media ${device.tablet} {
+    .col-market {
+      display: none;
+    }
+  }
+  @media (max-width: 700px) {
+    .col-name {
+      width: 7rem;
+    }
+  }
+  @media ${device.mobile} {
+    .col-lend-apy,
+    .col-borrow-apy {
+      display: none;
+    }
+
+    .col-available {
+      width: 10rem;
+    }
+  }
 `;
 
 export const IronBank = () => {
@@ -63,16 +86,18 @@ export const IronBank = () => {
 
           <DetailCard
             header="Supplied"
+            wrap
             metadata={[
               {
                 key: 'icon',
                 transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
                 width: '6rem',
+                className: 'col-icon',
               },
-              { key: 'name', header: 'Name' },
-              { key: 'apy', header: 'APY' },
-              { key: 'balance', header: 'Balance' },
-              { key: 'suppliedUsdc', header: 'Value' },
+              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', width: '7rem', className: 'col-apy' },
+              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
+              { key: 'suppliedUsdc', header: 'Value', width: '11rem', className: 'col-value' },
               {
                 key: 'collateral',
                 header: 'Collateral',
@@ -91,6 +116,7 @@ export const IronBank = () => {
                   />
                 ),
                 align: 'flex-end',
+                width: 'auto',
                 grow: '1',
               },
             ]}
@@ -105,18 +131,21 @@ export const IronBank = () => {
               address: market.address,
             }))}
           />
+
           <DetailCard
             header="Borrowed"
+            wrap
             metadata={[
               {
                 key: 'icon',
                 transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
                 width: '6rem',
+                className: 'col-icon',
               },
-              { key: 'name', header: 'Name' },
-              { key: 'apy', header: 'APY' },
-              { key: 'balance', header: 'Balance' },
-              { key: 'borrowedUsdc', header: 'Value' },
+              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', width: '7rem', className: 'col-apy' },
+              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
+              { key: 'borrowedUsdc', header: 'Value', width: '11rem', className: 'col-value' },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -128,6 +157,7 @@ export const IronBank = () => {
                   />
                 ),
                 align: 'flex-end',
+                width: 'auto',
                 grow: '1',
               },
             ]}
@@ -141,19 +171,22 @@ export const IronBank = () => {
               address: market.address,
             }))}
           />
-          <DetailCard
+
+          <OpportunitiesCard
             header="Opportunities"
+            wrap
             metadata={[
               {
                 key: 'icon',
                 transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
                 width: '6rem',
+                className: 'col-icon',
               },
-              { key: 'name', header: 'Name' },
-              { key: 'supplyAPY', header: 'Lend APY' },
-              { key: 'borrowAPY', header: 'Borrow APY' },
-              { key: 'liquidity', header: 'Market Liquidity' },
-              { key: 'userTokenBalance', header: 'Available to Invest' },
+              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'supplyAPY', header: 'Lend APY', width: '7rem', className: 'col-lend-apy' },
+              { key: 'borrowAPY', header: 'Borrow APY', width: '7rem', className: 'col-borrow-apy' },
+              { key: 'liquidity', header: 'Market Liquidity', width: '15rem', className: 'col-market' },
+              { key: 'userTokenBalance', header: 'Available to Invest', width: '15rem', className: 'col-available' },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -165,6 +198,7 @@ export const IronBank = () => {
                   />
                 ),
                 align: 'flex-end',
+                width: 'auto',
                 grow: '1',
               },
             ]}

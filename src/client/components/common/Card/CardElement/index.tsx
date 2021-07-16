@@ -33,6 +33,7 @@ interface CardElementProps {
   align?: 'flex-start' | 'center' | 'flex-end';
   grow?: '1' | '0';
   fontWeight?: number;
+  className?: string;
 }
 
 export const CardElement: FC<CardElementProps> = ({
@@ -43,10 +44,11 @@ export const CardElement: FC<CardElementProps> = ({
   align,
   grow,
   fontWeight,
+  className,
   ...props
 }) => {
   return (
-    <Container width={width} align={align} grow={grow} fontWeight={fontWeight} {...props}>
+    <Container width={width} align={align} grow={grow} fontWeight={fontWeight} className={className} {...props}>
       {header && <Header>{header}</Header>}
       {content && <Content>{content}</Content>}
       {children}
