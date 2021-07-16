@@ -115,9 +115,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   const expectedAmount = toBN(amount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmount, selectedTargetToken?.decimals)
     : '';
-  const expectedAmountValue = toBN(expectedAmount)
-    .times(normalizeAmount(selectedTargetToken.priceUsdc, USDC_DECIMALS))
-    .toString();
+  const expectedAmountValue = normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS);
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
