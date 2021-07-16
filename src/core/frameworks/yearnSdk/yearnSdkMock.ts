@@ -49,41 +49,37 @@ const tokens = {
 };
 
 const vaults = {
-  get: (): Vault[] => {
-    const staticVaultsData = VaultsV2MockData.static;
-    const dynamicVaultsData = VaultsV2MockData.dynamic;
-
-    const vaults: Vault[] = staticVaultsData.map((staticData, i) => {
-      const dynamicData = dynamicVaultsData[i];
-      const vault = { ...staticData, ...dynamicData };
-      return {
-        ...vault,
-        typeId: 'VAULT_V2',
-      };
-    });
-    return vaults;
-  },
-  positionsOf: (userAddress: string, vaultAddresses?: string[]): Position[] => {
-    const vaultsPositions: Position[] = [];
-    VaultsV2PositionsMockData.forEach((data) => {
-      vaultsPositions.push(...data.positions);
-    });
-
-    return vaultsPositions;
-  },
-  getStatic: (addresses?: string[]): VaultStatic[] => {
-    const vaultStaticData: VaultStatic = { ...VaultsV2MockData.static[0], typeId: 'VAULT_V2' };
-
-    return [vaultStaticData];
-  },
-  getDynamic: (addresses?: string[]): VaultDynamic[] => {
-    const vaultDynamicData: VaultDynamic = { ...VaultsV2MockData.dynamic[0], typeId: 'VAULT_V2' };
-
-    return [vaultDynamicData];
-  },
-  tokens: (overrides?: any): Token[] => {
-    return VaultsTokensMockData;
-  },
+  // get: (): Vault[] => {
+  //   const staticVaultsData = VaultsV2MockData.static;
+  //   const dynamicVaultsData = VaultsV2MockData.dynamic;
+  //   const vaults: Vault[] = staticVaultsData.map((staticData, i) => {
+  //     const dynamicData = dynamicVaultsData[i];
+  //     const vault = { ...staticData, ...dynamicData };
+  //     return {
+  //       ...vault,
+  //       typeId: 'VAULT_V2',
+  //     };
+  //   });
+  //   return vaults;
+  // },
+  // positionsOf: (userAddress: string, vaultAddresses?: string[]): Position[] => {
+  //   const vaultsPositions: Position[] = [];
+  //   VaultsV2PositionsMockData.forEach((data) => {
+  //     vaultsPositions.push(...data.positions);
+  //   });
+  //   return vaultsPositions;
+  // },
+  // getStatic: (addresses?: string[]): VaultStatic[] => {
+  //   const vaultStaticData: VaultStatic = { ...VaultsV2MockData.static[0], typeId: 'VAULT_V2' };
+  //   return [vaultStaticData];
+  // },
+  // getDynamic: (addresses?: string[]): VaultDynamic[] => {
+  //   const vaultDynamicData: VaultDynamic = { ...VaultsV2MockData.dynamic[0], typeId: 'VAULT_V2' };
+  //   return [vaultDynamicData];
+  // },
+  // tokens: (overrides?: any): Token[] => {
+  //   return VaultsTokensMockData;
+  // },
 };
 
 const ironBank = {
