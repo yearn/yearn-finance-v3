@@ -254,6 +254,7 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
       state.user.marketsAllowancesMap = {};
       state.user.userMarketsMetadataMap = {};
       state.user.userMarketsPositionsMap = {};
+      state.user.userIronBankSummary = undefined;
     })
     .addMatcher(isPendingTxAction, (state, { meta, type }) => {
       const marketAddress: string = meta.arg.marketAddress;

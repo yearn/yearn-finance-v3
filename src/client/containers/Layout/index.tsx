@@ -95,6 +95,7 @@ export const Layout: FC = ({ children }) => {
   function clearUserData() {
     dispatch(TokensActions.clearUserTokenState());
     dispatch(VaultsActions.clearUserData());
+    dispatch(LabsActions.clearUserData());
     dispatch(IronBankActions.clearUserData());
   }
 
