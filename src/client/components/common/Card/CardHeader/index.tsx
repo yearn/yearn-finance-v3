@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
-  margin: 0 ${({ theme }) => theme.cardPadding};
+  padding: 0 ${({ theme }) => theme.cardPadding};
 `;
 
 const Header = styled.div`

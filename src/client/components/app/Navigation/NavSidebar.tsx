@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 
-import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
+import { useAppTranslation, useAppSelector, useAppDispatch, useWindowDimensions } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
 
 import {
@@ -133,13 +133,20 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
 
 export const NavSidebar = () => {
   const { t } = useAppTranslation('common');
+  const { isMobile } = useWindowDimensions();
   const dispatch = useAppDispatch();
   const location = useLocation();
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
   const currentPath = '/' + location.pathname.toLowerCase().split('/')[1];
 
-  const toggleSidebar = () => dispatch(SettingsActions.toggleSidebar());
+  const toggleSidebar = () => {
+    if (isMobile && collapsedSidebar) {
+      return;
+    }
+
+    dispatch(SettingsActions.toggleSidebar());
+  };
 
   const navLinks = [
     {
@@ -190,7 +197,7 @@ export const NavSidebar = () => {
     <StyledSidebar collapsed={collapsedSidebar}>
       <SidebarHeader>
         <StyledLogo full={!collapsedSidebar} />
-        <ToggleSidebarButton Component={CollapseIcon} onClick={toggleSidebar} />
+        {!isMobile && <ToggleSidebarButton Component={CollapseIcon} onClick={toggleSidebar} />}
       </SidebarHeader>
 
       <SidebarContent>{linkList}</SidebarContent>

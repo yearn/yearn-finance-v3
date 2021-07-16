@@ -70,7 +70,9 @@ const LinkSection = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  flex-wrap: wrap;
+  column-gap: 2rem;
+  row-gap: 1rem;
   flex: 1;
   font-size: 1.8rem;
   color: ${({ theme }) => theme.colors.secondary};
@@ -78,6 +80,7 @@ const LinkSection = styled.div`
 
 const StyledLink = styled(Link)`
   padding: 1rem;
+  margin: -1rem;
 `;
 
 const StyledIconLink = styled(Link)`
@@ -109,6 +112,7 @@ const StyledFooter = styled.div`
   width: 100%;
   flex-wrap: wrap;
   gap: 1rem;
+  row-gap: 1.5rem;
   padding: 4rem;
   border-radius: ${({ theme }) => theme.globalRadius};
   background-color: ${({ theme }) => theme.colors.surface};
@@ -117,6 +121,7 @@ const StyledFooter = styled.div`
 
   @media ${device.tablet} {
     grid-template-columns: 1fr;
+    padding: 2rem;
 
     ${LinkSection},
     ${LogoSection} {
