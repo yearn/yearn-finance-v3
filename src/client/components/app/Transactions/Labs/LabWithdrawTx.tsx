@@ -129,9 +129,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const expectedAmount = toBN(amount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedLab?.token.decimals)
     : '';
-  const expectedAmountValue = toBN(expectedAmount)
-    .times(normalizeAmount(selectedLab.token.priceUsdc, USDC_DECIMALS))
-    .toString();
+  const expectedAmountValue = normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS);
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');

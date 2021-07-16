@@ -130,9 +130,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const expectedAmount = toBN(amount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedVault?.token.decimals)
     : '';
-  const expectedAmountValue = toBN(expectedAmount)
-    .times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS))
-    .toString();
+  const expectedAmountValue = normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS);
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
