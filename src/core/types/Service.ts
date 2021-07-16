@@ -21,7 +21,12 @@ import {
   VaultUserMetadata,
 } from '@types';
 
-export interface UserService {}
+export interface GetAddressEnsNameProps {
+  address: string;
+}
+export interface UserService {
+  getAddressEnsName: (props: GetAddressEnsNameProps) => Promise<string>;
+}
 
 export interface VaultService {
   getSupportedVaults: (props: GetSupportedVaultsProps) => Promise<Vault[]>;
