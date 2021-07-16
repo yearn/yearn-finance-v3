@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { LabsSelectors, WalletSelectors, ModalsActions, LabsActions } from '@store';
+
 import {
   SummaryCard,
   DetailCard,
@@ -14,9 +15,10 @@ import {
   ViewContainer,
   NoWalletCard,
 } from '@components/app';
+import { SpinnerLoading, SearchInput } from '@components/common';
 import { formatPercent, halfWidthCss, humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
-import { Box, SpinnerLoading, SearchInput } from '@components/common';
 import { getConstants } from '@config/constants';
+import { device } from '@themes/default';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -37,6 +39,56 @@ const StyledRecommendationsCard = styled(RecommendationsCard)`
 const StyledInfoCard = styled(InfoCard)`
   max-width: 100%;
   flex: 1;
+`;
+
+const OpportunitiesCard = styled(DetailCard)`
+  @media ${device.tablet} {
+    .col-name {
+      width: 10rem;
+    }
+  }
+  @media (max-width: 820px) {
+    .col-assets {
+      display: none;
+    }
+  }
+  @media ${device.mobile} {
+    .col-name {
+      width: 7rem;
+    }
+    .col-available {
+      width: 10rem;
+    }
+  }
+  @media (max-width: 450px) {
+    .col-available {
+      display: none;
+    }
+  }
+`;
+
+const HoldingsCard = styled(DetailCard)`
+  @media ${device.tablet} {
+    .col-name {
+      width: 10rem;
+    }
+    .col-balance {
+      width: 10rem;
+    }
+  }
+  @media (max-width: 650px) {
+    .col-value {
+      display: none;
+    }
+  }
+  @media ${device.mobile} {
+    .col-name {
+      width: 7rem;
+    }
+    .col-apy {
+      display: none;
+    }
+  }
 `;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
@@ -203,11 +255,7 @@ export const Labs = () => {
         cardSize="small"
       />
 
-      {labsStatus.loading && (
-        <Box height="100%" width="100%" position="relative" display="flex" center paddingTop="4rem">
-          <SpinnerLoading flex="1" />
-        </Box>
-      )}
+      {labsStatus.loading && <SpinnerLoading flex="1" width="100%" />}
 
       {!labsStatus.loading && (
         <>
@@ -232,22 +280,25 @@ export const Labs = () => {
 
           {!walletIsConnected && <StyledNoWalletCard />}
 
-          <DetailCard
+          <HoldingsCard
             header="Holdings"
+            wrap
             metadata={[
               {
                 key: 'icon',
                 transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
                 width: '6rem',
+                className: 'col-icon',
               },
-              { key: 'name', header: 'Name' },
-              { key: 'apy', header: 'ROI' },
-              { key: 'balance', header: 'Balance' },
-              { key: 'value', header: 'Value' },
+              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'ROI', width: '7rem', className: 'col-apy' },
+              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
+              { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
               {
                 key: 'actions',
                 transform: ({ labAddress }) => <LabHoldingsActions labAddress={labAddress} />,
                 align: 'flex-end',
+                width: 'auto',
                 grow: '1',
               },
             ]}
@@ -262,22 +313,25 @@ export const Labs = () => {
             }))}
           />
 
-          <DetailCard
+          <OpportunitiesCard
             header="Opportunities"
+            wrap
             metadata={[
               {
                 key: 'icon',
                 transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
                 width: '6rem',
+                className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600 },
-              { key: 'apy', header: 'APY' },
-              { key: 'labBalanceUsdc', header: 'Total Assets' },
-              { key: 'userTokenBalance', header: 'Available to Invest' },
+              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', width: '7rem', className: 'col-apy' },
+              { key: 'labBalanceUsdc', header: 'Total Assets', width: '15rem', className: 'col-assets' },
+              { key: 'userTokenBalance', header: 'Available to Invest', width: '15rem', className: 'col-available' },
               {
                 key: 'actions',
                 transform: ({ labAddress }) => <LabOpportunitiesActions labAddress={labAddress} />,
                 align: 'flex-end',
+                width: 'auto',
                 grow: '1',
               },
             ]}

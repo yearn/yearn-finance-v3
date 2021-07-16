@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react';
 import { getTheme } from '../themes';
-
-const MOBILE_WIDTH: number = getTheme().devices.mobile;
-
 export interface Dimension {
   width: number;
   height: number;
   isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
 }
 
 function getWindowDimensions(): Dimension {
   const dimensions: Dimension = {
     width: window.innerWidth,
     height: window.innerHeight,
-    isMobile: window.innerWidth <= MOBILE_WIDTH,
+    isMobile: window.innerWidth <= getTheme().devices.mobile,
+    isTablet: window.innerWidth <= getTheme().devices.tablet,
+    isDesktop: window.innerWidth <= getTheme().devices.desktop,
   };
   return dimensions;
 }

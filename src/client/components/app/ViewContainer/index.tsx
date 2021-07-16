@@ -8,6 +8,8 @@ const StyledViewContainer = styled.div`
   gap: ${({ theme }) => theme.layoutPadding};
   max-width: ${({ theme }) => theme.globalMaxWidth};
   flex: 1;
+  overflow: hidden;
+  overflow-y: auto;
 `;
 
 export const ViewContainer: FC = ({ children, ...props }) => {

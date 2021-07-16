@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { Button } from '@components/common';
 
 const ActionButtonsContainer = styled.div<{ actions: number }>`
-  display: grid;
+  display: flex;
   align-items: center;
-  grid-template-columns: repeat(${({ actions }) => actions}, 1fr);
+  // grid-template-columns: repeat(${({ actions }) => actions}, 1fr);
   gap: ${({ theme }) => theme.cardPadding};
 `;
 
