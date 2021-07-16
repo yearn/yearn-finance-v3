@@ -82,16 +82,20 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   useEffect(() => {
     if (!selectedLab || !selectedTargetTokenAddress) return;
 
-    if (toBN(amount).gt(0)) {
-      dispatch(
-        VaultsActions.getExpectedTransactionOutcome({
-          transactionType: 'WITHDRAW',
-          sourceTokenAddress: selectedLab.address,
-          sourceTokenAmount: yvTokenAmount,
-          targetTokenAddress: selectedTargetTokenAddress,
-        })
-      );
-    }
+    const timeOutId = setTimeout(() => {
+      if (toBN(amount).gt(0)) {
+        dispatch(
+          VaultsActions.getExpectedTransactionOutcome({
+            transactionType: 'WITHDRAW',
+            sourceTokenAddress: selectedLab.address,
+            sourceTokenAmount: yvTokenAmount,
+            targetTokenAddress: selectedTargetTokenAddress,
+          })
+        );
+      }
+    }, 500);
+
+    return () => clearTimeout(timeOutId);
   }, [amount, selectedTargetTokenAddress, selectedLab]);
 
   if (!selectedLab || !selectedTargetToken || !targetTokensOptions) {
