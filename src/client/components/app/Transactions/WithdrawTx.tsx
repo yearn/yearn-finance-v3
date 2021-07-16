@@ -72,7 +72,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
     dispatch(VaultsActions.clearVaultStatus({ vaultAddress: selectedVault.address }));
 
     const timeOutId = setTimeout(() => {
-      if (toBN(amount).gt(0)) {
+      if (toBN(amount).gt(0) && !inputError) {
         dispatch(
           VaultsActions.getExpectedTransactionOutcome({
             transactionType: 'WITHDRAW',
