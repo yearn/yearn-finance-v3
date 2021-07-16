@@ -85,7 +85,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
 
     const timeOutId = setTimeout(() => {
-      if (toBN(amount).gt(0)) {
+      if (toBN(amount).gt(0) || !inputError) {
         dispatch(
           VaultsActions.getExpectedTransactionOutcome({
             transactionType: 'WITHDRAW',
