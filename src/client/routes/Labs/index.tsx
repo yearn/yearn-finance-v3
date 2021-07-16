@@ -215,7 +215,7 @@ export const Labs = () => {
             <StyledRecommendationsCard
               header="Recommendations"
               items={recommendations.map(({ address, name, apyData, icon }) => ({
-                header: 'Special Token',
+                // header: 'Special Token',
                 icon: icon,
                 name: name,
                 info: formatPercent(apyData, 2),

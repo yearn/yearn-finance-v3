@@ -105,7 +105,7 @@ export const Vaults = () => {
             <StyledRecommendationsCard
               header="Recommendations"
               items={recommendations.map(({ address, token, apyData }) => ({
-                header: 'Vault',
+                // header: 'Vault',
                 icon: token.icon ?? '',
                 name: token.symbol,
                 info: formatPercent(apyData, 2),
