@@ -20,6 +20,7 @@ import {
   IronBankMarketDynamic,
   CyTokenUserMetadata,
   VaultUserMetadata,
+  TransactionOutcome,
 } from '@yfi/sdk';
 
 declare type Lab = LabStatic & LabDynamic;
@@ -50,17 +51,6 @@ interface LabMetadata {
 }
 
 interface LabUserMetadata {}
-
-interface TransactionOutcome {
-  sourceTokenAddress: Address;
-  sourceTokenAmount: Integer;
-  targetTokenAddress: Address;
-  targetTokenAmount: Integer;
-  targetUnderlyingTokenAddress?: Address;
-  targetUnderlyingTokenAmount?: Integer;
-  conversionRate?: number;
-  slippage?: number;
-}
 
 export type {
   Position,
