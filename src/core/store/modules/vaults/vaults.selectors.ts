@@ -248,7 +248,7 @@ function createVault(props: CreateVaultProps) {
     token: {
       address: tokenData?.address,
       name: tokenData?.name,
-      symbol: tokenData?.symbol,
+      symbol: vaultData.metadata.displayName,
       decimals: parseInt(tokenData?.decimals),
       icon: tokenData?.icon,
       balance: userTokenData?.balance ?? '0',
