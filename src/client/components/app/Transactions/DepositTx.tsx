@@ -78,16 +78,20 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   useEffect(() => {
     if (!selectedVault || !selectedSellTokenAddress) return;
 
-    if (toBN(amount).gt(0)) {
-      dispatch(
-        VaultsActions.getExpectedTransactionOutcome({
-          transactionType: 'DEPOSIT',
-          sourceTokenAddress: selectedSellTokenAddress,
-          sourceTokenAmount: toWei(amount, selectedSellToken.decimals),
-          targetTokenAddress: selectedVault.address,
-        })
-      );
-    }
+    const timeOutId = setTimeout(() => {
+      if (toBN(amount).gt(0)) {
+        dispatch(
+          VaultsActions.getExpectedTransactionOutcome({
+            transactionType: 'DEPOSIT',
+            sourceTokenAddress: selectedSellTokenAddress,
+            sourceTokenAmount: toWei(amount, selectedSellToken.decimals),
+            targetTokenAddress: selectedVault.address,
+          })
+        );
+      }
+    }, 500);
+
+    return () => clearTimeout(timeOutId);
   }, [amount, selectedSellTokenAddress, selectedVault]);
 
   if (!selectedVault || !selectedSellTokenAddress || !sellTokensOptions) {

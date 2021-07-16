@@ -85,19 +85,24 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   }, [selectedSellTokenAddress]);
 
   // TODO: SET LABS SIMULATION
+
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
 
-    if (toBN(amount).gt(0)) {
-      dispatch(
-        VaultsActions.getExpectedTransactionOutcome({
-          transactionType: 'DEPOSIT',
-          sourceTokenAddress: selectedSellTokenAddress,
-          sourceTokenAmount: toWei(amount, selectedSellToken.decimals),
-          targetTokenAddress: selectedLab.address,
-        })
-      );
-    }
+    const timeOutId = setTimeout(() => {
+      if (toBN(amount).gt(0)) {
+        dispatch(
+          VaultsActions.getExpectedTransactionOutcome({
+            transactionType: 'DEPOSIT',
+            sourceTokenAddress: selectedSellTokenAddress,
+            sourceTokenAmount: toWei(amount, selectedSellToken.decimals),
+            targetTokenAddress: selectedLab.address,
+          })
+        );
+      }
+    }, 500);
+
+    return () => clearTimeout(timeOutId);
   }, [amount, selectedSellTokenAddress, selectedLab]);
 
   if (!selectedLab || !selectedSellTokenAddress || !sellTokensOptions) {
