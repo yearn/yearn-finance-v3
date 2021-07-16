@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { ModalsActions, VaultsActions, VaultsSelectors, WalletSelectors } from '@store';
+
 import {
   SummaryCard,
   DetailCard,
@@ -14,6 +15,7 @@ import {
   ViewContainer,
   NoWalletCard,
 } from '@components/app';
+import { SpinnerLoading, SearchInput } from '@components/common';
 import {
   formatPercent,
   humanizeAmount,
@@ -22,7 +24,6 @@ import {
   USDC_DECIMALS,
   halfWidthCss,
 } from '@src/utils';
-import { Box, SpinnerLoading, SearchInput } from '@components/common';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -93,11 +94,7 @@ export const Vaults = () => {
         cardSize="small"
       />
 
-      {vaultsStatus.loading && (
-        <Box height="100%" width="100%" position="relative" display="flex" center paddingTop="4rem">
-          <SpinnerLoading flex="1" />
-        </Box>
-      )}
+      {vaultsStatus.loading && <SpinnerLoading flex="1" width="100%" />}
 
       {!vaultsStatus.loading && (
         <>

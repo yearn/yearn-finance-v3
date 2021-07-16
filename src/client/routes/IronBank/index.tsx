@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-
 import { ModalsActions, IronBankActions, IronBankSelectors, WalletSelectors } from '@store';
-import { Box, SpinnerLoading, ToggleButton, SearchInput } from '@components/common';
-import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, NoWalletCard } from '@components/app';
 
+import { SpinnerLoading, ToggleButton, SearchInput } from '@components/common';
+import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, NoWalletCard } from '@components/app';
 import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss } from '@src/utils';
 
 const SearchBarContainer = styled.div`
@@ -56,11 +55,7 @@ export const IronBank = () => {
         cardSize="small"
       />
 
-      {ironBankStatus.loading && (
-        <Box height="100%" width="100%" position="relative" display="flex" center paddingTop="4rem">
-          <SpinnerLoading flex="1" />
-        </Box>
-      )}
+      {ironBankStatus.loading && <SpinnerLoading flex="1" width="100%" />}
 
       {!ironBankStatus.loading && (
         <>

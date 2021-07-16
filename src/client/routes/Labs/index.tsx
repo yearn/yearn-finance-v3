@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { LabsSelectors, WalletSelectors, ModalsActions, LabsActions } from '@store';
+
 import {
   SummaryCard,
   DetailCard,
@@ -14,8 +15,8 @@ import {
   ViewContainer,
   NoWalletCard,
 } from '@components/app';
+import { SpinnerLoading, SearchInput } from '@components/common';
 import { formatPercent, halfWidthCss, humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
-import { Box, SpinnerLoading, SearchInput } from '@components/common';
 import { getConstants } from '@config/constants';
 
 const SearchBarContainer = styled.div`
@@ -203,11 +204,7 @@ export const Labs = () => {
         cardSize="small"
       />
 
-      {labsStatus.loading && (
-        <Box height="100%" width="100%" position="relative" display="flex" center paddingTop="4rem">
-          <SpinnerLoading flex="1" />
-        </Box>
-      )}
+      {labsStatus.loading && <SpinnerLoading flex="1" width="100%" />}
 
       {!labsStatus.loading && (
         <>

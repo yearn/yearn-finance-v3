@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
-import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions, TokensActions } from '@store';
+import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions } from '@store';
 import { getTheme } from '@themes';
 import { getConfig } from '@config';
 import { AlertTypes, ModalName, Theme } from '@types';
-
 import { ModalsActions } from '@store';
 
+import { ViewContainer } from '@components/app';
 import {
   ThemesIcon,
   ClockIcon,
@@ -20,13 +20,11 @@ import {
   CardContent,
 } from '@components/common';
 import { ThemeBox } from '@components/app/Settings';
-import { ViewContainer } from '@components/app';
+import { device } from '@themes/default';
 import { formatPercent } from '@utils';
 
 const sectionsGap = '2.2rem';
 const sectionsBorderRadius = '0.8rem';
-
-const SettingsView = styled(ViewContainer)``;
 
 const SettingsCardHeader = styled(CardHeader)`
   margin-bottom: 1.2rem;
@@ -104,6 +102,35 @@ const SlippageOption = styled.div<{ active?: boolean }>`
     background-color: ${theme.colors.secondary};
     color: ${theme.colors.surface};
   `}
+`;
+
+const SettingsView = styled(ViewContainer)`
+  @media ${device.mobile} {
+    ${SettingsCardContent} {
+      gap: 2rem;
+    }
+    ${SettingsSection} {
+      grid-template-columns: 1fr;
+      width: 100%;
+      padding: 0;
+
+      :not(:first-child) ${SectionTitle} {
+        padding-top: ${({ theme }) => theme.cardPadding};
+      }
+      :not(:first-child) ${SectionContent} {
+        padding-top: 0;
+      }
+
+      :first-child ${SectionTitle}, :last-child ${SectionTitle} {
+        border-radius: 0;
+      }
+    }
+    ${SectionTitle} {
+    }
+    ${SectionContent} {
+      padding: 0 ${({ theme }) => theme.cardPadding};
+    }
+  }
 `;
 
 export const Settings = () => {
