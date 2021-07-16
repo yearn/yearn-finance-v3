@@ -119,7 +119,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
     .map(({ address, DEPOSIT, token }) => ({
       address,
-      symbol: token.name,
+      symbol: token.symbol,
       icon: token.icon,
       balance: DEPOSIT.userDeposited,
       decimals: token.decimals,

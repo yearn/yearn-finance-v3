@@ -106,7 +106,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
 
   const selectedVaultOption = {
     address: selectedVault.address,
-    symbol: selectedVault.token.name,
+    symbol: selectedVault.token.symbol,
     icon: selectedVault.token.icon,
     balance: selectedVault.DEPOSIT.userDeposited,
     decimals: selectedVault.token.decimals,
