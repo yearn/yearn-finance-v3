@@ -39,6 +39,7 @@ const ItemCard = styled(Card)<{ onClick: any }>`
 `;
 
 const ItemHeader = styled(Text)`
+  position: absolute;
   font-size: 1.4rem;
 `;
 
@@ -67,7 +68,7 @@ const ItemName = styled(Text)`
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: 0.4rem;
+  margin-top: 0.7rem;
   text-align: center;
   flex: 1;
 `;
@@ -90,7 +91,7 @@ const CenterIcon = styled.div`
 `;
 
 interface Item {
-  header: string;
+  header?: string;
   icon: string;
   name: string;
   info: string;
@@ -116,10 +117,10 @@ export const RecommendationsCard = ({ header, items, ...props }: Recommendations
       <StyledCardContent>
         {items.map((item, i) => (
           <ItemCard key={`${i}-${item.name}`} variant="primary" onClick={item.onAction ? item.onAction : undefined}>
-            <ItemHeader>{item.header}</ItemHeader>
+            {item.header && <ItemHeader>{item.header}</ItemHeader>}
 
             <CenterIcon>
-              <TokenIcon symbol={item.name} icon={item.icon} size="big" />
+              <TokenIcon symbol={item.name} icon={item.icon} size="extraBig" />
               {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}
             </CenterIcon>
 
