@@ -70,6 +70,7 @@ const {
   getUserVaultsSummary,
   getUserVaultsMetadata,
   clearSelectedVaultAndStatus,
+  clearVaultStatus,
 } = VaultsActions;
 
 const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
@@ -268,6 +269,9 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       const currentAddress = state.selectedVaultAddress;
       state.statusMap.vaultsActionsStatusMap[currentAddress] = initialVaultActionsStatusMap;
       state.selectedVaultAddress = undefined;
+    })
+    .addCase(clearVaultStatus, (state, { payload: { vaultAddress } }) => {
+      state.statusMap.vaultsActionsStatusMap[vaultAddress] = initialVaultActionsStatusMap;
     });
 });
 

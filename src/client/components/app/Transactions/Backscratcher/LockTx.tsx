@@ -43,6 +43,11 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     );
   }, [selectedSellTokenAddress]);
 
+  useEffect(() => {
+    if (!selectedLab) return;
+    dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
+  }, [amount]);
+
   if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken) {
     return null;
   }

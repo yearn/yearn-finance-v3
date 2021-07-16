@@ -29,6 +29,7 @@ const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/
 const clearUserData = createAction<void>('vaults/clearUserData');
 const clearTransactionData = createAction<void>('vaults/clearTransactionData');
 const clearSelectedVaultAndStatus = createAction<void>('vaults/clearSelectedVaultAndStatus');
+const clearVaultStatus = createAction<{ vaultAddress: string }>('vaults/clearVaultStatus');
 
 const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',
@@ -313,4 +314,5 @@ export const VaultsActions = {
   getUserVaultsSummary,
   getUserVaultsMetadata,
   clearSelectedVaultAndStatus,
+  clearVaultStatus,
 };
