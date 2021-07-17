@@ -73,8 +73,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
 
-    const isZap = selectedSellTokenAddress === selectedLab.token.address;
-    const spenderAddress = isZap ? getZapInContractAddress(selectedLab.token.address) : selectedLab.address;
+    const isZap = selectedSellTokenAddress !== selectedLab.token.address;
+    const spenderAddress = isZap ? getZapInContractAddress(selectedLab.address) : selectedLab.address;
 
     dispatch(
       TokensActions.getTokenAllowance({

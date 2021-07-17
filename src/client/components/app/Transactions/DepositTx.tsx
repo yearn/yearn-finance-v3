@@ -65,8 +65,8 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   useEffect(() => {
     if (!selectedVault || !selectedSellTokenAddress) return;
 
-    const isZap = selectedSellTokenAddress === selectedVault.token.address;
-    const spenderAddress = isZap ? getZapInContractAddress(selectedVault.token.address) : selectedVault.address;
+    const isZap = selectedSellTokenAddress !== selectedVault.token.address;
+    const spenderAddress = isZap ? getZapInContractAddress(selectedVault.address) : selectedVault.address;
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedSellTokenAddress,
