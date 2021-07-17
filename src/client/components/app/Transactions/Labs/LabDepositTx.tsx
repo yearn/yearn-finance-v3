@@ -77,8 +77,6 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     if (!selectedLab || !selectedSellTokenAddress) return;
 
     const isZap = selectedSellTokenAddress !== selectedLab.token.address || selectedLab.address === PSLPYVBOOSTETH;
-    console.log({ isZap });
-
     const spenderAddress = isZap ? getZapInContractAddress(selectedLab.address) : selectedLab.address;
 
     dispatch(
