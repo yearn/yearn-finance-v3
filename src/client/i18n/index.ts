@@ -11,6 +11,7 @@ i18n
   .use(initReactI18next)
   .init({
     supportedLngs: ['en', 'es'],
+    nonExplicitSupportedLngs: true,
     fallbackLng: 'en',
     preload: ['en'],
     defaultNS: 'common',
