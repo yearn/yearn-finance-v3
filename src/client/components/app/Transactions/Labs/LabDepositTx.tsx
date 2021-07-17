@@ -19,9 +19,11 @@ import {
   validateVaultDeposit,
   validateVaultAllowance,
   getZapInContractAddress,
+  validateYvBoostEthActionsAllowance,
 } from '@src/utils';
 
 import { Transaction } from '../Transaction';
+import { getConstants } from '../../../../../config/constants';
 
 const isZapDisabled = (labAddress?: string) => {
   // TODO: DISABLE ZAPS THROUGH METADATA
@@ -33,6 +35,7 @@ export interface LabDepositTxProps {
 }
 
 export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
+  const { YVBOOST, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
@@ -73,7 +76,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
 
-    const isZap = selectedSellTokenAddress !== selectedLab.token.address;
+    const isZap = selectedSellTokenAddress !== selectedLab.token.address || selectedLab.address === PSLPYVBOOSTETH;
     const spenderAddress = isZap ? getZapInContractAddress(selectedLab.address) : selectedLab.address;
 
     dispatch(
@@ -111,15 +114,37 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     return null;
   }
 
-  // TODO: USE LAB VALIDATIONS
-  const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
-    amount: toBN(amount),
-    vaultAddress: selectedLab.address,
-    vaultUnderlyingTokenAddress: selectedLab.token.address,
-    sellTokenAddress: selectedSellTokenAddress,
-    sellTokenDecimals: selectedSellToken.decimals.toString(),
-    sellTokenAllowancesMap: selectedSellToken.allowancesMap,
-  });
+  let isApproved: boolean | undefined;
+  let allowanceError: string | undefined;
+
+  if (selectedLab.address === YVBOOST) {
+    console.log('validateVaultAllowance');
+
+    const { approved, error } = validateVaultAllowance({
+      amount: toBN(amount),
+      vaultAddress: selectedLab.address,
+      vaultUnderlyingTokenAddress: selectedLab.token.address,
+      sellTokenAddress: selectedSellTokenAddress,
+      sellTokenDecimals: selectedSellToken.decimals.toString(),
+      sellTokenAllowancesMap: selectedSellToken.allowancesMap,
+    });
+    isApproved = approved;
+    allowanceError = error;
+  }
+
+  if (selectedLab.address === PSLPYVBOOSTETH) {
+    console.log('validateYvBoostEthActionsAllowance');
+
+    const { approved, error } = validateYvBoostEthActionsAllowance({
+      action: 'INVEST',
+      sellTokenAmount: toBN(amount),
+      sellTokenAddress: selectedSellTokenAddress,
+      sellTokenDecimals: selectedSellToken.decimals.toString(),
+      sellTokenAllowancesMap: selectedSellToken.allowancesMap,
+    });
+    isApproved = approved;
+    allowanceError = error;
+  }
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
     sellTokenAmount: toBN(amount),
@@ -130,7 +155,6 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     vaultUnderlyingBalance: selectedLab.labBalance,
   });
 
-  // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
   const error = allowanceError || inputError || actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
 
   const selectedLabOption = {
