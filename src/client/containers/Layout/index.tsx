@@ -81,8 +81,8 @@ export const Layout: FC = ({ children }) => {
 
   // TODO: MOVE THIS LOGIC TO THUNKS
   useEffect(() => {
+    clearUserData();
     if (selectedAddress) {
-      clearUserData();
       fetchUserData(path);
     }
   }, [selectedAddress]);

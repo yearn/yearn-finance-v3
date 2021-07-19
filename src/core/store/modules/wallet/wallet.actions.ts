@@ -16,7 +16,7 @@ const getSubscriptions = (dispatch: AppDispatch, customSubscriptions?: Subscript
   },
   address: (address: string) => {
     dispatch(addressChange({ address }));
-    dispatch(getAddressEnsName({ address }));
+    if (address) dispatch(getAddressEnsName({ address }));
     if (customSubscriptions && customSubscriptions.address) customSubscriptions.address(address);
   },
   network: (network: number) => {

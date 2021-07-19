@@ -23,7 +23,7 @@ const walletReducer = createReducer(walletInitialState, (builder) => {
     })
     .addCase(addressChange, (state, { payload: { address } }) => {
       state.addressEnsName = undefined;
-      state.selectedAddress = getAddress(address);
+      state.selectedAddress = address ? getAddress(address) : undefined;
     })
     .addCase(networkChange, (state, { payload: { network } }) => {
       state.networkVersion = network;
