@@ -11,6 +11,7 @@ import {
   validateVaultDeposit,
   validateVaultAllowance,
   getZapInContractAddress,
+  formatPercent,
 } from '@src/utils';
 
 import { Transaction } from './Transaction';
@@ -122,12 +123,13 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
-    .map(({ address, DEPOSIT, token }) => ({
+    .map(({ address, DEPOSIT, token, apyData }) => ({
       address,
       symbol: token.symbol,
       icon: token.icon,
       balance: DEPOSIT.userDeposited,
       decimals: token.decimals,
+      yield: formatPercent(apyData, 2),
     }));
   const selectedVaultOption = vaultsOptions.find(({ address }) => address === selectedVault.address)!;
 

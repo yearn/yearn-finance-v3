@@ -20,6 +20,7 @@ import {
   validateVaultAllowance,
   getZapInContractAddress,
   validateYvBoostEthActionsAllowance,
+  formatPercent,
 } from '@src/utils';
 
 import { Transaction } from '../Transaction';
@@ -163,6 +164,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     icon: selectedLab.icon,
     balance: selectedLab.DEPOSIT.userBalance,
     decimals: toBN(selectedLab.decimals).toNumber(),
+    yield: formatPercent(selectedLab.apyData, 2),
   };
 
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
