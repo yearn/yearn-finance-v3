@@ -9,6 +9,7 @@ import {
   validateVaultDeposit,
   validateYvBoostEthActionsAllowance,
   getStakingContractAddress,
+  formatPercent,
 } from '@src/utils';
 
 import { Transaction } from '../Transaction';
@@ -91,6 +92,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
     icon: selectedLab.icon,
     balance: selectedLab.STAKE.userDeposited,
     decimals: toBN(selectedLab.decimals).toNumber(),
+    yield: formatPercent(selectedLab.apyData, 2),
   };
 
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();

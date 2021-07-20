@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { VaultsSelectors, LabsSelectors, LabsActions, VaultsActions, TokensActions } from '@store';
-import { normalizeAmount, USDC_DECIMALS } from '@src/utils';
+import { formatPercent, normalizeAmount, USDC_DECIMALS } from '@src/utils';
 import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
@@ -57,7 +57,15 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
     icon: selectedTargetToken.icon,
     balance: selectedTargetVault.DEPOSIT.userDeposited,
     decimals: selectedTargetToken.decimals,
-    yield: selectedTargetVault.apyData,
+  };
+
+  const selectedVaultOption = {
+    address: selectedTargetToken.address,
+    symbol: selectedTargetToken.name,
+    icon: selectedTargetToken.icon,
+    balance: selectedTargetToken.balance,
+    decimals: selectedTargetToken.decimals,
+    yield: formatPercent(selectedTargetVault.apyData, 2),
   };
 
   const amount = normalizeAmount(selectedLab.YIELD.userDeposited, selectedTargetToken.decimals);
@@ -112,8 +120,8 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       targetHeader="To Vault"
-      targetAssetOptions={[selectedTargetToken]}
-      selectedTargetAsset={selectedTargetToken}
+      targetAssetOptions={[selectedVaultOption]}
+      selectedTargetAsset={selectedVaultOption}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
       targetAmountStatus={{}}
