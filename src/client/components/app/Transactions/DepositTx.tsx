@@ -52,8 +52,13 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     }
 
     if (!selectedVault) {
-      // TODO: DEFINE DEFAULT SELECTED VAULT ADDRESS CRITERIA
-      dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: '0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1' }));
+      const matchingVault = vaults.find((vault) => vault.token.address === selectedSellTokenAddress);
+      const highestYieldingVault = vaults.reduce((prev, current) => (prev.apyData > current.apyData ? prev : current));
+      dispatch(
+        VaultsActions.setSelectedVaultAddress({
+          vaultAddress: matchingVault?.address ?? highestYieldingVault.address,
+        })
+      );
       setAllowVaultSelect(true);
     }
 
