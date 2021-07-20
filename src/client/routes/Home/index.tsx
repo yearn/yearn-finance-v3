@@ -58,7 +58,7 @@ export const Home = () => {
         items={[
           { header: 'Net Worth', content: `${normalizeUsdc(netWorth)}` },
           { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
-          { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
+          { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
         ]}
         variant="secondary"
         cardSize="small"

@@ -249,7 +249,7 @@ export const Labs = () => {
         items={[
           { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
           // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
-          // { header: 'Est. Yearly Yield', content: `${normalizePercent(estYearlyYeild, 2)}` },
+          // { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
         ]}
         variant="secondary"
         cardSize="small"
