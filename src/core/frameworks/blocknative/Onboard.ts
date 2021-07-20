@@ -105,12 +105,13 @@ export class BlocknativeWalletImpl implements Wallet {
   }
 
   public async connect(args?: any): Promise<boolean> {
-    const selected = await this.onboard?.walletSelect(args?.name);
-    if (selected) {
+    try {
+      await this.onboard?.walletSelect(args?.name);
       const valid = await this.onboard?.walletCheck();
       return valid ?? false;
+    } catch (error) {
+      return false;
     }
-    return false;
   }
 
   public async changeTheme(theme: Theme) {
