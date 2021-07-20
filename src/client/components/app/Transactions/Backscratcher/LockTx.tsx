@@ -2,7 +2,14 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { TokensActions, LabsSelectors, LabsActions, VaultsActions } from '@store';
-import { toBN, normalizeAmount, USDC_DECIMALS, validateVaultDeposit, validateVaultAllowance } from '@src/utils';
+import {
+  toBN,
+  normalizeAmount,
+  USDC_DECIMALS,
+  validateVaultDeposit,
+  validateVaultAllowance,
+  formatPercent,
+} from '@src/utils';
 
 import { Transaction } from '../Transaction';
 
@@ -79,6 +86,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     icon: selectedLab.icon,
     balance: selectedLab.DEPOSIT.userDeposited,
     decimals: selectedLab.token.decimals,
+    yield: formatPercent(selectedLab.apyData, 2),
   };
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = amount;
