@@ -291,7 +291,7 @@ export const Labs = () => {
                 className: 'col-icon',
               },
               { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'ROI', width: '7rem', className: 'col-apy' },
+              { key: 'apy', header: 'ROI', width: '8rem', className: 'col-apy' },
               { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
               { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
               {
@@ -324,7 +324,7 @@ export const Labs = () => {
                 className: 'col-icon',
               },
               { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '7rem', className: 'col-apy' },
+              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
               { key: 'labBalanceUsdc', header: 'Total Assets', width: '15rem', className: 'col-assets' },
               { key: 'userTokenBalance', header: 'Available to Invest', width: '15rem', className: 'col-available' },
               {
