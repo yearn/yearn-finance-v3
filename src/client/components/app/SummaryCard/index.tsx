@@ -15,6 +15,8 @@ const StyledCardContent = styled(CardContent)`
 const StyledCardElement = styled(CardElement)`
   max-width: 100%;
   overflow: hidden;
+  width: auto;
+  min-width: 17rem;
 `;
 
 const StyledText = styled(Text)<{ variant?: string }>`
