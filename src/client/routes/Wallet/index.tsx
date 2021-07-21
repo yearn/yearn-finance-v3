@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { WalletSelectors, TokensSelectors, TokensActions, IronBankActions, ModalsActions } from '@store';
@@ -84,7 +84,7 @@ export const Wallet = () => {
             },
             { key: 'name', header: 'Name', width: '17rem', className: 'col-name' },
             { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
-            { key: 'price', header: 'Price', width: '10rem', className: 'col-price' },
+            { key: 'price', header: 'Price', width: '11rem', className: 'col-price' },
             { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
             {
               key: 'actions',
