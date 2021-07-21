@@ -90,7 +90,7 @@ const DepositsCard = styled(DetailCard)`
       width: 10rem;
     }
   }
-  @media (max-width: 650px) {
+  @media (max-width: 670px) {
     .col-value {
       display: none;
     }
@@ -191,7 +191,7 @@ export const Vaults = () => {
               { key: 'apy', header: 'APY', width: '7rem', className: 'col-apy' },
               { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
               { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
-              { key: 'earned', header: 'Earned', width: '10rem', className: 'col-earned' },
+              { key: 'earned', header: 'Earned', width: '11rem', className: 'col-earned' },
               {
                 key: 'actions',
                 transform: ({ vaultAddress }) => (
