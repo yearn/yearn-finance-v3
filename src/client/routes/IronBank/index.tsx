@@ -95,7 +95,7 @@ export const IronBank = () => {
                 className: 'col-icon',
               },
               { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '7rem', className: 'col-apy' },
+              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
               { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
               { key: 'suppliedUsdc', header: 'Value', width: '11rem', className: 'col-value' },
               {
@@ -143,7 +143,7 @@ export const IronBank = () => {
                 className: 'col-icon',
               },
               { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '7rem', className: 'col-apy' },
+              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
               { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
               { key: 'borrowedUsdc', header: 'Value', width: '11rem', className: 'col-value' },
               {
@@ -183,8 +183,8 @@ export const IronBank = () => {
                 className: 'col-icon',
               },
               { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'supplyAPY', header: 'Lend APY', width: '7rem', className: 'col-lend-apy' },
-              { key: 'borrowAPY', header: 'Borrow APY', width: '7rem', className: 'col-borrow-apy' },
+              { key: 'supplyAPY', header: 'Lend APY', width: '8rem', className: 'col-lend-apy' },
+              { key: 'borrowAPY', header: 'Borrow APY', width: '8rem', className: 'col-borrow-apy' },
               { key: 'liquidity', header: 'Market Liquidity', width: '15rem', className: 'col-market' },
               { key: 'userTokenBalance', header: 'Available to Invest', width: '15rem', className: 'col-available' },
               {
