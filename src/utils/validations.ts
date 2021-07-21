@@ -190,6 +190,39 @@ export function validateYvBoostEthActionsAllowance(props: ValidateYvBoostEthActi
   });
 }
 
+interface ValidateYveCrvActionsAllowanceProps {
+  labAddress: string;
+  sellTokenAddress: string;
+  sellTokenAmount: BigNumber;
+  sellTokenDecimals: string;
+  sellTokenAllowancesMap: AllowancesMap;
+  action: 'LOCK' | 'REINVEST';
+}
+
+export function validateYveCrvActionsAllowance(props: ValidateYveCrvActionsAllowanceProps): ValidationResonse {
+  const { y3CrvBackZapper, CRV, THREECRV, YVECRV } = getConfig().CONTRACT_ADDRESSES;
+  const { labAddress, sellTokenAddress, sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap, action } = props;
+  let spenderAddress: string = '';
+  if (labAddress !== YVECRV) throw new Error('Only yveCrv is supported as labAddress for this method');
+
+  if (action === 'LOCK') {
+    spenderAddress = labAddress;
+    if (sellTokenAddress !== CRV) throw new Error('Only Crv token is supported for YveCrv LOCK action');
+  }
+  if (action === 'REINVEST') {
+    spenderAddress = y3CrvBackZapper;
+    if (sellTokenAddress !== THREECRV) throw new Error('Only 3Crv token is supported for YveCrv STAKE action');
+  }
+
+  return validateAllowance({
+    tokenAddress: sellTokenAddress,
+    tokenAmount: sellTokenAmount,
+    tokenDecimals: sellTokenDecimals,
+    tokenAllowancesMap: sellTokenAllowancesMap,
+    spenderAddress,
+  });
+}
+
 interface ValidateAllowanceProps {
   tokenAddress: string;
   tokenAmount: BigNumber;

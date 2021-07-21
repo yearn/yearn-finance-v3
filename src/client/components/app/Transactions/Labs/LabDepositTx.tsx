@@ -134,8 +134,6 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   }
 
   if (selectedLab.address === PSLPYVBOOSTETH) {
-    console.log('validateYvBoostEthActionsAllowance');
-
     const { approved, error } = validateYvBoostEthActionsAllowance({
       action: 'INVEST',
       sellTokenAmount: toBN(amount),
