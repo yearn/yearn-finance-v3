@@ -7,8 +7,8 @@ import {
   normalizeAmount,
   USDC_DECIMALS,
   validateVaultDeposit,
-  validateVaultAllowance,
   formatPercent,
+  validateYveCrvActionsAllowance,
 } from '@src/utils';
 
 import { Transaction } from '../Transaction';
@@ -59,11 +59,11 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     return null;
   }
 
-  // TODO: REPLACE WITH LAB VALIDATIONS
-  const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
-    amount: toBN(amount),
-    vaultAddress: selectedLab.address,
-    vaultUnderlyingTokenAddress: selectedLab.token.address,
+  // TODO: generic lab allowance validation
+  const { approved: isApproved, error: allowanceError } = validateYveCrvActionsAllowance({
+    action: 'LOCK',
+    labAddress: selectedLab.address,
+    sellTokenAmount: toBN(amount),
     sellTokenAddress: selectedSellTokenAddress,
     sellTokenDecimals: selectedSellToken.decimals.toString(),
     sellTokenAllowancesMap: selectedSellToken.allowancesMap,

@@ -14,6 +14,7 @@ import {
   validateVaultWithdrawAllowance,
   validateYvBoostEthActionsAllowance,
   getZapInContractAddress,
+  validateYveCrvActionsAllowance,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -478,7 +479,23 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
     const userAddress = getState().wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    // TODO validations.
+    const tokenData = getState().tokens.tokensMap[THREECRV];
+    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[THREECRV];
+    const amount = getState().labs.user.userLabsPositionsMap[YVECRV].YIELD.underlyingTokenBalance.amount;
+
+    const { error: allowanceError } = validateYveCrvActionsAllowance({
+      action: 'REINVEST',
+      labAddress: YVECRV,
+      sellTokenAmount: toBN(amount),
+      sellTokenAddress: tokenData.address,
+      sellTokenDecimals: tokenData.decimals.toString(),
+      sellTokenAllowancesMap: tokenAllowancesMap,
+    });
+
+    // TODO validations for action.
+
+    const error = allowanceError;
+    if (error) throw new Error(error);
 
     const { labService } = services;
     const tx = await labService.reinvest({
