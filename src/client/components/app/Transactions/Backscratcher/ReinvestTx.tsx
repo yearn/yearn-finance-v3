@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { VaultsSelectors, LabsSelectors, LabsActions, VaultsActions, TokensActions } from '@store';
-import { formatPercent, normalizeAmount, USDC_DECIMALS } from '@src/utils';
+import { formatPercent, normalizeAmount, toBN, USDC_DECIMALS, validateYveCrvActionsAllowance } from '@src/utils';
 import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
@@ -48,9 +48,6 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
     return null;
   }
 
-  // TODO: VALIDATIONS
-  const error = actionsStatus.approveReinvest.error || actionsStatus.reinvest.error;
-
   const selectedLabOption = {
     address: selectedLab.address,
     symbol: selectedTargetToken.name,
@@ -72,6 +69,18 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
   const amountValue = normalizeAmount(selectedLab.YIELD.userDepositedUsdc, USDC_DECIMALS);
   const expectedAmount = amount;
   const expectedAmountValue = amountValue;
+
+  // TODO: generic lab allowance validation
+  const { approved: isApproved, error: allowanceError } = validateYveCrvActionsAllowance({
+    action: 'REINVEST',
+    labAddress: selectedLab.address,
+    sellTokenAmount: toBN(amount),
+    sellTokenAddress: selectedTargetToken.address,
+    sellTokenDecimals: selectedTargetToken.decimals.toString(),
+    sellTokenAllowancesMap: selectedTargetToken.allowancesMap,
+  });
+
+  const error = allowanceError || actionsStatus.approveReinvest.error || actionsStatus.reinvest.error;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -98,13 +107,13 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
       label: 'Approve',
       onAction: approve,
       status: actionsStatus.approveReinvest,
-      disabled: false,
+      disabled: isApproved,
     },
     {
       label: 'Reinvest',
       onAction: reinvest,
       status: actionsStatus.reinvest,
-      disabled: false,
+      disabled: !isApproved,
     },
   ];
 
