@@ -110,7 +110,9 @@ export const Wallet = () => {
           header="Yearn passes $5B TVL!"
           Component={
             <Text>
-              Join us for the event on 02/22/2022
+              Total Value Locked (TVL) is a key indicator of the scale of Yearn and DeFi. <br />
+              With $5B TVL, Yearn is the 8th largest DeFi protocol. Yearn is not a bank, but fun fact: the average US
+              bank has $3.1B in deposits according to mx.com.
               <br />
               <br />
               Over $5B in holdings have been deposited into the Yearn suite of products.
