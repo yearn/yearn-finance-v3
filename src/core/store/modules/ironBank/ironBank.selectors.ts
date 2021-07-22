@@ -1,11 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit';
-
-import { RootState, IronBankMarketView, Status } from '@types';
 import BigNumber from 'bignumber.js';
-import { toBN } from '../../../../utils';
+
+import { RootState, IronBankMarketView, MarketActionsStatusMap, Status } from '@types';
+import { toBN } from '@utils';
+import { initialMarketsActionsMap } from './ironBank.reducer';
 
 const selectMarketsMap = (state: RootState) => state.ironBank.marketsMap;
 const selectMarketsAddresses = (state: RootState) => state.ironBank.marketAddresses;
+const selectSelectedMarketAddress = (state: RootState) => state.ironBank.selectedMarketAddress;
 const selectMarketsAllowancesMap = (state: RootState) => state.ironBank.user.marketsAllowancesMap;
 const selectUserMarketsPositionsMap = (state: RootState) => state.ironBank.user.userMarketsPositionsMap;
 const selectUserMarketsMetadataMap = (state: RootState) => state.ironBank.user.userMarketsMetadataMap;
@@ -15,6 +17,7 @@ const selectGetUserIronBankSummaryStatus = (state: RootState) => state.ironBank.
 const selectGetMarketsStatus = (state: RootState) => state.ironBank.statusMap.getMarkets;
 const selectGetUserMarketsPositionsStatus = (state: RootState) => state.ironBank.statusMap.user.getUserMarketsPositions;
 const selectGetUserMarketsMetadataStatus = (state: RootState) => state.ironBank.statusMap.user.getUserMarketsMetadata;
+const selectMarketsActionsStatusMap = (state: RootState) => state.ironBank.statusMap.marketsActionsMap;
 
 // tokens
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
@@ -107,6 +110,22 @@ const selectBorrowMarkets = createSelector([selectMarkets], (markets) => {
   return borrowMarkets.filter((market) => new BigNumber(market.userDeposited).gt(0));
 });
 
+const selectSelectedMarket = createSelector(
+  [selectMarkets, selectSelectedMarketAddress],
+  (markets, selectedMarketAddress) => {
+    if (!selectedMarketAddress) return undefined;
+
+    return markets.find((market) => market.address === selectedMarketAddress);
+  }
+);
+
+const selectSelectedMarketActionsStatusMap = createSelector(
+  [selectMarketsActionsStatusMap, selectSelectedMarketAddress],
+  (marketsActionsStatusMap, selectedMarketAddress): MarketActionsStatusMap => {
+    return selectedMarketAddress ? marketsActionsStatusMap[selectedMarketAddress] : initialMarketsActionsMap;
+  }
+);
+
 const selectSummaryData = createSelector([selectUserIronBankSummary], (userIronBankSummary) => {
   return {
     supplyBalance: userIronBankSummary?.supplyBalanceUsdc ?? '0',
@@ -150,6 +169,8 @@ export const IronBankSelectors = {
   selectUserIronBankSummary,
   selectLendMarkets,
   selectBorrowMarkets,
+  selectSelectedMarket,
+  selectSelectedMarketActionsStatusMap,
   selectSummaryData,
   selectIronBankStatus,
 };

@@ -29,7 +29,7 @@ export const initialUserMarketsActionsMap: UserMarketActionsStatusMap = {
 export const ironBankInitialState: IronBankState = {
   marketAddresses: [],
   marketsMap: {},
-  selectedMarketAddress: '',
+  selectedMarketAddress: undefined,
   user: {
     userIronBankSummary: undefined,
     userMarketsPositionsMap: {},
@@ -60,6 +60,7 @@ const {
   getMarketsDynamic,
   enterMarkets,
   clearUserData,
+  clearSelectedMarketAndStatus,
 } = IronBankActions;
 
 type GenericAsyncThunk = AsyncThunk<any, any, any>;
@@ -255,6 +256,12 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
       state.user.userMarketsMetadataMap = {};
       state.user.userMarketsPositionsMap = {};
       state.user.userIronBankSummary = undefined;
+    })
+    .addCase(clearSelectedMarketAndStatus, (state) => {
+      if (!state.selectedMarketAddress) return;
+      const currentAddress = state.selectedMarketAddress;
+      state.statusMap.marketsActionsMap[currentAddress] = initialMarketsActionsMap;
+      state.selectedMarketAddress = undefined;
     })
     .addMatcher(isPendingTxAction, (state, { meta, type }) => {
       const marketAddress: string = meta.arg.marketAddress;
