@@ -3,8 +3,16 @@ import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { WalletSelectors, TokensSelectors, TokensActions, IronBankActions, ModalsActions } from '@store';
 
-import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, NoWalletCard } from '@components/app';
-import { SpinnerLoading } from '@components/common';
+import {
+  SummaryCard,
+  DetailCard,
+  ViewContainer,
+  ActionButtons,
+  TokenIcon,
+  NoWalletCard,
+  InfoCard,
+} from '@components/app';
+import { SpinnerLoading, Text } from '@components/common';
 import { halfWidthCss, humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
 import { device } from '@themes/default';
 
@@ -24,6 +32,20 @@ const TokensCard = styled(DetailCard)`
       display: none;
     }
   }
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
+  flex-wrap: wrap;
+  width: 100%;
+`;
+
+const StyledInfoCard = styled(InfoCard)`
+  flex: 1;
+  ${halfWidthCss}
 `;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
@@ -67,6 +89,36 @@ export const Wallet = () => {
         variant="secondary"
         cardSize="small"
       />
+
+      <Row>
+        <StyledInfoCard
+          header="What's in Your Wallet?"
+          Component={
+            <Text>
+              “Wallet” is a great place to put your idling capital to work.
+              <br />
+              <br />
+              Choose token and either invest or lend it in a couple of clicks.
+              <br />
+              No distractions and lengthy text pages – you know why you are here.
+            </Text>
+          }
+          cardSize="big"
+        />
+
+        <StyledInfoCard
+          header="Yearn passes $5B TVL!"
+          Component={
+            <Text>
+              Join us for the event on 02/22/2022
+              <br />
+              <br />
+              Over $5B in holdings have been deposited into the Yearn suite of products.
+            </Text>
+          }
+          cardSize="big"
+        />
+      </Row>
 
       {!walletIsConnected && <StyledNoWalletCard />}
 

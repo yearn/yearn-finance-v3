@@ -37,8 +37,8 @@ const StyledRecommendationsCard = styled(RecommendationsCard)`
 `;
 
 const StyledInfoCard = styled(InfoCard)`
-  max-width: 100%;
   flex: 1;
+  ${halfWidthCss}
 `;
 
 const OpportunitiesCard = styled(DetailCard)`
