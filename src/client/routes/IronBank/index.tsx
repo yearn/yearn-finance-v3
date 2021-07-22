@@ -60,8 +60,15 @@ export const IronBank = () => {
   }, [markets]);
 
   const actionHandler = (action: string, marketAddress: string) => {
-    dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
-    dispatch(ModalsActions.openModal({ modalName: 'comingSoon' }));
+    switch (action) {
+      case 'supply':
+        dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
+        dispatch(ModalsActions.openModal({ modalName: 'IronBankSupplyTx' }));
+        break;
+      default:
+        dispatch(ModalsActions.openModal({ modalName: 'comingSoon' }));
+        break;
+    }
   };
 
   return (
@@ -124,7 +131,7 @@ export const IronBank = () => {
               icon: market.token.icon ?? '',
               tokenSymbol: market.token.symbol,
               name: market.token.symbol,
-              balance: humanizeAmount(market.userBalance, parseInt(market.decimals), 4),
+              balance: humanizeAmount(market.userDeposited, market.token.decimals, 4),
               apy: normalizePercent(market.lendApy, 2),
               suppliedUsdc: normalizeUsdc(market.userDepositedUsdc),
               collateral: market.enteredMarket ? 'true' : 'false',
@@ -165,7 +172,7 @@ export const IronBank = () => {
               icon: market.token.icon ?? '',
               tokenSymbol: market.token.symbol,
               name: market.token.symbol,
-              balance: humanizeAmount(market.userBalance, parseInt(market.decimals), 4),
+              balance: humanizeAmount(market.userDeposited, market.token.decimals, 4),
               apy: normalizePercent(market.borrowApy, 2),
               borrowedUsdc: normalizeUsdc(market.userDepositedUsdc),
               address: market.address,
