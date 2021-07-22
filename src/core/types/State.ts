@@ -161,7 +161,7 @@ export interface IronBankMarketPositionsMap {
 export interface IronBankState {
   marketAddresses: EthereumAddress[];
   marketsMap: { [marketAddress: string]: IronBankMarket };
-  selectedMarketAddress: EthereumAddress;
+  selectedMarketAddress: EthereumAddress | undefined;
   user: {
     userIronBankSummary: IronBankUserSummary | undefined;
     userMarketsPositionsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
