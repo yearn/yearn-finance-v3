@@ -83,13 +83,6 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
   `}
 `;
 
-const CopyrightSmall = styled.span`
-  display: none;
-`;
-const CopyrightLarge = styled.span`
-  white-space: nowrap;
-`;
-
 const ToggleSidebarButton = styled(LinkIcon)`
   fill: ${({ theme }) => theme.colors.primaryVariant};
   transition: ${linkTransition};
@@ -120,13 +113,8 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
     `
     width: ${props.theme.sideBar.collapsedWidth};
 
-    ${LinkText},
-    ${CopyrightLarge} {
+    ${LinkText} {
       display: none;
-    }
-    ${CopyrightSmall} {
-      display: block;
-      text-align: center;
     }
   `};
 `;
@@ -201,10 +189,8 @@ export const NavSidebar = () => {
       </SidebarHeader>
 
       <SidebarContent>{linkList}</SidebarContent>
-      <SidebarFooter>
-        <CopyrightSmall>{t('navigation.copyright.small')}</CopyrightSmall>
-        <CopyrightLarge>{t('navigation.copyright.big')}</CopyrightLarge>
-      </SidebarFooter>
+      {/* <SidebarFooter>
+      </SidebarFooter> */}
     </StyledSidebar>
   );
 };
