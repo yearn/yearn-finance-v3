@@ -35,6 +35,7 @@ const StyledNavbar = styled.nav`
   background-color: ${({ theme }) => theme.colors.background};
   height: ${(props) => props.theme.navbar.height};
   z-index: ${(props) => props.theme.zindex.navbar};
+  max-width: ${({ theme }) => theme.globalMaxWidth};
 `;
 
 export const Navbar = ({ className, title, walletAddress, addressEnsName, onWalletClick }: NavbarProps) => {
