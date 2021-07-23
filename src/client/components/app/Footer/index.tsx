@@ -12,23 +12,23 @@ interface FooterProps {
 
 const footerLinks = [
   {
-    link: 'https://twitter.com/iearnfinance',
+    link: 'https://gov.yearn.finance',
     name: 'gov',
   },
   {
-    link: 'https://twitter.com/iearnfinance',
+    link: 'https://docs.yearn.finance',
     name: 'docs',
   },
   {
-    link: 'https://twitter.com/iearnfinance',
+    link: 'https://github.com/yearn/yearn-protocol/blob/develop/SECURITY.md',
     name: 'security',
   },
   {
-    link: 'https://twitter.com/iearnfinance',
+    link: 'https://v1.yearn.finance',
     name: 'v1',
   },
   {
-    link: 'https://twitter.com/iearnfinance',
+    link: 'https://yearn.finance',
     name: 'v2',
   },
 ];
@@ -39,11 +39,11 @@ const socialLinks = [
     icon: TwitterIcon,
   },
   {
-    link: 'https://github.com/yearn/yearn-finance.git',
+    link: 'https://github.com/yearn',
     icon: GithubIcon,
   },
   {
-    link: 'https://discord.com/invite/6PNv2nF/',
+    link: 'https://discord.yearn.finance',
     icon: DiscordIcon,
   },
   {
@@ -51,7 +51,7 @@ const socialLinks = [
     icon: MediumIcon,
   },
   {
-    link: 'https://www.google.com',
+    link: 'https://t.me/yearnfinance',
     icon: TelegramIcon,
   },
 ];
