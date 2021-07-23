@@ -71,7 +71,7 @@ const LinkSection = styled.div`
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  column-gap: 2rem;
+  column-gap: 4rem;
   row-gap: 1rem;
   flex: 1;
   font-size: 1.8rem;
@@ -107,7 +107,7 @@ const AlchemyLogo = styled(AlchemyCertified)`
 
 const StyledFooter = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
   width: 100%;
   flex-wrap: wrap;
