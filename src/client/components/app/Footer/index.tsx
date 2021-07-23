@@ -39,7 +39,7 @@ const socialLinks = [
     icon: TwitterIcon,
   },
   {
-    link: 'https://github.com/yearn/yearn-finance.git',
+    link: 'https://github.com/yearn',
     icon: GithubIcon,
   },
   {
