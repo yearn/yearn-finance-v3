@@ -15,7 +15,12 @@ import { BackscratcherLockTxModal, BackscratcherClaimTxModal, BackscratcherReinv
 import { LabDepositTxModal } from './LabDepositTxModal';
 import { LabWithdrawTxModal } from './LabWithdrawTxModal';
 import { LabStakeTxModal } from './LabStakeTxModal';
-import { IronBankSupplyTxModal, IronBankWithdrawTxModal, IronBankBorrowTxModal } from './IronBank';
+import {
+  IronBankSupplyTxModal,
+  IronBankWithdrawTxModal,
+  IronBankBorrowTxModal,
+  IronBankRepayTxModal,
+} from './IronBank';
 
 const modalTimeout = 300;
 
@@ -198,6 +203,12 @@ export const Modals = () => {
       {activeModal === 'IronBankBorrowTx' && (
         <CSSTransition key={'IronBankBorrowTx'} timeout={500} classNames="slideBottom">
           <IronBankBorrowTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'IronBankRepayTx' && (
+        <CSSTransition key={'IronBankRepayTx'} timeout={500} classNames="slideBottom">
+          <IronBankRepayTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

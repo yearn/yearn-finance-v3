@@ -42,6 +42,7 @@ interface IronBankTransactionProps {
   amount: string;
   amountValue?: string;
   safeMax?: string;
+  maxLabel?: string;
   onAmountChange: (amount: string) => void;
   borrowBalance: string;
   proyectedBorrowBalance?: string;
@@ -66,6 +67,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
     amount,
     amountValue,
     safeMax,
+    maxLabel,
     onAmountChange,
     borrowBalance,
     proyectedBorrowBalance,
@@ -97,7 +99,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         onAmountChange={onAmountChange}
         amountValue={amountValue}
         maxAmount={safeMax ?? assetBalance}
-        maxLabel={safeMax ? 'SAFE MAX' : 'MAX'}
+        maxLabel={maxLabel ?? (safeMax ? 'SAFE MAX' : 'MAX')}
         selectedToken={asset}
         inputError={!!status.error}
         readOnly={!onAmountChange}

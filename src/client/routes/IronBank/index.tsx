@@ -60,18 +60,19 @@ export const IronBank = () => {
   }, [markets]);
 
   const actionHandler = (action: string, marketAddress: string) => {
+    dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
     switch (action) {
       case 'supply':
-        dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
         dispatch(ModalsActions.openModal({ modalName: 'IronBankSupplyTx' }));
         break;
       case 'withdraw':
-        dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
         dispatch(ModalsActions.openModal({ modalName: 'IronBankWithdrawTx' }));
         break;
       case 'borrow':
-        dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
         dispatch(ModalsActions.openModal({ modalName: 'IronBankBorrowTx' }));
+        break;
+      case 'repay':
+        dispatch(ModalsActions.openModal({ modalName: 'IronBankRepayTx' }));
         break;
       default:
         dispatch(ModalsActions.openModal({ modalName: 'comingSoon' }));
