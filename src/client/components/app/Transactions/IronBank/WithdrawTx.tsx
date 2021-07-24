@@ -1,16 +1,18 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { IronBankSelectors, TokensActions, IronBankActions } from '@store';
+import { IronBankSelectors, IronBankActions } from '@store';
 import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS } from '@src/utils';
+import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 
-export interface IronBankSupplyTxProps {
+export interface IronBankWithdrawTxProps {
   onClose?: () => void;
 }
 
-export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
+export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => {
+  const { IRON_BANK_MAX_RATIO } = getConfig();
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
@@ -29,26 +31,14 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (!selectedMarket) return;
-
-    dispatch(
-      TokensActions.getTokenAllowance({
-        tokenAddress: selectedMarket.token.address,
-        spenderAddress: selectedMarket.address,
-      })
-    );
-  }, [selectedMarket?.address]);
-
   if (!selectedMarket || !userIronBankSummary) {
     return null;
   }
 
   // TODO: validations
-  const { approved: isApproved, error: allowanceError } = { approved: true, error: undefined };
   const { approved: isValidAmount, error: inputError } = { approved: true, error: undefined };
 
-  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.supply.error;
+  const error = inputError || actionsStatus.withdraw.error;
 
   const borrowBalance = normalizeAmount(userIronBankSummary.borrowBalanceUsdc, USDC_DECIMALS);
   const underlyingTokenPrice = normalizeAmount(selectedMarket.token.priceUsdc, USDC_DECIMALS);
@@ -57,26 +47,27 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const collateralAmount = toBN(amountValue).times(collateralFactor).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
-  const proyectedBorrowLimit = toBN(borrowLimit).plus(collateralAmount).toString();
-  const asset = { ...selectedMarket.token, yield: normalizePercent(selectedMarket.lendApy, 2) };
+  const proyectedBorrowLimit = toBN(borrowLimit).minus(collateralAmount).toString();
+  const maxAllowedBorrowBalance = toBN(borrowBalance).div(IRON_BANK_MAX_RATIO);
+  const suppliedTokens = normalizeAmount(selectedMarket.LEND.userDeposited, selectedMarket.token.decimals);
+  const availableCollateral = toBN(borrowLimit).minus(maxAllowedBorrowBalance).toString();
+  let withdrawableTokens = toBN(availableCollateral).div(collateralFactor).div(underlyingTokenPrice).toString();
+  withdrawableTokens = toBN(withdrawableTokens).lt(0) ? '0' : withdrawableTokens;
+  withdrawableTokens = toBN(withdrawableTokens).gt(suppliedTokens) ? suppliedTokens : withdrawableTokens;
+  const asset = {
+    ...selectedMarket.token,
+    balance: selectedMarket.LEND.userDeposited,
+    yield: normalizePercent(selectedMarket.lendApy, 2),
+  };
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
   };
 
-  const approve = async () => {
-    await dispatch(
-      IronBankActions.approveMarket({
-        marketAddress: selectedMarket.address,
-        tokenAddress: selectedMarket.token.address,
-      })
-    );
-  };
-
-  const supply = async () => {
+  const withdraw = async () => {
     try {
       await dispatchAndUnwrap(
-        IronBankActions.supplyMarket({
+        IronBankActions.withdrawMarket({
           marketAddress: selectedMarket.address,
           amount: toBN(amount),
         })
@@ -87,30 +78,25 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
 
   const txActions = [
     {
-      label: 'Approve',
-      onAction: approve,
-      status: actionsStatus.approve,
-      disabled: isApproved,
-    },
-    {
-      label: 'Supply',
-      onAction: supply,
-      status: actionsStatus.supply,
-      disabled: !isApproved || !isValidAmount,
+      label: 'Withdraw',
+      onAction: withdraw,
+      status: actionsStatus.withdraw,
+      disabled: !isValidAmount,
       contrast: true,
     },
   ];
 
   return (
     <IronBankTransaction
-      transactionLabel="Supply"
+      transactionLabel="Withdraw"
       transactionCompleted={txCompleted}
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      assetHeader="To Iron Bank"
+      assetHeader="From Iron Bank"
       asset={asset}
       amount={amount}
       amountValue={amountValue}
+      safeMax={withdrawableTokens}
       onAmountChange={setAmount}
       borrowBalance={borrowBalance}
       borrowLimit={borrowLimit}

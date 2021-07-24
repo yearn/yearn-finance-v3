@@ -12,4 +12,5 @@ export type ModalName =
   | 'labDepositTx'
   | 'labWithdrawTx'
   | 'labStakeTx'
-  | 'IronBankSupplyTx';
+  | 'IronBankSupplyTx'
+  | 'IronBankWithdrawTx';

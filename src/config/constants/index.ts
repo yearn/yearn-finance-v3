@@ -44,6 +44,7 @@ export const getConstants = memoize(
       },
       SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
       DEFAULT_SLIPPAGE: 0.01,
+      IRON_BANK_MAX_RATIO: 0.8,
       ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
       DEFAULT_THEME: 'light',
       AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk'],
