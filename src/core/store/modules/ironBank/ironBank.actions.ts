@@ -89,7 +89,7 @@ const approveMarket = createAsyncThunk<void, { marketAddress: string; tokenAddre
   }
 );
 
-const supplyMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/supply',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     try {
@@ -101,20 +101,20 @@ const supplyMarket = createAsyncThunk<void, { marketAddress: string; amount: Big
 
       // TODO Needed checks for amount
 
-      const txResponse = await ironBankService.executeTransaction({
+      const tx = await ironBankService.executeTransaction({
         userAddress,
         marketAddress,
         amount: amount.toString(),
         action: 'supply',
       });
-      // await txResponse.wait(1);
+      // await handleTransaction(tx);
     } catch (error) {
       throw new Error(error.message);
     }
   }
 );
 
-const borrowMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/borrow',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     try {
@@ -126,20 +126,20 @@ const borrowMarket = createAsyncThunk<void, { marketAddress: string; amount: Big
 
       // TODO Needed checks for amount
 
-      const txResponse = await ironBankService.executeTransaction({
+      const tx = await ironBankService.executeTransaction({
         userAddress,
         marketAddress,
         amount: amount.toString(),
         action: 'borrow',
       });
-      // await txResponse.wait(1);
+      // await handleTransaction(tx);
     } catch (error) {
       throw new Error(error.message);
     }
   }
 );
 
-const withdrawMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/withdraw',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     try {
@@ -151,20 +151,20 @@ const withdrawMarket = createAsyncThunk<void, { marketAddress: string; amount: B
 
       // TODO Needed checks for amount
 
-      const txResponse = await ironBankService.executeTransaction({
+      const tx = await ironBankService.executeTransaction({
         userAddress,
         marketAddress,
         amount: amount.toString(),
         action: 'withdraw',
       });
-      // await txResponse.wait(1);
+      // await handleTransaction(tx);
     } catch (error) {
       throw new Error(error.message);
     }
   }
 );
 
-const repayMarket = createAsyncThunk<void, { marketAddress: string; amount: BigNumber }, ThunkAPI>(
+const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/repay',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     try {
@@ -176,13 +176,13 @@ const repayMarket = createAsyncThunk<void, { marketAddress: string; amount: BigN
 
       // TODO Needed checks for amount
 
-      const txResponse = await ironBankService.executeTransaction({
+      const tx = await ironBankService.executeTransaction({
         userAddress,
         marketAddress,
         amount: amount.toString(),
         action: 'repay',
       });
-      // await txResponse.wait(1);
+      // await handleTransaction(tx);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -201,13 +201,18 @@ const enterMarkets = createAsyncThunk<void, { marketAddresses: string[] }, Thunk
 
       // TODO should we double check if user is in markets?
 
-      const txResponse = await ironBankService.enterMarkets({ marketAddresses, userAddress });
-      // await txResponse.wait(1);
+      const tx = await ironBankService.enterMarkets({ marketAddresses, userAddress });
+      // await handleTransaction(tx);
     } catch (error) {
       throw new Error(error.message);
     }
   }
 );
+
+export interface MarketsActionsProps {
+  marketAddress: string;
+  amount: BigNumber;
+}
 
 export const IronBankActions = {
   initiateIronBank,
