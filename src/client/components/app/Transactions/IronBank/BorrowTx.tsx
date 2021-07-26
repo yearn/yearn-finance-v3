@@ -7,11 +7,11 @@ import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 
-export interface IronBankWithdrawTxProps {
+export interface IronBankBorrowTxProps {
   onClose?: () => void;
 }
 
-export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => {
+export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
   const { IRON_BANK_MAX_RATIO } = getConfig();
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
@@ -35,7 +35,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
     return null;
   }
 
-  // TODO: validations //
+  // TODO: validations
   const { approved: isValidAmount, error: inputError } = { approved: true, error: undefined };
 
   const error = inputError || actionsStatus.withdraw.error;
@@ -43,31 +43,28 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   const borrowBalance = normalizeAmount(userIronBankSummary.borrowBalanceUsdc, USDC_DECIMALS);
   const underlyingTokenPrice = normalizeAmount(selectedMarket.token.priceUsdc, USDC_DECIMALS);
   const amountValue = toBN(amount).times(underlyingTokenPrice).toString();
-  const collateralFactor = normalizeAmount(selectedMarket.collateralFactor, selectedMarket.token.decimals);
-  const collateralAmount = toBN(amountValue).times(collateralFactor).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
-  const proyectedBorrowLimit = toBN(borrowLimit).minus(collateralAmount).toString();
-  const maxAllowedBorrowBalance = toBN(borrowBalance).div(IRON_BANK_MAX_RATIO).toString();
-  const suppliedTokens = normalizeAmount(selectedMarket.LEND.userDeposited, selectedMarket.token.decimals);
-  const availableCollateral = toBN(borrowLimit).minus(maxAllowedBorrowBalance).toString();
-  let withdrawableTokens = toBN(availableCollateral).div(collateralFactor).div(underlyingTokenPrice).toString();
-  withdrawableTokens = toBN(withdrawableTokens).lt(0) ? '0' : withdrawableTokens;
-  withdrawableTokens = toBN(withdrawableTokens).gt(suppliedTokens) ? suppliedTokens : withdrawableTokens;
+  const proyectedBorrowBalance = toBN(borrowBalance).plus(amountValue).toString();
+  const maxAllowedBorrowBalance = toBN(borrowLimit).times(IRON_BANK_MAX_RATIO).toString();
+  const availableCollateral = toBN(maxAllowedBorrowBalance).minus(borrowBalance).toString();
+  let borrowableTokens = toBN(availableCollateral).div(underlyingTokenPrice).toString();
+  borrowableTokens = toBN(borrowableTokens).lt(0) ? '0' : borrowableTokens;
+
   const asset = {
     ...selectedMarket.token,
-    balance: selectedMarket.LEND.userDeposited,
-    yield: normalizePercent(selectedMarket.lendApy, 2),
+    balance: selectedMarket.BORROW.userDeposited,
+    yield: normalizePercent(selectedMarket.borrowApy, 2),
   };
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
   };
 
-  const withdraw = async () => {
+  const borrow = async () => {
     try {
       await dispatchAndUnwrap(
-        IronBankActions.withdrawMarket({
+        IronBankActions.borrowMarket({
           marketAddress: selectedMarket.address,
           amount: toBN(amount),
         })
@@ -78,8 +75,8 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
 
   const txActions = [
     {
-      label: 'Withdraw',
-      onAction: withdraw,
+      label: 'Borrow',
+      onAction: borrow,
       status: actionsStatus.withdraw,
       disabled: !isValidAmount,
       contrast: true,
@@ -88,7 +85,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
 
   return (
     <IronBankTransaction
-      transactionLabel="Withdraw"
+      transactionLabel="Borrow"
       transactionCompleted={txCompleted}
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
@@ -96,12 +93,12 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
       asset={asset}
       amount={amount}
       amountValue={amountValue}
-      safeMax={withdrawableTokens}
+      safeMax={borrowableTokens}
       onAmountChange={setAmount}
       borrowBalance={borrowBalance}
+      proyectedBorrowBalance={proyectedBorrowBalance}
       borrowLimit={borrowLimit}
-      proyectedBorrowLimit={proyectedBorrowLimit}
-      yieldType={'SUPPLY'}
+      yieldType={'BORROW'}
       actions={txActions}
       status={{ error }}
       onClose={onClose}
