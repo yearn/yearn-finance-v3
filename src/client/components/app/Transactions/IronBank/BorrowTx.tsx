@@ -77,7 +77,7 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
     {
       label: 'Borrow',
       onAction: borrow,
-      status: actionsStatus.withdraw,
+      status: actionsStatus.borrow,
       disabled: !isValidAmount,
       contrast: true,
     },

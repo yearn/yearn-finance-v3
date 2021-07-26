@@ -74,7 +74,7 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
     {
       label: 'Repay',
       onAction: repay,
-      status: actionsStatus.withdraw,
+      status: actionsStatus.repay,
       disabled: !isValidAmount,
       contrast: true,
     },
