@@ -9,6 +9,7 @@ import {
   Status,
   GeneralLabView,
   LabActionsStatusMap,
+  LabsPositionsTypes,
 } from '@types';
 import { getConstants } from '@config/constants';
 import { toBN } from '@utils';
@@ -50,7 +51,15 @@ const selectYveCrvLab = createSelector(
   ],
   (labData, userPositions, labAllowances, tokenData, userTokenData, tokenAllowancesMap) => {
     if (!labData) return undefined;
-    return createLab({ labAllowances, labData, tokenAllowancesMap, tokenData, userPositions, userTokenData });
+    return createLab({
+      labAllowances,
+      labData,
+      tokenAllowancesMap,
+      tokenData,
+      userPositions,
+      userTokenData,
+      mainPositionKey: 'DEPOSIT',
+    });
   }
 );
 
@@ -70,7 +79,15 @@ const selectYvBoostLab = createSelector(
   ],
   (labData, userPositions, labAllowances, tokenData, userTokenData, tokenAllowancesMap) => {
     if (!labData) return undefined;
-    return createLab({ labAllowances, labData, tokenAllowancesMap, tokenData, userPositions, userTokenData });
+    return createLab({
+      labAllowances,
+      labData,
+      tokenAllowancesMap,
+      tokenData,
+      userPositions,
+      userTokenData,
+      mainPositionKey: 'DEPOSIT',
+    });
   }
 );
 
@@ -91,7 +108,15 @@ const selectYvBoostEthLab = createSelector(
   ],
   (labData, userPositions, labAllowances, tokenData, userTokenData, tokenAllowancesMap) => {
     if (!labData) return undefined;
-    return createLab({ labAllowances, labData, tokenAllowancesMap, tokenData, userPositions, userTokenData });
+    return createLab({
+      labAllowances,
+      labData,
+      tokenAllowancesMap,
+      tokenData,
+      userPositions,
+      userTokenData,
+      mainPositionKey: 'STAKE',
+    });
   }
 );
 
@@ -133,9 +158,7 @@ const selectSelectedLab = createSelector([selectLabs, selectSelectedLabAddress],
 
 const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) => {
   let totalDeposited = toBN('0');
-  depositedLabs.forEach(
-    (lab) => (totalDeposited = totalDeposited.plus(lab.DEPOSIT.userDepositedUsdc).plus(lab.STAKE.userDepositedUsdc))
-  );
+  depositedLabs.forEach((lab) => (totalDeposited = totalDeposited.plus(lab[lab.mainPositionKey].userDepositedUsdc)));
 
   return {
     totalDeposits: totalDeposited.toString(),
@@ -168,10 +191,19 @@ interface CreateLabProps {
   tokenData: Token;
   userTokenData: Balance;
   tokenAllowancesMap: AllowancesMap;
+  mainPositionKey: LabsPositionsTypes;
 }
 
 function createLab(props: CreateLabProps): GeneralLabView {
-  const { labAllowances, labData, tokenAllowancesMap, tokenData, userPositions, userTokenData } = props;
+  const {
+    labAllowances,
+    labData,
+    tokenAllowancesMap,
+    tokenData,
+    userPositions,
+    userTokenData,
+    mainPositionKey,
+  } = props;
   return {
     address: labData.address,
     name: labData.name,
@@ -182,6 +214,7 @@ function createLab(props: CreateLabProps): GeneralLabView {
     apyData: labData.metadata.apy?.recommended.toString() ?? '0',
     allowancesMap: labAllowances ?? {},
     pricePerShare: labData.metadata.pricePerShare,
+    mainPositionKey,
     DEPOSIT: {
       userBalance: userPositions?.DEPOSIT?.balance ?? '0',
       userDeposited: userPositions?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',

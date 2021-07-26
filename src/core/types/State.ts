@@ -197,6 +197,8 @@ export interface LabsPositionsMap {
   STAKE: Position;
 }
 
+export type LabsPositionsTypes = keyof LabsPositionsMap;
+
 export interface LabActionsStatusMap {
   get: Status;
   approveDeposit: Status;
