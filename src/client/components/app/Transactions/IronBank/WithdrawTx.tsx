@@ -35,7 +35,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
     return null;
   }
 
-  // TODO: validations
+  // TODO: validations //
   const { approved: isValidAmount, error: inputError } = { approved: true, error: undefined };
 
   const error = inputError || actionsStatus.withdraw.error;
