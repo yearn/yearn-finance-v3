@@ -306,8 +306,8 @@ export const Labs = () => {
               icon: lab.icon,
               tokenSymbol: lab.name,
               name: lab.name,
-              balance: humanizeAmount(lab.DEPOSIT.userDeposited, lab.token.decimals, 4),
-              value: normalizeUsdc(lab.DEPOSIT.userDepositedUsdc, 2),
+              balance: humanizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
+              value: normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
               apy: formatPercent(lab.apyData, 2),
               labAddress: lab.address,
             }))}

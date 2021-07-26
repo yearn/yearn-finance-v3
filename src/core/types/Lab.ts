@@ -1,4 +1,4 @@
-import { AllowancesMap } from './State';
+import { AllowancesMap, LabsPositionsTypes } from './State';
 import { TokenView } from './Token';
 
 // This General naming means it has the positions inside as keys
@@ -12,6 +12,7 @@ export interface GeneralLabView {
   apyData: string;
   allowancesMap: AllowancesMap;
   pricePerShare: string;
+  mainPositionKey: LabsPositionsTypes;
   DEPOSIT: {
     userBalance: string;
     userDeposited: string;
