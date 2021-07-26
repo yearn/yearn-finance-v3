@@ -13,7 +13,7 @@ import {
   InfoCard,
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
-import { halfWidthCss, humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
+import { halfWidthCss, humanizeAmount, normalizeUsdc } from '@src/utils';
 import { device } from '@themes/default';
 
 const TokensCard = styled(DetailCard)`
@@ -174,8 +174,8 @@ export const Wallet = () => {
             symbol: token.symbol,
             name: token.name,
             balance: humanizeAmount(token.balance, token.decimals, 2),
-            price: `$ ${humanizeAmount(token.priceUsdc, USDC_DECIMALS, 2)}`,
-            value: `$ ${humanizeAmount(token.balanceUsdc, USDC_DECIMALS, 2)}`,
+            price: normalizeUsdc(token.priceUsdc, 2),
+            value: normalizeUsdc(token.balanceUsdc, 2),
             tokenAddress: token.address,
           }))}
         />

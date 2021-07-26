@@ -18,14 +18,7 @@ import {
   NoWalletCard,
 } from '@components/app';
 import { SpinnerLoading, SearchInput } from '@components/common';
-import {
-  formatPercent,
-  humanizeAmount,
-  normalizePercent,
-  normalizeUsdc,
-  USDC_DECIMALS,
-  halfWidthCss,
-} from '@src/utils';
+import { formatPercent, humanizeAmount, normalizeUsdc, halfWidthCss } from '@src/utils';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -211,10 +204,10 @@ export const Vaults = () => {
               icon: vault.token.icon ?? '',
               tokenSymbol: vault.token.symbol,
               name: vault.token.symbol,
-              balance: humanizeAmount(vault.userBalance, parseInt(vault.decimals), 4),
-              value: `$ ${humanizeAmount(vault.userDepositedUsdc, USDC_DECIMALS, 2)}`,
+              balance: humanizeAmount(vault.userDeposited, vault.token.decimals, 4),
+              value: normalizeUsdc(vault.userDepositedUsdc, 2),
               apy: formatPercent(vault.apyData, 2),
-              earned: `$ ${humanizeAmount(vault.earned, USDC_DECIMALS, 2)}`,
+              earned: normalizeUsdc(vault.earned, 2),
               vaultAddress: vault.address,
             }))}
           />
@@ -254,7 +247,7 @@ export const Vaults = () => {
               icon: vault.token.icon ?? '',
               tokenSymbol: vault.token.symbol,
               name: vault.token.symbol,
-              vaultBalanceUsdc: `$ ${humanizeAmount(vault.vaultBalanceUsdc, USDC_DECIMALS, 0)}`,
+              vaultBalanceUsdc: normalizeUsdc(vault.vaultBalanceUsdc, 0),
               apy: formatPercent(vault.apyData, 2),
               vaultAddress: vault.address,
               userTokenBalance:

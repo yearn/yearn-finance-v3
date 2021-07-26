@@ -16,7 +16,7 @@ import {
   NoWalletCard,
 } from '@components/app';
 import { SpinnerLoading, SearchInput } from '@components/common';
-import { formatPercent, halfWidthCss, humanizeAmount, normalizeUsdc, USDC_DECIMALS } from '@src/utils';
+import { formatPercent, halfWidthCss, humanizeAmount, normalizeUsdc } from '@src/utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 
@@ -291,7 +291,7 @@ export const Labs = () => {
                 className: 'col-icon',
               },
               { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'ROI', width: '8rem', className: 'col-apy' },
+              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
               { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
               { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
               {
@@ -306,8 +306,8 @@ export const Labs = () => {
               icon: lab.icon,
               tokenSymbol: lab.name,
               name: lab.name,
-              balance: humanizeAmount(lab.DEPOSIT.userBalance, parseInt(lab.decimals), 4),
-              value: `$ ${humanizeAmount(lab.DEPOSIT.userDepositedUsdc, USDC_DECIMALS, 2)}`,
+              balance: humanizeAmount(lab.DEPOSIT.userDeposited, lab.token.decimals, 4),
+              value: normalizeUsdc(lab.DEPOSIT.userDepositedUsdc, 2),
               apy: formatPercent(lab.apyData, 2),
               labAddress: lab.address,
             }))}
@@ -340,7 +340,7 @@ export const Labs = () => {
               tokenSymbol: lab.name,
               name: lab.name,
               apy: formatPercent(lab.apyData, 2),
-              labBalanceUsdc: `$ ${humanizeAmount(lab.labBalanceUsdc, USDC_DECIMALS, 0)}`,
+              labBalanceUsdc: normalizeUsdc(lab.labBalanceUsdc, 0),
               userTokenBalance:
                 lab.token.balance === '0' ? '-' : humanizeAmount(lab.token.balance, lab.token.decimals, 4),
               labAddress: lab.address,
