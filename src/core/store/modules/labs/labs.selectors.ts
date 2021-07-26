@@ -158,9 +158,7 @@ const selectSelectedLab = createSelector([selectLabs, selectSelectedLabAddress],
 
 const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) => {
   let totalDeposited = toBN('0');
-  depositedLabs.forEach(
-    (lab) => (totalDeposited = totalDeposited.plus(lab.DEPOSIT.userDepositedUsdc).plus(lab.STAKE.userDepositedUsdc))
-  );
+  depositedLabs.forEach((lab) => (totalDeposited = totalDeposited.plus(lab[lab.mainPositionKey].userDepositedUsdc)));
 
   return {
     totalDeposits: totalDeposited.toString(),
