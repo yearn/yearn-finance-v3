@@ -3,16 +3,14 @@ import { FC, useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { IronBankSelectors, IronBankActions } from '@store';
 import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS } from '@src/utils';
-import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 
-export interface IronBankBorrowTxProps {
+export interface IronBankRepayTxProps {
   onClose?: () => void;
 }
 
-export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
-  const { IRON_BANK_MAX_RATIO } = getConfig();
+export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
@@ -38,18 +36,17 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
   // TODO: validations
   const { approved: isValidAmount, error: inputError } = { approved: true, error: undefined };
 
-  const error = inputError || actionsStatus.borrow.error;
+  const error = inputError || actionsStatus.repay.error;
 
   const borrowBalance = normalizeAmount(userIronBankSummary.borrowBalanceUsdc, USDC_DECIMALS);
   const underlyingTokenPrice = normalizeAmount(selectedMarket.token.priceUsdc, USDC_DECIMALS);
   const amountValue = toBN(amount).times(underlyingTokenPrice).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
-  const proyectedBorrowBalance = toBN(borrowBalance).plus(amountValue).toString();
-  const maxAllowedBorrowBalance = toBN(borrowLimit).times(IRON_BANK_MAX_RATIO).toString();
-  const availableCollateral = toBN(maxAllowedBorrowBalance).minus(borrowBalance).toString();
-  let borrowableTokens = toBN(availableCollateral).div(underlyingTokenPrice).toString();
-  borrowableTokens = toBN(borrowableTokens).lt(0) ? '0' : borrowableTokens;
+  const proyectedBorrowBalance = toBN(borrowBalance).minus(amountValue).toString();
+  const borrowedTokens = normalizeAmount(selectedMarket.BORROW.userDeposited, selectedMarket.token.decimals);
+  const tokenBalance = normalizeAmount(selectedMarket.token.balance, selectedMarket.token.decimals);
+  const repayableTokens = toBN(tokenBalance).gt(borrowedTokens) ? borrowedTokens : tokenBalance;
 
   const asset = {
     ...selectedMarket.token,
@@ -61,10 +58,10 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
     if (onClose) onClose();
   };
 
-  const borrow = async () => {
+  const repay = async () => {
     try {
       await dispatchAndUnwrap(
-        IronBankActions.borrowMarket({
+        IronBankActions.repayMarket({
           marketAddress: selectedMarket.address,
           amount: toBN(amount),
         })
@@ -75,9 +72,9 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
 
   const txActions = [
     {
-      label: 'Borrow',
-      onAction: borrow,
-      status: actionsStatus.borrow,
+      label: 'Repay',
+      onAction: repay,
+      status: actionsStatus.repay,
       disabled: !isValidAmount,
       contrast: true,
     },
@@ -85,15 +82,16 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
 
   return (
     <IronBankTransaction
-      transactionLabel="Borrow"
+      transactionLabel="Repay"
       transactionCompleted={txCompleted}
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      assetHeader="From Iron Bank"
+      assetHeader="To Iron Bank"
       asset={asset}
       amount={amount}
       amountValue={amountValue}
-      safeMax={borrowableTokens}
+      safeMax={repayableTokens}
+      maxLabel="MAX"
       onAmountChange={setAmount}
       borrowBalance={borrowBalance}
       proyectedBorrowBalance={proyectedBorrowBalance}
