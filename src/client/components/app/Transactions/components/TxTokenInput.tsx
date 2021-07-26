@@ -184,6 +184,7 @@ export interface TxTokenInputProps {
   onAmountChange?: (amount: string) => void;
   amountValue?: string;
   maxAmount?: string;
+  maxLabel?: string;
   selectedToken: Token;
   onSelectedTokenChange?: (address: string) => void;
   yieldPercent?: string;
@@ -199,6 +200,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   onAmountChange,
   amountValue,
   maxAmount,
+  maxLabel = 'MAX',
   selectedToken,
   onSelectedTokenChange,
   yieldPercent,
@@ -272,7 +274,9 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <TokenExtras>
             {amountValue && <StyledText>≈ {formatUsd(amountValue)}</StyledText>}
             {maxAmount && (
-              <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>Max</StyledButton>
+              <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+                {maxLabel}
+              </StyledButton>
             )}
             {yieldPercent && (
               <StyledText>

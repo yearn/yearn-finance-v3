@@ -6,7 +6,6 @@ import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
 import { TxStatus } from './components/TxStatus';
-import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
 import { TxBorrowLimit } from './components/TxBorrowLimit';
 
 import { formatAmount, normalizeAmount } from '@src/utils';
@@ -42,7 +41,8 @@ interface IronBankTransactionProps {
   asset: Asset;
   amount: string;
   amountValue?: string;
-  onAmountChange?: (amount: string) => void;
+  safeMax?: string;
+  onAmountChange: (amount: string) => void;
   borrowBalance: string;
   proyectedBorrowBalance?: string;
   borrowLimit: string;
@@ -65,6 +65,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
     asset,
     amount,
     amountValue,
+    safeMax,
     onAmountChange,
     borrowBalance,
     proyectedBorrowBalance,
@@ -78,20 +79,6 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
 
   const assetBalance = normalizeAmount(asset.balance, asset.decimals);
   const yieldLabel = yieldType === 'SUPPLY' ? 'Supply APY' : 'Borrow APY';
-
-  let txArrowStatus: TxArrowStatusTypes = 'preparing';
-
-  if (actions.length && actions.length > 1) {
-    if (!actions[0].disabled && !actions[0].status.loading) {
-      txArrowStatus = 'preparing';
-    } else if (actions[0].status.loading) {
-      txArrowStatus = 'firstPending';
-    } else if (!actions[1].status.loading) {
-      txArrowStatus = 'secondPreparing';
-    } else if (actions[1].status.loading) {
-      txArrowStatus = 'secondPending';
-    }
-  }
 
   if (transactionCompleted) {
     return (
@@ -109,7 +96,8 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         amount={amount}
         onAmountChange={onAmountChange}
         amountValue={amountValue}
-        maxAmount={onAmountChange ? assetBalance : undefined}
+        maxAmount={safeMax ?? assetBalance}
+        maxLabel={safeMax ? 'SAFE MAX' : 'MAX'}
         selectedToken={asset}
         inputError={!!status.error}
         readOnly={!onAmountChange}
@@ -124,7 +112,6 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         yieldPercent={asset.yield ?? ''}
       />
 
-      {!status.error && <TxArrowStatus status={txArrowStatus} />}
       {status.error && <TxError errorText={status.error} />}
 
       <TxActions>
