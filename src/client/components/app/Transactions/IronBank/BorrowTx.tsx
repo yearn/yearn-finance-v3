@@ -38,7 +38,7 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
   // TODO: validations
   const { approved: isValidAmount, error: inputError } = { approved: true, error: undefined };
 
-  const error = inputError || actionsStatus.withdraw.error;
+  const error = inputError || actionsStatus.borrow.error;
 
   const borrowBalance = normalizeAmount(userIronBankSummary.borrowBalanceUsdc, USDC_DECIMALS);
   const underlyingTokenPrice = normalizeAmount(selectedMarket.token.priceUsdc, USDC_DECIMALS);
