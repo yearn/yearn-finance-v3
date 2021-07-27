@@ -64,8 +64,6 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
         </StyledText>
       </Info>
 
-      <ProgressBar value={limitUsedPercent} diffValue={proyectedLimitUsedPercent} />
-
       <Info>
         <StyledText>Borrow Limit Used</StyledText>
         <StyledText>
@@ -75,6 +73,9 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
           )}
         </StyledText>
       </Info>
+
+      <ProgressBar value={limitUsedPercent} diffValue={proyectedLimitUsedPercent} />
+
       <Info>
         <StyledText>{yieldLabel}</StyledText>
         <StyledText>{yieldPercent}</StyledText>
