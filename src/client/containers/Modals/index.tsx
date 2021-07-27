@@ -159,55 +159,55 @@ export const Modals = () => {
       )}
 
       {activeModal === 'backscratcherClaimTx' && (
-        <CSSTransition key={'backscratcherClaimTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'backscratcherClaimTx'} timeout={modalTimeout} classNames="slideBottom">
           <BackscratcherClaimTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'backscratcherReinvestTx' && (
-        <CSSTransition key={'backscratcherReinvestTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'backscratcherReinvestTx'} timeout={modalTimeout} classNames="slideBottom">
           <BackscratcherReinvestTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'labDepositTx' && (
-        <CSSTransition key={'labDepositTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'labDepositTx'} timeout={modalTimeout} classNames="slideBottom">
           <LabDepositTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'labWithdrawTx' && (
-        <CSSTransition key={'labWithdrawTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'labWithdrawTx'} timeout={modalTimeout} classNames="slideBottom">
           <LabWithdrawTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'labStakeTx' && (
-        <CSSTransition key={'labStakeTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'labStakeTx'} timeout={modalTimeout} classNames="slideBottom">
           <LabStakeTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'IronBankSupplyTx' && (
-        <CSSTransition key={'IronBankSupplyTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'IronBankSupplyTx'} timeout={modalTimeout} classNames="slideBottom">
           <IronBankSupplyTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'IronBankWithdrawTx' && (
-        <CSSTransition key={'IronBankWithdrawTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'IronBankWithdrawTx'} timeout={modalTimeout} classNames="slideBottom">
           <IronBankWithdrawTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'IronBankBorrowTx' && (
-        <CSSTransition key={'IronBankBorrowTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'IronBankBorrowTx'} timeout={modalTimeout} classNames="slideBottom">
           <IronBankBorrowTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
       {activeModal === 'IronBankRepayTx' && (
-        <CSSTransition key={'IronBankRepayTx'} timeout={500} classNames="slideBottom">
+        <CSSTransition key={'IronBankRepayTx'} timeout={modalTimeout} classNames="slideBottom">
           <IronBankRepayTxModal onClose={closeModal} />
         </CSSTransition>
       )}

@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
 
-import { Text } from '@components/common';
+import { Text, ProgressBar } from '@components/common';
 
 import { TxActionButton, TxActions, TxSpinnerLoading } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
@@ -23,6 +23,9 @@ export const TestTx: FC<TestTxProps> = ({ onClose, children, ...props }) => {
       <TxArrowStatus />
 
       {/* <TxTokenInput headerText="To vault" /> */}
+
+      <ProgressBar value={2140} diffValue={3040} maxValue={5032} />
+      <ProgressBar value={2140} diffValue={1540} maxValue={5032} />
 
       <TxError errorText="Test error" />
 

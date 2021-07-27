@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { Text } from '@components/common';
+import { ProgressBar, Text } from '@components/common';
 import { toBN, formatUsd, formatPercent } from '@src/utils';
 
 const StyledText = styled(Text)`
@@ -60,7 +60,15 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
           {borrowLimit !== proyectedBorrowLimit && <>{` → ${formatUsd(proyectedBorrowLimit)}`}</>}
         </StyledText>
       </Info>
-
+      {/* TODO REMOVE */}
+      {toBN(borrowBalance).toNumber()} |{toBN(proyectedBorrowBalance).toNumber()} |
+      {toBN(proyectedBorrowLimit ?? borrowLimit).toNumber()}
+      {/* END TODO REMOVE */}
+      <ProgressBar
+        value={toBN(borrowBalance).toNumber()}
+        diffValue={toBN(proyectedBorrowBalance).toNumber()}
+        maxValue={toBN(proyectedBorrowLimit ?? borrowLimit).toNumber()}
+      />
       <Info>
         <StyledText>Borrow Limit Used</StyledText>
         <StyledText>
@@ -70,7 +78,6 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
           )}
         </StyledText>
       </Info>
-
       <Info>
         <StyledText>{yieldLabel}</StyledText>
         <StyledText>{yieldPercent}</StyledText>
