@@ -15,5 +15,6 @@ export * from './SpinnerLoading';
 export * from './Text';
 export * from './Toggle';
 
+export * from './ProgressBar';
 export * from './SearchList';
 export * from './TxModal';
