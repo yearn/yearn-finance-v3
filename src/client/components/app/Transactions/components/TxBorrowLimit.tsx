@@ -51,6 +51,9 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
     ? '0'
     : toBN(proyectedBorrowBalance).div(proyectedBorrowLimit).toString();
 
+  const limitUsedPercent = toBN(borrowBalance).div(borrowLimit).times(100).toNumber();
+  const proyectedLimitUsedPercent = toBN(proyectedBorrowBalance).div(proyectedBorrowLimit).times(100).toNumber();
+
   return (
     <StyledTxBorrowLimit>
       <Info>
@@ -60,15 +63,9 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
           {borrowLimit !== proyectedBorrowLimit && <>{` → ${formatUsd(proyectedBorrowLimit)}`}</>}
         </StyledText>
       </Info>
-      {/* TODO REMOVE */}
-      {toBN(borrowBalance).toNumber()} |{toBN(proyectedBorrowBalance).toNumber()} |
-      {toBN(proyectedBorrowLimit ?? borrowLimit).toNumber()}
-      {/* END TODO REMOVE */}
-      <ProgressBar
-        value={toBN(borrowBalance).toNumber()}
-        diffValue={toBN(proyectedBorrowBalance).toNumber()}
-        maxValue={toBN(proyectedBorrowLimit ?? borrowLimit).toNumber()}
-      />
+
+      <ProgressBar value={limitUsedPercent} diffValue={proyectedLimitUsedPercent} />
+
       <Info>
         <StyledText>Borrow Limit Used</StyledText>
         <StyledText>
