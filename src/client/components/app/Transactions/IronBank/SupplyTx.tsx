@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { IronBankSelectors, TokensActions, IronBankActions } from '@store';
-import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS } from '@src/utils';
+import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS, validateAllowance } from '@src/utils';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 
@@ -44,8 +44,15 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
     return null;
   }
 
-  // TODO: validations
-  const { approved: isApproved, error: allowanceError } = { approved: true, error: undefined };
+  const { approved: isApproved, error: allowanceError } = validateAllowance({
+    tokenAmount: toBN(amount),
+    tokenAddress: selectedMarket.token.address,
+    tokenDecimals: selectedMarket.token.decimals.toString(),
+    tokenAllowancesMap: selectedMarket.token.allowancesMap,
+    spenderAddress: selectedMarket.address,
+  });
+
+  // TODO: amount validations
   const { approved: isValidAmount, error: inputError } = { approved: true, error: undefined };
 
   const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.supply.error;
