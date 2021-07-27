@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { IronBankSelectors, IronBankActions } from '@store';
-import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS } from '@src/utils';
+import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS, basicValidateAmount, toWei } from '@src/utils';
 import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';
@@ -18,6 +18,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedMarket = useAppSelector(IronBankSelectors.selectSelectedMarket);
+  const selectedToken = selectedMarket?.token;
   const userIronBankSummary = useAppSelector(IronBankSelectors.selectUserIronBankSummary);
   const actionsStatus = useAppSelector(IronBankSelectors.selectSelectedMarketActionsStatusMap);
 
@@ -31,34 +32,38 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
     };
   }, []);
 
-  if (!selectedMarket || !userIronBankSummary) {
+  if (!selectedMarket || !userIronBankSummary || !selectedToken) {
     return null;
   }
 
-  // TODO: validations //
-  const { approved: isValidAmount, error: inputError } = { approved: true, error: undefined };
-
-  const error = inputError || actionsStatus.withdraw.error;
-
   const borrowBalance = normalizeAmount(userIronBankSummary.borrowBalanceUsdc, USDC_DECIMALS);
-  const underlyingTokenPrice = normalizeAmount(selectedMarket.token.priceUsdc, USDC_DECIMALS);
+  const underlyingTokenPrice = normalizeAmount(selectedToken.priceUsdc, USDC_DECIMALS);
   const amountValue = toBN(amount).times(underlyingTokenPrice).toString();
-  const collateralFactor = normalizeAmount(selectedMarket.collateralFactor, selectedMarket.token.decimals);
+  const collateralFactor = normalizeAmount(selectedMarket.collateralFactor, selectedToken.decimals);
   const collateralAmount = toBN(amountValue).times(collateralFactor).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
   const proyectedBorrowLimit = toBN(borrowLimit).minus(collateralAmount).toString();
   const maxAllowedBorrowBalance = toBN(borrowBalance).div(IRON_BANK_MAX_RATIO).toString();
-  const suppliedTokens = normalizeAmount(selectedMarket.LEND.userDeposited, selectedMarket.token.decimals);
+  const suppliedTokens = normalizeAmount(selectedMarket.LEND.userDeposited, selectedToken.decimals);
   const availableCollateral = toBN(borrowLimit).minus(maxAllowedBorrowBalance).toString();
   let withdrawableTokens = toBN(availableCollateral).div(collateralFactor).div(underlyingTokenPrice).toString();
   withdrawableTokens = toBN(withdrawableTokens).lt(0) ? '0' : withdrawableTokens;
   withdrawableTokens = toBN(withdrawableTokens).gt(suppliedTokens) ? suppliedTokens : withdrawableTokens;
   const asset = {
-    ...selectedMarket.token,
+    ...selectedToken,
     balance: selectedMarket.LEND.userDeposited,
     yield: normalizePercent(selectedMarket.lendApy, 2),
   };
+
+  // TODO: validations //
+  const { approved: isValidAmount, error: inputError } = basicValidateAmount({
+    sellTokenAmount: toBN(amount),
+    sellTokenDecimals: selectedToken.decimals.toString(),
+    maxAmount: toWei(withdrawableTokens, selectedToken.decimals),
+  });
+
+  const error = inputError || actionsStatus.withdraw.error;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
