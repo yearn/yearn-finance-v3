@@ -2,7 +2,14 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { IronBankSelectors, TokensActions, IronBankActions } from '@store';
-import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS, validateAllowance } from '@src/utils';
+import {
+  toBN,
+  normalizeAmount,
+  normalizePercent,
+  USDC_DECIMALS,
+  validateAllowance,
+  basicValidateAmount,
+} from '@src/utils';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 
@@ -16,6 +23,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedMarket = useAppSelector(IronBankSelectors.selectSelectedMarket);
+  const selectedToken = selectedMarket?.token;
   const userIronBankSummary = useAppSelector(IronBankSelectors.selectUserIronBankSummary);
   const actionsStatus = useAppSelector(IronBankSelectors.selectSelectedMarketActionsStatusMap);
 
@@ -40,32 +48,35 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
     );
   }, [selectedMarket?.address]);
 
-  if (!selectedMarket || !userIronBankSummary) {
+  if (!selectedMarket || !userIronBankSummary || !selectedToken) {
     return null;
   }
 
-  const { approved: isApproved, error: allowanceError } = validateAllowance({
-    tokenAmount: toBN(amount),
-    tokenAddress: selectedMarket.token.address,
-    tokenDecimals: selectedMarket.token.decimals.toString(),
-    tokenAllowancesMap: selectedMarket.token.allowancesMap,
-    spenderAddress: selectedMarket.address,
-  });
-
-  // TODO: amount validations
-  const { approved: isValidAmount, error: inputError } = { approved: true, error: undefined };
-
-  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.supply.error;
-
   const borrowBalance = normalizeAmount(userIronBankSummary.borrowBalanceUsdc, USDC_DECIMALS);
-  const underlyingTokenPrice = normalizeAmount(selectedMarket.token.priceUsdc, USDC_DECIMALS);
+  const underlyingTokenPrice = normalizeAmount(selectedToken.priceUsdc, USDC_DECIMALS);
   const amountValue = toBN(amount).times(underlyingTokenPrice).toString();
-  const collateralFactor = normalizeAmount(selectedMarket.collateralFactor, selectedMarket.token.decimals);
+  const collateralFactor = normalizeAmount(selectedMarket.collateralFactor, selectedToken.decimals);
   const collateralAmount = toBN(amountValue).times(collateralFactor).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
   const proyectedBorrowLimit = toBN(borrowLimit).plus(collateralAmount).toString();
-  const asset = { ...selectedMarket.token, yield: normalizePercent(selectedMarket.lendApy, 2) };
+  const asset = { ...selectedToken, yield: normalizePercent(selectedMarket.lendApy, 2) };
+
+  const { approved: isApproved, error: allowanceError } = validateAllowance({
+    tokenAmount: toBN(amount),
+    tokenAddress: selectedToken.address,
+    tokenDecimals: selectedToken.decimals.toString(),
+    tokenAllowancesMap: selectedToken.allowancesMap,
+    spenderAddress: selectedMarket.address,
+  });
+
+  const { approved: isValidAmount, error: inputError } = basicValidateAmount({
+    sellTokenAmount: toBN(amount),
+    sellTokenDecimals: selectedToken.decimals.toString(),
+    maxAmount: selectedToken.balance,
+  });
+
+  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.supply.error;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -75,7 +86,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
     await dispatch(
       IronBankActions.approveMarket({
         marketAddress: selectedMarket.address,
-        tokenAddress: selectedMarket.token.address,
+        tokenAddress: selectedToken.address,
       })
     );
   };
