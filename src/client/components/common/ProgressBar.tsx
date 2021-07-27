@@ -5,7 +5,7 @@ import { styledSystem, StyledSystemProps } from '@components/common/styledSystem
 export interface ProgressBarProps extends StyledSystemProps {
   value: number;
   diffValue?: number;
-  maxValue?: number;
+  maxValue?: number; // If not defined, maxValue = 100 (usefull for percents)
 }
 
 const StyledProgressBar = styled.div`
