@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { IronBankSelectors, IronBankActions } from '@store';
-import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS } from '@src/utils';
+import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS, basicValidateAmount, toWei } from '@src/utils';
 import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';
@@ -18,6 +18,7 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedMarket = useAppSelector(IronBankSelectors.selectSelectedMarket);
+  const selectedToken = selectedMarket?.token;
   const userIronBankSummary = useAppSelector(IronBankSelectors.selectUserIronBankSummary);
   const actionsStatus = useAppSelector(IronBankSelectors.selectSelectedMarketActionsStatusMap);
 
@@ -31,17 +32,12 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
     };
   }, []);
 
-  if (!selectedMarket || !userIronBankSummary) {
+  if (!selectedMarket || !userIronBankSummary || !selectedToken) {
     return null;
   }
 
-  // TODO: validations
-  const { approved: isValidAmount, error: inputError } = { approved: true, error: undefined };
-
-  const error = inputError || actionsStatus.borrow.error;
-
   const borrowBalance = normalizeAmount(userIronBankSummary.borrowBalanceUsdc, USDC_DECIMALS);
-  const underlyingTokenPrice = normalizeAmount(selectedMarket.token.priceUsdc, USDC_DECIMALS);
+  const underlyingTokenPrice = normalizeAmount(selectedToken.priceUsdc, USDC_DECIMALS);
   const amountValue = toBN(amount).times(underlyingTokenPrice).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
@@ -52,10 +48,18 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
   borrowableTokens = toBN(borrowableTokens).lt(0) ? '0' : borrowableTokens;
 
   const asset = {
-    ...selectedMarket.token,
+    ...selectedToken,
     balance: selectedMarket.BORROW.userDeposited,
     yield: normalizePercent(selectedMarket.borrowApy, 2),
   };
+
+  const { approved: isValidAmount, error: inputError } = basicValidateAmount({
+    sellTokenAmount: toBN(amount),
+    sellTokenDecimals: selectedToken.decimals.toString(),
+    maxAmount: toWei(borrowableTokens, selectedToken.decimals),
+  });
+
+  const error = inputError || actionsStatus.borrow.error;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();

@@ -56,7 +56,6 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
     yield: normalizePercent(selectedMarket.lendApy, 2),
   };
 
-  // TODO: validations //
   const { approved: isValidAmount, error: inputError } = basicValidateAmount({
     sellTokenAmount: toBN(amount),
     sellTokenDecimals: selectedToken.decimals.toString(),
