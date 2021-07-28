@@ -59,7 +59,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const collateralAmount = toBN(amountValue).times(collateralFactor).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
-  const proyectedBorrowLimit = toBN(borrowLimit).plus(collateralAmount).toString();
+  const projectedBorrowLimit = toBN(borrowLimit).plus(collateralAmount).toString();
   const asset = { ...selectedToken, yield: normalizePercent(selectedMarket.lendApy, 2) };
 
   const { approved: isApproved, error: allowanceError } = validateAllowance({
@@ -126,13 +126,14 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       assetHeader="To Iron Bank"
+      assetLabel="Wallet Balance"
       asset={asset}
       amount={amount}
       amountValue={amountValue}
       onAmountChange={setAmount}
       borrowBalance={borrowBalance}
       borrowLimit={borrowLimit}
-      proyectedBorrowLimit={proyectedBorrowLimit}
+      projectedBorrowLimit={projectedBorrowLimit}
       yieldType={'SUPPLY'}
       actions={txActions}
       status={{ error }}

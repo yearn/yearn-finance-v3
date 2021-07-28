@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { ProgressBar, Text } from '@components/common';
-import { toBN, formatUsd, formatPercent } from '@src/utils';
+import { toBN, formatAmount, formatUsd, formatPercent } from '@utils';
 
 const StyledText = styled(Text)`
   color: ${({ theme }) => theme.colors.txModalColors.text};
@@ -28,53 +28,66 @@ const StyledTxBorrowLimit = styled.div`
 
 export interface TxBorrowLimitProps {
   borrowBalance: string;
-  proyectedBorrowBalance?: string;
+  projectedBorrowBalance?: string;
   borrowLimit: string;
-  proyectedBorrowLimit?: string;
+  projectedBorrowLimit?: string;
   yieldLabel: string;
   yieldPercent: string;
+  borrowingTokens?: string;
+  projectedBorrowingTokens?: string;
+  tokenSymbol?: string;
 }
 
 export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
   borrowBalance,
-  proyectedBorrowBalance,
+  projectedBorrowBalance,
   borrowLimit,
-  proyectedBorrowLimit,
+  projectedBorrowLimit,
   yieldLabel,
   yieldPercent,
+  borrowingTokens,
+  projectedBorrowingTokens,
+  tokenSymbol,
 }) => {
-  if (!proyectedBorrowBalance) proyectedBorrowBalance = borrowBalance;
-  if (!proyectedBorrowLimit) proyectedBorrowLimit = borrowLimit;
+  if (!projectedBorrowBalance) projectedBorrowBalance = borrowBalance;
+  if (!projectedBorrowLimit) projectedBorrowLimit = borrowLimit;
 
   const borrowRatio = toBN(borrowLimit).eq(0) ? '0' : toBN(borrowBalance).div(borrowLimit).toString();
-  const proyectedBorrowRatio = toBN(proyectedBorrowLimit).eq(0)
+  const projectedBorrowRatio = toBN(projectedBorrowLimit).eq(0)
     ? '0'
-    : toBN(proyectedBorrowBalance).div(proyectedBorrowLimit).toString();
+    : toBN(projectedBorrowBalance).div(projectedBorrowLimit).toString();
 
   const limitUsedPercent = toBN(borrowBalance).div(borrowLimit).times(100).toNumber();
-  const proyectedLimitUsedPercent = toBN(proyectedBorrowBalance).div(proyectedBorrowLimit).times(100).toNumber();
+  const projectedLimitUsedPercent = toBN(projectedBorrowBalance).div(projectedBorrowLimit).times(100).toNumber();
 
   return (
     <StyledTxBorrowLimit>
       <Info>
-        <StyledText>Borrow Limit</StyledText>
+        <StyledText>Total Borrow Limit</StyledText>
         <StyledText>
           {formatUsd(borrowLimit)}
-          {borrowLimit !== proyectedBorrowLimit && <>{` → ${formatUsd(proyectedBorrowLimit)}`}</>}
+          {borrowLimit !== projectedBorrowLimit && <>{` → ${formatUsd(projectedBorrowLimit)}`}</>}
         </StyledText>
       </Info>
 
       <Info>
-        <StyledText>Borrow Limit Used</StyledText>
+        <StyledText>Total Borrow Limit Used</StyledText>
         <StyledText>
           {formatPercent(borrowRatio, 0)}
-          {formatPercent(borrowRatio, 0) !== formatPercent(proyectedBorrowRatio, 0) && (
-            <>{` → ${formatPercent(proyectedBorrowRatio, 0)}`}</>
+          {formatPercent(borrowRatio, 0) !== formatPercent(projectedBorrowRatio, 0) && (
+            <>{` → ${formatPercent(projectedBorrowRatio, 0)}`}</>
           )}
         </StyledText>
       </Info>
 
-      <ProgressBar value={limitUsedPercent} diffValue={proyectedLimitUsedPercent} />
+      <ProgressBar value={limitUsedPercent} diffValue={projectedLimitUsedPercent} />
+
+      {borrowingTokens && (
+        <Info>
+          <StyledText>Borrowing</StyledText>
+          <StyledText>{`${formatAmount(projectedBorrowingTokens ?? borrowingTokens, 4)} ${tokenSymbol}`}</StyledText>
+        </Info>
+      )}
 
       <Info>
         <StyledText>{yieldLabel}</StyledText>

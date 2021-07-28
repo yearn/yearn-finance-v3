@@ -43,7 +43,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   const collateralAmount = toBN(amountValue).times(collateralFactor).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
-  const proyectedBorrowLimit = toBN(borrowLimit).minus(collateralAmount).toString();
+  const projectedBorrowLimit = toBN(borrowLimit).minus(collateralAmount).toString();
   const maxAllowedBorrowBalance = toBN(borrowBalance).div(IRON_BANK_MAX_RATIO).toString();
   const suppliedTokens = normalizeAmount(selectedMarket.LEND.userDeposited, selectedToken.decimals);
   const availableCollateral = toBN(borrowLimit).minus(maxAllowedBorrowBalance).toString();
@@ -97,6 +97,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       assetHeader="From Iron Bank"
+      assetLabel="Supplied Balance"
       asset={asset}
       amount={amount}
       amountValue={amountValue}
@@ -104,7 +105,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
       onAmountChange={setAmount}
       borrowBalance={borrowBalance}
       borrowLimit={borrowLimit}
-      proyectedBorrowLimit={proyectedBorrowLimit}
+      projectedBorrowLimit={projectedBorrowLimit}
       yieldType={'SUPPLY'}
       actions={txActions}
       status={{ error }}

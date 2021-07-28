@@ -101,7 +101,7 @@ export const IronBank = () => {
           {!walletIsConnected && <StyledNoWalletCard />}
 
           <DetailCard
-            header="Supplied"
+            header="Supplying"
             wrap
             metadata={[
               {
@@ -149,7 +149,7 @@ export const IronBank = () => {
           />
 
           <DetailCard
-            header="Borrowed"
+            header="Borrowing"
             wrap
             metadata={[
               {
