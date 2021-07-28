@@ -41,13 +41,13 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
   const amountValue = toBN(amount).times(underlyingTokenPrice).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
-  const proyectedBorrowBalance = toBN(borrowBalance).plus(amountValue).toString();
+  const projectedBorrowBalance = toBN(borrowBalance).plus(amountValue).toString();
   const maxAllowedBorrowBalance = toBN(borrowLimit).times(IRON_BANK_MAX_RATIO).toString();
   const availableCollateral = toBN(maxAllowedBorrowBalance).minus(borrowBalance).toString();
   let borrowableTokens = toBN(availableCollateral).div(underlyingTokenPrice).toString();
   borrowableTokens = toBN(borrowableTokens).lt(0) ? '0' : borrowableTokens;
   const borrowingTokens = normalizeAmount(selectedMarket.BORROW.userDeposited, selectedMarket.token.decimals);
-  const proyectedBorrowingTokens = toBN(borrowingTokens).plus(toBN(amount)).toString();
+  const projectedBorrowingTokens = toBN(borrowingTokens).plus(toBN(amount)).toString();
 
   const asset = {
     ...selectedToken,
@@ -103,10 +103,10 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
       safeMax={borrowableTokens}
       onAmountChange={setAmount}
       borrowBalance={borrowBalance}
-      proyectedBorrowBalance={proyectedBorrowBalance}
+      projectedBorrowBalance={projectedBorrowBalance}
       borrowLimit={borrowLimit}
       borrowingTokens={borrowingTokens}
-      proyectedBorrowingTokens={proyectedBorrowingTokens}
+      projectedBorrowingTokens={projectedBorrowingTokens}
       yieldType={'BORROW'}
       actions={txActions}
       status={{ error }}

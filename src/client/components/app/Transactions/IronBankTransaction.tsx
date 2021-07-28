@@ -46,11 +46,11 @@ interface IronBankTransactionProps {
   maxLabel?: string;
   onAmountChange: (amount: string) => void;
   borrowBalance: string;
-  proyectedBorrowBalance?: string;
+  projectedBorrowBalance?: string;
   borrowLimit: string;
-  proyectedBorrowLimit?: string;
+  projectedBorrowLimit?: string;
   borrowingTokens?: string;
-  proyectedBorrowingTokens?: string;
+  projectedBorrowingTokens?: string;
   yieldType: 'SUPPLY' | 'BORROW';
   actions: Action[];
   status: Status;
@@ -74,11 +74,11 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
     maxLabel,
     onAmountChange,
     borrowBalance,
-    proyectedBorrowBalance,
+    projectedBorrowBalance,
     borrowLimit,
-    proyectedBorrowLimit,
+    projectedBorrowLimit,
     borrowingTokens,
-    proyectedBorrowingTokens,
+    projectedBorrowingTokens,
     yieldType,
     actions,
     status,
@@ -114,13 +114,13 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
 
       <TxBorrowLimit
         borrowBalance={borrowBalance}
-        proyectedBorrowBalance={proyectedBorrowBalance}
+        projectedBorrowBalance={projectedBorrowBalance}
         borrowLimit={borrowLimit}
-        proyectedBorrowLimit={proyectedBorrowLimit}
+        projectedBorrowLimit={projectedBorrowLimit}
         yieldLabel={yieldLabel}
         yieldPercent={asset.yield ?? ''}
         borrowingTokens={borrowingTokens}
-        proyectedBorrowingTokens={proyectedBorrowingTokens}
+        projectedBorrowingTokens={projectedBorrowingTokens}
         tokenSymbol={asset.symbol}
       />
 
