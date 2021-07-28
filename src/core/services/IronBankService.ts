@@ -10,6 +10,7 @@ import {
   EnterMarketsProps,
   IronBankGenericGetUserDataProps,
   IronBankTransactionProps,
+  TransactionResponse,
   Web3Provider,
   Config,
 } from '@types';
@@ -63,7 +64,7 @@ export class IronBankServiceImpl implements IronBankService {
     marketAddress,
     amount,
     action,
-  }: IronBankTransactionProps): Promise<any> {
+  }: IronBankTransactionProps): Promise<TransactionResponse> {
     const provider = this.web3Provider.getSigner();
     const ironBankMarketContract = getContract(marketAddress, ironBankMarketAbi, provider);
 
@@ -79,7 +80,7 @@ export class IronBankServiceImpl implements IronBankService {
     }
   }
 
-  public async enterMarkets({ marketAddresses }: EnterMarketsProps): Promise<any> {
+  public async enterMarkets({ marketAddresses }: EnterMarketsProps): Promise<TransactionResponse> {
     const { CONTRACT_ADDRESSES } = this.config;
     const { ironBankComptroller } = CONTRACT_ADDRESSES;
     const provider = this.web3Provider.getSigner();

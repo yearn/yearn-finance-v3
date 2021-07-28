@@ -136,8 +136,8 @@ export interface IronBankService {
   getUserMarketsMetadata: (props: IronBankGenericGetUserDataProps) => Promise<CyTokenUserMetadata[]>;
   getUserIronBankSummary: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankUserSummary>;
   getMarketsDynamicData: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
-  executeTransaction: (props: IronBankTransactionProps) => Promise<any>;
-  enterMarkets: (props: EnterMarketsProps) => Promise<any>;
+  executeTransaction: (props: IronBankTransactionProps) => Promise<TransactionResponse>;
+  enterMarkets: (props: EnterMarketsProps) => Promise<TransactionResponse>;
 }
 
 export interface SubscriptionProps {
