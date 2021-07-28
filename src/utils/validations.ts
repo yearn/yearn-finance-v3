@@ -52,17 +52,8 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   } = props;
   userTokenBalance = userTokenBalance ?? '0';
   const depositLimitBN = depositLimit ? toBN(depositLimit) : undefined;
-  const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
-  const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
-
-  if (sellTokenAmount.isZero()) return {};
-
-  if (amountInWei.lt(0)) {
-    return { error: 'INVALID AMOUNT' };
-  }
-  if (amountInWei.gt(userTokenBalance)) {
-    return { error: 'INSUFFICIENT FUNDS' };
-  }
+  // const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
+  // const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
 
   // TODO we need to wait until we decide what to do with the convertion rate from sdk.
   // if (depositLimitBN && depositLimitBN.gt(0) && TODO CHECK IF depositLimit.lt(...)))) {
@@ -72,7 +63,8 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   if (emergencyShutdown) {
     return { error: 'VAULT IS DISABLED' };
   }
-  return { approved: true };
+
+  return basicValidateAmount({ sellTokenAmount, sellTokenDecimals, totalAmountAvailable: userTokenBalance });
 }
 
 export function validateVaultAllowance(props: ValidateVaultAllowanceProps): ValidationResonse {
@@ -223,6 +215,8 @@ export function validateYveCrvActionsAllowance(props: ValidateYveCrvActionsAllow
   });
 }
 
+// ********************* General *********************
+
 interface ValidateAllowanceProps {
   tokenAddress: string;
   tokenAmount: BigNumber;
@@ -246,6 +240,34 @@ export function validateAllowance(props: ValidateAllowanceProps): ValidationReso
   const approved = allowance.gte(amountInWei);
   if (!approved) {
     return { approved: false };
+  }
+
+  return { approved: true };
+}
+
+export interface BasicValidateAmountProps {
+  sellTokenAmount: BigNumber;
+  sellTokenDecimals: string;
+  totalAmountAvailable: string;
+  maxAmountAllowed?: string;
+}
+export function basicValidateAmount(props: BasicValidateAmountProps): ValidationResonse {
+  const { totalAmountAvailable, sellTokenAmount, sellTokenDecimals, maxAmountAllowed } = props;
+  const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
+  const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
+
+  if (sellTokenAmount.isZero()) return {};
+
+  if (amountInWei.lt(0)) {
+    return { error: 'INVALID AMOUNT' };
+  }
+
+  if (maxAmountAllowed && amountInWei.gt(maxAmountAllowed)) {
+    return { error: 'EXCEEDED ACCEPTED AMOUNT' };
+  }
+
+  if (amountInWei.gt(totalAmountAvailable)) {
+    return { error: 'INSUFFICIENT FUNDS' };
   }
 
   return { approved: true };
