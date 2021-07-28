@@ -49,14 +49,14 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
 
   const asset = {
     ...selectedToken,
-    balance: selectedMarket.BORROW.userDeposited,
+    balance: toWei(borrowableTokens, selectedToken.decimals),
     yield: normalizePercent(selectedMarket.borrowApy, 2),
   };
 
   const { approved: isValidAmount, error: inputError } = basicValidateAmount({
     sellTokenAmount: toBN(amount),
     sellTokenDecimals: selectedToken.decimals.toString(),
-    maxAmount: toWei(borrowableTokens, selectedToken.decimals),
+    totalAmountAvailable: toWei(borrowableTokens, selectedToken.decimals),
   });
 
   const error = inputError || actionsStatus.borrow.error;

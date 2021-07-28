@@ -73,7 +73,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const { approved: isValidAmount, error: inputError } = basicValidateAmount({
     sellTokenAmount: toBN(amount),
     sellTokenDecimals: selectedToken.decimals.toString(),
-    maxAmount: selectedToken.balance,
+    totalAmountAvailable: selectedToken.balance,
   });
 
   const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.supply.error;

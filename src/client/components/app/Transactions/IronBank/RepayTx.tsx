@@ -46,14 +46,15 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
 
   const asset = {
     ...selectedToken,
-    balance: selectedMarket.BORROW.userDeposited,
+    balance: selectedToken.balance,
     yield: normalizePercent(selectedMarket.borrowApy, 2),
   };
 
   const { approved: isValidAmount, error: inputError } = basicValidateAmount({
     sellTokenAmount: toBN(amount),
     sellTokenDecimals: selectedToken.decimals.toString(),
-    maxAmount: toWei(repayableTokens, selectedToken.decimals),
+    totalAmountAvailable: selectedToken.balance,
+    maxAmountAllowed: toWei(repayableTokens, selectedToken.decimals),
   });
 
   const error = inputError || actionsStatus.repay.error;

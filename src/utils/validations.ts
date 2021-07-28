@@ -64,7 +64,7 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
     return { error: 'VAULT IS DISABLED' };
   }
 
-  return basicValidateAmount({ sellTokenAmount, sellTokenDecimals, maxAmount: userTokenBalance });
+  return basicValidateAmount({ sellTokenAmount, sellTokenDecimals, totalAmountAvailable: userTokenBalance });
 }
 
 export function validateVaultAllowance(props: ValidateVaultAllowanceProps): ValidationResonse {
@@ -215,6 +215,8 @@ export function validateYveCrvActionsAllowance(props: ValidateYveCrvActionsAllow
   });
 }
 
+// ********************* General *********************
+
 interface ValidateAllowanceProps {
   tokenAddress: string;
   tokenAmount: BigNumber;
@@ -246,10 +248,11 @@ export function validateAllowance(props: ValidateAllowanceProps): ValidationReso
 export interface BasicValidateAmountProps {
   sellTokenAmount: BigNumber;
   sellTokenDecimals: string;
-  maxAmount: string;
+  totalAmountAvailable: string;
+  maxAmountAllowed?: string;
 }
 export function basicValidateAmount(props: BasicValidateAmountProps): ValidationResonse {
-  const { maxAmount, sellTokenAmount, sellTokenDecimals } = props;
+  const { totalAmountAvailable, sellTokenAmount, sellTokenDecimals, maxAmountAllowed } = props;
   const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
   const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
 
@@ -258,7 +261,12 @@ export function basicValidateAmount(props: BasicValidateAmountProps): Validation
   if (amountInWei.lt(0)) {
     return { error: 'INVALID AMOUNT' };
   }
-  if (amountInWei.gt(maxAmount)) {
+
+  if (maxAmountAllowed && amountInWei.gt(maxAmountAllowed)) {
+    return { error: 'EXCEEDED ACCEPTED AMOUNT' };
+  }
+
+  if (amountInWei.gt(totalAmountAvailable)) {
     return { error: 'INSUFFICIENT FUNDS' };
   }
 

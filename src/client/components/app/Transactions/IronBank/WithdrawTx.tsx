@@ -59,7 +59,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   const { approved: isValidAmount, error: inputError } = basicValidateAmount({
     sellTokenAmount: toBN(amount),
     sellTokenDecimals: selectedToken.decimals.toString(),
-    maxAmount: toWei(withdrawableTokens, selectedToken.decimals),
+    totalAmountAvailable: toWei(withdrawableTokens, selectedToken.decimals),
   });
 
   const error = inputError || actionsStatus.withdraw.error;
