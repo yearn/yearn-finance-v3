@@ -117,8 +117,15 @@ export const IronBank = () => {
               {
                 key: 'collateral',
                 header: 'Collateral',
-                transform: ({ collateral }) => (
-                  <ToggleButton selected={collateral === 'true'} setSelected={() => console.log('Enable Collateral')} />
+                transform: ({ collateral, address }) => (
+                  <ToggleButton
+                    selected={collateral === 'true'}
+                    setSelected={() => {
+                      if (collateral === 'false') {
+                        dispatch(IronBankActions.enterMarkets({ marketAddresses: [address] }));
+                      }
+                    }}
+                  />
                 ),
               },
               {

@@ -1,8 +1,10 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
+import BigNumber from 'bignumber.js';
+
 import { ThunkAPI } from '@frameworks/redux';
 import { CyTokenUserMetadata, IronBankMarket, IronBankMarketDynamic, IronBankUserSummary, Position } from '@types';
+import { handleTransaction } from '@utils';
 import { TokensActions } from '@store';
-import BigNumber from 'bignumber.js';
 
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
 const clearSelectedMarketAndStatus = createAction<void>('ironBank/clearSelectedMarketAndStatus');
@@ -103,7 +105,7 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
         amount: amount.toString(),
         action: 'supply',
       });
-      // await handleTransaction(tx);
+      await handleTransaction(tx);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -128,7 +130,7 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
         amount: amount.toString(),
         action: 'borrow',
       });
-      // await handleTransaction(tx);
+      await handleTransaction(tx);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -153,7 +155,7 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
         amount: amount.toString(),
         action: 'withdraw',
       });
-      // await handleTransaction(tx);
+      await handleTransaction(tx);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -178,7 +180,7 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
         amount: amount.toString(),
         action: 'repay',
       });
-      // await handleTransaction(tx);
+      await handleTransaction(tx);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -198,7 +200,7 @@ const enterMarkets = createAsyncThunk<void, { marketAddresses: string[] }, Thunk
       // TODO should we double check if user is in markets?
 
       const tx = await ironBankService.enterMarkets({ marketAddresses, userAddress });
-      // await handleTransaction(tx);
+      await handleTransaction(tx);
     } catch (error) {
       throw new Error(error.message);
     }
