@@ -9,6 +9,7 @@ import {
   USDC_DECIMALS,
   validateAllowance,
   basicValidateAmount,
+  COLLATERAL_FACTOR_DECIMALS,
 } from '@src/utils';
 
 import { IronBankTransaction } from '../IronBankTransaction';
@@ -55,7 +56,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const borrowBalance = normalizeAmount(userIronBankSummary.borrowBalanceUsdc, USDC_DECIMALS);
   const underlyingTokenPrice = normalizeAmount(selectedToken.priceUsdc, USDC_DECIMALS);
   const amountValue = toBN(amount).times(underlyingTokenPrice).toString();
-  const collateralFactor = normalizeAmount(selectedMarket.collateralFactor, selectedToken.decimals);
+  const collateralFactor = normalizeAmount(selectedMarket.collateralFactor, COLLATERAL_FACTOR_DECIMALS);
   const collateralAmount = toBN(amountValue).times(collateralFactor).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 

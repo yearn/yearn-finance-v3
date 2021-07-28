@@ -2,7 +2,15 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
 import { IronBankSelectors, IronBankActions } from '@store';
-import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS, basicValidateAmount, toWei } from '@src/utils';
+import {
+  toBN,
+  normalizeAmount,
+  normalizePercent,
+  USDC_DECIMALS,
+  basicValidateAmount,
+  toWei,
+  COLLATERAL_FACTOR_DECIMALS,
+} from '@src/utils';
 import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';
@@ -39,7 +47,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   const borrowBalance = normalizeAmount(userIronBankSummary.borrowBalanceUsdc, USDC_DECIMALS);
   const underlyingTokenPrice = normalizeAmount(selectedToken.priceUsdc, USDC_DECIMALS);
   const amountValue = toBN(amount).times(underlyingTokenPrice).toString();
-  const collateralFactor = normalizeAmount(selectedMarket.collateralFactor, selectedToken.decimals);
+  const collateralFactor = normalizeAmount(selectedMarket.collateralFactor, COLLATERAL_FACTOR_DECIMALS);
   const collateralAmount = toBN(amountValue).times(collateralFactor).toString();
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
@@ -50,6 +58,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   let withdrawableTokens = toBN(availableCollateral).div(collateralFactor).div(underlyingTokenPrice).toString();
   withdrawableTokens = toBN(withdrawableTokens).lt(0) ? '0' : withdrawableTokens;
   withdrawableTokens = toBN(withdrawableTokens).gt(suppliedTokens) ? suppliedTokens : withdrawableTokens;
+  withdrawableTokens = toBN(withdrawableTokens).toFixed(selectedToken.decimals);
   const asset = {
     ...selectedToken,
     balance: selectedMarket.LEND.userDeposited,

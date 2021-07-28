@@ -46,6 +46,7 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
   const availableCollateral = toBN(maxAllowedBorrowBalance).minus(borrowBalance).toString();
   let borrowableTokens = toBN(availableCollateral).div(underlyingTokenPrice).toString();
   borrowableTokens = toBN(borrowableTokens).lt(0) ? '0' : borrowableTokens;
+  borrowableTokens = toBN(borrowableTokens).toFixed(selectedToken.decimals);
   const borrowingTokens = normalizeAmount(selectedMarket.BORROW.userDeposited, selectedMarket.token.decimals);
   const projectedBorrowingTokens = toBN(borrowingTokens).plus(toBN(amount)).toString();
 

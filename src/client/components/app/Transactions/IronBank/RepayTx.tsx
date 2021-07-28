@@ -42,7 +42,8 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
   const projectedBorrowBalance = toBN(borrowBalance).minus(amountValue).toString();
   const borrowedTokens = normalizeAmount(selectedMarket.BORROW.userDeposited, selectedToken.decimals);
   const tokenBalance = normalizeAmount(selectedToken.balance, selectedToken.decimals);
-  const repayableTokens = toBN(tokenBalance).gt(borrowedTokens) ? borrowedTokens : tokenBalance;
+  let repayableTokens = toBN(tokenBalance).gt(borrowedTokens) ? borrowedTokens : tokenBalance;
+  repayableTokens = toBN(repayableTokens).toFixed(selectedToken.decimals);
   const borrowingTokens = normalizeAmount(selectedMarket.BORROW.userDeposited, selectedMarket.token.decimals);
   const projectedBorrowingTokens = toBN(borrowingTokens).minus(toBN(amount)).toString();
 
