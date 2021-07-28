@@ -46,6 +46,8 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
   const availableCollateral = toBN(maxAllowedBorrowBalance).minus(borrowBalance).toString();
   let borrowableTokens = toBN(availableCollateral).div(underlyingTokenPrice).toString();
   borrowableTokens = toBN(borrowableTokens).lt(0) ? '0' : borrowableTokens;
+  const borrowingTokens = normalizeAmount(selectedMarket.BORROW.userDeposited, selectedMarket.token.decimals);
+  const proyectedBorrowingTokens = toBN(borrowingTokens).plus(toBN(amount)).toString();
 
   const asset = {
     ...selectedToken,
@@ -94,6 +96,7 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       assetHeader="From Iron Bank"
+      assetLabel="Available to Borrow"
       asset={asset}
       amount={amount}
       amountValue={amountValue}
@@ -102,6 +105,8 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
       borrowBalance={borrowBalance}
       proyectedBorrowBalance={proyectedBorrowBalance}
       borrowLimit={borrowLimit}
+      borrowingTokens={borrowingTokens}
+      proyectedBorrowingTokens={proyectedBorrowingTokens}
       yieldType={'BORROW'}
       actions={txActions}
       status={{ error }}

@@ -43,6 +43,8 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
   const borrowedTokens = normalizeAmount(selectedMarket.BORROW.userDeposited, selectedToken.decimals);
   const tokenBalance = normalizeAmount(selectedToken.balance, selectedToken.decimals);
   const repayableTokens = toBN(tokenBalance).gt(borrowedTokens) ? borrowedTokens : tokenBalance;
+  const borrowingTokens = normalizeAmount(selectedMarket.BORROW.userDeposited, selectedMarket.token.decimals);
+  const proyectedBorrowingTokens = toBN(borrowingTokens).minus(toBN(amount)).toString();
 
   const asset = {
     ...selectedToken,
@@ -92,6 +94,7 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       assetHeader="To Iron Bank"
+      assetLabel="Wallet Balance"
       asset={asset}
       amount={amount}
       amountValue={amountValue}
@@ -101,6 +104,8 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
       borrowBalance={borrowBalance}
       proyectedBorrowBalance={proyectedBorrowBalance}
       borrowLimit={borrowLimit}
+      borrowingTokens={borrowingTokens}
+      proyectedBorrowingTokens={proyectedBorrowingTokens}
       yieldType={'BORROW'}
       actions={txActions}
       status={{ error }}

@@ -126,6 +126,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       assetHeader="To Iron Bank"
+      assetLabel="Wallet Balance"
       asset={asset}
       amount={amount}
       amountValue={amountValue}

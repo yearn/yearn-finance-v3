@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { ProgressBar, Text } from '@components/common';
-import { toBN, formatUsd, formatPercent } from '@src/utils';
+import { toBN, formatAmount, formatUsd, formatPercent } from '@utils';
 
 const StyledText = styled(Text)`
   color: ${({ theme }) => theme.colors.txModalColors.text};
@@ -33,6 +33,9 @@ export interface TxBorrowLimitProps {
   proyectedBorrowLimit?: string;
   yieldLabel: string;
   yieldPercent: string;
+  borrowingTokens?: string;
+  proyectedBorrowingTokens?: string;
+  tokenSymbol?: string;
 }
 
 export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
@@ -42,6 +45,9 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
   proyectedBorrowLimit,
   yieldLabel,
   yieldPercent,
+  borrowingTokens,
+  proyectedBorrowingTokens,
+  tokenSymbol,
 }) => {
   if (!proyectedBorrowBalance) proyectedBorrowBalance = borrowBalance;
   if (!proyectedBorrowLimit) proyectedBorrowLimit = borrowLimit;
@@ -57,7 +63,7 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
   return (
     <StyledTxBorrowLimit>
       <Info>
-        <StyledText>Borrow Limit</StyledText>
+        <StyledText>Total Borrow Limit</StyledText>
         <StyledText>
           {formatUsd(borrowLimit)}
           {borrowLimit !== proyectedBorrowLimit && <>{` → ${formatUsd(proyectedBorrowLimit)}`}</>}
@@ -65,7 +71,7 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
       </Info>
 
       <Info>
-        <StyledText>Borrow Limit Used</StyledText>
+        <StyledText>Total Borrow Limit Used</StyledText>
         <StyledText>
           {formatPercent(borrowRatio, 0)}
           {formatPercent(borrowRatio, 0) !== formatPercent(proyectedBorrowRatio, 0) && (
@@ -75,6 +81,13 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
       </Info>
 
       <ProgressBar value={limitUsedPercent} diffValue={proyectedLimitUsedPercent} />
+
+      {borrowingTokens && (
+        <Info>
+          <StyledText>Borrowing</StyledText>
+          <StyledText>{`${formatAmount(proyectedBorrowingTokens ?? borrowingTokens, 4)} ${tokenSymbol}`}</StyledText>
+        </Info>
+      )}
 
       <Info>
         <StyledText>{yieldLabel}</StyledText>

@@ -38,6 +38,7 @@ interface IronBankTransactionProps {
   transactionCompletedLabel: string;
   onTransactionCompletedDismissed: () => void;
   assetHeader: string;
+  assetLabel: string;
   asset: Asset;
   amount: string;
   amountValue?: string;
@@ -48,6 +49,8 @@ interface IronBankTransactionProps {
   proyectedBorrowBalance?: string;
   borrowLimit: string;
   proyectedBorrowLimit?: string;
+  borrowingTokens?: string;
+  proyectedBorrowingTokens?: string;
   yieldType: 'SUPPLY' | 'BORROW';
   actions: Action[];
   status: Status;
@@ -63,6 +66,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
     transactionCompletedLabel,
     onTransactionCompletedDismissed,
     assetHeader,
+    assetLabel,
     asset,
     amount,
     amountValue,
@@ -73,14 +77,17 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
     proyectedBorrowBalance,
     borrowLimit,
     proyectedBorrowLimit,
+    borrowingTokens,
+    proyectedBorrowingTokens,
     yieldType,
     actions,
     status,
     onClose,
   } = props;
 
+  const showBorrowing = yieldType === 'BORROW';
+  const yieldLabel = showBorrowing ? 'Borrow APY' : 'Supply APY';
   const assetBalance = normalizeAmount(asset.balance, asset.decimals);
-  const yieldLabel = yieldType === 'SUPPLY' ? 'Supply APY' : 'Borrow APY';
 
   if (transactionCompleted) {
     return (
@@ -94,7 +101,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
     <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
       <TxTokenInput
         headerText={assetHeader}
-        inputText={`Balance ${formatAmount(assetBalance, 4)} ${asset.symbol}`}
+        inputText={`${assetLabel} ${formatAmount(assetBalance, 4)} ${asset.symbol}`}
         amount={amount}
         onAmountChange={onAmountChange}
         amountValue={amountValue}
@@ -112,6 +119,9 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         proyectedBorrowLimit={proyectedBorrowLimit}
         yieldLabel={yieldLabel}
         yieldPercent={asset.yield ?? ''}
+        borrowingTokens={borrowingTokens}
+        proyectedBorrowingTokens={proyectedBorrowingTokens}
+        tokenSymbol={asset.symbol}
       />
 
       {status.error && <TxError errorText={status.error} />}
