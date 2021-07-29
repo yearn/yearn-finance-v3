@@ -1,3 +1,4 @@
+import { getContract } from '@frameworks/ethers';
 import {
   IronBankService,
   YearnSdk,
@@ -9,13 +10,22 @@ import {
   EnterMarketsProps,
   IronBankGenericGetUserDataProps,
   IronBankTransactionProps,
+  TransactionResponse,
+  Web3Provider,
+  Config,
 } from '@types';
+import ironBankMarketAbi from './contracts/ironBankMarket.json';
+import ironBankComptrollerAbi from './contracts/ironBankComptroller.json';
 
 export class IronBankServiceImpl implements IronBankService {
   private yearnSdk: YearnSdk;
+  private web3Provider: Web3Provider;
+  private config: Config;
 
-  constructor({ yearnSdk }: { yearnSdk: YearnSdk }) {
+  constructor({ web3Provider, yearnSdk, config }: { web3Provider: Web3Provider; yearnSdk: YearnSdk; config: Config }) {
+    this.web3Provider = web3Provider;
     this.yearnSdk = yearnSdk;
+    this.config = config;
   }
 
   public async getUserIronBankSummary({ userAddress }: { userAddress: string }): Promise<IronBankUserSummary> {
@@ -54,15 +64,27 @@ export class IronBankServiceImpl implements IronBankService {
     marketAddress,
     amount,
     action,
-  }: IronBankTransactionProps): Promise<any> {
-    // const yearn = this.yearnSdk;
-    // return await yearn.ironBank[action](userAddress, marketAddress, amount); // TODO use when sdk uready
-    return;
+  }: IronBankTransactionProps): Promise<TransactionResponse> {
+    const provider = this.web3Provider.getSigner();
+    const ironBankMarketContract = getContract(marketAddress, ironBankMarketAbi, provider);
+
+    switch (action) {
+      case 'supply':
+        return await ironBankMarketContract.mint(amount);
+      case 'withdraw':
+        return await ironBankMarketContract.redeemUnderlying(amount);
+      case 'borrow':
+        return await ironBankMarketContract.borrow(amount);
+      case 'repay':
+        return await ironBankMarketContract.repayBorrow(amount);
+    }
   }
 
-  public async enterMarkets({ marketAddresses }: EnterMarketsProps): Promise<any> {
-    // const yearn = this.yearnSdk;
-    // return await yearn.ironBank.enterMarkets(marketAddresses); // TODO use when sdk uready
-    return;
+  public async enterMarkets({ marketAddresses }: EnterMarketsProps): Promise<TransactionResponse> {
+    const { CONTRACT_ADDRESSES } = this.config;
+    const { ironBankComptroller } = CONTRACT_ADDRESSES;
+    const provider = this.web3Provider.getSigner();
+    const ironBankComptrollerContract = getContract(ironBankComptroller, ironBankComptrollerAbi, provider);
+    return await ironBankComptrollerContract.enterMarkets(marketAddresses);
   }
 }

@@ -60,22 +60,25 @@ export const IronBank = () => {
   }, [markets]);
 
   const actionHandler = (action: string, marketAddress: string) => {
-    dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
     switch (action) {
+      case 'enterMarket':
+        dispatch(IronBankActions.enterMarkets({ marketAddresses: [marketAddress] }));
+        break;
       case 'supply':
+        dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
         dispatch(ModalsActions.openModal({ modalName: 'IronBankSupplyTx' }));
         break;
       case 'withdraw':
+        dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
         dispatch(ModalsActions.openModal({ modalName: 'IronBankWithdrawTx' }));
         break;
       case 'borrow':
+        dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
         dispatch(ModalsActions.openModal({ modalName: 'IronBankBorrowTx' }));
         break;
       case 'repay':
+        dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
         dispatch(ModalsActions.openModal({ modalName: 'IronBankRepayTx' }));
-        break;
-      default:
-        dispatch(ModalsActions.openModal({ modalName: 'comingSoon' }));
         break;
     }
   };
@@ -117,8 +120,11 @@ export const IronBank = () => {
               {
                 key: 'collateral',
                 header: 'Collateral',
-                transform: ({ collateral }) => (
-                  <ToggleButton selected={collateral === 'true'} setSelected={() => console.log('Enable Collateral')} />
+                transform: ({ collateral, address }) => (
+                  <ToggleButton
+                    selected={collateral === 'true'}
+                    setSelected={() => (collateral === 'false' ? actionHandler('enterMarket', address) : null)}
+                  />
                 ),
               },
               {

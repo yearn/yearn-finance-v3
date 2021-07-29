@@ -40,6 +40,7 @@ export const getConstants = memoize(
         zapOut: '0xA8a3B1A1e09A0f84B2856533DB4eE0Cc88DD4E11',
         pickleZapIn: '0xc695f73c1862e050059367B2E64489E66c525983',
         y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
+        ironBankComptroller: '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB',
         ...ADDRESSES,
       },
       SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
