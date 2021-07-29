@@ -62,10 +62,10 @@ export const IronBank = () => {
   const actionHandler = (action: string, marketAddress: string) => {
     switch (action) {
       case 'enterMarket':
-        dispatch(IronBankActions.enterOrExitMarket({ marketAddresses: [marketAddress], actionType: 'enterMarket' }));
+        dispatch(IronBankActions.enterOrExitMarket({ marketAddress: marketAddress, actionType: 'enterMarket' }));
         break;
       case 'exitMarket':
-        dispatch(IronBankActions.enterOrExitMarket({ marketAddresses: [marketAddress], actionType: 'exitMarket' }));
+        dispatch(IronBankActions.enterOrExitMarket({ marketAddress: marketAddress, actionType: 'exitMarket' }));
         break;
       case 'supply':
         dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));

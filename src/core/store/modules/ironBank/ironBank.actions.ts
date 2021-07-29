@@ -194,14 +194,14 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   }
 );
 
-export interface EnterOrExitMarketsProps {
-  marketAddresses: EthereumAddress[];
+export interface EnterOrExitMarketProps {
+  marketAddress: EthereumAddress;
   actionType: 'enterMarket' | 'exitMarket';
 }
 
-const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketsProps, ThunkAPI>(
+const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAPI>(
   'ironBank/enterOrExitMarket',
-  async ({ marketAddresses, actionType }, { extra, getState, dispatch }) => {
+  async ({ marketAddress, actionType }, { extra, getState }) => {
     try {
       const { ironBankService } = extra.services;
       const userAddress = getState().wallet.selectedAddress;
@@ -211,8 +211,9 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketsProps, ThunkA
 
       // TODO should we double check if user is in markets?
 
-      const tx = await ironBankService.enterOrExitMarkets({ marketAddresses, userAddress, actionType });
+      const tx = await ironBankService.enterOrExitMarket({ marketAddress, userAddress, actionType });
       await handleTransaction(tx);
+      // TODO update needed data
     } catch (error) {
       throw new Error(error.message);
     }

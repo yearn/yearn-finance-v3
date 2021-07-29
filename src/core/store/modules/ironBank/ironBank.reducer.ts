@@ -235,22 +235,16 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
       });
     })
     .addCase(enterOrExitMarket.pending, (state, { meta }) => {
-      const { marketAddresses, actionType } = meta.arg;
-      marketAddresses.forEach((address) => {
-        state.statusMap.marketsActionsMap[address][actionType] = { loading: true };
-      });
+      const { marketAddress, actionType } = meta.arg;
+      state.statusMap.marketsActionsMap[marketAddress][actionType] = { loading: true };
     })
     .addCase(enterOrExitMarket.fulfilled, (state, { meta }) => {
-      const { marketAddresses, actionType } = meta.arg;
-      marketAddresses.forEach((address) => {
-        state.statusMap.marketsActionsMap[address][actionType] = {};
-      });
+      const { marketAddress, actionType } = meta.arg;
+      state.statusMap.marketsActionsMap[marketAddress][actionType] = {};
     })
     .addCase(enterOrExitMarket.rejected, (state, { meta, error }) => {
-      const { marketAddresses, actionType } = meta.arg;
-      marketAddresses.forEach((address) => {
-        state.statusMap.marketsActionsMap[address][actionType] = { error: error.message };
-      });
+      const { marketAddress, actionType } = meta.arg;
+      state.statusMap.marketsActionsMap[marketAddress][actionType] = { error: error.message };
     })
     .addCase(clearUserData, (state) => {
       state.user.marketsAllowancesMap = {};

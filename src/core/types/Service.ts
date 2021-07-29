@@ -125,9 +125,9 @@ export interface IronBankGenericGetUserDataProps {
   userAddress: EthereumAddress;
   marketAddresses?: string[];
 }
-export interface EnterOrExitMarketsProps {
+export interface EnterOrExitMarketProps {
   userAddress: EthereumAddress;
-  marketAddresses: string[];
+  marketAddress: string;
   actionType: 'enterMarket' | 'exitMarket';
 }
 
@@ -138,7 +138,7 @@ export interface IronBankService {
   getUserIronBankSummary: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankUserSummary>;
   getMarketsDynamicData: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
   executeTransaction: (props: IronBankTransactionProps) => Promise<TransactionResponse>;
-  enterOrExitMarkets: (props: EnterOrExitMarketsProps) => Promise<TransactionResponse>;
+  enterOrExitMarket: (props: EnterOrExitMarketProps) => Promise<TransactionResponse>;
 }
 
 export interface SubscriptionProps {

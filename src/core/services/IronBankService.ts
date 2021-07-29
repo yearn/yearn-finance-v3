@@ -7,7 +7,7 @@ import {
   IronBankUserSummary,
   IronBankMarketDynamic,
   CyTokenUserMetadata,
-  EnterOrExitMarketsProps,
+  EnterOrExitMarketProps,
   IronBankGenericGetUserDataProps,
   IronBankTransactionProps,
   TransactionResponse,
@@ -80,21 +80,17 @@ export class IronBankServiceImpl implements IronBankService {
     }
   }
 
-  public async enterOrExitMarkets({
-    marketAddresses,
-    actionType,
-  }: EnterOrExitMarketsProps): Promise<TransactionResponse> {
+  public async enterOrExitMarket({ marketAddress, actionType }: EnterOrExitMarketProps): Promise<TransactionResponse> {
     const { CONTRACT_ADDRESSES } = this.config;
     const { ironBankComptroller } = CONTRACT_ADDRESSES;
     const provider = this.web3Provider.getSigner();
     const ironBankComptrollerContract = getContract(ironBankComptroller, ironBankComptrollerAbi, provider);
     switch (actionType) {
       case 'enterMarket':
-        return await ironBankComptrollerContract.enterMarkets(marketAddresses);
+        return await ironBankComptrollerContract.enterMarkets([marketAddress]);
 
       case 'exitMarket':
-        // NOTE: we only support one exitMarket at a time.
-        return await ironBankComptrollerContract.exitMarket(marketAddresses[0]);
+        return await ironBankComptrollerContract.exitMarket(marketAddress);
     }
   }
 }
