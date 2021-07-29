@@ -37,11 +37,14 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
 
-  const yvTokenAmount = calculateSharesAmount({
-    amount: toBN(amount),
-    decimals: selectedVault!.decimals,
-    pricePerShare: selectedVault!.pricePerShare,
-  });
+  // TODO Fix logic for vault details
+  const yvTokenAmount = selectedVault
+    ? calculateSharesAmount({
+        amount: toBN(amount),
+        decimals: selectedVault!.decimals,
+        pricePerShare: selectedVault!.pricePerShare,
+      })
+    : '';
   const yvTokenAmountNormalized = normalizeAmount(yvTokenAmount, toBN(selectedVault?.decimals).toNumber());
 
   const onExit = () => {

@@ -17,4 +17,5 @@ export * from './Toggle';
 
 export * from './ProgressBar';
 export * from './SearchList';
+export * from './Tabs';
 export * from './TxModal';

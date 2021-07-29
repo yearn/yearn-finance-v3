@@ -22,7 +22,7 @@ const routesMap = [
     component: Save,
   },
   {
-    path: '/vault/:vaultId',
+    path: '/vault/:vaultAddress',
     component: VaultDetail,
   },
   {

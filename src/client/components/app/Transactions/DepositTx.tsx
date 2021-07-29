@@ -53,6 +53,8 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     }
 
     if (!selectedVault) {
+      if (!vaults || !vaults.length) return;
+
       const matchingVault = vaults.find((vault) => vault.token.address === selectedSellTokenAddress);
       const highestYieldingVault = vaults.reduce((prev, current) => (prev.apyData > current.apyData ? prev : current));
       dispatch(
@@ -64,6 +66,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
     }
 
     return () => {
+      // TODO Fix clear on vault details
       onExit();
     };
   }, []);

@@ -1,22 +1,37 @@
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { ViewContainer } from '@components/app';
-import { Card } from '@components/common';
-import { LineChart } from '@components/common/Charts';
-import { DepositTx } from '@components/app/Transactions';
+import { DepositTx, WithdrawTx } from '@components/app/Transactions';
 
-// import { useAppTranslation } from '@hooks';
+import { Card, CardHeader, Tab, TabPanel, Tabs } from '@components/common';
+import { LineChart } from '@components/common/Charts';
+import { VaultsActions } from '@store';
+import { useAppDispatch } from '@hooks';
 
 const VaultChart = styled(Card)`
   flex: 1 100%;
   width: 100%;
 `;
 
+const StyledCardHeader = styled(CardHeader)`
+  padding: 0;
+`;
+
+const StyledTabPanel = styled(TabPanel)`
+  margin-top: 1.5rem;
+`;
+
+const ActionsTabs = styled(Tabs)`
+  margin-top: 1.2rem;
+`;
+
 const VaultActions = styled(Card)`
   display: flex;
   flex-direction: column;
   width: 41.6rem;
+  align-self: stretch;
 `;
 
 const VaultOverview = styled(Card)`
@@ -32,14 +47,23 @@ const VaultDetailView = styled(ViewContainer)`
 `;
 
 export interface VaultDetailRouteParams {
-  vaultId: string;
+  vaultAddress: string;
 }
 
 export const VaultDetail = () => {
-  // TODO Set selectedVault or token for the DepositTx
-
   // const { t } = useAppTranslation('common');
-  const { vaultId } = useParams<VaultDetailRouteParams>();
+  const dispatch = useAppDispatch();
+  const { vaultAddress } = useParams<VaultDetailRouteParams>();
+  const [selectedTab, setSelectedTab] = React.useState('deposit');
+
+  useEffect(() => {
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+  }, []);
+
+  const handleTabChange = (newValue: string) => {
+    setSelectedTab(newValue);
+  };
+
   const data = [
     {
       id: 'japan',
@@ -57,96 +81,6 @@ export const VaultDetail = () => {
           x: 'boat',
           y: 170,
         },
-        {
-          x: 'train',
-          y: 182,
-        },
-        {
-          x: 'subway',
-          y: 156,
-        },
-        {
-          x: 'bus',
-          y: 83,
-        },
-        {
-          x: 'car',
-          y: 221,
-        },
-        {
-          x: 'moto',
-          y: 37,
-        },
-        {
-          x: 'bicycle',
-          y: 60,
-        },
-        {
-          x: 'horse',
-          y: 132,
-        },
-        {
-          x: 'skateboard',
-          y: 194,
-        },
-        {
-          x: 'others',
-          y: 270,
-        },
-      ],
-    },
-    {
-      id: 'norway',
-      color: '#6526d9',
-      data: [
-        {
-          x: 'plane',
-          y: 213,
-        },
-        {
-          x: 'helicopter',
-          y: 86,
-        },
-        {
-          x: 'boat',
-          y: 177,
-        },
-        {
-          x: 'train',
-          y: 155,
-        },
-        {
-          x: 'subway',
-          y: 197,
-        },
-        {
-          x: 'bus',
-          y: 26,
-        },
-        {
-          x: 'car',
-          y: 208,
-        },
-        {
-          x: 'moto',
-          y: 78,
-        },
-        {
-          x: 'bicycle',
-          y: 166,
-        },
-        {
-          x: 'horse',
-          y: 217,
-        },
-        {
-          x: 'skateboard',
-          y: 150,
-        },
-        {
-          x: 'others',
-          y: 222,
-        },
       ],
     },
   ];
@@ -155,12 +89,23 @@ export const VaultDetail = () => {
     <VaultDetailView>
       <VaultOverview>
         Vault overview data
-        <h3>Vault: {vaultId}</h3>
+        <h3>Vault: {vaultAddress}</h3>
       </VaultOverview>
 
       <VaultActions>
-        Actions tabs
-        <DepositTx />
+        <StyledCardHeader header="Transactions" />
+
+        <ActionsTabs value={selectedTab} onChange={handleTabChange}>
+          <Tab value="deposit">Deposit</Tab>
+          <Tab value="withdraw">Withdraw</Tab>
+        </ActionsTabs>
+
+        <StyledTabPanel value="deposit" tabValue={selectedTab}>
+          <DepositTx />
+        </StyledTabPanel>
+        <StyledTabPanel value="withdraw" tabValue={selectedTab}>
+          <WithdrawTx />
+        </StyledTabPanel>
       </VaultActions>
 
       <VaultChart>
