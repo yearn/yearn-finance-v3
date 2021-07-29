@@ -18,6 +18,7 @@ export const initialMarketsActionsMap: MarketActionsStatusMap = {
   repay: initialStatus,
   supply: initialStatus,
   enterMarket: initialStatus,
+  exitMarket: initialStatus,
   withdraw: initialStatus,
 };
 
@@ -58,7 +59,7 @@ const {
   setSelectedMarketAddress,
   approveMarket,
   getMarketsDynamic,
-  enterMarkets,
+  enterOrExitMarket,
   clearUserData,
   clearSelectedMarketAndStatus,
 } = IronBankActions;
@@ -233,22 +234,22 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
         state.statusMap.marketsActionsMap[address].get = { error: error.message };
       });
     })
-    .addCase(enterMarkets.pending, (state, { meta }) => {
-      const marketAddresses = meta.arg.marketAddresses;
+    .addCase(enterOrExitMarket.pending, (state, { meta }) => {
+      const { marketAddresses, actionType } = meta.arg;
       marketAddresses.forEach((address) => {
-        state.statusMap.marketsActionsMap[address].enterMarket = { loading: true };
+        state.statusMap.marketsActionsMap[address][actionType] = { loading: true };
       });
     })
-    .addCase(enterMarkets.fulfilled, (state, { meta }) => {
-      const marketAddresses = meta.arg.marketAddresses;
+    .addCase(enterOrExitMarket.fulfilled, (state, { meta }) => {
+      const { marketAddresses, actionType } = meta.arg;
       marketAddresses.forEach((address) => {
-        state.statusMap.marketsActionsMap[address].enterMarket = {};
+        state.statusMap.marketsActionsMap[address][actionType] = {};
       });
     })
-    .addCase(enterMarkets.rejected, (state, { meta, error }) => {
-      const marketAddresses = meta.arg.marketAddresses;
+    .addCase(enterOrExitMarket.rejected, (state, { meta, error }) => {
+      const { marketAddresses, actionType } = meta.arg;
       marketAddresses.forEach((address) => {
-        state.statusMap.marketsActionsMap[address].enterMarket = { error: error.message };
+        state.statusMap.marketsActionsMap[address][actionType] = { error: error.message };
       });
     })
     .addCase(clearUserData, (state) => {

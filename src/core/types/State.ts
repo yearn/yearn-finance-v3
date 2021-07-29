@@ -144,6 +144,7 @@ export interface MarketActionsStatusMap {
   repay: Status;
   withdraw: Status;
   enterMarket: Status;
+  exitMarket: Status;
   get: Status;
 }
 export type MarketActionsTypes = keyof MarketActionsStatusMap;
