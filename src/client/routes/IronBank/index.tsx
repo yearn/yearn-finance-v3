@@ -45,7 +45,7 @@ export const IronBank = () => {
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
-  const { supplyBalance, borrowBalance, borrowUtilizationRatio, netAPY } = useAppSelector(
+  const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, netAPY } = useAppSelector(
     IronBankSelectors.selectSummaryData
   );
   const markets = useAppSelector(IronBankSelectors.selectMarkets);
@@ -91,10 +91,10 @@ export const IronBank = () => {
       <SummaryCard
         header="Dashboard"
         items={[
-          { header: 'Supplied', content: `${normalizeUsdc(supplyBalance)}` },
-          { header: 'Borrowed', content: `${normalizeUsdc(borrowBalance)}` },
+          { header: 'Supplied', content: `${normalizeUsdc(supplyBalanceUsdc)}` },
+          { header: 'Borrowed', content: `${normalizeUsdc(borrowBalanceUsdc)}` },
           { header: 'Borrow Limit Used', content: `${normalizePercent(borrowUtilizationRatio, 2)}` },
-          // { header: 'Net APY', content: `${normalizePercent(netAPY, 2)}` }, // TODO netAPY calc in selector
+          // { header: 'Net APY', content: `${normalizePercent(netAPY, 2)}` }, // TODO add to sdk
         ]}
         variant="secondary"
         cardSize="small"

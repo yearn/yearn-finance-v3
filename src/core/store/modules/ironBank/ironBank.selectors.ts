@@ -128,9 +128,10 @@ const selectSelectedMarketActionsStatusMap = createSelector(
 
 const selectSummaryData = createSelector([selectUserIronBankSummary], (userIronBankSummary) => {
   return {
-    supplyBalance: userIronBankSummary?.supplyBalanceUsdc ?? '0',
-    borrowBalance: userIronBankSummary?.borrowBalanceUsdc ?? '0',
+    supplyBalanceUsdc: userIronBankSummary?.supplyBalanceUsdc ?? '0',
+    borrowBalanceUsdc: userIronBankSummary?.borrowBalanceUsdc ?? '0',
     borrowUtilizationRatio: userIronBankSummary?.utilizationRatioBips ?? '0',
+    borrowLimitUsdc: userIronBankSummary?.borrowLimitUsdc ?? '0',
     // TODO: Calc for NET APY
     netAPY: '0',
   };
