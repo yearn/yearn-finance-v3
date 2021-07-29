@@ -201,7 +201,7 @@ export interface EnterOrExitMarketProps {
 
 const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAPI>(
   'ironBank/enterOrExitMarket',
-  async ({ marketAddress, actionType }, { extra, getState }) => {
+  async ({ marketAddress, actionType }, { extra, getState, dispatch }) => {
     try {
       const { ironBankService } = extra.services;
       const userAddress = getState().wallet.selectedAddress;
@@ -213,7 +213,9 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAP
 
       const tx = await ironBankService.enterOrExitMarket({ marketAddress, userAddress, actionType });
       await handleTransaction(tx);
-      // TODO update needed data
+      dispatch(getIronBankSummary());
+      dispatch(getUserMarketsPositions({ marketAddresses: [marketAddress] }));
+      dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] }));
     } catch (error) {
       throw new Error(error.message);
     }
