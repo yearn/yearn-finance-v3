@@ -2,7 +2,14 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { CyTokenUserMetadata, IronBankMarket, IronBankMarketDynamic, IronBankUserSummary, Position } from '@types';
+import {
+  CyTokenUserMetadata,
+  EthereumAddress,
+  IronBankMarket,
+  IronBankMarketDynamic,
+  IronBankUserSummary,
+  Position,
+} from '@types';
 import { handleTransaction } from '@utils';
 import { TokensActions } from '@store';
 
@@ -187,9 +194,14 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   }
 );
 
-const enterMarkets = createAsyncThunk<void, { marketAddresses: string[] }, ThunkAPI>(
-  'ironBank/enterMarkets',
-  async ({ marketAddresses }, { extra, getState, dispatch }) => {
+export interface EnterOrExitMarketProps {
+  marketAddress: EthereumAddress;
+  actionType: 'enterMarket' | 'exitMarket';
+}
+
+const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAPI>(
+  'ironBank/enterOrExitMarket',
+  async ({ marketAddress, actionType }, { extra, getState, dispatch }) => {
     try {
       const { ironBankService } = extra.services;
       const userAddress = getState().wallet.selectedAddress;
@@ -199,8 +211,11 @@ const enterMarkets = createAsyncThunk<void, { marketAddresses: string[] }, Thunk
 
       // TODO should we double check if user is in markets?
 
-      const tx = await ironBankService.enterMarkets({ marketAddresses, userAddress });
+      const tx = await ironBankService.enterOrExitMarket({ marketAddress, userAddress, actionType });
       await handleTransaction(tx);
+      dispatch(getIronBankSummary());
+      dispatch(getUserMarketsPositions({ marketAddresses: [marketAddress] }));
+      dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] }));
     } catch (error) {
       throw new Error(error.message);
     }
@@ -225,7 +240,7 @@ export const IronBankActions = {
   borrowMarket,
   withdrawMarket,
   repayMarket,
-  enterMarkets,
+  enterOrExitMarket,
   clearUserData,
   clearSelectedMarketAndStatus,
 };

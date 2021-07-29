@@ -36,6 +36,27 @@
     "type": "function"
   },
   {
+    "constant": false,
+    "inputs": [
+  {
+    "internalType": "address",
+    "name": "cTokenAddress",
+    "type": "address"
+  }
+  ],
+    "name": "exitMarket",
+    "outputs": [
+  {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+  }
+  ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "constant": true,
     "inputs": [
       {

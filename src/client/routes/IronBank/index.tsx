@@ -62,7 +62,10 @@ export const IronBank = () => {
   const actionHandler = (action: string, marketAddress: string) => {
     switch (action) {
       case 'enterMarket':
-        dispatch(IronBankActions.enterMarkets({ marketAddresses: [marketAddress] }));
+        dispatch(IronBankActions.enterOrExitMarket({ marketAddress: marketAddress, actionType: 'enterMarket' }));
+        break;
+      case 'exitMarket':
+        dispatch(IronBankActions.enterOrExitMarket({ marketAddress: marketAddress, actionType: 'exitMarket' }));
         break;
       case 'supply':
         dispatch(IronBankActions.setSelectedMarketAddress({ marketAddress }));
@@ -123,7 +126,11 @@ export const IronBank = () => {
                 transform: ({ collateral, address }) => (
                   <ToggleButton
                     selected={collateral === 'true'}
-                    setSelected={() => (collateral === 'false' ? actionHandler('enterMarket', address) : null)}
+                    setSelected={() =>
+                      collateral === 'false'
+                        ? actionHandler('enterMarket', address)
+                        : actionHandler('exitMarket', address)
+                    }
                   />
                 ),
               },

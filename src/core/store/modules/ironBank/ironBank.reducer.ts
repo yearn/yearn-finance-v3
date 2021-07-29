@@ -18,6 +18,7 @@ export const initialMarketsActionsMap: MarketActionsStatusMap = {
   repay: initialStatus,
   supply: initialStatus,
   enterMarket: initialStatus,
+  exitMarket: initialStatus,
   withdraw: initialStatus,
 };
 
@@ -58,7 +59,7 @@ const {
   setSelectedMarketAddress,
   approveMarket,
   getMarketsDynamic,
-  enterMarkets,
+  enterOrExitMarket,
   clearUserData,
   clearSelectedMarketAndStatus,
 } = IronBankActions;
@@ -233,23 +234,17 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
         state.statusMap.marketsActionsMap[address].get = { error: error.message };
       });
     })
-    .addCase(enterMarkets.pending, (state, { meta }) => {
-      const marketAddresses = meta.arg.marketAddresses;
-      marketAddresses.forEach((address) => {
-        state.statusMap.marketsActionsMap[address].enterMarket = { loading: true };
-      });
+    .addCase(enterOrExitMarket.pending, (state, { meta }) => {
+      const { marketAddress, actionType } = meta.arg;
+      state.statusMap.marketsActionsMap[marketAddress][actionType] = { loading: true };
     })
-    .addCase(enterMarkets.fulfilled, (state, { meta }) => {
-      const marketAddresses = meta.arg.marketAddresses;
-      marketAddresses.forEach((address) => {
-        state.statusMap.marketsActionsMap[address].enterMarket = {};
-      });
+    .addCase(enterOrExitMarket.fulfilled, (state, { meta }) => {
+      const { marketAddress, actionType } = meta.arg;
+      state.statusMap.marketsActionsMap[marketAddress][actionType] = {};
     })
-    .addCase(enterMarkets.rejected, (state, { meta, error }) => {
-      const marketAddresses = meta.arg.marketAddresses;
-      marketAddresses.forEach((address) => {
-        state.statusMap.marketsActionsMap[address].enterMarket = { error: error.message };
-      });
+    .addCase(enterOrExitMarket.rejected, (state, { meta, error }) => {
+      const { marketAddress, actionType } = meta.arg;
+      state.statusMap.marketsActionsMap[marketAddress][actionType] = { error: error.message };
     })
     .addCase(clearUserData, (state) => {
       state.user.marketsAllowancesMap = {};
