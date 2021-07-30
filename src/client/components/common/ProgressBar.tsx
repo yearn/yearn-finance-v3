@@ -50,6 +50,9 @@ const Bar = styled.div<{ value: number; maxValue: number; diffBar?: 'positive' |
 `;
 
 export const ProgressBar: FC<ProgressBarProps> = ({ value, diffValue, maxValue = 100, ...props }) => {
+  // NOTE usefull if you want to show the diff bar only when diffPercentage in % > x
+  // const diffPercentage = diffValue ? ((value - diffValue) / maxValue) * 100 : 0;
+
   let diffBar;
   if (diffValue) {
     diffBar = <Bar value={diffValue} maxValue={maxValue} diffBar={value > diffValue ? 'positive' : 'negative'} />;

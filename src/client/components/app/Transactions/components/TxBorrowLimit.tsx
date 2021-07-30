@@ -4,26 +4,55 @@ import styled from 'styled-components';
 import { ProgressBar, Text } from '@components/common';
 import { toBN, formatAmount, formatUsd, formatPercent } from '@utils';
 
-const StyledText = styled(Text)`
-  color: ${({ theme }) => theme.colors.txModalColors.text};
+type TextColor = 'primary' | 'contrast' | 'positive' | 'negative';
+
+const CustomText = styled(Text)<{ color: TextColor }>`
+  color: inherit;
+
+  ${({ color, theme }) => {
+    if (color === 'contrast') {
+      return `color: ${theme.colors.txModalColors.textContrast}`;
+    } else if (color === 'primary') {
+      return `color: ${theme.colors.txModalColors.primary}`;
+    } else if (color === 'positive') {
+      return `color: ${theme.colors.txModalColors.success}`;
+    } else if (color === 'negative') {
+      return `color: ${theme.colors.txModalColors.loading}`;
+    }
+  }}}
+`;
+
+const BottomInfo = styled.div`
+  display: grid;
+  grid-gap: 0.2rem;
+  margin-top: 2.5rem;
+`;
+
+const StyledProgressBar = styled(ProgressBar)`
+  margin-top: 0.4rem;
 `;
 
 const Info = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  > div {
+    display: flex;
+    text-align: right;
+  }
 `;
 
 const StyledTxBorrowLimit = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
   background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
-  min-height: 15.6rem;
   width: 100%;
   border-radius: ${({ theme }) => theme.globalRadius};
   padding: ${({ theme }) => theme.txModal.gap};
-  gap: 0.8rem;
+  color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
+  grid-gap: 0.2rem;
+  font-size: 1.4rem;
+  line-height: 1.8rem;
 `;
 
 export interface TxBorrowLimitProps {
@@ -36,6 +65,8 @@ export interface TxBorrowLimitProps {
   borrowingTokens?: string;
   projectedBorrowingTokens?: string;
   tokenSymbol?: string;
+  borrowLimitLabel?: string;
+  borrowLimitUsedLabel?: string;
 }
 
 export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
@@ -48,6 +79,8 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
   borrowingTokens,
   projectedBorrowingTokens,
   tokenSymbol,
+  borrowLimitLabel,
+  borrowLimitUsedLabel,
 }) => {
   if (!projectedBorrowBalance) projectedBorrowBalance = borrowBalance;
   if (!projectedBorrowLimit) projectedBorrowLimit = borrowLimit;
@@ -63,36 +96,40 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
   return (
     <StyledTxBorrowLimit>
       <Info>
-        <StyledText>Total Borrow Limit</StyledText>
-        <StyledText>
-          {formatUsd(borrowLimit)}
+        <Text>{borrowLimitLabel ?? 'Borrow Limit'}</Text>
+        <Text>
+          <Text>{formatUsd(borrowLimit)}</Text>
           {borrowLimit !== projectedBorrowLimit && <>{` → ${formatUsd(projectedBorrowLimit)}`}</>}
-        </StyledText>
+        </Text>
       </Info>
 
       <Info>
-        <StyledText>Total Borrow Limit Used</StyledText>
-        <StyledText>
-          {formatPercent(borrowRatio, 0)}
-          {formatPercent(borrowRatio, 0) !== formatPercent(projectedBorrowRatio, 0) && (
-            <>{` → ${formatPercent(projectedBorrowRatio, 0)}`}</>
-          )}
-        </StyledText>
+        <Text>{borrowLimitUsedLabel ?? 'Borrow Limit Used'}</Text>
+        <Text>
+          <CustomText color="primary">{formatPercent(borrowRatio, 0)}&nbsp;</CustomText>
+          <CustomText color={limitUsedPercent > projectedLimitUsedPercent ? 'positive' : 'negative'}>
+            {formatPercent(borrowRatio, 0) !== formatPercent(projectedBorrowRatio, 0) && (
+              <>{` → ${formatPercent(projectedBorrowRatio, 0)}`}</>
+            )}
+          </CustomText>
+        </Text>
       </Info>
 
-      <ProgressBar value={limitUsedPercent} diffValue={projectedLimitUsedPercent} />
+      <StyledProgressBar value={limitUsedPercent} diffValue={projectedLimitUsedPercent} />
 
-      {borrowingTokens && (
+      <BottomInfo>
+        {borrowingTokens && (
+          <Info>
+            <Text>Borrowing</Text>
+            <Text>{`${formatAmount(projectedBorrowingTokens ?? borrowingTokens, 4)} ${tokenSymbol}`}</Text>
+          </Info>
+        )}
+
         <Info>
-          <StyledText>Borrowing</StyledText>
-          <StyledText>{`${formatAmount(projectedBorrowingTokens ?? borrowingTokens, 4)} ${tokenSymbol}`}</StyledText>
+          <Text>{yieldLabel}</Text>
+          <CustomText color="contrast">{yieldPercent}</CustomText>
         </Info>
-      )}
-
-      <Info>
-        <StyledText>{yieldLabel}</StyledText>
-        <StyledText>{yieldPercent}</StyledText>
-      </Info>
+      </BottomInfo>
     </StyledTxBorrowLimit>
   );
 };

@@ -87,6 +87,8 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
 
   const showBorrowing = yieldType === 'BORROW';
   const yieldLabel = showBorrowing ? 'Borrow APY' : 'Supply APY';
+  const borrowLimitLabel = showBorrowing ? 'Total Borrow Limit' : undefined;
+  const borrowLimitUsedLabel = showBorrowing ? 'Total Borrow Limit Used' : undefined;
   const assetBalance = normalizeAmount(asset.balance, asset.decimals);
 
   if (transactionCompleted) {
@@ -116,6 +118,8 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         borrowBalance={borrowBalance}
         projectedBorrowBalance={projectedBorrowBalance}
         borrowLimit={borrowLimit}
+        borrowLimitLabel={borrowLimitLabel}
+        borrowLimitUsedLabel={borrowLimitUsedLabel}
         projectedBorrowLimit={projectedBorrowLimit}
         yieldLabel={yieldLabel}
         yieldPercent={asset.yield ?? ''}
