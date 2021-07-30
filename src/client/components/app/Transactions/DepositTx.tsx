@@ -36,7 +36,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
 
-  const debouncedAmount = useDebounce(amount, 2000);
+  const debouncedAmount = useDebounce(amount, 500);
 
   const sellTokensOptions = selectedVault
     ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
