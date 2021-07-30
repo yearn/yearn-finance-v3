@@ -25,7 +25,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedMarket = useAppSelector(IronBankSelectors.selectSelectedMarket);
   const selectedToken = selectedMarket?.token;
-  const userIronBankSummary = useAppSelector(IronBankSelectors.selectUserIronBankSummary);
+  const userIronBankSummary = useAppSelector(IronBankSelectors.selectSummaryData);
   const actionsStatus = useAppSelector(IronBankSelectors.selectSelectedMarketActionsStatusMap);
 
   const onExit = () => {
