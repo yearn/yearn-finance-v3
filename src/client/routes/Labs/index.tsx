@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { LabsSelectors, WalletSelectors, ModalsActions, LabsActions, TokensSelectors } from '@store';
+import { LabsSelectors, WalletSelectors, ModalsActions, LabsActions, TokensSelectors, ModalSelectors } from '@store';
 
 import {
   SummaryCard,
@@ -108,10 +108,11 @@ export const Labs = () => {
   const holdings = useAppSelector(LabsSelectors.selectDepositedLabs);
   const opportunities = useAppSelector(LabsSelectors.selectLabsOpportunities);
   const [filteredOpportunities, setFilteredOpportunities] = useState(opportunities);
+  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
   const labsStatus = useAppSelector(LabsSelectors.selectLabsStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
-  const generalLoading = labsStatus.loading || tokensStatus.loading;
+  const generalLoading = (labsStatus.loading || tokensStatus.loading) && !activeModal;
 
   // const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   // const crvToken = tokenSelectorFilter(CRV);

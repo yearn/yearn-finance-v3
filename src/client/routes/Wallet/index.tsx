@@ -1,7 +1,14 @@
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { WalletSelectors, TokensSelectors, TokensActions, IronBankActions, ModalsActions } from '@store';
+import {
+  WalletSelectors,
+  TokensSelectors,
+  TokensActions,
+  IronBankActions,
+  ModalsActions,
+  ModalSelectors,
+} from '@store';
 
 import {
   SummaryCard,
@@ -61,6 +68,9 @@ export const Wallet = () => {
   const { totalBalance } = useAppSelector(TokensSelectors.selectSummaryData);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
+  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
+
+  const generalLoading = tokensListStatus.loading && !activeModal;
 
   const actionHandler = (action: string, tokenAddress: string) => {
     switch (action) {
@@ -124,8 +134,8 @@ export const Wallet = () => {
 
       {!walletIsConnected && <StyledNoWalletCard />}
 
-      {tokensListStatus.loading && walletIsConnected && <SpinnerLoading flex="1" width="100%" />}
-      {!tokensListStatus.loading && walletIsConnected && (
+      {generalLoading && walletIsConnected && <SpinnerLoading flex="1" width="100%" />}
+      {!generalLoading && walletIsConnected && (
         <TokensCard
           header="Tokens"
           wrap
