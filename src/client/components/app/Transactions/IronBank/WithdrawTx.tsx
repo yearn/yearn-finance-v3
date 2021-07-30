@@ -35,6 +35,11 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   };
 
   useEffect(() => {
+    if (selectedMarket) {
+      dispatch(IronBankActions.getUserMarketsPositions({ marketAddresses: [selectedMarket.address] }));
+      dispatch(IronBankActions.getUserMarketsMetadata({ marketAddresses: [selectedMarket.address] }));
+    }
+
     return () => {
       onExit();
     };
