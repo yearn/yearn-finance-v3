@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { LabsSelectors, WalletSelectors, ModalsActions, LabsActions } from '@store';
+import { LabsSelectors, WalletSelectors, ModalsActions, LabsActions, TokensSelectors } from '@store';
 
 import {
   SummaryCard,
@@ -110,6 +110,8 @@ export const Labs = () => {
   const [filteredOpportunities, setFilteredOpportunities] = useState(opportunities);
 
   const labsStatus = useAppSelector(LabsSelectors.selectLabsStatus);
+  const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
+  const generalLoading = labsStatus.loading || tokensStatus.loading;
 
   // const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   // const crvToken = tokenSelectorFilter(CRV);
@@ -255,9 +257,9 @@ export const Labs = () => {
         cardSize="small"
       />
 
-      {labsStatus.loading && <SpinnerLoading flex="1" width="100%" />}
+      {generalLoading && <SpinnerLoading flex="1" width="100%" />}
 
-      {!labsStatus.loading && (
+      {!generalLoading && (
         <>
           <Row>
             <StyledRecommendationsCard

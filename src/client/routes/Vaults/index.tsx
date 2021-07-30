@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, VaultsActions, VaultsSelectors, WalletSelectors } from '@store';
+import { ModalsActions, TokensSelectors, VaultsActions, VaultsSelectors, WalletSelectors } from '@store';
 
 import { device } from '@themes/default';
 
@@ -117,6 +117,8 @@ export const Vaults = () => {
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
 
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
+  const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
+  const generalLoading = vaultsStatus.loading || tokensStatus.loading;
 
   useEffect(() => {
     setFilteredVaults(opportunities);
@@ -145,9 +147,9 @@ export const Vaults = () => {
         cardSize="small"
       />
 
-      {vaultsStatus.loading && <SpinnerLoading flex="1" width="100%" />}
+      {generalLoading && <SpinnerLoading flex="1" width="100%" />}
 
-      {!vaultsStatus.loading && (
+      {!generalLoading && (
         <>
           <Row>
             <StyledRecommendationsCard
