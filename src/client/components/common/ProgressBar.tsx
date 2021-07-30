@@ -25,7 +25,7 @@ const StyledProgressBar = styled.div`
   ${styledSystem}
 `;
 
-const Bar = styled.div<{ value: number; maxValue: number; diffBar?: 'positive' | 'negative' }>`
+const Bar = styled.div<{ value: number; maxValue: number; diffBarType?: 'positive' | 'negative' }>`
   width: ${(props) => (props.value / props.maxValue) * 100}%;
   height: 100%;
   background: var(--progress-bar-value-bg);
@@ -36,13 +36,13 @@ const Bar = styled.div<{ value: number; maxValue: number; diffBar?: 'positive' |
   left: 0;
   z-index: 1;
 
-  ${({ diffBar }) =>
-    diffBar === 'positive' &&
+  ${({ diffBarType }) =>
+    diffBarType === 'positive' &&
     `
     background: var(--progress-bar-positive-bg);
   `};
-  ${({ diffBar }) =>
-    diffBar === 'negative' &&
+  ${({ diffBarType }) =>
+    diffBarType === 'negative' &&
     `
     background:  var(--progress-bar-negative-bg);
     z-index: 0;
@@ -54,8 +54,8 @@ export const ProgressBar: FC<ProgressBarProps> = ({ value, diffValue, maxValue =
   // const diffPercentage = diffValue ? ((value - diffValue) / maxValue) * 100 : 0;
 
   let diffBar;
-  if (diffValue) {
-    diffBar = <Bar value={diffValue} maxValue={maxValue} diffBar={value > diffValue ? 'positive' : 'negative'} />;
+  if (diffValue && diffValue !== value) {
+    diffBar = <Bar value={diffValue} maxValue={maxValue} diffBarType={value > diffValue ? 'positive' : 'negative'} />;
   }
 
   return (
