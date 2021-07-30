@@ -13,8 +13,8 @@ const StyledModal = styled.div`
   z-index: 1;
   width: 32rem;
   height: 32rem;
-  max-width: 80%;
-  max-height: 80%;
+  max-width: 85%;
+  max-height: 85%;
 `;
 
 const CloseModal = styled.div`

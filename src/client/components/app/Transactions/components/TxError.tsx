@@ -32,6 +32,7 @@ const StyledTxError = styled.div`
   max-height: 10rem;
   overflow: hidden;
   overflow-y: auto;
+  flex: 1;
 `;
 
 export interface TxErrorProps {

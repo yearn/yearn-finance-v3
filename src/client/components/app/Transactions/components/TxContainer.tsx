@@ -44,6 +44,7 @@ const TxContainerContent = styled.div`
   gap: ${({ theme }) => theme.txModal.gap};
   position: relative;
   border-radius: ${({ theme }) => theme.globalRadius};
+  flex: 1;
 `;
 
 const TxHeader = styled.div`
@@ -59,6 +60,7 @@ const StyledTxContainer = styled.div`
   flex-direction: column;
   padding: ${({ theme }) => theme.txModal.gap};
   width: 100%;
+  height: 53rem;
   background: ${({ theme }) => theme.colors.txModalColors.background};
   color: ${({ theme }) => theme.colors.txModalColors.text};
   border-radius: ${({ theme }) => theme.globalRadius};
