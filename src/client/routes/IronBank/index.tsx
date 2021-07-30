@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, IronBankActions, IronBankSelectors, WalletSelectors } from '@store';
+import { ModalsActions, IronBankActions, IronBankSelectors, WalletSelectors, TokensSelectors } from '@store';
 
 import { SpinnerLoading, ToggleButton, SearchInput } from '@components/common';
 import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, NoWalletCard } from '@components/app';
@@ -54,6 +54,8 @@ export const IronBank = () => {
   const [filteredMarkets, setFilteredMarkets] = useState(markets);
 
   const ironBankStatus = useAppSelector(IronBankSelectors.selectIronBankStatus);
+  const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
+  const generalLoading = ironBankStatus.loading || tokensStatus.loading;
 
   useEffect(() => {
     setFilteredMarkets(markets);
@@ -100,9 +102,9 @@ export const IronBank = () => {
         cardSize="small"
       />
 
-      {ironBankStatus.loading && <SpinnerLoading flex="1" width="100%" />}
+      {generalLoading && <SpinnerLoading flex="1" width="100%" />}
 
-      {!ironBankStatus.loading && (
+      {!generalLoading && (
         <>
           {!walletIsConnected && <StyledNoWalletCard />}
 
