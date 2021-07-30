@@ -2,7 +2,14 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, IronBankActions, IronBankSelectors, WalletSelectors, TokensSelectors } from '@store';
+import {
+  ModalsActions,
+  IronBankActions,
+  IronBankSelectors,
+  WalletSelectors,
+  TokensSelectors,
+  ModalSelectors,
+} from '@store';
 
 import { SpinnerLoading, ToggleButton, SearchInput } from '@components/common';
 import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, NoWalletCard } from '@components/app';
@@ -52,10 +59,11 @@ export const IronBank = () => {
   const supplied = useAppSelector(IronBankSelectors.selectLendMarkets);
   const borrowed = useAppSelector(IronBankSelectors.selectBorrowMarkets);
   const [filteredMarkets, setFilteredMarkets] = useState(markets);
+  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
   const ironBankStatus = useAppSelector(IronBankSelectors.selectIronBankStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
-  const generalLoading = ironBankStatus.loading || tokensStatus.loading;
+  const generalLoading = (ironBankStatus.loading || tokensStatus.loading) && !activeModal;
 
   useEffect(() => {
     setFilteredMarkets(markets);

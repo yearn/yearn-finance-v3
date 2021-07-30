@@ -3,7 +3,14 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, TokensSelectors, VaultsActions, VaultsSelectors, WalletSelectors } from '@store';
+import {
+  ModalsActions,
+  ModalSelectors,
+  TokensSelectors,
+  VaultsActions,
+  VaultsSelectors,
+  WalletSelectors,
+} from '@store';
 
 import { device } from '@themes/default';
 
@@ -115,10 +122,11 @@ export const Vaults = () => {
   const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOpportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
+  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
-  const generalLoading = vaultsStatus.loading || tokensStatus.loading;
+  const generalLoading = (vaultsStatus.loading || tokensStatus.loading) && !activeModal;
 
   useEffect(() => {
     setFilteredVaults(opportunities);
