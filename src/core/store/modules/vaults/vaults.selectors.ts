@@ -205,6 +205,7 @@ const selectVault = createSelector(
       });
     })
 );
+
 interface CreateVaultProps {
   vaultData: Vault;
   tokenData: Token;
@@ -214,6 +215,7 @@ interface CreateVaultProps {
   userVaultsMetadataMap: VaultUserMetadata;
   vaultAllowancesMap: AllowancesMap;
 }
+
 function createVault(props: CreateVaultProps) {
   const {
     tokenAllowancesMap,
@@ -226,9 +228,13 @@ function createVault(props: CreateVaultProps) {
   } = props;
   const vaultAddress = vaultData.address;
   const currentAllowance = tokenAllowancesMap[vaultAddress] ?? '0';
+
   return {
     address: vaultData.address,
     name: vaultData.name,
+    displayName: vaultData.metadata.displayName,
+    displayIcon: vaultData.metadata.displayIcon,
+    defaultDisplayToken: vaultData.metadata.defaultDisplayToken,
     vaultBalance: vaultData.underlyingTokenBalance.amount,
     decimals: vaultData.decimals,
     vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
@@ -247,7 +253,7 @@ function createVault(props: CreateVaultProps) {
     token: {
       address: tokenData?.address,
       name: tokenData?.name,
-      symbol: vaultData.metadata.displayName,
+      symbol: tokenData?.symbol,
       decimals: parseInt(tokenData?.decimals),
       icon: tokenData?.icon,
       balance: userTokenData?.balance ?? '0',

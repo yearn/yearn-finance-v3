@@ -52,13 +52,16 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
   useEffect(() => {
     if (!selectedSellTokenAddress && selectedVault) {
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedVault.token.address }));
+      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedVault.defaultDisplayToken }));
     }
 
     if (!selectedVault) {
       if (!vaults || !vaults.length) return;
 
-      const matchingVault = vaults.find((vault) => vault.token.address === selectedSellTokenAddress);
+      const matchingVault = vaults.find(
+        (vault) =>
+          vault.token.address === selectedSellTokenAddress || vault.defaultDisplayToken === selectedSellTokenAddress
+      );
       const highestYieldingVault = vaults.reduce((prev, current) => (prev.apyData > current.apyData ? prev : current));
       dispatch(
         VaultsActions.setSelectedVaultAddress({
@@ -133,10 +136,10 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
-    .map(({ address, DEPOSIT, token, apyData }) => ({
+    .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData }) => ({
       address,
-      symbol: token.symbol,
-      icon: token.icon,
+      symbol: displayName,
+      icon: displayIcon,
       balance: DEPOSIT.userDeposited,
       decimals: token.decimals,
       yield: formatPercent(apyData, 2),

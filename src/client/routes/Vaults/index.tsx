@@ -162,10 +162,10 @@ export const Vaults = () => {
           <Row>
             <StyledRecommendationsCard
               header="Recommendations"
-              items={recommendations.map(({ address, token, apyData }) => ({
+              items={recommendations.map(({ displayName, displayIcon, apyData }) => ({
                 // header: 'Vault',
-                icon: token.icon ?? '',
-                name: token.symbol,
+                icon: displayIcon,
+                name: displayName,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
                 // onAction: () => history.push(`/vault/${address}`),
@@ -211,9 +211,9 @@ export const Vaults = () => {
               },
             ]}
             data={deposits.map((vault) => ({
-              icon: vault.token.icon ?? '',
+              icon: vault.displayIcon,
               tokenSymbol: vault.token.symbol,
-              name: vault.token.symbol,
+              name: vault.displayName,
               balance: humanizeAmount(vault.userDeposited, vault.token.decimals, 4),
               value: normalizeUsdc(vault.userDepositedUsdc, 2),
               apy: formatPercent(vault.apyData, 2),
@@ -254,9 +254,9 @@ export const Vaults = () => {
               },
             ]}
             data={filteredVaults.map((vault) => ({
-              icon: vault.token.icon ?? '',
+              icon: vault.displayIcon,
               tokenSymbol: vault.token.symbol,
-              name: vault.token.symbol,
+              name: vault.displayName,
               vaultBalanceUsdc: normalizeUsdc(vault.vaultBalanceUsdc, 0),
               apy: formatPercent(vault.apyData, 2),
               vaultAddress: vault.address,
@@ -267,7 +267,7 @@ export const Vaults = () => {
               <SearchBarContainer>
                 <SearchInput
                   searchableData={opportunities}
-                  searchableKeys={['name', 'token.symbol', 'token.name']}
+                  searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
                   placeholder=""
                   onSearch={(data) => setFilteredVaults(data)}
                 />
