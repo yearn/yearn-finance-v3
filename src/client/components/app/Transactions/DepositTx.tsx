@@ -15,6 +15,7 @@ import {
 } from '@src/utils';
 
 import { Transaction } from './Transaction';
+import { useDebounce } from '../../../hooks/useDebounce';
 
 export interface DepositTxProps {
   onClose?: () => void;
@@ -34,6 +35,8 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
+
+  const debouncedAmount = useDebounce(amount, 2000);
 
   const sellTokensOptions = selectedVault
     ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
@@ -85,24 +88,23 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
   }, [selectedSellTokenAddress]);
 
   useEffect(() => {
-    if (!selectedVault || !selectedSellTokenAddress) return;
+    if (!selectedVault) return;
     dispatch(VaultsActions.clearVaultStatus({ vaultAddress: selectedVault.address }));
-
-    const timeOutId = setTimeout(() => {
-      if (toBN(amount).gt(0) && !inputError) {
-        dispatch(
-          VaultsActions.getExpectedTransactionOutcome({
-            transactionType: 'DEPOSIT',
-            sourceTokenAddress: selectedSellTokenAddress,
-            sourceTokenAmount: toWei(amount, selectedSellToken.decimals),
-            targetTokenAddress: selectedVault.address,
-          })
-        );
-      }
-    }, 500);
-
-    return () => clearTimeout(timeOutId);
   }, [amount, selectedSellTokenAddress, selectedVault]);
+
+  useEffect(() => {
+    if (!selectedVault || !selectedSellTokenAddress) return;
+    if (toBN(debouncedAmount).gt(0) && !inputError) {
+      dispatch(
+        VaultsActions.getExpectedTransactionOutcome({
+          transactionType: 'DEPOSIT',
+          sourceTokenAddress: selectedSellTokenAddress,
+          sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
+          targetTokenAddress: selectedVault.address,
+        })
+      );
+    }
+  }, [debouncedAmount]);
 
   if (!selectedVault || !selectedSellTokenAddress || !sellTokensOptions) {
     return null;
