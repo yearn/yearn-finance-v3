@@ -18,9 +18,9 @@ const StyledTxArrowStatus = styled.div<{ status?: TxArrowStatusTypes }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
   position: relative;
   overflow: visible;
+  flex: 1;
 
   ${Icon} {
     height: 4.8rem;

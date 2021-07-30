@@ -25,24 +25,24 @@ const StyledProgressBar = styled.div`
   ${styledSystem}
 `;
 
-const Bar = styled.div<{ value: number; maxValue: number; diffBar?: 'positive' | 'negative' }>`
+const Bar = styled.div<{ value: number; maxValue: number; diffBarType?: 'positive' | 'negative' }>`
   width: ${(props) => (props.value / props.maxValue) * 100}%;
   height: 100%;
   background: var(--progress-bar-value-bg);
   border-radius: ${({ theme }) => theme.globalRadius};
-  transition: width 200ms ease-in-out;
+  transition: width 500ms ease-in-out;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
 
-  ${({ diffBar }) =>
-    diffBar === 'positive' &&
+  ${({ diffBarType }) =>
+    diffBarType === 'positive' &&
     `
     background: var(--progress-bar-positive-bg);
   `};
-  ${({ diffBar }) =>
-    diffBar === 'negative' &&
+  ${({ diffBarType }) =>
+    diffBarType === 'negative' &&
     `
     background:  var(--progress-bar-negative-bg);
     z-index: 0;
@@ -50,9 +50,12 @@ const Bar = styled.div<{ value: number; maxValue: number; diffBar?: 'positive' |
 `;
 
 export const ProgressBar: FC<ProgressBarProps> = ({ value, diffValue, maxValue = 100, ...props }) => {
+  // NOTE usefull if you want to show the diff bar only when diffPercentage in % > x
+  // const diffPercentage = diffValue ? ((value - diffValue) / maxValue) * 100 : 0;
+
   let diffBar;
-  if (diffValue) {
-    diffBar = <Bar value={diffValue} maxValue={maxValue} diffBar={value > diffValue ? 'positive' : 'negative'} />;
+  if (diffValue && diffValue !== value) {
+    diffBar = <Bar value={diffValue} maxValue={maxValue} diffBarType={value > diffValue ? 'positive' : 'negative'} />;
   }
 
   return (

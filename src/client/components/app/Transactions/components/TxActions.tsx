@@ -42,7 +42,13 @@ export const StyledTxActionButton = styled(Button)<{ contrast?: boolean; success
 
 const StyledTxActions = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.txModal.gap};
+  align-items: flex-end;
+  margin: calc(-${({ theme }) => theme.txModal.gap} / 2);
+  margin-top: auto;
+
+  ${StyledTxActionButton} {
+    margin: calc(${({ theme }) => theme.txModal.gap} / 2);
+  }
 `;
 
 export interface TxActionsProps {}

@@ -66,6 +66,10 @@ const TokenExtras = styled.div`
   }
 `;
 
+const AmountTitle = styled(Text)`
+  color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
+`;
+
 const TokenData = styled.div`
   display: flex;
   flex-direction: column;
@@ -138,15 +142,14 @@ const Header = styled.div`
 
 const scaleTransitionTime = 300;
 
-const StyledTxTokenInput = styled.div`
-  display: flex;
-  flex-direction: column;
+const StyledTxTokenInput = styled(TransitionGroup)`
+  display: grid;
   background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
   min-height: 15.6rem;
   width: 100%;
   border-radius: ${({ theme }) => theme.globalRadius};
   padding: ${({ theme }) => theme.txModal.gap};
-  gap: 0.8rem;
+  grid-gap: 0.8rem;
 
   .scale-enter {
     opacity: 0;
@@ -237,20 +240,17 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   return (
     <StyledTxTokenInput {...props}>
       {headerText && <Header>{headerText}</Header>}
-
-      <TransitionGroup>
-        {openedSearch && (
-          <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
-            <StyledSearchList
-              list={listItems}
-              headerText="Select a token"
-              selected={selectedItem}
-              setSelected={(item) => (onSelectedTokenChange ? onSelectedTokenChange(item.id) : undefined)}
-              onCloseList={() => setOpenedSearch(false)}
-            />
-          </CSSTransition>
-        )}
-      </TransitionGroup>
+      {openedSearch && (
+        <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
+          <StyledSearchList
+            list={listItems}
+            headerText="Select a token"
+            selected={selectedItem}
+            setSelected={(item) => (onSelectedTokenChange ? onSelectedTokenChange(item.id) : undefined)}
+            onCloseList={() => setOpenedSearch(false)}
+          />
+        </CSSTransition>
+      )}
 
       <TokenInfo>
         <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
@@ -262,7 +262,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         </TokenSelector>
 
         <TokenData>
-          <StyledText>{inputText || 'Balance'}</StyledText>
+          <AmountTitle>{inputText || 'Balance'}</AmountTitle>
           <StyledAmountInput
             value={amount}
             onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
