@@ -30,7 +30,7 @@ const Bar = styled.div<{ value: number; maxValue: number; diffBar?: 'positive' |
   height: 100%;
   background: var(--progress-bar-value-bg);
   border-radius: ${({ theme }) => theme.globalRadius};
-  transition: width 200ms ease-in-out;
+  transition: width 500ms ease-in-out;
   position: absolute;
   top: 0;
   left: 0;
