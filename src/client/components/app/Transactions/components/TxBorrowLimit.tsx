@@ -65,8 +65,6 @@ export interface TxBorrowLimitProps {
   borrowingTokens?: string;
   projectedBorrowingTokens?: string;
   tokenSymbol?: string;
-  borrowLimitLabel?: string;
-  borrowLimitUsedLabel?: string;
 }
 
 export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
@@ -79,8 +77,6 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
   borrowingTokens,
   projectedBorrowingTokens,
   tokenSymbol,
-  borrowLimitLabel,
-  borrowLimitUsedLabel,
 }) => {
   if (!projectedBorrowBalance) projectedBorrowBalance = borrowBalance;
   if (!projectedBorrowLimit) projectedBorrowLimit = borrowLimit;
@@ -92,11 +88,15 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
 
   const limitUsedPercent = toBN(borrowBalance).div(borrowLimit).times(100).toNumber();
   const projectedLimitUsedPercent = toBN(projectedBorrowBalance).div(projectedBorrowLimit).times(100).toNumber();
+  let diffType: 'positive' | 'negative' | undefined;
+  if (projectedLimitUsedPercent && limitUsedPercent !== projectedLimitUsedPercent) {
+    diffType = limitUsedPercent > projectedLimitUsedPercent ? 'positive' : 'negative';
+  }
 
   return (
     <StyledTxBorrowLimit>
       <Info>
-        <Text>{borrowLimitLabel ?? 'Borrow Limit'}</Text>
+        <Text>Total Borrow Limit</Text>
         <Text>
           <Text>{formatUsd(borrowLimit)}</Text>
           {borrowLimit !== projectedBorrowLimit && <>{` → ${formatUsd(projectedBorrowLimit)}`}</>}
@@ -104,10 +104,10 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
       </Info>
 
       <Info>
-        <Text>{borrowLimitUsedLabel ?? 'Borrow Limit Used'}</Text>
+        <Text>Total Borrow Limit Used</Text>
         <Text>
           <CustomText color="primary">{formatPercent(borrowRatio, 0)}&nbsp;</CustomText>
-          <CustomText color={limitUsedPercent > projectedLimitUsedPercent ? 'positive' : 'negative'}>
+          <CustomText color={diffType ?? 'primary'}>
             {formatPercent(borrowRatio, 0) !== formatPercent(projectedBorrowRatio, 0) && (
               <>{` → ${formatPercent(projectedBorrowRatio, 0)}`}</>
             )}
@@ -121,7 +121,12 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
         {borrowingTokens && (
           <Info>
             <Text>Borrowing</Text>
-            <Text>{`${formatAmount(projectedBorrowingTokens ?? borrowingTokens, 4)} ${tokenSymbol}`}</Text>
+            <Text>
+              <CustomText color={diffType ?? 'primary'}>
+                {formatAmount(projectedBorrowingTokens ?? borrowingTokens, 4)}
+              </CustomText>
+              <CustomText color="contrast">&nbsp;{tokenSymbol}</CustomText>
+            </Text>
           </Info>
         )}
 
