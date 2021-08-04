@@ -30,7 +30,6 @@ export const getConstants = memoize(
       WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
       WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
       FANTOM_PROVIDER_HTTPS: 'https://rpcapi.fantom.network',
-      LOCAL_PROVIDER_HTTPS: 'http://127.0.0.1:8545/',
       CONTRACT_ADDRESSES: {
         oracle: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
         lens: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',

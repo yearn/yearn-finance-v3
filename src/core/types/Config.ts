@@ -6,6 +6,7 @@ export interface Config extends Env, Constants {}
 export interface Env {
   ENV: string;
   ETHEREUM_NETWORK: EthereumNetwork;
+  CUSTOM_PROVIDER_HTTPS: string;
   USE_MAINNET_FORK: boolean;
   USE_SDK_MOCK: boolean;
   ALLOW_DEV_MODE: boolean;
@@ -26,7 +27,6 @@ export interface Constants {
   WEB3_PROVIDER_HTTPS: string;
   WEB3_PROVIDER_WSS: string;
   FANTOM_PROVIDER_HTTPS: string;
-  LOCAL_PROVIDER_HTTPS: string;
   CONTRACT_ADDRESSES: {
     [KEY: string]: string;
   };
