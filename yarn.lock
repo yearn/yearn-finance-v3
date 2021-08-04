@@ -3158,16 +3158,17 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
 
-"@yfi/sdk@^1.0.0-0":
-  version "1.0.0-0"
-  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-1.0.0-0.tgz#b3503db0c80c65071dedba1c21607cc69b0e0dfa"
-  integrity sha512-/L7RxW/jO0B8XVtdBjDTyGz0A3q7h+tWoKSPAVHX2KHG1jeLqNL6oEqt2GlWaeNwJkyQ5v8Gowt5MtnDkdYAyQ==
+"@yfi/sdk@1.0.0-2":
+  version "1.0.0-2"
+  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-1.0.0-2.tgz#f588493bc23ff4506b5db3ff104b10f445a989b3"
+  integrity sha512-53+BDrIKc2ye81x14ZQMCdlnBy3CYRgNuZbL4hYwunv7KYscldz0Iy0ITcwNgikXvjL39oOs2M16OHs34DeLyQ==
   dependencies:
     apollo-cache-inmemory "^1.6.6"
     apollo-client "^2.6.10"
     apollo-link-http "^1.5.17"
     bignumber.js "^9.0.1"
     cross-fetch "^3.1.3-alpha.6"
+    dotenv "^10.0.0"
     emittery "^0.8.1"
     graphql "^15.5.0"
     graphql-tag "^2.12.4"
@@ -5531,6 +5532,11 @@ dotenv-expand@5.1.0:
 dotenv@8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
+
+dotenv@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
+  integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
 drbg.js@^1.0.1:
   version "1.0.1"
