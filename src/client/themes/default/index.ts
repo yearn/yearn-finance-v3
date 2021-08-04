@@ -9,31 +9,6 @@ const sharedTheme: SharedTheme = {
     height: '6.6rem',
   },
 
-  chartTheme: {
-    // background: '#292929',
-    textColor: '#ffffff',
-    fontSize: 11,
-    axis: {
-      domain: {
-        line: {
-          stroke: '#777777',
-          strokeWidth: 1,
-        },
-      },
-      ticks: {
-        line: {
-          stroke: '#adadad',
-          strokeWidth: 1,
-        },
-      },
-    },
-    grid: {
-      line: {
-        stroke: '#dddddd',
-        strokeWidth: 1,
-      },
-    },
-  },
   zindex: {
     navbar: 400,
     sidemenu: 500,
