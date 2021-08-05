@@ -1,4 +1,4 @@
-import { TransactionRequest, TransactionResponse, TransactionReceipt } from '@ethersproject/providers';
+import { TransactionRequest, TransactionResponse, TransactionReceipt } from '@ethersproject/abstract-provider';
 
 import {
   Position,
