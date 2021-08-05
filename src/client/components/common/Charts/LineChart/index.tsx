@@ -1,80 +1,126 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 import { Serie, ResponsiveLine } from '@nivo/line';
-import { sharedTheme } from '@themes/default';
+
+import { Text } from '@components/common';
+
+import { useAppSelector } from '@hooks';
+import { getTheme } from '@themes';
 
 export interface LineChartProps {
   className?: string;
   chartData: Serie[];
+  tooltipLabel?: string;
 }
+
+const StyledTooltip = styled.div<{ align: 'left' | 'right' }>`
+  background: transparent;
+  color: ${({ theme }) => theme.colors.secondary};
+  font-size: 1.4rem;
+  position: relative;
+  text-align: center;
+
+  ${({ align }) => align === 'left' && `left: 100%; transform: translateX(-50%)`};
+  ${({ align }) => align === 'right' && `right: 100%; transform: translateX(50%)`};
+`;
+
+const LineBackground = styled.div`
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: ${({ theme }) => `
+    repeating-linear-gradient(90deg, ${theme.colors.surfaceVariantA},
+                                     ${theme.colors.surfaceVariantA} 12rem,
+                                     transparent 12rem,
+                                     transparent 24rem)
+  `};
+
+  // NOTE If you want to create variant bgs for each point with different widths use this:
+  // div {
+  //   flex: 1;
+  //   &:nth-child(odd) {
+  //     flex: 1;
+  //     background: ${({ theme }) => theme.colors.surfaceVariantA};
+  //   }
+  // }
+`;
 
 const StyledLineChart = styled.div`
   width: 100%;
-  height: 40rem;
+  height: 21rem;
+  position: relative;
 `;
 
-export const LineChart: FC<LineChartProps> = ({ chartData, className, ...props }) => (
+export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, className, ...props }) => {
+  const currentTheme = useAppSelector(({ theme }) => theme.current);
+  const theme = getTheme(currentTheme);
+
   // TODO Load currentTheme instead of defaultTheme
-  <StyledLineChart className={className} {...props}>
-    <ResponsiveLine
-      data={chartData}
-      theme={sharedTheme.chartTheme}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-      xScale={{ type: 'point' }}
-      yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
-      yFormat=" >-.2f"
-      axisTop={null}
-      axisRight={null}
-      axisBottom={{
-        orient: 'bottom',
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: 'transportation',
-        legendOffset: 36,
-        legendPosition: 'middle',
-      }}
-      axisLeft={{
-        orient: 'left',
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: 'count',
-        legendOffset: -40,
-        legendPosition: 'middle',
-      }}
-      pointSize={10}
-      pointColor={{ theme: 'background' }}
-      pointBorderWidth={2}
-      pointBorderColor={{ from: 'serieColor' }}
-      pointLabelYOffset={-12}
-      useMesh={true}
-      legends={[
-        {
-          anchor: 'bottom-right',
-          direction: 'column',
-          justify: false,
-          translateX: 100,
-          translateY: 0,
-          itemsSpacing: 0,
-          itemDirection: 'left-to-right',
-          itemWidth: 80,
-          itemHeight: 20,
-          itemOpacity: 0.75,
-          symbolSize: 12,
-          symbolShape: 'circle',
-          symbolBorderColor: 'rgba(0, 0, 0, .5)',
-          effects: [
-            {
-              on: 'hover',
-              style: {
-                itemBackground: 'rgba(0, 0, 0, .03)',
-                itemOpacity: 1,
-              },
-            },
-          ],
-        },
-      ]}
-    />
-  </StyledLineChart>
-);
+  const lineTheme = {
+    crosshair: {
+      line: {
+        stroke: theme.colors.secondary,
+        strokeWidth: 1,
+        strokeOpacity: 0.35,
+      },
+    },
+    textColor: theme.colors.onSurfaceSH1,
+  };
+
+  return (
+    <StyledLineChart className={className} {...props}>
+      <LineBackground />
+
+      <ResponsiveLine
+        data={chartData}
+        theme={lineTheme}
+        curve="monotoneX"
+        colors={theme.colors.secondary}
+        margin={{ top: 20, right: 10, bottom: 36, left: 15 }}
+        // xScale={{ type: 'point' }}
+        xScale={{
+          type: 'time',
+          format: '%Y-%m-%d',
+        }}
+        yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
+        yFormat=" >-.2f"
+        axisTop={null}
+        axisRight={null}
+        // axisBottom={null}
+        axisBottom={{
+          orient: 'bottom',
+          tickSize: 0,
+          tickPadding: 16,
+          format: '%b %d',
+          tickValues: 'every 2 weeks',
+        }}
+        // xFormat="time:%Y-%m-%d"
+        axisLeft={null}
+        enableGridY={false}
+        enableGridX={false}
+        pointSize={14}
+        pointBorderWidth={2}
+        pointBorderColor={{ theme: 'background' }}
+        pointLabelYOffset={-12}
+        crosshairType="x"
+        useMesh={true}
+        legends={[]}
+        lineWidth={3}
+        // NOTE Custom tooltip to fix position
+        tooltip={({ point }) => {
+          const isFirstHalf = point.index < chartData[0].data.length / 2;
+
+          return (
+            <StyledTooltip align={isFirstHalf ? 'left' : 'right'}>
+              <Text>{tooltipLabel || point.serieId}</Text>
+              <Text>{point.data.yFormatted}</Text>
+            </StyledTooltip>
+          );
+        }}
+      />
+    </StyledLineChart>
+  );
+};

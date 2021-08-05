@@ -10,6 +10,10 @@ import { LineChart } from '@components/common/Charts';
 import { VaultsActions } from '@store';
 import { useAppDispatch } from '@hooks';
 
+const StyledLineChart = styled(LineChart)`
+  margin-top: 2.4rem;
+`;
+
 const VaultChart = styled(Card)`
   flex: 1 100%;
   width: 100%;
@@ -67,20 +71,11 @@ export const VaultDetail = () => {
   const data = [
     {
       id: 'japan',
-      color: '#d9269a',
+      // color: '#d9269a',
       data: [
-        {
-          x: 'plane',
-          y: 294,
-        },
-        {
-          x: 'helicopter',
-          y: 176,
-        },
-        {
-          x: 'boat',
-          y: 170,
-        },
+        { x: '2019-05-01', y: 2 },
+        { x: '2019-06-01', y: 7 },
+        { x: '2019-09-01', y: 1 },
       ],
     },
   ];
@@ -88,7 +83,7 @@ export const VaultDetail = () => {
   return (
     <VaultDetailView>
       <VaultOverview>
-        Vault overview data
+        <StyledCardHeader header="Overview" />
         <h3>Vault: {vaultAddress}</h3>
       </VaultOverview>
 
@@ -109,8 +104,8 @@ export const VaultDetail = () => {
       </VaultActions>
 
       <VaultChart>
-        Performance
-        <LineChart chartData={data} />
+        <StyledCardHeader header="Performance" />
+        <StyledLineChart chartData={data} tooltipLabel="Earning Over Time" />
       </VaultChart>
     </VaultDetailView>
   );

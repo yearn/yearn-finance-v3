@@ -8,7 +8,6 @@ declare module 'styled-components' {
     navbar: {
       height: string;
     };
-    chartTheme: any;
     zindex: {
       navbar: number;
       sidemenu: number;
