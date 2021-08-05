@@ -16,6 +16,9 @@ export interface VaultData extends VaultDynamicData {
 export interface VaultView {
   address: EthereumAddress;
   name: string;
+  displayName: string;
+  displayIcon: string;
+  defaultDisplayToken: string;
   decimals: string;
   vaultBalance: string;
   vaultBalanceUsdc: string;
