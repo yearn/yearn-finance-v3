@@ -39,7 +39,7 @@ export class LabServiceImpl implements LabService {
     const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
-    const provider = this.web3Provider.getInstanceOf('default');
+    const provider = this.web3Provider.getInstanceOf(this.web3Provider.providerType);
     const vaultsPromise = get(YEARN_API);
     const pricesPromise = get(
       'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault&vs_currencies=usd'
@@ -212,7 +212,7 @@ export class LabServiceImpl implements LabService {
     const { YEARN_API, ZAPPER_API_KEY, CONTRACT_ADDRESSES } = this.config;
     const { YVECRV, CRV, THREECRV, YVBOOST, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = CONTRACT_ADDRESSES;
     const THREECRV_DECIMALS = 18;
-    const provider = this.web3Provider.getInstanceOf('default');
+    const provider = this.web3Provider.getInstanceOf(this.web3Provider.providerType);
     const vaultsPromise = get(YEARN_API);
     const pricesPromise = get(
       'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault,lp-3pool-curve,yvboost&vs_currencies=usd'
