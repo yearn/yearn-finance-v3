@@ -72,7 +72,7 @@ export class VaultServiceImpl implements VaultService {
           sourceTokenAddress,
           sourceTokenAmount,
           targetTokenAddress,
-          DEFAULT_SLIPPAGE_SIMULATION
+          { slippage: DEFAULT_SLIPPAGE_SIMULATION }
         );
         break;
       case 'WITHDRAW':
@@ -81,7 +81,7 @@ export class VaultServiceImpl implements VaultService {
           sourceTokenAddress,
           sourceTokenAmount,
           targetTokenAddress,
-          DEFAULT_SLIPPAGE_SIMULATION
+          { slippage: DEFAULT_SLIPPAGE_SIMULATION }
         );
         break;
       default:
