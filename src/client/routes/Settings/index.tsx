@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 
 import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
 import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions } from '@store';
@@ -136,6 +137,7 @@ const SettingsView = styled(ViewContainer)`
 export const Settings = () => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+  const history = useHistory();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
   const defaultSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
@@ -149,6 +151,10 @@ export const Settings = () => {
 
   const openModal = (modalName: ModalName, modalProps?: any) => {
     dispatch(ModalsActions.openModal({ modalName, modalProps }));
+  };
+
+  const openVault = (address: string) => {
+    history.push(`/vault/${address}`);
   };
 
   const openAlert = (message: string, type?: AlertTypes, persistent?: boolean) => {
@@ -235,6 +241,9 @@ export const Settings = () => {
                   <Button onClick={() => openModal('test', { testVar: 'test variable' })}>Open test modal</Button>
                   <Button onClick={() => openModal('testTx')}>Open TestTx modal</Button>
                   <Button onClick={() => openModal('comingSoon')}>Open ComingSoon modal</Button>
+                  <Button onClick={() => openVault('0xdA816459F1AB5631232FE5e97a05BBBb94970c95')}>
+                    Open DAI Vault details
+                  </Button>
                 </SectionContent>
               </SettingsSection>
 

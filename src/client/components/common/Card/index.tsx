@@ -29,6 +29,16 @@ const secondaryVariant = css`
   color: ${({ theme }) => theme.colors.onSurfaceH1};
 `;
 
+const backgroundVariant = css`
+  background-color: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.onBackground};
+`;
+
+const surfaceVariant = css`
+  background-color: ${({ theme }) => theme.colors.surfaceVariantA};
+  color: ${({ theme }) => theme.colors.onSurfaceH2};
+`;
+
 const sizeStyle = ({ cardSize }: CardProps) => {
   switch (cardSize) {
     case 'small':
@@ -46,12 +56,16 @@ const variantStyle = ({ variant }: CardProps) => {
       return primaryVariant;
     case 'secondary':
       return secondaryVariant;
+    case 'background':
+      return backgroundVariant;
+    case 'surface':
+      return surfaceVariant;
     default:
       return defaultVariant;
   }
 };
 
-type CardVariant = 'primary' | 'secondary';
+type CardVariant = 'primary' | 'secondary' | 'background' | 'surface';
 export type CardSizeType = 'small' | 'big';
 
 export interface CardProps extends StyledSystemProps {

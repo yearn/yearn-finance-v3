@@ -68,6 +68,9 @@ export const Layout: FC = ({ children }) => {
       case 'vaults':
         dispatch(VaultsActions.initiateSaveVaults());
         break;
+      case 'vault':
+        dispatch(VaultsActions.initiateSaveVaults());
+        break;
       case 'labs':
         dispatch(LabsActions.initiateLabs());
         break;

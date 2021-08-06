@@ -14,10 +14,11 @@ const StyledTokenIcon = styled.div<{ size?: TokenIconSize }>`
   }
 
   ${({ size }) => size === 'big' && `width: 4.2rem;`}
-  ${({ size }) => size === 'extraBig' && `width: 5.5rem;`}
+  ${({ size }) => size === 'xBig' && `width: 4.8rem;`}
+  ${({ size }) => size === 'xxBig' && `width: 5.5rem;`}
 `;
 
-type TokenIconSize = 'default' | 'big' | 'extraBig';
+type TokenIconSize = 'default' | 'big' | 'xBig' | 'xxBig';
 
 interface TokenIconProps {
   icon?: string;
