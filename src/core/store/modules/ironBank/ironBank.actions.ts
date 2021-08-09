@@ -113,7 +113,7 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     const tx = await ironBankService.executeTransaction({
       userAddress,
       marketAddress,
-      amount: amount.times(ONE_UNIT).toString(),
+      amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'supply',
     });
     await handleTransaction(tx);
@@ -142,7 +142,7 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     const tx = await ironBankService.executeTransaction({
       userAddress,
       marketAddress,
-      amount: amount.times(ONE_UNIT).toString(),
+      amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'borrow',
     });
     await handleTransaction(tx);
@@ -171,7 +171,7 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     const tx = await ironBankService.executeTransaction({
       userAddress,
       marketAddress,
-      amount: amount.times(ONE_UNIT).toString(),
+      amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'withdraw',
     });
     await handleTransaction(tx);
@@ -200,7 +200,7 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     const tx = await ironBankService.executeTransaction({
       userAddress,
       marketAddress,
-      amount: amount.times(ONE_UNIT).toString(),
+      amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'repay',
     });
     await handleTransaction(tx);
