@@ -10,7 +10,7 @@ import {
   IronBankUserSummary,
   Position,
 } from '@types';
-import { handleTransaction } from '@utils';
+import { handleTransaction, toBN } from '@utils';
 import { TokensActions } from '@store';
 
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
@@ -104,14 +104,16 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
       throw new Error('WALLET NOT CONNECTED');
     }
 
-    const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].address;
+    const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
+    const tokenDecimals = getState().tokens.tokensMap[underlyingTokenAddress].decimals;
+    const ONE_UNIT = toBN('10').pow(tokenDecimals);
 
     // TODO Needed checks for amount
 
     const tx = await ironBankService.executeTransaction({
       userAddress,
       marketAddress,
-      amount: amount.toString(),
+      amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'supply',
     });
     await handleTransaction(tx);
@@ -132,14 +134,15 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].address;
-
+    const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
+    const tokenDecimals = getState().tokens.tokensMap[underlyingTokenAddress].decimals;
+    const ONE_UNIT = toBN('10').pow(tokenDecimals);
     // TODO Needed checks for amount
 
     const tx = await ironBankService.executeTransaction({
       userAddress,
       marketAddress,
-      amount: amount.toString(),
+      amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'borrow',
     });
     await handleTransaction(tx);
@@ -160,14 +163,15 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].address;
-
+    const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
+    const tokenDecimals = getState().tokens.tokensMap[underlyingTokenAddress].decimals;
+    const ONE_UNIT = toBN('10').pow(tokenDecimals);
     // TODO Needed checks for amount
 
     const tx = await ironBankService.executeTransaction({
       userAddress,
       marketAddress,
-      amount: amount.toString(),
+      amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'withdraw',
     });
     await handleTransaction(tx);
@@ -188,14 +192,15 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].address;
-
+    const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
+    const tokenDecimals = getState().tokens.tokensMap[underlyingTokenAddress].decimals;
+    const ONE_UNIT = toBN('10').pow(tokenDecimals);
     // TODO Needed checks for amount
 
     const tx = await ironBankService.executeTransaction({
       userAddress,
       marketAddress,
-      amount: amount.toString(),
+      amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'repay',
     });
     await handleTransaction(tx);
