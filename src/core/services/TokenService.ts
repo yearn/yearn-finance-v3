@@ -15,6 +15,7 @@ import erc20Abi from './contracts/erc20.json';
 import { unionBy } from 'lodash';
 import { getConstants } from '../../config/constants';
 import { get, toBN, USDC_DECIMALS } from '../../utils';
+import { getConfig } from '@config';
 
 export class TokenServiceImpl implements TokenService {
   private yearnSdk: YearnSdk;
@@ -56,8 +57,13 @@ export class TokenServiceImpl implements TokenService {
   }
 
   public async getUserTokensData(address: string, tokenAddresses?: string[]): Promise<Balance[]> {
+    const { USE_MAINNET_FORK } = getConfig();
     const yearn = this.yearnSdk;
-    return await yearn.tokens.balances(address);
+    const balances = await yearn.tokens.balances(address);
+    if (USE_MAINNET_FORK) {
+      return this.getBalancesForFork(balances, address);
+    }
+    return balances;
   }
 
   public async getTokenAllowance(
@@ -124,5 +130,67 @@ export class TokenServiceImpl implements TokenService {
       symbol: 'pSLPyvBOOST-ETH',
       icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
     };
+  }
+
+  private async getBalancesForFork(balances: Balance[], userAddress: string): Promise<Balance[]> {
+    const signer = this.web3Provider.getSigner();
+    const provider = this.web3Provider.getInstanceOf('custom');
+
+    const DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
+    const daiContract = getContract(DAI, erc20Abi, signer);
+    const userDaiData = balances.find((balance) => balance.address === DAI);
+
+    const YFI = '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e';
+    const yfiContract = getContract(YFI, erc20Abi, signer);
+    const userYfiData = balances.find((balance) => balance.address === YFI);
+
+    const ETH = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+    const userEthData = balances.find((balance) => balance.address === ETH);
+
+    const [daiBalance, ethBalance, yfiBalance] = await Promise.all([
+      daiContract.balanceOf(userAddress),
+      provider.getBalance(userAddress),
+      yfiContract.balanceOf(userAddress),
+    ]);
+
+    const newBalances: Balance[] = [];
+
+    if (userDaiData) {
+      const newUserDaiData = {
+        ...userDaiData,
+        balance: daiBalance.toString(),
+        balanceUsdc: toBN(userDaiData.priceUsdc)
+          .times(daiBalance.toString())
+          .div(10 ** parseInt(userDaiData.token.decimals))
+          .toFixed(0),
+      };
+      newBalances.push(newUserDaiData);
+    }
+
+    if (userYfiData) {
+      const newUserYfiData = {
+        ...userYfiData,
+        balance: yfiBalance.toString(),
+        balanceUsdc: toBN(userYfiData.priceUsdc)
+          .times(yfiBalance.toString())
+          .div(10 ** parseInt(userYfiData.token.decimals))
+          .toFixed(0),
+      };
+      newBalances.push(newUserYfiData);
+    }
+
+    if (userEthData) {
+      const newUserEthData = {
+        ...userEthData,
+        balance: ethBalance.toString(),
+        balanceUsdc: toBN(userEthData.priceUsdc)
+          .times(ethBalance.toString())
+          .div(10 ** parseInt(userEthData.token.decimals))
+          .toFixed(0),
+      };
+      newBalances.push(newUserEthData);
+    }
+
+    return newBalances;
   }
 }
