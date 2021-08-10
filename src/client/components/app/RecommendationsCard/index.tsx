@@ -120,7 +120,7 @@ export const RecommendationsCard = ({ header, items, ...props }: Recommendations
             {item.header && <ItemHeader>{item.header}</ItemHeader>}
 
             <CenterIcon>
-              <TokenIcon symbol={item.name} icon={item.icon} size="extraBig" />
+              <TokenIcon symbol={item.name} icon={item.icon} size="xxBig" />
               {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}
             </CenterIcon>
 
