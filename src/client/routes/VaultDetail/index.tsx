@@ -117,8 +117,6 @@ export const VaultDetail = () => {
 
   const generalLoading = vaultsStatus.loading;
 
-  console.log(selectedVault);
-
   useEffect(() => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
   }, []);
