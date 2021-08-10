@@ -18,7 +18,7 @@ import {
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
-import { isAddress } from '@ethersproject/address';
+import { isValidAddress } from '../../../utils';
 
 const contentSeparation = '1.6rem';
 
@@ -75,7 +75,7 @@ export const Layout: FC = ({ children }) => {
         break;
       case 'vault':
         if (!assetAddress) break;
-        if (!isAddress(assetAddress)) {
+        if (!isValidAddress(assetAddress)) {
           dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
           history.push('/home');
           break;
@@ -136,7 +136,7 @@ export const Layout: FC = ({ children }) => {
         dispatch(VaultsActions.getUserVaultsMetadata({}));
         break;
       case 'vault':
-        if (!assetAddress || !isAddress(assetAddress)) break;
+        if (!assetAddress || !isValidAddress(assetAddress)) break;
         dispatch(VaultsActions.getUserVaultsSummary());
         dispatch(VaultsActions.getUserVaultsPositions({ vaultAddresses: [assetAddress] }));
         dispatch(VaultsActions.getUserVaultsMetadata({ vaultsAddresses: [assetAddress] }));
