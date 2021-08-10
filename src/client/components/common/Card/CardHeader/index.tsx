@@ -11,14 +11,21 @@ const Header = styled.div`
   font-weight: bold;
 `;
 
+const SubHeader = styled.div`
+  font-size: 1.4rem;
+  font-weight: 600;
+`;
+
 interface CardElementProps {
   header?: string;
+  subHeader?: string;
 }
 
-export const CardHeader: FC<CardElementProps> = ({ children, header, ...props }) => {
+export const CardHeader: FC<CardElementProps> = ({ children, header, subHeader, ...props }) => {
   return (
     <Container {...props}>
       {header && <Header>{header}</Header>}
+      {subHeader && <SubHeader>{subHeader}</SubHeader>}
       {children}
     </Container>
   );
