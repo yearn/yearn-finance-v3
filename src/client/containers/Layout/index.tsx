@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -12,11 +12,13 @@ import {
   IronBankActions,
   WalletSelectors,
   SettingsSelectors,
+  AlertsActions,
 } from '@store';
 
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
+import { isValidAddress } from '../../../utils';
 
 const contentSeparation = '1.6rem';
 
@@ -47,9 +49,12 @@ export const Layout: FC = ({ children }) => {
   const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const addressEnsName = useAppSelector(WalletSelectors.selectAddressEnsName);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
+  const history = useHistory();
 
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1];
+
+  const assetAddress: string | undefined = location.pathname.split('/')[2];
 
   useEffect(() => {
     dispatch(AppActions.initApp());
@@ -69,7 +74,14 @@ export const Layout: FC = ({ children }) => {
         dispatch(VaultsActions.initiateSaveVaults());
         break;
       case 'vault':
-        dispatch(VaultsActions.initiateSaveVaults());
+        if (!assetAddress) break;
+        if (!isValidAddress(assetAddress)) {
+          dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
+          history.push('/home');
+          break;
+        }
+        dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));
+        dispatch(VaultsActions.getVaults({ addresses: [assetAddress] }));
         break;
       case 'labs':
         dispatch(LabsActions.initiateLabs());
@@ -122,6 +134,12 @@ export const Layout: FC = ({ children }) => {
         dispatch(VaultsActions.getUserVaultsSummary());
         dispatch(VaultsActions.getUserVaultsPositions({}));
         dispatch(VaultsActions.getUserVaultsMetadata({}));
+        break;
+      case 'vault':
+        if (!assetAddress || !isValidAddress(assetAddress)) break;
+        dispatch(VaultsActions.getUserVaultsSummary());
+        dispatch(VaultsActions.getUserVaultsPositions({ vaultAddresses: [assetAddress] }));
+        dispatch(VaultsActions.getUserVaultsMetadata({ vaultsAddresses: [assetAddress] }));
         break;
       case 'labs':
         dispatch(LabsActions.getUserLabsPositions({}));

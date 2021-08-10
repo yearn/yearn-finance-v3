@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { VaultsActions, VaultsSelectors } from '@store';
+import { TokensSelectors, VaultsSelectors } from '@store';
 import { useAppDispatch, useAppSelector } from '@hooks';
 import { formatPercent, normalizeUsdc } from '@src/utils';
 
@@ -10,6 +9,7 @@ import { TokenIcon, ViewContainer } from '@components/app';
 // import { DepositTx, WithdrawTx } from '@components/app/Transactions';
 import { Card, CardContent, CardHeader, SpinnerLoading, Tab, TabPanel, Tabs, Text } from '@components/common';
 import { LineChart } from '@components/common/Charts';
+import { useState } from 'react';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -108,18 +108,13 @@ export interface VaultDetailRouteParams {
 
 export const VaultDetail = () => {
   // const { t } = useAppTranslation('common');
-  const dispatch = useAppDispatch();
-  const { vaultAddress } = useParams<VaultDetailRouteParams>();
-  const [selectedTab, setSelectedTab] = React.useState('deposit');
+  const [selectedTab, setSelectedTab] = useState('deposit');
 
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
+  const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
 
-  const generalLoading = vaultsStatus.loading;
-
-  useEffect(() => {
-    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
-  }, []);
+  const generalLoading = vaultsStatus.loading || tokensStatus.loading;
 
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
