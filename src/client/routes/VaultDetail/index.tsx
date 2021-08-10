@@ -117,10 +117,6 @@ export const VaultDetail = () => {
 
   const generalLoading = vaultsStatus.loading;
 
-  useEffect(() => {
-    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
-  }, []);
-
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
   };

@@ -54,7 +54,7 @@ export const Layout: FC = ({ children }) => {
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1];
 
-  const assetAddress: string | undefined = location.pathname.toLowerCase().split('/')[2];
+  const assetAddress: string | undefined = location.pathname.split('/')[2];
 
   useEffect(() => {
     dispatch(AppActions.initApp());
