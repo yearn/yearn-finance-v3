@@ -29,6 +29,9 @@ export interface TokenView {
   balance: string;
   balanceUsdc: string;
   priceUsdc: string;
+  categories: string[];
+  description: string;
+  website: string;
   allowancesMap: { [tokenAddress: string]: string };
 }
 
