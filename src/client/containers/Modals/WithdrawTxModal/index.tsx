@@ -12,7 +12,7 @@ export interface WithdrawTxModalProps {
 export const WithdrawTxModal: FC<WithdrawTxModalProps> = ({ onClose, ...props }) => {
   return (
     <StyledWithdrawTxModal {...props}>
-      <WithdrawTx onClose={onClose} />
+      <WithdrawTx header="Withdraw" onClose={onClose} />
     </StyledWithdrawTxModal>
   );
 };

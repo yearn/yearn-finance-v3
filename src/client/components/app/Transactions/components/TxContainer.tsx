@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Icon, CloseIcon } from '@components/common';
 
 export interface TxContainerProps {
-  header: string;
+  header?: string;
   onClose?: () => void;
 }
 
@@ -80,10 +80,12 @@ export const TxContainer: FC<TxContainerProps> = ({ header, onClose, children, .
 
   return (
     <StyledTxContainer {...props}>
-      <TxHeader>
-        <TxHeaderTitle>{header}</TxHeaderTitle>
-        <TxHeaderActions>{closeButton}</TxHeaderActions>
-      </TxHeader>
+      {(header || closeButton) && (
+        <TxHeader>
+          {header && <TxHeaderTitle>{header}</TxHeaderTitle>}
+          <TxHeaderActions>{closeButton}</TxHeaderActions>
+        </TxHeader>
+      )}
 
       <TxContainerContent>{children}</TxContainerContent>
     </StyledTxContainer>

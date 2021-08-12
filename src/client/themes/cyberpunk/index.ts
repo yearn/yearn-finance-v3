@@ -45,16 +45,16 @@ const cyberpunkTheme: DefaultTheme = {
     },
 
     txModalColors: {
-      background: '#191919',
-      backgroundVariant: '#000000',
-      onBackgroundVariant: '#202020',
-      onBackgroundVariantColor: '#555555',
+      background: '#3D305F',
+      backgroundVariant: '#392850',
+      onBackgroundVariant: '#523C6E',
+      onBackgroundVariantColor: '#BB6FA1',
       primary: '#00A3FF',
       loading: '#FFA800',
       error: '#FF005E',
       success: '#C6E11E',
-      text: '#888888',
-      textContrast: '#FFFFFF',
+      text: '#D35290',
+      textContrast: '#FBD282',
     },
   },
 };

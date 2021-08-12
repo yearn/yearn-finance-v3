@@ -18,10 +18,11 @@ import { Transaction } from './Transaction';
 import { useDebounce } from '../../../hooks/useDebounce';
 
 export interface DepositTxProps {
+  header?: string;
   onClose?: () => void;
 }
 
-export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) => {
+export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...props }) => {
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [allowVaultSelect, setAllowVaultSelect] = useState(false);
@@ -204,7 +205,7 @@ export const DepositTx: FC<DepositTxProps> = ({ onClose, children, ...props }) =
 
   return (
     <Transaction
-      transactionLabel="Invest"
+      transactionLabel={header}
       transactionCompleted={txCompleted}
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
