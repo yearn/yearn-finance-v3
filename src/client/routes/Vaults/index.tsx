@@ -162,13 +162,13 @@ export const Vaults = () => {
           <Row>
             <StyledRecommendationsCard
               header="Recommendations"
-              items={recommendations.map(({ displayName, displayIcon, apyData }) => ({
+              items={recommendations.map(({ displayName, displayIcon, apyData, address }) => ({
                 // header: 'Vault',
                 icon: displayIcon,
                 name: displayName,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
-                // onAction: () => history.push(`/vault/${address}`),
+                onAction: () => history.push(`/vault/${address}`),
               }))}
             />
 

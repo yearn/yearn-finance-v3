@@ -271,7 +271,7 @@ export const Labs = () => {
                 name: name,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
-                // onAction: () => history.push(`/vault/${address}`),
+                onAction: () => history.push(`/vault/${address}`),
               }))}
             />
 
