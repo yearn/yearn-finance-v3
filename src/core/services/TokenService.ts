@@ -14,7 +14,7 @@ import { getContract } from '@frameworks/ethers';
 import erc20Abi from './contracts/erc20.json';
 import { unionBy } from 'lodash';
 import { getConstants } from '../../config/constants';
-import { get, toBN, USDC_DECIMALS } from '../../utils';
+import { get, getUniqueAndCombine, toBN, USDC_DECIMALS } from '../../utils';
 import { getConfig } from '@config';
 
 export class TokenServiceImpl implements TokenService {
@@ -47,7 +47,7 @@ export class TokenServiceImpl implements TokenService {
 
     const tokens = unionBy(vaultsTokens, ironBankTokens, 'address');
     tokens.push(...labsTokens);
-    return unionBy(zapperTokens, tokens, 'address');
+    return getUniqueAndCombine(tokens, zapperTokens, 'address');
   }
 
   public async getTokensDynamicData(addresses: string[]): Promise<TokenDynamicData[]> {

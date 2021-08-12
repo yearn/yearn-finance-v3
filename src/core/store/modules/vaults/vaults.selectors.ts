@@ -259,6 +259,9 @@ function createVault(props: CreateVaultProps) {
       balance: userTokenData?.balance ?? '0',
       balanceUsdc: userTokenData?.balanceUsdc ?? '0',
       priceUsdc: tokenData?.priceUsdc ?? '0',
+      categories: tokenData?.metadata?.categories ?? [],
+      description: tokenData?.metadata?.description ?? '',
+      website: tokenData?.metadata?.website ?? '',
       allowancesMap: tokenAllowancesMap,
     },
   };

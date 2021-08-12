@@ -32,6 +32,9 @@ const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (to
       balanceUsdc: userTokenData?.balanceUsdc ?? '0',
       allowancesMap: allowancesMap,
       priceUsdc: userTokenData?.priceUsdc ?? '0',
+      categories: tokenData?.metadata?.categories ?? [],
+      description: tokenData?.metadata?.description ?? '',
+      website: tokenData?.metadata?.website ?? '',
     };
   });
   return tokens;
@@ -91,8 +94,11 @@ const selectToken = createSelector([selectTokensMap, selectTokensUser], (tokensM
         icon: tokenData?.icon,
         balance: userTokenData?.balance ?? '0',
         balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-        allowancesMap: allowancesMap,
         priceUsdc: tokenData?.priceUsdc ?? '0',
+        categories: tokenData?.metadata?.categories ?? [],
+        description: tokenData?.metadata?.description ?? '',
+        website: tokenData?.metadata?.website ?? '',
+        allowancesMap: allowancesMap,
       };
     }
   )
