@@ -54,7 +54,7 @@ const lightTheme: DefaultTheme = {
       loading: '#FFA800',
       error: '#FF005E',
       success: '#A8C300',
-      text: '#888888',
+      text: '#000000',
       textContrast: '#000000',
     },
   },
