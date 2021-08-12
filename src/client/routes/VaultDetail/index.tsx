@@ -159,28 +159,25 @@ export const VaultDetail = () => {
                 </InfoValueRow>
                 <InfoValueRow>
                   <span>Type</span>
-                  <StyledText ellipsis>Stablecoin</StyledText>
+                  <StyledText ellipsis>{selectedVault.token.categories}</StyledText>
                 </InfoValueRow>
                 <InfoValueRow>
                   <span>Website</span>
-                  <StyledText ellipsis>https://www.google.com</StyledText>
+                  <StyledText ellipsis>{selectedVault.token.website}</StyledText>
                 </InfoValueRow>
               </TokenInfo>
             </OverviewTokenInfo>
 
             <OverviewInfo variant="surface" cardSize="small">
               <StyledCardHeader subHeader="About" />
-              <StyledCardContent>
-                USDC is a fully collteralized US dollar stable coin. It’s the bridge between dollars and trading on
-                cryptocurrency exchange.
-              </StyledCardContent>
+              <StyledCardContent>{selectedVault.token.description}</StyledCardContent>
             </OverviewInfo>
 
             <OverviewInfo variant="surface" cardSize="small">
               <StyledCardHeader subHeader="Strategies" />
               <StyledCardContent>
-                This vault supplies the USDC on Compound and borrows an additional amount of USDC to maximize COMP
-                farming. ( 1 of 9 )
+                This vault supplies the {selectedVault.displayName} on Compound and borrows an additional amount of{' '}
+                {selectedVault.displayName} to maximize COMP farming. ( 1 of 9 )
               </StyledCardContent>
             </OverviewInfo>
           </VaultOverview>
