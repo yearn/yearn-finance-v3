@@ -48,6 +48,7 @@ const lightTheme: DefaultTheme = {
       background: '#FFFFFF',
       backgroundVariant: '#E8E8EA',
       onBackgroundVariant: '#FFFFFF',
+      onBackgroundVariantB: '#F0F0F0',
       onBackgroundVariantColor: '#555555',
       primary: '#00A3FF',
       loading: '#FFA800',

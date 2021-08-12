@@ -48,6 +48,7 @@ const darkTheme: DefaultTheme = {
       background: '#191919',
       backgroundVariant: '#000000',
       onBackgroundVariant: '#202020',
+      onBackgroundVariantB: '#202020',
       onBackgroundVariantColor: '#555555',
       primary: '#00A3FF',
       loading: '#FFA800',
