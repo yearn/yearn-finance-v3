@@ -47,8 +47,10 @@ export class BlocknativeWalletImpl implements Wallet {
     const { BLOCKNATIVE_KEY, FORTMATIC_KEY, PORTIS_KEY, WEB3_PROVIDER_HTTPS } = getConfig();
 
     const rpcUrl = WEB3_PROVIDER_HTTPS;
+    const appName = 'Yearn Finance';
 
     const wallets = [
+      { walletName: 'detectedwallet' },
       { walletName: 'metamask' },
       {
         walletName: 'walletConnect',
@@ -70,7 +72,7 @@ export class BlocknativeWalletImpl implements Wallet {
       { walletName: 'status' },
       {
         walletName: 'lattice',
-        appName: 'Yearn Finance',
+        appName,
         rpcUrl,
       },
       { walletName: 'walletLink', rpcUrl },
@@ -86,6 +88,12 @@ export class BlocknativeWalletImpl implements Wallet {
       { walletName: 'operaTouch' },
       { walletName: 'imToken', rpcUrl },
       { walletName: 'meetone' },
+      { walletName: 'gnosis' },
+      {
+        walletName: 'keystone',
+        rpcUrl,
+        appName,
+      },
     ];
 
     const walletCheck = [{ checkName: 'derivationPath' }, { checkName: 'connect' }, { checkName: 'accounts' }];
