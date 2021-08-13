@@ -33,7 +33,7 @@ interface Asset {
 }
 
 interface TransactionProps {
-  transactionLabel: string;
+  transactionLabel?: string;
   transactionCompleted: boolean;
   transactionCompletedLabel: string;
   onTransactionCompletedDismissed: () => void;

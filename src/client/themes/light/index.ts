@@ -30,7 +30,7 @@ const lightTheme: DefaultTheme = {
     onSurfaceSH1: '#888888',
     onSurfaceSH1Hover: '#000000',
 
-    upTrend: '#C6E11E',
+    upTrend: '#A8C300',
     downTrend: '#FF005E',
 
     vaultActionButton: {
@@ -45,16 +45,17 @@ const lightTheme: DefaultTheme = {
     },
 
     txModalColors: {
-      background: '#191919',
-      backgroundVariant: '#000000',
-      onBackgroundVariant: '#202020',
+      background: '#FFFFFF',
+      backgroundVariant: '#E8E8EA',
+      onBackgroundVariant: '#FFFFFF',
+      onBackgroundVariantB: '#F0F0F0',
       onBackgroundVariantColor: '#555555',
       primary: '#00A3FF',
       loading: '#FFA800',
       error: '#FF005E',
-      success: '#C6E11E',
-      text: '#888888',
-      textContrast: '#FFFFFF',
+      success: '#A8C300',
+      text: '#000000',
+      textContrast: '#000000',
     },
   },
 };

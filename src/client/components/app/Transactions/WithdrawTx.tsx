@@ -15,10 +15,11 @@ import { getConfig } from '@config';
 
 import { Transaction } from './Transaction';
 export interface WithdrawTxProps {
+  header?: string;
   onClose?: () => void;
 }
 
-export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props }) => {
+export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...props }) => {
   const { CONTRACT_ADDRESSES } = getConfig();
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
@@ -170,7 +171,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ onClose, children, ...props })
 
   return (
     <Transaction
-      transactionLabel="Withdraw"
+      transactionLabel={header}
       transactionCompleted={txCompleted}
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}

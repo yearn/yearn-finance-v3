@@ -21,7 +21,7 @@ export const StyledTxActionButton = styled(Button)<{ contrast?: boolean; success
   ${(props) =>
     props.disabled &&
     `
-    background-color: ${props.theme.colors.txModalColors.onBackgroundVariant};
+    background-color: ${props.theme.colors.txModalColors.onBackgroundVariantB};
     color: ${props.theme.colors.txModalColors.onBackgroundVariantColor};
   `}
 

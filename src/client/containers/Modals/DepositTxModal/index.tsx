@@ -12,7 +12,7 @@ export interface DepositTxModalProps {
 export const DepositTxModal: FC<DepositTxModalProps> = ({ onClose, ...props }) => {
   return (
     <StyledDepositTxModal {...props}>
-      <DepositTx onClose={onClose} />
+      <DepositTx header="Invest" onClose={onClose} />
     </StyledDepositTxModal>
   );
 };

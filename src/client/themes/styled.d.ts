@@ -109,6 +109,7 @@ declare module 'styled-components' {
         background: string;
         backgroundVariant: string;
         onBackgroundVariant: string;
+        onBackgroundVariantB: string;
         onBackgroundVariantColor: string;
         primary: string;
         loading: string;

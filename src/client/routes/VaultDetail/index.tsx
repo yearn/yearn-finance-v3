@@ -1,12 +1,11 @@
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { TokensSelectors, VaultsSelectors } from '@store';
-import { useAppDispatch, useAppSelector } from '@hooks';
+import { useAppSelector } from '@hooks';
 import { formatPercent, normalizeUsdc } from '@src/utils';
 
 import { TokenIcon, ViewContainer } from '@components/app';
-// import { DepositTx, WithdrawTx } from '@components/app/Transactions';
+import { DepositTx, WithdrawTx } from '@components/app/Transactions';
 import { Card, CardContent, CardHeader, SpinnerLoading, Tab, TabPanel, Tabs, Text } from '@components/common';
 import { LineChart } from '@components/common/Charts';
 import { useState } from 'react';
@@ -186,15 +185,15 @@ export const VaultDetail = () => {
             <StyledCardHeader header="Transactions" />
 
             <ActionsTabs value={selectedTab} onChange={handleTabChange}>
-              <Tab value="deposit">Deposit</Tab>
+              <Tab value="deposit">Invest</Tab>
               <Tab value="withdraw">Withdraw</Tab>
             </ActionsTabs>
 
             <StyledTabPanel value="deposit" tabValue={selectedTab}>
-              {/* <DepositTx /> */}
+              <DepositTx />
             </StyledTabPanel>
             <StyledTabPanel value="withdraw" tabValue={selectedTab}>
-              {/* <WithdrawTx /> */}
+              <WithdrawTx />
             </StyledTabPanel>
           </VaultActions>
 
