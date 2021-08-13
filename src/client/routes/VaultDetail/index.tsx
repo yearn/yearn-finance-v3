@@ -126,6 +126,9 @@ export const VaultDetail = () => {
       data: [
         { x: '2019-05-01', y: 2 },
         { x: '2019-06-01', y: 7 },
+        { x: '2019-06-15', y: 17 },
+        { x: '2019-06-23', y: 1 },
+        { x: '2019-08-01', y: 42 },
         { x: '2019-09-01', y: 1 },
       ],
     },
@@ -167,10 +170,12 @@ export const VaultDetail = () => {
               </TokenInfo>
             </OverviewTokenInfo>
 
-            <OverviewInfo variant="surface" cardSize="small">
-              <StyledCardHeader subHeader="About" />
-              <StyledCardContent>{selectedVault.token.description}</StyledCardContent>
-            </OverviewInfo>
+            {selectedVault.token.description && (
+              <OverviewInfo variant="surface" cardSize="small">
+                <StyledCardHeader subHeader="About" />
+                <StyledCardContent>{selectedVault.token.description}</StyledCardContent>
+              </OverviewInfo>
+            )}
 
             <OverviewInfo variant="surface" cardSize="small">
               <StyledCardHeader subHeader="Strategies" />

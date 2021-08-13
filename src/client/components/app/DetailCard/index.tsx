@@ -39,9 +39,9 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean }>`
   // grid-template-columns: 6rem 16.8rem 16.8rem 16.8rem 16.8rem 1fr; */
 
   // TODO Update theme to support change on button and font color and support this code
-  // &:hover > ${StyledCardElement} {
-  //   background-color: ${({ theme }) => theme.colors.selectionBar};
-  // }
+  /* &:hover > ${StyledCardElement} {
+    background-color: ${({ theme }) => theme.colors.selectionBar};
+  } */
   padding: 0.6rem 0;
   ${({ wrap }) => wrap && `flex-wrap: wrap;`};
 `;

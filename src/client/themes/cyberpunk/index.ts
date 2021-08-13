@@ -37,6 +37,11 @@ const cyberpunkTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#BB6FA1',
       color: '#BB6FA1',
+      // hovered: {
+      //   background: 'transparent',
+      //   borderColor: '#BB6FA1',
+      //   color: '#BB6FA1',
+      // },
     },
 
     walletButton: {
