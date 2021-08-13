@@ -2,9 +2,14 @@ import { notify } from '@frameworks/blocknative';
 
 import { TransactionResponse, TransactionReceipt } from '@types';
 
-export const handleTransaction = async (tx: TransactionResponse): Promise<TransactionReceipt> => {
+export const handleTransaction = async (
+  tx: TransactionResponse,
+  renderNotification = true
+): Promise<TransactionReceipt> => {
   try {
-    notify.hash(tx.hash);
+    if (renderNotification) {
+      notify.hash(tx.hash);
+    }
     const receipt = await tx.wait();
     return receipt;
   } catch (error) {
@@ -12,8 +17,7 @@ export const handleTransaction = async (tx: TransactionResponse): Promise<Transa
       if (error.cancelled) {
         throw new Error('Transaction Cancelled');
       } else {
-        // notify.unsubscribe(tx.hash); TODO: VERIFY IF NOTIFICATION CHANGES AUTOMATICALLY
-        return await handleTransaction(error.replacement);
+        return await handleTransaction(error.replacement, false);
       }
     }
 
