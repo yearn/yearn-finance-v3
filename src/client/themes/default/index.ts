@@ -25,7 +25,7 @@ const sharedTheme: SharedTheme = {
     desktopL: 2560,
   },
   globalFont: '"SF Pro Display", sans-serif',
-  globalMaxWidth: '102rem',
+  globalMaxWidth: '112rem',
   globalRadius: '0.8rem',
 
   sideBar: {

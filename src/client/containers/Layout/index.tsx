@@ -24,6 +24,7 @@ const contentSeparation = '1.6rem';
 
 const StyledLayout = styled.div`
   display: flex;
+  justify-content: center;
   flex: 1;
   padding: ${({ theme }) => theme.layoutPadding};
 `;
@@ -32,7 +33,8 @@ const Content = styled.div<{ collapsedSidebar?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  flex: 1;
+  max-width: ${({ theme }) => theme.globalMaxWidth};
+  // flex: 1;
   min-height: 100%;
   transition: padding-left ${({ theme }) => theme.sideBar.animation};
 
