@@ -61,7 +61,7 @@ export const Home = () => {
       <HeaderCard
         header="Dashboard"
         items={[
-          { header: 'Net Worth', content: `${normalizeUsdc(netWorth)}` },
+          { header: 'Total Net Worth', content: `${normalizeUsdc(netWorth)}` },
           { header: 'Vaults Earnings', content: `${normalizeUsdc(vaultsSummary.totalEarnings)}` },
           { header: 'Vaults Est. Yearly Yield', content: `${normalizeUsdc(vaultsSummary.estYearlyYeild)}` },
         ]}
