@@ -68,9 +68,7 @@ export const Layout: FC = ({ children }) => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
     switch (path) {
       case 'home':
-        // TODO init lab
-
-        // dispatch(LabsActions.initiateLabs());
+        dispatch(LabsActions.initiateLabs());
         break;
       case 'wallet':
         dispatch(VaultsActions.initiateSaveVaults());
@@ -124,7 +122,8 @@ export const Layout: FC = ({ children }) => {
     dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
     switch (path) {
       case 'home':
-        // TODO init lab
+        dispatch(LabsActions.getUserLabsPositions({}));
+
         dispatch(IronBankActions.getIronBankSummary()); // use only this when lens summary calculation fixed
         dispatch(IronBankActions.getUserMarketsPositions({})); // remove this when lens summary calculation fixed
         dispatch(IronBankActions.getUserMarketsMetadata({})); // remove this when lens summary calculation fixed
