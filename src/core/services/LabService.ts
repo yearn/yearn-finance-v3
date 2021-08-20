@@ -83,8 +83,7 @@ export class LabServiceImpl implements LabService {
             type: backscratcherData.apy.type,
             description: '',
           },
-          icon:
-            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
+          icon: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
         },
       };
     } catch (error) {
@@ -131,8 +130,7 @@ export class LabServiceImpl implements LabService {
             type: yvBoostData.apy.type,
             description: '',
           },
-          icon:
-            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+          icon: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
         },
       };
     } catch (error) {

@@ -38,20 +38,20 @@
   {
     "constant": false,
     "inputs": [
-  {
-    "internalType": "address",
-    "name": "cTokenAddress",
-    "type": "address"
-  }
-  ],
+      {
+        "internalType": "address",
+        "name": "cTokenAddress",
+        "type": "address"
+      }
+    ],
     "name": "exitMarket",
     "outputs": [
-  {
-    "internalType": "uint256",
-    "name": "",
-    "type": "uint256"
-  }
-  ],
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
