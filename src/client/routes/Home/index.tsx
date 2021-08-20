@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import { useAppSelector } from '@hooks';
-import { TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
+import { IronBankSelectors, LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
 import { SummaryCard, InfoCard, ViewContainer, NoWalletCard } from '@components/app';
 import { Text } from '@components/common';
 
@@ -45,20 +45,25 @@ const StyledSummaryCard = styled(SummaryCard)`
 export const Home = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
-  const { totalDeposits, totalEarnings, estYearlyYeild, apy } = useAppSelector(VaultsSelectors.selectSummaryData);
-  // const { supplyBalance, borrowUtilizationRatio } = useAppSelector(IronBankSelectors.selectSummaryData);
+  const vaultsSummary = useAppSelector(VaultsSelectors.selectSummaryData);
+  const labsSummary = useAppSelector(LabsSelectors.selectSummaryData);
+  const ibSummary = useAppSelector(IronBankSelectors.selectSummaryData);
   const walletSummary = useAppSelector(TokensSelectors.selectSummaryData);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
 
-  const netWorth = toBN(totalDeposits).plus(walletSummary.totalBalance).toString();
+  const netWorth = toBN(vaultsSummary.totalDeposits)
+    .plus(walletSummary.totalBalance)
+    .plus(labsSummary.totalDeposits)
+    .plus(ibSummary.supplyBalanceUsdc)
+    .toString();
   return (
     <StyledViewContainer>
       <HeaderCard
         header="Dashboard"
         items={[
           { header: 'Net Worth', content: `${normalizeUsdc(netWorth)}` },
-          { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
-          { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
+          { header: 'Vaults Earnings', content: `${normalizeUsdc(vaultsSummary.totalEarnings)}` },
+          { header: 'Vaults Est. Yearly Yield', content: `${normalizeUsdc(vaultsSummary.estYearlyYeild)}` },
         ]}
         variant="secondary"
         cardSize="small"
@@ -103,20 +108,26 @@ export const Home = () => {
           <StyledSummaryCard
             header="Vaults"
             items={[
-              { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
-              { header: 'APY', content: formatPercent(apy, 2) }, // TODO check if normalizePercent is needed.
+              { header: 'Holdings', content: `${normalizeUsdc(vaultsSummary.totalDeposits)}` },
+              { header: 'APY', content: formatPercent(vaultsSummary.apy, 2) }, // TODO check if normalizePercent is needed.
             ]}
             cardSize="small"
           />
 
-          {/* <StyledSummaryCard
-        header="Iron Bank"
-        items={[
-          { header: 'Supply Balance', content: `${normalizeUsdc(supplyBalance)}` },
-          { header: 'Borrow Limit Used', content: `${normalizePercent(borrowUtilizationRatio, 2)}` },
-        ]}
-        cardSize="small"
-      /> */}
+          <StyledSummaryCard
+            header="Labs"
+            items={[{ header: 'Holdings', content: `${normalizeUsdc(labsSummary.totalDeposits)}` }]}
+            cardSize="small"
+          />
+
+          <StyledSummaryCard
+            header="Iron Bank"
+            items={[
+              { header: 'Supplied', content: `${normalizeUsdc(ibSummary.supplyBalanceUsdc)}` },
+              { header: 'Borrow Limit Used', content: `${normalizePercent(ibSummary.borrowUtilizationRatio, 2)}` },
+            ]}
+            cardSize="small"
+          />
         </>
       )}
 
