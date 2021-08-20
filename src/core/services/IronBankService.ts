@@ -11,6 +11,7 @@ import {
   IronBankGenericGetUserDataProps,
   IronBankTransactionProps,
   TransactionResponse,
+  TransactionService,
   Web3Provider,
   Config,
 } from '@types';
@@ -18,11 +19,23 @@ import ironBankMarketAbi from './contracts/ironBankMarket.json';
 import ironBankComptrollerAbi from './contracts/ironBankComptroller.json';
 
 export class IronBankServiceImpl implements IronBankService {
+  private transactionService: TransactionService;
   private yearnSdk: YearnSdk;
   private web3Provider: Web3Provider;
   private config: Config;
 
-  constructor({ web3Provider, yearnSdk, config }: { web3Provider: Web3Provider; yearnSdk: YearnSdk; config: Config }) {
+  constructor({
+    transactionService,
+    web3Provider,
+    yearnSdk,
+    config,
+  }: {
+    transactionService: TransactionService;
+    web3Provider: Web3Provider;
+    yearnSdk: YearnSdk;
+    config: Config;
+  }) {
+    this.transactionService = transactionService;
     this.web3Provider = web3Provider;
     this.yearnSdk = yearnSdk;
     this.config = config;
@@ -70,13 +83,13 @@ export class IronBankServiceImpl implements IronBankService {
 
     switch (action) {
       case 'supply':
-        return await ironBankMarketContract.mint(amount);
+        return await this.transactionService.execute({ fn: ironBankMarketContract.mint, args: [amount] });
       case 'withdraw':
-        return await ironBankMarketContract.redeemUnderlying(amount);
+        return await this.transactionService.execute({ fn: ironBankMarketContract.redeemUnderlying, args: [amount] });
       case 'borrow':
-        return await ironBankMarketContract.borrow(amount);
+        return await this.transactionService.execute({ fn: ironBankMarketContract.borrow, args: [amount] });
       case 'repay':
-        return await ironBankMarketContract.repayBorrow(amount);
+        return await this.transactionService.execute({ fn: ironBankMarketContract.repayBorrow, args: [amount] });
     }
   }
 
@@ -87,10 +100,16 @@ export class IronBankServiceImpl implements IronBankService {
     const ironBankComptrollerContract = getContract(ironBankComptroller, ironBankComptrollerAbi, provider);
     switch (actionType) {
       case 'enterMarket':
-        return await ironBankComptrollerContract.enterMarkets([marketAddress]);
+        return await this.transactionService.execute({
+          fn: ironBankComptrollerContract.enterMarkets,
+          args: [[marketAddress]],
+        });
 
       case 'exitMarket':
-        return await ironBankComptrollerContract.exitMarket(marketAddress);
+        return await this.transactionService.execute({
+          fn: ironBankComptrollerContract.exitMarket,
+          args: [marketAddress],
+        });
     }
   }
 }

@@ -14,11 +14,11 @@ export class GasServiceImpl implements GasService {
 
   public async getGasFees(): Promise<GasFees> {
     const response = await get(this.GAS_FEES_API, { headers: this.headers });
-    const { gasPrice, maxFeePerGas, maxPriorityFeePerGas } = response.data.blockPrices
+    const { price, maxFeePerGas, maxPriorityFeePerGas } = response.data.blockPrices
       .shift()
       .estimatedPrices.find(({ confidence }: { confidence: number }) => confidence === this.DEFAULT_CONFIDENCE_LEVEL);
     return {
-      gasPrice: toWei(gasPrice, GWEI),
+      gasPrice: toWei(price, GWEI),
       maxFeePerGas: toWei(maxFeePerGas, GWEI),
       maxPriorityFeePerGas: toWei(maxPriorityFeePerGas, GWEI),
     };

@@ -18,17 +18,24 @@ export class TransactionServiceImpl implements TransactionService {
     }
 
     try {
-      const tx = await fn(args, {
+      const txOverrides = {
         maxFeePerGas: gasFees.maxFeePerGas,
         maxPriorityFeePerGas: gasFees.maxPriorityFeePerGas,
         ...overrides,
-      });
+      };
+      const txArgs = args ? [...args, txOverrides] : [txOverrides];
+      const tx = await fn(...txArgs);
       return tx;
     } catch (error) {
       // Retry as a legacy tx, for specific error in metamask v10 + ledger transactions
       // Metamask RPC Error: Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559
       if (error.code === -32602) {
-        const tx = await fn(args, { gasPrice: gasFees.gasPrice, ...overrides });
+        const txOverrides = {
+          gasPrice: gasFees.gasPrice,
+          ...overrides,
+        };
+        const txArgs = args ? [...args, txOverrides] : [txOverrides];
+        const tx = await fn(...txArgs);
         return tx;
       }
 

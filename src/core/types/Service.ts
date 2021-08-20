@@ -192,8 +192,8 @@ export interface TransactionService {
 
 export interface ExecuteTransactionProps {
   fn: ContractFunction;
-  args: Array<any>;
-  overrides: Overrides;
+  args?: Array<any>;
+  overrides?: Overrides;
 }
 
 type ContractFunction = (...args: Array<any>) => Promise<TransactionResponse>;
