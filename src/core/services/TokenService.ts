@@ -9,6 +9,7 @@ import {
   Integer,
   Config,
   TransactionResponse,
+  TransactionService,
 } from '@types';
 import { getContract } from '@frameworks/ethers';
 import erc20Abi from './contracts/erc20.json';
@@ -18,11 +19,23 @@ import { get, getUniqueAndCombine, toBN, USDC_DECIMALS } from '../../utils';
 import { getConfig } from '@config';
 
 export class TokenServiceImpl implements TokenService {
+  private transactionService: TransactionService;
   private yearnSdk: YearnSdk;
   private web3Provider: Web3Provider;
   private config: Config;
 
-  constructor({ yearnSdk, web3Provider, config }: { web3Provider: Web3Provider; yearnSdk: YearnSdk; config: Config }) {
+  constructor({
+    transactionService,
+    yearnSdk,
+    web3Provider,
+    config,
+  }: {
+    transactionService: TransactionService;
+    web3Provider: Web3Provider;
+    yearnSdk: YearnSdk;
+    config: Config;
+  }) {
+    this.transactionService = transactionService;
     this.yearnSdk = yearnSdk;
     this.web3Provider = web3Provider;
     this.config = config;
@@ -84,7 +97,7 @@ export class TokenServiceImpl implements TokenService {
     const { tokenAddress, spenderAddress, amount } = props;
     const signer = this.web3Provider.getSigner();
     const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
-    return await erc20Contract.approve(spenderAddress, amount);
+    return await this.transactionService.execute({ fn: erc20Contract.approve, args: [spenderAddress, amount] });
   }
 
   public async getLabsTokens(): Promise<Token[]> {

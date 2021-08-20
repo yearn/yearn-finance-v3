@@ -9,6 +9,8 @@ import {
   TokenService,
   IronBankService,
   LabService,
+  GasService,
+  TransactionService,
   SubscriptionService,
 } from '@types';
 
@@ -29,6 +31,8 @@ export interface ServiceContainer {
   tokenService: TokenService;
   ironBankService: IronBankService;
   labService: LabService;
+  gasService: GasService;
+  transactionService: TransactionService;
   subscriptionService: SubscriptionService;
 }
 

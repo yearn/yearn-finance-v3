@@ -15,6 +15,7 @@ import {
   StakeProps,
   ClaimProps,
   TransactionResponse,
+  TransactionService,
   YearnSdk,
 } from '@types';
 import { toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress } from '@utils';
@@ -25,11 +26,23 @@ import pickleJarAbi from './contracts/pickleJar.json';
 import pickleGaugeAbi from './contracts/pickleGauge.json';
 
 export class LabServiceImpl implements LabService {
+  private transactionService: TransactionService;
   private yearnSdk: YearnSdk;
   private web3Provider: Web3Provider;
   private config: Config;
 
-  constructor({ web3Provider, yearnSdk, config }: { web3Provider: Web3Provider; yearnSdk: YearnSdk; config: Config }) {
+  constructor({
+    transactionService,
+    web3Provider,
+    yearnSdk,
+    config,
+  }: {
+    transactionService: TransactionService;
+    web3Provider: Web3Provider;
+    yearnSdk: YearnSdk;
+    config: Config;
+  }) {
+    this.transactionService = transactionService;
     this.web3Provider = web3Provider;
     this.yearnSdk = yearnSdk;
     this.config = config;
@@ -83,8 +96,7 @@ export class LabServiceImpl implements LabService {
             type: backscratcherData.apy.type,
             description: '',
           },
-          icon:
-            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
+          icon: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
         },
       };
     } catch (error) {
@@ -131,8 +143,7 @@ export class LabServiceImpl implements LabService {
             type: yvBoostData.apy.type,
             description: '',
           },
-          icon:
-            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+          icon: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
         },
       };
     } catch (error) {
@@ -425,7 +436,7 @@ export class LabServiceImpl implements LabService {
       this.getStakingContractAbi(vaultAddress),
       provider
     );
-    return await stakeContract.deposit(amount);
+    return await this.transactionService.execute({ fn: stakeContract.deposit, args: [amount] });
   }
 
   public async lock(props: StakeProps): Promise<TransactionResponse> {
@@ -433,7 +444,7 @@ export class LabServiceImpl implements LabService {
 
     const provider = this.web3Provider.getSigner();
     const lockContract = getContract(vaultAddress, backscratcherAbi, provider);
-    return await lockContract.deposit(amount);
+    return await this.transactionService.execute({ fn: lockContract.deposit, args: [amount] });
   }
 
   public async claim(props: ClaimProps): Promise<TransactionResponse> {
@@ -442,7 +453,7 @@ export class LabServiceImpl implements LabService {
 
     const provider = this.web3Provider.getSigner();
     const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
-    return await backscratcherContract.claim();
+    return await this.transactionService.execute({ fn: backscratcherContract.claim });
   }
 
   public async reinvest(props: ClaimProps): Promise<TransactionResponse> {
@@ -451,7 +462,7 @@ export class LabServiceImpl implements LabService {
 
     const provider = this.web3Provider.getSigner();
     const y3CrvBackZapperContract = getContract(y3CrvBackZapper, y3CrvBackZapperAbi, provider);
-    return await y3CrvBackZapperContract.zap();
+    return await this.transactionService.execute({ fn: y3CrvBackZapperContract.zap });
   }
 
   private getStakingContractAbi(address: string) {

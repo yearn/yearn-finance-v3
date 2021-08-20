@@ -19,6 +19,8 @@ import {
   TransactionOutcome,
   VaultsUserSummary,
   VaultUserMetadata,
+  GasFees,
+  Overrides,
 } from '@types';
 
 export interface GetAddressEnsNameProps {
@@ -179,3 +181,19 @@ export interface GetUserVaultsMetadataProps {
   userAddress: EthereumAddress;
   vaultsAddresses?: string[];
 }
+
+export interface GasService {
+  getGasFees: () => Promise<GasFees>;
+}
+
+export interface TransactionService {
+  execute: (props: ExecuteTransactionProps) => Promise<TransactionResponse>;
+}
+
+export interface ExecuteTransactionProps {
+  fn: ContractFunction;
+  args?: Array<any>;
+  overrides?: Overrides;
+}
+
+type ContractFunction = (...args: Array<any>) => Promise<TransactionResponse>;

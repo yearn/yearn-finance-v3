@@ -1,4 +1,5 @@
 import { TransactionRequest, TransactionResponse, TransactionReceipt } from '@ethersproject/providers';
+import { Overrides } from '@ethersproject/contracts';
 
 import {
   Position,
@@ -77,5 +78,6 @@ export type {
   TransactionResponse,
   TransactionReceipt,
   TransactionOutcome,
+  Overrides,
   VaultUserMetadata,
 };
