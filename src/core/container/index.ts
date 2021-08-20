@@ -9,6 +9,8 @@ import {
   VaultServiceImpl,
   IronBankServiceImpl,
   LabServiceImpl,
+  GasServiceImpl,
+  TransactionServiceImpl,
   SubscriptionServiceImpl,
 } from '@services';
 import { getConfig } from '@config';
@@ -47,6 +49,8 @@ export class Container implements DIContainer {
       vaultService: awilix.asClass(VaultServiceImpl),
       ironBankService: awilix.asClass(IronBankServiceImpl),
       labService: awilix.asClass(LabServiceImpl),
+      gasService: awilix.asClass(GasServiceImpl),
+      transactionService: awilix.asClass(TransactionServiceImpl),
       subscriptionService: awilix.asClass(SubscriptionServiceImpl),
     });
   }
@@ -72,6 +76,8 @@ export class Container implements DIContainer {
       vaultService: this.container.cradle.vaultService,
       ironBankService: this.container.cradle.ironBankService,
       labService: this.container.cradle.labService,
+      gasService: this.container.cradle.gasService,
+      transactionService: this.container.cradle.transactionService,
       subscriptionService: this.container.cradle.subscriptionService,
     };
   }
