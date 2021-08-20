@@ -9,7 +9,7 @@ export type Wei = string;
 export type RpcUrl = string;
 
 export interface GasFees {
-  gasPrice: Wei;
-  maxFeePerGas: Wei;
-  maxPriorityFeePerGas: Wei;
+  gasPrice?: Wei;
+  maxFeePerGas?: Wei;
+  maxPriorityFeePerGas?: Wei;
 }
