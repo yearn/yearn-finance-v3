@@ -122,6 +122,7 @@ export const Layout: FC = ({ children }) => {
     dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
     switch (path) {
       case 'home':
+        dispatch(VaultsActions.getUserVaultsSummary());
         dispatch(LabsActions.getUserLabsPositions({}));
 
         dispatch(IronBankActions.getIronBankSummary()); // use only this when lens summary calculation fixed
