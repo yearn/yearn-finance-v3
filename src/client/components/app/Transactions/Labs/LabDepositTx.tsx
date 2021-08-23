@@ -66,7 +66,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   useEffect(() => {
     if (!selectedSellTokenAddress && selectedLab) {
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedLab.token.address }));
+      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedLab.defaultDisplayToken }));
     }
 
     return () => {
@@ -158,8 +158,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   const selectedLabOption = {
     address: selectedLab.address,
-    symbol: selectedLab.name,
-    icon: selectedLab.icon,
+    symbol: selectedLab.displayName,
+    icon: selectedLab.displayIcon,
     balance: selectedLab.DEPOSIT.userBalance,
     decimals: toBN(selectedLab.decimals).toNumber(),
     yield: formatPercent(selectedLab.apyData, 2),

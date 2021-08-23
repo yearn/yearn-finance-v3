@@ -27,7 +27,9 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
-  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedVault?.token.address ?? '');
+  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(
+    selectedVault?.defaultDisplayToken ?? ''
+  );
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
   const targetTokensOptions = selectedVault
     ? [selectedVault.token, ...zapOutTokens.filter(({ address }) => address !== selectedVault.token.address)]
