@@ -52,7 +52,7 @@ export const IronBank = () => {
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
-  const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, netAPY } = useAppSelector(
+  const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, netAPY, borrowLimitUsdc } = useAppSelector(
     IronBankSelectors.selectSummaryData
   );
   const markets = useAppSelector(IronBankSelectors.selectMarkets);
@@ -104,7 +104,7 @@ export const IronBank = () => {
           { header: 'Supplied', content: `${normalizeUsdc(supplyBalanceUsdc)}` },
           { header: 'Borrowed', content: `${normalizeUsdc(borrowBalanceUsdc)}` },
           { header: 'Borrow Limit Used', content: `${normalizePercent(borrowUtilizationRatio, 2)}` },
-          // { header: 'Net APY', content: `${normalizePercent(netAPY, 2)}` }, // TODO add to sdk
+          { header: 'Total Borrow Limit', content: `${normalizeUsdc(borrowLimitUsdc)}` },
         ]}
         variant="secondary"
         cardSize="small"
