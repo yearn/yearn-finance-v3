@@ -51,7 +51,7 @@ export class LabServiceImpl implements LabService {
   public async getSupportedLabs() {
     const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
-    const { YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+    const { ETH, YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
     const provider = this.web3Provider.getInstanceOf(this.web3Provider.providerType);
     const vaultsPromise = get(YEARN_API);
     const pricesPromise = get(
@@ -96,7 +96,10 @@ export class LabServiceImpl implements LabService {
             type: backscratcherData.apy.type,
             description: '',
           },
-          icon: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
+          displayName: backscratcherData.name,
+          displayIcon:
+            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
+          defaultDisplayToken: CRV,
         },
       };
     } catch (error) {
@@ -121,7 +124,7 @@ export class LabServiceImpl implements LabService {
         address: YVBOOST,
         typeId: 'LAB',
         token: YVECRV,
-        name: yvBoostData.symbol,
+        name: yvBoostData.name,
         version: yvBoostData.version,
         symbol: yvBoostData.symbol,
         decimals: yvBoostData.decimals.toString(),
@@ -143,7 +146,10 @@ export class LabServiceImpl implements LabService {
             type: yvBoostData.apy.type,
             description: '',
           },
-          icon: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+          displayName: yvBoostData.symbol,
+          displayIcon:
+            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+          defaultDisplayToken: YVECRV,
         },
       };
     } catch (error) {
@@ -199,7 +205,9 @@ export class LabServiceImpl implements LabService {
             type: pJarData.apy.type,
             description: '',
           },
-          icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
+          displayName: 'pSLPyvBOOST-ETH',
+          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
+          defaultDisplayToken: ETH,
         },
       };
     } catch (error) {

@@ -265,10 +265,10 @@ export const Labs = () => {
           <Row>
             <StyledRecommendationsCard
               header="Recommendations"
-              items={recommendations.map(({ address, name, apyData, icon }) => ({
+              items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
                 // header: 'Special Token',
-                icon: icon,
-                name: name,
+                icon: displayIcon,
+                name: displayName,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
                 onAction: () => history.push(`/vault/${address}`),
@@ -306,9 +306,9 @@ export const Labs = () => {
               },
             ]}
             data={holdings.map((lab) => ({
-              icon: lab.icon,
-              tokenSymbol: lab.name,
-              name: lab.name,
+              icon: lab.displayIcon,
+              tokenSymbol: lab.displayName,
+              name: lab.displayName,
               balance: humanizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
               value: normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
               apy: formatPercent(lab.apyData, 2),
@@ -339,9 +339,9 @@ export const Labs = () => {
               },
             ]}
             data={filteredOpportunities.map((lab) => ({
-              icon: lab.icon,
-              tokenSymbol: lab.name,
-              name: lab.name,
+              icon: lab.displayIcon,
+              tokenSymbol: lab.displayName,
+              name: lab.displayName,
               apy: formatPercent(lab.apyData, 2),
               labBalanceUsdc: normalizeUsdc(lab.labBalanceUsdc, 0),
               userTokenBalance:
@@ -352,7 +352,7 @@ export const Labs = () => {
               <SearchBarContainer>
                 <SearchInput
                   searchableData={opportunities}
-                  searchableKeys={['name', 'token.symbol', 'token.name']}
+                  searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
                   placeholder=""
                   onSearch={(data) => setFilteredOpportunities(data)}
                 />

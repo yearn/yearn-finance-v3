@@ -13,7 +13,6 @@ import {
 } from '@store';
 import {
   toBN,
-  formatPercent,
   normalizeAmount,
   USDC_DECIMALS,
   validateVaultWithdraw,
@@ -37,7 +36,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const selectedLabToken = tokenSelectorFilter(selectedLab?.address ?? '');
   const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
-  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedLab?.token.address ?? '');
+  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedLab?.defaultDisplayToken ?? '');
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
 
   const targetTokensOptions = selectedLab
@@ -85,7 +84,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
 
     const timeOutId = setTimeout(() => {
-      if (toBN(amount).gt(0) || !inputError) {
+      if (toBN(amount).gt(0) && !inputError) {
         dispatch(
           VaultsActions.getExpectedTransactionOutcome({
             transactionType: 'WITHDRAW',
@@ -125,8 +124,8 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
 
   const selectedLabOption = {
     address: selectedLab.address,
-    symbol: selectedLab.name,
-    icon: selectedLab.icon,
+    symbol: selectedLab.displayName,
+    icon: selectedLab.displayIcon,
     balance: selectedLab.DEPOSIT.userBalance,
     decimals: toBN(selectedLab.decimals).toNumber(),
   };

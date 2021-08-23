@@ -49,6 +49,9 @@ interface LabMetadata {
   icon?: string;
   depositLimit: string;
   emergencyShutdown: boolean;
+  displayName: string;
+  displayIcon: string;
+  defaultDisplayToken: Address;
 }
 
 interface LabUserMetadata {}
