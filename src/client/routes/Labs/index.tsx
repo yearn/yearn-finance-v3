@@ -16,9 +16,10 @@ import {
   NoWalletCard,
 } from '@components/app';
 import { SpinnerLoading, SearchInput } from '@components/common';
-import { formatPercent, halfWidthCss, humanizeAmount, normalizeUsdc } from '@src/utils';
+import { formatPercent, halfWidthCss, humanizeAmount, normalizeUsdc, toBN } from '@src/utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
+import { GeneralLabView } from '../../../core/types';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -245,6 +246,19 @@ export const Labs = () => {
     }
   };
 
+  const labsHoldingsAlerts = (lab: GeneralLabView): string | undefined => {
+    switch (lab.address) {
+      case PSLPYVBOOSTETH:
+        if (toBN(lab.DEPOSIT.userBalance).gt(0)) {
+          return 'AVAILABLE TO STAKE';
+        }
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <ViewContainer>
       <SummaryCard
@@ -298,6 +312,13 @@ export const Labs = () => {
               { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
               { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
               {
+                key: 'alert',
+                transform: ({ alert }) => alert !== '' && <div> {alert} </div>,
+                align: 'flex-end',
+                width: 'auto',
+                grow: '1',
+              },
+              {
                 key: 'actions',
                 transform: ({ labAddress }) => <LabHoldingsActions labAddress={labAddress} />,
                 align: 'flex-end',
@@ -313,6 +334,7 @@ export const Labs = () => {
               value: normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
               apy: formatPercent(lab.apyData, 2),
               labAddress: lab.address,
+              alert: labsHoldingsAlerts(lab) ?? '',
             }))}
           />
 
