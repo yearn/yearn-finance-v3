@@ -34,14 +34,14 @@ export interface ValidateVaultAllowanceProps {
   sellTokenAllowancesMap: AllowancesMap;
 }
 
-export interface ValidationResonse {
+export interface ValidationResponse {
   approved?: boolean;
   error?: string;
 }
 
 // Vaults validations
 
-export function validateVaultDeposit(props: ValidateVaultDepositProps): ValidationResonse {
+export function validateVaultDeposit(props: ValidateVaultDepositProps): ValidationResponse {
   let {
     sellTokenAmount,
     depositLimit,
@@ -67,7 +67,7 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   return basicValidateAmount({ sellTokenAmount, sellTokenDecimals, totalAmountAvailable: userTokenBalance });
 }
 
-export function validateVaultAllowance(props: ValidateVaultAllowanceProps): ValidationResonse {
+export function validateVaultAllowance(props: ValidateVaultAllowanceProps): ValidationResponse {
   const ZAP_IN_CONTRACT = getConfig().CONTRACT_ADDRESSES.zapIn;
   const {
     amount,
@@ -89,7 +89,7 @@ export function validateVaultAllowance(props: ValidateVaultAllowanceProps): Vali
   });
 }
 
-export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): ValidationResonse {
+export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): ValidationResponse {
   let { yvTokenAmount, yvTokenDecimals, userYvTokenBalance } = props;
   userYvTokenBalance = userYvTokenBalance ?? '0';
   const ONE_UNIT = toBN('10').pow(yvTokenDecimals);
@@ -107,7 +107,7 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
   return { approved: true };
 }
 
-export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllowanceProps): ValidationResonse {
+export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllowanceProps): ValidationResponse {
   const ZAP_OUT_CONTRACT = getConfig().CONTRACT_ADDRESSES.zapOut;
   let {
     yvTokenAddress,
@@ -132,7 +132,7 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
 
 // ********************* Iron Bank *********************
 
-export function validateExitMarket(props: ValidateExitMarketsProps): ValidationResonse {
+export function validateExitMarket(props: ValidateExitMarketsProps): ValidationResponse {
   const { marketSuppliedUsdc, marketCollateralFactor, userIronBankSummary } = props;
 
   if (!userIronBankSummary) return { error: 'USER SUMMARY IS UNDEFINED' };
@@ -169,12 +169,12 @@ export interface ValidateExitMarketsProps {
 //   action: LabAction;
 // }
 
-// export function validateLabActionsAllowance(): ValidationResonse {
+// export function validateLabActionsAllowance(): ValidationResponse {
 //   // TODO: GENERAL VALIDATION FOR LABS BASED ON LAB ADDRESS AND ACTION
 //   return {};
 // }
 
-// export function validateLabActions(): ValidationResonse {
+// export function validateLabActions(): ValidationResponse {
 //   // TODO: GENERAL VALIDATION FOR LABS BASED ON LAB ADDRESS AND ACTION
 //   return {};
 // }
@@ -187,7 +187,7 @@ interface ValidateYvBoostEthActionsAllowanceProps {
   action: 'INVEST' | 'STAKE';
 }
 
-export function validateYvBoostEthActionsAllowance(props: ValidateYvBoostEthActionsAllowanceProps): ValidationResonse {
+export function validateYvBoostEthActionsAllowance(props: ValidateYvBoostEthActionsAllowanceProps): ValidationResponse {
   const { PSLPYVBOOSTETH_GAUGE, pickleZapIn: PICKLE_ZAP_IN, PSLPYVBOOSTETH } = getConfig().CONTRACT_ADDRESSES;
   const { sellTokenAddress, sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap, action } = props;
   let spenderAddress: string = '';
@@ -216,7 +216,7 @@ interface ValidateYveCrvActionsAllowanceProps {
   action: 'LOCK' | 'REINVEST';
 }
 
-export function validateYveCrvActionsAllowance(props: ValidateYveCrvActionsAllowanceProps): ValidationResonse {
+export function validateYveCrvActionsAllowance(props: ValidateYveCrvActionsAllowanceProps): ValidationResponse {
   const { y3CrvBackZapper, CRV, THREECRV, YVECRV } = getConfig().CONTRACT_ADDRESSES;
   const { labAddress, sellTokenAddress, sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap, action } = props;
   let spenderAddress: string = '';
@@ -249,7 +249,7 @@ interface ValidateAllowanceProps {
   tokenAllowancesMap: AllowancesMap;
   spenderAddress: string;
 }
-export function validateAllowance(props: ValidateAllowanceProps): ValidationResonse {
+export function validateAllowance(props: ValidateAllowanceProps): ValidationResponse {
   const { tokenAddress, tokenAmount, tokenDecimals, tokenAllowancesMap, spenderAddress } = props;
   const ONE_UNIT = toBN('10').pow(tokenDecimals);
   const amountInWei = tokenAmount.multipliedBy(ONE_UNIT);
@@ -276,7 +276,7 @@ export interface BasicValidateAmountProps {
   totalAmountAvailable: string;
   maxAmountAllowed?: string;
 }
-export function basicValidateAmount(props: BasicValidateAmountProps): ValidationResonse {
+export function basicValidateAmount(props: BasicValidateAmountProps): ValidationResponse {
   const { totalAmountAvailable, sellTokenAmount, sellTokenDecimals, maxAmountAllowed } = props;
   const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
   const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
