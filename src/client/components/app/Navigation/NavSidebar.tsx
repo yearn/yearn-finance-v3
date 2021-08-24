@@ -103,6 +103,7 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   max-width: 100%;
   padding: 1rem 1.2rem;
   position: fixed;
+  top: ${({ theme }) => theme.layoutPadding};
   max-height: calc(100% - ${({ theme }) => theme.layoutPadding} * 2);
   transition: width ${({ theme }) => theme.sideBar.animation};
   overflow: hidden;

@@ -10,6 +10,7 @@ const Container = styled.div<{ wrap?: string }>`
 
 interface CardContentProps {
   wrap?: boolean;
+  onClick?: () => void;
 }
 
 export const CardContent: FC<CardContentProps> = ({ children, wrap, ...props }) => {

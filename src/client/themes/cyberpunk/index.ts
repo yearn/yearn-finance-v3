@@ -37,6 +37,12 @@ const cyberpunkTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#BB6FA1',
       color: '#BB6FA1',
+
+      selected: {
+        background: 'transparent',
+        borderColor: '#3D305F',
+        color: '#3D305F',
+      },
     },
 
     walletButton: {

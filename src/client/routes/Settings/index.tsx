@@ -40,6 +40,7 @@ const SettingsCard = styled(Card)`
   display: grid;
   padding-left: 0;
   padding-right: 0;
+  width: 100%;
 `;
 
 const SettingsSection = styled.div`
@@ -125,8 +126,6 @@ const SettingsView = styled(ViewContainer)`
       :first-child ${SectionTitle}, :last-child ${SectionTitle} {
         border-radius: 0;
       }
-    }
-    ${SectionTitle} {
     }
     ${SectionContent} {
       padding: 0 ${({ theme }) => theme.cardPadding};

@@ -17,7 +17,7 @@ const lightTheme: DefaultTheme = {
     surfaceVariantA: '#E8E8EA',
     surfaceVariantB: '#000000',
 
-    selectionBar: 'rgba(0, 0, 0, .1)',
+    selectionBar: '#000000',
 
     onPrimary: '#B4B4B4',
     onPrimaryVariant: '#000000',
@@ -26,7 +26,7 @@ const lightTheme: DefaultTheme = {
     onSurfaceH1: '#FFFFFF',
     onSurfaceH1Contrast: '#FFFFFF',
     onSurfaceH2: '#000000',
-    onSurfaceH2Hover: '#000000',
+    onSurfaceH2Hover: '#FFFFFF',
     onSurfaceSH1: '#888888',
     onSurfaceSH1Hover: '#000000',
 
@@ -37,6 +37,17 @@ const lightTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#000000',
       color: '#000000',
+
+      // hovered {
+      //   background: 'transparent',
+      //   borderColor: '#000000',
+      //   color: '#000000',
+      // }
+      selected: {
+        background: 'transparent',
+        borderColor: '#FFFFFF',
+        color: '#FFFFFF',
+      },
     },
 
     walletButton: {

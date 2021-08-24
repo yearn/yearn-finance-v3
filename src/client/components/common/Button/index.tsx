@@ -5,7 +5,7 @@ export interface ButtonProps {
   className?: string;
   disabled?: boolean;
   color?: string;
-  onClick?: () => void;
+  onClick?: (e?: any) => void;
 }
 
 const StyledButton = styled.button`
