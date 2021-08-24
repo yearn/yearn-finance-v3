@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Card, CardHeader, CardContent, CardElement } from '@components/common';
@@ -79,7 +78,7 @@ interface Metadata {
 }
 
 interface Data {
-  [key: string]: string;
+  [key: string]: any;
 }
 
 interface DetailCardProps {
@@ -92,8 +91,6 @@ interface DetailCardProps {
 }
 
 export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, ...props }: DetailCardProps) => {
-  const history = useHistory();
-
   if (data.length === 0 && !SearchBar) {
     return null;
   }
@@ -120,12 +117,7 @@ export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, .
       </CardContent>
 
       {data.map((item, i) => (
-        <StyledCardContent
-          key={`content-${i}`}
-          wrap={wrap}
-          pointer={!!item.redirectTo}
-          onClick={() => item.redirectTo && history.push(`/vault/${item.redirectTo}`)}
-        >
+        <StyledCardContent key={`content-${i}`} wrap={wrap} pointer={!!item.onClick} onClick={item.onClick}>
           {metadata.map(
             ({ key, width, align, grow, hide, fontWeight, className, transform }) =>
               !hide && (

@@ -219,7 +219,7 @@ export const Vaults = () => {
               apy: formatPercent(vault.apyData, 2),
               earned: normalizeUsdc(vault.earned, 2),
               vaultAddress: vault.address,
-              redirectTo: vault.address,
+              onClick: () => history.push(`/vault/${vault.address}`),
             }))}
           />
 
@@ -263,7 +263,7 @@ export const Vaults = () => {
               vaultAddress: vault.address,
               userTokenBalance:
                 vault.token.balance === '0' ? '-' : humanizeAmount(vault.token.balance, vault.token.decimals, 4),
-              redirectTo: vault.address,
+              onClick: () => history.push(`/vault/${vault.address}`),
             }))}
             SearchBar={
               <SearchBarContainer>
