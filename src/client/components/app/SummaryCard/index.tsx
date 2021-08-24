@@ -9,14 +9,12 @@ const StyledCard = styled(Card)`
   flex-shrink: 0;
 `;
 
-const StyledCardContent = styled(CardContent)`
-  column-gap: 10.9rem;
-`;
 const StyledCardElement = styled(CardElement)`
   max-width: 100%;
   overflow: hidden;
   width: auto;
   min-width: 17rem;
+  flex: 1;
 `;
 
 const StyledText = styled(Text)<{ variant?: string }>`
@@ -43,7 +41,7 @@ export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, card
     <StyledCard variant={variant} cardSize={cardSize} {...props}>
       {header && <CardHeader header={header} />}
 
-      <StyledCardContent wrap>
+      <CardContent wrap>
         {items.map((item) => (
           <StyledCardElement
             key={item.header}
@@ -51,7 +49,7 @@ export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, card
             content={<StyledText variant={variant}>{item.content}</StyledText>}
           ></StyledCardElement>
         ))}
-      </StyledCardContent>
+      </CardContent>
     </StyledCard>
   );
 };
