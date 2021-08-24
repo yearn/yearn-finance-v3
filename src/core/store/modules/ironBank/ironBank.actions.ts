@@ -227,9 +227,10 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAP
     }
 
     if (actionType === 'exitMarket') {
-      const marketSuppliedUsdc = getState().ironBank.user.userMarketsMetadataMap[marketAddress].supplyBalanceUsdc;
-      const marketCollateralFactor = getState().ironBank.marketsMap[marketAddress].metadata.collateralFactor;
-      const userIronBankSummary = getState().ironBank.user.userIronBankSummary;
+      const ironBankState = getState().ironBank;
+      const marketSuppliedUsdc = ironBankState.user.userMarketsMetadataMap[marketAddress].supplyBalanceUsdc;
+      const marketCollateralFactor = ironBankState.marketsMap[marketAddress].metadata.collateralFactor;
+      const userIronBankSummary = ironBankState.user.userIronBankSummary;
 
       const { error } = validateExitMarket({
         marketCollateralFactor,
