@@ -70,16 +70,13 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefin
   }
 );
 
-const changeWalletTheme = (theme: Theme) => async (
-  dispatch: AppDispatch,
-  getState: () => RootState,
-  container: DIContainer
-) => {
-  const { wallet } = container.context;
-  if (wallet.isCreated && wallet.changeTheme) {
-    wallet.changeTheme(theme);
-  }
-};
+const changeWalletTheme =
+  (theme: Theme) => async (dispatch: AppDispatch, getState: () => RootState, container: DIContainer) => {
+    const { wallet } = container.context;
+    if (wallet.isCreated && wallet.changeTheme) {
+      wallet.changeTheme(theme);
+    }
+  };
 
 export const WalletActions = {
   walletChange,

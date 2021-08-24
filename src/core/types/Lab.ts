@@ -5,9 +5,11 @@ import { TokenView } from './Token';
 export interface GeneralLabView {
   address: string;
   name: string;
-  icon: string;
-  labBalance: string;
+  displayName: string;
+  displayIcon: string;
+  defaultDisplayToken: string;
   decimals: string;
+  labBalance: string;
   labBalanceUsdc: string;
   apyData: string;
   allowancesMap: AllowancesMap;

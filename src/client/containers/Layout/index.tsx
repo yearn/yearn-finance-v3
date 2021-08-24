@@ -68,7 +68,7 @@ export const Layout: FC = ({ children }) => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
     switch (path) {
       case 'home':
-        dispatch(VaultsActions.initiateSaveVaults());
+        dispatch(LabsActions.initiateLabs());
         break;
       case 'wallet':
         dispatch(VaultsActions.initiateSaveVaults());
@@ -123,12 +123,11 @@ export const Layout: FC = ({ children }) => {
     switch (path) {
       case 'home':
         dispatch(VaultsActions.getUserVaultsSummary());
-        dispatch(VaultsActions.getUserVaultsPositions({}));
-        dispatch(VaultsActions.getUserVaultsMetadata({}));
+        dispatch(LabsActions.getUserLabsPositions({}));
 
-        dispatch(IronBankActions.getIronBankSummary());
-        dispatch(IronBankActions.getUserMarketsPositions({}));
-        dispatch(IronBankActions.getUserMarketsMetadata({}));
+        dispatch(IronBankActions.getIronBankSummary()); // use only this when lens summary calculation fixed
+        dispatch(IronBankActions.getUserMarketsPositions({})); // remove this when lens summary calculation fixed
+        dispatch(IronBankActions.getUserMarketsMetadata({})); // remove this when lens summary calculation fixed
         break;
       case 'wallet':
         dispatch(VaultsActions.getUserVaultsPositions({}));

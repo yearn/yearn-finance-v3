@@ -1,14 +1,14 @@
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { TokensSelectors, VaultsSelectors } from '@store';
 import { useAppSelector } from '@hooks';
 import { formatPercent, normalizeUsdc } from '@src/utils';
-
 import { TokenIcon, ViewContainer } from '@components/app';
 import { DepositTx, WithdrawTx } from '@components/app/Transactions';
-import { Card, CardContent, CardHeader, SpinnerLoading, Tab, TabPanel, Tabs, Text } from '@components/common';
+import { Card, CardContent, CardHeader, SpinnerLoading, Tab, TabPanel, Tabs, Text, Button } from '@components/common';
 import { LineChart } from '@components/common/Charts';
-import { useState } from 'react';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -88,7 +88,6 @@ const VaultOverview = styled(Card)`
   flex-direction: column;
   flex: 1;
   align-self: stretch;
-  margin-top: -${({ theme }) => theme.cardPadding};
 
   > * {
     margin-top: ${({ theme }) => theme.cardPadding};
@@ -101,12 +100,18 @@ const VaultDetailView = styled(ViewContainer)`
   flex-wrap: wrap;
 `;
 
+const BackButton = styled(Button)`
+  background-color: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.onSurfaceH2};
+`;
+
 export interface VaultDetailRouteParams {
   vaultAddress: string;
 }
 
 export const VaultDetail = () => {
   // const { t } = useAppTranslation('common');
+  const history = useHistory();
   const [selectedTab, setSelectedTab] = useState('deposit');
 
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
@@ -135,11 +140,13 @@ export const VaultDetail = () => {
   ];
 
   return (
-    <VaultDetailView>
+    <ViewContainer>
+      <BackButton onClick={() => history.push(`/vaults`)}>Back to Vaults Page</BackButton>
+
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
 
       {!generalLoading && selectedVault && (
-        <>
+        <VaultDetailView>
           <VaultOverview>
             <StyledCardHeader header="Overview" />
 
@@ -206,8 +213,8 @@ export const VaultDetail = () => {
             <StyledCardHeader header="Performance" />
             <StyledLineChart chartData={data} tooltipLabel="Earning Over Time" />
           </VaultChart>
-        </>
+        </VaultDetailView>
       )}
-    </VaultDetailView>
+    </ViewContainer>
   );
 };

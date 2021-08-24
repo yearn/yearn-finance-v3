@@ -19,36 +19,34 @@ const ADDRESSES = {
   PSLPYVBOOSTETH_GAUGE: '0xDA481b277dCe305B97F4091bD66595d57CF31634',
 };
 
-export const getConstants = memoize(
-  (): Constants => {
-    const { ALCHEMY_API_KEY } = getEnv();
-    return {
-      STATE_VERSION: 1,
-      ETHEREUM_ADDRESS: ADDRESSES.ETH,
-      MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
-      YEARN_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
-      WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-      WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-      FANTOM_PROVIDER_HTTPS: 'https://rpcapi.fantom.network',
-      CONTRACT_ADDRESSES: {
-        oracle: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
-        lens: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
-        registryV2Adapter: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
-        helper: '0x420b1099B9eF5baba6D92029594eF45E19A04A4A',
-        zapIn: '0x92Be6ADB6a12Da0CA607F9d87DB2F9978cD6ec3E',
-        zapOut: '0xA8a3B1A1e09A0f84B2856533DB4eE0Cc88DD4E11',
-        pickleZapIn: '0xc695f73c1862e050059367B2E64489E66c525983',
-        y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
-        ironBankComptroller: '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB',
-        ...ADDRESSES,
-      },
-      SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
-      DEFAULT_SLIPPAGE: 0.01,
-      IRON_BANK_MAX_RATIO: 0.8,
-      ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
-      DEFAULT_THEME: 'light',
-      AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk'],
-      DEFAULT_ALERT_TIMEOUT: 3000,
-    };
-  }
-);
+export const getConstants = memoize((): Constants => {
+  const { ALCHEMY_API_KEY } = getEnv();
+  return {
+    STATE_VERSION: 1,
+    ETHEREUM_ADDRESS: ADDRESSES.ETH,
+    MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
+    YEARN_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
+    WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+    WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+    FANTOM_PROVIDER_HTTPS: 'https://rpcapi.fantom.network',
+    CONTRACT_ADDRESSES: {
+      oracle: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
+      lens: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
+      registryV2Adapter: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
+      helper: '0x420b1099B9eF5baba6D92029594eF45E19A04A4A',
+      zapIn: '0x92Be6ADB6a12Da0CA607F9d87DB2F9978cD6ec3E',
+      zapOut: '0xA8a3B1A1e09A0f84B2856533DB4eE0Cc88DD4E11',
+      pickleZapIn: '0xc695f73c1862e050059367B2E64489E66c525983',
+      y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
+      ironBankComptroller: '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB',
+      ...ADDRESSES,
+    },
+    SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
+    DEFAULT_SLIPPAGE: 0.01,
+    IRON_BANK_MAX_RATIO: 0.8,
+    ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
+    DEFAULT_THEME: 'light',
+    AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk'],
+    DEFAULT_ALERT_TIMEOUT: 3000,
+  };
+});

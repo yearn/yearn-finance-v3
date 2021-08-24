@@ -1,4 +1,5 @@
 import { TransactionRequest, TransactionResponse, TransactionReceipt } from '@ethersproject/providers';
+import { Overrides } from '@ethersproject/contracts';
 
 import {
   Position,
@@ -48,6 +49,9 @@ interface LabMetadata {
   icon?: string;
   depositLimit: string;
   emergencyShutdown: boolean;
+  displayName: string;
+  displayIcon: string;
+  defaultDisplayToken: Address;
 }
 
 interface LabUserMetadata {}
@@ -77,5 +81,6 @@ export type {
   TransactionResponse,
   TransactionReceipt,
   TransactionOutcome,
+  Overrides,
   VaultUserMetadata,
 };

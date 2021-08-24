@@ -93,14 +93,11 @@ const selectVaultsOpportunities = createSelector([selectVaults], (vaults): Vault
   return opportunities;
 });
 
-const selectVaultsGeneralStatus = createSelector(
-  [selectVaultsStatusMap],
-  (statusMap): Status => {
-    const loading = statusMap.getVaults.loading || statusMap.initiateSaveVaults.loading;
-    const error = statusMap.getVaults.error || statusMap.initiateSaveVaults.error;
-    return { loading, error };
-  }
-);
+const selectVaultsGeneralStatus = createSelector([selectVaultsStatusMap], (statusMap): Status => {
+  const loading = statusMap.getVaults.loading || statusMap.initiateSaveVaults.loading;
+  const error = statusMap.getVaults.error || statusMap.initiateSaveVaults.error;
+  return { loading, error };
+});
 
 const selectSelectedVault = createSelector(
   [selectVaults, selectSelectedVaultAddress],

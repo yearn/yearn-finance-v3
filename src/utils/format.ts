@@ -3,6 +3,7 @@ import { formatUnits, BigNumber as EthersBN } from '@frameworks/ethers';
 
 export const USDC_DECIMALS = 6;
 export const COLLATERAL_FACTOR_DECIMALS = 18;
+export const GWEI = 9;
 
 const format = {
   prefix: '',

@@ -195,21 +195,16 @@ interface CreateLabProps {
 }
 
 function createLab(props: CreateLabProps): GeneralLabView {
-  const {
-    labAllowances,
-    labData,
-    tokenAllowancesMap,
-    tokenData,
-    userPositions,
-    userTokenData,
-    mainPositionKey,
-  } = props;
+  const { labAllowances, labData, tokenAllowancesMap, tokenData, userPositions, userTokenData, mainPositionKey } =
+    props;
   return {
     address: labData.address,
     name: labData.name,
-    icon: labData.metadata.icon ?? tokenData?.icon ?? '',
-    labBalance: labData.underlyingTokenBalance.amount,
+    displayName: labData.metadata.displayName,
+    displayIcon: labData.metadata.displayIcon,
+    defaultDisplayToken: labData.metadata.defaultDisplayToken,
     decimals: labData.decimals,
+    labBalance: labData.underlyingTokenBalance.amount,
     labBalanceUsdc: labData.underlyingTokenBalance.amountUsdc,
     apyData: labData.metadata.apy?.recommended.toString() ?? '0',
     allowancesMap: labAllowances ?? {},

@@ -80,28 +80,26 @@ const selectWalletTokensStatus = createSelector(
 );
 
 const selectToken = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user) =>
-  memoize(
-    (tokenAddress: string): TokenView => {
-      const { userTokensMap, userTokensAllowancesMap } = user; // use specific selectors, is not a big performance improvement in this case
-      const tokenData = tokensMap[tokenAddress];
-      const userTokenData = userTokensMap[tokenAddress];
-      const allowancesMap = userTokensAllowancesMap[tokenAddress] ?? {};
-      return {
-        address: tokenData?.address,
-        name: tokenData?.name,
-        symbol: tokenData?.symbol,
-        decimals: parseInt(tokenData?.decimals),
-        icon: tokenData?.icon,
-        balance: userTokenData?.balance ?? '0',
-        balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-        priceUsdc: tokenData?.priceUsdc ?? '0',
-        categories: tokenData?.metadata?.categories ?? [],
-        description: tokenData?.metadata?.description ?? '',
-        website: tokenData?.metadata?.website ?? '',
-        allowancesMap: allowancesMap,
-      };
-    }
-  )
+  memoize((tokenAddress: string): TokenView => {
+    const { userTokensMap, userTokensAllowancesMap } = user; // use specific selectors, is not a big performance improvement in this case
+    const tokenData = tokensMap[tokenAddress];
+    const userTokenData = userTokensMap[tokenAddress];
+    const allowancesMap = userTokensAllowancesMap[tokenAddress] ?? {};
+    return {
+      address: tokenData?.address,
+      name: tokenData?.name,
+      symbol: tokenData?.symbol,
+      decimals: parseInt(tokenData?.decimals),
+      icon: tokenData?.icon,
+      balance: userTokenData?.balance ?? '0',
+      balanceUsdc: userTokenData?.balanceUsdc ?? '0',
+      priceUsdc: tokenData?.priceUsdc ?? '0',
+      categories: tokenData?.metadata?.categories ?? [],
+      description: tokenData?.metadata?.description ?? '',
+      website: tokenData?.metadata?.website ?? '',
+      allowancesMap: allowancesMap,
+    };
+  })
 );
 
 export const TokensSelectors = {
