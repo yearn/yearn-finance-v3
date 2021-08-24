@@ -10,8 +10,8 @@ import {
   IronBankUserSummary,
   Position,
 } from '@types';
-import { handleTransaction, toBN } from '@utils';
-import { TokensActions } from '@store';
+import { handleTransaction, toBN, validateExitMarket } from '@utils';
+import { AlertsActions, TokensActions } from '@store';
 
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
 const clearSelectedMarketAndStatus = createAction<void>('ironBank/clearSelectedMarketAndStatus');
@@ -226,7 +226,23 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAP
       throw new Error('WALLET NOT CONNECTED');
     }
 
-    // TODO should we double check if user is in markets?
+    if (actionType === 'exitMarket') {
+      const ironBankState = getState().ironBank;
+      const marketSuppliedUsdc = ironBankState.user.userMarketsMetadataMap[marketAddress].supplyBalanceUsdc;
+      const marketCollateralFactor = ironBankState.marketsMap[marketAddress].metadata.collateralFactor;
+      const userIronBankSummary = ironBankState.user.userIronBankSummary;
+
+      const { error } = validateExitMarket({
+        marketCollateralFactor,
+        marketSuppliedUsdc,
+        userIronBankSummary,
+      });
+
+      if (error) {
+        dispatch(AlertsActions.openAlert({ message: error, type: 'error', timeout: 3000 }));
+        throw new Error(error);
+      }
+    }
 
     const tx = await ironBankService.enterOrExitMarket({ marketAddress, userAddress, actionType });
     await handleTransaction(tx);
