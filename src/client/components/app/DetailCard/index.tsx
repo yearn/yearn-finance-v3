@@ -43,8 +43,6 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolea
   ${({ pointer }) => pointer && `cursor: pointer;`};
   ${({ wrap }) => wrap && `flex-wrap: wrap;`};
 
-  // TODO Update theme to support change on button and font color and support this code
-  /* &:hover > ${StyledCardElement} { */
   &:hover {
     background-color: ${({ theme }) => theme.colors.selectionBar};
 
