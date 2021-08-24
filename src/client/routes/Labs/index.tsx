@@ -313,6 +313,8 @@ export const Labs = () => {
               value: normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
               apy: formatPercent(lab.apyData, 2),
               labAddress: lab.address,
+              // TODO Redirect address is wrong
+              redirectTo: lab.address,
             }))}
           />
 
@@ -347,6 +349,8 @@ export const Labs = () => {
               userTokenBalance:
                 lab.token.balance === '0' ? '-' : humanizeAmount(lab.token.balance, lab.token.decimals, 4),
               labAddress: lab.address,
+              // TODO Redirect address is wrong
+              redirectTo: lab.address,
             }))}
             SearchBar={
               <SearchBarContainer>

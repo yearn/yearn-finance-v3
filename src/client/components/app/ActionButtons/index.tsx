@@ -28,7 +28,7 @@ interface ActionButtonsProps {
 export const ActionButtons = ({ actions }: ActionButtonsProps) => (
   <ActionButtonsContainer actions={actions.length}>
     {actions.map(({ name, handler, disabled }) => (
-      <ActionButton key={`action-${name}`} onClick={handler} disabled={disabled}>
+      <ActionButton className="action-button" key={`action-${name}`} onClick={handler} disabled={disabled}>
         {name}
       </ActionButton>
     ))}

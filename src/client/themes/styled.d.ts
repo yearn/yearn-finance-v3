@@ -98,6 +98,12 @@ declare module 'styled-components' {
         background: string;
         borderColor: string;
         color: string;
+
+        selected: {
+          background: string;
+          borderColor: string;
+          color: string;
+        };
       };
 
       walletButton: {

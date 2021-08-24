@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Card, CardHeader, CardContent, CardElement } from '@components/common';
@@ -7,13 +8,14 @@ const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
   display: flex;
   justify-content: center;
   margin: 0;
-  padding: 0 ${({ theme }) => theme.cardPadding};
+  padding: 0.6rem ${({ theme }) => theme.cardPadding};
   font-size: 1.4rem;
   flex-shrink: 0;
 
   > * {
     margin-top: 0;
     font-size: inherit;
+    color: inherit;
   }
 
   ${({ stripes, theme }) =>
@@ -33,17 +35,28 @@ const TitleCardElement = styled(CardElement)`
   flex-shrink: 0;
 `;
 
-const StyledCardContent = styled(CardContent)<{ wrap?: boolean }>`
+const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolean }>`
   // display: grid;
-  align-items: center;
   // grid-template-columns: 6rem 16.8rem 16.8rem 16.8rem 16.8rem 1fr; */
+  align-items: stretch;
+  justify-content: stretch;
+  ${({ pointer }) => pointer && `cursor: pointer;`};
+  ${({ wrap }) => wrap && `flex-wrap: wrap;`};
 
   // TODO Update theme to support change on button and font color and support this code
-  /* &:hover > ${StyledCardElement} {
+  /* &:hover > ${StyledCardElement} { */
+  &:hover {
     background-color: ${({ theme }) => theme.colors.selectionBar};
-  } */
-  padding: 0.6rem 0;
-  ${({ wrap }) => wrap && `flex-wrap: wrap;`};
+
+    ${StyledCardElement} {
+      color: ${({ theme }) => theme.colors.onSurfaceH2Hover};
+    }
+    .action-button {
+      background: ${({ theme }) => theme.colors.vaultActionButton.selected.background};
+      color: ${({ theme }) => theme.colors.vaultActionButton.selected.color};
+      border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
+    }
+  }
 `;
 
 const StyledCardHeader = styled(CardHeader)`
@@ -81,6 +94,8 @@ interface DetailCardProps {
 }
 
 export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, ...props }: DetailCardProps) => {
+  const history = useHistory();
+
   if (data.length === 0 && !SearchBar) {
     return null;
   }
@@ -107,7 +122,12 @@ export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, .
       </CardContent>
 
       {data.map((item, i) => (
-        <StyledCardContent key={`content-${i}`} wrap={wrap}>
+        <StyledCardContent
+          key={`content-${i}`}
+          wrap={wrap}
+          pointer={!!item.redirectTo}
+          onClick={() => item.redirectTo && history.push(`/vault/${item.redirectTo}`)}
+        >
           {metadata.map(
             ({ key, width, align, grow, hide, fontWeight, className, transform }) =>
               !hide && (

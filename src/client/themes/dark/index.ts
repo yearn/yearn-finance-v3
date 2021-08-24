@@ -37,6 +37,12 @@ const darkTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#555555',
       color: '#555555',
+
+      selected: {
+        background: 'transparent',
+        borderColor: '#FFFFFF',
+        color: '#FFFFFF',
+      },
     },
 
     walletButton: {

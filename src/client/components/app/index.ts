@@ -1,6 +1,6 @@
 export * from './ActionButtons';
 export * from './AssetCard_old';
-export * from './Blade';
+export * from './Blade_old';
 export * from './ConnectWalletButton';
 export * from './DetailCard';
 export * from './Footer';
