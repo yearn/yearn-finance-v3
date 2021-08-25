@@ -155,6 +155,13 @@ const selectSummaryData = createSelector(
   }
 );
 
+const selectRecommendations = createSelector([selectMarkets], (markets) => {
+  const sortedMarkets = [...markets].sort((a, b) => {
+    return toBN(b.lendApy).minus(a.lendApy).toNumber();
+  });
+  return sortedMarkets.slice(0, 3);
+});
+
 const selectIronBankStatus = createSelector(
   [
     selectGetUserIronBankSummaryStatus,
@@ -195,6 +202,7 @@ export const IronBankSelectors = {
   selectSelectedMarket,
   selectSelectedMarketActionsStatusMap,
   selectSummaryData,
+  selectRecommendations,
   selectIronBankStatus,
   selectUnderlyingTokensAddresses,
 };
