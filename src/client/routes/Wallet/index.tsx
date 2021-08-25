@@ -5,9 +5,9 @@ import {
   WalletSelectors,
   TokensSelectors,
   TokensActions,
-  IronBankActions,
   ModalsActions,
   ModalSelectors,
+  IronBankSelectors,
 } from '@store';
 
 import {
@@ -69,6 +69,7 @@ export const Wallet = () => {
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
+  const ironBankUnderlyingTokens = useAppSelector(IronBankSelectors.selectUnderlyingTokensAddresses);
 
   const generalLoading = tokensListStatus.loading && !activeModal;
 
@@ -79,16 +80,32 @@ export const Wallet = () => {
         dispatch(ModalsActions.openModal({ modalName: 'depositTx' }));
         break;
       case 'supply':
-      case 'borrow':
-        // TODO: SET CORRESPONDING MARKET
-        dispatch(
-          IronBankActions.setSelectedMarketAddress({ marketAddress: '0x41c84c0e2EE0b740Cf0d31F63f3B6F627DC6b393' })
-        );
-        dispatch(ModalsActions.openModal({ modalName: 'test' }));
+        dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
+        dispatch(ModalsActions.openModal({ modalName: 'IronBankSupplyTx' }));
         break;
       default:
         break;
     }
+  };
+
+  const tokensButtons = (tokenAddress: string) => {
+    const buttons: any[] = [
+      {
+        name: 'Invest',
+        handler: () => actionHandler('invest', tokenAddress),
+        disabled: !walletIsConnected,
+      },
+    ];
+
+    if (ironBankUnderlyingTokens.includes(tokenAddress)) {
+      buttons.push({
+        name: 'Supply',
+        handler: () => actionHandler('supply', tokenAddress),
+        disabled: !walletIsConnected,
+      });
+    }
+
+    return buttons;
   };
 
   return (
@@ -152,28 +169,7 @@ export const Wallet = () => {
             { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
             {
               key: 'actions',
-              transform: ({ tokenAddress }) => (
-                <ActionButtons
-                  actions={[
-                    {
-                      name: 'Invest',
-                      handler: () => actionHandler('invest', tokenAddress),
-                      disabled: !walletIsConnected,
-                    },
-                    // NOTE: hide for alpha
-                    // {
-                    //   name: 'Supply',
-                    //   handler: () => actionHandler('supply', tokenAddress),
-                    //   disabled: !walletIsConnected,
-                    // },
-                    // {
-                    //   name: 'Borrow',
-                    //   handler: () => actionHandler('borrow', tokenAddress),
-                    //   disabled: !walletIsConnected,
-                    // },
-                  ]}
-                />
-              ),
+              transform: ({ tokenAddress }) => <ActionButtons actions={tokensButtons(tokenAddress)} />,
               align: 'flex-end',
               width: 'auto',
               grow: '1',

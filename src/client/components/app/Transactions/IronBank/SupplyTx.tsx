@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
-import { IronBankSelectors, TokensActions, IronBankActions } from '@store';
+import { IronBankSelectors, TokensActions, IronBankActions, TokensSelectors } from '@store';
 import {
   toBN,
   normalizeAmount,
@@ -23,8 +23,10 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
+  const markets = useAppSelector(IronBankSelectors.selectMarkets);
   const selectedMarket = useAppSelector(IronBankSelectors.selectSelectedMarket);
   const selectedToken = selectedMarket?.token;
+  const selectedTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const userIronBankSummary = useAppSelector(IronBankSelectors.selectSummaryData);
   const actionsStatus = useAppSelector(IronBankSelectors.selectSelectedMarketActionsStatusMap);
 
@@ -33,6 +35,17 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   };
 
   useEffect(() => {
+    if (!selectedMarket && selectedTokenAddress) {
+      if (!markets || !markets.length) return;
+
+      const matchingMarket = markets.find((market) => market.token.address === selectedTokenAddress);
+      if (!matchingMarket) return;
+      dispatch(
+        IronBankActions.setSelectedMarketAddress({
+          marketAddress: matchingMarket.address,
+        })
+      );
+    }
     return () => {
       onExit();
     };
