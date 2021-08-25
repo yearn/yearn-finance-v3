@@ -149,10 +149,10 @@ const selectRecommendations = createSelector([selectVaults], (vaults) => {
   // });
 
   // return [stableVault, derivativeVaults[1], derivativeVaults[0]].filter((item) => !!item);
-  const sortedVaults = vaults.concat().sort((a, b) => {
+  const sortedVaults = [...vaults].sort((a, b) => {
     return toBN(b.apyData).minus(a.apyData).toNumber();
   });
-  return [sortedVaults[2], sortedVaults[1], sortedVaults[0]].filter((item) => !!item);
+  return sortedVaults.slice(0, 3);
 });
 
 const selectVaultsStatus = createSelector(
