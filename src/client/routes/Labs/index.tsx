@@ -124,7 +124,7 @@ export const Labs = () => {
     setFilteredOpportunities(opportunities);
   }, [opportunities]);
 
-  const LabHoldingsActions = ({ labAddress }: { labAddress: string }) => {
+  const LabHoldingsActions = ({ labAddress, alert }: { labAddress: string; alert?: string }) => {
     switch (labAddress) {
       case YVECRV:
         return (
@@ -183,6 +183,7 @@ export const Labs = () => {
       case PSLPYVBOOSTETH:
         return (
           <ActionButtons
+            alert={alert}
             actions={[
               {
                 name: 'Invest',
@@ -311,16 +312,16 @@ export const Labs = () => {
               { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
               { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
               { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
-              {
-                key: 'alert',
-                transform: ({ alert }) => alert !== '' && <div> {alert} </div>,
-                align: 'flex-end',
-                width: 'auto',
-                grow: '1',
-              },
+              // {
+              //   key: 'alert',
+              //   transform: ({ alert }) => alert !== '' && <div> {alert} </div>,
+              //   align: 'flex-end',
+              //   width: 'auto',
+              //   grow: '1',
+              // },
               {
                 key: 'actions',
-                transform: ({ labAddress }) => <LabHoldingsActions labAddress={labAddress} />,
+                transform: ({ labAddress, alert }) => <LabHoldingsActions labAddress={labAddress} alert={alert} />,
                 align: 'flex-end',
                 width: 'auto',
                 grow: '1',
