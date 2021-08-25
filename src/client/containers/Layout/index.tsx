@@ -72,6 +72,7 @@ export const Layout: FC = ({ children }) => {
         break;
       case 'wallet':
         dispatch(VaultsActions.initiateSaveVaults());
+        dispatch(IronBankActions.initiateIronBank());
         break;
       case 'vaults':
         dispatch(VaultsActions.initiateSaveVaults());
@@ -131,6 +132,10 @@ export const Layout: FC = ({ children }) => {
         break;
       case 'wallet':
         dispatch(VaultsActions.getUserVaultsPositions({}));
+
+        dispatch(IronBankActions.getIronBankSummary());
+        dispatch(IronBankActions.getUserMarketsPositions({}));
+        dispatch(IronBankActions.getUserMarketsMetadata({}));
         break;
       case 'vaults':
         dispatch(VaultsActions.getUserVaultsSummary());
