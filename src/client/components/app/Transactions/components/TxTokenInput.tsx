@@ -30,19 +30,23 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   &::placeholder {
     color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
   }
+
   ${({ readOnly, theme }) =>
     readOnly &&
     `
     color: ${theme.colors.txModalColors.onBackgroundVariantColor};
     cursor: default;
   `}
+
   ${({ error, theme }) => error && `color: ${theme.colors.txModalColors.error};`}
 
-  ::-webkit-outer-spin-button,
-  ::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+  ${() => `
+    ::-webkit-outer-spin-button,
+    ::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    };
+  `}
 `;
 
 const ContrastText = styled.span`
@@ -193,6 +197,8 @@ export interface TxTokenInputProps {
   yieldPercent?: string;
   tokenOptions?: Token[];
   readOnly?: boolean;
+  loading?: boolean;
+  loadingText?: string;
 }
 
 export const TxTokenInput: FC<TxTokenInputProps> = ({
@@ -209,6 +215,8 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   yieldPercent,
   tokenOptions,
   readOnly,
+  loading,
+  loadingText,
   children,
   ...props
 }) => {
@@ -264,15 +272,15 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         <TokenData>
           <AmountTitle>{inputText || 'Balance'}</AmountTitle>
           <StyledAmountInput
-            value={amount}
+            value={loading || (inputError && readOnly) ? '' : amount}
             onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-            placeholder="00000000.00"
+            placeholder={loading ? loadingText : '00000000.00'}
             readOnly={readOnly}
             error={inputError}
             type="number"
           />
           <TokenExtras>
-            {amountValue && <StyledText>≈ {formatUsd(amountValue)}</StyledText>}
+            {amountValue && <StyledText>≈ {formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
             {maxAmount && (
               <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
                 {maxLabel}

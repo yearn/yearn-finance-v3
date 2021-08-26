@@ -11,8 +11,17 @@ import {
   ModalSelectors,
 } from '@store';
 
-import { SpinnerLoading, ToggleButton, SearchInput } from '@components/common';
-import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, NoWalletCard } from '@components/app';
+import { SpinnerLoading, ToggleButton, SearchInput, Text } from '@components/common';
+import {
+  SummaryCard,
+  DetailCard,
+  ViewContainer,
+  ActionButtons,
+  TokenIcon,
+  NoWalletCard,
+  RecommendationsCard,
+  InfoCard,
+} from '@components/app';
 import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss } from '@src/utils';
 import { device } from '@themes/default';
 
@@ -20,10 +29,30 @@ const SearchBarContainer = styled.div`
   margin: 1.2rem;
 `;
 
+const Row = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
+  flex-wrap: wrap;
+  width: 100%;
+`;
+
+const StyledRecommendationsCard = styled(RecommendationsCard)`
+  ${halfWidthCss}
+`;
+
+const StyledInfoCard = styled(InfoCard)`
+  max-width: 100%;
+  flex: 1;
+  ${halfWidthCss}
+`;
+
 const StyledNoWalletCard = styled(NoWalletCard)`
   width: 100%;
   ${halfWidthCss}
 `;
+
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-market {
@@ -55,6 +84,7 @@ export const IronBank = () => {
   const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, netAPY, borrowLimitUsdc } = useAppSelector(
     IronBankSelectors.selectSummaryData
   );
+  const recommendations = useAppSelector(IronBankSelectors.selectRecommendations);
   const markets = useAppSelector(IronBankSelectors.selectMarkets);
   const supplied = useAppSelector(IronBankSelectors.selectLendMarkets);
   const borrowed = useAppSelector(IronBankSelectors.selectBorrowMarkets);
@@ -114,6 +144,33 @@ export const IronBank = () => {
 
       {!generalLoading && (
         <>
+          <Row>
+            <StyledRecommendationsCard
+              header="Recommendations"
+              items={recommendations.map(({ token, lendApy, address }) => ({
+                icon: token.icon ?? '',
+                name: token.symbol,
+                info: normalizePercent(lendApy, 2),
+                infoDetail: 'EYY',
+                onAction: () => actionHandler('supply', address),
+              }))}
+            />
+
+            <StyledInfoCard
+              header="Dreaming of more tokens?"
+              Component={
+                <Text>
+                  Iron Bank offers a simple way to get exposure to new tokens. Borrow using your crypto as collateral
+                  and recognize liquidity without having to sell your holdings. Didn’t find the right Vault for your
+                  tokens? Supply them to Iron Bank and earn interest.
+                  <br />
+                  <br />
+                  Check out the opportunities and corresponding APY below and click ‘Supply’ to get started!
+                </Text>
+              }
+            />
+          </Row>
+
           {!walletIsConnected && <StyledNoWalletCard />}
 
           <DetailCard

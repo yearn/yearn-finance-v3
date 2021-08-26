@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions, SettingsSelectors } from '@store';
 import {
   toBN,
@@ -15,7 +15,6 @@ import {
 } from '@src/utils';
 
 import { Transaction } from './Transaction';
-import { useDebounce } from '../../../hooks/useDebounce';
 
 export interface DepositTxProps {
   header?: string;
@@ -27,6 +26,7 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [allowVaultSelect, setAllowVaultSelect] = useState(false);
   const [amount, setAmount] = useState('');
+  const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const vaults = useAppSelector(VaultsSelectors.selectVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
@@ -36,8 +36,6 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
-
-  const debouncedAmount = useDebounce(amount, 500);
 
   const sellTokensOptions = selectedVault
     ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
@@ -115,7 +113,7 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
   }
 
   const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
-    amount: toBN(amount),
+    amount: toBN(debouncedAmount),
     vaultAddress: selectedVault.address,
     vaultUnderlyingTokenAddress: selectedVault.token.address,
     sellTokenAddress: selectedSellTokenAddress,
@@ -124,7 +122,7 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
-    sellTokenAmount: toBN(amount),
+    sellTokenAmount: toBN(debouncedAmount),
     depositLimit: selectedVault.depositLimit,
     emergencyShutdown: selectedVault.emergencyShutdown,
     sellTokenDecimals: selectedSellToken.decimals.toString(),
@@ -148,10 +146,16 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
   const selectedVaultOption = vaultsOptions.find(({ address }) => address === selectedVault.address)!;
 
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
-  const expectedAmount = toBN(amount).gt(0)
+  const expectedAmount = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedVault?.token.decimals)
     : '';
-  const expectedAmountValue = normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS);
+  const expectedAmountValue = toBN(debouncedAmount).gt(0)
+    ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
+    : '0';
+  const expectedAmountStatus = {
+    error: expectedTxOutcomeStatus.error || error,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+  };
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -198,7 +202,7 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
       label: 'Deposit',
       onAction: deposit,
       status: actionsStatus.deposit,
-      disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading,
+      disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading || isDebouncePending,
       contrast: true,
     },
   ];
@@ -222,7 +226,7 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
       onSelectedTargetAssetChange={onSelectedVaultChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedTxOutcomeStatus}
+      targetAmountStatus={expectedAmountStatus}
       actions={txActions}
       status={{ error }}
       onClose={onClose}

@@ -60,7 +60,7 @@ export class TokenServiceImpl implements TokenService {
 
     const tokens = unionBy(vaultsTokens, ironBankTokens, 'address');
     tokens.push(...labsTokens);
-    return getUniqueAndCombine(tokens, zapperTokens, 'address');
+    return getUniqueAndCombine(zapperTokens, tokens, 'address');
   }
 
   public async getTokensDynamicData(addresses: string[]): Promise<TokenDynamicData[]> {

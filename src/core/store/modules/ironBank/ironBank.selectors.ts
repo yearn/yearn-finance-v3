@@ -1,7 +1,7 @@
-import { createSelector, current } from '@reduxjs/toolkit';
+import { createSelector } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
-import { RootState, IronBankMarketView, MarketActionsStatusMap, Status } from '@types';
+import { RootState, IronBankMarketView, MarketActionsStatusMap, Status, EthereumAddress } from '@types';
 import { toBN } from '@utils';
 import { initialMarketsActionsMap } from './ironBank.reducer';
 
@@ -155,6 +155,13 @@ const selectSummaryData = createSelector(
   }
 );
 
+const selectRecommendations = createSelector([selectMarkets], (markets) => {
+  const sortedMarkets = [...markets].sort((a, b) => {
+    return toBN(b.lendApy).minus(a.lendApy).toNumber();
+  });
+  return sortedMarkets.slice(0, 3);
+});
+
 const selectIronBankStatus = createSelector(
   [
     selectGetUserIronBankSummaryStatus,
@@ -183,6 +190,10 @@ const selectIronBankStatus = createSelector(
   }
 );
 
+const selectUnderlyingTokensAddresses = createSelector([selectMarketsMap], (markets): EthereumAddress[] => {
+  return Object.values(markets).map((market) => market.tokenId);
+});
+
 export const IronBankSelectors = {
   selectMarkets,
   selectUserIronBankSummary,
@@ -191,5 +202,7 @@ export const IronBankSelectors = {
   selectSelectedMarket,
   selectSelectedMarketActionsStatusMap,
   selectSummaryData,
+  selectRecommendations,
   selectIronBankStatus,
+  selectUnderlyingTokensAddresses,
 };

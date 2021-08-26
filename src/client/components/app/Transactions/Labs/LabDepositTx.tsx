@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
 import {
   TokensSelectors,
   LabsSelectors,
@@ -40,6 +40,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
+  const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
@@ -88,28 +89,25 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     );
   }, [selectedSellTokenAddress]);
 
-  // TODO: SET LABS SIMULATION
+  useEffect(() => {
+    if (!selectedLab) return;
+    dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
+  }, [amount, selectedSellTokenAddress, selectedLab]);
 
+  // TODO: SET LABS SIMULATION
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
-
-    dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
-
-    const timeOutId = setTimeout(() => {
-      if (toBN(amount).gt(0) && !inputError) {
-        dispatch(
-          VaultsActions.getExpectedTransactionOutcome({
-            transactionType: 'DEPOSIT',
-            sourceTokenAddress: selectedSellTokenAddress,
-            sourceTokenAmount: toWei(amount, selectedSellToken.decimals),
-            targetTokenAddress: selectedLab.address,
-          })
-        );
-      }
-    }, 500);
-
-    return () => clearTimeout(timeOutId);
-  }, [amount, selectedSellTokenAddress, selectedLab]);
+    if (toBN(debouncedAmount).gt(0) && !inputError) {
+      dispatch(
+        VaultsActions.getExpectedTransactionOutcome({
+          transactionType: 'DEPOSIT',
+          sourceTokenAddress: selectedSellTokenAddress,
+          sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
+          targetTokenAddress: selectedLab.address,
+        })
+      );
+    }
+  }, [debouncedAmount]);
 
   if (!selectedLab || !selectedSellTokenAddress || !sellTokensOptions) {
     return null;
@@ -122,7 +120,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     console.log('validateVaultAllowance');
 
     const { approved, error } = validateVaultAllowance({
-      amount: toBN(amount),
+      amount: toBN(debouncedAmount),
       vaultAddress: selectedLab.address,
       vaultUnderlyingTokenAddress: selectedLab.token.address,
       sellTokenAddress: selectedSellTokenAddress,
@@ -136,7 +134,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   if (selectedLab.address === PSLPYVBOOSTETH) {
     const { approved, error } = validateYvBoostEthActionsAllowance({
       action: 'INVEST',
-      sellTokenAmount: toBN(amount),
+      sellTokenAmount: toBN(debouncedAmount),
       sellTokenAddress: selectedSellTokenAddress,
       sellTokenDecimals: selectedSellToken.decimals.toString(),
       sellTokenAllowancesMap: selectedSellToken.allowancesMap,
@@ -146,7 +144,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   }
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
-    sellTokenAmount: toBN(amount),
+    sellTokenAmount: toBN(debouncedAmount),
     depositLimit: '0',
     emergencyShutdown: false,
     sellTokenDecimals: selectedSellToken.decimals.toString(),
@@ -166,10 +164,16 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   };
 
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
-  const expectedAmount = toBN(amount).gt(0)
+  const expectedAmount = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedLab?.token.decimals)
     : '';
-  const expectedAmountValue = normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS);
+  const expectedAmountValue = toBN(debouncedAmount).gt(0)
+    ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
+    : '0';
+  const expectedAmountStatus = {
+    error: expectedTxOutcomeStatus.error || error,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+  };
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -243,7 +247,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       onSelectedTargetAssetChange={onSelectedLabChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedTxOutcomeStatus}
+      targetAmountStatus={expectedAmountStatus}
       actions={txActions}
       status={{ error }}
       onClose={onClose}
