@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
 import {
   TokensSelectors,
   LabsSelectors,
@@ -31,6 +31,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
+  const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
@@ -49,7 +50,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
 
   const yvTokenAmount = calculateSharesAmount({
-    amount: toBN(amount),
+    amount: toBN(debouncedAmount),
     decimals: selectedLab!.decimals,
     pricePerShare: selectedLab!.pricePerShare,
   });
@@ -79,25 +80,23 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   }, [selectedTargetTokenAddress]);
 
   useEffect(() => {
-    if (!selectedLab || !selectedTargetTokenAddress) return;
-
+    if (!selectedLab) return;
     dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
-
-    const timeOutId = setTimeout(() => {
-      if (toBN(amount).gt(0) && !inputError) {
-        dispatch(
-          VaultsActions.getExpectedTransactionOutcome({
-            transactionType: 'WITHDRAW',
-            sourceTokenAddress: selectedLab.address,
-            sourceTokenAmount: yvTokenAmount,
-            targetTokenAddress: selectedTargetTokenAddress,
-          })
-        );
-      }
-    }, 500);
-
-    return () => clearTimeout(timeOutId);
   }, [amount, selectedTargetTokenAddress, selectedLab]);
+
+  useEffect(() => {
+    if (!selectedLab || !selectedTargetTokenAddress) return;
+    if (toBN(debouncedAmount).gt(0) && !inputError) {
+      dispatch(
+        VaultsActions.getExpectedTransactionOutcome({
+          transactionType: 'WITHDRAW',
+          sourceTokenAddress: selectedLab.address,
+          sourceTokenAmount: yvTokenAmount,
+          targetTokenAddress: selectedTargetTokenAddress,
+        })
+      );
+    }
+  }, [debouncedAmount]);
 
   if (!selectedLab || !selectedTargetToken || !targetTokensOptions) {
     return null;
@@ -131,10 +130,16 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   };
 
   const amountValue = toBN(amount).times(normalizeAmount(selectedLabToken.priceUsdc, USDC_DECIMALS)).toString();
-  const expectedAmount = toBN(amount).gt(0)
+  const expectedAmount = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedLab?.token.decimals)
     : '';
-  const expectedAmountValue = normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS);
+  const expectedAmountValue = toBN(debouncedAmount).gt(0)
+    ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
+    : '0';
+  const expectedAmountStatus = {
+    error: expectedTxOutcomeStatus.error,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+  };
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -197,7 +202,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       onSelectedTargetAssetChange={onSelectedTargetTokenChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedTxOutcomeStatus}
+      targetAmountStatus={expectedAmountStatus}
       actions={txActions}
       status={{ error }}
       onClose={onClose}
