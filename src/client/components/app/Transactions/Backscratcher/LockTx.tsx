@@ -153,7 +153,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
       selectedTargetAsset={selectedLabOption}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={{}}
+      targetAmountStatus={{ error }}
       actions={txActions}
       status={{ error }}
     />
