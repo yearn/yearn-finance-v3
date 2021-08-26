@@ -25,7 +25,7 @@ import {
   NoWalletCard,
 } from '@components/app';
 import { SpinnerLoading, SearchInput } from '@components/common';
-import { formatPercent, humanizeAmount, normalizeUsdc, halfWidthCss } from '@src/utils';
+import { formatPercent, humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount } from '@src/utils';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -190,11 +190,11 @@ export const Vaults = () => {
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
-              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
-              { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
-              { key: 'earned', header: 'Earned', width: '11rem', className: 'col-earned' },
+              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', sortKey: 'apyRaw', width: '8rem', className: 'col-apy' },
+              { key: 'balance', header: 'Balance', sortKey: 'balanceRaw', width: '13rem', className: 'col-balance' },
+              { key: 'value', header: 'Value', sortKey: 'valueRaw', width: '11rem', className: 'col-value' },
+              { key: 'earned', header: 'Earned', sortKey: 'earnedRaw', width: '11rem', className: 'col-earned' },
               {
                 key: 'actions',
                 transform: ({ vaultAddress }) => (
@@ -215,9 +215,13 @@ export const Vaults = () => {
               tokenSymbol: vault.token.symbol,
               name: vault.displayName,
               balance: humanizeAmount(vault.userDeposited, vault.token.decimals, 4),
+              balanceRaw: normalizeAmount(vault.userDeposited, vault.token.decimals),
               value: normalizeUsdc(vault.userDepositedUsdc, 2),
+              valueRaw: vault.userDepositedUsdc,
               apy: formatPercent(vault.apyData, 2),
+              apyRaw: vault.apyData,
               earned: normalizeUsdc(vault.earned, 2),
+              earnedRaw: vault.earned,
               vaultAddress: vault.address,
               onClick: () => history.push(`/vault/${vault.address}`),
             }))}
@@ -225,7 +229,6 @@ export const Vaults = () => {
 
           <OpportunitiesCard
             header="Opportunities"
-            wrap
             metadata={[
               {
                 key: 'icon',
@@ -233,10 +236,22 @@ export const Vaults = () => {
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
-              { key: 'vaultBalanceUsdc', header: 'Total Assets', width: '15rem', className: 'col-assets' },
-              { key: 'userTokenBalance', header: 'Available to Invest', width: '15rem', className: 'col-available' },
+              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', sortKey: 'apyRaw', width: '8rem', className: 'col-apy' },
+              {
+                key: 'totalAssets',
+                header: 'Total Assets',
+                sortKey: 'totalAssetsRaw',
+                width: '15rem',
+                className: 'col-assets',
+              },
+              {
+                key: 'userTokenBalance',
+                header: 'Available to Invest',
+                sortKey: 'userTokenBalanceRaw',
+                width: '15rem',
+                className: 'col-available',
+              },
               // { key: 'apy', header: 'APY', hide: DWidth <= 400 },
               // { key: 'vaultBalanceUsdc', header: 'Total Assets', hide: isTablet },
               // { key: 'userTokenBalance', header: 'Available to Invest', hide: isTablet },
@@ -258,11 +273,14 @@ export const Vaults = () => {
               icon: vault.displayIcon,
               tokenSymbol: vault.token.symbol,
               name: vault.displayName,
-              vaultBalanceUsdc: normalizeUsdc(vault.vaultBalanceUsdc, 0),
+              totalAssets: normalizeUsdc(vault.vaultBalanceUsdc, 0),
+              totalAssetsRaw: vault.vaultBalanceUsdc,
               apy: formatPercent(vault.apyData, 2),
+              apyRaw: vault.apyData,
               vaultAddress: vault.address,
               userTokenBalance:
                 vault.token.balance === '0' ? '-' : humanizeAmount(vault.token.balance, vault.token.decimals, 4),
+              userTokenBalanceRaw: normalizeAmount(vault.token.balance, vault.token.decimals),
               onClick: () => history.push(`/vault/${vault.address}`),
             }))}
             SearchBar={
@@ -275,6 +293,7 @@ export const Vaults = () => {
                 />
               </SearchBarContainer>
             }
+            wrap
           />
         </>
       )}

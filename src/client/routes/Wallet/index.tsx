@@ -20,7 +20,7 @@ import {
   InfoCard,
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
-import { halfWidthCss, humanizeAmount, normalizeUsdc } from '@src/utils';
+import { halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc } from '@src/utils';
 import { device } from '@themes/default';
 
 const TokensCard = styled(DetailCard)`
@@ -163,10 +163,10 @@ export const Wallet = () => {
               width: '6rem',
               className: 'col-icon',
             },
-            { key: 'name', header: 'Name', width: '17rem', className: 'col-name' },
-            { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
-            { key: 'price', header: 'Price', width: '11rem', className: 'col-price' },
-            { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
+            { key: 'name', header: 'Name', sortKey: 'name', width: '17rem', className: 'col-name' },
+            { key: 'balance', header: 'Balance', sortKey: 'balanceRaw', width: '13rem', className: 'col-balance' },
+            { key: 'price', header: 'Price', sortKey: 'priceRaw', width: '11rem', className: 'col-price' },
+            { key: 'value', header: 'Value', sortKey: 'valueRaw', width: '11rem', className: 'col-value' },
             {
               key: 'actions',
               transform: ({ tokenAddress }) => <ActionButtons actions={tokensButtons(tokenAddress)} />,
@@ -180,8 +180,11 @@ export const Wallet = () => {
             symbol: token.symbol,
             name: token.name,
             balance: humanizeAmount(token.balance, token.decimals, 2),
+            balanceRaw: normalizeAmount(token.balance, token.decimals),
             price: normalizeUsdc(token.priceUsdc, 2),
+            priceRaw: token.priceUsdc,
             value: normalizeUsdc(token.balanceUsdc, 2),
+            valueRaw: token.balanceUsdc,
             tokenAddress: token.address,
           }))}
         />

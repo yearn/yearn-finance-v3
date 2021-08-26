@@ -22,7 +22,7 @@ import {
   RecommendationsCard,
   InfoCard,
 } from '@components/app';
-import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss } from '@src/utils';
+import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss, normalizeAmount } from '@src/utils';
 import { device } from '@themes/default';
 
 const SearchBarContainer = styled.div`
@@ -183,10 +183,16 @@ export const IronBank = () => {
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
-              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
-              { key: 'suppliedUsdc', header: 'Value', width: '11rem', className: 'col-value' },
+              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', sortKey: 'apyRaw', width: '8rem', className: 'col-apy' },
+              { key: 'balance', header: 'Balance', sortKey: 'balanceRaw', width: '13rem', className: 'col-balance' },
+              {
+                key: 'suppliedUsdc',
+                header: 'Value',
+                sortKey: 'suppliedUsdcRaw',
+                width: '11rem',
+                className: 'col-value',
+              },
               {
                 key: 'collateral',
                 header: 'Collateral',
@@ -221,8 +227,11 @@ export const IronBank = () => {
               tokenSymbol: market.token.symbol,
               name: market.token.symbol,
               balance: humanizeAmount(market.userDeposited, market.token.decimals, 4),
+              balanceRaw: normalizeAmount(market.userDeposited, market.token.decimals),
               apy: normalizePercent(market.lendApy, 2),
+              apyRaw: market.lendApy,
               suppliedUsdc: normalizeUsdc(market.userDepositedUsdc),
+              suppliedUsdcRaw: market.userDepositedUsdc,
               collateral: market.enteredMarket ? 'true' : 'false',
               address: market.address,
             }))}
@@ -238,10 +247,16 @@ export const IronBank = () => {
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
-              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
-              { key: 'borrowedUsdc', header: 'Value', width: '11rem', className: 'col-value' },
+              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', sortKey: 'apyRaw', width: '8rem', className: 'col-apy' },
+              { key: 'balance', header: 'Balance', sortKey: 'balanceRaw', width: '13rem', className: 'col-balance' },
+              {
+                key: 'borrowedUsdc',
+                header: 'Value',
+                sortKey: 'borrowedUsdcRaw',
+                width: '11rem',
+                className: 'col-value',
+              },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -262,8 +277,11 @@ export const IronBank = () => {
               tokenSymbol: market.token.symbol,
               name: market.token.symbol,
               balance: humanizeAmount(market.userDeposited, market.token.decimals, 4),
+              balanceRaw: normalizeAmount(market.userDeposited, market.token.decimals),
               apy: normalizePercent(market.borrowApy, 2),
+              apyRaw: market.borrowApy,
               borrowedUsdc: normalizeUsdc(market.userDepositedUsdc),
+              borrowedUsdcRaw: market.userDepositedUsdc,
               address: market.address,
             }))}
           />
@@ -278,11 +296,35 @@ export const IronBank = () => {
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'supplyAPY', header: 'Lend APY', width: '8rem', className: 'col-lend-apy' },
-              { key: 'borrowAPY', header: 'Borrow APY', width: '8rem', className: 'col-borrow-apy' },
-              { key: 'liquidity', header: 'Market Liquidity', width: '15rem', className: 'col-market' },
-              { key: 'userTokenBalance', header: 'Available to Invest', width: '15rem', className: 'col-available' },
+              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              {
+                key: 'supplyAPY',
+                header: 'Lend APY',
+                sortKey: 'supplyApyRaw',
+                width: '8rem',
+                className: 'col-lend-apy',
+              },
+              {
+                key: 'borrowAPY',
+                header: 'Borrow APY',
+                sortKey: 'borrowApyRaw',
+                width: '8rem',
+                className: 'col-borrow-apy',
+              },
+              {
+                key: 'liquidity',
+                header: 'Market Liquidity',
+                sortKey: 'liquidityRaw',
+                width: '15rem',
+                className: 'col-market',
+              },
+              {
+                key: 'userTokenBalance',
+                header: 'Available to Invest',
+                sortKey: 'userTokenBalanceRaw',
+                width: '15rem',
+                className: 'col-available',
+              },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -303,10 +345,14 @@ export const IronBank = () => {
               tokenSymbol: market.token.symbol,
               name: market.token.symbol,
               supplyAPY: normalizePercent(market.lendApy, 2),
+              supplyApyRaw: market.lendApy,
               borrowAPY: normalizePercent(market.borrowApy, 2),
+              borrowApyRaw: market.borrowApy,
               liquidity: normalizeUsdc(market.liquidity, 0),
+              liquidityRaw: market.liquidity,
               userTokenBalance:
                 market.token.balance === '0' ? '-' : humanizeAmount(market.token.balance, market.token.decimals, 4),
+              userTokenBalanceRaw: normalizeAmount(market.token.balance, market.token.decimals),
               address: market.address,
             }))}
             SearchBar={

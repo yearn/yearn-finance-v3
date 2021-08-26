@@ -16,7 +16,7 @@ import {
   NoWalletCard,
 } from '@components/app';
 import { SpinnerLoading, SearchInput } from '@components/common';
-import { formatPercent, halfWidthCss, humanizeAmount, normalizeUsdc, toBN } from '@src/utils';
+import { formatPercent, halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc, toBN } from '@src/utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '../../../core/types';
@@ -307,10 +307,10 @@ export const Labs = () => {
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
-              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
-              { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
+              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', sortKey: 'apyRaw', width: '8rem', className: 'col-apy' },
+              { key: 'balance', header: 'Balance', sortKey: 'balanceRaw', width: '13rem', className: 'col-balance' },
+              { key: 'value', header: 'Value', sortKey: 'valueRaw', width: '11rem', className: 'col-value' },
               {
                 key: 'alert',
                 transform: ({ alert }) => alert !== '' && <div> {alert} </div>,
@@ -331,8 +331,11 @@ export const Labs = () => {
               tokenSymbol: lab.displayName,
               name: lab.displayName,
               balance: humanizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
+              balanceRaw: normalizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals),
               value: normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
+              valueRaw: lab[lab.mainPositionKey].userDepositedUsdc,
               apy: formatPercent(lab.apyData, 2),
+              apyRaw: lab.apyData,
               labAddress: lab.address,
               // TODO Redirect address is wrong
               onClick: () => history.push(`/vault/${lab.address}`),
@@ -350,10 +353,22 @@ export const Labs = () => {
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
-              { key: 'labBalanceUsdc', header: 'Total Assets', width: '15rem', className: 'col-assets' },
-              { key: 'userTokenBalance', header: 'Available to Invest', width: '15rem', className: 'col-available' },
+              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
+              { key: 'apy', header: 'APY', sortKey: 'apyRaw', width: '8rem', className: 'col-apy' },
+              {
+                key: 'totalAssets',
+                header: 'Total Assets',
+                sortKey: 'totalAssetsRaw',
+                width: '15rem',
+                className: 'col-assets',
+              },
+              {
+                key: 'userTokenBalance',
+                header: 'Available to Invest',
+                sortKey: 'userTokenBalanceRaw',
+                width: '15rem',
+                className: 'col-available',
+              },
               {
                 key: 'actions',
                 transform: ({ labAddress }) => <LabOpportunitiesActions labAddress={labAddress} />,
@@ -367,9 +382,12 @@ export const Labs = () => {
               tokenSymbol: lab.displayName,
               name: lab.displayName,
               apy: formatPercent(lab.apyData, 2),
-              labBalanceUsdc: normalizeUsdc(lab.labBalanceUsdc, 0),
+              apyRaw: lab.apyData,
+              totalAssets: normalizeUsdc(lab.labBalanceUsdc, 0),
+              totalAssetsRaw: lab.labBalanceUsdc,
               userTokenBalance:
                 lab.token.balance === '0' ? '-' : humanizeAmount(lab.token.balance, lab.token.decimals, 4),
+              userTokenBalanceRaw: normalizeAmount(lab.token.balance, lab.token.decimals),
               labAddress: lab.address,
               // TODO Redirect address is wrong
               onClick: () => history.push(`/vault/${lab.address}`),
