@@ -9,6 +9,7 @@ import { TokenIcon, ViewContainer } from '@components/app';
 import { DepositTx, WithdrawTx } from '@components/app/Transactions';
 import { Card, CardContent, CardHeader, SpinnerLoading, Tab, TabPanel, Tabs, Text, Button } from '@components/common';
 import { LineChart } from '@components/common/Charts';
+import { useEffect } from 'react';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -118,7 +119,25 @@ export const VaultDetail = () => {
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
 
-  const generalLoading = vaultsStatus.loading || tokensStatus.loading;
+  const [firstTokensFetch, setFirstTokensFetch] = useState(false);
+  const [tokensInitialized, setTokensInitialized] = useState(false);
+
+  useEffect(() => {
+    const loading = tokensStatus.loading;
+    if (loading && !firstTokensFetch) setFirstTokensFetch(true);
+    if (!loading && firstTokensFetch) setTokensInitialized(true);
+  }, [tokensStatus.loading]);
+
+  const [firstVaultsFetch, setFirstVaultsFetch] = useState(false);
+  const [vaultsInitialized, setVaultsInitialized] = useState(false);
+
+  useEffect(() => {
+    const loading = vaultsStatus.loading;
+    if (loading && !firstVaultsFetch) setFirstVaultsFetch(true);
+    if (!loading && firstVaultsFetch) setVaultsInitialized(true);
+  }, [vaultsStatus.loading]);
+
+  const generalLoading = (vaultsStatus.loading || tokensStatus.loading) && (!tokensInitialized || !vaultsInitialized);
 
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
