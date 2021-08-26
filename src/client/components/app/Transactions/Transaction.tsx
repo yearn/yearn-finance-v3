@@ -8,7 +8,7 @@ import { TxError } from './components/TxError';
 import { TxStatus } from './components/TxStatus';
 import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
 
-import { formatAmount, normalizeAmount } from '@src/utils';
+import { formatAmount, normalizeAmount, toBN } from '@src/utils';
 
 interface Status {
   loading?: boolean;
@@ -137,7 +137,10 @@ export const Transaction: FC<TransactionProps> = (props) => {
         tokenOptions={targetAssetOptions}
         onSelectedTokenChange={onSelectedTargetAssetChange}
         yieldPercent={selectedTargetAsset.yield}
+        inputError={!!targetAmountStatus.error}
         readOnly
+        loading={toBN(sourceAmount).eq(0) ? false : targetAmountStatus.loading}
+        loadingText="Simulating..."
       />
 
       <TxActions>

@@ -1,6 +1,8 @@
 import BigNumber from 'bignumber.js';
 import { formatUnits, BigNumber as EthersBN } from '@frameworks/ethers';
 
+BigNumber.set({ EXPONENTIAL_AT: 50 });
+
 export const USDC_DECIMALS = 6;
 export const COLLATERAL_FACTOR_DECIMALS = 18;
 export const GWEI = 9;

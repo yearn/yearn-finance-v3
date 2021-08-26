@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
 import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions, SettingsSelectors } from '@store';
 import {
   toBN,
@@ -24,6 +24,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
+  const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
@@ -43,7 +44,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   // TODO Fix logic for vault details
   const yvTokenAmount = selectedVault
     ? calculateSharesAmount({
-        amount: toBN(amount),
+        amount: toBN(debouncedAmount),
         decimals: selectedVault!.decimals,
         pricePerShare: selectedVault!.pricePerShare,
       })
@@ -74,24 +75,23 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   }, [selectedTargetTokenAddress]);
 
   useEffect(() => {
-    if (!selectedVault || !selectedTargetTokenAddress) return;
+    if (!selectedVault) return;
     dispatch(VaultsActions.clearVaultStatus({ vaultAddress: selectedVault.address }));
-
-    const timeOutId = setTimeout(() => {
-      if (toBN(amount).gt(0) && !inputError) {
-        dispatch(
-          VaultsActions.getExpectedTransactionOutcome({
-            transactionType: 'WITHDRAW',
-            sourceTokenAddress: selectedVault.address,
-            sourceTokenAmount: yvTokenAmount,
-            targetTokenAddress: selectedTargetTokenAddress,
-          })
-        );
-      }
-    }, 500);
-
-    return () => clearTimeout(timeOutId);
   }, [amount, selectedTargetTokenAddress, selectedVault]);
+
+  useEffect(() => {
+    if (!selectedVault || !selectedTargetTokenAddress) return;
+    if (toBN(debouncedAmount).gt(0) && !inputError) {
+      dispatch(
+        VaultsActions.getExpectedTransactionOutcome({
+          transactionType: 'WITHDRAW',
+          sourceTokenAddress: selectedVault.address,
+          sourceTokenAmount: yvTokenAmount,
+          targetTokenAddress: selectedTargetTokenAddress,
+        })
+      );
+    }
+  }, [debouncedAmount]);
 
   if (!selectedVault || !selectedTargetToken || !targetTokensOptions) {
     return null;
@@ -123,10 +123,16 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     decimals: selectedVault.token.decimals,
   };
   const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
-  const expectedAmount = toBN(amount).gt(0)
+  const expectedAmount = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmount, selectedTargetToken?.decimals)
     : '';
-  const expectedAmountValue = normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS);
+  const expectedAmountValue = toBN(debouncedAmount).gt(0)
+    ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
+    : '0';
+  const expectedAmountStatus = {
+    error: expectedTxOutcomeStatus.error,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+  };
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -189,7 +195,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       onSelectedTargetAssetChange={onSelectedTargetTokenChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedTxOutcomeStatus}
+      targetAmountStatus={expectedAmountStatus}
       actions={txActions}
       status={{ error }}
       onClose={onClose}
