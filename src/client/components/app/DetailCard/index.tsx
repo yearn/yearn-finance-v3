@@ -1,6 +1,6 @@
 import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
-import { sortBy, reverse, some, get, toNumber, isString, orderBy } from 'lodash';
+import { reverse, some, get, toNumber, isString, orderBy } from 'lodash';
 
 import { Card, CardHeader, CardContent, CardElement } from '@components/common';
 import { useEffect } from 'react';
