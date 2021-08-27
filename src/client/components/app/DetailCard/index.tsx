@@ -1,6 +1,6 @@
 import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
-import { sortBy, reverse, some, get, toNumber, isString } from 'lodash';
+import { sortBy, reverse, some, get, toNumber, isString, orderBy } from 'lodash';
 
 import { Card, CardHeader, CardContent, CardElement } from '@components/common';
 import { useEffect } from 'react';
@@ -122,18 +122,22 @@ export const DetailCard = <T,>({
     } else {
       if (some(sortedData, key)) {
         setSortedBy(key);
-        const sortedDataDesc = sortBy([...sortedData], (item) => {
-          const element = get(item, key);
-          if (isNumber(element)) {
-            return toNumber(element);
-          }
-          if (isString(element)) {
-            return element.toLowerCase();
-          }
+        const sortedDataDesc = orderBy(
+          [...sortedData],
+          (item) => {
+            const element = get(item, key);
+            if (isNumber(element)) {
+              return toNumber(element);
+            }
+            if (isString(element)) {
+              return element.toLowerCase();
+            }
 
-          return element;
-        });
-        setSortedData(reverse([...sortedDataDesc]));
+            return element;
+          },
+          ['desc']
+        );
+        setSortedData(sortedDataDesc);
       }
     }
   };
