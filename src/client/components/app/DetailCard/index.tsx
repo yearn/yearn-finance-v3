@@ -1,7 +1,13 @@
-import { ReactNode } from 'react';
+import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
+import { reverse, some, get, toNumber, isString, orderBy } from 'lodash';
 
 import { Card, CardHeader, CardContent, CardElement } from '@components/common';
+import { useEffect } from 'react';
+
+function isNumber(n: any) {
+  return typeof n != 'boolean' && !isNaN(n);
+}
 
 const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
   display: flex;
@@ -65,8 +71,8 @@ const StyledCard = styled(Card)`
   width: 100%;
 `;
 
-interface Metadata {
-  key: string;
+interface Metadata<T> {
+  key: Extract<keyof T, string>;
   header?: string;
   align?: 'flex-start' | 'center' | 'flex-end';
   fontWeight?: number;
@@ -74,26 +80,67 @@ interface Metadata {
   grow?: '1' | '0';
   hide?: boolean;
   className?: string;
-  transform?: (data: Data) => ReactNode;
+  sortable?: boolean;
+  format?: (item: T) => string;
+  transform?: (item: T) => ReactNode;
 }
 
-interface Data {
-  [key: string]: any;
-}
-
-interface DetailCardProps {
+interface DetailCardProps<T> {
   header: string;
-  metadata: Metadata[];
-  data: Data[];
+  metadata: Metadata<T>[];
+  data: T[];
   stripes?: boolean;
   wrap?: boolean;
   SearchBar?: ReactNode;
+  onAction?: (item: T) => void;
 }
 
-export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, ...props }: DetailCardProps) => {
+export const DetailCard = <T,>({
+  header,
+  metadata,
+  data,
+  stripes,
+  wrap,
+  SearchBar,
+  onAction,
+  ...props
+}: DetailCardProps<T>) => {
+  const [sortedBy, setSortedBy] = useState('');
+  const [sortedData, setSortedData] = useState(data);
+
+  useEffect(() => {
+    setSortedData(data);
+  }, [data]);
+
   if (data.length === 0 && !SearchBar) {
     return null;
   }
+
+  const sort = (key: string) => {
+    if (sortedBy === key) {
+      setSortedData(reverse([...sortedData]));
+    } else {
+      if (some(sortedData, key)) {
+        setSortedBy(key);
+        const sortedDataDesc = orderBy(
+          [...sortedData],
+          (item) => {
+            const element = get(item, key);
+            if (isNumber(element)) {
+              return toNumber(element);
+            }
+            if (isString(element)) {
+              return element.toLowerCase();
+            }
+
+            return element;
+          },
+          ['desc']
+        );
+        setSortedData(sortedDataDesc);
+      }
+    }
+  };
 
   return (
     <StyledCard {...props}>
@@ -102,7 +149,7 @@ export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, .
 
       <CardContent>
         {metadata.map(
-          ({ key, header, width, align, grow, hide, className }) =>
+          ({ key, header, width, align, grow, sortable, hide, className }) =>
             !hide && (
               <TitleCardElement
                 className={className}
@@ -111,19 +158,28 @@ export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, .
                 width={width}
                 align={align}
                 grow={grow}
+                onClick={() => (sortable ? sort(key) : undefined)}
+                pointer={sortable}
               />
             )
         )}
       </CardContent>
 
-      {data.map((item, i) => (
-        <StyledCardContent key={`content-${i}`} wrap={wrap} pointer={!!item.onClick} onClick={item.onClick}>
+      {sortedData.map((item, i) => (
+        <StyledCardContent
+          key={`content-${i}`}
+          wrap={wrap}
+          pointer={!!onAction}
+          onClick={() => {
+            if (onAction) onAction(item);
+          }}
+        >
           {metadata.map(
-            ({ key, width, align, grow, hide, fontWeight, className, transform }) =>
+            ({ key, width, align, grow, hide, fontWeight, className, format, transform }) =>
               !hide && (
                 <StyledCardElement
                   key={`element-${key}-${i}`}
-                  content={transform ? undefined : item[key]}
+                  content={transform ? undefined : format ? format(item) : item[key]}
                   fontWeight={fontWeight}
                   width={width}
                   align={align}
