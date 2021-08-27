@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Button } from '@components/common';
+import { Button, Icon, WarningFilledIcon } from '@components/common';
 
 const ActionButtonsContainer = styled.div<{ actions: number }>`
   display: flex;
@@ -9,11 +9,20 @@ const ActionButtonsContainer = styled.div<{ actions: number }>`
   gap: ${({ theme }) => theme.cardPadding};
 `;
 
+const AlertIcon = styled(Icon)`
+  width: 1.6rem;
+  fill: ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
+`;
+
 const AlertButton = styled.div`
-  border-radius: 2px;
-  background: black;
-  width: 2rem;
-  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.8rem;
+  border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
+  background: ${({ theme }) => theme.colors.vaultActionButton.borderColor};
+  width: 2.8rem;
+  height: 2.8rem;
 `;
 
 const ActionButton = styled(Button)`
@@ -41,7 +50,9 @@ export const ActionButtons = ({ actions, alert }: ActionButtonsProps) => (
         onClick={(e) => {
           e.stopPropagation();
         }}
-      />
+      >
+        <AlertIcon Component={WarningFilledIcon} />
+      </AlertButton>
     )}
 
     {actions.map(({ name, handler, disabled }) => (

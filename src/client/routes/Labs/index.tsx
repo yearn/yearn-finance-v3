@@ -251,7 +251,7 @@ export const Labs = () => {
     switch (lab.address) {
       case PSLPYVBOOSTETH:
         if (toBN(lab.DEPOSIT.userBalance).gt(0)) {
-          return 'AVAILABLE TO STAKE';
+          return 'Available to stake';
         }
         break;
 
