@@ -39,7 +39,7 @@ const TokensCard = styled(DetailCard)`
       display: none;
     }
   }
-`;
+` as typeof DetailCard;
 
 const Row = styled.div`
   display: flex;
@@ -155,38 +155,53 @@ export const Wallet = () => {
       {!generalLoading && walletIsConnected && (
         <TokensCard
           header="Tokens"
-          wrap
           metadata={[
             {
-              key: 'icon',
-              transform: ({ icon, symbol }) => <TokenIcon icon={icon} symbol={symbol} />,
+              key: 'displayIcon',
+              transform: ({ displayIcon, symbol }) => <TokenIcon icon={displayIcon} symbol={symbol} />,
               width: '6rem',
               className: 'col-icon',
             },
-            { key: 'name', header: 'Name', sortKey: 'name', width: '17rem', className: 'col-name' },
-            { key: 'balance', header: 'Balance', sortKey: 'balanceRaw', width: '13rem', className: 'col-balance' },
-            { key: 'price', header: 'Price', sortKey: 'priceRaw', width: '11rem', className: 'col-price' },
-            { key: 'value', header: 'Value', sortKey: 'valueRaw', width: '11rem', className: 'col-value' },
+            { key: 'name', header: 'Name', sortable: true, width: '17rem', className: 'col-name' },
+            {
+              key: 'tokenBalance',
+              header: 'Balance',
+              format: ({ balance, decimals }) => humanizeAmount(balance, decimals, 2),
+              sortable: true,
+              width: '13rem',
+              className: 'col-balance',
+            },
+            {
+              key: 'priceUsdc',
+              header: 'Price',
+              format: ({ priceUsdc }) => normalizeUsdc(priceUsdc, 2),
+              sortable: true,
+              width: '11rem',
+              className: 'col-price',
+            },
+            {
+              key: 'balanceUsdc',
+              header: 'Value',
+              format: ({ balanceUsdc }) => normalizeUsdc(balanceUsdc, 2),
+              sortable: true,
+              width: '11rem',
+              className: 'col-value',
+            },
             {
               key: 'actions',
-              transform: ({ tokenAddress }) => <ActionButtons actions={tokensButtons(tokenAddress)} />,
+              transform: ({ address }) => <ActionButtons actions={tokensButtons(address)} />,
               align: 'flex-end',
               width: 'auto',
               grow: '1',
             },
           ]}
           data={userTokens.map((token) => ({
-            icon: token.icon ?? '',
-            symbol: token.symbol,
-            name: token.name,
-            balance: humanizeAmount(token.balance, token.decimals, 2),
-            balanceRaw: normalizeAmount(token.balance, token.decimals),
-            price: normalizeUsdc(token.priceUsdc, 2),
-            priceRaw: token.priceUsdc,
-            value: normalizeUsdc(token.balanceUsdc, 2),
-            valueRaw: token.balanceUsdc,
-            tokenAddress: token.address,
+            ...token,
+            displayIcon: token.icon ?? '',
+            tokenBalance: normalizeAmount(token.balance, token.decimals),
+            actions: null,
           }))}
+          wrap
         />
       )}
     </ViewContainer>

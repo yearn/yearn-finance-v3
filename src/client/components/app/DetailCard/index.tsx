@@ -1,6 +1,6 @@
 import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
-import { sortBy, reverse, some, get, toNumber } from 'lodash';
+import { sortBy, reverse, some, get, toNumber, isString } from 'lodash';
 
 import { Card, CardHeader, CardContent, CardElement } from '@components/common';
 import { useEffect } from 'react';
@@ -71,8 +71,8 @@ const StyledCard = styled(Card)`
   width: 100%;
 `;
 
-interface Metadata {
-  key: string;
+interface Metadata<T> {
+  key: Extract<keyof T, string>;
   header?: string;
   align?: 'flex-start' | 'center' | 'flex-end';
   fontWeight?: number;
@@ -80,24 +80,31 @@ interface Metadata {
   grow?: '1' | '0';
   hide?: boolean;
   className?: string;
-  transform?: (data: Data) => ReactNode;
-  sortKey?: string;
+  sortable?: boolean;
+  format?: (item: T) => string;
+  transform?: (item: T) => ReactNode;
 }
 
-interface Data {
-  [key: string]: any;
-}
-
-interface DetailCardProps {
+interface DetailCardProps<T> {
   header: string;
-  metadata: Metadata[];
-  data: Data[];
+  metadata: Metadata<T>[];
+  data: T[];
   stripes?: boolean;
   wrap?: boolean;
   SearchBar?: ReactNode;
+  onAction?: (item: T) => void;
 }
 
-export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, ...props }: DetailCardProps) => {
+export const DetailCard = <T,>({
+  header,
+  metadata,
+  data,
+  stripes,
+  wrap,
+  SearchBar,
+  onAction,
+  ...props
+}: DetailCardProps<T>) => {
   const [sortedBy, setSortedBy] = useState('');
   const [sortedData, setSortedData] = useState(data);
 
@@ -120,6 +127,9 @@ export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, .
           if (isNumber(element)) {
             return toNumber(element);
           }
+          if (isString(element)) {
+            return element.toLowerCase();
+          }
 
           return element;
         });
@@ -135,7 +145,7 @@ export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, .
 
       <CardContent>
         {metadata.map(
-          ({ key, header, width, align, grow, sortKey, hide, className }) =>
+          ({ key, header, width, align, grow, sortable, hide, className }) =>
             !hide && (
               <TitleCardElement
                 className={className}
@@ -144,21 +154,28 @@ export const DetailCard = ({ header, metadata, data, stripes, wrap, SearchBar, .
                 width={width}
                 align={align}
                 grow={grow}
-                onClick={() => (sortKey ? sort(sortKey) : undefined)}
-                pointer={!!sortKey}
+                onClick={() => (sortable ? sort(key) : undefined)}
+                pointer={sortable}
               />
             )
         )}
       </CardContent>
 
       {sortedData.map((item, i) => (
-        <StyledCardContent key={`content-${i}`} wrap={wrap} pointer={!!item.onClick} onClick={item.onClick}>
+        <StyledCardContent
+          key={`content-${i}`}
+          wrap={wrap}
+          pointer={!!onAction}
+          onClick={() => {
+            if (onAction) onAction(item);
+          }}
+        >
           {metadata.map(
-            ({ key, width, align, grow, hide, fontWeight, className, transform }) =>
+            ({ key, width, align, grow, hide, fontWeight, className, format, transform }) =>
               !hide && (
                 <StyledCardElement
                   key={`element-${key}-${i}`}
-                  content={transform ? undefined : item[key]}
+                  content={transform ? undefined : format ? format(item) : item[key]}
                   fontWeight={fontWeight}
                   width={width}
                   align={align}

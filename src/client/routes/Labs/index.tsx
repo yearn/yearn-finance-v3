@@ -66,7 +66,7 @@ const OpportunitiesCard = styled(DetailCard)`
       display: none;
     }
   }
-`;
+` as typeof DetailCard;
 
 const HoldingsCard = styled(DetailCard)`
   @media ${device.tablet} {
@@ -90,7 +90,7 @@ const HoldingsCard = styled(DetailCard)`
       display: none;
     }
   }
-`;
+` as typeof DetailCard;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
   width: 100%;
@@ -299,18 +299,45 @@ export const Labs = () => {
 
           <HoldingsCard
             header="Holdings"
-            wrap
             metadata={[
               {
-                key: 'icon',
-                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                key: 'displayIcon',
+                transform: ({ displayIcon, displayName }) => <TokenIcon icon={displayIcon} symbol={displayName} />,
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', sortKey: 'apyRaw', width: '8rem', className: 'col-apy' },
-              { key: 'balance', header: 'Balance', sortKey: 'balanceRaw', width: '13rem', className: 'col-balance' },
-              { key: 'value', header: 'Value', sortKey: 'valueRaw', width: '11rem', className: 'col-value' },
+              {
+                key: 'displayName',
+                header: 'Name',
+                sortable: true,
+                fontWeight: 600,
+                width: '17rem',
+                className: 'col-name',
+              },
+              {
+                key: 'apyData',
+                header: 'APY',
+                format: ({ apyData }) => formatPercent(apyData, 2),
+                sortable: true,
+                width: '8rem',
+                className: 'col-apy',
+              },
+              {
+                key: 'balance',
+                header: 'Balance',
+                format: (lab) => humanizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
+                sortable: true,
+                width: '13rem',
+                className: 'col-balance',
+              },
+              {
+                key: 'value',
+                header: 'Value',
+                format: (lab) => normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
+                sortable: true,
+                width: '11rem',
+                className: 'col-value',
+              },
               {
                 key: 'alert',
                 transform: ({ alert }) => alert !== '' && <div> {alert} </div>,
@@ -320,77 +347,77 @@ export const Labs = () => {
               },
               {
                 key: 'actions',
-                transform: ({ labAddress }) => <LabHoldingsActions labAddress={labAddress} />,
+                transform: ({ address }) => <LabHoldingsActions labAddress={address} />,
                 align: 'flex-end',
                 width: 'auto',
                 grow: '1',
               },
             ]}
             data={holdings.map((lab) => ({
-              icon: lab.displayIcon,
-              tokenSymbol: lab.displayName,
-              name: lab.displayName,
-              balance: humanizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
-              balanceRaw: normalizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals),
-              value: normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
-              valueRaw: lab[lab.mainPositionKey].userDepositedUsdc,
-              apy: formatPercent(lab.apyData, 2),
-              apyRaw: lab.apyData,
-              labAddress: lab.address,
-              // TODO Redirect address is wrong
-              onClick: () => history.push(`/vault/${lab.address}`),
+              ...lab,
+              balance: normalizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals),
+              value: lab[lab.mainPositionKey].userDepositedUsdc,
               alert: labsHoldingsAlerts(lab) ?? '',
+              actions: null,
             }))}
+            // TODO Redirect address is wrong
+            onAction={({ address }) => history.push(`/vault/${address}`)}
+            wrap
           />
 
           <OpportunitiesCard
             header="Opportunities"
-            wrap
             metadata={[
               {
-                key: 'icon',
-                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                key: 'displayIcon',
+                transform: ({ displayIcon, displayName }) => <TokenIcon icon={displayIcon} symbol={displayName} />,
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', sortKey: 'apyRaw', width: '8rem', className: 'col-apy' },
               {
-                key: 'totalAssets',
+                key: 'displayName',
+                header: 'Name',
+                sortable: true,
+                fontWeight: 600,
+                width: '17rem',
+                className: 'col-name',
+              },
+              {
+                key: 'apyData',
+                header: 'APY',
+                format: ({ apyData }) => formatPercent(apyData, 2),
+                sortable: true,
+                width: '8rem',
+                className: 'col-apy',
+              },
+              {
+                key: 'labBalanceUsdc',
                 header: 'Total Assets',
-                sortKey: 'totalAssetsRaw',
+                format: ({ labBalanceUsdc }) => normalizeUsdc(labBalanceUsdc, 0),
+                sortable: true,
                 width: '15rem',
                 className: 'col-assets',
               },
               {
                 key: 'userTokenBalance',
                 header: 'Available to Invest',
-                sortKey: 'userTokenBalanceRaw',
+                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                sortable: true,
                 width: '15rem',
                 className: 'col-available',
               },
               {
                 key: 'actions',
-                transform: ({ labAddress }) => <LabOpportunitiesActions labAddress={labAddress} />,
+                transform: ({ address }) => <LabOpportunitiesActions labAddress={address} />,
                 align: 'flex-end',
                 width: 'auto',
                 grow: '1',
               },
             ]}
             data={filteredOpportunities.map((lab) => ({
-              icon: lab.displayIcon,
-              tokenSymbol: lab.displayName,
-              name: lab.displayName,
-              apy: formatPercent(lab.apyData, 2),
-              apyRaw: lab.apyData,
-              totalAssets: normalizeUsdc(lab.labBalanceUsdc, 0),
-              totalAssetsRaw: lab.labBalanceUsdc,
-              userTokenBalance:
-                lab.token.balance === '0' ? '-' : humanizeAmount(lab.token.balance, lab.token.decimals, 4),
-              userTokenBalanceRaw: normalizeAmount(lab.token.balance, lab.token.decimals),
-              labAddress: lab.address,
-              // TODO Redirect address is wrong
-              onClick: () => history.push(`/vault/${lab.address}`),
+              ...lab,
+              userTokenBalance: normalizeAmount(lab.token.balance, lab.token.decimals),
+              actions: null,
             }))}
             SearchBar={
               <SearchBarContainer>
@@ -402,6 +429,9 @@ export const Labs = () => {
                 />
               </SearchBarContainer>
             }
+            // TODO Redirect address is wrong
+            onAction={({ address }) => history.push(`/vault/${address}`)}
+            wrap
           />
         </>
       )}

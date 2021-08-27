@@ -79,7 +79,7 @@ const OpportunitiesCard = styled(DetailCard)`
       display: none;
     }
   }
-`;
+` as typeof DetailCard;
 
 const DepositsCard = styled(DetailCard)`
   @media ${device.tablet} {
@@ -108,7 +108,7 @@ const DepositsCard = styled(DetailCard)`
       display: none;
     }
   }
-`;
+` as typeof DetailCard;
 
 export const Vaults = () => {
   // TODO: Add translation
@@ -182,26 +182,60 @@ export const Vaults = () => {
 
           <DepositsCard
             header="Deposits"
-            wrap
             metadata={[
               {
-                key: 'icon',
-                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                key: 'displayIcon',
+                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', sortKey: 'apyRaw', width: '8rem', className: 'col-apy' },
-              { key: 'balance', header: 'Balance', sortKey: 'balanceRaw', width: '13rem', className: 'col-balance' },
-              { key: 'value', header: 'Value', sortKey: 'valueRaw', width: '11rem', className: 'col-value' },
-              { key: 'earned', header: 'Earned', sortKey: 'earnedRaw', width: '11rem', className: 'col-earned' },
+              {
+                key: 'displayName',
+                header: 'Name',
+                sortable: true,
+                fontWeight: 600,
+                width: '17rem',
+                className: 'col-name',
+              },
+              {
+                key: 'apyData',
+                header: 'APY',
+                format: ({ apyData }) => formatPercent(apyData, 2),
+                sortable: true,
+                width: '8rem',
+                className: 'col-apy',
+              },
+              {
+                key: 'balance',
+                header: 'Balance',
+                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                sortable: true,
+                width: '13rem',
+                className: 'col-balance',
+              },
+              {
+                key: 'userDepositedUsdc',
+                header: 'Value',
+                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc, 2),
+                sortable: true,
+                width: '11rem',
+                className: 'col-value',
+              },
+              {
+                key: 'earned',
+                header: 'Earned',
+                format: ({ earned }) => normalizeUsdc(earned, 2),
+                sortable: true,
+                width: '11rem',
+                className: 'col-earned',
+              },
               {
                 key: 'actions',
-                transform: ({ vaultAddress }) => (
+                transform: ({ address }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Invest', handler: () => depositHandler(vaultAddress) },
-                      { name: 'Withdraw', handler: () => withdrawHandler(vaultAddress) },
+                      { name: 'Invest', handler: () => depositHandler(address) },
+                      { name: 'Withdraw', handler: () => withdrawHandler(address) },
                     ]}
                   />
                 ),
@@ -211,57 +245,60 @@ export const Vaults = () => {
               },
             ]}
             data={deposits.map((vault) => ({
-              icon: vault.displayIcon,
-              tokenSymbol: vault.token.symbol,
-              name: vault.displayName,
-              balance: humanizeAmount(vault.userDeposited, vault.token.decimals, 4),
-              balanceRaw: normalizeAmount(vault.userDeposited, vault.token.decimals),
-              value: normalizeUsdc(vault.userDepositedUsdc, 2),
-              valueRaw: vault.userDepositedUsdc,
-              apy: formatPercent(vault.apyData, 2),
-              apyRaw: vault.apyData,
-              earned: normalizeUsdc(vault.earned, 2),
-              earnedRaw: vault.earned,
-              vaultAddress: vault.address,
-              onClick: () => history.push(`/vault/${vault.address}`),
+              ...vault,
+              balance: normalizeAmount(vault.userDeposited, vault.token.decimals),
+              actions: null,
             }))}
+            onAction={({ address }) => history.push(`/vault/${address}`)}
+            wrap
           />
 
           <OpportunitiesCard
             header="Opportunities"
             metadata={[
               {
-                key: 'icon',
-                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                key: 'displayIcon',
+                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', sortKey: 'name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', sortKey: 'apyRaw', width: '8rem', className: 'col-apy' },
               {
-                key: 'totalAssets',
+                key: 'displayName',
+                header: 'Name',
+                sortable: true,
+                fontWeight: 600,
+                width: '17rem',
+                className: 'col-name',
+              },
+              {
+                key: 'apyData',
+                header: 'APY',
+                format: ({ apyData }) => formatPercent(apyData, 2),
+                sortable: true,
+                width: '8rem',
+                className: 'col-apy',
+              },
+              {
+                key: 'vaultBalanceUsdc',
                 header: 'Total Assets',
-                sortKey: 'totalAssetsRaw',
+                format: ({ vaultBalanceUsdc }) => normalizeUsdc(vaultBalanceUsdc, 0),
+                sortable: true,
                 width: '15rem',
                 className: 'col-assets',
               },
               {
                 key: 'userTokenBalance',
                 header: 'Available to Invest',
-                sortKey: 'userTokenBalanceRaw',
+                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                sortable: true,
                 width: '15rem',
                 className: 'col-available',
               },
-              // { key: 'apy', header: 'APY', hide: DWidth <= 400 },
-              // { key: 'vaultBalanceUsdc', header: 'Total Assets', hide: isTablet },
-              // { key: 'userTokenBalance', header: 'Available to Invest', hide: isTablet },
               {
                 key: 'actions',
-                transform: ({ vaultAddress }) => (
+                transform: ({ address }) => (
                   <ActionButtons
-                    actions={[
-                      { name: 'Invest', handler: () => depositHandler(vaultAddress), disabled: !walletIsConnected },
-                    ]}
+                    actions={[{ name: 'Invest', handler: () => depositHandler(address), disabled: !walletIsConnected }]}
                   />
                 ),
                 align: 'flex-end',
@@ -270,18 +307,9 @@ export const Vaults = () => {
               },
             ]}
             data={filteredVaults.map((vault) => ({
-              icon: vault.displayIcon,
-              tokenSymbol: vault.token.symbol,
-              name: vault.displayName,
-              totalAssets: normalizeUsdc(vault.vaultBalanceUsdc, 0),
-              totalAssetsRaw: vault.vaultBalanceUsdc,
-              apy: formatPercent(vault.apyData, 2),
-              apyRaw: vault.apyData,
-              vaultAddress: vault.address,
-              userTokenBalance:
-                vault.token.balance === '0' ? '-' : humanizeAmount(vault.token.balance, vault.token.decimals, 4),
-              userTokenBalanceRaw: normalizeAmount(vault.token.balance, vault.token.decimals),
-              onClick: () => history.push(`/vault/${vault.address}`),
+              ...vault,
+              userTokenBalance: normalizeAmount(vault.token.balance, vault.token.decimals),
+              actions: null,
             }))}
             SearchBar={
               <SearchBarContainer>
@@ -293,6 +321,7 @@ export const Vaults = () => {
                 />
               </SearchBarContainer>
             }
+            onAction={({ address }) => history.push(`/vault/${address}`)}
             wrap
           />
         </>
