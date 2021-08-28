@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -7,7 +7,6 @@ import { useAppSelector } from '@hooks';
 
 import { VaultDetailPanels, ViewContainer } from '@components/app';
 import { SpinnerLoading, Button } from '@components/common';
-import { ViewContainer } from '@components/app';
 
 const BackButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.surface};
@@ -39,7 +38,7 @@ export const VaultDetail = () => {
   const [firstTokensFetch, setFirstTokensFetch] = useState(false);
   const [tokensInitialized, setTokensInitialized] = useState(false);
 
-  (() => {
+  useEffect(() => {
     const loading = tokensStatus.loading;
     if (loading && !firstTokensFetch) setFirstTokensFetch(true);
     if (!loading && firstTokensFetch) setTokensInitialized(true);
