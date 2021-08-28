@@ -13,5 +13,6 @@ export * from './SummaryCard';
 export * from './TokenAmountInput_old';
 export * from './TokenIcon';
 export * from './Transactions';
-export * from './TransactionSettings';
+export * from './TransactionSettings_old';
+export * from './VaultDetail';
 export * from './ViewContainer';

@@ -35,7 +35,7 @@ const StyledButton = styled.button`
     outline: none;
   }
   &:hover {
-    filter: brightness(110%);
+    filter: contrast(90%);
   }
 
   &.outline {
