@@ -22,7 +22,7 @@ import {
   RecommendationsCard,
   InfoCard,
 } from '@components/app';
-import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss } from '@src/utils';
+import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss, normalizeAmount } from '@src/utils';
 import { device } from '@themes/default';
 
 const SearchBarContainer = styled.div`
@@ -74,7 +74,7 @@ const OpportunitiesCard = styled(DetailCard)`
       width: 10rem;
     }
   }
-`;
+` as typeof DetailCard;
 
 export const IronBank = () => {
   // TODO: Add translation
@@ -175,28 +175,53 @@ export const IronBank = () => {
 
           <DetailCard
             header="Supplying"
-            wrap
             metadata={[
               {
-                key: 'icon',
-                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                key: 'displayIcon',
+                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
-              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
-              { key: 'suppliedUsdc', header: 'Value', width: '11rem', className: 'col-value' },
+              {
+                key: 'displayName',
+                header: 'Name',
+                sortable: true,
+                fontWeight: 600,
+                width: '17rem',
+                className: 'col-name',
+              },
+              {
+                key: 'lendApy',
+                header: 'APY',
+                format: ({ lendApy }) => normalizePercent(lendApy, 2),
+                sortable: true,
+                width: '8rem',
+                className: 'col-apy',
+              },
+              {
+                key: 'balance',
+                header: 'Balance',
+                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                sortable: true,
+                width: '13rem',
+                className: 'col-balance',
+              },
+              {
+                key: 'userDepositedUsdc',
+                header: 'Value',
+                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc),
+                sortable: true,
+                width: '11rem',
+                className: 'col-value',
+              },
               {
                 key: 'collateral',
                 header: 'Collateral',
                 transform: ({ collateral, address }) => (
                   <ToggleButton
-                    selected={collateral === 'true'}
+                    selected={collateral}
                     setSelected={() =>
-                      collateral === 'false'
-                        ? actionHandler('enterMarket', address)
-                        : actionHandler('exitMarket', address)
+                      collateral ? actionHandler('exitMarket', address) : actionHandler('enterMarket', address)
                     }
                   />
                 ),
@@ -217,31 +242,57 @@ export const IronBank = () => {
               },
             ]}
             data={supplied.map((market) => ({
-              icon: market.token.icon ?? '',
-              tokenSymbol: market.token.symbol,
-              name: market.token.symbol,
-              balance: humanizeAmount(market.userDeposited, market.token.decimals, 4),
-              apy: normalizePercent(market.lendApy, 2),
-              suppliedUsdc: normalizeUsdc(market.userDepositedUsdc),
-              collateral: market.enteredMarket ? 'true' : 'false',
-              address: market.address,
+              ...market,
+              displayIcon: market.token.icon ?? '',
+              displayName: market.token.symbol,
+              balance: normalizeAmount(market.userDeposited, market.token.decimals),
+              collateral: market.enteredMarket,
+              actions: null,
             }))}
+            wrap
           />
 
           <DetailCard
             header="Borrowing"
-            wrap
             metadata={[
               {
-                key: 'icon',
-                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                key: 'displayIcon',
+                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
-              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
-              { key: 'borrowedUsdc', header: 'Value', width: '11rem', className: 'col-value' },
+              {
+                key: 'displayName',
+                header: 'Name',
+                sortable: true,
+                fontWeight: 600,
+                width: '17rem',
+                className: 'col-name',
+              },
+              {
+                key: 'borrowApy',
+                header: 'APY',
+                format: ({ borrowApy }) => normalizePercent(borrowApy, 2),
+                sortable: true,
+                width: '8rem',
+                className: 'col-apy',
+              },
+              {
+                key: 'balance',
+                header: 'Balance',
+                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                sortable: true,
+                width: '13rem',
+                className: 'col-balance',
+              },
+              {
+                key: 'userDepositedUsdc',
+                header: 'Value',
+                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc),
+                sortable: true,
+                width: '11rem',
+                className: 'col-value',
+              },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -258,31 +309,64 @@ export const IronBank = () => {
               },
             ]}
             data={borrowed.map((market) => ({
-              icon: market.token.icon ?? '',
-              tokenSymbol: market.token.symbol,
-              name: market.token.symbol,
-              balance: humanizeAmount(market.userDeposited, market.token.decimals, 4),
-              apy: normalizePercent(market.borrowApy, 2),
-              borrowedUsdc: normalizeUsdc(market.userDepositedUsdc),
-              address: market.address,
+              ...market,
+              displayIcon: market.token.icon ?? '',
+              displayName: market.token.symbol,
+              balance: normalizeAmount(market.userDeposited, market.token.decimals),
+              actions: null,
             }))}
+            wrap
           />
 
           <OpportunitiesCard
             header="Opportunities"
-            wrap
             metadata={[
               {
-                key: 'icon',
-                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                key: 'displayIcon',
+                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'supplyAPY', header: 'Lend APY', width: '8rem', className: 'col-lend-apy' },
-              { key: 'borrowAPY', header: 'Borrow APY', width: '8rem', className: 'col-borrow-apy' },
-              { key: 'liquidity', header: 'Market Liquidity', width: '15rem', className: 'col-market' },
-              { key: 'userTokenBalance', header: 'Available to Invest', width: '15rem', className: 'col-available' },
+              {
+                key: 'displayName',
+                header: 'Name',
+                sortable: true,
+                fontWeight: 600,
+                width: '17rem',
+                className: 'col-name',
+              },
+              {
+                key: 'lendApy',
+                header: 'Lend APY',
+                format: ({ lendApy }) => normalizePercent(lendApy, 2),
+                sortable: true,
+                width: '8rem',
+                className: 'col-lend-apy',
+              },
+              {
+                key: 'borrowApy',
+                header: 'Borrow APY',
+                format: ({ borrowApy }) => normalizePercent(borrowApy, 2),
+                sortable: true,
+                width: '8rem',
+                className: 'col-borrow-apy',
+              },
+              {
+                key: 'liquidity',
+                header: 'Market Liquidity',
+                format: ({ liquidity }) => normalizeUsdc(liquidity, 0),
+                sortable: true,
+                width: '15rem',
+                className: 'col-market',
+              },
+              {
+                key: 'userTokenBalance',
+                header: 'Available to Invest',
+                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                sortable: true,
+                width: '15rem',
+                className: 'col-available',
+              },
               {
                 key: 'actions',
                 transform: ({ address }) => (
@@ -299,15 +383,11 @@ export const IronBank = () => {
               },
             ]}
             data={filteredMarkets.map((market) => ({
-              icon: market.token.icon ?? '',
-              tokenSymbol: market.token.symbol,
-              name: market.token.symbol,
-              supplyAPY: normalizePercent(market.lendApy, 2),
-              borrowAPY: normalizePercent(market.borrowApy, 2),
-              liquidity: normalizeUsdc(market.liquidity, 0),
-              userTokenBalance:
-                market.token.balance === '0' ? '-' : humanizeAmount(market.token.balance, market.token.decimals, 4),
-              address: market.address,
+              ...market,
+              displayIcon: market.token.icon ?? '',
+              displayName: market.token.symbol,
+              userTokenBalance: normalizeAmount(market.token.balance, market.token.decimals),
+              actions: null,
             }))}
             SearchBar={
               <SearchBarContainer>
@@ -319,6 +399,7 @@ export const IronBank = () => {
                 />
               </SearchBarContainer>
             }
+            wrap
           />
         </>
       )}
