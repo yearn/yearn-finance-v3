@@ -16,7 +16,7 @@ import {
   NoWalletCard,
 } from '@components/app';
 import { SpinnerLoading, SearchInput } from '@components/common';
-import { formatPercent, halfWidthCss, humanizeAmount, normalizeUsdc, toBN } from '@src/utils';
+import { formatPercent, halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc, toBN } from '@src/utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '../../../core/types';
@@ -66,7 +66,7 @@ const OpportunitiesCard = styled(DetailCard)`
       display: none;
     }
   }
-`;
+` as typeof DetailCard;
 
 const HoldingsCard = styled(DetailCard)`
   @media ${device.tablet} {
@@ -90,7 +90,7 @@ const HoldingsCard = styled(DetailCard)`
       display: none;
     }
   }
-`;
+` as typeof DetailCard;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
   width: 100%;
@@ -124,7 +124,7 @@ export const Labs = () => {
     setFilteredOpportunities(opportunities);
   }, [opportunities]);
 
-  const LabHoldingsActions = ({ labAddress }: { labAddress: string }) => {
+  const LabHoldingsActions = ({ labAddress, alert }: { labAddress: string; alert?: string }) => {
     switch (labAddress) {
       case YVECRV:
         return (
@@ -183,6 +183,7 @@ export const Labs = () => {
       case PSLPYVBOOSTETH:
         return (
           <ActionButtons
+            alert={alert}
             actions={[
               {
                 name: 'Invest',
@@ -250,7 +251,7 @@ export const Labs = () => {
     switch (lab.address) {
       case PSLPYVBOOSTETH:
         if (toBN(lab.DEPOSIT.userBalance).gt(0)) {
-          return 'AVAILABLE TO STAKE';
+          return 'Available to stake';
         }
         break;
 
@@ -299,80 +300,118 @@ export const Labs = () => {
 
           <HoldingsCard
             header="Holdings"
-            wrap
             metadata={[
               {
-                key: 'icon',
-                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                key: 'displayIcon',
+                transform: ({ displayIcon, displayName }) => <TokenIcon icon={displayIcon} symbol={displayName} />,
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
-              { key: 'balance', header: 'Balance', width: '13rem', className: 'col-balance' },
-              { key: 'value', header: 'Value', width: '11rem', className: 'col-value' },
               {
-                key: 'alert',
-                transform: ({ alert }) => alert !== '' && <div> {alert} </div>,
-                align: 'flex-end',
-                width: 'auto',
-                grow: '1',
+                key: 'displayName',
+                header: 'Name',
+                sortable: true,
+                fontWeight: 600,
+                width: '17rem',
+                className: 'col-name',
+              },
+              {
+                key: 'apyData',
+                header: 'APY',
+                format: ({ apyData }) => formatPercent(apyData, 2),
+                sortable: true,
+                width: '8rem',
+                className: 'col-apy',
+              },
+              {
+                key: 'balance',
+                header: 'Balance',
+                format: (lab) => humanizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
+                sortable: true,
+                width: '13rem',
+                className: 'col-balance',
+              },
+              {
+                key: 'value',
+                header: 'Value',
+                format: (lab) => normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
+                sortable: true,
+                width: '11rem',
+                className: 'col-value',
               },
               {
                 key: 'actions',
-                transform: ({ labAddress }) => <LabHoldingsActions labAddress={labAddress} />,
+                transform: ({ address, alert }) => <LabHoldingsActions labAddress={address} alert={alert} />,
                 align: 'flex-end',
                 width: 'auto',
                 grow: '1',
               },
             ]}
             data={holdings.map((lab) => ({
-              icon: lab.displayIcon,
-              tokenSymbol: lab.displayName,
-              name: lab.displayName,
-              balance: humanizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
-              value: normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
-              apy: formatPercent(lab.apyData, 2),
-              labAddress: lab.address,
-              // TODO Redirect address is wrong
-              onClick: () => history.push(`/vault/${lab.address}`),
+              ...lab,
+              balance: normalizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals),
+              value: lab[lab.mainPositionKey].userDepositedUsdc,
               alert: labsHoldingsAlerts(lab) ?? '',
+              actions: null,
             }))}
+            // TODO Redirect address is wrong
+            onAction={({ address }) => history.push(`/vault/${address}`)}
+            wrap
           />
 
           <OpportunitiesCard
             header="Opportunities"
-            wrap
             metadata={[
               {
-                key: 'icon',
-                transform: ({ icon, tokenSymbol }) => <TokenIcon icon={icon} symbol={tokenSymbol} />,
+                key: 'displayIcon',
+                transform: ({ displayIcon, displayName }) => <TokenIcon icon={displayIcon} symbol={displayName} />,
                 width: '6rem',
                 className: 'col-icon',
               },
-              { key: 'name', header: 'Name', fontWeight: 600, width: '17rem', className: 'col-name' },
-              { key: 'apy', header: 'APY', width: '8rem', className: 'col-apy' },
-              { key: 'labBalanceUsdc', header: 'Total Assets', width: '15rem', className: 'col-assets' },
-              { key: 'userTokenBalance', header: 'Available to Invest', width: '15rem', className: 'col-available' },
+              {
+                key: 'displayName',
+                header: 'Name',
+                sortable: true,
+                fontWeight: 600,
+                width: '17rem',
+                className: 'col-name',
+              },
+              {
+                key: 'apyData',
+                header: 'APY',
+                format: ({ apyData }) => formatPercent(apyData, 2),
+                sortable: true,
+                width: '8rem',
+                className: 'col-apy',
+              },
+              {
+                key: 'labBalanceUsdc',
+                header: 'Total Assets',
+                format: ({ labBalanceUsdc }) => normalizeUsdc(labBalanceUsdc, 0),
+                sortable: true,
+                width: '15rem',
+                className: 'col-assets',
+              },
+              {
+                key: 'userTokenBalance',
+                header: 'Available to Invest',
+                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                sortable: true,
+                width: '15rem',
+                className: 'col-available',
+              },
               {
                 key: 'actions',
-                transform: ({ labAddress }) => <LabOpportunitiesActions labAddress={labAddress} />,
+                transform: ({ address }) => <LabOpportunitiesActions labAddress={address} />,
                 align: 'flex-end',
                 width: 'auto',
                 grow: '1',
               },
             ]}
             data={filteredOpportunities.map((lab) => ({
-              icon: lab.displayIcon,
-              tokenSymbol: lab.displayName,
-              name: lab.displayName,
-              apy: formatPercent(lab.apyData, 2),
-              labBalanceUsdc: normalizeUsdc(lab.labBalanceUsdc, 0),
-              userTokenBalance:
-                lab.token.balance === '0' ? '-' : humanizeAmount(lab.token.balance, lab.token.decimals, 4),
-              labAddress: lab.address,
-              // TODO Redirect address is wrong
-              onClick: () => history.push(`/vault/${lab.address}`),
+              ...lab,
+              userTokenBalance: normalizeAmount(lab.token.balance, lab.token.decimals),
+              actions: null,
             }))}
             SearchBar={
               <SearchBarContainer>
@@ -384,6 +423,9 @@ export const Labs = () => {
                 />
               </SearchBarContainer>
             }
+            // TODO Redirect address is wrong
+            onAction={({ address }) => history.push(`/vault/${address}`)}
+            wrap
           />
         </>
       )}

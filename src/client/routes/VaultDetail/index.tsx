@@ -1,10 +1,13 @@
+import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { TokensSelectors, VaultsSelectors } from '@store';
 import { useAppSelector } from '@hooks';
+
 import { VaultDetailPanels, ViewContainer } from '@components/app';
 import { SpinnerLoading, Button } from '@components/common';
+import { ViewContainer } from '@components/app';
 
 const BackButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.surface};
@@ -33,7 +36,25 @@ export const VaultDetail = () => {
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
 
-  const generalLoading = vaultsStatus.loading || tokensStatus.loading;
+  const [firstTokensFetch, setFirstTokensFetch] = useState(false);
+  const [tokensInitialized, setTokensInitialized] = useState(false);
+
+  (() => {
+    const loading = tokensStatus.loading;
+    if (loading && !firstTokensFetch) setFirstTokensFetch(true);
+    if (!loading && firstTokensFetch) setTokensInitialized(true);
+  }, [tokensStatus.loading]);
+
+  const [firstVaultsFetch, setFirstVaultsFetch] = useState(false);
+  const [vaultsInitialized, setVaultsInitialized] = useState(false);
+
+  useEffect(() => {
+    const loading = vaultsStatus.loading;
+    if (loading && !firstVaultsFetch) setFirstVaultsFetch(true);
+    if (!loading && firstVaultsFetch) setVaultsInitialized(true);
+  }, [vaultsStatus.loading]);
+
+  const generalLoading = (vaultsStatus.loading || tokensStatus.loading) && (!tokensInitialized || !vaultsInitialized);
 
   const chartData = [
     {

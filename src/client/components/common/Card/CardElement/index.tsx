@@ -11,9 +11,10 @@ const Container = styled.div<{ width?: string; align?: string; grow?: string; fo
   font-weight: ${({ fontWeight }) => fontWeight ?? 400};
 `;
 
-const Header = styled.div`
+const Header = styled.div<{ pointer?: boolean }>`
   font-size: 1.4rem;
   color: ${({ theme }) => theme.colors.onSurfaceSH1};
+  cursor: ${({ pointer }) => (pointer ? 'pointer' : 'default')};
 `;
 
 const Content = styled.div`
@@ -33,6 +34,8 @@ interface CardElementProps {
   align?: 'flex-start' | 'center' | 'flex-end';
   grow?: '1' | '0';
   fontWeight?: number;
+  onClick?: () => void;
+  pointer?: boolean;
   className?: string;
 }
 
@@ -44,12 +47,18 @@ export const CardElement: FC<CardElementProps> = ({
   align,
   grow,
   fontWeight,
+  onClick,
+  pointer,
   className,
   ...props
 }) => {
   return (
     <Container width={width} align={align} grow={grow} fontWeight={fontWeight} className={className} {...props}>
-      {header && <Header>{header}</Header>}
+      {header && (
+        <Header onClick={onClick} pointer={pointer}>
+          {header}
+        </Header>
+      )}
       {content && <Content>{content}</Content>}
       {children}
     </Container>
