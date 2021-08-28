@@ -124,7 +124,7 @@ export const Labs = () => {
     setFilteredOpportunities(opportunities);
   }, [opportunities]);
 
-  const LabHoldingsActions = ({ labAddress }: { labAddress: string }) => {
+  const LabHoldingsActions = ({ labAddress, alert }: { labAddress: string; alert?: string }) => {
     switch (labAddress) {
       case YVECRV:
         return (
@@ -183,6 +183,7 @@ export const Labs = () => {
       case PSLPYVBOOSTETH:
         return (
           <ActionButtons
+            alert={alert}
             actions={[
               {
                 name: 'Invest',
@@ -250,7 +251,7 @@ export const Labs = () => {
     switch (lab.address) {
       case PSLPYVBOOSTETH:
         if (toBN(lab.DEPOSIT.userBalance).gt(0)) {
-          return 'AVAILABLE TO STAKE';
+          return 'Available to stake';
         }
         break;
 
@@ -339,15 +340,8 @@ export const Labs = () => {
                 className: 'col-value',
               },
               {
-                key: 'alert',
-                transform: ({ alert }) => alert !== '' && <div> {alert} </div>,
-                align: 'flex-end',
-                width: 'auto',
-                grow: '1',
-              },
-              {
                 key: 'actions',
-                transform: ({ address }) => <LabHoldingsActions labAddress={address} />,
+                transform: ({ address, alert }) => <LabHoldingsActions labAddress={address} alert={alert} />,
                 align: 'flex-end',
                 width: 'auto',
                 grow: '1',
