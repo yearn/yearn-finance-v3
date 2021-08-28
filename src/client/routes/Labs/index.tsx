@@ -286,7 +286,7 @@ export const Labs = () => {
                 name: displayName,
                 info: formatPercent(apyData, 2),
                 infoDetail: 'EYY',
-                onAction: () => history.push(`/vault/${address}`),
+                // onAction: () => history.push(`/vault/${address}`),
               }))}
             />
 
@@ -355,7 +355,7 @@ export const Labs = () => {
               actions: null,
             }))}
             // TODO Redirect address is wrong
-            onAction={({ address }) => history.push(`/vault/${address}`)}
+            // onAction={({ address }) => history.push(`/vault/${address}`)}
             wrap
           />
 
@@ -424,7 +424,7 @@ export const Labs = () => {
               </SearchBarContainer>
             }
             // TODO Redirect address is wrong
-            onAction={({ address }) => history.push(`/vault/${address}`)}
+            // onAction={({ address }) => history.push(`/vault/${address}`)}
             wrap
           />
         </>
