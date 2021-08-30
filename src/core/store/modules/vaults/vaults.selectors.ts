@@ -237,7 +237,7 @@ function createVault(props: CreateVaultProps) {
     vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
     emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
-    apyData: vaultData.metadata.apy?.recommended.toString() ?? '0',
+    apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
     allowancesMap: vaultAllowancesMap ?? {},
     approved: new BigNumber(currentAllowance).gt(0),
     pricePerShare: vaultData?.metadata.pricePerShare,
