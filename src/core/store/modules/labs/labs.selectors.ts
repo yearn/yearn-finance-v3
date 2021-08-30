@@ -206,7 +206,7 @@ function createLab(props: CreateLabProps): GeneralLabView {
     decimals: labData.decimals,
     labBalance: labData.underlyingTokenBalance.amount,
     labBalanceUsdc: labData.underlyingTokenBalance.amountUsdc,
-    apyData: labData.metadata.apy?.recommended.toString() ?? '0',
+    apyData: labData.metadata.apy?.net_apy.toString() ?? '0',
     allowancesMap: labAllowances ?? {},
     pricePerShare: labData.metadata.pricePerShare,
     mainPositionKey,

@@ -90,12 +90,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: toBN('1')
             .times(10 ** backscratcherData.decimals)
             .toFixed(0),
-          apy: {
-            recommended: backscratcherData.apy.composite?.totalApy,
-            composite: false,
-            type: backscratcherData.apy.type,
-            description: '',
-          },
+          apy: backscratcherData.apy,
           displayName: backscratcherData.name,
           displayIcon:
             'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
@@ -140,12 +135,7 @@ export class LabServiceImpl implements LabService {
           depositLimit: depositLimit.toString(),
           emergencyShutdown: emergencyShutdown,
           pricePerShare: pricePerShare.toString(),
-          apy: {
-            recommended: yvBoostData.apy.net_apy,
-            composite: false,
-            type: yvBoostData.apy.type,
-            description: '',
-          },
+          apy: yvBoostData.apy,
           displayName: yvBoostData.symbol,
           displayIcon:
             'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
@@ -199,12 +189,7 @@ export class LabServiceImpl implements LabService {
           depositLimit: '0', // yvboost-eth doestn have
           emergencyShutdown: false, // yvboost-eth doestn have
           pricePerShare: pJarRatio.toString(),
-          apy: {
-            recommended: toBN(performance.toString()).dividedBy(100).toNumber(),
-            composite: false,
-            type: pJarData.apy.type,
-            description: '',
-          },
+          apy: pJarData.apy,
           displayName: 'pSLPyvBOOST-ETH',
           displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
