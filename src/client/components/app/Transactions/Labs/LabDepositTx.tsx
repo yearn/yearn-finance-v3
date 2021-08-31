@@ -92,7 +92,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   useEffect(() => {
     if (!selectedLab) return;
     dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
-  }, [amount, selectedSellTokenAddress, selectedLab]);
+  }, [debouncedAmount, selectedSellTokenAddress, selectedLab]);
 
   // TODO: SET LABS SIMULATION
   useEffect(() => {
@@ -117,8 +117,6 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   let allowanceError: string | undefined;
 
   if (selectedLab.address === YVBOOST) {
-    console.log('validateVaultAllowance');
-
     const { approved, error } = validateVaultAllowance({
       amount: toBN(debouncedAmount),
       vaultAddress: selectedLab.address,

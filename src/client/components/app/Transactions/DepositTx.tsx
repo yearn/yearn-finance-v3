@@ -92,7 +92,7 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
   useEffect(() => {
     if (!selectedVault) return;
     dispatch(VaultsActions.clearVaultStatus({ vaultAddress: selectedVault.address }));
-  }, [amount, selectedSellTokenAddress, selectedVault]);
+  }, [debouncedAmount, selectedSellTokenAddress, selectedVault]);
 
   useEffect(() => {
     if (!selectedVault || !selectedSellTokenAddress) return;

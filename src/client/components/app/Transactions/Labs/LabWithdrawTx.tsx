@@ -82,7 +82,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   useEffect(() => {
     if (!selectedLab) return;
     dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
-  }, [amount, selectedTargetTokenAddress, selectedLab]);
+  }, [debouncedAmount, selectedTargetTokenAddress, selectedLab]);
 
   useEffect(() => {
     if (!selectedLab || !selectedTargetTokenAddress) return;

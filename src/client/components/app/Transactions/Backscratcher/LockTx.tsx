@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
 import { TokensActions, LabsSelectors, LabsActions, VaultsActions } from '@store';
 import {
   toBN,
@@ -21,6 +21,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
+  const [debouncedAmount] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedLab = useAppSelector(LabsSelectors.selectYveCrvLab);
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
@@ -53,7 +54,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   useEffect(() => {
     if (!selectedLab) return;
     dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
-  }, [amount]);
+  }, [debouncedAmount]);
 
   if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken) {
     return null;

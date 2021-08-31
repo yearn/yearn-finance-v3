@@ -77,7 +77,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   useEffect(() => {
     if (!selectedVault) return;
     dispatch(VaultsActions.clearVaultStatus({ vaultAddress: selectedVault.address }));
-  }, [amount, selectedTargetTokenAddress, selectedVault]);
+  }, [debouncedAmount, selectedTargetTokenAddress, selectedVault]);
 
   useEffect(() => {
     if (!selectedVault || !selectedTargetTokenAddress) return;

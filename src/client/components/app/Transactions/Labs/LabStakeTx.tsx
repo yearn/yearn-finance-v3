@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
 import { TokensSelectors, LabsSelectors, LabsActions, TokensActions, VaultsActions } from '@store';
 import {
   toBN,
@@ -23,6 +23,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
+  const [debouncedAmount] = useDebounce(amount, 500);
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const selectedSellToken = tokenSelectorFilter(selectedLab?.address ?? '');
@@ -59,7 +60,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
   useEffect(() => {
     if (!selectedLab) return;
     dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
-  }, [amount]);
+  }, [debouncedAmount]);
 
   if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken) {
     return null;
