@@ -62,6 +62,7 @@ const {
   enterOrExitMarket,
   clearUserData,
   clearSelectedMarketAndStatus,
+  clearMarketStatus,
 } = IronBankActions;
 
 type GenericAsyncThunk = AsyncThunk<any, any, any>;
@@ -257,6 +258,9 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
       const currentAddress = state.selectedMarketAddress;
       state.statusMap.marketsActionsMap[currentAddress] = initialMarketsActionsMap;
       state.selectedMarketAddress = undefined;
+    })
+    .addCase(clearMarketStatus, (state, { payload: { marketAddress } }) => {
+      state.statusMap.marketsActionsMap[marketAddress] = initialMarketsActionsMap;
     })
     .addMatcher(isPendingTxAction, (state, { meta, type }) => {
       const marketAddress: string = meta.arg.marketAddress;

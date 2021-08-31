@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
 import { IronBankSelectors, IronBankActions } from '@store';
 import {
   toBN,
@@ -24,6 +24,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
+  const [debouncedAmount] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedMarket = useAppSelector(IronBankSelectors.selectSelectedMarket);
   const selectedToken = selectedMarket?.token;
@@ -44,6 +45,11 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
       onExit();
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedMarket || !error) return;
+    dispatch(IronBankActions.clearMarketStatus({ marketAddress: selectedMarket.address }));
+  }, [debouncedAmount]);
 
   if (!selectedMarket || !userIronBankSummary || !selectedToken) {
     return null;
