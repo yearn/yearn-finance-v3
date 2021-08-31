@@ -1,5 +1,6 @@
 import { EthereumAddress } from '@types';
 import { Usdc } from '@yfi/sdk';
+import { StrategyDetailedMetadata } from '@yfi/sdk/dist/types/strategy';
 import { TokenView } from './Token';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
@@ -25,6 +26,7 @@ export interface VaultView {
   depositLimit: string;
   emergencyShutdown: boolean;
   apyData: any;
+  strategies: StrategyDetailedMetadata[];
   userBalance: string;
   userDeposited: string;
   userDepositedUsdc: string;

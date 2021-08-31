@@ -7,6 +7,7 @@ import { TokenIcon } from '@components/app';
 import { DepositTx, WithdrawTx } from '@components/app/Transactions';
 import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text } from '@components/common';
 import { LineChart } from '@components/common/Charts';
+import { StrategyDetailedMetadata } from '@yfi/sdk/dist/types/strategy';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -102,6 +103,7 @@ export interface VaultDetailPanelsProps {
 export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanelsProps) => {
   // const { t } = useAppTranslation('common');
   const [selectedTab, setSelectedTab] = useState('deposit');
+  const strategy: StrategyDetailedMetadata | null = selectedVault?.strategies[0] ?? null;
 
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
@@ -145,13 +147,12 @@ export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanel
           </OverviewInfo>
         )}
 
-        <OverviewInfo variant="surface" cardSize="small">
-          <StyledCardHeader subHeader="Strategies" />
-          <StyledCardContent>
-            This vault supplies the {selectedVault.displayName} on Compound and borrows an additional amount of{' '}
-            {selectedVault.displayName} to maximize COMP farming. ( 1 of 9 )
-          </StyledCardContent>
-        </OverviewInfo>
+        {strategy && (
+          <OverviewInfo variant="surface" cardSize="small">
+            <StyledCardHeader subHeader="Strategies" />
+            <StyledCardContent>{strategy.description}</StyledCardContent>
+          </OverviewInfo>
+        )}
       </VaultOverview>
 
       <VaultActions>
