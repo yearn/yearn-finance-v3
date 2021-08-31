@@ -16,6 +16,7 @@ import { AlertsActions, TokensActions } from '@store';
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
 const clearSelectedMarketAndStatus = createAction<void>('ironBank/clearSelectedMarketAndStatus');
 const clearUserData = createAction<void>('ironbank/clearUserData');
+const clearMarketStatus = createAction<{ marketAddress: string }>('ironBank/clearMarketStatus');
 
 const initiateIronBank = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'ironBank/initiateIronBank',
@@ -273,4 +274,5 @@ export const IronBankActions = {
   enterOrExitMarket,
   clearUserData,
   clearSelectedMarketAndStatus,
+  clearMarketStatus,
 };
