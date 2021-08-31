@@ -53,6 +53,7 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
     symbol: selectedTargetToken.name,
     icon: selectedTargetToken.icon,
     balance: selectedTargetVault.DEPOSIT.userDeposited,
+    balanceUsdc: selectedTargetVault.DEPOSIT.userDepositedUsdc,
     decimals: selectedTargetToken.decimals,
   };
 
@@ -61,6 +62,7 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
     symbol: selectedTargetToken.name,
     icon: selectedTargetToken.icon,
     balance: selectedTargetToken.balance,
+    balanceUsdc: selectedTargetToken.balanceUsdc,
     decimals: selectedTargetToken.decimals,
     yield: formatPercent(selectedTargetVault.apyData, 2),
   };

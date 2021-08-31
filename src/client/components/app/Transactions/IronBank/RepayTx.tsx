@@ -50,6 +50,7 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
   const asset = {
     ...selectedToken,
     balance: selectedToken.balance,
+    balanceUsdc: selectedToken.balanceUsdc,
     yield: normalizePercent(selectedMarket.borrowApy, 2),
   };
 

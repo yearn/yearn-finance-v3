@@ -85,6 +85,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     symbol: selectedLab.displayName,
     icon: selectedLab.displayIcon,
     balance: selectedLab.DEPOSIT.userDeposited,
+    balanceUsdc: selectedLab.DEPOSIT.userDepositedUsdc,
     decimals: selectedLab.token.decimals,
     yield: formatPercent(selectedLab.apyData, 2),
   };

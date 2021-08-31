@@ -28,6 +28,7 @@ interface Asset {
   symbol: string;
   icon?: string;
   balance: string;
+  balanceUsdc: string;
   decimals: number;
   yield?: string;
 }

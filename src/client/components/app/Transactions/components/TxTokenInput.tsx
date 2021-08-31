@@ -5,7 +5,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { TokenIcon } from '@components/app';
 import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from '@components/common';
 
-import { formatUsd, humanizeAmount } from '@src/utils';
+import { formatUsd, normalizeUsdc } from '@src/utils';
 
 const StyledButton = styled(Button)`
   background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
@@ -175,12 +175,19 @@ const StyledTxTokenInput = styled(TransitionGroup)`
   }
 `;
 
+const amountToNumber = (amount: string) => {
+  const parsedAmount = amount.replace(/[%,$ ]/g, '');
+  return parseInt(parsedAmount);
+};
+
 interface Token {
   address: string;
   symbol: string;
   icon?: string;
   balance: string;
+  balanceUsdc: string;
   decimals: number;
+  yield?: string;
 }
 
 export interface TxTokenInputProps {
@@ -225,18 +232,21 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
     id: selectedToken.address,
     icon: selectedToken.icon,
     label: selectedToken.symbol,
-    value: humanizeAmount(selectedToken.balance, selectedToken.decimals, 4),
+    value: selectedToken.yield ?? normalizeUsdc(selectedToken.balanceUsdc),
   };
 
   if (tokenOptions && tokenOptions.length > 1) {
-    listItems = tokenOptions.map((item) => {
-      return {
-        id: item.address,
-        icon: item.icon,
-        label: item.symbol,
-        value: humanizeAmount(item.balance, item.decimals, 4),
-      };
-    });
+    listItems = tokenOptions
+      .map((item) => {
+        return {
+          id: item.address,
+          icon: item.icon,
+          label: item.symbol,
+          value: item.yield ?? normalizeUsdc(item.balanceUsdc),
+        };
+      })
+      .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));
+    listItems.sort((a, b) => (a.id === selectedItem.id ? -1 : 1));
   }
 
   const openSearchList = () => {
@@ -252,7 +262,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
           <StyledSearchList
             list={listItems}
-            headerText="Select a token"
+            headerText={`Select a ${selectedToken.yield ? 'Vault' : 'Token'}`}
             selected={selectedItem}
             setSelected={(item) => (onSelectedTokenChange ? onSelectedTokenChange(item.id) : undefined)}
             onCloseList={() => setOpenedSearch(false)}

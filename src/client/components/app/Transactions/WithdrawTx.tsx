@@ -120,6 +120,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     symbol: selectedVault.displayName,
     icon: selectedVault.displayIcon,
     balance: selectedVault.DEPOSIT.userDeposited,
+    balanceUsdc: selectedVault.DEPOSIT.userDepositedUsdc,
     decimals: selectedVault.token.decimals,
   };
   const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
