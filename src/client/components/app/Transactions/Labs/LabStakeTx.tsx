@@ -92,6 +92,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
     symbol: selectedLab.displayName,
     icon: selectedLab.displayIcon,
     balance: selectedLab.STAKE.userDeposited,
+    balanceUsdc: selectedLab.STAKE.userDepositedUsdc,
     decimals: toBN(selectedLab.decimals).toNumber(),
     yield: formatPercent(selectedLab.apyData, 2),
   };

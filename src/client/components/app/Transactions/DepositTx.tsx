@@ -140,6 +140,7 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
       symbol: displayName,
       icon: displayIcon,
       balance: DEPOSIT.userDeposited,
+      balanceUsdc: DEPOSIT.userDepositedUsdc,
       decimals: token.decimals,
       yield: formatPercent(apyData, 2),
     }));

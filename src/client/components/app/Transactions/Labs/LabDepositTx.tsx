@@ -157,6 +157,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     symbol: selectedLab.displayName,
     icon: selectedLab.displayIcon,
     balance: selectedLab.DEPOSIT.userBalance,
+    balanceUsdc: selectedLab.DEPOSIT.userDepositedUsdc,
     decimals: toBN(selectedLab.decimals).toNumber(),
     yield: formatPercent(selectedLab.apyData, 2),
   };

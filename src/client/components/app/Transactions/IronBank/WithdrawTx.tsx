@@ -73,6 +73,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   const asset = {
     ...selectedToken,
     balance: selectedMarket.LEND.userDeposited,
+    balanceUsdc: selectedMarket.LEND.userDepositedUsdc,
     yield: normalizePercent(selectedMarket.lendApy, 2),
   };
 

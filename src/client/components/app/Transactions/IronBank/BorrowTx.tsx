@@ -59,6 +59,7 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
   const asset = {
     ...selectedToken,
     balance: toWei(borrowableTokens, selectedToken.decimals),
+    balanceUsdc: toWei(toBN(borrowableTokens).times(underlyingTokenPrice).toString(), USDC_DECIMALS),
     yield: normalizePercent(selectedMarket.borrowApy, 2),
   };
 

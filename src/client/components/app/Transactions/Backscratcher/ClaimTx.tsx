@@ -45,6 +45,7 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
     symbol: selectedTargetToken.name,
     icon: selectedTargetToken.icon,
     balance: selectedLab.YIELD.userDeposited,
+    balanceUsdc: selectedLab.YIELD.userDepositedUsdc,
     decimals: selectedTargetToken.decimals,
   };
 

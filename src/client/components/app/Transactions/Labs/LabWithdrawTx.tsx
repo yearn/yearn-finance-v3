@@ -126,6 +126,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     symbol: selectedLab.displayName,
     icon: selectedLab.displayIcon,
     balance: selectedLab.DEPOSIT.userBalance,
+    balanceUsdc: selectedLab.DEPOSIT.userDepositedUsdc,
     decimals: toBN(selectedLab.decimals).toNumber(),
   };
 
