@@ -7,6 +7,7 @@ import { useAppSelector } from '@hooks';
 
 import { VaultDetailPanels, ViewContainer } from '@components/app';
 import { SpinnerLoading, Button } from '@components/common';
+import { parseHistoricalEarnings } from '../../../utils';
 
 const BackButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.surface};
@@ -55,20 +56,22 @@ export const VaultDetail = () => {
 
   const generalLoading = (vaultsStatus.loading || tokensStatus.loading) && (!tokensInitialized || !vaultsInitialized);
 
-  const chartData = [
-    {
-      id: 'japan',
-      // color: '#d9269a',
-      data: [
-        { x: '2019-05-01', y: 2 },
-        { x: '2019-06-01', y: 7 },
-        { x: '2019-06-15', y: 17 },
-        { x: '2019-06-23', y: 1 },
-        { x: '2019-08-01', y: 42 },
-        { x: '2019-09-01', y: 1 },
-      ],
-    },
-  ];
+  // const chartData = [
+  //   {
+  //     id: 'japan',
+  //     // color: '#d9269a',
+  //     data: [
+  //       { x: '2019-05-01', y: 2 },
+  //       { x: '2019-06-01', y: 7 },
+  //       { x: '2019-06-15', y: 17 },
+  //       { x: '2019-06-23', y: 1 },
+  //       { x: '2019-08-01', y: 42 },
+  //       { x: '2019-09-01', y: 1 },
+  //     ],
+  //   },
+  // ];
+
+  const chartData = parseHistoricalEarnings(selectedVault?.historicalEarnings);
 
   return (
     <VaultDetailView>

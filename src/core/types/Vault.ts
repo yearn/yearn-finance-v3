@@ -1,5 +1,5 @@
 import { EthereumAddress } from '@types';
-import { Usdc } from '@yfi/sdk';
+import { EarningsDayData, Usdc } from '@yfi/sdk';
 import { StrategyDetailedMetadata } from '@yfi/sdk/dist/types/strategy';
 import { TokenView } from './Token';
 
@@ -27,6 +27,7 @@ export interface VaultView {
   emergencyShutdown: boolean;
   apyData: any;
   strategies: StrategyDetailedMetadata[];
+  historicalEarnings: EarningsDayData[];
   userBalance: string;
   userDeposited: string;
   userDepositedUsdc: string;

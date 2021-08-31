@@ -243,6 +243,7 @@ function createVault(props: CreateVaultProps) {
     pricePerShare: vaultData?.metadata.pricePerShare,
     earned: userVaultsMetadataMap?.earned ?? '0',
     strategies: vaultData.metadata.strategies?.strategiesMetadata ?? [],
+    historicalEarnings: vaultData.metadata.historicEarnings ?? [],
     DEPOSIT: {
       userBalance: userVaultPositionsMap?.DEPOSIT?.balance ?? '0',
       userDeposited: userVaultPositionsMap?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',
