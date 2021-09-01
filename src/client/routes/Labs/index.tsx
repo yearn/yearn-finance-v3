@@ -2,8 +2,16 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
-import { LabsSelectors, WalletSelectors, ModalsActions, LabsActions, TokensSelectors, ModalSelectors } from '@store';
+import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
+import {
+  LabsSelectors,
+  WalletSelectors,
+  ModalsActions,
+  LabsActions,
+  TokensSelectors,
+  ModalSelectors,
+  AppSelectors,
+} from '@store';
 
 import {
   SummaryCard,
@@ -103,6 +111,7 @@ export const Labs = () => {
   const { YVECRV, YVBOOST, PSLPYVBOOSTETH, CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
   const history = useHistory();
   const dispatch = useAppDispatch();
+  const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(LabsSelectors.selectSummaryData);
   const recommendations = useAppSelector(LabsSelectors.selectRecommendations);
@@ -111,9 +120,11 @@ export const Labs = () => {
   const [filteredOpportunities, setFilteredOpportunities] = useState(opportunities);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
+  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const labsStatus = useAppSelector(LabsSelectors.selectLabsStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
-  const generalLoading = (labsStatus.loading || tokensStatus.loading) && !activeModal;
+  const generalLoading =
+    (appStatus.loading || labsStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
 
   // const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   // const crvToken = tokenSelectorFilter(CRV);

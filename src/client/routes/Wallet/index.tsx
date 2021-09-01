@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
 import {
   WalletSelectors,
   TokensSelectors,
@@ -8,6 +8,7 @@ import {
   ModalsActions,
   ModalSelectors,
   IronBankSelectors,
+  AppSelectors,
 } from '@store';
 
 import {
@@ -64,14 +65,16 @@ export const Wallet = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+  const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalBalance } = useAppSelector(TokensSelectors.selectSummaryData);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
-  const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
   const ironBankUnderlyingTokens = useAppSelector(IronBankSelectors.selectUnderlyingTokensAddresses);
 
-  const generalLoading = tokensListStatus.loading && !activeModal;
+  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
+  const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
+  const generalLoading = (appStatus.loading || tokensListStatus.loading || isMounting) && !activeModal;
 
   const actionHandler = (action: string, tokenAddress: string) => {
     switch (action) {

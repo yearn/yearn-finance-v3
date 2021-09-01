@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
 import {
   ModalsActions,
   IronBankActions,
@@ -9,6 +9,7 @@ import {
   WalletSelectors,
   TokensSelectors,
   ModalSelectors,
+  AppSelectors,
 } from '@store';
 
 import { SpinnerLoading, ToggleButton, SearchInput, Text } from '@components/common';
@@ -80,6 +81,7 @@ export const IronBank = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+  const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, netAPY, borrowLimitUsdc } = useAppSelector(
     IronBankSelectors.selectSummaryData
@@ -91,9 +93,11 @@ export const IronBank = () => {
   const [filteredMarkets, setFilteredMarkets] = useState(markets);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
+  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const ironBankStatus = useAppSelector(IronBankSelectors.selectIronBankStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
-  const generalLoading = (ironBankStatus.loading || tokensStatus.loading) && !activeModal;
+  const generalLoading =
+    (appStatus.loading || ironBankStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
 
   useEffect(() => {
     setFilteredMarkets(markets);

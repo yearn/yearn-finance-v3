@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
 import {
   ModalsActions,
   ModalSelectors,
@@ -10,6 +10,7 @@ import {
   VaultsActions,
   VaultsSelectors,
   WalletSelectors,
+  AppSelectors,
 } from '@store';
 
 import { device } from '@themes/default';
@@ -115,6 +116,7 @@ export const Vaults = () => {
   // const { t } = useAppTranslation('common');
   const history = useHistory();
   const dispatch = useAppDispatch();
+  const isMounting = useIsMounting();
   // const { isTablet, isMobile, width: DWidth } = useWindowDimensions();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
@@ -124,9 +126,11 @@ export const Vaults = () => {
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
-  const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
+  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
+  const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsGeneralStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
-  const generalLoading = (vaultsStatus.loading || tokensStatus.loading) && !activeModal;
+  const generalLoading =
+    (appStatus.loading || vaultsStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
 
   useEffect(() => {
     setFilteredVaults(opportunities);

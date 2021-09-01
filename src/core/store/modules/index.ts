@@ -4,6 +4,7 @@ import { RootState } from '@types';
 
 import appReducer, { appInitialState } from './app/app.reducer';
 import { AppActions } from './app/app.actions';
+import { AppSelectors } from './app/app.selectors';
 
 import alertsReducer, { alertsInitialState } from './alerts/alerts.reducer';
 import { AlertsActions } from './alerts/alerts.actions';
@@ -15,6 +16,7 @@ import { ModalSelectors } from './modals/modals.selectors';
 
 import routeReducer, { routeInitialState } from './route/route.reducer';
 import { RouteActions } from './route/route.actions';
+import { RouteSelectors } from './route/route.selectors';
 
 import themeReducer, { themeInitialState } from './theme/theme.reducer';
 import { ThemeActions } from './theme/theme.actions';
@@ -77,7 +79,9 @@ export {
 // Selectors
 export {
   AlertsSelectors,
+  AppSelectors,
   ModalSelectors,
+  RouteSelectors,
   VaultsSelectors,
   WalletSelectors,
   IronBankSelectors,
