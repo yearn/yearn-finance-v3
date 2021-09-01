@@ -1,21 +1,13 @@
 import styled from 'styled-components';
 
+import { Img } from '@components/common';
+
 const fallbackIcon = '';
 
-const StyledTokenIcon = styled.div<{ size?: TokenIconSize }>`
+const StyledTokenIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3.6rem;
-
-  img {
-    width: 100%;
-    height: auto;
-  }
-
-  ${({ size }) => size === 'big' && `width: 4.2rem;`}
-  ${({ size }) => size === 'xBig' && `width: 4.8rem;`}
-  ${({ size }) => size === 'xxBig' && `width: 5.5rem;`}
 `;
 
 type TokenIconSize = 'default' | 'big' | 'xBig' | 'xxBig';
@@ -28,9 +20,26 @@ interface TokenIconProps {
 
 export const TokenIcon = ({ icon, symbol, size, ...props }: TokenIconProps) => {
   const src = icon === '' || !icon ? fallbackIcon : icon;
+  let height;
+  switch (size) {
+    case 'big':
+      height = 42;
+      break;
+    case 'xBig':
+      height = 48;
+      break;
+    case 'xxBig':
+      height = 55;
+      break;
+    default:
+      height = 36;
+      break;
+  }
+  const width = height;
+
   return (
-    <StyledTokenIcon size={size} {...props}>
-      {src && <img alt={symbol ?? 'n/a'} src={src} />}
+    <StyledTokenIcon {...props}>
+      {src && <Img alt={symbol ?? 'n/a'} width={width} height={height} src={src} />}
     </StyledTokenIcon>
   );
 };
