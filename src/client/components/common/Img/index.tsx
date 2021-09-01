@@ -10,11 +10,12 @@ const StyledImg = styled.img<{ loaded?: boolean }>`
 interface ImgProps extends ImgHTMLAttributes<HTMLImageElement> {}
 
 export const Img = ({ alt, src, ...props }: ImgProps) => {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(true);
 
   useEffect(() => {
     const image = new Image();
     image.src = src ?? '';
+    if (!image.complete) setLoaded(false);
     image.onload = () => setLoaded(true);
   }, [src]);
 
