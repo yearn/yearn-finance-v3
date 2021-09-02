@@ -1,13 +1,8 @@
-import { useState, ReactNode } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import styled from 'styled-components';
-import { reverse, some, get, toNumber, isString, orderBy } from 'lodash';
 
 import { Card, CardHeader, CardContent, CardElement } from '@components/common';
-import { useEffect } from 'react';
-
-function isNumber(n: any) {
-  return typeof n != 'boolean' && !isNaN(n);
-}
+import { sort } from '@utils';
 
 const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
   display: flex;
@@ -91,6 +86,7 @@ interface DetailCardProps<T> {
   data: T[];
   stripes?: boolean;
   wrap?: boolean;
+  initialSortBy?: Extract<keyof T, string>;
   SearchBar?: ReactNode;
   onAction?: (item: T) => void;
 }
@@ -101,46 +97,33 @@ export const DetailCard = <T,>({
   data,
   stripes,
   wrap,
+  initialSortBy,
   SearchBar,
   onAction,
   ...props
 }: DetailCardProps<T>) => {
-  const [sortedBy, setSortedBy] = useState('');
-  const [sortedData, setSortedData] = useState(data);
+  const [sortedData, setSortedData] = useState(initialSortBy ? sort(data, initialSortBy) : data);
+  const [sortedBy, setSortedBy] = useState(initialSortBy);
+  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+
+  const handleSort = (key: Extract<keyof T, string>) => {
+    if (sortedBy === key) {
+      setSortedData([...sortedData].reverse());
+      setOrder(order === 'desc' ? 'asc' : 'desc');
+    } else {
+      setSortedData(sort(sortedData, key));
+      setSortedBy(key);
+      setOrder('desc');
+    }
+  };
 
   useEffect(() => {
-    setSortedData(data);
+    setSortedData(sortedBy ? sort(data, sortedBy, order) : data);
   }, [data]);
 
   if (data.length === 0 && !SearchBar) {
     return null;
   }
-
-  const sort = (key: string) => {
-    if (sortedBy === key) {
-      setSortedData(reverse([...sortedData]));
-    } else {
-      if (some(sortedData, key)) {
-        setSortedBy(key);
-        const sortedDataDesc = orderBy(
-          [...sortedData],
-          (item) => {
-            const element = get(item, key);
-            if (isNumber(element)) {
-              return toNumber(element);
-            }
-            if (isString(element)) {
-              return element.toLowerCase();
-            }
-
-            return element;
-          },
-          ['desc']
-        );
-        setSortedData(sortedDataDesc);
-      }
-    }
-  };
 
   return (
     <StyledCard {...props}>
@@ -149,17 +132,14 @@ export const DetailCard = <T,>({
 
       <CardContent>
         {metadata.map(
-          ({ key, header, width, align, grow, sortable, hide, className }) =>
+          ({ key, sortable, hide, className, ...rest }) =>
             !hide && (
               <TitleCardElement
                 className={className}
                 key={key}
-                header={header}
-                width={width}
-                align={align}
-                grow={grow}
-                onClick={() => (sortable ? sort(key) : undefined)}
+                onClick={() => (sortable ? handleSort(key) : undefined)}
                 pointer={sortable}
+                {...rest}
               />
             )
         )}
