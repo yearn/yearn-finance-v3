@@ -20,6 +20,7 @@ interface TokenIconProps {
 
 export const TokenIcon = ({ icon, symbol, size, ...props }: TokenIconProps) => {
   const src = icon === '' || !icon ? fallbackIcon : icon;
+  // TODO: use rem units instead of pixels
   let height;
   switch (size) {
     case 'big':
