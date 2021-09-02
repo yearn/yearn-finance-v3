@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
 import {
   ModalsActions,
   IronBankActions,
@@ -9,6 +9,7 @@ import {
   WalletSelectors,
   TokensSelectors,
   ModalSelectors,
+  AppSelectors,
 } from '@store';
 
 import { SpinnerLoading, ToggleButton, SearchInput, Text } from '@components/common';
@@ -21,6 +22,7 @@ import {
   NoWalletCard,
   RecommendationsCard,
   InfoCard,
+  Amount,
 } from '@components/app';
 import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss, normalizeAmount } from '@src/utils';
 import { device } from '@themes/default';
@@ -80,6 +82,7 @@ export const IronBank = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+  const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, netAPY, borrowLimitUsdc } = useAppSelector(
     IronBankSelectors.selectSummaryData
@@ -91,9 +94,11 @@ export const IronBank = () => {
   const [filteredMarkets, setFilteredMarkets] = useState(markets);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
+  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const ironBankStatus = useAppSelector(IronBankSelectors.selectIronBankStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
-  const generalLoading = (ironBankStatus.loading || tokensStatus.loading) && !activeModal;
+  const generalLoading =
+    (appStatus.loading || ironBankStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
 
   useEffect(() => {
     setFilteredMarkets(markets);
@@ -131,10 +136,13 @@ export const IronBank = () => {
       <SummaryCard
         header="Dashboard"
         items={[
-          { header: 'Supplied', content: `${normalizeUsdc(supplyBalanceUsdc)}` },
-          { header: 'Borrowed', content: `${normalizeUsdc(borrowBalanceUsdc)}` },
-          { header: 'Borrow Limit Used', content: `${normalizePercent(borrowUtilizationRatio, 2)}` },
-          { header: 'Total Borrow Limit', content: `${normalizeUsdc(borrowLimitUsdc)}` },
+          { header: 'Supplied', Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
+          { header: 'Borrowed', Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },
+          {
+            header: 'Borrow Limit Used',
+            Component: <Amount value={borrowUtilizationRatio} input="weipercent" />,
+          },
+          { header: 'Total Borrow Limit', Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
         ]}
         variant="secondary"
         cardSize="small"

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
 import {
   WalletSelectors,
   TokensSelectors,
@@ -8,6 +8,7 @@ import {
   ModalsActions,
   ModalSelectors,
   IronBankSelectors,
+  AppSelectors,
 } from '@store';
 
 import {
@@ -18,6 +19,7 @@ import {
   TokenIcon,
   NoWalletCard,
   InfoCard,
+  Amount,
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
 import { halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc } from '@src/utils';
@@ -64,14 +66,16 @@ export const Wallet = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+  const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const { totalBalance } = useAppSelector(TokensSelectors.selectSummaryData);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
-  const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
   const ironBankUnderlyingTokens = useAppSelector(IronBankSelectors.selectUnderlyingTokensAddresses);
 
-  const generalLoading = tokensListStatus.loading && !activeModal;
+  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
+  const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
+  const generalLoading = (appStatus.loading || tokensListStatus.loading || isMounting) && !activeModal;
 
   const actionHandler = (action: string, tokenAddress: string) => {
     switch (action) {
@@ -112,7 +116,7 @@ export const Wallet = () => {
     <ViewContainer>
       <SummaryCard
         header="Dashboard"
-        items={[{ header: 'Available to Invest', content: `${normalizeUsdc(totalBalance)}` }]}
+        items={[{ header: 'Available to Invest', Component: <Amount value={totalBalance} input="usdc" /> }]}
         variant="secondary"
         cardSize="small"
       />

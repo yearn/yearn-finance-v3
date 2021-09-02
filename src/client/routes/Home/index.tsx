@@ -1,11 +1,10 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { useAppSelector } from '@hooks';
 import { IronBankSelectors, LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
-import { SummaryCard, InfoCard, ViewContainer, NoWalletCard } from '@components/app';
+import { SummaryCard, InfoCard, ViewContainer, NoWalletCard, Amount } from '@components/app';
 import { Text } from '@components/common';
-
-import { normalizeUsdc, normalizePercent, toBN, halfWidthCss, formatPercent } from '@src/utils';
+import { toBN, halfWidthCss } from '@src/utils';
 
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
@@ -61,9 +60,12 @@ export const Home = () => {
       <HeaderCard
         header="Dashboard"
         items={[
-          { header: 'Total Net Worth', content: `${normalizeUsdc(netWorth)}` },
-          { header: 'Vaults Earnings', content: `${normalizeUsdc(vaultsSummary.totalEarnings)}` },
-          { header: 'Vaults Est. Yearly Yield', content: `${normalizeUsdc(vaultsSummary.estYearlyYeild)}` },
+          { header: 'Total Net Worth', Component: <Amount value={netWorth} input="usdc" /> },
+          { header: 'Vaults Earnings', Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" /> },
+          {
+            header: 'Vaults Est. Yearly Yield',
+            Component: <Amount value={vaultsSummary.estYearlyYeild} input="usdc" />,
+          },
         ]}
         variant="secondary"
         cardSize="small"
@@ -99,7 +101,7 @@ export const Home = () => {
             items={[
               {
                 header: 'Available to Invest',
-                content: `${normalizeUsdc(walletSummary.totalBalance)}`,
+                Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
               },
             ]}
             cardSize="small"
@@ -108,23 +110,40 @@ export const Home = () => {
           <StyledSummaryCard
             header="Vaults"
             items={[
-              { header: 'Holdings', content: `${normalizeUsdc(vaultsSummary.totalDeposits)}` },
-              { header: 'APY', content: formatPercent(vaultsSummary.apy, 2) }, // TODO check if normalizePercent is needed.
+              {
+                header: 'Holdings',
+                Component: <Amount value={vaultsSummary.totalDeposits} input="usdc" />,
+              },
+              {
+                header: 'APY',
+                Component: <Amount value={vaultsSummary.apy} input="percent" />,
+              },
             ]}
             cardSize="small"
           />
 
           <StyledSummaryCard
             header="Labs"
-            items={[{ header: 'Holdings', content: `${normalizeUsdc(labsSummary.totalDeposits)}` }]}
+            items={[
+              {
+                header: 'Holdings',
+                Component: <Amount value={labsSummary.totalDeposits} input="usdc" />,
+              },
+            ]}
             cardSize="small"
           />
 
           <StyledSummaryCard
             header="Iron Bank"
             items={[
-              { header: 'Supplied', content: `${normalizeUsdc(ibSummary.supplyBalanceUsdc)}` },
-              { header: 'Borrow Limit Used', content: `${normalizePercent(ibSummary.borrowUtilizationRatio, 2)}` },
+              {
+                header: 'Supplied',
+                Component: <Amount value={ibSummary.supplyBalanceUsdc} input="usdc" />,
+              },
+              {
+                header: 'Borrow Limit Used',
+                Component: <Amount value={ibSummary.borrowUtilizationRatio} input="weipercent" />,
+              },
             ]}
             cardSize="small"
           />

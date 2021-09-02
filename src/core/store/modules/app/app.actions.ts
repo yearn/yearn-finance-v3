@@ -7,9 +7,9 @@ import { VaultsActions } from '../vaults/vaults.actions';
 const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_arg, { dispatch, getState }) => {
   const { wallet } = getState();
   if (wallet.name) {
-    dispatch(WalletActions.walletSelect(wallet.name));
+    await dispatch(WalletActions.walletSelect(wallet.name));
   }
-  dispatch(TokensActions.getTokens());
+  await dispatch(TokensActions.getTokens());
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
 });
