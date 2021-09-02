@@ -1,5 +1,4 @@
-import { EthereumAddress } from '@types';
-import { EarningsDayData, Usdc } from '@yfi/sdk';
+import { EthereumAddress, EarningsDayData, Usdc } from '@types';
 import { StrategyDetailedMetadata } from '@yfi/sdk/dist/types/strategy';
 import { TokenView } from './Token';
 

@@ -7,7 +7,7 @@ import { useAppSelector } from '@hooks';
 
 import { VaultDetailPanels, ViewContainer } from '@components/app';
 import { SpinnerLoading, Button } from '@components/common';
-import { parseHistoricalEarnings } from '../../../utils';
+import { parseHistoricalEarnings } from '@utils';
 
 const BackButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.surface};

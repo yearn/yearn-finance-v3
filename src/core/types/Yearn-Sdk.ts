@@ -22,6 +22,7 @@ import {
   CyTokenUserMetadata,
   VaultUserMetadata,
   TransactionOutcome,
+  EarningsDayData,
 } from '@yfi/sdk';
 
 declare type Lab = LabStatic & LabDynamic;
@@ -83,4 +84,5 @@ export type {
   TransactionOutcome,
   Overrides,
   VaultUserMetadata,
+  EarningsDayData,
 };
