@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useWindowDimensions } from '@hooks';
 
 import { ConnectWalletButton } from '@components/app';
-import { Text } from '@components/common';
+import { Button, Text } from '@components/common';
 
 interface NavbarProps {
   className?: string;
@@ -12,8 +12,14 @@ interface NavbarProps {
   onWalletClick?: () => void;
 }
 
+const BetaButton = styled(Button)`
+  white-space: nowrap;
+`;
+
 const StyledNavbarActions = styled.div`
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 0.8rem;
   align-items: center;
   justify-content: flex-end;
   flex: 1;
@@ -39,18 +45,19 @@ const StyledNavbar = styled.nav`
 `;
 
 export const Navbar = ({ className, title, walletAddress, addressEnsName, onWalletClick }: NavbarProps) => {
-  const connectWalletButton = (
-    <ConnectWalletButton
-      address={walletAddress}
-      ensName={addressEnsName}
-      onClick={() => onWalletClick && onWalletClick()}
-    />
-  );
-
   return (
     <StyledNavbar className={className}>
       {title && <StyledText>{title}</StyledText>}
-      <StyledNavbarActions>{connectWalletButton}</StyledNavbarActions>
+
+      <StyledNavbarActions>
+        <BetaButton outline>V3 BETA</BetaButton>
+
+        <ConnectWalletButton
+          address={walletAddress}
+          ensName={addressEnsName}
+          onClick={() => onWalletClick && onWalletClick()}
+        />
+      </StyledNavbarActions>
     </StyledNavbar>
   );
 };

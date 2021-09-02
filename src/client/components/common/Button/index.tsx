@@ -5,10 +5,11 @@ export interface ButtonProps {
   className?: string;
   disabled?: boolean;
   color?: string;
+  outline?: boolean;
   onClick?: (e?: any) => void;
 }
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<{ outline?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -38,15 +39,17 @@ const StyledButton = styled.button`
     filter: contrast(90%);
   }
 
-  &.outline {
-    border-color: ${(props) => props.color || props.theme.colors.primary};
+  ${(props) =>
+    props.outline &&
+    `
+    border-color: ${props.color || props.theme.colors.primary};
     background: transparent;
-    color: ${(props) => props.color || props.theme.colors.primary};
-  }
+    color: ${props.color || props.theme.colors.primary};
+  `}
 `;
 
-export const Button: FC<ButtonProps> = ({ className, disabled, color, onClick, children, ...props }) => (
-  <StyledButton className={className} disabled={disabled} color={color} onClick={onClick} {...props}>
+export const Button: FC<ButtonProps> = ({ className, disabled, color, outline, onClick, children, ...props }) => (
+  <StyledButton className={className} disabled={disabled} color={color} outline={outline} onClick={onClick} {...props}>
     {children}
   </StyledButton>
 );
