@@ -47,7 +47,9 @@ export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, card
             key={item.header}
             header={item.header}
             content={<StyledText variant={variant}>{item.content}</StyledText>}
-          ></StyledCardElement>
+          >
+            {item.Component && <StyledText variant={variant}>{item.Component}</StyledText>}
+          </StyledCardElement>
         ))}
       </CardContent>
     </StyledCard>

@@ -19,6 +19,7 @@ import {
   TokenIcon,
   NoWalletCard,
   InfoCard,
+  Amount,
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
 import { halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc } from '@src/utils';
@@ -115,7 +116,7 @@ export const Wallet = () => {
     <ViewContainer>
       <SummaryCard
         header="Dashboard"
-        items={[{ header: 'Available to Invest', content: `${normalizeUsdc(totalBalance)}` }]}
+        items={[{ header: 'Available to Invest', Component: <Amount value={totalBalance} input="usdc" /> }]}
         variant="secondary"
         cardSize="small"
       />

@@ -22,6 +22,7 @@ import {
   InfoCard,
   ViewContainer,
   NoWalletCard,
+  Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput } from '@components/common';
 import { formatPercent, halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc, toBN } from '@src/utils';
@@ -276,7 +277,7 @@ export const Labs = () => {
       <SummaryCard
         header="Dashboard"
         items={[
-          { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
+          { header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> },
           // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
           // { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
         ]}

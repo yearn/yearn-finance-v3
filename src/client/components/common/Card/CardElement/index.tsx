@@ -60,7 +60,7 @@ export const CardElement: FC<CardElementProps> = ({
         </Header>
       )}
       {content && <Content>{content}</Content>}
-      {children}
+      {children && <Content>{children}</Content>}
     </Container>
   );
 };

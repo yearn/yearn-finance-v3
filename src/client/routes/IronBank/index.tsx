@@ -22,6 +22,7 @@ import {
   NoWalletCard,
   RecommendationsCard,
   InfoCard,
+  Amount,
 } from '@components/app';
 import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss, normalizeAmount } from '@src/utils';
 import { device } from '@themes/default';
@@ -135,10 +136,13 @@ export const IronBank = () => {
       <SummaryCard
         header="Dashboard"
         items={[
-          { header: 'Supplied', content: `${normalizeUsdc(supplyBalanceUsdc)}` },
-          { header: 'Borrowed', content: `${normalizeUsdc(borrowBalanceUsdc)}` },
-          { header: 'Borrow Limit Used', content: `${normalizePercent(borrowUtilizationRatio, 2)}` },
-          { header: 'Total Borrow Limit', content: `${normalizeUsdc(borrowLimitUsdc)}` },
+          { header: 'Supplied', Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
+          { header: 'Borrowed', Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },
+          {
+            header: 'Borrow Limit Used',
+            Component: <Amount value={borrowUtilizationRatio} input="weipercent" />,
+          },
+          { header: 'Total Borrow Limit', Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
         ]}
         variant="secondary"
         cardSize="small"

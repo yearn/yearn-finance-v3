@@ -24,6 +24,7 @@ import {
   InfoCard,
   ViewContainer,
   NoWalletCard,
+  Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput } from '@components/common';
 import { formatPercent, humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount } from '@src/utils';
@@ -151,9 +152,9 @@ export const Vaults = () => {
       <SummaryCard
         header="Dashboard"
         items={[
-          { header: 'Holdings', content: `${normalizeUsdc(totalDeposits)}` },
-          { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
-          { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
+          { header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> },
+          { header: 'Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
+          { header: 'Est. Yearly Yield', Component: <Amount value={estYearlyYeild} input="usdc" /> },
         ]}
         variant="secondary"
         cardSize="small"
