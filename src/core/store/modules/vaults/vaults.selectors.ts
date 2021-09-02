@@ -261,6 +261,7 @@ function createVault(props: CreateVaultProps) {
       categories: tokenData?.metadata?.categories ?? [],
       description: tokenData?.metadata?.description ?? '',
       website: tokenData?.metadata?.website ?? '',
+      isZapable: tokenData?.supported.zapper ?? false,
       allowancesMap: tokenAllowancesMap,
     },
   };
