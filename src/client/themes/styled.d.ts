@@ -26,6 +26,9 @@ declare module 'styled-components' {
       collapsedWidth: string;
       animation: string;
     };
+    tabbar: {
+      height: string;
+    };
 
     alerts: {
       default: {
