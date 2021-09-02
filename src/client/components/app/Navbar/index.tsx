@@ -15,6 +15,8 @@ interface NavbarProps {
 const BetaButton = styled(Button)`
   white-space: nowrap;
   cursor: default;
+  border-color: ${({ theme }) => theme.colors.walletButton.background};
+  color: ${({ theme }) => theme.colors.walletButton.background};
 `;
 
 const StyledNavbarActions = styled.div`
