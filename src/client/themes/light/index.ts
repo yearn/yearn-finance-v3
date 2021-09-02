@@ -51,7 +51,7 @@ const lightTheme: DefaultTheme = {
     },
 
     walletButton: {
-      background: '#006AE3',
+      background: '#000000',
       color: '#FFFFFF',
     },
 

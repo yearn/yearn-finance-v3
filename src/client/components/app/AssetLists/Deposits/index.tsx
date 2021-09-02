@@ -57,13 +57,13 @@ export const DepositsList = ({ assets, ...props }: DepositListProps) => {
               <Text>{asset.wallet}</Text>
               <Text>{asset.roi}</Text>
               <div className="actions-col">
-                <Button onClick={() => asset.onWithdraw && asset.onWithdraw()} className="outline">
+                <Button onClick={() => asset.onWithdraw && asset.onWithdraw()} outline>
                   <Text>Withdraw</Text>
                 </Button>
-                <Button onClick={() => asset.onInvest && asset.onInvest()} className="outline">
+                <Button onClick={() => asset.onInvest && asset.onInvest()} outline>
                   <Text>Invest</Text>
                 </Button>
-                <Button onClick={() => asset.onInfo && asset.onInfo()} className="outline">
+                <Button onClick={() => asset.onInfo && asset.onInfo()} outline>
                   <Text>Info</Text>
                 </Button>
               </div>
