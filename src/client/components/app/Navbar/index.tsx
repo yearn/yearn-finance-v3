@@ -14,6 +14,7 @@ interface NavbarProps {
 
 const BetaButton = styled(Button)`
   white-space: nowrap;
+  cursor: default;
 `;
 
 const StyledNavbarActions = styled.div`
