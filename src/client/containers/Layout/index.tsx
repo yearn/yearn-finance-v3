@@ -15,10 +15,10 @@ import {
   AlertsActions,
 } from '@store';
 
-import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
+import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
-import { isValidAddress } from '../../../utils';
+import { isValidAddress } from '@utils';
 
 const contentSeparation = '1.6rem';
 
@@ -29,25 +29,34 @@ const StyledLayout = styled.div`
   padding: ${({ theme }) => theme.layoutPadding};
 `;
 
-const Content = styled.div<{ collapsedSidebar?: boolean }>`
+const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: ${({ theme }) => theme.globalMaxWidth};
-  // flex: 1;
   min-height: 100%;
   transition: padding-left ${({ theme }) => theme.sideBar.animation};
 
-  padding-left: ${(props) =>
-    props.collapsedSidebar
-      ? `calc(${props.theme.sideBar.collapsedWidth} + ${contentSeparation})`
-      : `calc(${props.theme.sideBar.width} + ${contentSeparation})`};
+  padding-left: ${(props) => {
+    if (!props.useTabbar) {
+      // If we are not using tabbar mobile and navbar is collapsed
+      if (props.collapsedSidebar) {
+        return `calc(${props.theme.sideBar.collapsedWidth} + ${contentSeparation})`;
+      } else {
+        return `calc(${props.theme.sideBar.width} + ${contentSeparation})`;
+      }
+    }
+  }};
+
+  // NOTE if we are using tabbar mobile
+  padding-bottom: ${(props) => props.useTabbar && `calc(${props.theme.tabbar.height} + ${contentSeparation})`};
 `;
 
 export const Layout: FC = ({ children }) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const { isMobile } = useWindowDimensions();
   const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const addressEnsName = useAppSelector(WalletSelectors.selectAddressEnsName);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
@@ -167,7 +176,7 @@ export const Layout: FC = ({ children }) => {
       <Modals />
       <Navigation />
 
-      <Content collapsedSidebar={collapsedSidebar}>
+      <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
         <Navbar
           title={t(`navigation.${path}`)}
           walletAddress={selectedAddress}

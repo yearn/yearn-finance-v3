@@ -34,6 +34,10 @@ const sharedTheme: SharedTheme = {
     animation: '200ms ease-in-out',
   },
 
+  tabbar: {
+    height: '6.4rem',
+  },
+
   alerts: {
     default: {
       background: '#191919',

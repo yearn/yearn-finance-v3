@@ -1,21 +1,11 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 import { useAppTranslation, useAppSelector, useAppDispatch, useWindowDimensions } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
 
-import {
-  Icon,
-  Logo,
-  CollapseIcon,
-  HomeIcon,
-  WalletIcon,
-  VaultIcon,
-  LabsIcon,
-  IronBankIcon,
-  SettingsIcon,
-} from '@components/common';
+import { NavigationLink } from '@components/app';
+import { Icon, Logo, CollapseIcon } from '@components/common';
 
 const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
@@ -32,7 +22,7 @@ const SidebarContent = styled.div`
   flex: 1;
 `;
 
-const SidebarFooter = styled.div``;
+// const SidebarFooter = styled.div``;
 
 const StyledLogo = styled(Logo)`
   justify-content: flex-start;
@@ -108,6 +98,7 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   transition: width ${({ theme }) => theme.sideBar.animation};
   overflow: hidden;
   overflow-y: auto;
+  z-index: ${({ theme }) => theme.zindex.navSidemenu};
 
   ${(props) =>
     props.collapsed &&
@@ -119,8 +110,11 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
     }
   `};
 `;
+interface NavSidebarProps {
+  navLinks: NavigationLink[];
+}
 
-export const NavSidebar = () => {
+export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
   const { t } = useAppTranslation('common');
   const { isMobile } = useWindowDimensions();
   const dispatch = useAppDispatch();
@@ -137,45 +131,12 @@ export const NavSidebar = () => {
     dispatch(SettingsActions.toggleSidebar());
   };
 
-  const navLinks = [
-    {
-      to: '/home',
-      text: t('navigation.home'),
-      icon: HomeIcon,
-    },
-    {
-      to: '/wallet',
-      text: t('navigation.wallet'),
-      icon: WalletIcon,
-    },
-    {
-      to: '/vaults',
-      text: t('navigation.vaults'),
-      icon: VaultIcon,
-    },
-    {
-      to: '/labs',
-      text: t('navigation.labs'),
-      icon: LabsIcon,
-    },
-    {
-      to: '/ironbank',
-      text: t('navigation.ironbank'),
-      icon: IronBankIcon,
-    },
-    {
-      to: '/settings',
-      text: t('navigation.settings'),
-      icon: SettingsIcon,
-    },
-  ];
-
   const linkList = (
     <LinkList className="link-list">
       {navLinks.map((link, index) => {
         return (
           <RouterLink to={link.to} key={index} selected={currentPath === link.to}>
-            <LinkIcon Component={link.icon} /> <LinkText>{link.text}</LinkText>
+            <LinkIcon Component={link.icon} /> <LinkText>{t(link.text)}</LinkText>
           </RouterLink>
         );
       })}
