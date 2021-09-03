@@ -1,6 +1,8 @@
 import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
+import { Icon, ArrowDownIcon } from '@components/common/Icon';
+
 const Container = styled.div<{ width?: string; align?: string; grow?: string; fontWeight?: number }>`
   display: flex;
   flex-direction: column;
@@ -11,10 +13,28 @@ const Container = styled.div<{ width?: string; align?: string; grow?: string; fo
   font-weight: ${({ fontWeight }) => fontWeight ?? 400};
 `;
 
-const Header = styled.div<{ pointer?: boolean }>`
+const SortIcon = styled(Icon)<{ activeSort?: boolean; sortType?: SortType }>`
+  height: 1.1rem;
+  margin-left: 0.4rem;
+  fill: currentColor;
+  transition: transform 200ms ease-in-out;
+  flex-shrink: 0;
+  transform: rotateZ(0);
+
+  ${({ activeSort, sortType, theme }) =>
+    activeSort &&
+    `
+    color: ${theme.colors.onSurfaceH2};
+    transform: ${sortType === 'asc' ? 'rotateZ(180deg)' : 'rotateZ(0deg)'};
+  `}
+`;
+
+const Header = styled.div<{ onClick?: () => void }>`
+  display: flex;
+  align-items: center;
   font-size: 1.4rem;
   color: ${({ theme }) => theme.colors.onSurfaceSH1};
-  cursor: ${({ pointer }) => (pointer ? 'pointer' : 'default')};
+  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
 `;
 
 const Content = styled.div`
@@ -27,36 +47,42 @@ const Content = styled.div`
   color: ${({ theme }) => theme.colors.onSurfaceH2};
 `;
 
+type SortType = 'asc' | 'desc';
 interface CardElementProps {
   header?: string;
+  sortable?: boolean;
+  activeSort?: boolean;
+  sortType?: SortType;
   content?: string | ReactNode;
   width?: string;
   align?: 'flex-start' | 'center' | 'flex-end';
   grow?: '1' | '0';
   fontWeight?: number;
   onClick?: () => void;
-  pointer?: boolean;
   className?: string;
 }
 
 export const CardElement: FC<CardElementProps> = ({
   children,
   header,
+  sortable,
+  activeSort,
+  sortType,
   content,
   width,
   align,
   grow,
   fontWeight,
   onClick,
-  pointer,
   className,
   ...props
 }) => {
   return (
     <Container width={width} align={align} grow={grow} fontWeight={fontWeight} className={className} {...props}>
       {header && (
-        <Header onClick={onClick} pointer={pointer}>
+        <Header onClick={onClick}>
           {header}
+          {sortable && <SortIcon activeSort={activeSort} sortType={sortType} Component={ArrowDownIcon} />}
         </Header>
       )}
       {content && <Content>{content}</Content>}

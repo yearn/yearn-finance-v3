@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
-import { ArrowDown, Icon } from '@components/common';
+import { ArrowDownIcon, Icon } from '@components/common';
 
 const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
   --dropdown-background: ${({ theme }) => theme.colors.onSurfaceH1};
@@ -142,7 +142,7 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
       {...props}
     >
       <DropdownSelected onClick={() => (!isSingleOption ? setOpen(!open) : null)} open={open}>
-        {!isSingleOption && <Arrow Component={ArrowDown} />}
+        {!isSingleOption && <Arrow Component={ArrowDownIcon} />}
         <SelectedText>{selectedText}</SelectedText>
       </DropdownSelected>
 

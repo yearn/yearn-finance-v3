@@ -14,7 +14,7 @@ import { ReactComponent as IronBankIcon } from '@assets/icons/iron-bank.svg';
 import { ReactComponent as WalletIcon } from '@assets/icons/wallet.svg';
 import { ReactComponent as HelpIcon } from '@assets/icons/help.svg';
 import { ReactComponent as CloseIcon } from '@assets/icons/close.svg';
-import { ReactComponent as ArrowDown } from '@assets/icons/arrow-down.svg';
+import { ReactComponent as ArrowDownIcon } from '@assets/icons/arrow-down.svg';
 import { ReactComponent as CollapseIcon } from '@assets/icons/collapse.svg';
 import { ReactComponent as SettingsIcon } from '@assets/icons/settings.svg';
 import { ReactComponent as ThemesIcon } from '@assets/icons/themes.svg';
@@ -66,7 +66,7 @@ export {
   WalletIcon,
   HelpIcon,
   CloseIcon,
-  ArrowDown,
+  ArrowDownIcon,
   CollapseIcon,
   SettingsIcon,
   ThemesIcon,
