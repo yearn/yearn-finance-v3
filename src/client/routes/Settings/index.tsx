@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
-import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions } from '@store';
+import { useAppTranslation, useAppSelector, useAppDispatch, useWindowDimensions } from '@hooks';
+import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions, ModalsActions } from '@store';
 import { getTheme } from '@themes';
 import { getConfig } from '@config';
 import { AlertTypes, ModalName, Theme } from '@types';
-import { ModalsActions } from '@store';
 
 import { ViewContainer } from '@components/app';
 import {
@@ -137,15 +136,23 @@ export const Settings = () => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const { isMobile } = useWindowDimensions();
+
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
   const defaultSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
+  const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
+
   const availableSlippages = getConfig().SLIPPAGE_OPTIONS;
   const { ALLOW_DEV_MODE, AVAILABLE_THEMES } = getConfig();
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
   const changeSlippage = (slippage: number) => {
     dispatch(SettingsActions.setDefaultSlippage({ slippage }));
+  };
+
+  const toggleSidebar = () => {
+    dispatch(SettingsActions.toggleSidebar());
   };
 
   const openModal = (modalName: ModalName, modalProps?: any) => {
@@ -199,22 +206,33 @@ export const Settings = () => {
             </SectionContent>
           </SettingsSection>
 
+          {!isMobile && (
+            <SettingsSection>
+              <SectionTitle>
+                <SectionIcon Component={ThemesIcon} />
+                Additional settings
+              </SectionTitle>
+              <SectionContent>
+                Expanded sidenav
+                <ToggleButton selected={!collapsedSidebar} setSelected={toggleSidebar} />
+              </SectionContent>
+            </SettingsSection>
+          )}
+
           {ALLOW_DEV_MODE && (
-            <>
-              <SettingsSection>
-                <SectionTitle>
-                  <SectionIcon Component={ThemesIcon} />
-                  Dev Mode
-                </SectionTitle>
-                <SectionContent>
-                  Enable Dev Mode
-                  <ToggleButton
-                    selected={devModeSettings.enabled}
-                    setSelected={() => dispatch(SettingsActions.toggleDevMode({ enable: !devModeSettings.enabled }))}
-                  />
-                </SectionContent>
-              </SettingsSection>
-            </>
+            <SettingsSection>
+              <SectionTitle>
+                <SectionIcon Component={ThemesIcon} />
+                Dev Mode
+              </SectionTitle>
+              <SectionContent>
+                Enable Dev Mode
+                <ToggleButton
+                  selected={devModeSettings.enabled}
+                  setSelected={() => dispatch(SettingsActions.toggleDevMode({ enable: !devModeSettings.enabled }))}
+                />
+              </SectionContent>
+            </SettingsSection>
           )}
 
           {/* Only on development settings for testing! */}
