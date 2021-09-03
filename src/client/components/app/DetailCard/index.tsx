@@ -139,6 +139,7 @@ export const DetailCard = <T,>({
                 onClick={() => (sortable ? handleSort(key) : undefined)}
                 sortable={sortable}
                 activeSort={sortedBy === key}
+                sortType={order}
                 {...rest}
               />
             )

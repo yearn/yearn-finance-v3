@@ -13,19 +13,19 @@ const Container = styled.div<{ width?: string; align?: string; grow?: string; fo
   font-weight: ${({ fontWeight }) => fontWeight ?? 400};
 `;
 
-const SortIcon = styled(Icon)<{ active?: boolean }>`
+const SortIcon = styled(Icon)<{ activeSort?: boolean; sortType?: SortType }>`
   height: 1.1rem;
   margin-left: 0.4rem;
-  transform: rotateZ(180deg);
   fill: currentColor;
   transition: transform 200ms ease-in-out;
   flex-shrink: 0;
+  transform: rotateZ(0);
 
-  ${({ active, theme }) =>
-    active &&
+  ${({ activeSort, sortType, theme }) =>
+    activeSort &&
     `
-    transform: rotateZ(0);
     color: ${theme.colors.onSurfaceH2};
+    transform: ${sortType === 'asc' ? 'rotateZ(180deg)' : 'rotateZ(0deg)'};
   `}
 `;
 
@@ -47,10 +47,12 @@ const Content = styled.div`
   color: ${({ theme }) => theme.colors.onSurfaceH2};
 `;
 
+type SortType = 'asc' | 'desc';
 interface CardElementProps {
   header?: string;
   sortable?: boolean;
   activeSort?: boolean;
+  sortType?: SortType;
   content?: string | ReactNode;
   width?: string;
   align?: 'flex-start' | 'center' | 'flex-end';
@@ -65,6 +67,7 @@ export const CardElement: FC<CardElementProps> = ({
   header,
   sortable,
   activeSort,
+  sortType,
   content,
   width,
   align,
@@ -79,7 +82,7 @@ export const CardElement: FC<CardElementProps> = ({
       {header && (
         <Header onClick={onClick}>
           {header}
-          {sortable && <SortIcon active={activeSort} Component={ArrowDownIcon} />}
+          {sortable && <SortIcon activeSort={activeSort} sortType={sortType} Component={ArrowDownIcon} />}
         </Header>
       )}
       {content && <Content>{content}</Content>}
