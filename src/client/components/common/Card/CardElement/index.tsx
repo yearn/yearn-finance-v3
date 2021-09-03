@@ -19,6 +19,7 @@ const SortIcon = styled(Icon)<{ active?: boolean }>`
   transform: rotateZ(180deg);
   fill: currentColor;
   transition: transform 200ms ease-in-out;
+  flex-shrink: 0;
 
   ${({ active, theme }) =>
     active &&
