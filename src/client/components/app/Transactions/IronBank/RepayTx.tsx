@@ -94,7 +94,7 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
     maxAmountAllowed: toWei(repayableTokens, selectedToken.decimals),
   });
 
-  const error = allowanceError || inputError || actionsStatus.repay.error;
+  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.repay.error;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
