@@ -67,12 +67,6 @@ interface CardElementProps {
   className?: string;
 }
 
-// export const CardElement: FC<CardElementProps> = ({ ...props }) => {
-//   return (
-
-//   );
-// };
-
 export const CardElement: FC<CardElementProps> = ({
   children,
   header,
