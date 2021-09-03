@@ -55,6 +55,57 @@ const StyledNoWalletCard = styled(NoWalletCard)`
   ${halfWidthCss}
 `;
 
+const SupplyingCard = styled(DetailCard)`
+  @media (max-width: 860px) {
+    .col-name {
+      width: 7rem;
+    }
+  }
+  @media (max-width: 760px) {
+    .col-balance {
+      display: none;
+    }
+  }
+  @media (max-width: 630px) {
+    .col-apy {
+      display: none;
+    }
+  }
+  @media (max-width: 600px) {
+    .col-apy {
+      display: flex;
+    }
+  }
+  @media (max-width: 450px) {
+    .col-apy {
+      display: none;
+    }
+  }
+  @media (max-width: 360px) {
+    .col-value {
+      display: none;
+    }
+  }
+` as typeof DetailCard;
+
+const BorrowingCard = styled(DetailCard)`
+  @media (max-width: 800px) {
+    .col-name {
+      width: 7rem;
+    }
+  }
+  @media (max-width: 700px) {
+    .col-balance {
+      display: none;
+    }
+  }
+  @media (max-width: 360px) {
+    .col-apy {
+      display: none;
+    }
+  }
+` as typeof DetailCard;
+
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-market {
@@ -181,7 +232,7 @@ export const IronBank = () => {
 
           {!walletIsConnected && <StyledNoWalletCard />}
 
-          <DetailCard
+          <SupplyingCard
             header="Supplying"
             metadata={[
               {
@@ -233,6 +284,8 @@ export const IronBank = () => {
                     }
                   />
                 ),
+                width: '8rem',
+                className: 'col-collateral',
               },
               {
                 key: 'actions',
@@ -261,7 +314,7 @@ export const IronBank = () => {
             wrap
           />
 
-          <DetailCard
+          <BorrowingCard
             header="Borrowing"
             metadata={[
               {
