@@ -38,7 +38,8 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   useEffect(() => {
     if (selectedMarket) {
       dispatch(IronBankActions.getUserMarketsPositions({ marketAddresses: [selectedMarket.address] }));
-      dispatch(IronBankActions.getUserMarketsMetadata({ marketAddresses: [selectedMarket.address] }));
+      // dispatch(IronBankActions.getUserMarketsMetadata({ marketAddresses: [selectedMarket.address] })); TODO use this when lens fixes are deployed
+      dispatch(IronBankActions.getUserMarketsMetadata({})); //  TODO remove this when lens fixes are deployed
     }
 
     return () => {
