@@ -53,7 +53,7 @@ export const Navbar = ({ className, title, walletAddress, addressEnsName, onWall
       {title && <StyledText>{title}</StyledText>}
 
       <StyledNavbarActions>
-        <BetaButton outline>V3 BETA</BetaButton>
+        <BetaButton outline>BETA</BetaButton>
 
         <ConnectWalletButton
           address={walletAddress}
