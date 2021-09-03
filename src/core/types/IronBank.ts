@@ -18,7 +18,6 @@ export interface IronBankMarketView {
   userDepositedUsdc: string;
   allowancesMap: { [spenderAddress: string]: string };
   enteredMarket: boolean;
-  borrowLimit: string;
 
   // underlyingToken
   token: TokenView;

@@ -66,7 +66,6 @@ const selectMarkets = createSelector(
         reserveFactor: marketData.metadata.reserveFactor,
         isActive: marketData.metadata.isActive,
         exchangeRate: marketData.metadata.exchangeRate,
-        borrowLimit: userIronBankSummary?.borrowLimitUsdc ?? '0',
         allowancesMap: marketsAllowancesMap[address] ?? {},
         enteredMarket: userMarketMetadata?.enteredMarket ?? false,
         LEND: {
