@@ -28,11 +28,10 @@ const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
 `;
 
 const TitleCardElement = styled(CardElement)`
-  display: flex;
-  justify-content: center;
   margin: 0;
   padding: 0.6rem ${({ theme }) => theme.cardPadding};
   flex-shrink: 0;
+  user-select: none;
 `;
 
 const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolean }>`
@@ -138,7 +137,8 @@ export const DetailCard = <T,>({
                 className={className}
                 key={key}
                 onClick={() => (sortable ? handleSort(key) : undefined)}
-                pointer={sortable}
+                sortable={sortable}
+                activeSort={sortedBy === key}
                 {...rest}
               />
             )
