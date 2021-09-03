@@ -1,8 +1,7 @@
-import { useEffect, ElementType } from 'react';
+import { ElementType } from 'react';
 import styled from 'styled-components';
-import { useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
+import { useWindowDimensions } from '@hooks';
 
-import { SettingsActions, SettingsSelectors } from '@store';
 import { HomeIcon, WalletIcon, VaultIcon, LabsIcon, IronBankIcon, SettingsIcon } from '@components/common';
 import { NavSidebar } from './NavSidebar';
 import { NavTabbar } from './NavTabbar';
@@ -52,17 +51,16 @@ const navLinks = [
 
 export const Navigation = () => {
   const { isMobile } = useWindowDimensions();
-  const dispatch = useAppDispatch();
-  const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
-  // NOTE If this throws a propagation error between Navigation and Navsidebar, just move it to NavSidebar
-  // Keep watch
-  useEffect(() => {
-    if (isMobile && !collapsedSidebar) {
-      dispatch(SettingsActions.closeSidebar());
-    }
-  }, [isMobile]);
-  //
+  // NOTE Auto collapse sidenav on mobile
+  // const dispatch = useAppDispatch();
+  // const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
+
+  // useEffect(() => {
+  //   if (isMobile && !collapsedSidebar) {
+  //     dispatch(SettingsActions.closeSidebar());
+  //   }
+  // }, [isMobile]);
 
   return (
     <StyledNavigation>
