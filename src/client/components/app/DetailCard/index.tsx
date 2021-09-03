@@ -131,7 +131,7 @@ export const DetailCard = <T,>({
 
       <CardContent>
         {metadata.map(
-          ({ key, sortable, hide, className, ...rest }) =>
+          ({ key, sortable, hide, className, transform, format, ...rest }) =>
             !hide && (
               <TitleCardElement
                 className={className}
