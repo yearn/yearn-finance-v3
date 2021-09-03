@@ -120,7 +120,8 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     await handleTransaction(tx);
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
     dispatch(getIronBankSummary());
-    dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] }));
+    // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
+    dispatch(getUserMarketsMetadata({})); //  TODO remove this when lens fixes are deployed
     dispatch(getUserMarketsPositions({ marketAddresses: [marketAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [underlyingTokenAddress] }));
   }
@@ -149,7 +150,8 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     await handleTransaction(tx);
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
     dispatch(getIronBankSummary());
-    dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] }));
+    // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
+    dispatch(getUserMarketsMetadata({})); //  TODO remove this when lens fixes are deployed
     dispatch(getUserMarketsPositions({ marketAddresses: [marketAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [underlyingTokenAddress] }));
   }
@@ -178,7 +180,8 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     await handleTransaction(tx);
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
     dispatch(getIronBankSummary());
-    dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] }));
+    // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
+    dispatch(getUserMarketsMetadata({})); //  TODO remove this when lens fixes are deployed
     dispatch(getUserMarketsPositions({ marketAddresses: [marketAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [underlyingTokenAddress] }));
   }
@@ -207,7 +210,8 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     await handleTransaction(tx);
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
     dispatch(getIronBankSummary());
-    dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] }));
+    // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
+    dispatch(getUserMarketsMetadata({})); //  TODO remove this when lens fixes are deployed
     dispatch(getUserMarketsPositions({ marketAddresses: [marketAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [underlyingTokenAddress] }));
   }
@@ -249,7 +253,8 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAP
     await handleTransaction(tx);
     dispatch(getIronBankSummary());
     dispatch(getUserMarketsPositions({ marketAddresses: [marketAddress] }));
-    dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] }));
+    // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
+    dispatch(getUserMarketsMetadata({})); //  TODO remove this when lens fixes are deployed
   }
 );
 
