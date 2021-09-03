@@ -1,8 +1,16 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
-import { IronBankSelectors, IronBankActions } from '@store';
-import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS, basicValidateAmount, toWei } from '@src/utils';
+import { IronBankSelectors, IronBankActions, TokensActions } from '@store';
+import {
+  toBN,
+  normalizeAmount,
+  normalizePercent,
+  USDC_DECIMALS,
+  basicValidateAmount,
+  toWei,
+  validateAllowance,
+} from '@src/utils';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 
@@ -30,6 +38,17 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
       onExit();
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedMarket) return;
+
+    dispatch(
+      TokensActions.getTokenAllowance({
+        tokenAddress: selectedMarket.token.address,
+        spenderAddress: selectedMarket.address,
+      })
+    );
+  }, [selectedMarket?.address]);
 
   useEffect(() => {
     if (!selectedMarket || !error) return;
@@ -60,6 +79,14 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
     yield: normalizePercent(selectedMarket.borrowApy, 2),
   };
 
+  const { approved: isApproved, error: allowanceError } = validateAllowance({
+    tokenAmount: toBN(amount),
+    tokenAddress: selectedToken.address,
+    tokenDecimals: selectedToken.decimals.toString(),
+    tokenAllowancesMap: selectedToken.allowancesMap,
+    spenderAddress: selectedMarket.address,
+  });
+
   const { approved: isValidAmount, error: inputError } = basicValidateAmount({
     sellTokenAmount: toBN(amount),
     sellTokenDecimals: selectedToken.decimals.toString(),
@@ -67,10 +94,19 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
     maxAmountAllowed: toWei(repayableTokens, selectedToken.decimals),
   });
 
-  const error = inputError || actionsStatus.repay.error;
+  const error = allowanceError || inputError || actionsStatus.repay.error;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
+  };
+
+  const approve = async () => {
+    await dispatch(
+      IronBankActions.approveMarket({
+        marketAddress: selectedMarket.address,
+        tokenAddress: selectedToken.address,
+      })
+    );
   };
 
   const repay = async () => {
@@ -86,6 +122,12 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
   };
 
   const txActions = [
+    {
+      label: 'Approve',
+      onAction: approve,
+      status: actionsStatus.approve,
+      disabled: isApproved,
+    },
     {
       label: 'Repay',
       onAction: repay,
