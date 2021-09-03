@@ -76,7 +76,6 @@ const StyledText = styled(Text)`
 const StyledLink = styled.a`
   display: block;
   white-space: initial;
-  /* color: ${(props) => props.theme.colors.secondary}; */
 `;
 
 const InfoValueRow = styled.div`
