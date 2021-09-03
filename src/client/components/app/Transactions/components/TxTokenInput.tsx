@@ -80,6 +80,7 @@ const TokenData = styled.div`
   align-items: flex-end;
   overflow: hidden;
   font-size: 1.4rem;
+  flex: 1;
 `;
 
 const TokenName = styled.div`

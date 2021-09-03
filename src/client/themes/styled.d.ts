@@ -133,6 +133,7 @@ declare module 'styled-components' {
   export interface Devices {
     mobile: number;
     tablet: number;
+    tabletL: number;
     desktopS: number;
     desktop: number;
     desktopL: number;

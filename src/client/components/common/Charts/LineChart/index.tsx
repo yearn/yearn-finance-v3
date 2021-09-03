@@ -4,8 +4,9 @@ import { Serie, ResponsiveLine } from '@nivo/line';
 
 import { Text } from '@components/common';
 
-import { useAppSelector } from '@hooks';
+import { useAppSelector, useWindowDimensions } from '@hooks';
 import { getTheme } from '@themes';
+import { formatUsd } from '@utils';
 
 export interface LineChartProps {
   className?: string;
@@ -55,6 +56,7 @@ const StyledLineChart = styled.div`
 `;
 
 export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, className, ...props }) => {
+  const { isTablet } = useWindowDimensions();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const theme = getTheme(currentTheme);
 
@@ -95,7 +97,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, classNa
           tickSize: 0,
           tickPadding: 16,
           format: '%b %d',
-          tickValues: 'every 2 weeks',
+          tickValues: isTablet ? 'every 8 days' : 'every 4 days',
         }}
         // xFormat="time:%Y-%m-%d"
         axisLeft={null}
@@ -116,7 +118,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, classNa
           return (
             <StyledTooltip align={isFirstHalf ? 'left' : 'right'}>
               <Text>{tooltipLabel || point.serieId}</Text>
-              <Text>{point.data.yFormatted}</Text>
+              <Text>{formatUsd(point.data.yFormatted.toString())}</Text>
             </StyledTooltip>
           );
         }}

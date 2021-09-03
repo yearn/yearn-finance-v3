@@ -4,10 +4,10 @@ import styled from 'styled-components';
 
 import { TokensSelectors, VaultsSelectors } from '@store';
 import { useAppSelector } from '@hooks';
+import { parseHistoricalEarnings } from '@utils';
 
 import { VaultDetailPanels, ViewContainer } from '@components/app';
 import { SpinnerLoading, Button } from '@components/common';
-import { parseHistoricalEarnings } from '@utils';
 
 const BackButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.surface};

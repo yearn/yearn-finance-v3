@@ -1,16 +1,34 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import { formatPercent, normalizeUsdc } from '@src/utils';
+import { formatPercent, formatUsd, normalizeUsdc } from '@utils';
 
+import { device } from '@themes/default';
 import { TokenIcon } from '@components/app';
 import { DepositTx, WithdrawTx } from '@components/app/Transactions';
 import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text } from '@components/common';
 import { LineChart } from '@components/common/Charts';
+
 import { StrategyDetailedMetadata } from '@yfi/sdk/dist/types/strategy';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
+`;
+
+const ChartValue = styled(Text)`
+  font-size: 2.4rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+`;
+
+const ChartValueLabel = styled(Text)`
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: ${({ theme }) => theme.colors.onSurfaceSH1};
+`;
+
+const ChartValueContainer = styled.div`
+  margin-top: 1.2rem;
 `;
 
 const VaultChart = styled(Card)`
@@ -39,6 +57,10 @@ const VaultActions = styled(Card)`
   flex-direction: column;
   width: 41.6rem;
   align-self: stretch;
+
+  @media ${device.tabletL} {
+    width: 100%;
+  } ;
 `;
 
 const OverviewInfo = styled(Card)`
@@ -89,12 +111,30 @@ const VaultOverview = styled(Card)`
   flex-direction: column;
   flex: 1;
   align-self: stretch;
+  max-width: 100%;
 
-  > * {
+  > div:not(:first-child) {
     margin-top: ${({ theme }) => theme.cardPadding};
   }
-`;
 
+  @media ${device.mobile} {
+    ${OverviewTokenInfo} {
+      grid-gap: 2rem;
+    }
+    ${InfoValueRow} {
+      display: flex;
+      margin-top: 0.5rem;
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 360px) {
+    ${OverviewTokenInfo} {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+`;
 export interface VaultDetailPanelsProps {
   selectedVault?: any;
   chartData?: any;
@@ -104,6 +144,8 @@ export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanel
   // const { t } = useAppTranslation('common');
   const [selectedTab, setSelectedTab] = useState('deposit');
   const strategy: StrategyDetailedMetadata | null = selectedVault?.strategies[0] ?? null;
+
+  const chartValue = formatUsd(chartData[0].data.slice(-1)[0].y.toString()) ?? '-';
 
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
@@ -174,6 +216,12 @@ export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanel
       {chartData && (
         <VaultChart>
           <StyledCardHeader header="Performance" />
+
+          <ChartValueContainer>
+            <ChartValueLabel>Earnings Over Time</ChartValueLabel>
+            <ChartValue>{chartValue}</ChartValue>
+          </ChartValueContainer>
+
           <StyledLineChart chartData={chartData} tooltipLabel="Earning Over Time" />
         </VaultChart>
       )}

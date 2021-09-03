@@ -20,6 +20,7 @@ const sharedTheme: SharedTheme = {
   devices: {
     mobile: 600,
     tablet: 960,
+    tabletL: 1024,
     desktopS: 1280,
     desktop: 1920,
     desktopL: 2560,
@@ -76,6 +77,7 @@ const sharedTheme: SharedTheme = {
 export const device = {
   mobile: `(max-width: ${sharedTheme.devices.mobile}px)`,
   tablet: `(max-width: ${sharedTheme.devices.tablet}px)`,
+  tabletL: `(max-width: ${sharedTheme.devices.tabletL}px)`,
   desktopS: `(max-width: ${sharedTheme.devices.desktopS}px)`,
   desktop: `(max-width: ${sharedTheme.devices.desktop}px)`,
   desktopL: `(max-width: ${sharedTheme.devices.desktopL}px)`,
