@@ -368,6 +368,7 @@ export const Labs = () => {
             }))}
             // TODO Redirect address is wrong
             // onAction={({ address }) => history.push(`/vault/${address}`)}
+            initialSortBy="value"
             wrap
           />
 
@@ -437,6 +438,7 @@ export const Labs = () => {
             }
             // TODO Redirect address is wrong
             // onAction={({ address }) => history.push(`/vault/${address}`)}
+            initialSortBy="apyData"
             wrap
           />
         </>

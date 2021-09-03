@@ -32,6 +32,7 @@ export interface TokenView {
   categories: string[];
   description: string;
   website: string;
+  isZapable: boolean;
   allowancesMap: { [tokenAddress: string]: string };
 }
 

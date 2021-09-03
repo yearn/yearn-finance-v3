@@ -35,6 +35,7 @@ const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (to
       categories: tokenData?.metadata?.categories ?? [],
       description: tokenData?.metadata?.description ?? '',
       website: tokenData?.metadata?.website ?? '',
+      isZapable: tokenData?.supported.zapper ?? false,
     };
   });
   return tokens;
@@ -48,6 +49,10 @@ const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
     totalBalance: totalBalance?.toString() ?? '0',
     tokensAmount: userTokens.length.toString(),
   };
+});
+
+const selectZapInTokens = createSelector([selectUserTokens], (userTokens) => {
+  return userTokens.filter(({ isZapable }) => isZapable);
 });
 
 const selectZapOutTokens = createSelector([selectTokensMap, selectUserTokensMap], (tokensMap, userTokensMap) => {
@@ -97,6 +102,7 @@ const selectToken = createSelector([selectTokensMap, selectTokensUser], (tokensM
       categories: tokenData?.metadata?.categories ?? [],
       description: tokenData?.metadata?.description ?? '',
       website: tokenData?.metadata?.website ?? '',
+      isZapable: tokenData?.supported.zapper ?? false,
       allowancesMap: allowancesMap,
     };
   })
@@ -110,6 +116,7 @@ export const TokensSelectors = {
   selectUserTokensStatusMap,
   selectUserTokens,
   selectSummaryData,
+  selectZapInTokens,
   selectZapOutTokens,
   selectWalletTokensStatus,
   selectToken,

@@ -92,24 +92,32 @@ export const Wallet = () => {
     }
   };
 
-  const tokensButtons = (tokenAddress: string) => {
-    const buttons: any[] = [
-      {
-        name: 'Invest',
-        handler: () => actionHandler('invest', tokenAddress),
-        disabled: !walletIsConnected,
-      },
-    ];
-
-    if (ironBankUnderlyingTokens.includes(tokenAddress)) {
-      buttons.push({
-        name: 'Supply',
-        handler: () => actionHandler('supply', tokenAddress),
-        disabled: !walletIsConnected,
-      });
+  const investButton = (tokenAddress: string, isZapable: boolean) => {
+    if (isZapable) {
+      return [
+        {
+          name: 'Invest',
+          handler: () => actionHandler('invest', tokenAddress),
+          disabled: !walletIsConnected,
+        },
+      ];
     }
 
-    return buttons;
+    return [];
+  };
+
+  const supplyButton = (tokenAddress: string) => {
+    if (ironBankUnderlyingTokens.includes(tokenAddress)) {
+      return [
+        {
+          name: 'Supply',
+          handler: () => actionHandler('supply', tokenAddress),
+          disabled: !walletIsConnected,
+        },
+      ];
+    }
+
+    return [];
   };
 
   return (
@@ -192,19 +200,27 @@ export const Wallet = () => {
               className: 'col-value',
             },
             {
-              key: 'actions',
-              transform: ({ address }) => <ActionButtons actions={tokensButtons(address)} />,
+              key: 'supply',
+              transform: ({ address }) => <ActionButtons actions={supplyButton(address)} />,
               align: 'flex-end',
               width: 'auto',
               grow: '1',
+            },
+            {
+              key: 'invest',
+              transform: ({ address, isZapable }) => <ActionButtons actions={investButton(address, isZapable)} />,
+              align: 'flex-end',
+              width: '12rem',
             },
           ]}
           data={userTokens.map((token) => ({
             ...token,
             displayIcon: token.icon ?? '',
             tokenBalance: normalizeAmount(token.balance, token.decimals),
-            actions: null,
+            supply: null,
+            invest: null,
           }))}
+          initialSortBy="balanceUsdc"
           wrap
         />
       )}

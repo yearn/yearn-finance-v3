@@ -257,6 +257,7 @@ export const IronBank = () => {
               collateral: market.enteredMarket,
               actions: null,
             }))}
+            initialSortBy="userDepositedUsdc"
             wrap
           />
 
@@ -323,6 +324,7 @@ export const IronBank = () => {
               balance: normalizeAmount(market.userDeposited, market.token.decimals),
               actions: null,
             }))}
+            initialSortBy="userDepositedUsdc"
             wrap
           />
 
@@ -407,6 +409,7 @@ export const IronBank = () => {
                 />
               </SearchBarContainer>
             }
+            initialSortBy="lendApy"
             wrap
           />
         </>

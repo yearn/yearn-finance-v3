@@ -255,6 +255,7 @@ export const Vaults = () => {
               actions: null,
             }))}
             onAction={({ address }) => history.push(`/vault/${address}`)}
+            initialSortBy="userDepositedUsdc"
             wrap
           />
 
@@ -314,6 +315,7 @@ export const Vaults = () => {
             data={filteredVaults.map((vault) => ({
               ...vault,
               userTokenBalance: normalizeAmount(vault.token.balance, vault.token.decimals),
+              userTokenBalanceUsdc: vault.token.balanceUsdc,
               actions: null,
             }))}
             SearchBar={
@@ -327,6 +329,7 @@ export const Vaults = () => {
               </SearchBarContainer>
             }
             onAction={({ address }) => history.push(`/vault/${address}`)}
+            initialSortBy="apyData"
             wrap
           />
         </>

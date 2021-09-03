@@ -44,7 +44,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const [txCompleted, setTxCompleted] = useState(false);
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
-  const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
+  const userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
 
   // TODO: ADD EXPECTED OUTCOME TO LABS
