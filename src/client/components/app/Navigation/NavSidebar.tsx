@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { useLocation, Link } from 'react-router-dom';
 
-import { useAppTranslation, useAppSelector, useAppDispatch, useWindowDimensions } from '@hooks';
-import { SettingsActions, SettingsSelectors } from '@store';
+import { useAppTranslation, useAppSelector } from '@hooks';
+import { SettingsSelectors } from '@store';
 
 import { NavigationLink } from '@components/app';
-import { Icon, Logo, CollapseIcon } from '@components/common';
+import { Icon, Logo } from '@components/common';
 
 const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
@@ -73,14 +73,14 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
   `}
 `;
 
-const ToggleSidebarButton = styled(LinkIcon)`
-  fill: ${({ theme }) => theme.colors.primaryVariant};
-  transition: ${linkTransition};
-  &:hover {
-    filter: ${linkHoverFilter};
-  }
-  margin-right: 0;
-`;
+// const ToggleSidebarButton = styled(LinkIcon)`
+//   fill: ${({ theme }) => theme.colors.primaryVariant};
+//   transition: ${linkTransition};
+//   &:hover {
+//     filter: ${linkHoverFilter};
+//   }
+//   margin-right: 0;
+// `;
 
 const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   display: flex;
@@ -116,20 +116,18 @@ interface NavSidebarProps {
 
 export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
   const { t } = useAppTranslation('common');
-  const { isMobile } = useWindowDimensions();
-  const dispatch = useAppDispatch();
   const location = useLocation();
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
   const currentPath = '/' + location.pathname.toLowerCase().split('/')[1];
 
-  const toggleSidebar = () => {
-    if (isMobile && collapsedSidebar) {
-      return;
-    }
+  // const toggleSidebar = () => {
+  //   if (isMobile && collapsedSidebar) {
+  //     return;
+  //   }
 
-    dispatch(SettingsActions.toggleSidebar());
-  };
+  //   dispatch(SettingsActions.toggleSidebar());
+  // };
 
   const linkList = (
     <LinkList className="link-list">
@@ -147,7 +145,7 @@ export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
     <StyledSidebar collapsed={collapsedSidebar}>
       <SidebarHeader>
         <StyledLogo full={!collapsedSidebar} />
-        {!isMobile && <ToggleSidebarButton Component={CollapseIcon} onClick={toggleSidebar} />}
+        {/* {!isMobile && <ToggleSidebarButton Component={CollapseIcon} onClick={toggleSidebar} />} */}
       </SidebarHeader>
 
       <SidebarContent>{linkList}</SidebarContent>
