@@ -1,7 +1,7 @@
 import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
-import { Icon, ArrowDownIcon } from '@components/common/Icon';
+import { Icon, ArrowDownIcon, IconProps } from '@components/common/Icon';
 
 const Container = styled.div<{ width?: string; align?: string; grow?: string; fontWeight?: number }>`
   display: flex;
@@ -13,7 +13,12 @@ const Container = styled.div<{ width?: string; align?: string; grow?: string; fo
   font-weight: ${({ fontWeight }) => fontWeight ?? 400};
 `;
 
-const SortIcon = styled(Icon)<{ activeSort?: boolean; sortType?: SortType }>`
+interface SortIconProps extends Omit<IconProps, 'ref'> {
+  activeSort?: boolean;
+  sortType?: SortType;
+}
+
+const SortIcon = styled(({ activeSort, sortType, ...props }: SortIconProps) => <Icon {...props} />)`
   height: 1.1rem;
   margin-left: 0.4rem;
   fill: currentColor;
@@ -61,6 +66,12 @@ interface CardElementProps {
   onClick?: () => void;
   className?: string;
 }
+
+// export const CardElement: FC<CardElementProps> = ({ ...props }) => {
+//   return (
+
+//   );
+// };
 
 export const CardElement: FC<CardElementProps> = ({
   children,
