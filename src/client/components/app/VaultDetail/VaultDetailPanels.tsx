@@ -142,14 +142,13 @@ const VaultOverview = styled(Card)`
 export interface VaultDetailPanelsProps {
   selectedVault?: any;
   chartData?: any;
+  chartValue?: string;
 }
 
-export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanelsProps) => {
+export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: VaultDetailPanelsProps) => {
   // const { t } = useAppTranslation('common');
   const [selectedTab, setSelectedTab] = useState('deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
-
-  const chartValue = formatUsd(chartData[0].data.slice(-1)[0].y.toString()) ?? '-';
 
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
@@ -225,7 +224,7 @@ export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanel
 
           <ChartValueContainer>
             <ChartValueLabel>Earnings Over Time</ChartValueLabel>
-            <ChartValue>{chartValue}</ChartValue>
+            <ChartValue>{formatUsd(chartValue)}</ChartValue>
           </ChartValueContainer>
 
           <StyledLineChart chartData={chartData} tooltipLabel="Earning Over Time" />

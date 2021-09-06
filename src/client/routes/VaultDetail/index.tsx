@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { TokensSelectors, VaultsSelectors } from '@store';
 import { useAppSelector } from '@hooks';
-import { parseHistoricalEarnings } from '@utils';
+import { parseHistoricalEarnings, parseLastEarnings } from '@utils';
 
 import { VaultDetailPanels, ViewContainer } from '@components/app';
 import { SpinnerLoading, Button } from '@components/common';
@@ -72,6 +72,7 @@ export const VaultDetail = () => {
   // ];
 
   const chartData = parseHistoricalEarnings(selectedVault?.historicalEarnings);
+  const chartValue = parseLastEarnings(selectedVault?.historicalEarnings);
 
   return (
     <VaultDetailView>
@@ -81,7 +82,9 @@ export const VaultDetail = () => {
 
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
 
-      {!generalLoading && selectedVault && <VaultDetailPanels selectedVault={selectedVault} chartData={chartData} />}
+      {!generalLoading && selectedVault && (
+        <VaultDetailPanels selectedVault={selectedVault} chartData={chartData} chartValue={chartValue} />
+      )}
     </VaultDetailView>
   );
 };
