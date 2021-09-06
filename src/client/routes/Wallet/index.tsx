@@ -95,31 +95,23 @@ export const Wallet = () => {
   };
 
   const investButton = (tokenAddress: string, isZapable: boolean) => {
-    if (isZapable || vaultsUnderlyingTokens.includes(tokenAddress)) {
-      return [
-        {
-          name: 'Invest',
-          handler: () => actionHandler('invest', tokenAddress),
-          disabled: !walletIsConnected,
-        },
-      ];
-    }
-
-    return [];
+    return [
+      {
+        name: 'Invest',
+        handler: () => actionHandler('invest', tokenAddress),
+        disabled: !walletIsConnected || !(isZapable || vaultsUnderlyingTokens.includes(tokenAddress)),
+      },
+    ];
   };
 
   const supplyButton = (tokenAddress: string) => {
-    if (ironBankUnderlyingTokens.includes(tokenAddress)) {
-      return [
-        {
-          name: 'Supply',
-          handler: () => actionHandler('supply', tokenAddress),
-          disabled: !walletIsConnected,
-        },
-      ];
-    }
-
-    return [];
+    return [
+      {
+        name: 'Supply',
+        handler: () => actionHandler('supply', tokenAddress),
+        disabled: !walletIsConnected || !ironBankUnderlyingTokens.includes(tokenAddress),
+      },
+    ];
   };
 
   return (
@@ -202,17 +194,13 @@ export const Wallet = () => {
               className: 'col-value',
             },
             {
-              key: 'supply',
-              transform: ({ address }) => <ActionButtons actions={supplyButton(address)} />,
+              key: 'invest',
+              transform: ({ address, isZapable }) => (
+                <ActionButtons actions={[...supplyButton(address), ...investButton(address, isZapable)]} />
+              ),
               align: 'flex-end',
               width: 'auto',
               grow: '1',
-            },
-            {
-              key: 'invest',
-              transform: ({ address, isZapable }) => <ActionButtons actions={investButton(address, isZapable)} />,
-              align: 'flex-end',
-              width: '12rem',
             },
           ]}
           data={userTokens.map((token) => ({

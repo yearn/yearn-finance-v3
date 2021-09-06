@@ -6,6 +6,7 @@ import { getConfig } from '@config';
 
 const toggleSidebar = createAction('settings/toggleSidebar');
 const closeSidebar = createAction('settings/closeSidebar');
+const openSidebar = createAction('settings/openSidebar');
 
 const setDefaultSlippage = createAsyncThunk<{ slippage: number }, { slippage: number }, ThunkAPI>(
   'settings/setDefaultSlippage',
@@ -53,6 +54,7 @@ const changeWalletAddressOverride = createAsyncThunk<void, { address: string }, 
 export const SettingsActions = {
   toggleSidebar,
   closeSidebar,
+  openSidebar,
   setDefaultSlippage,
   toggleDevMode,
   changeWalletAddressOverride,

@@ -96,16 +96,32 @@ export const Home = () => {
 
       {walletIsConnected && (
         <>
-          <StyledSummaryCard
-            header="Wallet"
-            items={[
-              {
-                header: 'Available to Invest',
-                Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
-              },
-            ]}
-            cardSize="small"
-          />
+          <Row>
+            <StyledSummaryCard
+              header="Wallet"
+              items={[
+                {
+                  header: 'Available to Invest',
+                  Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
+                },
+              ]}
+              cardSize="small"
+            />
+            <StyledSummaryCard
+              header="Iron Bank"
+              items={[
+                {
+                  header: 'Supplied',
+                  Component: <Amount value={ibSummary.supplyBalanceUsdc} input="usdc" />,
+                },
+                {
+                  header: 'Borrow Limit Used',
+                  Component: <Amount value={ibSummary.borrowUtilizationRatio} input="weipercent" />,
+                },
+              ]}
+              cardSize="small"
+            />
+          </Row>
 
           <StyledSummaryCard
             header="Vaults"
@@ -128,21 +144,6 @@ export const Home = () => {
               {
                 header: 'Holdings',
                 Component: <Amount value={labsSummary.totalDeposits} input="usdc" />,
-              },
-            ]}
-            cardSize="small"
-          />
-
-          <StyledSummaryCard
-            header="Iron Bank"
-            items={[
-              {
-                header: 'Supplied',
-                Component: <Amount value={ibSummary.supplyBalanceUsdc} input="usdc" />,
-              },
-              {
-                header: 'Borrow Limit Used',
-                Component: <Amount value={ibSummary.borrowUtilizationRatio} input="weipercent" />,
               },
             ]}
             cardSize="small"
