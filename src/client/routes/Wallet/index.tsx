@@ -7,6 +7,7 @@ import {
   TokensActions,
   ModalsActions,
   ModalSelectors,
+  VaultsSelectors,
   IronBankSelectors,
   AppSelectors,
 } from '@store';
@@ -71,6 +72,7 @@ export const Wallet = () => {
   const { totalBalance } = useAppSelector(TokensSelectors.selectSummaryData);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
+  const vaultsUnderlyingTokens = useAppSelector(VaultsSelectors.selectUnderlyingTokensAddresses);
   const ironBankUnderlyingTokens = useAppSelector(IronBankSelectors.selectUnderlyingTokensAddresses);
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
@@ -93,7 +95,7 @@ export const Wallet = () => {
   };
 
   const investButton = (tokenAddress: string, isZapable: boolean) => {
-    if (isZapable) {
+    if (isZapable || vaultsUnderlyingTokens.includes(tokenAddress)) {
       return [
         {
           name: 'Invest',
@@ -171,7 +173,7 @@ export const Wallet = () => {
               width: '6rem',
               className: 'col-icon',
             },
-            { key: 'name', header: 'Name', sortable: true, width: '17rem', className: 'col-name' },
+            { key: 'displayName', header: 'Name', sortable: true, width: '17rem', className: 'col-name' },
             {
               key: 'tokenBalance',
               header: 'Balance',
@@ -215,6 +217,7 @@ export const Wallet = () => {
           ]}
           data={userTokens.map((token) => ({
             ...token,
+            displayName: token.symbol,
             displayIcon: token.icon ?? '',
             tokenBalance: normalizeAmount(token.balance, token.decimals),
             supply: null,
