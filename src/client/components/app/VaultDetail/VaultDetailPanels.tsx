@@ -6,7 +6,7 @@ import { formatPercent, formatUsd, normalizeUsdc } from '@utils';
 import { device } from '@themes/default';
 import { TokenIcon } from '@components/app';
 import { DepositTx, WithdrawTx } from '@components/app/Transactions';
-import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text } from '@components/common';
+import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text, Markdown } from '@components/common';
 import { LineChart } from '@components/common/Charts';
 import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 
@@ -69,6 +69,11 @@ const OverviewInfo = styled(Card)`
 const StyledText = styled(Text)`
   display: block;
   color: ${(props) => props.theme.colors.secondary};
+  white-space: initial;
+`;
+
+const StyledLink = styled.a`
+  display: block;
   white-space: initial;
 `;
 
@@ -176,7 +181,7 @@ export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanel
             </InfoValueRow>
             <InfoValueRow>
               <span>Website</span>
-              <StyledText>{selectedVault.token.website}</StyledText>
+              <StyledLink href={selectedVault.token.website}>{selectedVault.token.website}</StyledLink>
             </InfoValueRow>
           </TokenInfo>
         </OverviewTokenInfo>
@@ -191,7 +196,9 @@ export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanel
         {strategy && (
           <OverviewInfo variant="surface" cardSize="small">
             <StyledCardHeader subHeader="Strategies" />
-            <StyledCardContent>{strategy.description}</StyledCardContent>
+            <StyledCardContent>
+              <Markdown>{strategy.description}</Markdown>
+            </StyledCardContent>
           </OverviewInfo>
         )}
       </VaultOverview>
