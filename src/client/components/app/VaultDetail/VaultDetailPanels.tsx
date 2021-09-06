@@ -6,7 +6,7 @@ import { formatPercent, formatUsd, normalizeUsdc } from '@utils';
 import { device } from '@themes/default';
 import { TokenIcon } from '@components/app';
 import { DepositTx, WithdrawTx } from '@components/app/Transactions';
-import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text } from '@components/common';
+import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text, Markdown } from '@components/common';
 import { LineChart } from '@components/common/Charts';
 import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 
@@ -64,12 +64,25 @@ const VaultActions = styled(Card)`
 
 const OverviewInfo = styled(Card)`
   padding: ${({ theme }) => theme.cardPadding};
+
+  a {
+    text-decoration: underline;
+    color: inherit;
+    color: ${({ theme }) => theme.colors.onSurfaceSH1};
+  }
 `;
 
 const StyledText = styled(Text)`
   display: block;
   color: ${(props) => props.theme.colors.secondary};
   white-space: initial;
+`;
+
+const StyledLink = styled.a`
+  display: block;
+  white-space: initial;
+  text-decoration: underline;
+  color: inherit;
 `;
 
 const InfoValueRow = styled.div`
@@ -137,14 +150,13 @@ const VaultOverview = styled(Card)`
 export interface VaultDetailPanelsProps {
   selectedVault?: any;
   chartData?: any;
+  chartValue?: string;
 }
 
-export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanelsProps) => {
+export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: VaultDetailPanelsProps) => {
   // const { t } = useAppTranslation('common');
   const [selectedTab, setSelectedTab] = useState('deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
-
-  const chartValue = formatUsd(chartData[0].data[0].y.toString()) ?? '-';
 
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
@@ -176,7 +188,7 @@ export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanel
             </InfoValueRow>
             <InfoValueRow>
               <span>Website</span>
-              <StyledText>{selectedVault.token.website}</StyledText>
+              <StyledLink href={selectedVault.token.website}>{selectedVault.token.website}</StyledLink>
             </InfoValueRow>
           </TokenInfo>
         </OverviewTokenInfo>
@@ -191,7 +203,9 @@ export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanel
         {strategy && (
           <OverviewInfo variant="surface" cardSize="small">
             <StyledCardHeader subHeader="Strategies" />
-            <StyledCardContent>{strategy.description}</StyledCardContent>
+            <StyledCardContent>
+              <Markdown>{strategy.description}</Markdown>
+            </StyledCardContent>
           </OverviewInfo>
         )}
       </VaultOverview>
@@ -218,7 +232,7 @@ export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanel
 
           <ChartValueContainer>
             <ChartValueLabel>Earnings Over Time</ChartValueLabel>
-            <ChartValue>{chartValue}</ChartValue>
+            <ChartValue>{formatUsd(chartValue)}</ChartValue>
           </ChartValueContainer>
 
           <StyledLineChart chartData={chartData} tooltipLabel="Earning Over Time" />

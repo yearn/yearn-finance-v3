@@ -37,12 +37,8 @@ const lightTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#000000',
       color: '#000000',
+      disabledContrast: '0',
 
-      // hovered {
-      //   background: 'transparent',
-      //   borderColor: '#000000',
-      //   color: '#000000',
-      // }
       selected: {
         background: 'transparent',
         borderColor: '#FFFFFF',

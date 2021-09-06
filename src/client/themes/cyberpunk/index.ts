@@ -37,6 +37,7 @@ const cyberpunkTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#BB6FA1',
       color: '#BB6FA1',
+      disabledContrast: '0.6',
 
       selected: {
         background: 'transparent',

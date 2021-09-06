@@ -1,6 +1,7 @@
-import { ElementType } from 'react';
+import { ElementType, useEffect } from 'react';
 import styled from 'styled-components';
-import { useWindowDimensions } from '@hooks';
+import { useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
+import { SettingsActions, SettingsSelectors } from '@store';
 
 import { HomeIcon, WalletIcon, VaultIcon, LabsIcon, IronBankIcon, SettingsIcon } from '@components/common';
 import { NavSidebar } from './NavSidebar';
@@ -50,17 +51,20 @@ const navLinks = [
 ];
 
 export const Navigation = () => {
-  const { isMobile } = useWindowDimensions();
+  const { isMobile, isTablet, isDesktop } = useWindowDimensions();
 
   // NOTE Auto collapse sidenav on mobile
-  // const dispatch = useAppDispatch();
-  // const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
+  const dispatch = useAppDispatch();
+  const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
-  // useEffect(() => {
-  //   if (isMobile && !collapsedSidebar) {
-  //     dispatch(SettingsActions.closeSidebar());
-  //   }
-  // }, [isMobile]);
+  useEffect(() => {
+    if ((isTablet || isMobile) && !collapsedSidebar) {
+      dispatch(SettingsActions.closeSidebar());
+    }
+    if (isDesktop && !isTablet && collapsedSidebar) {
+      dispatch(SettingsActions.openSidebar());
+    }
+  }, [isMobile, isTablet, isDesktop]);
 
   return (
     <StyledNavigation>

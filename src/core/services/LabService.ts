@@ -152,7 +152,7 @@ export class LabServiceImpl implements LabService {
       const pSLPyvBoostEthContract = getContract(PSLPYVBOOSTETH, pickleJarAbi, provider);
       const pJarTotalSupplyPromise = pSLPyvBoostEthContract.totalSupply();
       const pJarRatioPromise = pSLPyvBoostEthContract.getRatio();
-      const picklePoolsPromise = get('https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/pools');
+      const picklePoolsPromise = get('https://api.pickle.finance/prod/protocol/pools');
       const [pJarTotalSupply, pJarRatio, picklePoolsResponse] = await Promise.all([
         pJarTotalSupplyPromise,
         pJarRatioPromise,

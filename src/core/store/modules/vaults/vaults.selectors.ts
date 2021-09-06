@@ -10,6 +10,7 @@ import {
   AllowancesMap,
   VaultPositionsMap,
   VaultUserMetadata,
+  EthereumAddress,
 } from '@types';
 import BigNumber from 'bignumber.js';
 import { memoize } from 'lodash';
@@ -203,6 +204,10 @@ const selectVault = createSelector(
     })
 );
 
+const selectUnderlyingTokensAddresses = createSelector([selectVaultsMap], (vaults): EthereumAddress[] => {
+  return Object.values(vaults).map((vault) => vault.tokenId);
+});
+
 interface CreateVaultProps {
   vaultData: Vault;
   tokenData: Token;
@@ -287,4 +292,5 @@ export const VaultsSelectors = {
   selectVault,
   selectExpectedTxOutcome,
   selectExpectedTxOutcomeStatus,
+  selectUnderlyingTokensAddresses,
 };

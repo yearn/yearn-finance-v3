@@ -7,6 +7,7 @@ import {
   TokensActions,
   ModalsActions,
   ModalSelectors,
+  VaultsSelectors,
   IronBankSelectors,
   AppSelectors,
 } from '@store';
@@ -71,6 +72,7 @@ export const Wallet = () => {
   const { totalBalance } = useAppSelector(TokensSelectors.selectSummaryData);
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
+  const vaultsUnderlyingTokens = useAppSelector(VaultsSelectors.selectUnderlyingTokensAddresses);
   const ironBankUnderlyingTokens = useAppSelector(IronBankSelectors.selectUnderlyingTokensAddresses);
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
@@ -93,31 +95,23 @@ export const Wallet = () => {
   };
 
   const investButton = (tokenAddress: string, isZapable: boolean) => {
-    if (isZapable) {
-      return [
-        {
-          name: 'Invest',
-          handler: () => actionHandler('invest', tokenAddress),
-          disabled: !walletIsConnected,
-        },
-      ];
-    }
-
-    return [];
+    return [
+      {
+        name: 'Invest',
+        handler: () => actionHandler('invest', tokenAddress),
+        disabled: !walletIsConnected || !(isZapable || vaultsUnderlyingTokens.includes(tokenAddress)),
+      },
+    ];
   };
 
   const supplyButton = (tokenAddress: string) => {
-    if (ironBankUnderlyingTokens.includes(tokenAddress)) {
-      return [
-        {
-          name: 'Supply',
-          handler: () => actionHandler('supply', tokenAddress),
-          disabled: !walletIsConnected,
-        },
-      ];
-    }
-
-    return [];
+    return [
+      {
+        name: 'Supply',
+        handler: () => actionHandler('supply', tokenAddress),
+        disabled: !walletIsConnected || !ironBankUnderlyingTokens.includes(tokenAddress),
+      },
+    ];
   };
 
   return (
@@ -174,7 +168,7 @@ export const Wallet = () => {
               width: '6rem',
               className: 'col-icon',
             },
-            { key: 'name', header: 'Name', sortable: true, width: '17rem', className: 'col-name' },
+            { key: 'displayName', header: 'Name', sortable: true, width: '17rem', className: 'col-name' },
             {
               key: 'tokenBalance',
               header: 'Balance',
@@ -200,21 +194,18 @@ export const Wallet = () => {
               className: 'col-value',
             },
             {
-              key: 'supply',
-              transform: ({ address }) => <ActionButtons actions={supplyButton(address)} />,
+              key: 'invest',
+              transform: ({ address, isZapable }) => (
+                <ActionButtons actions={[...supplyButton(address), ...investButton(address, isZapable)]} />
+              ),
               align: 'flex-end',
               width: 'auto',
               grow: '1',
             },
-            {
-              key: 'invest',
-              transform: ({ address, isZapable }) => <ActionButtons actions={investButton(address, isZapable)} />,
-              align: 'flex-end',
-              width: '12rem',
-            },
           ]}
           data={userTokens.map((token) => ({
             ...token,
+            displayName: token.symbol,
             displayIcon: token.icon ?? '',
             tokenBalance: normalizeAmount(token.balance, token.decimals),
             supply: null,

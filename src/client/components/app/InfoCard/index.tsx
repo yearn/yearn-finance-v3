@@ -10,9 +10,9 @@ const StyledCardContent = styled(CardContent)`
 `;
 
 const StyledCard = styled(Card)`
-  max-width: max-content;
+  // max-width: max-content;
   padding: ${({ theme }) => theme.cardPadding} 0;
-  min-width: 20rem;
+  min-width: 28rem;
 `;
 
 interface InfoCardProps {

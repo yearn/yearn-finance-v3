@@ -37,6 +37,7 @@ const darkTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#555555',
       color: '#555555',
+      disabledContrast: '1.5',
 
       selected: {
         background: 'transparent',
