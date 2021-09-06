@@ -144,7 +144,7 @@ export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanel
   const [selectedTab, setSelectedTab] = useState('deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
 
-  const chartValue = formatUsd(chartData[0].data.slice(-1)[0].y.toString()) ?? '-';
+  const chartValue = formatUsd(chartData[0].data[0].y.toString()) ?? '-';
 
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
