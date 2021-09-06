@@ -95,17 +95,13 @@ export const Wallet = () => {
   };
 
   const investButton = (tokenAddress: string, isZapable: boolean) => {
-    if (isZapable || vaultsUnderlyingTokens.includes(tokenAddress)) {
-      return [
-        {
-          name: 'Invest',
-          handler: () => actionHandler('invest', tokenAddress),
-          disabled: !walletIsConnected,
-        },
-      ];
-    }
-
-    return [];
+    return [
+      {
+        name: 'Invest',
+        handler: () => actionHandler('invest', tokenAddress),
+        disabled: !walletIsConnected || !(isZapable || vaultsUnderlyingTokens.includes(tokenAddress)),
+      },
+    ];
   };
 
   const supplyButton = (tokenAddress: string) => {
@@ -113,8 +109,7 @@ export const Wallet = () => {
       {
         name: 'Supply',
         handler: () => actionHandler('supply', tokenAddress),
-        disabled: !walletIsConnected,
-        hide: !ironBankUnderlyingTokens.includes(tokenAddress),
+        disabled: !walletIsConnected || !ironBankUnderlyingTokens.includes(tokenAddress),
       },
     ];
   };
@@ -198,13 +193,6 @@ export const Wallet = () => {
               width: '11rem',
               className: 'col-value',
             },
-            // {
-            //   key: 'supply',
-            //   transform: ({ address }) => <ActionButtons actions={supplyButton(address)} />,
-            //   align: 'flex-end',
-            //   width: 'auto',
-            //   grow: '1',
-            // },
             {
               key: 'invest',
               transform: ({ address, isZapable }) => (

@@ -33,6 +33,11 @@ const ActionButton = styled(Button)<{ hide?: boolean }>`
   width: 9.6rem;
 
   ${({ hide }) => hide && `visibility: hidden;`}
+
+  &[disabled],
+  &.disabled {
+    filter: contrast(${({ theme }) => theme.colors.vaultActionButton.disabledContrast});
+  }
 `;
 
 interface ActionButtonsProps {
