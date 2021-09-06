@@ -109,7 +109,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     }
   }, [debouncedAmount]);
 
-  if (!selectedLab || !selectedSellTokenAddress || !sellTokensOptions) {
+  if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken || !sellTokensOptions) {
     return null;
   }
 
