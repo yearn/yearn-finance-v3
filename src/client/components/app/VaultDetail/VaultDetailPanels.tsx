@@ -64,6 +64,12 @@ const VaultActions = styled(Card)`
 
 const OverviewInfo = styled(Card)`
   padding: ${({ theme }) => theme.cardPadding};
+
+  a {
+    text-decoration: underline;
+    color: inherit;
+    color: ${({ theme }) => theme.colors.onSurfaceSH1};
+  }
 `;
 
 const StyledText = styled(Text)`
@@ -75,6 +81,8 @@ const StyledText = styled(Text)`
 const StyledLink = styled.a`
   display: block;
   white-space: initial;
+  text-decoration: underline;
+  color: inherit;
 `;
 
 const InfoValueRow = styled.div`
