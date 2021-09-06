@@ -1,4 +1,18 @@
-import { Wallet, Config, GetSupportedVaultsService } from '@types';
+import { Yearn } from '@yfi/sdk';
+
+import {
+  Wallet,
+  Config,
+  Web3Provider,
+  UserService,
+  VaultService,
+  TokenService,
+  IronBankService,
+  LabService,
+  GasService,
+  TransactionService,
+  SubscriptionService,
+} from '@types';
 
 export interface DIContainer {
   context: ContextContainer;
@@ -8,9 +22,20 @@ export interface DIContainer {
 
 export interface ContextContainer {
   wallet: Wallet;
+  web3Provider: Web3Provider;
+  yearnSdk: YearnSdk;
 }
 export interface ServiceContainer {
-  getSupportedVaults: GetSupportedVaultsService;
+  userService: UserService;
+  vaultService: VaultService;
+  tokenService: TokenService;
+  ironBankService: IronBankService;
+  labService: LabService;
+  gasService: GasService;
+  transactionService: TransactionService;
+  subscriptionService: SubscriptionService;
 }
 
 export interface ConfigContainer extends Config {}
+
+export type YearnSdk = Yearn<1>;

@@ -1,26 +1,31 @@
-import { Text } from '@components/common';
+import styled from 'styled-components';
+import { useAppTranslation } from '@hooks';
+import { Button, Text } from '@components/common';
 
 interface WalletAddressProps {
   address?: string;
+  ensName?: string;
   onClick: () => void;
 }
 
-export const ConnectWalletButton = ({
-  address,
-  onClick,
-}: WalletAddressProps) => {
+const StyledButton = styled(Button)`
+  background-color: ${({ theme }) => theme.colors.walletButton.background};
+  color: ${({ theme }) => theme.colors.walletButton.color};
+`;
+
+export const ConnectWalletButton = ({ address, ensName, onClick }: WalletAddressProps) => {
+  const { t } = useAppTranslation('common');
+  let buttonMessage;
+
   if (!address) {
-    return <button onClick={onClick}>Connect</button>;
+    buttonMessage = t('commons.connect-button.connect');
+  } else {
+    buttonMessage = ensName ?? address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length);
   }
 
-  const maskedAddress =
-    address.substring(0, 6) +
-    '...' +
-    address.substring(address.length - 4, address.length);
-
   return (
-    <button onClick={onClick}>
-      <Text textColor="primary">{maskedAddress}</Text>
-    </button>
+    <StyledButton onClick={() => onClick && onClick()}>
+      <Text>{buttonMessage}</Text>
+    </StyledButton>
   );
 };

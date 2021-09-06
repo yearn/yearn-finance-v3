@@ -1,0 +1,71 @@
+{
+  "language": "en",
+
+  "themes": {
+    "light": "Mono Light",
+    "dark": "Mono Dark",
+    "cyberpunk": "Cyberpunk"
+  },
+  "commons": {
+    "connect-button": {
+      "connect": "Connect Wallet"
+    }
+  },
+  "errors": {
+    "default": "There was an unexpected error"
+  },
+
+  "asset-lists": {
+    "deposits": "Deposits",
+    "headers": {
+      "asset": "Asset",
+      "deposited": "Deposited",
+      "wallet": "Wallet",
+      "roi": "ROI"
+    }
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "invest": "Invest",
+    "save": "Save",
+    "borrow": "Borrow",
+    "home": "Home",
+    "wallet": "Wallet",
+    "vaults": "Vaults",
+    "vault": "Vault Details",
+    "labs": "Labs",
+    "ironbank": "Iron Bank",
+    "settings": "Settings",
+    "copyright": {
+      "small": "©",
+      "big": "© Yearn 2021"
+    }
+  },
+  "footer": {
+    "links": {
+      "gov": "Gov",
+      "docs": "Docs",
+      "security": "Security",
+      "v1": "v1",
+      "v2": "v2"
+    }
+  },
+  "landing": {
+    "title-1": "THE",
+    "title-2": "Growth Protocol",
+    "subtitle": "Yearn finance is a gateway to DeFi products. Simple intuitive and decentralized solutions accessible to anyone.",
+    "action-button": "Go to App"
+  },
+  "save": {
+    "assets-headers": {
+      "asset": "Asset",
+      "balance": "Asset Balance",
+      "earning": "Earning"
+    }
+  },
+
+  "settings": {
+    "themes": "Themes",
+    "preferences": "Preferences"
+  }
+}

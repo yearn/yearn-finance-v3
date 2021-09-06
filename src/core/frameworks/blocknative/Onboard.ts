@@ -4,6 +4,7 @@ import { API } from 'bnc-onboard/dist/src/interfaces';
 import { getConfig } from '@config';
 import { getNetworkId } from '@utils';
 import { Wallet, Subscriptions, EthereumNetwork, Theme } from '@types';
+import { getAddress } from '@ethersproject/address';
 
 export class BlocknativeWalletImpl implements Wallet {
   private onboard?: API;
@@ -13,7 +14,8 @@ export class BlocknativeWalletImpl implements Wallet {
   }
 
   get selectedAddress() {
-    return this.getState()?.address;
+    const address = this.getState()?.address;
+    return address ? getAddress(address) : undefined;
   }
 
   get networkVersion() {
@@ -40,22 +42,15 @@ export class BlocknativeWalletImpl implements Wallet {
     return this.onboard?.walletCheck() ?? Promise.resolve(false);
   }
 
-  public create(
-    ethereumNetwork: EthereumNetwork,
-    subscriptions: Subscriptions,
-    theme?: Theme
-  ): boolean {
+  public create(ethereumNetwork: EthereumNetwork, subscriptions: Subscriptions, theme?: Theme): boolean {
     const networkId = getNetworkId(ethereumNetwork);
-    const {
-      BLOCKNATIVE_KEY,
-      FORTMATIC_KEY,
-      PORTIS_KEY,
-      WEB3_PROVIDER_HTTPS,
-    } = getConfig();
+    const { BLOCKNATIVE_KEY, FORTMATIC_KEY, PORTIS_KEY, WEB3_PROVIDER_HTTPS } = getConfig();
 
     const rpcUrl = WEB3_PROVIDER_HTTPS;
+    const appName = 'Yearn Finance';
 
     const wallets = [
+      { walletName: 'detectedwallet' },
       { walletName: 'metamask' },
       {
         walletName: 'walletConnect',
@@ -77,7 +72,7 @@ export class BlocknativeWalletImpl implements Wallet {
       { walletName: 'status' },
       {
         walletName: 'lattice',
-        appName: 'Yearn Finance',
+        appName,
         rpcUrl,
       },
       { walletName: 'walletLink', rpcUrl },
@@ -93,14 +88,15 @@ export class BlocknativeWalletImpl implements Wallet {
       { walletName: 'operaTouch' },
       { walletName: 'imToken', rpcUrl },
       { walletName: 'meetone' },
+      { walletName: 'gnosis' },
+      {
+        walletName: 'keystone',
+        rpcUrl,
+        appName,
+      },
     ];
 
-    const walletCheck = [
-      { checkName: 'derivationPath' },
-      { checkName: 'connect' },
-      { checkName: 'accounts' },
-      { checkName: 'network' },
-    ];
+    const walletCheck = [{ checkName: 'derivationPath' }, { checkName: 'connect' }, { checkName: 'accounts' }];
 
     this.onboard = Onboard({
       networkId,
@@ -117,12 +113,13 @@ export class BlocknativeWalletImpl implements Wallet {
   }
 
   public async connect(args?: any): Promise<boolean> {
-    const selected = await this.onboard?.walletSelect(args?.name);
-    if (selected) {
+    try {
+      await this.onboard?.walletSelect(args?.name);
       const valid = await this.onboard?.walletCheck();
       return valid ?? false;
+    } catch (error) {
+      return false;
     }
-    return false;
   }
 
   public async changeTheme(theme: Theme) {

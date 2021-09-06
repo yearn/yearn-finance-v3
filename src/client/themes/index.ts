@@ -1,11 +1,19 @@
 import { Theme } from '@types';
-import { defaultTheme } from './default';
+import { DefaultTheme } from 'styled-components';
 
-export const getTheme = (theme: Theme) => {
+import { cyberpunkTheme } from './cyberpunk';
+import { darkTheme } from './dark';
+import { lightTheme } from './light';
+
+export const getTheme = (theme?: Theme): DefaultTheme => {
   switch (theme) {
-    case 'default':
-      return defaultTheme;
+    case 'light':
+      return lightTheme;
+    case 'dark':
+      return darkTheme;
+    case 'cyberpunk':
+      return cyberpunkTheme;
     default:
-      return defaultTheme;
+      return lightTheme;
   }
 };
