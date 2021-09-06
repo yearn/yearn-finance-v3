@@ -14,3 +14,7 @@ export function parseHistoricalEarnings(earnings?: EarningsDayData[]) {
 
   return [{ id, data: chartData }];
 }
+
+export function parseLastEarnings(earnings?: EarningsDayData[]) {
+  return toBN(normalizeAmount(earnings?.slice(-1)[0]?.earnings.amountUsdc, USDC_DECIMALS)).toFixed();
+}
