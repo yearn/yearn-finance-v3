@@ -1,5 +1,5 @@
 import { EthereumAddress, EarningsDayData, Usdc } from '@types';
-import { StrategyDetailedMetadata } from '@yfi/sdk/dist/types/strategy';
+import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 import { TokenView } from './Token';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
@@ -25,7 +25,7 @@ export interface VaultView {
   depositLimit: string;
   emergencyShutdown: boolean;
   apyData: any;
-  strategies: StrategyDetailedMetadata[];
+  strategies: StrategyMetadata[];
   historicalEarnings: EarningsDayData[];
   userBalance: string;
   userDeposited: string;

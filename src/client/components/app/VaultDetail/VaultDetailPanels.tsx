@@ -8,8 +8,7 @@ import { TokenIcon } from '@components/app';
 import { DepositTx, WithdrawTx } from '@components/app/Transactions';
 import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text } from '@components/common';
 import { LineChart } from '@components/common/Charts';
-
-import { StrategyDetailedMetadata } from '@yfi/sdk/dist/types/strategy';
+import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -143,7 +142,7 @@ export interface VaultDetailPanelsProps {
 export const VaultDetailPanels = ({ selectedVault, chartData }: VaultDetailPanelsProps) => {
   // const { t } = useAppTranslation('common');
   const [selectedTab, setSelectedTab] = useState('deposit');
-  const strategy: StrategyDetailedMetadata | null = selectedVault?.strategies[0] ?? null;
+  const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
 
   const chartValue = formatUsd(chartData[0].data.slice(-1)[0].y.toString()) ?? '-';
 
