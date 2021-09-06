@@ -67,7 +67,6 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
           vaultAddress: matchingVault?.address ?? highestYieldingVault.address,
         })
       );
-      setAllowVaultSelect(true);
     }
 
     return () => {
@@ -75,6 +74,11 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
       onExit();
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedSellToken) return;
+    setAllowVaultSelect(selectedSellToken.isZapable);
+  }, [selectedSellToken]);
 
   useEffect(() => {
     if (!selectedVault || !selectedSellTokenAddress) return;
@@ -108,7 +112,7 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
     }
   }, [debouncedAmount]);
 
-  if (!selectedVault || !selectedSellTokenAddress || !sellTokensOptions) {
+  if (!selectedVault || !selectedSellTokenAddress || !selectedSellToken || !sellTokensOptions) {
     return null;
   }
 
