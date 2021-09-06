@@ -25,12 +25,14 @@ const AlertButton = styled.div`
   height: 2.8rem;
 `;
 
-const ActionButton = styled(Button)`
+const ActionButton = styled(Button)<{ hide?: boolean }>`
   background: ${({ theme }) => theme.colors.vaultActionButton.background};
   color: ${({ theme }) => theme.colors.vaultActionButton.color};
   border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.borderColor};
   padding: 0 1.6rem;
   width: 9.6rem;
+
+  ${({ hide }) => hide && `visibility: hidden;`}
 `;
 
 interface ActionButtonsProps {
@@ -38,6 +40,7 @@ interface ActionButtonsProps {
     name: string;
     handler: () => void;
     disabled?: boolean;
+    hide?: boolean;
   }>;
   alert?: string;
 }
@@ -55,7 +58,7 @@ export const ActionButtons = ({ actions, alert }: ActionButtonsProps) => (
       </AlertButton>
     )}
 
-    {actions.map(({ name, handler, disabled }) => (
+    {actions.map(({ name, handler, disabled, hide }) => (
       <ActionButton
         className="action-button"
         key={`action-${name}`}
@@ -64,6 +67,7 @@ export const ActionButtons = ({ actions, alert }: ActionButtonsProps) => (
           handler();
         }}
         disabled={disabled}
+        hide={hide}
       >
         {name}
       </ActionButton>

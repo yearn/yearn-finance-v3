@@ -206,19 +206,6 @@ export const Settings = () => {
             </SectionContent>
           </SettingsSection>
 
-          {!isMobile && (
-            <SettingsSection>
-              <SectionTitle>
-                <SectionIcon Component={ThemesIcon} />
-                Additional settings
-              </SectionTitle>
-              <SectionContent>
-                Expanded sidenav
-                <ToggleButton selected={!collapsedSidebar} setSelected={toggleSidebar} />
-              </SectionContent>
-            </SettingsSection>
-          )}
-
           {ALLOW_DEV_MODE && (
             <SettingsSection>
               <SectionTitle>
@@ -246,6 +233,17 @@ export const Settings = () => {
                     value={devModeSettings.walletAddressOverride}
                     onChange={(e) => dispatch(SettingsActions.changeWalletAddressOverride({ address: e.target.value }))}
                   />
+                </SectionContent>
+              </SettingsSection>
+
+              <SettingsSection>
+                <SectionTitle>
+                  <SectionIcon Component={ThemesIcon} />
+                  Additional settings
+                </SectionTitle>
+                <SectionContent>
+                  Expanded sidenav
+                  <ToggleButton selected={!collapsedSidebar} setSelected={toggleSidebar} />
                 </SectionContent>
               </SettingsSection>
 

@@ -107,17 +107,14 @@ export const Wallet = () => {
   };
 
   const supplyButton = (tokenAddress: string) => {
-    if (ironBankUnderlyingTokens.includes(tokenAddress)) {
-      return [
-        {
-          name: 'Supply',
-          handler: () => actionHandler('supply', tokenAddress),
-          disabled: !walletIsConnected,
-        },
-      ];
-    }
-
-    return [];
+    return [
+      {
+        name: 'Supply',
+        handler: () => actionHandler('supply', tokenAddress),
+        disabled: !walletIsConnected,
+        hide: !ironBankUnderlyingTokens.includes(tokenAddress),
+      },
+    ];
   };
 
   return (
@@ -199,18 +196,21 @@ export const Wallet = () => {
               width: '11rem',
               className: 'col-value',
             },
+            // {
+            //   key: 'supply',
+            //   transform: ({ address }) => <ActionButtons actions={supplyButton(address)} />,
+            //   align: 'flex-end',
+            //   width: 'auto',
+            //   grow: '1',
+            // },
             {
-              key: 'supply',
-              transform: ({ address }) => <ActionButtons actions={supplyButton(address)} />,
+              key: 'invest',
+              transform: ({ address, isZapable }) => (
+                <ActionButtons actions={[...supplyButton(address), ...investButton(address, isZapable)]} />
+              ),
               align: 'flex-end',
               width: 'auto',
               grow: '1',
-            },
-            {
-              key: 'invest',
-              transform: ({ address, isZapable }) => <ActionButtons actions={investButton(address, isZapable)} />,
-              align: 'flex-end',
-              width: '12rem',
             },
           ]}
           data={userTokens.map((token) => ({

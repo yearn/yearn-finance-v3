@@ -13,12 +13,16 @@ export const settingsInitialState: SettingsState = {
   },
 };
 
-const { toggleSidebar, closeSidebar, setDefaultSlippage, toggleDevMode, changeWalletAddressOverride } = SettingsActions;
+const { toggleSidebar, closeSidebar, openSidebar, setDefaultSlippage, toggleDevMode, changeWalletAddressOverride } =
+  SettingsActions;
 
 const settingsReducer = createReducer(settingsInitialState, (builder) => {
   builder
     .addCase(closeSidebar, (state) => {
       state.sidebarCollapsed = true;
+    })
+    .addCase(openSidebar, (state) => {
+      state.sidebarCollapsed = false;
     })
     .addCase(toggleSidebar, (state) => {
       state.sidebarCollapsed = !state.sidebarCollapsed;
