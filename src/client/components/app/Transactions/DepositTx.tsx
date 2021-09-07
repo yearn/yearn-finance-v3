@@ -18,13 +18,19 @@ import { Transaction } from './Transaction';
 
 export interface DepositTxProps {
   header?: string;
+  allowTokenSelect?: boolean;
+  allowVaultSelect?: boolean;
   onClose?: () => void;
 }
 
-export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...props }) => {
+export const DepositTx: FC<DepositTxProps> = ({
+  header,
+  onClose,
+  allowTokenSelect = true,
+  allowVaultSelect = false,
+}) => {
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const [allowVaultSelect, setAllowVaultSelect] = useState(false);
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
@@ -74,11 +80,6 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
       onExit();
     };
   }, []);
-
-  useEffect(() => {
-    if (!selectedSellToken) return;
-    setAllowVaultSelect(selectedSellToken.isZapable);
-  }, [selectedSellToken]);
 
   useEffect(() => {
     if (!selectedVault || !selectedSellTokenAddress) return;
@@ -135,7 +136,12 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
   });
 
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.deposit.error;
+  const error =
+    allowanceError ||
+    inputError ||
+    actionsStatus.approve.error ||
+    actionsStatus.deposit.error ||
+    expectedTxOutcomeStatus.error;
 
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
@@ -219,7 +225,7 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader="From wallet"
-      sourceAssetOptions={allowVaultSelect ? [selectedSellToken] : sellTokensOptions}
+      sourceAssetOptions={allowTokenSelect ? sellTokensOptions : [selectedSellToken]}
       selectedSourceAsset={selectedSellToken}
       onSelectedSourceAssetChange={onSelectedSellTokenChange}
       sourceAmount={amount}

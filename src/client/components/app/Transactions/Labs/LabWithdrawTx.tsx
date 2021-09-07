@@ -119,7 +119,12 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   });
 
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError || actionsStatus.approveWithdraw.error || actionsStatus.withdraw.error;
+  const error =
+    allowanceError ||
+    inputError ||
+    actionsStatus.approveWithdraw.error ||
+    actionsStatus.withdraw.error ||
+    expectedTxOutcomeStatus.error;
 
   const selectedLabOption = {
     address: selectedLab.address,
