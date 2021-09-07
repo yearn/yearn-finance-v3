@@ -135,7 +135,12 @@ export const DepositTx: FC<DepositTxProps> = ({ header, onClose, children, ...pr
   });
 
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.deposit.error;
+  const error =
+    allowanceError ||
+    inputError ||
+    actionsStatus.approve.error ||
+    actionsStatus.deposit.error ||
+    expectedTxOutcomeStatus.error;
 
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)

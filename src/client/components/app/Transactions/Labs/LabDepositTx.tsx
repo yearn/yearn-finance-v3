@@ -150,7 +150,12 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     vaultUnderlyingBalance: selectedLab.labBalance,
   });
 
-  const error = allowanceError || inputError || actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
+  const error =
+    allowanceError ||
+    inputError ||
+    actionsStatus.approveDeposit.error ||
+    actionsStatus.deposit.error ||
+    expectedTxOutcomeStatus.error;
 
   const selectedLabOption = {
     address: selectedLab.address,
