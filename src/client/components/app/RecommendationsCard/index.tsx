@@ -6,6 +6,7 @@ import { TokenIcon } from '@components/app';
 const ContainerCard = styled(Card)`
   padding: ${({ theme }) => theme.cardPadding} 0;
   width: 100%;
+  min-width: 56%;
 `;
 
 const StyledCardContent = styled(CardContent)`
