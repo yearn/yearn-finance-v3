@@ -113,7 +113,12 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   });
 
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError || actionsStatus.approveZapOut.error || actionsStatus.withdraw.error;
+  const error =
+    allowanceError ||
+    inputError ||
+    actionsStatus.approveZapOut.error ||
+    actionsStatus.withdraw.error ||
+    expectedTxOutcomeStatus.error;
 
   const selectedVaultOption = {
     address: selectedVault.address,

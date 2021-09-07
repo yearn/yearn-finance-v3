@@ -261,10 +261,11 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.statusMap.getExpectedTransactionOutcome = {};
     })
     .addCase(getExpectedTransactionOutcome.rejected, (state, { error }) => {
-      state.statusMap.getExpectedTransactionOutcome = { error: error.message };
+      state.statusMap.getExpectedTransactionOutcome = { error: 'Simulation Failed' };
     })
     .addCase(clearTransactionData, (state) => {
       state.transaction = initialTransaction;
+      state.statusMap.getExpectedTransactionOutcome = {};
     })
     .addCase(clearSelectedVaultAndStatus, (state) => {
       if (!state.selectedVaultAddress) return;
