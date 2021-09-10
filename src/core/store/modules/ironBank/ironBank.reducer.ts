@@ -1,4 +1,6 @@
 import { AnyAction, AsyncThunk, createReducer } from '@reduxjs/toolkit';
+import { groupBy, keyBy, union } from 'lodash';
+
 import {
   MarketActionsStatusMap,
   IronBankState,
@@ -6,9 +8,8 @@ import {
   IronBankMarketPositionsMap,
   Position,
   MarketActionsTypes,
+  initialStatus,
 } from '@types';
-import { groupBy, keyBy, union } from 'lodash';
-import { initialStatus } from '../../../types/Status';
 import { IronBankActions } from './ironBank.actions';
 
 export const initialMarketsActionsMap: MarketActionsStatusMap = {
