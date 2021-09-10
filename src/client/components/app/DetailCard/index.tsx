@@ -1,7 +1,7 @@
 import { useState, useEffect, ReactNode } from 'react';
 import styled from 'styled-components';
 
-import { Card, CardHeader, CardContent, CardElement } from '@components/common';
+import { Card, CardHeader, CardContent, CardElement, CardEmptyList } from '@components/common';
 import { sort } from '@utils';
 
 const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
@@ -128,7 +128,6 @@ export const DetailCard = <T,>({
     <StyledCard {...props}>
       <StyledCardHeader header={header} />
       {SearchBar}
-
       <CardContent>
         {metadata.map(
           ({ key, sortable, hide, className, transform, format, ...rest }) =>
@@ -145,7 +144,6 @@ export const DetailCard = <T,>({
             )
         )}
       </CardContent>
-
       {sortedData.map((item, i) => (
         <StyledCardContent
           key={`content-${i}`}
@@ -174,6 +172,8 @@ export const DetailCard = <T,>({
           )}
         </StyledCardContent>
       ))}
+
+      {!sortedData.length && <CardEmptyList />}
     </StyledCard>
   );
 };
