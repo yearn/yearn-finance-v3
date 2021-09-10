@@ -77,6 +77,8 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
     balanceUsdc: selectedMarket.LEND.userDepositedUsdc,
     yield: normalizePercent(selectedMarket.lendApy, 2),
   };
+  const percentageToWithdraw = toBN(amount).div(suppliedTokens).times(100).toString();
+  const willWithdrawAll = toBN(percentageToWithdraw).gte(99);
 
   const { approved: isValidAmount, error: inputError } = basicValidateAmount({
     sellTokenAmount: toBN(amount),
@@ -92,12 +94,20 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
 
   const withdraw = async () => {
     try {
-      await dispatchAndUnwrap(
-        IronBankActions.withdrawMarket({
-          marketAddress: selectedMarket.address,
-          amount: toBN(amount),
-        })
-      );
+      if (willWithdrawAll) {
+        await dispatchAndUnwrap(
+          IronBankActions.withdrawAllMarket({
+            marketAddress: selectedMarket.address,
+          })
+        );
+      } else {
+        await dispatchAndUnwrap(
+          IronBankActions.withdrawMarket({
+            marketAddress: selectedMarket.address,
+            amount: toBN(amount),
+          })
+        );
+      }
       setTxCompleted(true);
     } catch (error) {}
   };
