@@ -436,6 +436,7 @@ export const Labs = () => {
                 />
               </SearchBarContainer>
             }
+            searching={opportunities.length > filteredOpportunities.length}
             // TODO Redirect address is wrong
             // onAction={({ address }) => history.push(`/vault/${address}`)}
             initialSortBy="apyData"
