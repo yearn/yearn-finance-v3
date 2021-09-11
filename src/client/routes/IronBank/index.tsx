@@ -463,6 +463,7 @@ export const IronBank = () => {
                 />
               </SearchBarContainer>
             }
+            searching={markets.length > filteredMarkets.length}
             initialSortBy="lendApy"
             wrap
           />

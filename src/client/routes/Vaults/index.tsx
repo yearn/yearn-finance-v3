@@ -339,6 +339,7 @@ export const Vaults = () => {
                 />
               </SearchBarContainer>
             }
+            searching={opportunities.length > filteredVaults.length}
             onAction={({ address }) => history.push(`/vault/${address}`)}
             initialSortBy="apyData"
             wrap
