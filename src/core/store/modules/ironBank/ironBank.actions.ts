@@ -187,6 +187,34 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   }
 );
 
+const withdrawAllMarket = createAsyncThunk<void, WithdrawAllMarketProps, ThunkAPI>(
+  'ironBank/withdraw',
+  async ({ marketAddress }, { extra, getState, dispatch }) => {
+    // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
+    const { ironBankService } = extra.services;
+    const userAddress = getState().wallet.selectedAddress;
+    if (!userAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
+    const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
+    // TODO Needed checks for amount
+
+    const tx = await ironBankService.executeTransaction({
+      userAddress,
+      marketAddress,
+      amount: extra.config.MAX_UINT256,
+      action: 'withdraw',
+    });
+    await handleTransaction(tx);
+    dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
+    dispatch(getIronBankSummary());
+    // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
+    dispatch(getUserMarketsMetadata({})); //  TODO remove this when lens fixes are deployed
+    dispatch(getUserMarketsPositions({ marketAddresses: [marketAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [underlyingTokenAddress] }));
+  }
+);
+
 const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/repay',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
@@ -291,6 +319,10 @@ export interface MarketsActionsProps {
   amount: BigNumber;
 }
 
+export interface WithdrawAllMarketProps {
+  marketAddress: string;
+}
+
 export interface RepayAllMarketProps {
   marketAddress: string;
 }
@@ -307,6 +339,7 @@ export const IronBankActions = {
   supplyMarket,
   borrowMarket,
   withdrawMarket,
+  withdrawAllMarket,
   repayMarket,
   repayAllMarket,
   enterOrExitMarket,
