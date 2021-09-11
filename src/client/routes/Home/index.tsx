@@ -74,22 +74,22 @@ export const Home = () => {
       <Row>
         <StyledInfoCard
           header="Welcome to Your Yearn Home Screen"
-          content="There are many like it, but this one is yours. You can always return here to see a birds eye view of your most important statistics. The sections below show the total balance and utilization of your wallet, and a new section is added for every Yearn product you use, each showing your holdings and performance. Not sure where to start? Check out Vaults!"
+          Component={
+            <Text>
+              There are many like it, but this one is yours. You can always return here for a bird's-eye view of your
+              holdings. The cards below show the total balance and utilization of your wallet, and the holdings and
+              performance for every Yearn product you use.
+              <br />
+              <br />
+              Not sure where to start? Check out “Vaults” on the left side navigation.
+            </Text>
+          }
           cardSize="big"
         />
 
         <StyledInfoCard
-          header="Yearn passes $5B TVL!"
-          Component={
-            <Text>
-              Total Value Locked (TVL) is a key indicator of the scale of Yearn and DeFi. <br />
-              With $5B TVL, Yearn is the 8th largest DeFi protocol. Yearn is not a bank, but fun fact: the average US
-              bank has $3.1B in deposits according to mx.com.
-              <br />
-              <br />
-              Over $5B in holdings have been deposited into the Yearn suite of products.
-            </Text>
-          }
+          header="Promotional Text"
+          content="This is where we tell people what's new in the site and how to share their feedback."
           cardSize="big"
         />
       </Row>

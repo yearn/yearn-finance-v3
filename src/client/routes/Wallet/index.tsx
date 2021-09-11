@@ -126,16 +126,7 @@ export const Wallet = () => {
       <Row>
         <StyledInfoCard
           header="What's in Your Wallet?"
-          Component={
-            <Text>
-              “Wallet” is a great place to put your idling capital to work.
-              <br />
-              <br />
-              Choose token and either invest or lend it in a couple of clicks.
-              <br />
-              No distractions and lengthy text pages – you know why you are here.
-            </Text>
-          }
+          content="Once you are familiar with the risks and nuances of Vaults and other Yearn products, this screen helps you put your tokens to work with as few clicks as possible. If the 'Supply' or 'Invest' buttons are active, there's a lending and/or vault opportunity available for that token. Just click to see the strategy and current yield. Remember, these tools make it easy to access the tech, but you are responsible for understanding and actively managing your positions."
           cardSize="big"
         />
 

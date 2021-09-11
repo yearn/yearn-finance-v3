@@ -24,11 +24,11 @@ import {
   NoWalletCard,
   Amount,
 } from '@components/app';
-import { SpinnerLoading, SearchInput } from '@components/common';
+import { SpinnerLoading, SearchInput, Text } from '@components/common';
 import { formatPercent, halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc, toBN } from '@src/utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
-import { GeneralLabView } from '../../../core/types';
+import { GeneralLabView } from '@types';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -303,8 +303,20 @@ export const Labs = () => {
             />
 
             <StyledInfoCard
-              header="Welcome to the Lab!"
-              content="Ready to get a little experimental? The lab is the place for you. Emerging strategies with unconventional methods of generating yield live here. Be sure to read the “About” sections carefully as “Lab” offers don’t behave like normal “Vaults” and could have token locking, impermanent loss, or other risks. Check out the opportunities below and select your first experiment, guinea pig!"
+              header="These are not risks for ants."
+              Component={
+                <Text>
+                  The emerging strategies you'll find here are the newest and most unconventional around. Be sure to
+                  review the “About” sections carefully and make sure you understand token locking, impermanent loss,
+                  and other risks before proceeding.
+                  <br />
+                  As with all Yearn products, you are responsible for educating yourself on the details, and for
+                  actively managing your holdings.
+                  <br />
+                  <br />
+                  Welcome to the Lab, but proceed with caution, anon.
+                </Text>
+              }
             />
           </Row>
 
