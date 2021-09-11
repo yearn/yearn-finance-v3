@@ -9,7 +9,7 @@ const StyledCardEmptyList = styled.div<{ wrap?: string }>`
   justify-content: center;
   font-size: 1.4rem;
   line-height: 1.7rem;
-  font-weight: 600;
+  font-weight: 400;
   margin: 6.6rem 2rem;
   text-align: center;
 `;
