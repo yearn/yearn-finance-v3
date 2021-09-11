@@ -260,7 +260,7 @@ const repayAllMarket = createAsyncThunk<void, RepayAllMarketProps, ThunkAPI>(
     const tx = await ironBankService.executeTransaction({
       userAddress,
       marketAddress,
-      amount: '-1',
+      amount: extra.config.MAX_UINT256,
       action: 'repay',
     });
     await handleTransaction(tx);
