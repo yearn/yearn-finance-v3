@@ -26,7 +26,7 @@ import {
   NoWalletCard,
   Amount,
 } from '@components/app';
-import { SpinnerLoading, SearchInput } from '@components/common';
+import { SpinnerLoading, SearchInput, Text } from '@components/common';
 import { formatPercent, humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount } from '@src/utils';
 
 const SearchBarContainer = styled.div`
@@ -178,8 +178,19 @@ export const Vaults = () => {
             />
 
             <StyledInfoCard
-              header="Set it and forget it."
-              content="Yearn Vaults are a passive investing strategy, like supercharged savings accounts. “Recommendations” shows best offers and “Opportunities” lists all available options. Remember, your capital is not locked and is always available for withdrawal. Yearn does the work for you. We identify the optimal opportunities in the market and shift capital, auto-compound, and reblance to maximize your yield. Click ‘Invest’ to get started!"
+              header="Spend Your Time Wisely"
+              Component={
+                <Text>
+                  Yearn Vaults are a way to use technology to help manage your holdings. You choose the strategy that
+                  best suits you, deposit into that vault, and Yearn tech helps maximize yield through shifting capital,
+                  auto-compounding, and rebalancing.
+                  <br />
+                  Custody, and responsibility, for your holdings remains yours.
+                  <br />
+                  <br />
+                  You can withdraw anytime.
+                </Text>
+              }
             />
           </Row>
 
@@ -328,6 +339,7 @@ export const Vaults = () => {
                 />
               </SearchBarContainer>
             }
+            searching={opportunities.length > filteredVaults.length}
             onAction={({ address }) => history.push(`/vault/${address}`)}
             initialSortBy="apyData"
             wrap

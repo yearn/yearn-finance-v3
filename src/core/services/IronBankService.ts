@@ -78,6 +78,7 @@ export class IronBankServiceImpl implements IronBankService {
     amount,
     action,
   }: IronBankTransactionProps): Promise<TransactionResponse> {
+    const { MAX_UINT256 } = this.config;
     const provider = this.web3Provider.getSigner();
     const ironBankMarketContract = getContract(marketAddress, ironBankMarketAbi, provider);
 
@@ -85,7 +86,15 @@ export class IronBankServiceImpl implements IronBankService {
       case 'supply':
         return await this.transactionService.execute({ fn: ironBankMarketContract.mint, args: [amount] });
       case 'withdraw':
-        return await this.transactionService.execute({ fn: ironBankMarketContract.redeemUnderlying, args: [amount] });
+        if (amount === MAX_UINT256) {
+          const balanceOf = await ironBankMarketContract.balanceOf(userAddress);
+          return await this.transactionService.execute({
+            fn: ironBankMarketContract.redeem,
+            args: [balanceOf.toString()],
+          });
+        } else {
+          return await this.transactionService.execute({ fn: ironBankMarketContract.redeemUnderlying, args: [amount] });
+        }
       case 'borrow':
         return await this.transactionService.execute({ fn: ironBankMarketContract.borrow, args: [amount] });
       case 'repay':

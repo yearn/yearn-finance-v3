@@ -71,6 +71,8 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
   repayableTokens = toBN(repayableTokens).toFixed(selectedToken.decimals);
   const borrowingTokens = normalizeAmount(selectedMarket.BORROW.userDeposited, selectedMarket.token.decimals);
   const projectedBorrowingTokens = toBN(borrowingTokens).minus(toBN(amount)).toString();
+  const percentageToRepay = toBN(amount).div(borrowedTokens).times(100).toString();
+  const willRepayAll = toBN(percentageToRepay).gte(99);
 
   const asset = {
     ...selectedToken,
@@ -111,12 +113,20 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
 
   const repay = async () => {
     try {
-      await dispatchAndUnwrap(
-        IronBankActions.repayMarket({
-          marketAddress: selectedMarket.address,
-          amount: toBN(amount),
-        })
-      );
+      if (willRepayAll) {
+        await dispatchAndUnwrap(
+          IronBankActions.repayAllMarket({
+            marketAddress: selectedMarket.address,
+          })
+        );
+      } else {
+        await dispatchAndUnwrap(
+          IronBankActions.repayMarket({
+            marketAddress: selectedMarket.address,
+            amount: toBN(amount),
+          })
+        );
+      }
       setTxCompleted(true);
     } catch (error) {}
   };

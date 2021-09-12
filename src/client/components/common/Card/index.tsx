@@ -4,6 +4,8 @@ import styled, { css } from 'styled-components';
 import { CardHeader } from './CardHeader';
 import { CardContent } from './CardContent';
 import { CardElement } from './CardElement';
+import { CardEmptyList } from './CardEmptyList';
+
 import { styledSystem, StyledSystemProps } from '../styledSystem';
 
 const bigSize = css`
@@ -85,4 +87,4 @@ const StyledDiv = styled.div<CardProps>`
 
 export const Card: FC<CardProps> = (props) => <StyledDiv {...props} />;
 
-export { CardHeader, CardContent, CardElement };
+export { CardHeader, CardContent, CardElement, CardEmptyList };

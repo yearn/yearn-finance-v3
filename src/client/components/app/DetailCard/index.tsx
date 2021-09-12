@@ -1,7 +1,7 @@
 import { useState, useEffect, ReactNode } from 'react';
 import styled from 'styled-components';
 
-import { Card, CardHeader, CardContent, CardElement } from '@components/common';
+import { Card, CardHeader, CardContent, CardElement, CardEmptyList } from '@components/common';
 import { sort } from '@utils';
 
 const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
@@ -87,6 +87,7 @@ interface DetailCardProps<T> {
   wrap?: boolean;
   initialSortBy?: Extract<keyof T, string>;
   SearchBar?: ReactNode;
+  searching?: boolean;
   onAction?: (item: T) => void;
 }
 
@@ -98,6 +99,7 @@ export const DetailCard = <T,>({
   wrap,
   initialSortBy,
   SearchBar,
+  searching,
   onAction,
   ...props
 }: DetailCardProps<T>) => {
@@ -129,22 +131,24 @@ export const DetailCard = <T,>({
       <StyledCardHeader header={header} />
       {SearchBar}
 
-      <CardContent>
-        {metadata.map(
-          ({ key, sortable, hide, className, transform, format, ...rest }) =>
-            !hide && (
-              <TitleCardElement
-                className={className}
-                key={key}
-                onClick={() => (sortable ? handleSort(key) : undefined)}
-                sortable={sortable}
-                activeSort={sortedBy === key}
-                sortType={order}
-                {...rest}
-              />
-            )
-        )}
-      </CardContent>
+      {!!sortedData.length && (
+        <CardContent>
+          {metadata.map(
+            ({ key, sortable, hide, className, transform, format, ...rest }) =>
+              !hide && (
+                <TitleCardElement
+                  className={className}
+                  key={key}
+                  onClick={() => (sortable ? handleSort(key) : undefined)}
+                  sortable={sortable}
+                  activeSort={sortedBy === key}
+                  sortType={order}
+                  {...rest}
+                />
+              )
+          )}
+        </CardContent>
+      )}
 
       {sortedData.map((item, i) => (
         <StyledCardContent
@@ -174,6 +178,8 @@ export const DetailCard = <T,>({
           )}
         </StyledCardContent>
       ))}
+
+      {!sortedData.length && <CardEmptyList searching={searching} />}
     </StyledCard>
   );
 };
