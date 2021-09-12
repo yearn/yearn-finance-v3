@@ -49,6 +49,9 @@ const getTokenAllowance = createAsyncThunk<
     throw new Error('WALLET NOT CONNECTED');
   }
 
+  const { ETH } = extra.config.CONTRACT_ADDRESSES;
+  if (tokenAddress === ETH) return { allowance: extra.config.MAX_UINT256 };
+
   const { tokenService } = extra.services;
   const allowance = await tokenService.getTokenAllowance(accountAddress, tokenAddress, spenderAddress);
   return { allowance };
