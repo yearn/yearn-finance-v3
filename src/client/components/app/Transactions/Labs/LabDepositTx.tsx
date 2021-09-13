@@ -20,6 +20,7 @@ import {
   validateVaultAllowance,
   getZapInContractAddress,
   validateYvBoostEthActionsAllowance,
+  validateSlippage,
   formatPercent,
 } from '@src/utils';
 
@@ -45,7 +46,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
-  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
+  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
 
   // TODO: ADD EXPECTED OUTCOME TO LABS
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
@@ -150,12 +151,18 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     vaultUnderlyingBalance: selectedLab.labBalance,
   });
 
+  const { error: slippageError } = validateSlippage({
+    slippageTolerance: selectedSlippage,
+    expectedSlippage: expectedTxOutcome?.slippage,
+  });
+
   const error =
     allowanceError ||
     inputError ||
     actionsStatus.approveDeposit.error ||
     actionsStatus.deposit.error ||
-    expectedTxOutcomeStatus.error;
+    expectedTxOutcomeStatus.error ||
+    slippageError;
 
   const selectedLabOption = {
     address: selectedLab.address,
@@ -209,7 +216,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
           labAddress: selectedLab.address,
           tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
-          slippageTolerance: toBN(selectedSlippage).toNumber(),
+          slippageTolerance: selectedSlippage,
         })
       );
       setTxCompleted(true);

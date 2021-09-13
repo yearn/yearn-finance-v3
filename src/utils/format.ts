@@ -18,7 +18,7 @@ const format = {
   suffix: '',
 };
 
-export const toBN = (amount?: string) => {
+export const toBN = (amount?: string | number) => {
   if (!amount || amount === '') {
     amount = '0';
   }
