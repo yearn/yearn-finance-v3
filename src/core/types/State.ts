@@ -1,3 +1,5 @@
+import { Alert } from './Alerts';
+import { Address } from './Blockchain';
 import { Theme } from './Settings';
 import { Status } from './Status';
 import {
@@ -8,13 +10,12 @@ import {
   Balance,
   IronBankMarket,
   Lab,
-  Alert,
   VaultsUserSummary,
   VaultUserMetadata,
-} from '@types';
-import { Address } from './Ethereum';
-import { CyTokenUserMetadata, IronBankUserSummary } from '@yfi/sdk';
-import { TransactionOutcome } from './Yearn-Sdk';
+  TransactionOutcome,
+  CyTokenUserMetadata,
+  IronBankUserSummary,
+} from './Yearn-Sdk';
 
 export interface RootState {
   app: AppState;

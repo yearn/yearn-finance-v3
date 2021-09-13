@@ -1,5 +1,5 @@
-import { Network, Address, Wei } from './Ethereum';
-import { Theme } from '@types';
+import { Network, Address, Wei } from './Blockchain';
+import { Theme } from './Settings';
 
 export interface Config extends Env, Constants {}
 

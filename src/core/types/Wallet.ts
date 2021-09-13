@@ -1,4 +1,4 @@
-import { Network } from './Ethereum';
+import { Network } from './Blockchain';
 import { Theme, Language } from './Settings';
 
 export interface Wallet {
