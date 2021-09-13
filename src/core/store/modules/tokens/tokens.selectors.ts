@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
-import { RootState, Status, TokenView } from '@types';
+import { AllowancesMap, Balance, RootState, Status, Token, TokenView } from '@types';
 import { getConfig } from '@config';
 import { memoize } from 'lodash';
 
@@ -22,21 +22,7 @@ const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (to
     const tokenData = tokensMap[address];
     const userTokenData = userTokensMap[address];
     const allowancesMap = userTokensAllowancesMap[address] ?? {};
-    return {
-      address: userTokenData?.address,
-      name: userTokenData?.token.name,
-      symbol: userTokenData?.token.symbol,
-      decimals: parseInt(userTokenData?.token.decimals),
-      icon: tokenData?.icon,
-      balance: userTokenData?.balance ?? '0',
-      balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-      allowancesMap: allowancesMap,
-      priceUsdc: userTokenData?.priceUsdc ?? '0',
-      categories: tokenData?.metadata?.categories ?? [],
-      description: tokenData?.metadata?.description ?? '',
-      website: tokenData?.metadata?.website ?? '',
-      isZapable: tokenData?.supported.zapper ?? false,
-    };
+    return createToken({ tokenData, userTokenData, allowancesMap });
   });
   return tokens;
 });
@@ -90,23 +76,34 @@ const selectToken = createSelector([selectTokensMap, selectTokensUser], (tokensM
     const tokenData = tokensMap[tokenAddress];
     const userTokenData = userTokensMap[tokenAddress];
     const allowancesMap = userTokensAllowancesMap[tokenAddress] ?? {};
-    return {
-      address: tokenData?.address,
-      name: tokenData?.name,
-      symbol: tokenData?.symbol,
-      decimals: parseInt(tokenData?.decimals),
-      icon: tokenData?.icon,
-      balance: userTokenData?.balance ?? '0',
-      balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-      priceUsdc: tokenData?.priceUsdc ?? '0',
-      categories: tokenData?.metadata?.categories ?? [],
-      description: tokenData?.metadata?.description ?? '',
-      website: tokenData?.metadata?.website ?? '',
-      isZapable: tokenData?.supported.zapper ?? false,
-      allowancesMap: allowancesMap,
-    };
+    return createToken({ tokenData, userTokenData, allowancesMap });
   })
 );
+
+interface CreateTokenProps {
+  tokenData: Token;
+  userTokenData: Balance;
+  allowancesMap: AllowancesMap;
+}
+
+function createToken(props: CreateTokenProps): TokenView {
+  const { tokenData, userTokenData, allowancesMap } = props;
+  return {
+    address: tokenData?.address,
+    name: tokenData?.name,
+    symbol: tokenData?.symbol,
+    decimals: parseInt(tokenData?.decimals),
+    icon: tokenData?.icon,
+    balance: userTokenData?.balance ?? '0',
+    balanceUsdc: userTokenData?.balanceUsdc ?? '0',
+    priceUsdc: tokenData?.priceUsdc ?? '0',
+    categories: tokenData?.metadata?.categories ?? [],
+    description: tokenData?.metadata?.description ?? '',
+    website: tokenData?.metadata?.website ?? '',
+    isZapable: tokenData?.supported.zapper ?? false,
+    allowancesMap: allowancesMap,
+  };
+}
 
 export const TokensSelectors = {
   selectTokensState,
