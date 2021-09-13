@@ -9,7 +9,7 @@ import {
   TransactionOutcome,
   VaultsUserSummary,
   VaultUserMetadata,
-  EthereumAddress,
+  Address,
   Wei,
 } from '@types';
 import {
@@ -269,9 +269,9 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
 
 export interface GetExpectedTransactionOutcomeProps {
   transactionType: 'DEPOSIT' | 'WITHDRAW';
-  sourceTokenAddress: EthereumAddress;
+  sourceTokenAddress: Address;
   sourceTokenAmount: Wei;
-  targetTokenAddress: EthereumAddress;
+  targetTokenAddress: Address;
 }
 
 const getExpectedTransactionOutcome = createAsyncThunk<

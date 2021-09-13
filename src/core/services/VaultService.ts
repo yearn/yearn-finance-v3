@@ -4,7 +4,7 @@ import {
   YearnSdk,
   DepositProps,
   WithdrawProps,
-  EthereumAddress,
+  Address,
   Position,
   Vault,
   VaultDynamic,
@@ -42,7 +42,7 @@ export class VaultServiceImpl implements VaultService {
     userAddress,
     vaultAddresses,
   }: {
-    userAddress: EthereumAddress;
+    userAddress: Address;
     vaultAddresses?: string[];
   }): Promise<Position[]> {
     const yearn = this.yearnSdk;

@@ -12,7 +12,7 @@ import {
   LabDynamic,
   LabUserMetadata,
   TransactionResponse,
-  EthereumAddress,
+  Address,
   Integer,
   Wei,
   Balance,
@@ -37,7 +37,7 @@ export interface VaultService {
     userAddress,
     vaultAddresses,
   }: {
-    userAddress: EthereumAddress;
+    userAddress: Address;
     vaultAddresses?: string[];
   }) => Promise<Position[]>;
   getUserVaultsSummary: (props: GetUserVaultsSummaryProps) => Promise<VaultsUserSummary>;
@@ -60,75 +60,75 @@ export interface TokenService {
 }
 
 export interface GetSupportedVaultsProps {
-  addresses?: EthereumAddress[];
+  addresses?: Address[];
 }
 
 export interface GetExpectedTransactionOutcomeProps {
   transactionType: 'DEPOSIT' | 'WITHDRAW';
-  accountAddress: EthereumAddress;
-  sourceTokenAddress: EthereumAddress;
+  accountAddress: Address;
+  sourceTokenAddress: Address;
   sourceTokenAmount: Wei;
-  targetTokenAddress: EthereumAddress;
+  targetTokenAddress: Address;
   slippageTolerance?: number;
 }
 
 export interface DepositProps {
-  accountAddress: EthereumAddress;
-  tokenAddress: EthereumAddress;
-  vaultAddress: EthereumAddress;
+  accountAddress: Address;
+  tokenAddress: Address;
+  vaultAddress: Address;
   amount: Wei;
   slippageTolerance?: number;
 }
 
 export interface WithdrawProps {
-  accountAddress: EthereumAddress;
-  tokenAddress: EthereumAddress;
-  vaultAddress: EthereumAddress;
+  accountAddress: Address;
+  tokenAddress: Address;
+  vaultAddress: Address;
   amountOfShares: Wei;
   slippageTolerance?: number;
 }
 
 export interface StakeProps {
-  accountAddress: EthereumAddress;
-  tokenAddress: EthereumAddress;
-  vaultAddress: EthereumAddress;
+  accountAddress: Address;
+  tokenAddress: Address;
+  vaultAddress: Address;
   amount: Wei;
 }
 
 export interface LockProps {
-  accountAddress: EthereumAddress;
-  tokenAddress: EthereumAddress;
-  vaultAddress: EthereumAddress;
+  accountAddress: Address;
+  tokenAddress: Address;
+  vaultAddress: Address;
   amount: Wei;
 }
 
 export interface ClaimProps {
-  accountAddress: EthereumAddress;
+  accountAddress: Address;
 }
 
 export interface ReinvestProps {
-  accountAddress: EthereumAddress;
+  accountAddress: Address;
 }
 
 export interface ApproveProps {
-  accountAddress: EthereumAddress;
-  tokenAddress: EthereumAddress;
-  spenderAddress: EthereumAddress;
+  accountAddress: Address;
+  tokenAddress: Address;
+  spenderAddress: Address;
   amount: Wei;
 }
 
 export interface IronBankTransactionProps {
-  userAddress: EthereumAddress;
+  userAddress: Address;
   marketAddress: string;
   amount: Wei;
   action: 'supply' | 'borrow' | 'withdraw' | 'repay';
 }
 export interface IronBankGenericGetUserDataProps {
-  userAddress: EthereumAddress;
+  userAddress: Address;
   marketAddresses?: string[];
 }
 export interface EnterOrExitMarketProps {
-  userAddress: EthereumAddress;
+  userAddress: Address;
   marketAddress: string;
   actionType: 'enterMarket' | 'exitMarket';
 }
@@ -137,7 +137,7 @@ export interface IronBankService {
   getSupportedMarkets: () => Promise<IronBankMarket[]>;
   getUserMarketsPositions: (props: IronBankGenericGetUserDataProps) => Promise<Position[]>;
   getUserMarketsMetadata: (props: IronBankGenericGetUserDataProps) => Promise<CyTokenUserMetadata[]>;
-  getUserIronBankSummary: ({ userAddress }: { userAddress: EthereumAddress }) => Promise<IronBankUserSummary>;
+  getUserIronBankSummary: ({ userAddress }: { userAddress: Address }) => Promise<IronBankUserSummary>;
   getMarketsDynamicData: (marketAddresses: string[]) => Promise<IronBankMarketDynamic[]>;
   executeTransaction: (props: IronBankTransactionProps) => Promise<TransactionResponse>;
   enterOrExitMarket: (props: EnterOrExitMarketProps) => Promise<TransactionResponse>;
@@ -168,17 +168,17 @@ export interface LabService {
 }
 
 export interface GetUserLabsPositionsProps {
-  userAddress: EthereumAddress;
+  userAddress: Address;
 }
 
 export interface GetUserLabsMetadataProps {
-  userAddress: EthereumAddress;
+  userAddress: Address;
 }
 export interface GetUserVaultsSummaryProps {
-  userAddress: EthereumAddress;
+  userAddress: Address;
 }
 export interface GetUserVaultsMetadataProps {
-  userAddress: EthereumAddress;
+  userAddress: Address;
   vaultsAddresses?: string[];
 }
 

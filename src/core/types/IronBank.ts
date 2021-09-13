@@ -1,7 +1,7 @@
-import { EthereumAddress, TokenView } from '@types';
+import { Address, TokenView } from '@types';
 
 export interface IronBankMarketView {
-  address: EthereumAddress;
+  address: Address;
   decimals: string;
   name: string;
   symbol: string;

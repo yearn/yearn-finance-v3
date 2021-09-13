@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { ThunkAPI } from '@frameworks/redux';
 import {
   CyTokenUserMetadata,
-  EthereumAddress,
+  Address,
   IronBankMarket,
   IronBankMarketDynamic,
   IronBankUserSummary,
@@ -274,7 +274,7 @@ const repayAllMarket = createAsyncThunk<void, RepayAllMarketProps, ThunkAPI>(
 );
 
 export interface EnterOrExitMarketProps {
-  marketAddress: EthereumAddress;
+  marketAddress: Address;
   actionType: 'enterMarket' | 'exitMarket';
 }
 

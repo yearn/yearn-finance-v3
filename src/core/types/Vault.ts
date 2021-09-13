@@ -1,20 +1,20 @@
-import { EthereumAddress, EarningsDayData, Usdc } from '@types';
+import { Address, EarningsDayData, Usdc } from '@types';
 import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 import { TokenView } from './Token';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
 
 export interface VaultData extends VaultDynamicData {
-  address: EthereumAddress;
+  address: Address;
   name: string;
   version: string;
   typeId: VaultType;
-  token: EthereumAddress;
+  token: Address;
   symbol: string;
 }
 
 export interface VaultView {
-  address: EthereumAddress;
+  address: Address;
   name: string;
   displayName: string;
   displayIcon: string;
@@ -36,7 +36,7 @@ export interface VaultView {
   token: TokenView;
 }
 export interface GeneralVaultView {
-  address: EthereumAddress;
+  address: Address;
   name: string;
   decimals: string;
   vaultBalance: string;
@@ -56,7 +56,7 @@ export interface GeneralVaultView {
 }
 
 export interface VaultDynamicData {
-  address: EthereumAddress;
+  address: Address;
   balance: string;
   balanceUsdc: string;
   apyData: any;

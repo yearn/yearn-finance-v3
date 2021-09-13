@@ -6,7 +6,7 @@ import {
   IronBankMarketView,
   MarketActionsStatusMap,
   Status,
-  EthereumAddress,
+  Address,
   IronBankMarket,
   CyTokenUserMetadata,
   IronBankMarketPositionsMap,
@@ -173,7 +173,7 @@ const selectIronBankStatus = createSelector(
   }
 );
 
-const selectUnderlyingTokensAddresses = createSelector([selectMarketsMap], (markets): EthereumAddress[] => {
+const selectUnderlyingTokensAddresses = createSelector([selectMarketsMap], (markets): Address[] => {
   return Object.values(markets).map((market) => market.tokenId);
 });
 

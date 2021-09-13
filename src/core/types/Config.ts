@@ -1,4 +1,4 @@
-import { Network, EthereumAddress, Wei } from './Ethereum';
+import { Network, Address, Wei } from './Ethereum';
 import { Theme } from '@types';
 
 export interface Config extends Env, Constants {}
@@ -21,7 +21,7 @@ export interface Env {
 
 export interface Constants {
   STATE_VERSION: number;
-  ETHEREUM_ADDRESS: EthereumAddress;
+  ETHEREUM_ADDRESS: Address;
   MAX_UINT256: Wei;
   YEARN_API: string;
   WEB3_PROVIDER_HTTPS: string;
