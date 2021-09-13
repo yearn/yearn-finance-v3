@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js';
 import { RootState, IronBankMarketView, MarketActionsStatusMap, Status, EthereumAddress } from '@types';
 import { toBN } from '@utils';
 import { initialMarketsActionsMap } from './ironBank.reducer';
+import { createToken } from '../tokens/tokens.selectors';
 
 const selectMarketsMap = (state: RootState) => state.ironBank.marketsMap;
 const selectMarketsAddresses = (state: RootState) => state.ironBank.marketAddresses;
@@ -78,21 +79,7 @@ const selectMarkets = createSelector(
           userDeposited: userMarketPositionData?.BORROW?.underlyingTokenBalance.amount ?? '0',
           userDepositedUsdc: userMarketPositionData?.BORROW?.underlyingTokenBalance.amountUsdc ?? '0',
         },
-        token: {
-          address: tokenData?.address,
-          name: tokenData?.name,
-          symbol: tokenData?.symbol,
-          decimals: parseInt(tokenData?.decimals),
-          icon: tokenData?.icon,
-          balance: userTokenData?.balance ?? '0',
-          balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-          priceUsdc: tokenData?.priceUsdc ?? '0',
-          categories: tokenData?.metadata?.categories ?? [],
-          description: tokenData?.metadata?.description ?? '',
-          website: tokenData?.metadata?.website ?? '',
-          isZapable: tokenData?.supported.zapper ?? false,
-          allowancesMap: tokenAllowancesMap,
-        },
+        token: createToken({ tokenData, userTokenData, allowancesMap: tokenAllowancesMap }),
       };
     });
 

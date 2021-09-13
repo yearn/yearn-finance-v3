@@ -86,7 +86,7 @@ interface CreateTokenProps {
   allowancesMap: AllowancesMap;
 }
 
-function createToken(props: CreateTokenProps): TokenView {
+export function createToken(props: CreateTokenProps): TokenView {
   const { tokenData, userTokenData, allowancesMap } = props;
   return {
     address: tokenData?.address,
@@ -101,7 +101,7 @@ function createToken(props: CreateTokenProps): TokenView {
     description: tokenData?.metadata?.description ?? '',
     website: tokenData?.metadata?.website ?? '',
     isZapable: tokenData?.supported.zapper ?? false,
-    allowancesMap: allowancesMap,
+    allowancesMap: allowancesMap ?? {},
   };
 }
 

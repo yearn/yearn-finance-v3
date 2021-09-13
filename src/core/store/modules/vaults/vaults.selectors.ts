@@ -15,6 +15,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { memoize } from 'lodash';
 import { toBN } from '../../../../utils';
+import { createToken } from '../tokens/tokens.selectors';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 const selectVaultsState = (state: RootState) => state.vaults;
@@ -254,21 +255,7 @@ function createVault(props: CreateVaultProps) {
       userDeposited: userVaultPositionsMap?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',
       userDepositedUsdc: userVaultPositionsMap?.DEPOSIT?.underlyingTokenBalance.amountUsdc ?? '0',
     },
-    token: {
-      address: tokenData?.address,
-      name: tokenData?.name,
-      symbol: tokenData?.symbol,
-      decimals: parseInt(tokenData?.decimals),
-      icon: tokenData?.icon,
-      balance: userTokenData?.balance ?? '0',
-      balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-      priceUsdc: tokenData?.priceUsdc ?? '0',
-      categories: tokenData?.metadata?.categories ?? [],
-      description: tokenData?.metadata?.description ?? '',
-      website: tokenData?.metadata?.website ?? '',
-      isZapable: tokenData?.supported.zapper ?? false,
-      allowancesMap: tokenAllowancesMap,
-    },
+    token: createToken({ tokenData, userTokenData, allowancesMap: tokenAllowancesMap }),
   };
 }
 
