@@ -1,6 +1,6 @@
-import { EthereumNetwork } from '@types';
+import { Network } from '@types';
 
-export const getNetworkId = (network: EthereumNetwork): number => {
+export const getNetworkId = (network: Network): number => {
   switch (network) {
     case 'mainnet':
       return 1;

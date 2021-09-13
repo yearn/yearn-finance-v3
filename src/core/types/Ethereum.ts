@@ -1,4 +1,4 @@
-export type EthereumNetwork = 'mainnet' | 'morden' | 'ropsten' | 'rinkeby' | 'kovan';
+export type Network = 'mainnet' | 'morden' | 'ropsten' | 'rinkeby' | 'kovan';
 
 export type Symbol = string;
 

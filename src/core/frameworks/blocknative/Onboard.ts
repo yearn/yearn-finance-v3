@@ -3,7 +3,7 @@ import { API } from 'bnc-onboard/dist/src/interfaces';
 
 import { getConfig } from '@config';
 import { getNetworkId } from '@utils';
-import { Wallet, Subscriptions, EthereumNetwork, Theme } from '@types';
+import { Wallet, Subscriptions, Network, Theme } from '@types';
 import { getAddress } from '@ethersproject/address';
 
 export class BlocknativeWalletImpl implements Wallet {
@@ -42,8 +42,8 @@ export class BlocknativeWalletImpl implements Wallet {
     return this.onboard?.walletCheck() ?? Promise.resolve(false);
   }
 
-  public create(ethereumNetwork: EthereumNetwork, subscriptions: Subscriptions, theme?: Theme): boolean {
-    const networkId = getNetworkId(ethereumNetwork);
+  public create(network: Network, subscriptions: Subscriptions, theme?: Theme): boolean {
+    const networkId = getNetworkId(network);
     const { BLOCKNATIVE_KEY, FORTMATIC_KEY, PORTIS_KEY, WEB3_PROVIDER_HTTPS } = getConfig();
 
     const rpcUrl = WEB3_PROVIDER_HTTPS;

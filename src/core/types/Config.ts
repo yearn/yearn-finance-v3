@@ -1,11 +1,11 @@
-import { EthereumNetwork, EthereumAddress, Wei } from './Ethereum';
+import { Network, EthereumAddress, Wei } from './Ethereum';
 import { Theme } from '@types';
 
 export interface Config extends Env, Constants {}
 
 export interface Env {
   ENV: string;
-  ETHEREUM_NETWORK: EthereumNetwork;
+  NETWORK: Network;
   CUSTOM_PROVIDER_HTTPS: string;
   USE_MAINNET_FORK: boolean;
   USE_SDK_MOCK: boolean;

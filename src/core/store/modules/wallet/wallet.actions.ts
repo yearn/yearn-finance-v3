@@ -43,7 +43,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefin
   async (walletName, { dispatch, getState, extra }) => {
     const { context, config } = extra;
     const { wallet, web3Provider, yearnSdk } = context;
-    const { ETHEREUM_NETWORK, ALLOW_DEV_MODE } = config;
+    const { NETWORK, ALLOW_DEV_MODE } = config;
     const { theme, settings } = getState();
 
     if (!wallet.isCreated) {
@@ -63,7 +63,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefin
         },
       };
       const subscriptions = getSubscriptions(dispatch, customSubscriptions);
-      wallet.create(ETHEREUM_NETWORK, subscriptions, theme.current);
+      wallet.create(NETWORK, subscriptions, theme.current);
     }
     const isConnected = await wallet.connect({ name: walletName });
     return { isConnected };
