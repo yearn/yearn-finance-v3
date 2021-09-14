@@ -1,4 +1,4 @@
-import { first } from 'lodash';
+import { first, uniqBy } from 'lodash';
 
 import { EarningsDayData } from '@types';
 import { normalizeAmount, toBN, USDC_DECIMALS } from './format';
@@ -13,6 +13,8 @@ export function parseHistoricalEarnings(earnings?: EarningsDayData[]) {
       y: toBN(normalizeAmount(data.earnings.amountUsdc, USDC_DECIMALS)).toFixed(),
     };
   });
+
+  chartData = uniqBy(chartData, 'x');
 
   return [{ id, data: chartData }];
 }
