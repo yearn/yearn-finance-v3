@@ -307,16 +307,16 @@ export interface ValidateSlippageProps {
 export function validateSlippage(props: ValidateSlippageProps): ValidationResponse {
   const { slippageTolerance, expectedSlippage } = props;
 
-  if (slippageTolerance && expectedSlippage) {
-    const isOverSlippageTolerance = toBN(expectedSlippage).gt(slippageTolerance);
-    if (isOverSlippageTolerance) {
-      return {
-        error: `Expected slippage of ${formatPercent(
-          expectedSlippage.toString(),
-          1
-        )} is over your slippage tolerance of ${formatPercent(slippageTolerance.toString(), 1)}`,
-      };
-    }
+  if (slippageTolerance === undefined || expectedSlippage === undefined) return {};
+
+  const isOverSlippageTolerance = toBN(expectedSlippage).gt(slippageTolerance);
+  if (isOverSlippageTolerance) {
+    return {
+      error: `Expected slippage of ${formatPercent(
+        expectedSlippage.toString(),
+        1
+      )} is over your slippage tolerance of ${formatPercent(slippageTolerance.toString(), 1)}`,
+    };
   }
 
   return {};
