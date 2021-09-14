@@ -31,7 +31,7 @@ export class Container implements DIContainer {
 
   private registerContext() {
     const { USE_MAINNET_FORK } = getConfig();
-    const providerType: ProviderType = USE_MAINNET_FORK ? 'custom' : 'default';
+    const providerType: ProviderType = USE_MAINNET_FORK ? 'custom' : 'ethereum';
     this.container.register({
       wallet: awilix.asClass(BlocknativeWalletImpl).singleton(),
       web3Provider: awilix

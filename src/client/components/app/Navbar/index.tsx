@@ -1,16 +1,7 @@
 import styled from 'styled-components';
-import { useWindowDimensions } from '@hooks';
 
 import { ConnectWalletButton } from '@components/app';
-import { Button, Text } from '@components/common';
-
-interface NavbarProps {
-  className?: string;
-  title?: string;
-  walletAddress?: string;
-  addressEnsName?: string;
-  onWalletClick?: () => void;
-}
+import { Button, Text, SimpleDropdown } from '@components/common';
 
 const BetaButton = styled(Button)`
   white-space: nowrap;
@@ -47,13 +38,38 @@ const StyledNavbar = styled.nav`
   max-width: ${({ theme }) => theme.globalMaxWidth};
 `;
 
-export const Navbar = ({ className, title, walletAddress, addressEnsName, onWalletClick }: NavbarProps) => {
+interface NavbarProps {
+  className?: string;
+  title?: string;
+  walletAddress?: string;
+  addressEnsName?: string;
+  onWalletClick?: () => void;
+  selectedNetwork: string;
+  networkOptions: string[];
+  onNetworkChange: (network: string) => void;
+}
+
+export const Navbar = ({
+  className,
+  title,
+  walletAddress,
+  addressEnsName,
+  onWalletClick,
+  selectedNetwork,
+  networkOptions,
+  onNetworkChange,
+}: NavbarProps) => {
   return (
     <StyledNavbar className={className}>
       {title && <StyledText>{title}</StyledText>}
 
       <StyledNavbarActions>
         <BetaButton outline>BETA</BetaButton>
+        <SimpleDropdown
+          selected={{ value: networkOptions.indexOf(selectedNetwork).toString(), label: selectedNetwork }}
+          setSelected={(option) => onNetworkChange(option.label)}
+          options={networkOptions.map((network, i) => ({ value: i.toString(), label: network }))}
+        />
 
         <ConnectWalletButton
           address={walletAddress}

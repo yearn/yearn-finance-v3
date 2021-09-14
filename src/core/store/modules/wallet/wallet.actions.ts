@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkAPI } from '@frameworks/redux';
 import { getEthersProvider } from '@frameworks/ethers';
-import { Theme, RootState, DIContainer, Subscriptions } from '@types';
+import { Theme, RootState, DIContainer, Subscriptions, Network } from '@types';
 import { isValidAddress } from '@utils';
 
 const walletChange = createAction<{ walletName: string }>('wallet/walletChange');
@@ -38,9 +38,14 @@ const getAddressEnsName = createAsyncThunk<{ addressEnsName: string }, { address
   }
 );
 
-const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefined, ThunkAPI>(
+interface WalletSelectProps {
+  walletName?: string;
+  network?: Network;
+}
+
+const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProps, ThunkAPI>(
   'wallet/walletSelect',
-  async (walletName, { dispatch, getState, extra }) => {
+  async ({ walletName, network }, { dispatch, getState, extra }) => {
     const { context, config } = extra;
     const { wallet, web3Provider, yearnSdk } = context;
     const { NETWORK, ALLOW_DEV_MODE } = config;
@@ -63,7 +68,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefin
         },
       };
       const subscriptions = getSubscriptions(dispatch, customSubscriptions);
-      wallet.create(NETWORK, subscriptions, theme.current);
+      wallet.create(network ?? NETWORK, subscriptions, theme.current);
     }
     const isConnected = await wallet.connect({ name: walletName });
     return { isConnected };
@@ -78,6 +83,14 @@ const changeWalletTheme =
     }
   };
 
+const changeWalletNetwork =
+  (network: Network) => async (dispatch: AppDispatch, getState: () => RootState, container: DIContainer) => {
+    const { wallet } = container.context;
+    if (wallet.isCreated && wallet.changeNetwork) {
+      wallet.changeNetwork(network);
+    }
+  };
+
 export const WalletActions = {
   walletChange,
   addressChange,
@@ -85,5 +98,6 @@ export const WalletActions = {
   balanceChange,
   walletSelect,
   changeWalletTheme,
+  changeWalletNetwork,
   getAddressEnsName,
 };

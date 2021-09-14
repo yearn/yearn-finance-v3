@@ -1,5 +1,5 @@
 import { Alert } from './Alerts';
-import { Address } from './Blockchain';
+import { Address, Network } from './Blockchain';
 import { Theme } from './Settings';
 import { Status } from './Status';
 import {
@@ -21,6 +21,7 @@ export interface RootState {
   app: AppState;
   alerts: AlertsState;
   modals: ModalsState;
+  network: NetworkState;
   route: RouteState;
   theme: ThemeState;
   vaults: VaultsState;
@@ -35,6 +36,10 @@ export interface AppState {
   isInitialized: boolean;
   isLoading: boolean;
   error: string | undefined;
+}
+
+export interface NetworkState {
+  current: Network;
 }
 
 export interface ModalsState {

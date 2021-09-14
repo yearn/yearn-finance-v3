@@ -11,14 +11,18 @@ import {
   LabsActions,
   IronBankActions,
   WalletSelectors,
+  NetworkSelectors,
   SettingsSelectors,
   AlertsActions,
+  NetworkActions,
 } from '@store';
 
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
+import { getConfig } from '@config';
 import { isValidAddress } from '@utils';
+import { Network } from '@types';
 
 const contentSeparation = '1.6rem';
 
@@ -56,9 +60,11 @@ export const Layout: FC = ({ children }) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const { SUPPORTED_NETWORKS } = getConfig();
   const { isMobile } = useWindowDimensions();
   const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const addressEnsName = useAppSelector(WalletSelectors.selectAddressEnsName);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const history = useHistory();
 
@@ -105,7 +111,7 @@ export const Layout: FC = ({ children }) => {
       default:
         break;
     }
-  }, [location]);
+  }, [location, currentNetwork]);
 
   // TODO: MOVE THIS LOGIC TO THUNKS
   useEffect(() => {
@@ -113,7 +119,7 @@ export const Layout: FC = ({ children }) => {
     if (selectedAddress) {
       fetchUserData(path);
     }
-  }, [selectedAddress]);
+  }, [selectedAddress, currentNetwork]);
 
   useEffect(() => {
     if (selectedAddress) {
@@ -181,7 +187,10 @@ export const Layout: FC = ({ children }) => {
           title={t(`navigation.${path}`)}
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}
-          onWalletClick={() => dispatch(WalletActions.walletSelect())}
+          onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}
+          selectedNetwork={currentNetwork}
+          networkOptions={SUPPORTED_NETWORKS}
+          onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
         />
         {children}
         <Footer />

@@ -17,6 +17,7 @@ export interface Wallet {
   ) => Promise<boolean> | boolean;
   connect: (args?: any) => Promise<boolean>;
   changeTheme?: (theme: Theme) => void;
+  changeNetwork?: (network: Network) => void;
 }
 
 export interface Subscriptions {

@@ -2,7 +2,7 @@ import Onboard from 'bnc-onboard';
 import { API } from 'bnc-onboard/dist/src/interfaces';
 
 import { getConfig } from '@config';
-import { getNetworkId } from '@utils';
+import { getNetworkId, getNetworkRpc } from '@utils';
 import { Wallet, Subscriptions, Network, Theme } from '@types';
 import { getAddress } from '@ethersproject/address';
 
@@ -44,9 +44,9 @@ export class BlocknativeWalletImpl implements Wallet {
 
   public create(network: Network, subscriptions: Subscriptions, theme?: Theme): boolean {
     const networkId = getNetworkId(network);
-    const { BLOCKNATIVE_KEY, FORTMATIC_KEY, PORTIS_KEY, WEB3_PROVIDER_HTTPS } = getConfig();
+    const { BLOCKNATIVE_KEY, FORTMATIC_KEY, PORTIS_KEY } = getConfig();
 
-    const rpcUrl = WEB3_PROVIDER_HTTPS;
+    const rpcUrl = getNetworkRpc(network);
     const appName = 'Yearn Finance';
 
     const wallets = [
@@ -126,6 +126,13 @@ export class BlocknativeWalletImpl implements Wallet {
     const darkMode = theme !== 'light';
     if (this.onboard) {
       this.onboard.config({ darkMode });
+    }
+  }
+
+  public async changeNetwork(network: Network) {
+    const networkId = getNetworkId(network);
+    if (this.onboard) {
+      this.onboard.config({ networkId });
     }
   }
 }

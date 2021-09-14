@@ -26,9 +26,10 @@ export const getConstants = memoize((): Constants => {
     ETHEREUM_ADDRESS: ADDRESSES.ETH,
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
     YEARN_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
+    SUPPORTED_NETWORKS: ['mainnet', 'fantom'],
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-    FANTOM_PROVIDER_HTTPS: 'https://rpcapi.fantom.network',
+    FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
     CONTRACT_ADDRESSES: {
       oracle: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
       lens: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',

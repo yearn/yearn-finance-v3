@@ -102,7 +102,7 @@ export interface SimpleDropdownProps {
   options: DropdownOption[];
   className?: string;
   disabled?: boolean;
-  onChange?: (selected: DropdownOption | undefined) => void;
+  onChange?: (selected: DropdownOption) => void;
 }
 
 export const SimpleDropdown: FC<SimpleDropdownProps> = ({

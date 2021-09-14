@@ -1,7 +1,7 @@
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
 
 import { getConfig } from '@config';
-import { ProviderType, Web3Provider as AppWeb3Provider } from '@types';
+import { ProviderType, Web3Provider as AppWeb3Provider, Network } from '@types';
 import { getJsonRpcProvider } from './';
 
 export class EthersWeb3ProviderImpl implements AppWeb3Provider {
@@ -11,9 +11,22 @@ export class EthersWeb3ProviderImpl implements AppWeb3Provider {
   constructor({ providerType }: { providerType: ProviderType }) {
     const { FANTOM_PROVIDER_HTTPS, WEB3_PROVIDER_HTTPS, CUSTOM_PROVIDER_HTTPS, USE_MAINNET_FORK } = getConfig();
     this.providerType = providerType;
-    this.register('default', getJsonRpcProvider(WEB3_PROVIDER_HTTPS));
+    this.register('ethereum', getJsonRpcProvider(WEB3_PROVIDER_HTTPS));
     this.register('fantom', getJsonRpcProvider(FANTOM_PROVIDER_HTTPS));
     if (USE_MAINNET_FORK) this.register('custom', getJsonRpcProvider(CUSTOM_PROVIDER_HTTPS));
+  }
+
+  public changeProviderType(network: Network): void {
+    switch (network) {
+      case 'mainnet':
+        this.providerType = 'ethereum';
+        break;
+      case 'fantom':
+        this.providerType = 'fantom';
+        break;
+      default:
+        throw Error(`Provider not available for ${network}`);
+    }
   }
 
   public getInstanceOf(type: ProviderType): JsonRpcProvider {
