@@ -137,7 +137,7 @@ export const Wallet = () => {
         />
 
         <StyledInfoCard
-          header="Yearn passes $5B TVL!"
+          header="Beta is Here!"
           Component={
             <Text>
               This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
