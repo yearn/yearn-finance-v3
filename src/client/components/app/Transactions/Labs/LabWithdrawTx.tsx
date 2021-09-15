@@ -17,6 +17,7 @@ import {
   USDC_DECIMALS,
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
+  validateSlippage,
   calculateSharesAmount,
 } from '@src/utils';
 import { getConfig } from '@config';
@@ -38,7 +39,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const selectedLabToken = tokenSelectorFilter(selectedLab?.address ?? '');
   const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
   const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedLab?.defaultDisplayToken ?? '');
-  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
+  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
 
   const targetTokensOptions = selectedLab
     ? [selectedLab.token, ...zapOutTokens.filter(({ address }) => address !== selectedLab.token.address)]
@@ -118,13 +119,19 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     userYvTokenBalance: selectedLab.DEPOSIT.userBalance,
   });
 
+  const { error: slippageError } = validateSlippage({
+    slippageTolerance: selectedSlippage,
+    expectedSlippage: expectedTxOutcome?.slippage,
+  });
+
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
   const error =
     allowanceError ||
     inputError ||
     actionsStatus.approveWithdraw.error ||
     actionsStatus.withdraw.error ||
-    expectedTxOutcomeStatus.error;
+    expectedTxOutcomeStatus.error ||
+    slippageError;
 
   const selectedLabOption = {
     address: selectedLab.address,
@@ -167,7 +174,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
           labAddress: selectedLab.address,
           amount: toBN(amount),
           tokenAddress: selectedTargetTokenAddress,
-          slippageTolerance: toBN(selectedSlippage).toNumber(),
+          slippageTolerance: selectedSlippage,
         })
       );
       setTxCompleted(true);

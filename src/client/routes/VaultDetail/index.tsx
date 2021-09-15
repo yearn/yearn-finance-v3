@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { TokensSelectors, VaultsSelectors } from '@store';
-import { useAppSelector } from '@hooks';
+import { AppSelectors, TokensSelectors, VaultsSelectors } from '@store';
+import { useAppSelector, useIsMounting } from '@hooks';
 import { parseHistoricalEarnings, parseLastEarnings } from '@utils';
 
 import { VaultDetailPanels, ViewContainer } from '@components/app';
@@ -31,7 +31,9 @@ export interface VaultDetailRouteParams {
 export const VaultDetail = () => {
   // const { t } = useAppTranslation('common');
   const history = useHistory();
+  const isMounting = useIsMounting();
 
+  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
@@ -54,7 +56,9 @@ export const VaultDetail = () => {
     if (!loading && firstVaultsFetch) setVaultsInitialized(true);
   }, [vaultsStatus.loading]);
 
-  const generalLoading = (vaultsStatus.loading || tokensStatus.loading) && (!tokensInitialized || !vaultsInitialized);
+  const generalLoading =
+    (appStatus.loading || vaultsStatus.loading || tokensStatus.loading || isMounting) &&
+    (!tokensInitialized || !vaultsInitialized);
 
   // const chartData = [
   //   {

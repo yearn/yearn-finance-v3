@@ -1,7 +1,7 @@
 import { AllowancesMap, IronBankUserSummary } from '@types';
 import BigNumber from 'bignumber.js';
 import { getConfig } from '@config';
-import { COLLATERAL_FACTOR_DECIMALS, normalizeAmount, toBN } from './format';
+import { COLLATERAL_FACTOR_DECIMALS, normalizeAmount, toBN, formatPercent } from './format';
 
 interface ValidateVaultDepositProps {
   sellTokenAmount: BigNumber;
@@ -276,6 +276,7 @@ export interface BasicValidateAmountProps {
   totalAmountAvailable: string;
   maxAmountAllowed?: string;
 }
+
 export function basicValidateAmount(props: BasicValidateAmountProps): ValidationResponse {
   const { totalAmountAvailable, sellTokenAmount, sellTokenDecimals, maxAmountAllowed } = props;
   const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
@@ -296,4 +297,27 @@ export function basicValidateAmount(props: BasicValidateAmountProps): Validation
   }
 
   return { approved: true };
+}
+
+export interface ValidateSlippageProps {
+  slippageTolerance?: number;
+  expectedSlippage?: number;
+}
+
+export function validateSlippage(props: ValidateSlippageProps): ValidationResponse {
+  const { slippageTolerance, expectedSlippage } = props;
+
+  if (slippageTolerance === undefined || expectedSlippage === undefined) return {};
+
+  const isOverSlippageTolerance = toBN(expectedSlippage).gt(slippageTolerance);
+  if (isOverSlippageTolerance) {
+    return {
+      error: `Expected slippage of ${formatPercent(
+        expectedSlippage.toString(),
+        1
+      )} is over your slippage tolerance of ${formatPercent(slippageTolerance.toString(), 1)}`,
+    };
+  }
+
+  return {};
 }

@@ -63,6 +63,12 @@ const StyledNoWalletCard = styled(NoWalletCard)`
   width: 100%;
 `;
 
+const StyledLink = styled.a`
+  white-space: initial;
+  text-decoration: underline;
+  color: inherit;
+`;
+
 export const Wallet = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
@@ -131,15 +137,12 @@ export const Wallet = () => {
         />
 
         <StyledInfoCard
-          header="Yearn passes $5B TVL!"
+          header="Beta is Here!"
           Component={
             <Text>
-              Total Value Locked (TVL) is a key indicator of the scale of Yearn and DeFi. <br />
-              With $5B TVL, Yearn is the 8th largest DeFi protocol. Yearn is not a bank, but fun fact: the average US
-              bank has $3.1B in deposits according to mx.com.
-              <br />
-              <br />
-              Over $5B in holdings have been deposited into the Yearn suite of products.
+              This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
+              feedback, please let us know on <StyledLink href="https://t.me/yearnfinance">Telegram</StyledLink> or{' '}
+              <StyledLink href="https://discord.yearn.finance">Discord</StyledLink>.
             </Text>
           }
           cardSize="big"

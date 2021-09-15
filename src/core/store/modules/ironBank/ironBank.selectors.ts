@@ -1,9 +1,22 @@
 import { createSelector } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
-import { RootState, IronBankMarketView, MarketActionsStatusMap, Status, EthereumAddress } from '@types';
+import {
+  RootState,
+  IronBankMarketView,
+  MarketActionsStatusMap,
+  Status,
+  EthereumAddress,
+  IronBankMarket,
+  CyTokenUserMetadata,
+  IronBankMarketPositionsMap,
+  AllowancesMap,
+  Token,
+  Balance,
+} from '@types';
 import { toBN } from '@utils';
 import { initialMarketsActionsMap } from './ironBank.reducer';
+import { createToken } from '../tokens/tokens.selectors';
 
 const selectMarketsMap = (state: RootState) => state.ironBank.marketsMap;
 const selectMarketsAddresses = (state: RootState) => state.ironBank.marketAddresses;
@@ -54,46 +67,16 @@ const selectMarkets = createSelector(
       const tokenData = tokensMap[marketData.tokenId];
       const userTokenData = userTokensMap[marketData.tokenId];
       const tokenAllowancesMap = userTokensAllowancesMap[marketData.tokenId] ?? {};
-      return {
-        address: marketData.address,
-        decimals: marketData.decimals,
-        name: marketData.name,
-        symbol: marketData.symbol,
-        lendApy: marketData.metadata.lendApyBips,
-        borrowApy: marketData.metadata.borrowApyBips,
-        liquidity: marketData.metadata.liquidityUsdc,
-        collateralFactor: marketData.metadata.collateralFactor,
-        reserveFactor: marketData.metadata.reserveFactor,
-        isActive: marketData.metadata.isActive,
-        exchangeRate: marketData.metadata.exchangeRate,
-        allowancesMap: marketsAllowancesMap[address] ?? {},
-        enteredMarket: userMarketMetadata?.enteredMarket ?? false,
-        LEND: {
-          userBalance: userMarketPositionData?.LEND?.balance ?? '0',
-          userDeposited: userMarketPositionData?.LEND?.underlyingTokenBalance.amount ?? '0',
-          userDepositedUsdc: userMarketPositionData?.LEND?.underlyingTokenBalance.amountUsdc ?? '0',
-        },
-        BORROW: {
-          userBalance: userMarketPositionData?.BORROW?.balance ?? '0',
-          userDeposited: userMarketPositionData?.BORROW?.underlyingTokenBalance.amount ?? '0',
-          userDepositedUsdc: userMarketPositionData?.BORROW?.underlyingTokenBalance.amountUsdc ?? '0',
-        },
-        token: {
-          address: tokenData?.address,
-          name: tokenData?.name,
-          symbol: tokenData?.symbol,
-          decimals: parseInt(tokenData?.decimals),
-          icon: tokenData?.icon,
-          balance: userTokenData?.balance ?? '0',
-          balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-          priceUsdc: tokenData?.priceUsdc ?? '0',
-          categories: tokenData?.metadata?.categories ?? [],
-          description: tokenData?.metadata?.description ?? '',
-          website: tokenData?.metadata?.website ?? '',
-          isZapable: tokenData?.supported.zapper ?? false,
-          allowancesMap: tokenAllowancesMap,
-        },
-      };
+      const marketAllowancesMap = marketsAllowancesMap[address] ?? {};
+      return createMarket({
+        marketData,
+        userMarketPositionData,
+        userMarketMetadata,
+        marketAllowancesMap,
+        tokenData,
+        userTokenData,
+        tokenAllowancesMap,
+      });
     });
 
     markets.sort((a, b) => {
@@ -193,6 +176,54 @@ const selectIronBankStatus = createSelector(
 const selectUnderlyingTokensAddresses = createSelector([selectMarketsMap], (markets): EthereumAddress[] => {
   return Object.values(markets).map((market) => market.tokenId);
 });
+
+interface CreateMarketProps {
+  marketData: IronBankMarket;
+  userMarketMetadata: CyTokenUserMetadata;
+  userMarketPositionData: IronBankMarketPositionsMap;
+  marketAllowancesMap: AllowancesMap;
+  tokenData: Token;
+  userTokenData: Balance;
+  tokenAllowancesMap: AllowancesMap;
+}
+
+function createMarket(props: CreateMarketProps) {
+  const {
+    marketData,
+    userMarketPositionData,
+    userMarketMetadata,
+    marketAllowancesMap,
+    tokenData,
+    userTokenData,
+    tokenAllowancesMap,
+  } = props;
+  return {
+    address: marketData.address,
+    decimals: marketData.decimals,
+    name: marketData.name,
+    symbol: marketData.symbol,
+    lendApy: marketData.metadata.lendApyBips,
+    borrowApy: marketData.metadata.borrowApyBips,
+    liquidity: marketData.metadata.liquidityUsdc,
+    collateralFactor: marketData.metadata.collateralFactor,
+    reserveFactor: marketData.metadata.reserveFactor,
+    isActive: marketData.metadata.isActive,
+    exchangeRate: marketData.metadata.exchangeRate,
+    allowancesMap: marketAllowancesMap ?? {},
+    enteredMarket: userMarketMetadata?.enteredMarket ?? false,
+    LEND: {
+      userBalance: userMarketPositionData?.LEND?.balance ?? '0',
+      userDeposited: userMarketPositionData?.LEND?.underlyingTokenBalance.amount ?? '0',
+      userDepositedUsdc: userMarketPositionData?.LEND?.underlyingTokenBalance.amountUsdc ?? '0',
+    },
+    BORROW: {
+      userBalance: userMarketPositionData?.BORROW?.balance ?? '0',
+      userDeposited: userMarketPositionData?.BORROW?.underlyingTokenBalance.amount ?? '0',
+      userDepositedUsdc: userMarketPositionData?.BORROW?.underlyingTokenBalance.amountUsdc ?? '0',
+    },
+    token: createToken({ tokenData, userTokenData, allowancesMap: tokenAllowancesMap }),
+  };
+}
 
 export const IronBankSelectors = {
   selectMarkets,

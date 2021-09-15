@@ -8,7 +8,7 @@ import { AppContextProvider, BladeContextProvider, NavSideMenuContextProvider } 
 import { Routes } from '@routes';
 import { Themable } from '@containers';
 import '@i18n';
-import '@assets/fonts/SFProDisplayFont.css';
+import '@assets/fonts/OxygenFont.css';
 
 const GlobalStyle = createGlobalStyle`
   html, body {
