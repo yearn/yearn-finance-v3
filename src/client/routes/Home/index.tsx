@@ -41,6 +41,12 @@ const StyledSummaryCard = styled(SummaryCard)`
   ${halfWidthCss};
 `;
 
+const StyledLink = styled.a`
+  white-space: initial;
+  text-decoration: underline;
+  color: inherit;
+`;
+
 export const Home = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
@@ -88,8 +94,14 @@ export const Home = () => {
         />
 
         <StyledInfoCard
-          header="Promotional Text"
-          content="This is where we tell people what's new in the site and how to share their feedback."
+          header="Beta is Here!"
+          Component={
+            <Text>
+              This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
+              feedback, please let us know on <StyledLink href="https://t.me/yearnfinance">Telegram</StyledLink> or{' '}
+              <StyledLink href="https://discord.yearn.finance">Discord</StyledLink>.
+            </Text>
+          }
           cardSize="big"
         />
       </Row>
