@@ -1,4 +1,4 @@
-import { first, uniqBy } from 'lodash';
+import { last, uniqBy } from 'lodash';
 
 import { EarningsDayData } from '@types';
 import { normalizeAmount, toBN, USDC_DECIMALS } from './format';
@@ -20,6 +20,6 @@ export function parseHistoricalEarnings(earnings?: EarningsDayData[]) {
 }
 
 export function parseLastEarnings(earnings?: EarningsDayData[]) {
-  const currentEarning = first(earnings)?.earnings?.amountUsdc;
+  const currentEarning = last(earnings)?.earnings?.amountUsdc;
   return toBN(normalizeAmount(currentEarning, USDC_DECIMALS)).toFixed();
 }
