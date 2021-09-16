@@ -66,10 +66,10 @@ export const Home = () => {
       <HeaderCard
         header="Dashboard"
         items={[
-          { header: 'Total Net Worth', Component: <Amount value={netWorth} input="usdc" /> },
-          { header: 'Vaults Earnings', Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" /> },
+          { header: 'Total net worth', Component: <Amount value={netWorth} input="usdc" /> },
+          { header: 'Vaults earnings', Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" /> },
           {
-            header: 'Vaults Est. Yearly Yield',
+            header: 'Vaults est. yearly yield',
             Component: <Amount value={vaultsSummary.estYearlyYeild} input="usdc" />,
           },
         ]}
@@ -79,26 +79,28 @@ export const Home = () => {
 
       <Row>
         <StyledInfoCard
-          header="Welcome to Your Yearn Home Screen"
+          header="Welcome to your Yearn home screen"
           Component={
             <Text>
-              There are many like it, but this one is yours. You can always return here for a bird's-eye view of your
-              holdings. The cards below show the total balance and utilization of your wallet, and the holdings and
-              performance for every Yearn product you use.
-              <br />
-              <br />
-              Not sure where to start? Check out “Vaults” on the left side navigation.
+              <p>
+                There are many like it, but this one is yours. You can always return here for a bird's-eye view of your
+                holdings. The cards below show the total balance and utilization of your wallet, and the holdings and
+                performance for every Yearn product you use.
+              </p>
+              <p>Not sure where to start? Check out “Vaults” on the left side navigation.</p>
             </Text>
           }
           cardSize="big"
         />
 
         <StyledInfoCard
-          header="Beta is Here!"
+          header="Beta is here!"
           Component={
             <Text>
-              This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
-              feedback, please let us know on <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>.
+              <p>
+                This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
+                feedback, please let us know on <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>.
+              </p>
             </Text>
           }
           cardSize="big"
@@ -112,7 +114,7 @@ export const Home = () => {
               header="Wallet"
               items={[
                 {
-                  header: 'Available to Deposit',
+                  header: 'Available to deposit',
                   Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
                 },
               ]}
@@ -126,7 +128,7 @@ export const Home = () => {
                   Component: <Amount value={ibSummary.supplyBalanceUsdc} input="usdc" />,
                 },
                 {
-                  header: 'Borrow Limit Used',
+                  header: 'Borrow limit used',
                   Component: <Amount value={ibSummary.borrowUtilizationRatio} input="weipercent" />,
                 },
               ]}
