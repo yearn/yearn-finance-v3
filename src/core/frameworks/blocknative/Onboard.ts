@@ -94,9 +94,19 @@ export class BlocknativeWalletImpl implements Wallet {
         rpcUrl,
         appName,
       },
+      { walletName: 'liquality' },
+      {
+        walletName: 'mewwallet',
+        rpcUrl,
+      },
     ];
 
-    const walletCheck = [{ checkName: 'derivationPath' }, { checkName: 'connect' }, { checkName: 'accounts' }];
+    const walletCheck = [
+      { checkName: 'derivationPath' },
+      { checkName: 'connect' },
+      { checkName: 'accounts' },
+      { checkName: 'network' },
+    ];
 
     this.onboard = Onboard({
       networkId,
