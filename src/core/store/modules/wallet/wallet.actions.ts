@@ -61,6 +61,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefin
             dispatch(getAddressEnsName({ address: settings.devMode.walletAddressOverride }));
           }
         },
+        network: () => wallet.isConnected,
       };
       const subscriptions = getSubscriptions(dispatch, customSubscriptions);
       wallet.create(ETHEREUM_NETWORK, subscriptions, theme.current);

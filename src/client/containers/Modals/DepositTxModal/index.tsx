@@ -25,7 +25,7 @@ export const DepositTxModal: FC<DepositTxModalProps> = ({ onClose, ...props }) =
   return (
     <StyledDepositTxModal {...props}>
       <DepositTx
-        header="Invest"
+        header="Deposit"
         allowTokenSelect={allowTokenSelect}
         allowVaultSelect={allowVaultSelect}
         onClose={onClose}

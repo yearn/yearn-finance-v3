@@ -425,7 +425,7 @@ export const IronBank = () => {
               },
               {
                 key: 'userTokenBalance',
-                header: 'Available to Invest',
+                header: 'Available to Supply',
                 format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
                 sortable: true,
                 width: '15rem',

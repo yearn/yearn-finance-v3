@@ -98,8 +98,7 @@ export const Home = () => {
           Component={
             <Text>
               This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
-              feedback, please let us know on <StyledLink href="https://t.me/yearnfinance">Telegram</StyledLink> or{' '}
-              <StyledLink href="https://discord.yearn.finance">Discord</StyledLink>.
+              feedback, please let us know on <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>.
             </Text>
           }
           cardSize="big"
@@ -113,7 +112,7 @@ export const Home = () => {
               header="Wallet"
               items={[
                 {
-                  header: 'Available to Invest',
+                  header: 'Available to Deposit',
                   Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
                 },
               ]}
