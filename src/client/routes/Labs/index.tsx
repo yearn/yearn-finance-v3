@@ -174,7 +174,7 @@ export const Labs = () => {
           <ActionButtons
             actions={[
               {
-                name: 'Invest',
+                name: 'Deposit',
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
@@ -198,7 +198,7 @@ export const Labs = () => {
             alert={alert}
             actions={[
               {
-                name: 'Invest',
+                name: 'Deposit',
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
@@ -244,7 +244,7 @@ export const Labs = () => {
           <ActionButtons
             actions={[
               {
-                name: 'Invest',
+                name: 'Deposit',
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
@@ -263,7 +263,7 @@ export const Labs = () => {
     switch (lab.address) {
       case PSLPYVBOOSTETH:
         if (toBN(lab.DEPOSIT.userBalance).gt(0)) {
-          return 'Available to stake';
+          return 'Available to Stake';
         }
         break;
 
@@ -419,7 +419,7 @@ export const Labs = () => {
               },
               {
                 key: 'userTokenBalance',
-                header: 'Available to Invest',
+                header: 'Available to Deposit',
                 format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
                 sortable: true,
                 width: '15rem',
