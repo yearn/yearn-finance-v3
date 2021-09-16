@@ -10,7 +10,11 @@ export const getYearnSdk = ({ web3Provider, config }: { web3Provider: Web3Provid
     return yearnSdkMock;
   }
 
-  return new Yearn(1, {
+  // TODO: Change networkId dynamically on SDK
+  return new Yearn(250, {
     provider: web3Provider.getInstanceOf(web3Provider.providerType),
+    cache: {
+      useCache: false,
+    },
   });
 };

@@ -55,7 +55,7 @@ export class BlocknativeWalletImpl implements Wallet {
       {
         walletName: 'walletConnect',
         rpc: {
-          1: rpcUrl,
+          [networkId]: rpcUrl,
         },
       },
       {
