@@ -61,7 +61,7 @@ export const DepositsList = ({ assets, ...props }: DepositListProps) => {
                   <Text>Withdraw</Text>
                 </Button>
                 <Button onClick={() => asset.onInvest && asset.onInvest()} outline>
-                  <Text>Invest</Text>
+                  <Text>Deposit</Text>
                 </Button>
                 <Button onClick={() => asset.onInfo && asset.onInfo()} outline>
                   <Text>Info</Text>

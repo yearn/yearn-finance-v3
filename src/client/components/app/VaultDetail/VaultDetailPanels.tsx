@@ -214,7 +214,7 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
         <StyledCardHeader header="Transactions" />
 
         <ActionsTabs value={selectedTab} onChange={handleTabChange}>
-          <Tab value="deposit">Invest</Tab>
+          <Tab value="deposit">Deposit</Tab>
           <Tab value="withdraw">Withdraw</Tab>
         </ActionsTabs>
 

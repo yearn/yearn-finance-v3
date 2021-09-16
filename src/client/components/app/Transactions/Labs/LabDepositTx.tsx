@@ -241,7 +241,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   return (
     <Transaction
-      transactionLabel="Invest"
+      transactionLabel="Deposit"
       transactionCompleted={txCompleted}
       transactionCompletedLabel="Exit"
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}

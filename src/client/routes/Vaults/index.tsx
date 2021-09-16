@@ -250,7 +250,7 @@ export const Vaults = () => {
                 transform: ({ address }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Invest', handler: () => depositHandler(address) },
+                      { name: 'Deposit', handler: () => depositHandler(address) },
                       { name: 'Withdraw', handler: () => withdrawHandler(address) },
                     ]}
                   />
@@ -305,7 +305,7 @@ export const Vaults = () => {
               },
               {
                 key: 'userTokenBalance',
-                header: 'Available to Invest',
+                header: 'Available to Deposit',
                 format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
                 sortable: true,
                 width: '15rem',
@@ -315,7 +315,9 @@ export const Vaults = () => {
                 key: 'actions',
                 transform: ({ address }) => (
                   <ActionButtons
-                    actions={[{ name: 'Invest', handler: () => depositHandler(address), disabled: !walletIsConnected }]}
+                    actions={[
+                      { name: 'Deposit', handler: () => depositHandler(address), disabled: !walletIsConnected },
+                    ]}
                   />
                 ),
                 align: 'flex-end',

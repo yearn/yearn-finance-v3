@@ -113,7 +113,7 @@ export const Home = () => {
               header="Wallet"
               items={[
                 {
-                  header: 'Available to Invest',
+                  header: 'Available to Deposit',
                   Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
                 },
               ]}
