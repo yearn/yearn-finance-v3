@@ -11,6 +11,7 @@ import { Vaults } from './Vaults';
 import { Labs } from './Labs';
 import { IronBank } from './IronBank';
 import { Settings } from './Settings';
+import { Disclaimer } from './Disclaimer';
 
 const routesMap = [
   {
@@ -52,6 +53,10 @@ const routesMap = [
   {
     path: '/settings',
     component: Settings,
+  },
+  {
+    path: '/disclaimer',
+    component: Disclaimer,
   },
 ];
 

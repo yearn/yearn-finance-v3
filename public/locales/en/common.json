@@ -36,6 +36,7 @@
     "labs": "Labs",
     "ironbank": "Iron Bank",
     "settings": "Settings",
+    "disclaimer": "Disclaimer",
     "copyright": {
       "small": "©",
       "big": "© Yearn 2021"
@@ -47,7 +48,8 @@
       "docs": "Docs",
       "security": "Security",
       "v1": "v1",
-      "v2": "v2"
+      "v2": "v2",
+      "disclaimer": "Disclaimer"
     }
   },
   "landing": {

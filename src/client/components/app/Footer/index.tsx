@@ -23,13 +23,17 @@ const footerLinks = [
     link: 'https://github.com/yearn/yearn-protocol/blob/develop/SECURITY.md',
     name: 'security',
   },
+  // {
+  //   link: 'https://v1.yearn.finance',
+  //   name: 'v1',
+  // },
+  // {
+  //   link: 'https://yearn.finance',
+  //   name: 'v2',
+  // },
   {
-    link: 'https://v1.yearn.finance',
-    name: 'v1',
-  },
-  {
-    link: 'https://yearn.finance',
-    name: 'v2',
+    link: '/disclaimer',
+    name: 'disclaimer',
   },
 ];
 
