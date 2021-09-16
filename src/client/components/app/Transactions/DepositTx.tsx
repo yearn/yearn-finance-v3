@@ -10,6 +10,7 @@ import {
   USDC_DECIMALS,
   validateVaultDeposit,
   validateVaultAllowance,
+  validateSlippage,
   getZapInContractAddress,
   formatPercent,
 } from '@src/utils';
@@ -38,7 +39,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
-  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage).toString();
+  const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
@@ -135,13 +136,19 @@ export const DepositTx: FC<DepositTxProps> = ({
     vaultUnderlyingBalance: selectedVault.vaultBalance,
   });
 
+  const { error: slippageError } = validateSlippage({
+    slippageTolerance: selectedSlippage,
+    expectedSlippage: expectedTxOutcome?.slippage,
+  });
+
   // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
   const error =
     allowanceError ||
     inputError ||
     actionsStatus.approve.error ||
     actionsStatus.deposit.error ||
-    expectedTxOutcomeStatus.error;
+    expectedTxOutcomeStatus.error ||
+    slippageError;
 
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
@@ -195,7 +202,7 @@ export const DepositTx: FC<DepositTxProps> = ({
           vaultAddress: selectedVault.address,
           tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
-          slippageTolerance: toBN(selectedSlippage).toNumber(),
+          slippageTolerance: selectedSlippage,
         })
       );
       setTxCompleted(true);
