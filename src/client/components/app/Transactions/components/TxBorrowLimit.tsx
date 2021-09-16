@@ -96,7 +96,7 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
   return (
     <StyledTxBorrowLimit>
       <Info>
-        <Text>Total Borrow Limit</Text>
+        <Text>Total borrow limit</Text>
         <Text>
           <Text>{formatUsd(borrowLimit)}</Text>
           {borrowLimit !== projectedBorrowLimit && <>{` → ${formatUsd(projectedBorrowLimit)}`}</>}
@@ -104,7 +104,7 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
       </Info>
 
       <Info>
-        <Text>Total Borrow Limit Used</Text>
+        <Text>Total borrow limit used</Text>
         <Text>
           <CustomText color="primary">{formatPercent(borrowRatio, 0)}&nbsp;</CustomText>
           <CustomText color={diffType ?? 'primary'}>

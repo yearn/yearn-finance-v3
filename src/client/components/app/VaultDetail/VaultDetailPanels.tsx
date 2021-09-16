@@ -179,7 +179,7 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
               <StyledText fontWeight="bold">{formatPercent(selectedVault.apyData, 2)}</StyledText>
             </InfoValueRow>
             <InfoValueRow>
-              <span>Total Assets</span>
+              <span>Total assets</span>
               <StyledText>{normalizeUsdc(selectedVault.vaultBalanceUsdc, 0)}</StyledText>
             </InfoValueRow>
             <InfoValueRow>
@@ -231,11 +231,11 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
           <StyledCardHeader header="Performance" />
 
           <ChartValueContainer>
-            <ChartValueLabel>Earnings Over Time</ChartValueLabel>
+            <ChartValueLabel>Earnings over time</ChartValueLabel>
             <ChartValue>{formatUsd(chartValue)}</ChartValue>
           </ChartValueContainer>
 
-          <StyledLineChart chartData={chartData} tooltipLabel="Earning Over Time" />
+          <StyledLineChart chartData={chartData} tooltipLabel="Earnings over time" />
         </VaultChart>
       )}
     </>

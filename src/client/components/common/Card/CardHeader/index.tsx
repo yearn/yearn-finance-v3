@@ -8,7 +8,7 @@ const Container = styled.div`
 
 const Header = styled.div`
   font-size: 1.8rem;
-  font-weight: bold;
+  font-weight: 700;
 `;
 
 const SubHeader = styled.div`

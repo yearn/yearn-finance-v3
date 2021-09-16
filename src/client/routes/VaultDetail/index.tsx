@@ -81,7 +81,7 @@ export const VaultDetail = () => {
   return (
     <VaultDetailView>
       <ViewHeader>
-        <BackButton onClick={() => history.push(`/vaults`)}>Back to Vaults Page</BackButton>
+        <BackButton onClick={() => history.push(`/vaults`)}>Back to Vaults page</BackButton>
       </ViewHeader>
 
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
