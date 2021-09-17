@@ -189,7 +189,7 @@ export class LabServiceImpl implements LabService {
           depositLimit: '0', // yvboost-eth doestn have
           emergencyShutdown: false, // yvboost-eth doestn have
           pricePerShare: pJarRatio.toString(),
-          apy: pJarData.apy,
+          apy: { ...pJarData.apy, net_apy: toBN(performance.toString()).dividedBy(100).toNumber() },
           displayName: 'pSLPyvBOOST-ETH',
           displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
@@ -337,7 +337,9 @@ export class LabServiceImpl implements LabService {
       const pickleGaugeContract = getContract(PSLPYVBOOSTETH_GAUGE, pickleGaugeAbi, provider);
       const pJarBalanceOfPromise = pSLPyvBoostEthContract.balanceOf(userAddress);
       const pGaugeBalanceOfPromise = pickleGaugeContract.balanceOf(userAddress);
-      const pJarPricePerTokenPromise = get(`https://api.zapper.fi/v1/vault-stats/pickle?api_key=${ZAPPER_API_KEY}`);
+      const pJarPricePerTokenPromise = get(
+        `https://api.zapper.fi/v1/protocols/pickle/token-market-data?api_key=${ZAPPER_API_KEY}&type=vault`
+      );
       const [pJarBalanceOf, pGaugeBalanceOf, pJarPricePerTokenResponse] = await Promise.all([
         pJarBalanceOfPromise,
         pGaugeBalanceOfPromise,
@@ -349,7 +351,7 @@ export class LabServiceImpl implements LabService {
       if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
       const pJarPricePerToken = pJarPricePerTokenResponse.data.find(
         ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
-      )?.pricePerToken;
+      )?.price;
 
       const yvBoostEthDepositPosition: Position = {
         assetAddress: PSLPYVBOOSTETH,

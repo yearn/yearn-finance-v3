@@ -190,10 +190,10 @@ export const IronBank = () => {
           { header: 'Supplied', Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
           { header: 'Borrowed', Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },
           {
-            header: 'Borrow Limit Used',
+            header: 'Borrow limit used',
             Component: <Amount value={borrowUtilizationRatio} input="weipercent" />,
           },
-          { header: 'Total Borrow Limit', Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
+          { header: 'Total borrow limit', Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
         ]}
         variant="secondary"
         cardSize="small"
@@ -216,16 +216,18 @@ export const IronBank = () => {
             />
 
             <StyledInfoCard
-              header="Let your crypto work for you."
+              header="Let your crypto work for you"
               Component={
                 <Text>
-                  Iron Bank offers a simple way to get exposure to new tokens. Borrow using your crypto as collateral
-                  and recognize liquidity without having to sell. Didn’t find the right Vault for your tokens? Supply
-                  them to Iron Bank and earn more crypto.
-                  <br />
-                  <br />
-                  Remember, even with simple tools like Iron Bank, smart contract risks and systemic risks of the
-                  underlying crypto assets exist.
+                  <p>
+                    Iron Bank offers a simple way to get exposure to new tokens. Borrow using your crypto as collateral,
+                    without having to sell. Didn’t find the right Vault for your tokens? Supply them to Iron Bank and
+                    earn more crypto.
+                  </p>
+                  <p>
+                    Remember, even with simple tools like Iron Bank, smart contract risks and systemic risks of the
+                    underlying crypto assets exist.
+                  </p>
                 </Text>
               }
             />
@@ -417,7 +419,7 @@ export const IronBank = () => {
               },
               {
                 key: 'liquidity',
-                header: 'Market Liquidity',
+                header: 'Market liquidity',
                 format: ({ liquidity }) => normalizeUsdc(liquidity, 0),
                 sortable: true,
                 width: '15rem',
@@ -425,7 +427,7 @@ export const IronBank = () => {
               },
               {
                 key: 'userTokenBalance',
-                header: 'Available to Invest',
+                header: 'Available to supply',
                 format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
                 sortable: true,
                 width: '15rem',

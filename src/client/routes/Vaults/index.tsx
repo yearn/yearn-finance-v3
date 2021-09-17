@@ -154,7 +154,7 @@ export const Vaults = () => {
         items={[
           { header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> },
           { header: 'Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
-          { header: 'Est. Yearly Yield', Component: <Amount value={estYearlyYeild} input="usdc" /> },
+          { header: 'Est. yearly yield', Component: <Amount value={estYearlyYeild} input="usdc" /> },
         ]}
         variant="secondary"
         cardSize="small"
@@ -178,17 +178,16 @@ export const Vaults = () => {
             />
 
             <StyledInfoCard
-              header="Spend Your Time Wisely"
+              header="Spend your time wisely"
               Component={
                 <Text>
-                  Yearn Vaults are a way to use technology to help manage your holdings. You choose the strategy that
-                  best suits you, deposit into that vault, and Yearn tech helps maximize yield through shifting capital,
-                  auto-compounding, and rebalancing.
-                  <br />
-                  Custody, and responsibility, for your holdings remains yours.
-                  <br />
-                  <br />
-                  You can withdraw anytime.
+                  <p>
+                    Yearn Vaults are a way to use technology to help manage your holdings. You choose the strategy that
+                    best suits you, deposit into that vault, and Yearn tech helps maximize yield through shifting
+                    capital, auto-compounding, and rebalancing.
+                  </p>
+                  <p>Custody, and responsibility, for your holdings remains yours.</p>
+                  <p>You can withdraw anytime.</p>
                 </Text>
               }
             />
@@ -250,7 +249,7 @@ export const Vaults = () => {
                 transform: ({ address }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Invest', handler: () => depositHandler(address) },
+                      { name: 'Deposit', handler: () => depositHandler(address) },
                       { name: 'Withdraw', handler: () => withdrawHandler(address) },
                     ]}
                   />
@@ -297,7 +296,7 @@ export const Vaults = () => {
               },
               {
                 key: 'vaultBalanceUsdc',
-                header: 'Total Assets',
+                header: 'Total assets',
                 format: ({ vaultBalanceUsdc }) => normalizeUsdc(vaultBalanceUsdc, 0),
                 sortable: true,
                 width: '15rem',
@@ -305,7 +304,7 @@ export const Vaults = () => {
               },
               {
                 key: 'userTokenBalance',
-                header: 'Available to Invest',
+                header: 'Available to deposit',
                 format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
                 sortable: true,
                 width: '15rem',
@@ -315,7 +314,9 @@ export const Vaults = () => {
                 key: 'actions',
                 transform: ({ address }) => (
                   <ActionButtons
-                    actions={[{ name: 'Invest', handler: () => depositHandler(address), disabled: !walletIsConnected }]}
+                    actions={[
+                      { name: 'Deposit', handler: () => depositHandler(address), disabled: !walletIsConnected },
+                    ]}
                   />
                 ),
                 align: 'flex-end',

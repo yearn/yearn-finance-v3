@@ -103,7 +103,7 @@ export const Wallet = () => {
   const investButton = (tokenAddress: string, isZapable: boolean) => {
     return [
       {
-        name: 'Invest',
+        name: 'Deposit',
         handler: () => actionHandler('invest', tokenAddress),
         disabled: !walletIsConnected || !(isZapable || vaultsUnderlyingTokens.includes(tokenAddress)),
       },
@@ -124,25 +124,39 @@ export const Wallet = () => {
     <ViewContainer>
       <SummaryCard
         header="Dashboard"
-        items={[{ header: 'Available to Invest', Component: <Amount value={totalBalance} input="usdc" /> }]}
+        items={[{ header: 'Available', Component: <Amount value={totalBalance} input="usdc" /> }]}
         variant="secondary"
         cardSize="small"
       />
 
       <Row>
         <StyledInfoCard
-          header="What's in Your Wallet?"
-          content="Once you are familiar with the risks and nuances of Vaults and other Yearn products, this screen helps you put your tokens to work with as few clicks as possible. If the 'Supply' or 'Invest' buttons are active, there's a lending and/or vault opportunity available for that token. Just click to see the strategy and current yield. Remember, these tools make it easy to access the tech, but you are responsible for understanding and actively managing your positions."
+          header="What's in your Wallet?"
+          Component={
+            <Text>
+              <p>
+                Once you are familiar with the risks and nuances of Vaults and other Yearn products, this screen helps
+                you put your tokens to work with as few clicks as possible. If the 'Supply' or 'Deposit' buttons are
+                active, there's a lending and/or vault opportunity available for that token. Just click to see the
+                strategy and current yield.
+              </p>
+              <p>
+                Remember, these tools make it easy to access the tech, but you are responsible for understanding and
+                actively managing your positions.
+              </p>
+            </Text>
+          }
           cardSize="big"
         />
 
         <StyledInfoCard
-          header="Beta is Here!"
+          header="Beta is here!"
           Component={
             <Text>
-              This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
-              feedback, please let us know on <StyledLink href="https://t.me/yearnfinance">Telegram</StyledLink> or{' '}
-              <StyledLink href="https://discord.yearn.finance">Discord</StyledLink>.
+              <p>
+                This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
+                feedback, please let us know on <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>.
+              </p>
             </Text>
           }
           cardSize="big"

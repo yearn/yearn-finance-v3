@@ -32,10 +32,11 @@
     "home": "Home",
     "wallet": "Wallet",
     "vaults": "Vaults",
-    "vault": "Vault Details",
+    "vault": "Vault details",
     "labs": "Labs",
     "ironbank": "Iron Bank",
     "settings": "Settings",
+    "disclaimer": "Disclaimer",
     "copyright": {
       "small": "©",
       "big": "© Yearn 2021"
@@ -47,7 +48,8 @@
       "docs": "Docs",
       "security": "Security",
       "v1": "v1",
-      "v2": "v2"
+      "v2": "v2",
+      "disclaimer": "Disclaimer"
     }
   },
   "landing": {
@@ -59,7 +61,7 @@
   "save": {
     "assets-headers": {
       "asset": "Asset",
-      "balance": "Asset Balance",
+      "balance": "Asset balance",
       "earning": "Earning"
     }
   },

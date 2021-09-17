@@ -66,6 +66,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
             dispatch(getAddressEnsName({ address: settings.devMode.walletAddressOverride }));
           }
         },
+        network: () => wallet.isConnected,
       };
       const subscriptions = getSubscriptions(dispatch, customSubscriptions);
       wallet.create(network ?? NETWORK, subscriptions, theme.current);
