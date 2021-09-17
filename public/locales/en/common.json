@@ -32,7 +32,7 @@
     "home": "Home",
     "wallet": "Wallet",
     "vaults": "Vaults",
-    "vault": "Vault Details",
+    "vault": "Vault details",
     "labs": "Labs",
     "ironbank": "Iron Bank",
     "settings": "Settings",
@@ -61,7 +61,7 @@
   "save": {
     "assets-headers": {
       "asset": "Asset",
-      "balance": "Asset Balance",
+      "balance": "Asset balance",
       "earning": "Earning"
     }
   },

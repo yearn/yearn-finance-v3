@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
 
@@ -47,6 +47,15 @@ const GlobalStyle = createGlobalStyle`
     &:visited {
       color: inherit;
     }
+  }
+  
+  p {
+    letter-spacing: .015rem;
+    margin: 0;
+  }
+  
+  p + p {
+    margin-top: 1rem;
   }
 
   [disabled],
