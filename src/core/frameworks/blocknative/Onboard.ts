@@ -105,7 +105,7 @@ export class BlocknativeWalletImpl implements Wallet {
       { checkName: 'derivationPath' },
       { checkName: 'connect' },
       { checkName: 'accounts' },
-      { checkName: 'network' },
+      // { checkName: 'network' },
     ];
 
     this.onboard = Onboard({
