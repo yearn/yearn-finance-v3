@@ -1,6 +1,10 @@
 import 'styled-components';
 declare module 'styled-components' {
   export interface SharedTheme {
+    background?: {
+      image: string;
+    };
+
     blade: {
       background: string;
       blur: string;
