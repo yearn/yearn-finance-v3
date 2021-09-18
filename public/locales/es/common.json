@@ -4,7 +4,8 @@
   "themes": {
     "light": "Mono Light",
     "dark": "Mono Dark",
-    "cyberpunk": "Cyberpunk"
+    "cyberpunk": "Cyberpunk",
+    "classic": "Classic v2"
   },
   "commons": {
     "connect-button": {
@@ -32,7 +33,7 @@
     "home": "Inicio",
     "wallet": "Billetera",
     "vaults": "Vaults",
-    "vault": "Vault Details",
+    "vault": "Vault details",
     "labs": "Labs",
     "ironbank": "Iron Bank",
     "settings": "Ajustes",

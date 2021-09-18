@@ -263,7 +263,7 @@ export const Labs = () => {
     switch (lab.address) {
       case PSLPYVBOOSTETH:
         if (toBN(lab.DEPOSIT.userBalance).gt(0)) {
-          return 'Available to Stake';
+          return 'Available to stake';
         }
         break;
 
@@ -303,18 +303,19 @@ export const Labs = () => {
             />
 
             <StyledInfoCard
-              header="These are not risks for ants."
+              header="These are not risks for ants"
               Component={
                 <Text>
-                  The emerging strategies you'll find here are the newest and most unconventional around. Be sure to
-                  review the “About” sections carefully and make sure you understand token locking, impermanent loss,
-                  and other risks before proceeding.
-                  <br />
-                  As with all Yearn products, you are responsible for educating yourself on the details, and for
-                  actively managing your holdings.
-                  <br />
-                  <br />
-                  Welcome to the Lab, but proceed with caution, anon.
+                  <p>
+                    The emerging strategies you'll find here are the newest and most unconventional around. Be sure to
+                    review the <em>About</em> sections carefully and make sure you understand token locking, impermanent
+                    loss, and other risks before proceeding.
+                  </p>
+                  <p>
+                    As with all Yearn products, you are responsible for educating yourself on the details, and for
+                    actively managing your holdings.
+                  </p>
+                  <p>Welcome to the Lab, but proceed with caution, anon.</p>
                 </Text>
               }
             />
@@ -411,7 +412,7 @@ export const Labs = () => {
               },
               {
                 key: 'labBalanceUsdc',
-                header: 'Total Assets',
+                header: 'Total assets',
                 format: ({ labBalanceUsdc }) => normalizeUsdc(labBalanceUsdc, 0),
                 sortable: true,
                 width: '15rem',
@@ -419,7 +420,7 @@ export const Labs = () => {
               },
               {
                 key: 'userTokenBalance',
-                header: 'Available to Deposit',
+                header: 'Available to deposit',
                 format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
                 sortable: true,
                 width: '15rem',
