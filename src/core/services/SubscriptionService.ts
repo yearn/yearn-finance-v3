@@ -1,6 +1,6 @@
 import { SubscriptionService, SubscriptionProps, YearnSdk } from '@types';
 
-type SdkModule = 'vaults' | 'tokens' | 'earnings' | 'ironBank';
+// type SdkModule = 'vaults' | 'tokens' | 'earnings' | 'ironBank';
 
 export class SubscriptionServiceImpl implements SubscriptionService {
   private yearnSdk: YearnSdk;
@@ -10,23 +10,19 @@ export class SubscriptionServiceImpl implements SubscriptionService {
   }
 
   public subscribe({ module, event, action }: SubscriptionProps): void {
-    const yearn = this.yearnSdk;
-    const sdkModule = yearn[module as SdkModule];
-
-    if (!sdkModule) throw new Error(`'${module}' module not implemented on SDK`);
-    if (!sdkModule?.events) throw new Error(`'${module}' module does not support events`);
-
+    // const yearn = this.yearnSdk;
+    // const sdkModule = yearn[module as SdkModule];
+    // if (!sdkModule) throw new Error(`'${module}' module not implemented on SDK`);
+    // if (!sdkModule?.events) throw new Error(`'${module}' module does not support events`);
     // TODO when working on event handler
     // sdkModule.events.on(event, action);
   }
 
   public unsubscribe({ module, event, action }: SubscriptionProps): void {
-    const yearn = this.yearnSdk;
-    const sdkModule = yearn[module as SdkModule];
-
-    if (!sdkModule) throw new Error(`'${module}' module not implemented on SDK`);
-    if (!sdkModule?.events) throw new Error(`'${module}' module does not support events`);
-
+    // const yearn = this.yearnSdk;
+    // const sdkModule = yearn[module as SdkModule];
+    // if (!sdkModule) throw new Error(`'${module}' module not implemented on SDK`);
+    // if (!sdkModule?.events) throw new Error(`'${module}' module does not support events`);
     // TODO when working on event handler
     // sdkModule.events.removeListener(event, action);
   }

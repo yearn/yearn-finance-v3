@@ -1,3 +1,5 @@
+import { unionBy } from 'lodash';
+
 import {
   TokenService,
   YearnSdk,
@@ -10,13 +12,15 @@ import {
   Config,
   TransactionResponse,
   TransactionService,
+  GetSupportedTokensProps,
+  GetTokensDynamicDataProps,
+  GetUserTokensDataProps,
+  GetTokenAllowanceProps,
 } from '@types';
 import { getContract } from '@frameworks/ethers';
-import erc20Abi from './contracts/erc20.json';
-import { unionBy } from 'lodash';
-import { getConstants } from '../../config/constants';
-import { get, getUniqueAndCombine, toBN, USDC_DECIMALS } from '../../utils';
+import { get, getUniqueAndCombine, toBN, USDC_DECIMALS } from '@utils';
 import { getConfig } from '@config';
+import erc20Abi from './contracts/erc20.json';
 
 export class TokenServiceImpl implements TokenService {
   private transactionService: TransactionService;
@@ -41,8 +45,8 @@ export class TokenServiceImpl implements TokenService {
     this.config = config;
   }
 
-  public async getSupportedTokens(): Promise<Token[]> {
-    const yearn = this.yearnSdk;
+  public async getSupportedTokens({ network }: GetSupportedTokensProps): Promise<Token[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
     const [zapperTokens, vaultsTokens, ironBankTokens]: [Token[], Token[], Token[]] = await Promise.all([
       yearn.tokens.supported(),
       yearn.vaults.tokens(),
@@ -63,29 +67,34 @@ export class TokenServiceImpl implements TokenService {
     return getUniqueAndCombine(zapperTokens, tokens, 'address');
   }
 
-  public async getTokensDynamicData(addresses: string[]): Promise<TokenDynamicData[]> {
-    const yearn = this.yearnSdk;
+  public async getTokensDynamicData({ network, addresses }: GetTokensDynamicDataProps): Promise<TokenDynamicData[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
     const pricesUsdcMap: any = yearn.tokens.priceUsdc(addresses);
     return addresses.map((address: string) => ({ address, priceUsdc: pricesUsdcMap[address] }));
   }
 
-  public async getUserTokensData(address: string, tokenAddresses?: string[]): Promise<Balance[]> {
+  public async getUserTokensData({
+    network,
+    accountAddress,
+    tokenAddresses,
+  }: GetUserTokensDataProps): Promise<Balance[]> {
     const { USE_MAINNET_FORK } = getConfig();
-    const yearn = this.yearnSdk;
-    const balances = await yearn.tokens.balances(address);
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    const balances = await yearn.tokens.balances(accountAddress);
     if (USE_MAINNET_FORK) {
-      return this.getBalancesForFork(balances, address);
+      return this.getBalancesForFork(balances, accountAddress);
     }
     return balances;
   }
 
-  public async getTokenAllowance(
-    accountAddress: string,
-    tokenAddress: string,
-    spenderAddress: string
-  ): Promise<Integer> {
+  public async getTokenAllowance({
+    network,
+    accountAddress,
+    tokenAddress,
+    spenderAddress,
+  }: GetTokenAllowanceProps): Promise<Integer> {
     // TODO use sdk when new method added.
-    // const yearn = this.yearnSdk;
+    // const yearn = this.yearnSdk.getInstanceOf(network);
     // return await yearn.tokens.allowance(address);
     const signer = this.web3Provider.getSigner();
     const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
@@ -105,7 +114,7 @@ export class TokenServiceImpl implements TokenService {
   }
 
   private async getYvBoostToken(): Promise<Token> {
-    const { YVBOOST } = getConstants().CONTRACT_ADDRESSES;
+    const { YVBOOST } = getConfig().CONTRACT_ADDRESSES;
     const pricesResponse = await get('https://api.coingecko.com/api/v3/simple/price?ids=yvboost&vs_currencies=usd');
     const yvBoostPrice = pricesResponse.data['yvboost']['usd'];
     return {
@@ -125,7 +134,7 @@ export class TokenServiceImpl implements TokenService {
 
   private async getPSLPyvBoostEthToken(): Promise<Token> {
     const { ZAPPER_API_KEY } = this.config;
-    const { PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
+    const { PSLPYVBOOSTETH } = getConfig().CONTRACT_ADDRESSES;
     const pricesResponse = await get(
       `https://api.zapper.fi/v1/protocols/pickle/token-market-data?api_key=${ZAPPER_API_KEY}&type=vault`
     );

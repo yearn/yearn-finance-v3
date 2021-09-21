@@ -1,5 +1,5 @@
 import { getConfig } from '@config';
-import { Network } from '@types';
+import { Network, ProviderType } from '@types';
 
 export const getNetworkId = (network: Network): number => {
   switch (network) {
@@ -44,6 +44,17 @@ export const getNetworkRpc = (network: Network): string => {
       return WEB3_PROVIDER_HTTPS;
     case 'fantom':
       return FANTOM_PROVIDER_HTTPS;
+    default:
+      throw Error('Unknown Network');
+  }
+};
+
+export const getProviderType = (network: Network): ProviderType => {
+  switch (network) {
+    case 'mainnet':
+      return 'ethereum';
+    case 'fantom':
+      return 'fantom';
     default:
       throw Error('Unknown Network');
   }

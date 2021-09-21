@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkAPI } from '@frameworks/redux';
 import { getEthersProvider } from '@frameworks/ethers';
 import { Theme, RootState, DIContainer, Subscriptions, Network } from '@types';
-import { isValidAddress } from '@utils';
+import { isValidAddress, getProviderType } from '@utils';
 
 const walletChange = createAction<{ walletName: string }>('wallet/walletChange');
 const addressChange = createAction<{ address: string }>('wallet/addressChange');
@@ -39,8 +39,8 @@ const getAddressEnsName = createAsyncThunk<{ addressEnsName: string }, { address
 );
 
 interface WalletSelectProps {
+  network: Network;
   walletName?: string;
-  network?: Network;
 }
 
 const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProps, ThunkAPI>(
@@ -55,8 +55,10 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
       const customSubscriptions: Subscriptions = {
         wallet: (wallet) => {
           web3Provider.register('wallet', getEthersProvider(wallet.provider));
-          yearnSdk.context.setProvider({
-            read: web3Provider.getInstanceOf(web3Provider.providerType),
+          const providerType = getProviderType(network);
+          const sdkInstance = yearnSdk.getInstanceOf(network);
+          sdkInstance.context.setProvider({
+            read: web3Provider.getInstanceOf(providerType),
             write: web3Provider.getInstanceOf('wallet'),
           });
         },

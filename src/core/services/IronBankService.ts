@@ -14,6 +14,9 @@ import {
   TransactionService,
   Web3Provider,
   Config,
+  GetUserIronBankSummaryProps,
+  GetSupportedMarketsProps,
+  GetMarketDynamicDataProps,
 } from '@types';
 import ironBankMarketAbi from './contracts/ironBankMarket.json';
 import ironBankComptrollerAbi from './contracts/ironBankComptroller.json';
@@ -41,34 +44,42 @@ export class IronBankServiceImpl implements IronBankService {
     this.config = config;
   }
 
-  public async getUserIronBankSummary({ userAddress }: { userAddress: string }): Promise<IronBankUserSummary> {
-    const yearn = this.yearnSdk;
+  public async getUserIronBankSummary({
+    network,
+    userAddress,
+  }: GetUserIronBankSummaryProps): Promise<IronBankUserSummary> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.ironBank.summaryOf(userAddress);
   }
 
-  public async getSupportedMarkets(): Promise<IronBankMarket[]> {
-    const yearn = this.yearnSdk;
+  public async getSupportedMarkets({ network }: GetSupportedMarketsProps): Promise<IronBankMarket[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.ironBank.get();
   }
 
-  public async getMarketsDynamicData(marketAddresses: string[]): Promise<IronBankMarketDynamic[]> {
-    const yearn = this.yearnSdk;
+  public async getMarketsDynamicData({
+    network,
+    marketAddresses,
+  }: GetMarketDynamicDataProps): Promise<IronBankMarketDynamic[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.ironBank.getDynamic(marketAddresses);
   }
 
   public async getUserMarketsPositions({
+    network,
     userAddress,
     marketAddresses,
   }: IronBankGenericGetUserDataProps): Promise<Position[]> {
-    const yearn = this.yearnSdk;
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.ironBank.positionsOf(userAddress, marketAddresses);
   }
 
   public async getUserMarketsMetadata({
+    network,
     userAddress,
     marketAddresses,
   }: IronBankGenericGetUserDataProps): Promise<CyTokenUserMetadata[]> {
-    const yearn = this.yearnSdk;
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.ironBank.metadataOf(userAddress, marketAddresses);
   }
 

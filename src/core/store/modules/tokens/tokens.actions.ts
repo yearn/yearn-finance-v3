@@ -8,9 +8,10 @@ const clearUserTokenState = createAction<void>('tokens/clearUserTokenState');
 
 const getTokens = createAsyncThunk<{ tokensData: Token[] }, string | undefined, ThunkAPI>(
   'tokens/getTokens',
-  async (_arg, { extra }) => {
+  async (_arg, { getState, extra }) => {
+    const { network } = getState();
     const { tokenService } = extra.services;
-    const tokensData: Token[] = await tokenService.getSupportedTokens();
+    const tokensData: Token[] = await tokenService.getSupportedTokens({ network: network.current });
     return { tokensData };
   }
 );
@@ -19,22 +20,28 @@ const getTokensDynamicData = createAsyncThunk<
   { tokensDynamicData: TokenDynamicData[] },
   { addresses: string[] },
   ThunkAPI
->('tokens/getTokensDynamic', async ({ addresses }, { extra }) => {
+>('tokens/getTokensDynamic', async ({ addresses }, { getState, extra }) => {
+  const { network } = getState();
   const { tokenService } = extra.services;
-  const tokensDynamicData = await tokenService.getTokensDynamicData(addresses);
+  const tokensDynamicData = await tokenService.getTokensDynamicData({ network: network.current, addresses });
   return { tokensDynamicData };
 });
 
 const getUserTokens = createAsyncThunk<{ userTokens: Balance[] }, { addresses?: string[] }, ThunkAPI>(
   'tokens/getUserTokens',
   async ({ addresses }, { extra, getState }) => {
-    const accountAddress = getState().wallet.selectedAddress;
+    const { network, wallet } = getState();
+    const accountAddress = wallet.selectedAddress;
     if (!accountAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
 
     const { tokenService } = extra.services;
-    const userTokens = await tokenService.getUserTokensData(accountAddress, addresses);
+    const userTokens = await tokenService.getUserTokensData({
+      network: network.current,
+      accountAddress,
+      tokenAddresses: addresses,
+    });
     return { userTokens };
   }
 );
@@ -44,7 +51,8 @@ const getTokenAllowance = createAsyncThunk<
   { tokenAddress: string; spenderAddress: string },
   ThunkAPI
 >('tokens/getTokenAllowance', async ({ tokenAddress, spenderAddress }, { extra, getState }) => {
-  const accountAddress = getState().wallet.selectedAddress;
+  const { network, wallet } = getState();
+  const accountAddress = wallet.selectedAddress;
   if (!accountAddress) {
     throw new Error('WALLET NOT CONNECTED');
   }
@@ -53,7 +61,12 @@ const getTokenAllowance = createAsyncThunk<
   if (tokenAddress === ETH) return { allowance: extra.config.MAX_UINT256 };
 
   const { tokenService } = extra.services;
-  const allowance = await tokenService.getTokenAllowance(accountAddress, tokenAddress, spenderAddress);
+  const allowance = await tokenService.getTokenAllowance({
+    network: network.current,
+    accountAddress,
+    tokenAddress,
+    spenderAddress,
+  });
   return { allowance };
 });
 

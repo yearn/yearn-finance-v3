@@ -1,4 +1,3 @@
-import { get } from '@utils';
 import { getContract } from '@frameworks/ethers';
 import {
   LabService,
@@ -17,8 +16,9 @@ import {
   TransactionResponse,
   TransactionService,
   YearnSdk,
+  GetSupportedLabsProps,
 } from '@types';
-import { toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress } from '@utils';
+import { get, toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress, getProviderType } from '@utils';
 import backscratcherAbi from './contracts/backscratcher.json';
 import y3CrvBackZapperAbi from './contracts/y3CrvBackZapper.json';
 import yvBoostAbi from './contracts/yvBoost.json';
@@ -48,11 +48,12 @@ export class LabServiceImpl implements LabService {
     this.config = config;
   }
 
-  public async getSupportedLabs() {
+  public async getSupportedLabs({ network }: GetSupportedLabsProps) {
     const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { ETH, YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
-    const provider = this.web3Provider.getInstanceOf(this.web3Provider.providerType);
+    const providerType = getProviderType(network);
+    const provider = this.web3Provider.getInstanceOf(providerType);
     const vaultsPromise = get(YEARN_API);
     const pricesPromise = get(
       'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault&vs_currencies=usd'
@@ -212,11 +213,12 @@ export class LabServiceImpl implements LabService {
   }
 
   public async getUserLabsPositions(props: GetUserLabsPositionsProps) {
-    const { userAddress } = props;
+    const { userAddress, network } = props;
     const { YEARN_API, ZAPPER_API_KEY, CONTRACT_ADDRESSES } = this.config;
     const { YVECRV, CRV, THREECRV, YVBOOST, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = CONTRACT_ADDRESSES;
     const THREECRV_DECIMALS = 18;
-    const provider = this.web3Provider.getInstanceOf(this.web3Provider.providerType);
+    const providerType = getProviderType(network);
+    const provider = this.web3Provider.getInstanceOf(providerType);
     const vaultsPromise = get(YEARN_API);
     const pricesPromise = get(
       'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault,lp-3pool-curve,yvboost&vs_currencies=usd'
@@ -407,16 +409,16 @@ export class LabServiceImpl implements LabService {
   // ********** WRITE ACTIONS **********
 
   public async deposit(props: DepositProps): Promise<TransactionResponse> {
-    const { accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;
-    const yearn = this.yearnSdk;
+    const { network, accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.deposit(vaultAddress, tokenAddress, amount, accountAddress, {
       slippage: slippageTolerance,
     });
   }
 
   public async withdraw(props: WithdrawProps): Promise<TransactionResponse> {
-    const { accountAddress, tokenAddress, vaultAddress, amountOfShares, slippageTolerance } = props;
-    const yearn = this.yearnSdk;
+    const { network, accountAddress, tokenAddress, vaultAddress, amountOfShares, slippageTolerance } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
       slippage: slippageTolerance,
     });
