@@ -31,6 +31,20 @@ const StyledLayout = styled.div`
   justify-content: center;
   flex: 1;
   padding: ${({ theme }) => theme.layoutPadding};
+
+  ${({ theme }) =>
+    theme.background &&
+    `
+      background-size: cover;
+      background-image: url(${theme.background.image});
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+  `}
 `;
 
 const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean }>`
