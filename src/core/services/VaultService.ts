@@ -60,6 +60,21 @@ export class VaultServiceImpl implements VaultService {
     const { network, transactionType, accountAddress, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } =
       props;
     const DEFAULT_SLIPPAGE_SIMULATION = 0.99;
+
+    if (network !== 'mainnet') {
+      return {
+        sourceTokenAddress,
+        sourceTokenAmount,
+        targetTokenAddress,
+        targetTokenAmount: sourceTokenAmount,
+        targetTokenAmountUsdc: '000000',
+        targetUnderlyingTokenAddress: sourceTokenAddress,
+        targetUnderlyingTokenAmount: sourceTokenAmount,
+        conversionRate: 1,
+        slippage: 0,
+      };
+    }
+
     const yearn = this.yearnSdk.getInstanceOf(network);
     let expectedOutcome: TransactionOutcome;
     switch (transactionType) {

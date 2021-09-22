@@ -134,6 +134,7 @@ export interface GetTokenAllowanceProps {
 }
 
 export interface ApproveProps {
+  network: Network;
   accountAddress: Address;
   tokenAddress: Address;
   spenderAddress: Address;
@@ -172,6 +173,7 @@ export interface GetUserLabsMetadataProps {
 }
 
 export interface StakeProps {
+  network: Network;
   accountAddress: Address;
   tokenAddress: Address;
   vaultAddress: Address;
@@ -179,6 +181,7 @@ export interface StakeProps {
 }
 
 export interface LockProps {
+  network: Network;
   accountAddress: Address;
   tokenAddress: Address;
   vaultAddress: Address;
@@ -186,10 +189,12 @@ export interface LockProps {
 }
 
 export interface ClaimProps {
+  network: Network;
   accountAddress: Address;
 }
 
 export interface ReinvestProps {
+  network: Network;
   accountAddress: Address;
 }
 
@@ -226,6 +231,7 @@ export interface GetMarketDynamicDataProps {
 }
 
 export interface IronBankTransactionProps {
+  network: Network;
   userAddress: Address;
   marketAddress: string;
   amount: Wei;
@@ -233,6 +239,7 @@ export interface IronBankTransactionProps {
 }
 
 export interface EnterOrExitMarketProps {
+  network: Network;
   userAddress: Address;
   marketAddress: string;
   actionType: 'enterMarket' | 'exitMarket';
@@ -245,6 +252,7 @@ export interface TransactionService {
 }
 
 export interface ExecuteTransactionProps {
+  network: Network;
   fn: ContractFunction;
   args?: Array<any>;
   overrides?: Overrides;

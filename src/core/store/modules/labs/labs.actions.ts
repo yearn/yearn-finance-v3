@@ -285,8 +285,9 @@ const yvBoostApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkA
 const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoost/yvBoostDeposit',
   async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
+    const { wallet } = getState();
     const { services } = extra;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -352,8 +353,9 @@ const yvBoostWithdraw = createAsyncThunk<
   { labAddress: string; amount: BigNumber; targetTokenAddress: string },
   ThunkAPI
 >('labs/yvBoost/yvBoostWithdraw', async ({ labAddress, amount, targetTokenAddress }, { dispatch, extra, getState }) => {
+  const { wallet } = getState();
   const { services } = extra;
-  const userAddress = getState().wallet.selectedAddress;
+  const userAddress = wallet.selectedAddress;
   if (!userAddress) {
     throw new Error('WALLET NOT CONNECTED');
   }
@@ -417,8 +419,9 @@ const yveCrvApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAP
 const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yveCrv/yveCrvDeposit',
   async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
+    const { network, wallet } = getState();
     const { services } = extra;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -434,6 +437,7 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
 
     const { labService } = services;
     const tx = await labService.lock({
+      network: network.current,
       accountAddress: userAddress,
       tokenAddress: tokenData.address,
       vaultAddress: labAddress,
@@ -450,14 +454,16 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
 const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
   'labs/yveCrv/yveCrvClaimReward',
   async (_args, { dispatch, extra, getState }) => {
+    const { network, wallet } = getState();
     const { services } = extra;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     // TODO validations.
 
     const { labService } = services;
     const tx = await labService.claim({
+      network: network.current,
       accountAddress: userAddress,
     });
     await handleTransaction(tx);
@@ -481,8 +487,9 @@ const yveCrvApproveReinvest = createAsyncThunk<void, { labAddress: string; token
 const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
   'labs/yveCrv/yveCrvReinvest',
   async (_args, { dispatch, extra, getState }) => {
+    const { network, wallet } = getState();
     const { services } = extra;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const tokenData = getState().tokens.tokensMap[THREECRV];
@@ -505,6 +512,7 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
 
     const { labService } = services;
     const tx = await labService.reinvest({
+      network: network.current,
       accountAddress: userAddress,
     });
     await handleTransaction(tx);
@@ -538,8 +546,9 @@ const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthInvest',
   async ({ labAddress, tokenAddress, amount }, { dispatch, extra, getState }) => {
     // labAddress is PSLPYVBOOSTETH
+    const { wallet } = getState();
     const { services } = extra;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -602,8 +611,9 @@ const yvBoostEthApproveStake = createAsyncThunk<void, { labAddress: string }, Th
 const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthStake',
   async ({ labAddress, amount }, { dispatch, extra, getState }) => {
+    const { network, wallet } = getState();
     const { services } = extra;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -638,6 +648,7 @@ const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
 
     const { labService } = services;
     const tx = await labService.stake({
+      network: network.current,
       accountAddress: userAddress,
       tokenAddress: tokenData.address,
       vaultAddress: labAddress,

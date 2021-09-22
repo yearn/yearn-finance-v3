@@ -103,10 +103,14 @@ export class TokenServiceImpl implements TokenService {
   }
 
   public async approve(props: ApproveProps): Promise<TransactionResponse> {
-    const { tokenAddress, spenderAddress, amount } = props;
+    const { network, tokenAddress, spenderAddress, amount } = props;
     const signer = this.web3Provider.getSigner();
     const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
-    return await this.transactionService.execute({ fn: erc20Contract.approve, args: [spenderAddress, amount] });
+    return await this.transactionService.execute({
+      network,
+      fn: erc20Contract.approve,
+      args: [spenderAddress, amount],
+    });
   }
 
   public async getLabsTokens(): Promise<Token[]> {

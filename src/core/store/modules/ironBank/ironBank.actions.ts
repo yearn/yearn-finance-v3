@@ -116,8 +116,9 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/supply',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
+    const { network, wallet } = getState();
     const { ironBankService } = extra.services;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -129,6 +130,7 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     // TODO Needed checks for amount
 
     const tx = await ironBankService.executeTransaction({
+      network: network.current,
       userAddress,
       marketAddress,
       amount: amount.times(ONE_UNIT).toFixed(0),
@@ -148,8 +150,9 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/borrow',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
+    const { network, wallet } = getState();
     const { ironBankService } = extra.services;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -159,6 +162,7 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     // TODO Needed checks for amount
 
     const tx = await ironBankService.executeTransaction({
+      network: network.current,
       userAddress,
       marketAddress,
       amount: amount.times(ONE_UNIT).toFixed(0),
@@ -178,8 +182,9 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/withdraw',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
+    const { network, wallet } = getState();
     const { ironBankService } = extra.services;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -189,6 +194,7 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     // TODO Needed checks for amount
 
     const tx = await ironBankService.executeTransaction({
+      network: network.current,
       userAddress,
       marketAddress,
       amount: amount.times(ONE_UNIT).toFixed(0),
@@ -208,8 +214,9 @@ const withdrawAllMarket = createAsyncThunk<void, WithdrawAllMarketProps, ThunkAP
   'ironBank/withdraw',
   async ({ marketAddress }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
+    const { network, wallet } = getState();
     const { ironBankService } = extra.services;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -217,6 +224,7 @@ const withdrawAllMarket = createAsyncThunk<void, WithdrawAllMarketProps, ThunkAP
     // TODO Needed checks for amount
 
     const tx = await ironBankService.executeTransaction({
+      network: network.current,
       userAddress,
       marketAddress,
       amount: extra.config.MAX_UINT256,
@@ -236,8 +244,9 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/repay',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
+    const { network, wallet } = getState();
     const { ironBankService } = extra.services;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -247,6 +256,7 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     // TODO Needed checks for amount
 
     const tx = await ironBankService.executeTransaction({
+      network: network.current,
       userAddress,
       marketAddress,
       amount: amount.times(ONE_UNIT).toFixed(0),
@@ -266,8 +276,9 @@ const repayAllMarket = createAsyncThunk<void, RepayAllMarketProps, ThunkAPI>(
   'ironBank/repay',
   async ({ marketAddress }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
+    const { network, wallet } = getState();
     const { ironBankService } = extra.services;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -275,6 +286,7 @@ const repayAllMarket = createAsyncThunk<void, RepayAllMarketProps, ThunkAPI>(
     // TODO validation
 
     const tx = await ironBankService.executeTransaction({
+      network: network.current,
       userAddress,
       marketAddress,
       amount: extra.config.MAX_UINT256,
@@ -298,8 +310,9 @@ export interface EnterOrExitMarketProps {
 const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAPI>(
   'ironBank/enterOrExitMarket',
   async ({ marketAddress, actionType }, { extra, getState, dispatch }) => {
+    const { network, wallet } = getState();
     const { ironBankService } = extra.services;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
@@ -322,7 +335,12 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAP
       }
     }
 
-    const tx = await ironBankService.enterOrExitMarket({ marketAddress, userAddress, actionType });
+    const tx = await ironBankService.enterOrExitMarket({
+      network: network.current,
+      marketAddress,
+      userAddress,
+      actionType,
+    });
     await handleTransaction(tx);
     dispatch(getIronBankSummary());
     dispatch(getUserMarketsPositions({ marketAddresses: [marketAddress] }));

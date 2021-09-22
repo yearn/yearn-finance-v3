@@ -425,7 +425,7 @@ export class LabServiceImpl implements LabService {
   }
 
   public async stake(props: StakeProps): Promise<TransactionResponse> {
-    const { vaultAddress, amount } = props;
+    const { network, vaultAddress, amount } = props;
 
     const provider = this.web3Provider.getSigner();
     const stakeContract = getContract(
@@ -433,33 +433,35 @@ export class LabServiceImpl implements LabService {
       this.getStakingContractAbi(vaultAddress),
       provider
     );
-    return await this.transactionService.execute({ fn: stakeContract.deposit, args: [amount] });
+    return await this.transactionService.execute({ network, fn: stakeContract.deposit, args: [amount] });
   }
 
   public async lock(props: StakeProps): Promise<TransactionResponse> {
-    const { vaultAddress, amount } = props;
+    const { network, vaultAddress, amount } = props;
 
     const provider = this.web3Provider.getSigner();
     const lockContract = getContract(vaultAddress, backscratcherAbi, provider);
-    return await this.transactionService.execute({ fn: lockContract.deposit, args: [amount] });
+    return await this.transactionService.execute({ network, fn: lockContract.deposit, args: [amount] });
   }
 
   public async claim(props: ClaimProps): Promise<TransactionResponse> {
+    const { network } = props;
     const { CONTRACT_ADDRESSES } = this.config;
     const { YVECRV } = CONTRACT_ADDRESSES;
 
     const provider = this.web3Provider.getSigner();
     const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
-    return await this.transactionService.execute({ fn: backscratcherContract.claim });
+    return await this.transactionService.execute({ network, fn: backscratcherContract.claim });
   }
 
   public async reinvest(props: ClaimProps): Promise<TransactionResponse> {
+    const { network } = props;
     const { CONTRACT_ADDRESSES } = this.config;
     const { y3CrvBackZapper } = CONTRACT_ADDRESSES;
 
     const provider = this.web3Provider.getSigner();
     const y3CrvBackZapperContract = getContract(y3CrvBackZapper, y3CrvBackZapperAbi, provider);
-    return await this.transactionService.execute({ fn: y3CrvBackZapperContract.zap });
+    return await this.transactionService.execute({ network, fn: y3CrvBackZapperContract.zap });
   }
 
   private getStakingContractAbi(address: string) {
