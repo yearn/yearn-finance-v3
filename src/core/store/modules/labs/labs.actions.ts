@@ -24,6 +24,7 @@ import { AlertsActions, TokensActions } from '../..';
 const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
 
 const setSelectedLabAddress = createAction<{ labAddress?: string }>('labs/setSelectedLabAddress');
+const clearLabsData = createAction<void>('labs/clearLabsData');
 const clearSelectedLabAndStatus = createAction<void>('labs/clearSelectedLabAndStatus');
 const clearLabStatus = createAction<{ labAddress: string }>('labs/clearLabStatus');
 const clearUserData = createAction<void>('labs/clearUserData');
@@ -664,6 +665,7 @@ export const LabsActions = {
   deposit,
   approveWithdraw,
   withdraw,
+  clearLabsData,
   clearSelectedLabAndStatus,
   clearLabStatus,
   clearUserData,

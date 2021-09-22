@@ -64,6 +64,7 @@ const {
   withdrawVault,
   getVaultsDynamic,
   getUserVaultsPositions,
+  clearVaultsData,
   clearUserData,
   getExpectedTransactionOutcome,
   clearTransactionData,
@@ -245,6 +246,10 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       vaultAddresses.forEach((address) => {
         state.statusMap.vaultsActionsStatusMap[address].get = { error: error.message };
       });
+    })
+    .addCase(clearVaultsData, (state) => {
+      state.vaultsMap = {};
+      state.vaultsAddresses = [];
     })
     .addCase(clearUserData, (state) => {
       state.user.userVaultsPositionsMap = {};

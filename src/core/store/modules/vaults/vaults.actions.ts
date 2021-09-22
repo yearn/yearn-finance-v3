@@ -26,6 +26,7 @@ import { getConfig } from '@config';
 import { getConstants } from '../../../../config/constants';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
+const clearVaultsData = createAction<void>('vaults/clearVaultsData');
 const clearUserData = createAction<void>('vaults/clearUserData');
 const clearTransactionData = createAction<void>('vaults/clearTransactionData');
 const clearSelectedVaultAndStatus = createAction<void>('vaults/clearSelectedVaultAndStatus');
@@ -329,6 +330,7 @@ export const VaultsActions = {
   getVaultsDynamic,
   getUserVaultsPositions,
   initSubscriptions,
+  clearVaultsData,
   clearUserData,
   approveZapOut,
   getExpectedTransactionOutcome,

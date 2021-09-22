@@ -14,6 +14,7 @@ import { handleTransaction, toBN, validateExitMarket } from '@utils';
 import { AlertsActions, TokensActions } from '@store';
 
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
+const clearIronBankData = createAction<void>('ironbank/clearIronBankData');
 const clearSelectedMarketAndStatus = createAction<void>('ironBank/clearSelectedMarketAndStatus');
 const clearUserData = createAction<void>('ironbank/clearUserData');
 const clearMarketStatus = createAction<{ marketAddress: string }>('ironBank/clearMarketStatus');
@@ -359,6 +360,7 @@ export const IronBankActions = {
   repayMarket,
   repayAllMarket,
   enterOrExitMarket,
+  clearIronBankData,
   clearUserData,
   clearSelectedMarketAndStatus,
   clearMarketStatus,

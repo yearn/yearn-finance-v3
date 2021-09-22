@@ -95,6 +95,48 @@ export const Layout: FC = ({ children }) => {
   // TODO: MOVE THIS LOGIC TO THUNKS
   useEffect(() => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
+    fetchData(path);
+  }, [location]);
+
+  // TODO: MOVE THIS LOGIC TO THUNKS
+  useEffect(() => {
+    clearUserData();
+    if (selectedAddress) {
+      fetchUserData(path);
+    }
+  }, [selectedAddress]);
+
+  useEffect(() => {
+    if (selectedAddress) {
+      fetchUserData(path);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    clearData();
+    clearUserData();
+    fetchData(path);
+    if (selectedAddress) {
+      fetchUserData(path);
+    }
+  }, [currentNetwork]);
+
+  function clearUserData() {
+    dispatch(TokensActions.clearUserTokenState());
+    dispatch(VaultsActions.clearUserData());
+    dispatch(LabsActions.clearUserData());
+    dispatch(IronBankActions.clearUserData());
+  }
+
+  function clearData() {
+    dispatch(TokensActions.clearTokensData());
+    dispatch(VaultsActions.clearVaultsData());
+    dispatch(LabsActions.clearLabsData());
+    dispatch(IronBankActions.clearIronBankData());
+  }
+
+  function fetchData(path: string) {
+    dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
     switch (path) {
       case 'home':
         dispatch(LabsActions.initiateLabs());
@@ -125,27 +167,6 @@ export const Layout: FC = ({ children }) => {
       default:
         break;
     }
-  }, [location, currentNetwork]);
-
-  // TODO: MOVE THIS LOGIC TO THUNKS
-  useEffect(() => {
-    clearUserData();
-    if (selectedAddress) {
-      fetchUserData(path);
-    }
-  }, [selectedAddress, currentNetwork]);
-
-  useEffect(() => {
-    if (selectedAddress) {
-      fetchUserData(path);
-    }
-  }, [location]);
-
-  function clearUserData() {
-    dispatch(TokensActions.clearUserTokenState());
-    dispatch(VaultsActions.clearUserData());
-    dispatch(LabsActions.clearUserData());
-    dispatch(IronBankActions.clearUserData());
   }
 
   function fetchUserData(path: string) {

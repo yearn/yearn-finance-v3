@@ -4,6 +4,7 @@ import { TokenDynamicData, Token, Balance, Integer } from '@types';
 import { handleTransaction } from '@src/utils';
 
 const setSelectedTokenAddress = createAction<{ tokenAddress?: string }>('tokens/setSelectedTokenAddress');
+const clearTokensData = createAction<void>('tokens/clearTokensData');
 const clearUserTokenState = createAction<void>('tokens/clearUserTokenState');
 
 const getTokens = createAsyncThunk<{ tokensData: Token[] }, string | undefined, ThunkAPI>(
@@ -123,5 +124,6 @@ export const TokensActions = {
   getTokenAllowance,
   approve,
   initSubscriptions,
+  clearTokensData,
   clearUserTokenState,
 };
