@@ -115,6 +115,7 @@ export const Layout: FC = ({ children }) => {
   useEffect(() => {
     clearData();
     clearUserData();
+    dispatch(TokensActions.getTokens());
     fetchData(path);
     if (selectedAddress) {
       fetchUserData(path);
