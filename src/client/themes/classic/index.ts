@@ -1,6 +1,6 @@
 import { DefaultTheme } from 'styled-components';
 
-import { ClassicBackground } from '@assets/images';
+import ClassicBackground from './background.jpg';
 import { sharedTheme } from '../default';
 
 const classicTheme: DefaultTheme = {
