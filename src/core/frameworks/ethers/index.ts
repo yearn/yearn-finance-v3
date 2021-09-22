@@ -47,6 +47,8 @@ export const getUncheckedSigner = (provider: ethers.providers.ExternalProvider) 
 
 export const { formatEther, formatUnits, parseEther, parseUnits } = ethers.utils;
 
+export type ExternalProvider = ethers.providers.ExternalProvider;
+
 export const { BigNumber } = ethers;
 
 export { EthersWeb3ProviderImpl };

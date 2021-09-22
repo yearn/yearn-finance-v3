@@ -1,8 +1,8 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkAPI } from '@frameworks/redux';
-import { getEthersProvider } from '@frameworks/ethers';
+import { getEthersProvider, ExternalProvider } from '@frameworks/ethers';
 import { Theme, RootState, DIContainer, Subscriptions, Network } from '@types';
-import { isValidAddress, getProviderType } from '@utils';
+import { isValidAddress, getProviderType, getNetwork } from '@utils';
 
 const walletChange = createAction<{ walletName: string }>('wallet/walletChange');
 const addressChange = createAction<{ address: string }>('wallet/addressChange');
@@ -68,7 +68,18 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
             dispatch(getAddressEnsName({ address: settings.devMode.walletAddressOverride }));
           }
         },
-        network: () => wallet.isConnected,
+        network: (networkId) => {
+          if (wallet.isConnected) {
+            web3Provider.register('wallet', getEthersProvider(wallet.provider as ExternalProvider));
+            const network = getNetwork(networkId);
+            const providerType = getProviderType(network);
+            const sdkInstance = yearnSdk.getInstanceOf(network);
+            sdkInstance.context.setProvider({
+              read: web3Provider.getInstanceOf(providerType),
+              write: web3Provider.getInstanceOf('wallet'),
+            });
+          }
+        },
       };
       const subscriptions = getSubscriptions(dispatch, customSubscriptions);
       wallet.create(network ?? NETWORK, subscriptions, theme.current);

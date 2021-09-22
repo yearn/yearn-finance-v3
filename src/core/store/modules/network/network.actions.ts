@@ -13,7 +13,7 @@ const changeNetwork = createAsyncThunk<{ network: Network }, { network: Network 
     if (!extra.config.SUPPORTED_NETWORKS.includes(network)) throw Error('Network Not Supported');
 
     if (wallet.isCreated) {
-      await dispatch(WalletActions.changeWalletNetwork(network));
+      await dispatch(WalletActions.changeWalletNetwork(network)).then(() => wallet.isConnected);
     }
 
     if (web3Provider.hasInstanceOf('wallet')) {
