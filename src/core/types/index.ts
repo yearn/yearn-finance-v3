@@ -5,6 +5,7 @@ export * from './Container';
 export * from './IronBank';
 export * from './Lab';
 export * from './Modals';
+export * from './Position';
 export * from './Service';
 export * from './Settings';
 export * from './State';

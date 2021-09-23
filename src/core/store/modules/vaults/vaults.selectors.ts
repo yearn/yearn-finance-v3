@@ -11,6 +11,7 @@ import {
   VaultPositionsMap,
   VaultUserMetadata,
   Address,
+  GeneralVaultView,
 } from '@types';
 import BigNumber from 'bignumber.js';
 import { memoize } from 'lodash';
@@ -219,7 +220,7 @@ interface CreateVaultProps {
   vaultAllowancesMap: AllowancesMap;
 }
 
-function createVault(props: CreateVaultProps) {
+function createVault(props: CreateVaultProps): GeneralVaultView {
   const {
     tokenAllowancesMap,
     tokenData,
