@@ -12,6 +12,7 @@ export interface GeneralLabView {
   labBalance: string;
   labBalanceUsdc: string;
   apyData: string;
+  apyType: string;
   allowancesMap: AllowancesMap;
   pricePerShare: string;
   mainPositionKey: LabsPositionsTypes;

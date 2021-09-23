@@ -245,7 +245,7 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
     emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
     apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
-    apyType: '', // TODO use when sdk ready: vaultData.metadata.apy?.apyType.toString() ?? '0',
+    apyType: '', // TODO use when sdk ready: vaultData.metadata.apy?.apyType ?? '',
     allowancesMap: vaultAllowancesMap ?? {},
     approved: new BigNumber(currentAllowance).gt(0),
     pricePerShare: vaultData?.metadata.pricePerShare,

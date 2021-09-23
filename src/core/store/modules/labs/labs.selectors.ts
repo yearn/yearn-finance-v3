@@ -208,6 +208,7 @@ function createLab(props: CreateLabProps): GeneralLabView {
     labBalance: labData.underlyingTokenBalance.amount,
     labBalanceUsdc: labData.underlyingTokenBalance.amountUsdc,
     apyData: labData.metadata.apy?.net_apy.toString() ?? '0',
+    apyType: '', // TODO use when sdk ready: labData.metadata.apy?.apyType ?? '',
     allowancesMap: labAllowances ?? {},
     pricePerShare: labData.metadata.pricePerShare,
     mainPositionKey,
