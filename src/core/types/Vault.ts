@@ -17,7 +17,8 @@ export interface GeneralVaultView {
   vaultBalanceUsdc: string;
   depositLimit: string;
   emergencyShutdown: boolean;
-  apyData: any;
+  apyData: string;
+  apyType: string;
   strategies: StrategyMetadata[];
   historicalEarnings: EarningsDayData[];
   earned: Usdc;
@@ -26,25 +27,6 @@ export interface GeneralVaultView {
   pricePerShare: string;
   token: TokenView;
   DEPOSIT: PositionView;
-}
-export interface GeneralVaultView {
-  address: Address;
-  name: string;
-  decimals: string;
-  vaultBalance: string;
-  vaultBalanceUsdc: string;
-  depositLimit: string;
-  emergencyShutdown: boolean;
-  apyData: any;
-  DEPOSIT: {
-    userBalance: string;
-    userDeposited: string;
-    userDepositedUsdc: string;
-  };
-  earned: Usdc;
-  allowancesMap: { [vaultAddress: string]: string };
-  approved: boolean;
-  token: TokenView;
 }
 
 export interface VaultDynamicData {
