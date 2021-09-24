@@ -63,7 +63,7 @@ const Options = styled.div<{ open?: boolean }>`
   ${(props) => props.open && `display: flex;`}
 `;
 
-const Option = styled.div<{ selected?: boolean }>`
+const OptionChild = styled.div<{ selected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,8 +114,6 @@ export const OptionList: FC<OptionListProps> = ({
   const [open, setOpen] = useState(false);
   const isSingleOption = options.length === 1;
 
-  // console.log(selected);
-
   let selectedText = 'None';
   if (selected?.value) {
     selectedText = selected.label;
@@ -146,10 +144,14 @@ export const OptionList: FC<OptionListProps> = ({
 
       <Options open={open}>
         {options.map((option) => (
-          <Option key={option.value} onClick={() => selectOption(option)} selected={option.value === selected.value}>
+          <OptionChild
+            key={option.value}
+            onClick={() => selectOption(option)}
+            selected={option.value === selected.value}
+          >
             {option?.Icon && <Icon Component={option.Icon} />}
             {option.label}
-          </Option>
+          </OptionChild>
         ))}
       </Options>
     </StyledOptionList>

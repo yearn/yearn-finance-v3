@@ -94,12 +94,12 @@ export const Navbar = ({
   const dropdownSelectedNetwork = {
     value: selectedNetwork,
     label: NETWORK_SETTINGS[selectedNetwork].name,
-    icon: getNetworkIcon(selectedNetwork),
+    Icon: getNetworkIcon(selectedNetwork),
   };
   const dropdownNetworkOptions = networkOptions.map((network, i) => ({
     value: network,
     label: NETWORK_SETTINGS[network].name,
-    icon: getNetworkIcon(network),
+    Icon: getNetworkIcon(network),
   }));
 
   return (
