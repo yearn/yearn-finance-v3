@@ -1,13 +1,19 @@
 import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
-import { Button, Text, SimpleDropdown } from '@components/common';
+import { Button, Text, OptionList } from '@components/common';
+import { device } from '@themes/default';
 
 const BetaButton = styled(Button)`
   white-space: nowrap;
   cursor: default;
   border-color: ${({ theme }) => theme.colors.walletButton.background};
   color: ${({ theme }) => theme.colors.walletButton.background};
+`;
+
+const StyledOptionList = styled(OptionList)`
+  width: 14rem;
+  max-width: 14vw;
 `;
 
 const StyledNavbarActions = styled.div`
@@ -33,9 +39,19 @@ const StyledNavbar = styled.nav`
   display: flex;
   align-items: center;
   background-color: ${({ theme }) => theme.colors.background};
-  height: ${(props) => props.theme.navbar.height};
   z-index: ${(props) => props.theme.zindex.navbar};
   max-width: ${({ theme }) => theme.globalMaxWidth};
+  margin-top: 0.4rem;
+  margin-bottom: 1.6rem;
+
+  @media ${device.mobile} {
+    ${BetaButton} {
+      display: none;
+    }
+    ${StyledText} {
+      font-size: 1.9rem;
+    }
+  }
 `;
 
 interface NavbarProps {
@@ -69,7 +85,7 @@ export const Navbar = ({
       <StyledNavbarActions>
         <BetaButton outline>BETA</BetaButton>
 
-        <SimpleDropdown
+        <StyledOptionList
           selected={dropdownSelectedNetwork}
           setSelected={(option) => onNetworkChange(option.label)}
           options={dropdownNetworkOptions}

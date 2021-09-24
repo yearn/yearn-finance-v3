@@ -1,12 +1,12 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
-import { ArrowDownIcon, Icon } from '@components/common';
 
-const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
-  --dropdown-background: ${({ theme }) => theme.colors.onSurfaceH1};
-  --dropdown-color: ${({ theme }) => theme.colors.primaryVariant};
-  --dropdown-hover-color: ${({ theme }) => theme.colors.onSurfaceH2};
-  --dropdown-selected-color: ${({ theme }) => theme.colors.onPrimaryVariant};
+const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
+  --dropdown-background: ${({ theme }) => theme.colors.surface};
+  --dropdown-color: ${({ theme }) => theme.colors.onSurfaceH2};
+  --dropdown-hover-color: ${({ theme }) => theme.colors.secondary};
+  --dropdown-selected-color: ${({ theme }) => theme.colors.surface};
+  --dropdown-selected-background: ${({ theme }) => theme.colors.onSurfaceH2};
 
   display: flex;
   background: var(--dropdown-background);
@@ -27,12 +27,7 @@ const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number; 
   `}
 `;
 
-const Arrow = styled(Icon)`
-  fill: var(--dropdown-color);
-  transition: transform 100ms ease-in-out;
-`;
-
-const DropdownSelected = styled.div<{ open?: boolean }>`
+const OptionSelected = styled.div`
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -40,13 +35,6 @@ const DropdownSelected = styled.div<{ open?: boolean }>`
   text-overflow: ellipsis;
   padding: 0.8rem;
   width: 100%;
-  ${(props) =>
-    props.open &&
-    `
-      ${Arrow} {
-        transform: rotate(180deg);
-      }
-  `}
 `;
 
 const SelectedText = styled.span`
@@ -56,7 +44,7 @@ const SelectedText = styled.span`
   width: 100%;
 `;
 
-const DropdownOptions = styled.div<{ open?: boolean }>`
+const Options = styled.div<{ open?: boolean }>`
   display: none;
   flex-direction: column;
   flex-grow: 1;
@@ -64,11 +52,9 @@ const DropdownOptions = styled.div<{ open?: boolean }>`
   background-color: var(--dropdown-background);
   width: 100%;
   left: 0;
-  bottom: 0.8rem;
+  bottom: -0.8rem;
   transform: translateY(100%);
   border-radius: ${({ theme }) => theme.globalRadius};
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
   padding: 0.8rem;
   overflow: hidden;
   z-index: 1;
@@ -76,35 +62,43 @@ const DropdownOptions = styled.div<{ open?: boolean }>`
 `;
 
 const Option = styled.div<{ selected?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-radius: ${({ theme }) => theme.globalRadius};
+  padding: 0.4rem;
+  transition: opacity 200ms ease-in-out;
+
   ${(props) =>
     props.selected &&
     `
       color: var(--dropdown-selected-color);
+      background: var(--dropdown-selected-background);
   `}
 
   :hover {
-    color: var(--dropdown-hover-color);
+    opacity: 0.8;
   }
 `;
 
-interface DropdownOption {
+interface Option {
   value: string;
   label: string;
 }
 
-export interface SimpleDropdownProps {
-  selected: DropdownOption;
-  setSelected: (selected: DropdownOption) => void;
-  options: DropdownOption[];
+export interface OptionListProps {
+  selected: Option;
+  setSelected: (selected: Option) => void;
+  options: Option[];
   className?: string;
   disabled?: boolean;
-  onChange?: (selected: DropdownOption) => void;
+  onChange?: (selected: Option) => void;
 }
 
-export const SimpleDropdown: FC<SimpleDropdownProps> = ({
+export const OptionList: FC<OptionListProps> = ({
   selected,
   setSelected,
   options,
@@ -122,7 +116,7 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
     selectedText = selected.label;
   }
 
-  const selectOption = (option: DropdownOption) => {
+  const selectOption = (option: Option) => {
     setSelected(option);
     setOpen(false);
 
@@ -132,7 +126,7 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
   };
 
   return (
-    <StyledSimpleDropdown
+    <StyledOptionList
       className={className}
       tabIndex={0}
       disabled={disabled}
@@ -140,18 +134,17 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
       onBlur={() => setOpen(false)}
       {...props}
     >
-      <DropdownSelected onClick={() => (!isSingleOption ? setOpen(!open) : null)} open={open}>
-        {!isSingleOption && <Arrow Component={ArrowDownIcon} />}
+      <OptionSelected onClick={() => (!isSingleOption ? setOpen(!open) : null)}>
         <SelectedText>{selectedText}</SelectedText>
-      </DropdownSelected>
+      </OptionSelected>
 
-      <DropdownOptions open={open}>
+      <Options open={open}>
         {options.map((option) => (
           <Option key={option.value} onClick={() => selectOption(option)} selected={option.value === selected.value}>
             {option.label}
           </Option>
         ))}
-      </DropdownOptions>
-    </StyledSimpleDropdown>
+      </Options>
+    </StyledOptionList>
   );
 };
