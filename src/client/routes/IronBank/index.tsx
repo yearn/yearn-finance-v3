@@ -10,6 +10,7 @@ import {
   TokensSelectors,
   ModalSelectors,
   AppSelectors,
+  NetworkSelectors,
 } from '@store';
 
 import { SpinnerLoading, ToggleButton, SearchInput, Text } from '@components/common';
@@ -26,6 +27,7 @@ import {
 } from '@components/app';
 import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss, normalizeAmount } from '@src/utils';
 import { device } from '@themes/default';
+import { getConfig } from '@config';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -134,7 +136,10 @@ export const IronBank = () => {
   // const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
+  const { NETWORK_SETTINGS } = getConfig();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, netAPY, borrowLimitUsdc } = useAppSelector(
     IronBankSelectors.selectSummaryData
   );
@@ -203,35 +208,46 @@ export const IronBank = () => {
 
       {!generalLoading && (
         <>
-          <Row>
-            <StyledRecommendationsCard
-              header="Recommendations"
-              items={recommendations.map(({ token, lendApy, address }) => ({
-                icon: token.icon ?? '',
-                name: token.symbol,
-                info: normalizePercent(lendApy, 2),
-                infoDetail: 'EYY',
-                onAction: () => actionHandler('supply', address),
-              }))}
-            />
+          {currentNetworkSettings.ironBankEnabled ? (
+            <Row>
+              <StyledRecommendationsCard
+                header="Recommendations"
+                items={recommendations.map(({ token, lendApy, address }) => ({
+                  icon: token.icon ?? '',
+                  name: token.symbol,
+                  info: normalizePercent(lendApy, 2),
+                  infoDetail: 'EYY',
+                  onAction: () => actionHandler('supply', address),
+                }))}
+              />
 
+              <StyledInfoCard
+                header="Let your crypto work for you"
+                Component={
+                  <Text>
+                    <p>
+                      Iron Bank offers a simple way to get exposure to new tokens. Borrow using your crypto as
+                      collateral, without having to sell. Didn’t find the right Vault for your tokens? Supply them to
+                      Iron Bank and earn more crypto.
+                    </p>
+                    <p>
+                      Remember, even with simple tools like Iron Bank, smart contract risks and systemic risks of the
+                      underlying crypto assets exist.
+                    </p>
+                  </Text>
+                }
+              />
+            </Row>
+          ) : (
             <StyledInfoCard
-              header="Let your crypto work for you"
+              header={`No Iron Bank yet on ${currentNetworkSettings.name}`}
               Component={
                 <Text>
-                  <p>
-                    Iron Bank offers a simple way to get exposure to new tokens. Borrow using your crypto as collateral,
-                    without having to sell. Didn’t find the right Vault for your tokens? Supply them to Iron Bank and
-                    earn more crypto.
-                  </p>
-                  <p>
-                    Remember, even with simple tools like Iron Bank, smart contract risks and systemic risks of the
-                    underlying crypto assets exist.
-                  </p>
+                  <p>{`Check back soon.`}</p>
                 </Text>
               }
             />
-          </Row>
+          )}
 
           {!walletIsConnected && <StyledNoWalletCard />}
 

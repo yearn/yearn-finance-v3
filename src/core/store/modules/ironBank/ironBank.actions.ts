@@ -30,8 +30,19 @@ const getIronBankSummary = createAsyncThunk<{ userIronBankSummary: IronBankUserS
   'ironBank/getIronBankSummary',
   async (_arg, { extra, getState }) => {
     const { wallet, network } = getState();
+    const { NETWORK_SETTINGS } = extra.config;
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    if (!NETWORK_SETTINGS[network.current]?.labsEnabled)
+      return {
+        userIronBankSummary: {
+          supplyBalanceUsdc: '0',
+          borrowBalanceUsdc: '0',
+          borrowLimitUsdc: '0',
+          utilizationRatioBips: '0',
+        },
+      };
 
     const { ironBankService } = extra.services;
     const userIronBankSummary = await ironBankService.getUserIronBankSummary({ network: network.current, userAddress });
@@ -46,6 +57,10 @@ const getMarketsDynamic = createAsyncThunk<
 >('ironBank/getMarketsDynamic', async ({ addresses }, { getState, extra }) => {
   const { network } = getState();
   const { ironBankService } = extra.services;
+  const { NETWORK_SETTINGS } = extra.config;
+
+  if (!NETWORK_SETTINGS[network.current].labsEnabled) return { marketsDynamicData: [] };
+
   const marketsDynamicData = await ironBankService.getMarketsDynamicData({
     network: network.current,
     marketAddresses: addresses,
@@ -58,6 +73,10 @@ const getMarkets = createAsyncThunk<{ ironBankMarkets: IronBankMarket[] }, undef
   async (_arg, { getState, extra }) => {
     const { network } = getState();
     const { ironBankService } = extra.services;
+    const { NETWORK_SETTINGS } = extra.config;
+
+    if (!NETWORK_SETTINGS[network.current]?.labsEnabled) return { ironBankMarkets: [] };
+
     const ironBankMarkets = await ironBankService.getSupportedMarkets({ network: network.current });
 
     return { ironBankMarkets };
@@ -71,10 +90,12 @@ const getUserMarketsPositions = createAsyncThunk<
 >('ironBank/getUserMarketsPositions', async ({ marketAddresses }, { extra, getState }) => {
   const { network, wallet } = getState();
   const { ironBankService } = extra.services;
+  const { NETWORK_SETTINGS } = extra.config;
   const userAddress = wallet.selectedAddress;
-  if (!userAddress) {
-    throw new Error('WALLET NOT CONNECTED');
-  }
+
+  if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+  if (!NETWORK_SETTINGS[network.current].labsEnabled) return { userMarketsPositions: [] };
+
   const userMarketsPositions = await ironBankService.getUserMarketsPositions({
     network: network.current,
     userAddress,
@@ -91,10 +112,12 @@ const getUserMarketsMetadata = createAsyncThunk<
 >('ironBank/getUserMarketsMetadata', async ({ marketAddresses }, { extra, getState }) => {
   const { network, wallet } = getState();
   const { ironBankService } = extra.services;
+  const { NETWORK_SETTINGS } = extra.config;
   const userAddress = wallet.selectedAddress;
-  if (!userAddress) {
-    throw new Error('WALLET NOT CONNECTED');
-  }
+
+  if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+  if (!NETWORK_SETTINGS[network.current].labsEnabled) return { userMarketsMetadata: [] };
+
   const userMarketsMetadata = await ironBankService.getUserMarketsMetadata({
     network: network.current,
     userAddress,

@@ -41,6 +41,10 @@ const getLabs = createAsyncThunk<{ labsData: Lab[] }, void, ThunkAPI>(
   async (_arg, { getState, extra, dispatch }) => {
     const { network } = getState();
     const { labService } = extra.services;
+    const { NETWORK_SETTINGS } = extra.config;
+
+    if (!NETWORK_SETTINGS[network.current].labsEnabled) return { labsData: [] };
+
     dispatch(getYveCrvExtraData({}));
     const { labsData, errors } = await labService.getSupportedLabs({ network: network.current });
     errors.forEach((error) => {
@@ -55,6 +59,10 @@ const getLabsDynamic = createAsyncThunk<{ labsDynamicData: LabDynamic[] }, { add
   async ({ addresses }, { getState, extra, dispatch }) => {
     const { network } = getState();
     const { labService } = extra.services;
+    const { NETWORK_SETTINGS } = extra.config;
+
+    if (!NETWORK_SETTINGS[network.current].labsEnabled) return { labsDynamicData: [] };
+
     const [labsDynamicData] = await Promise.all([
       labService.getLabsDynamicData({ network: network.current }), // TODO pass addresses. waitint to xgaminto to merge his stuff to avoid conficts y lab service
       dispatch(getYveCrvExtraData({ fetchDynamicData: true })),
@@ -70,10 +78,14 @@ const getUserLabsPositions = createAsyncThunk<
 >('labs/getUserLabsPositions', async ({ labsAddresses }, { extra, getState, dispatch }) => {
   const { network, wallet } = getState();
   const { labService } = extra.services;
+  const { NETWORK_SETTINGS } = extra.config;
   const userAddress = wallet.selectedAddress;
+
   if (!userAddress) {
     throw new Error('WALLET NOT CONNECTED');
   }
+  if (!NETWORK_SETTINGS[network.current].labsEnabled) return { userLabsPositions: [] };
+
   const [userLabsPositionsResponse] = await Promise.all([
     labService.getUserLabsPositions({ network: network.current, userAddress }), // TODO pass addresses. waitint to xgaminto to merge his stuff to avoid conficts y lab service
     dispatch(getUserYveCrvExtraData()),
