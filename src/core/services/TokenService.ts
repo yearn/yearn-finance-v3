@@ -10,6 +10,7 @@ import {
   Token,
   Integer,
   Config,
+  Network,
   TransactionResponse,
   TransactionService,
   GetSupportedTokensProps,
@@ -57,7 +58,7 @@ export class TokenServiceImpl implements TokenService {
     // so we get the rest of the tokens.
     let labsTokens: Token[] = [];
     try {
-      labsTokens = await this.getLabsTokens();
+      labsTokens = await this.getLabsTokens({ network });
     } catch (error) {
       console.log({ error });
     }
@@ -113,7 +114,9 @@ export class TokenServiceImpl implements TokenService {
     });
   }
 
-  public async getLabsTokens(): Promise<Token[]> {
+  public async getLabsTokens({ network }: { network: Network }): Promise<Token[]> {
+    const { NETWORK_SETTINGS } = this.config;
+    if (!NETWORK_SETTINGS[network].labsEnabled) return [];
     return await Promise.all([this.getYvBoostToken(), this.getPSLPyvBoostEthToken()]);
   }
 
