@@ -2,7 +2,14 @@ import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
-import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions, SettingsSelectors } from '@store';
+import {
+  TokensSelectors,
+  VaultsSelectors,
+  VaultsActions,
+  TokensActions,
+  SettingsSelectors,
+  NetworkSelectors,
+} from '@store';
 import {
   toBN,
   normalizeAmount,
@@ -21,12 +28,14 @@ export interface WithdrawTxProps {
 }
 
 export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...props }) => {
-  const { CONTRACT_ADDRESSES } = getConfig();
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
+  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
   const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(
@@ -146,6 +155,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     error: expectedTxOutcomeStatus.error,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
+  const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -211,6 +221,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       targetAmountStatus={expectedAmountStatus}
       actions={txActions}
       status={{ error }}
+      loadingText={loadingText}
       onClose={onClose}
     />
   );
