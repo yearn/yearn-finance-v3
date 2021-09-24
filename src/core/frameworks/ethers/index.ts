@@ -1,10 +1,10 @@
 import { ethers } from 'ethers';
 
-import { EthereumNetwork, RpcUrl } from '@types';
+import { Network, RpcUrl } from '@types';
 import { EthersWeb3ProviderImpl } from './Web3Provider';
 
 export const getEthersDefaultProvider = (
-  network: EthereumNetwork | RpcUrl,
+  network: Network | RpcUrl,
   infuraProjectId?: string,
   etherscanApiKey?: string,
   alchemyApiKey?: string
@@ -46,6 +46,8 @@ export const getUncheckedSigner = (provider: ethers.providers.ExternalProvider) 
 };
 
 export const { formatEther, formatUnits, parseEther, parseUnits } = ethers.utils;
+
+export type ExternalProvider = ethers.providers.ExternalProvider;
 
 export const { BigNumber } = ethers;
 

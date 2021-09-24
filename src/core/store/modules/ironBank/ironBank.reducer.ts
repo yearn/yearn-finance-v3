@@ -61,6 +61,7 @@ const {
   approveMarket,
   getMarketsDynamic,
   enterOrExitMarket,
+  clearIronBankData,
   clearUserData,
   clearSelectedMarketAndStatus,
   clearMarketStatus,
@@ -247,6 +248,10 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
     .addCase(enterOrExitMarket.rejected, (state, { meta, error }) => {
       const { marketAddress, actionType } = meta.arg;
       state.statusMap.marketsActionsMap[marketAddress][actionType] = { error: error.message };
+    })
+    .addCase(clearIronBankData, (state) => {
+      state.marketsMap = {};
+      state.marketAddresses = [];
     })
     .addCase(clearUserData, (state) => {
       state.user.marketsAllowancesMap = {};

@@ -29,7 +29,6 @@ const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number; 
 
 const Arrow = styled(Icon)`
   fill: var(--dropdown-color);
-  /* margin-right: 1.6rem; */
   transition: transform 100ms ease-in-out;
 `;
 
@@ -102,7 +101,7 @@ export interface SimpleDropdownProps {
   options: DropdownOption[];
   className?: string;
   disabled?: boolean;
-  onChange?: (selected: DropdownOption | undefined) => void;
+  onChange?: (selected: DropdownOption) => void;
 }
 
 export const SimpleDropdown: FC<SimpleDropdownProps> = ({

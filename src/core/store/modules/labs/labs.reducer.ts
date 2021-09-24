@@ -63,6 +63,7 @@ const {
   yvBoost,
   yveCrv,
   yvBoostEth,
+  clearLabsData,
   clearSelectedLabAndStatus,
   clearLabStatus,
   clearUserData,
@@ -365,6 +366,10 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
     .addCase(yvBoostEthStake.rejected, (state, { meta, error }) => {
       // const { labAddress } = meta.arg;
       state.statusMap.labsActionsStatusMap[PSLPYVBOOSTETH].stake = { error: error.message };
+    })
+    .addCase(clearLabsData, (state) => {
+      state.labsMap = {};
+      state.labsAddresses = [];
     })
     .addCase(clearSelectedLabAndStatus, (state) => {
       if (!state.selectedLabAddress) return;

@@ -2,7 +2,7 @@ import * as awilix from 'awilix';
 
 import { BlocknativeWalletImpl } from '@frameworks/blocknative';
 import { EthersWeb3ProviderImpl } from '@frameworks/ethers';
-import { getYearnSdk } from '@frameworks/yearnSdk';
+import { YearnSdkImpl } from '@frameworks/yearnSdk';
 import {
   TokenServiceImpl,
   UserServiceImpl,
@@ -14,7 +14,7 @@ import {
   SubscriptionServiceImpl,
 } from '@services';
 import { getConfig } from '@config';
-import { DIContainer, ContextContainer, ServiceContainer, ConfigContainer, ProviderType } from '@types';
+import { DIContainer, ContextContainer, ServiceContainer, ConfigContainer } from '@types';
 
 export class Container implements DIContainer {
   private container: awilix.AwilixContainer;
@@ -30,15 +30,10 @@ export class Container implements DIContainer {
   }
 
   private registerContext() {
-    const { USE_MAINNET_FORK } = getConfig();
-    const providerType: ProviderType = USE_MAINNET_FORK ? 'custom' : 'default';
     this.container.register({
       wallet: awilix.asClass(BlocknativeWalletImpl).singleton(),
-      web3Provider: awilix
-        .asClass(EthersWeb3ProviderImpl)
-        .inject(() => ({ providerType }))
-        .singleton(),
-      yearnSdk: awilix.asFunction(getYearnSdk).singleton(),
+      web3Provider: awilix.asClass(EthersWeb3ProviderImpl).singleton(),
+      yearnSdk: awilix.asClass(YearnSdkImpl).singleton(),
     });
   }
 

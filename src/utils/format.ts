@@ -74,3 +74,10 @@ export const toWei = (amount: string, decimals: number) => {
   const ONE_UNIT = new BigNumber(10).pow(decimals);
   return new BigNumber(amount).times(ONE_UNIT).toFixed(0);
 };
+
+export const formatApy = (apyData: string, apyType: string) => {
+  if (apyType === 'new') return 'NEW ✨';
+  if (apyType === 'n/a') return 'N/A';
+
+  return formatPercent(apyData, 2);
+};

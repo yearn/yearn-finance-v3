@@ -1,10 +1,9 @@
+import { toBN, normalizeAmount, USDC_DECIMALS } from '@utils';
 import {
   VaultService,
-  Web3Provider,
   YearnSdk,
   DepositProps,
   WithdrawProps,
-  EthereumAddress,
   Position,
   Vault,
   VaultDynamic,
@@ -16,54 +15,77 @@ import {
   VaultsUserSummary,
   GetUserVaultsMetadataProps,
   VaultUserMetadata,
+  GetVaultsDynamicDataProps,
+  GetUserVaultsPositionsProps,
 } from '@types';
 
 export class VaultServiceImpl implements VaultService {
-  private web3Provider: Web3Provider;
   private yearnSdk: YearnSdk;
 
-  constructor({ web3Provider, yearnSdk }: { web3Provider: Web3Provider; yearnSdk: YearnSdk }) {
-    this.web3Provider = web3Provider;
+  constructor({ yearnSdk }: { yearnSdk: YearnSdk }) {
     this.yearnSdk = yearnSdk;
   }
 
-  public async getSupportedVaults({ addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
-    const yearn = this.yearnSdk;
+  public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
     const vaults = await yearn.vaults.get(addresses);
     return vaults.filter((vault) => !vault.metadata.migrationAvailable); // removing old v2 vaults.
   }
 
-  public async getVaultsDynamicData(addresses: string[] | undefined): Promise<VaultDynamic[]> {
-    const yearn = this.yearnSdk;
+  public async getVaultsDynamicData({ network, addresses }: GetVaultsDynamicDataProps): Promise<VaultDynamic[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.getDynamic(addresses);
   }
 
   public async getUserVaultsPositions({
+    network,
     userAddress,
     vaultAddresses,
-  }: {
-    userAddress: EthereumAddress;
-    vaultAddresses?: string[];
-  }): Promise<Position[]> {
-    const yearn = this.yearnSdk;
+  }: GetUserVaultsPositionsProps): Promise<Position[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.positionsOf(userAddress, vaultAddresses);
   }
 
-  public async getUserVaultsSummary({ userAddress }: GetUserVaultsSummaryProps): Promise<VaultsUserSummary> {
-    const yearn = this.yearnSdk;
+  public async getUserVaultsSummary({ network, userAddress }: GetUserVaultsSummaryProps): Promise<VaultsUserSummary> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.summaryOf(userAddress);
   }
 
   public async getUserVaultsMetadata(props: GetUserVaultsMetadataProps): Promise<VaultUserMetadata[]> {
-    const { userAddress, vaultsAddresses } = props;
-    const yearn = this.yearnSdk;
+    const { network, userAddress, vaultsAddresses } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.metadataOf(userAddress, vaultsAddresses);
   }
 
   public async getExpectedTransactionOutcome(props: GetExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {
-    const { transactionType, accountAddress, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = props;
+    const { network, transactionType, accountAddress, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } =
+      props;
     const DEFAULT_SLIPPAGE_SIMULATION = 0.99;
-    const yearn = this.yearnSdk;
+    const yearn = this.yearnSdk.getInstanceOf(network);
+
+    if (network !== 'mainnet') {
+      const tokenAddress = transactionType === 'DEPOSIT' ? sourceTokenAddress : targetTokenAddress;
+      const priceUsdc = await yearn.tokens.priceUsdc(tokenAddress);
+      const tokens = await yearn.vaults.tokens();
+      const decimals = tokens.find((token) => token.address === tokenAddress)?.decimals;
+
+      const targetTokenAmountUsdc = toBN(normalizeAmount(sourceTokenAmount, toBN(decimals).toNumber()))
+        .times(priceUsdc)
+        .toString();
+
+      return {
+        sourceTokenAddress,
+        sourceTokenAmount,
+        targetTokenAddress,
+        targetTokenAmount: sourceTokenAmount,
+        targetTokenAmountUsdc,
+        targetUnderlyingTokenAddress: sourceTokenAddress,
+        targetUnderlyingTokenAmount: sourceTokenAmount,
+        conversionRate: 1,
+        slippage: 0,
+      };
+    }
+
     let expectedOutcome: TransactionOutcome;
     switch (transactionType) {
       case 'DEPOSIT':
@@ -94,16 +116,16 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async deposit(props: DepositProps): Promise<TransactionResponse> {
-    const { accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;
-    const yearn = this.yearnSdk;
+    const { network, accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.deposit(vaultAddress, tokenAddress, amount, accountAddress, {
       slippage: slippageTolerance,
     });
   }
 
   public async withdraw(props: WithdrawProps): Promise<TransactionResponse> {
-    const { accountAddress, tokenAddress, vaultAddress, amountOfShares, slippageTolerance } = props;
-    const yearn = this.yearnSdk;
+    const { network, accountAddress, tokenAddress, vaultAddress, amountOfShares, slippageTolerance } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
       slippage: slippageTolerance,
     });

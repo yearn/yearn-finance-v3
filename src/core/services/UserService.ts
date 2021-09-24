@@ -9,7 +9,7 @@ export class UserServiceImpl implements UserService {
 
   public async getAddressEnsName(props: GetAddressEnsNameProps) {
     const { address } = props;
-    const provider = this.web3Provider.getInstanceOf('default');
+    const provider = this.web3Provider.getInstanceOf('ethereum');
 
     const addressEnsName = await provider.lookupAddress(address);
     return addressEnsName;

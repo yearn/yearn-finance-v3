@@ -1,8 +1,8 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkAPI } from '@frameworks/redux';
-import { getEthersProvider } from '@frameworks/ethers';
-import { Theme, RootState, DIContainer, Subscriptions } from '@types';
-import { isValidAddress } from '@utils';
+import { getEthersProvider, ExternalProvider } from '@frameworks/ethers';
+import { Theme, RootState, DIContainer, Subscriptions, Network } from '@types';
+import { isValidAddress, getProviderType, getNetwork } from '@utils';
 
 const walletChange = createAction<{ walletName: string }>('wallet/walletChange');
 const addressChange = createAction<{ address: string }>('wallet/addressChange');
@@ -38,20 +38,27 @@ const getAddressEnsName = createAsyncThunk<{ addressEnsName: string }, { address
   }
 );
 
-const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefined, ThunkAPI>(
+interface WalletSelectProps {
+  network: Network;
+  walletName?: string;
+}
+
+const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProps, ThunkAPI>(
   'wallet/walletSelect',
-  async (walletName, { dispatch, getState, extra }) => {
+  async ({ walletName, network }, { dispatch, getState, extra }) => {
     const { context, config } = extra;
     const { wallet, web3Provider, yearnSdk } = context;
-    const { ETHEREUM_NETWORK, ALLOW_DEV_MODE } = config;
+    const { NETWORK, ALLOW_DEV_MODE, SUPPORTED_NETWORKS, NETWORK_SETTINGS } = config;
     const { theme, settings } = getState();
 
     if (!wallet.isCreated) {
       const customSubscriptions: Subscriptions = {
         wallet: (wallet) => {
           web3Provider.register('wallet', getEthersProvider(wallet.provider));
-          yearnSdk.context.setProvider({
-            read: web3Provider.getInstanceOf(web3Provider.providerType),
+          const providerType = getProviderType(network);
+          const sdkInstance = yearnSdk.getInstanceOf(network);
+          sdkInstance.context.setProvider({
+            read: web3Provider.getInstanceOf(providerType),
             write: web3Provider.getInstanceOf('wallet'),
           });
         },
@@ -61,10 +68,24 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, string | undefin
             dispatch(getAddressEnsName({ address: settings.devMode.walletAddressOverride }));
           }
         },
-        network: () => wallet.isConnected,
+        network: (networkId) => {
+          const supportedNetworkSettings = SUPPORTED_NETWORKS.find(
+            (network) => NETWORK_SETTINGS[network].networkId === networkId
+          );
+          if (wallet.isConnected && supportedNetworkSettings) {
+            web3Provider.register('wallet', getEthersProvider(wallet.provider as ExternalProvider));
+            const network = getNetwork(networkId);
+            const providerType = getProviderType(network);
+            const sdkInstance = yearnSdk.getInstanceOf(network);
+            sdkInstance.context.setProvider({
+              read: web3Provider.getInstanceOf(providerType),
+              write: web3Provider.getInstanceOf('wallet'),
+            });
+          }
+        },
       };
       const subscriptions = getSubscriptions(dispatch, customSubscriptions);
-      wallet.create(ETHEREUM_NETWORK, subscriptions, theme.current);
+      wallet.create(network ?? NETWORK, subscriptions, theme.current);
     }
     const isConnected = await wallet.connect({ name: walletName });
     return { isConnected };
@@ -79,6 +100,14 @@ const changeWalletTheme =
     }
   };
 
+const changeWalletNetwork =
+  (network: Network) => async (dispatch: AppDispatch, getState: () => RootState, container: DIContainer) => {
+    const { wallet } = container.context;
+    if (wallet.isCreated && wallet.changeNetwork) {
+      wallet.changeNetwork(network);
+    }
+  };
+
 export const WalletActions = {
   walletChange,
   addressChange,
@@ -86,5 +115,6 @@ export const WalletActions = {
   balanceChange,
   walletSelect,
   changeWalletTheme,
+  changeWalletNetwork,
   getAddressEnsName,
 };

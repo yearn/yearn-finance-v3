@@ -1,20 +1,13 @@
-import { EthereumAddress, EarningsDayData, Usdc } from '@types';
+import { Address, EarningsDayData, PositionView, Usdc } from '@types';
 import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 import { TokenView } from './Token';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
 
-export interface VaultData extends VaultDynamicData {
-  address: EthereumAddress;
-  name: string;
-  version: string;
-  typeId: VaultType;
-  token: EthereumAddress;
-  symbol: string;
-}
+export interface VaultView extends PositionView, Omit<GeneralVaultView, 'DEPOSIT'> {}
 
-export interface VaultView {
-  address: EthereumAddress;
+export interface GeneralVaultView {
+  address: Address;
   name: string;
   displayName: string;
   displayIcon: string;
@@ -24,39 +17,22 @@ export interface VaultView {
   vaultBalanceUsdc: string;
   depositLimit: string;
   emergencyShutdown: boolean;
-  apyData: any;
+  apyData: string;
+  apyType: string;
   strategies: StrategyMetadata[];
   historicalEarnings: EarningsDayData[];
-  userBalance: string;
-  userDeposited: string;
-  userDepositedUsdc: string;
   earned: Usdc;
   allowancesMap: { [vaultAddress: string]: string };
   approved: boolean;
+  pricePerShare: string;
+  allowZapIn: boolean;
+  allowZapOut: boolean;
   token: TokenView;
-}
-export interface GeneralVaultView {
-  address: EthereumAddress;
-  name: string;
-  decimals: string;
-  vaultBalance: string;
-  vaultBalanceUsdc: string;
-  depositLimit: string;
-  emergencyShutdown: boolean;
-  apyData: any;
-  DEPOSIT: {
-    userBalance: string;
-    userDeposited: string;
-    userDepositedUsdc: string;
-  };
-  earned: Usdc;
-  allowancesMap: { [vaultAddress: string]: string };
-  approved: boolean;
-  token: TokenView;
+  DEPOSIT: PositionView;
 }
 
 export interface VaultDynamicData {
-  address: EthereumAddress;
+  address: Address;
   balance: string;
   balanceUsdc: string;
   apyData: any;

@@ -2,7 +2,14 @@ import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
-import { TokensSelectors, VaultsSelectors, VaultsActions, TokensActions, SettingsSelectors } from '@store';
+import {
+  TokensSelectors,
+  VaultsSelectors,
+  VaultsActions,
+  TokensActions,
+  SettingsSelectors,
+  NetworkSelectors,
+} from '@store';
 import {
   toBN,
   normalizeAmount,
@@ -13,7 +20,8 @@ import {
   validateSlippage,
   getZapInContractAddress,
   formatPercent,
-} from '@src/utils';
+} from '@utils';
+import { getConfig } from '@config';
 
 import { Transaction } from './Transaction';
 
@@ -32,13 +40,17 @@ export const DepositTx: FC<DepositTxProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
+  const { NETWORK_SETTINGS } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const vaults = useAppSelector(VaultsSelectors.selectVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
-  const userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
+  let userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
+  userTokens = selectedVault?.allowZapIn ? userTokens : [];
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
@@ -174,6 +186,7 @@ export const DepositTx: FC<DepositTxProps> = ({
     error: expectedTxOutcomeStatus.error || error,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
+  const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -247,6 +260,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       targetAmountStatus={expectedAmountStatus}
       actions={txActions}
       status={{ error }}
+      loadingText={loadingText}
       onClose={onClose}
     />
   );

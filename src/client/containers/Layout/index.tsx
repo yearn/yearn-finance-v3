@@ -11,14 +11,18 @@ import {
   LabsActions,
   IronBankActions,
   WalletSelectors,
+  NetworkSelectors,
   SettingsSelectors,
   AlertsActions,
+  NetworkActions,
 } from '@store';
 
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
+import { getConfig } from '@config';
 import { isValidAddress } from '@utils';
+import { Network } from '@types';
 
 const contentSeparation = '1.6rem';
 
@@ -70,9 +74,11 @@ export const Layout: FC = ({ children }) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const { SUPPORTED_NETWORKS } = getConfig();
   const { isMobile } = useWindowDimensions();
   const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const addressEnsName = useAppSelector(WalletSelectors.selectAddressEnsName);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const history = useHistory();
 
@@ -89,6 +95,49 @@ export const Layout: FC = ({ children }) => {
   // TODO: MOVE THIS LOGIC TO THUNKS
   useEffect(() => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
+    fetchData(path);
+  }, [location]);
+
+  // TODO: MOVE THIS LOGIC TO THUNKS
+  useEffect(() => {
+    clearUserData();
+    if (selectedAddress) {
+      fetchUserData(path);
+    }
+  }, [selectedAddress]);
+
+  useEffect(() => {
+    if (selectedAddress) {
+      fetchUserData(path);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    clearData();
+    clearUserData();
+    dispatch(TokensActions.getTokens());
+    fetchData(path);
+    if (selectedAddress) {
+      fetchUserData(path);
+    }
+  }, [currentNetwork]);
+
+  function clearUserData() {
+    dispatch(TokensActions.clearUserTokenState());
+    dispatch(VaultsActions.clearUserData());
+    dispatch(LabsActions.clearUserData());
+    dispatch(IronBankActions.clearUserData());
+  }
+
+  function clearData() {
+    dispatch(TokensActions.clearTokensData());
+    dispatch(VaultsActions.clearVaultsData());
+    dispatch(LabsActions.clearLabsData());
+    dispatch(IronBankActions.clearIronBankData());
+  }
+
+  function fetchData(path: string) {
+    dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
     switch (path) {
       case 'home':
         dispatch(LabsActions.initiateLabs());
@@ -119,27 +168,6 @@ export const Layout: FC = ({ children }) => {
       default:
         break;
     }
-  }, [location]);
-
-  // TODO: MOVE THIS LOGIC TO THUNKS
-  useEffect(() => {
-    clearUserData();
-    if (selectedAddress) {
-      fetchUserData(path);
-    }
-  }, [selectedAddress]);
-
-  useEffect(() => {
-    if (selectedAddress) {
-      fetchUserData(path);
-    }
-  }, [location]);
-
-  function clearUserData() {
-    dispatch(TokensActions.clearUserTokenState());
-    dispatch(VaultsActions.clearUserData());
-    dispatch(LabsActions.clearUserData());
-    dispatch(IronBankActions.clearUserData());
   }
 
   function fetchUserData(path: string) {
@@ -195,7 +223,10 @@ export const Layout: FC = ({ children }) => {
           title={t(`navigation.${path}`)}
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}
-          onWalletClick={() => dispatch(WalletActions.walletSelect())}
+          onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}
+          selectedNetwork={currentNetwork}
+          networkOptions={SUPPORTED_NETWORKS}
+          onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
         />
         {children}
         <Footer />

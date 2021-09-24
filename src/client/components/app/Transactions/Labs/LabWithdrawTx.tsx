@@ -10,6 +10,7 @@ import {
   VaultsActions,
   TokensActions,
   SettingsSelectors,
+  NetworkSelectors,
 } from '@store';
 import {
   toBN,
@@ -28,16 +29,19 @@ export interface LabWithdrawTxProps {
 }
 
 export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...props }) => {
-  const { CONTRACT_ADDRESSES } = getConfig();
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
+  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const selectedLabToken = tokenSelectorFilter(selectedLab?.address ?? '');
-  const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
+  let zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
+  zapOutTokens = selectedLab?.allowZapOut ? zapOutTokens : [];
   const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedLab?.defaultDisplayToken ?? '');
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
 
@@ -153,6 +157,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     error: expectedTxOutcomeStatus.error,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
+  const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -218,6 +223,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       targetAmountStatus={expectedAmountStatus}
       actions={txActions}
       status={{ error }}
+      loadingText={loadingText}
       onClose={onClose}
     />
   );

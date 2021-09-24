@@ -30,6 +30,10 @@ import { ReactComponent as StatusArrowIcon } from '@assets/icons/status-arrow.sv
 import { ReactComponent as WalletMissingIcon } from '@assets/icons/wallet-missing.svg';
 import { ReactComponent as ConstructionIcon } from '@assets/icons/construction.svg';
 
+// NOTE NETWORK Icons
+import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
+import { ReactComponent as FantomIcon } from '@assets/icons/networks/fantom.svg';
+
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
 export interface IconProps
@@ -81,4 +85,6 @@ export {
   StatusArrowIcon,
   WalletMissingIcon,
   ConstructionIcon,
+  EthereumIcon,
+  FantomIcon,
 };

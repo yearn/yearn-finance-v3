@@ -1,4 +1,4 @@
-import { EthereumNetwork } from './Ethereum';
+import { Network } from './Blockchain';
 import { Theme, Language } from './Settings';
 
 export interface Wallet {
@@ -10,13 +10,14 @@ export interface Wallet {
   isCreated: Promise<boolean> | boolean;
   isConnected: Promise<boolean> | boolean;
   create: (
-    ethereumNetwork: EthereumNetwork,
+    network: Network,
     subscriptions: Subscriptions,
     theme?: Theme,
     language?: Language
   ) => Promise<boolean> | boolean;
   connect: (args?: any) => Promise<boolean>;
   changeTheme?: (theme: Theme) => void;
+  changeNetwork?: (network: Network) => void;
 }
 
 export interface Subscriptions {

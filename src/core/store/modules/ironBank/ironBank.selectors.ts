@@ -6,13 +6,14 @@ import {
   IronBankMarketView,
   MarketActionsStatusMap,
   Status,
-  EthereumAddress,
+  Address,
   IronBankMarket,
   CyTokenUserMetadata,
   IronBankMarketPositionsMap,
   AllowancesMap,
   Token,
   Balance,
+  GeneralIronBankMarketView,
 } from '@types';
 import { toBN } from '@utils';
 import { initialMarketsActionsMap } from './ironBank.reducer';
@@ -173,7 +174,7 @@ const selectIronBankStatus = createSelector(
   }
 );
 
-const selectUnderlyingTokensAddresses = createSelector([selectMarketsMap], (markets): EthereumAddress[] => {
+const selectUnderlyingTokensAddresses = createSelector([selectMarketsMap], (markets): Address[] => {
   return Object.values(markets).map((market) => market.tokenId);
 });
 
@@ -187,7 +188,7 @@ interface CreateMarketProps {
   tokenAllowancesMap: AllowancesMap;
 }
 
-function createMarket(props: CreateMarketProps) {
+function createMarket(props: CreateMarketProps): GeneralIronBankMarketView {
   const {
     marketData,
     userMarketPositionData,

@@ -1,7 +1,9 @@
-import { EthereumAddress, TokenView } from '@types';
+import { Address, PositionView, TokenView } from '@types';
 
-export interface IronBankMarketView {
-  address: EthereumAddress;
+export interface IronBankMarketView extends PositionView, Omit<GeneralIronBankMarketView, 'LEND' | 'BORROW'> {}
+
+export interface GeneralIronBankMarketView {
+  address: Address;
   decimals: string;
   name: string;
   symbol: string;
@@ -13,12 +15,10 @@ export interface IronBankMarketView {
   isActive: boolean;
   exchangeRate: string;
   // user
-  userBalance: string;
-  userDeposited: string;
-  userDepositedUsdc: string;
   allowancesMap: { [spenderAddress: string]: string };
   enteredMarket: boolean;
-
+  LEND: PositionView;
+  BORROW: PositionView;
   // underlyingToken
   token: TokenView;
 }

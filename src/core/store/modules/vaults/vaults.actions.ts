@@ -9,7 +9,7 @@ import {
   TransactionOutcome,
   VaultsUserSummary,
   VaultUserMetadata,
-  EthereumAddress,
+  Address,
   Wei,
 } from '@types';
 import {
@@ -26,6 +26,7 @@ import { getConfig } from '@config';
 import { getConstants } from '../../../../config/constants';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
+const clearVaultsData = createAction<void>('vaults/clearVaultsData');
 const clearUserData = createAction<void>('vaults/clearUserData');
 const clearTransactionData = createAction<void>('vaults/clearTransactionData');
 const clearSelectedVaultAndStatus = createAction<void>('vaults/clearSelectedVaultAndStatus');
@@ -40,18 +41,20 @@ const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
 
 const getVaults = createAsyncThunk<{ vaultsData: Vault[] }, { addresses?: string[] }, ThunkAPI>(
   'vaults/getVaults',
-  async ({ addresses }, { extra }) => {
+  async ({ addresses }, { getState, extra }) => {
+    const { network } = getState();
     const { vaultService } = extra.services;
-    const vaultsData = await vaultService.getSupportedVaults({ addresses });
+    const vaultsData = await vaultService.getSupportedVaults({ network: network.current, addresses });
     return { vaultsData };
   }
 );
 
 const getVaultsDynamic = createAsyncThunk<{ vaultsDynamicData: VaultDynamic[] }, { addresses: string[] }, ThunkAPI>(
   'vaults/getVaultsDynamic',
-  async ({ addresses }, { extra }) => {
+  async ({ addresses }, { getState, extra }) => {
+    const { network } = getState();
     const { vaultService } = extra.services;
-    const vaultsDynamicData = await vaultService.getVaultsDynamicData(addresses);
+    const vaultsDynamicData = await vaultService.getVaultsDynamicData({ network: network.current, addresses });
     return { vaultsDynamicData };
   }
 );
@@ -60,25 +63,34 @@ const getUserVaultsPositions = createAsyncThunk<
   { userVaultsPositions: Position[] },
   { vaultAddresses?: string[] },
   ThunkAPI
->('vaults/getUserVaultsPositions', async ({ vaultAddresses }, { extra, getState, dispatch }) => {
+>('vaults/getUserVaultsPositions', async ({ vaultAddresses }, { extra, getState }) => {
+  const { network, wallet } = getState();
   const { services } = extra;
-  const userAddress = getState().wallet.selectedAddress;
+  const userAddress = wallet.selectedAddress;
   if (!userAddress) {
     throw new Error('WALLET NOT CONNECTED');
   }
-  const userVaultsPositions = await services.vaultService.getUserVaultsPositions({ userAddress, vaultAddresses });
+  const userVaultsPositions = await services.vaultService.getUserVaultsPositions({
+    network: network.current,
+    userAddress,
+    vaultAddresses,
+  });
   return { userVaultsPositions };
 });
 
 const getUserVaultsSummary = createAsyncThunk<{ userVaultsSummary: VaultsUserSummary }, void, ThunkAPI>(
   'vaults/getUserVaultsSummary',
   async (args, { extra, getState }) => {
+    const { network, wallet } = getState();
     const { services } = extra;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const userVaultsSummary = await services.vaultService.getUserVaultsSummary({ userAddress });
+    const userVaultsSummary = await services.vaultService.getUserVaultsSummary({
+      network: network.current,
+      userAddress,
+    });
     return { userVaultsSummary };
   }
 );
@@ -88,12 +100,17 @@ const getUserVaultsMetadata = createAsyncThunk<
   { vaultsAddresses?: string[] },
   ThunkAPI
 >('vaults/getUserVaultsMetadata', async ({ vaultsAddresses }, { extra, getState }) => {
+  const { network, wallet } = getState();
   const { vaultService } = extra.services;
-  const userAddress = getState().wallet.selectedAddress;
+  const userAddress = wallet.selectedAddress;
   if (!userAddress) {
     throw new Error('WALLET NOT CONNECTED');
   }
-  const userVaultsMetadata = await vaultService.getUserVaultsMetadata({ userAddress, vaultsAddresses });
+  const userVaultsMetadata = await vaultService.getUserVaultsMetadata({
+    network: network.current,
+    userAddress,
+    vaultsAddresses,
+  });
 
   return { userVaultsMetadata };
 });
@@ -135,15 +152,16 @@ const depositVault = createAsyncThunk<
 >(
   'vaults/depositVault',
   async ({ vaultAddress, tokenAddress, amount, slippageTolerance }, { extra, getState, dispatch }) => {
+    const { network, wallet, vaults, tokens } = getState();
     const { services } = extra;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const vaultData = getState().vaults.vaultsMap[vaultAddress];
-    const tokenData = getState().tokens.tokensMap[tokenAddress];
-    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
-    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
+    const vaultData = vaults.vaultsMap[vaultAddress];
+    const tokenData = tokens.tokensMap[tokenAddress];
+    const userTokenData = tokens.user.userTokensMap[tokenAddress];
+    const tokenAllowancesMap = tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
 
@@ -171,6 +189,7 @@ const depositVault = createAsyncThunk<
     const amountInWei = amount.multipliedBy(ONE_UNIT);
     const { vaultService } = services;
     const tx = await vaultService.deposit({
+      network: network.current,
       accountAddress: userAddress,
       tokenAddress: tokenData.address,
       vaultAddress,
@@ -193,15 +212,16 @@ const withdrawVault = createAsyncThunk<
 >(
   'vaults/withdrawVault',
   async ({ vaultAddress, amount, targetTokenAddress, slippageTolerance }, { extra, getState, dispatch }) => {
+    const { network, wallet, vaults, tokens } = getState();
     const { services } = extra;
-    const userAddress = getState().wallet.selectedAddress;
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const vaultData = getState().vaults.vaultsMap[vaultAddress];
-    const tokenData = getState().tokens.tokensMap[vaultData.tokenId];
-    const vaultAllowancesMap = getState().tokens.user.userTokensAllowancesMap[vaultAddress];
-    const userVaultData = getState().vaults.user.userVaultsPositionsMap[vaultAddress]?.DEPOSIT;
+    const vaultData = vaults.vaultsMap[vaultAddress];
+    const tokenData = tokens.tokensMap[vaultData.tokenId];
+    const vaultAllowancesMap = tokens.user.userTokensAllowancesMap[vaultAddress];
+    const userVaultData = vaults.user.userVaultsPositionsMap[vaultAddress]?.DEPOSIT;
 
     const amountOfShares = calculateSharesAmount({
       amount,
@@ -229,6 +249,7 @@ const withdrawVault = createAsyncThunk<
 
     const { vaultService } = services;
     const tx = await vaultService.withdraw({
+      network: network.current,
       accountAddress: userAddress,
       tokenAddress: vaultData.tokenId,
       vaultAddress,
@@ -269,16 +290,17 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
 
 export interface GetExpectedTransactionOutcomeProps {
   transactionType: 'DEPOSIT' | 'WITHDRAW';
-  sourceTokenAddress: EthereumAddress;
+  sourceTokenAddress: Address;
   sourceTokenAmount: Wei;
-  targetTokenAddress: EthereumAddress;
+  targetTokenAddress: Address;
 }
 
 const getExpectedTransactionOutcome = createAsyncThunk<
   { txOutcome: TransactionOutcome },
   GetExpectedTransactionOutcomeProps,
   ThunkAPI
->('vaults/getExpectedTransactionOutcome', async (getExpectedTxOutcomeProps, { dispatch, getState, extra }) => {
+>('vaults/getExpectedTransactionOutcome', async (getExpectedTxOutcomeProps, { getState, extra }) => {
+  const { network } = getState();
   const { services } = extra;
   const { vaultService } = services;
   const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
@@ -288,6 +310,7 @@ const getExpectedTransactionOutcome = createAsyncThunk<
   }
 
   const txOutcome = await vaultService.getExpectedTransactionOutcome({
+    network: network.current,
     transactionType,
     accountAddress,
     sourceTokenAddress,
@@ -307,6 +330,7 @@ export const VaultsActions = {
   getVaultsDynamic,
   getUserVaultsPositions,
   initSubscriptions,
+  clearVaultsData,
   clearUserData,
   approveZapOut,
   getExpectedTransactionOutcome,
