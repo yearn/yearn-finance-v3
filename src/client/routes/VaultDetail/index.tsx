@@ -25,8 +25,8 @@ const VaultDetailView = styled(ViewContainer)`
 `;
 
 const StyledInfoCard = styled(InfoCard)`
-  flex: 1;
-  ${halfWidthCss}
+  padding: 3rem;
+  margin: 0 auto;
 `;
 
 export interface VaultDetailRouteParams {
