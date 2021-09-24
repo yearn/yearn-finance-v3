@@ -11,6 +11,7 @@ import {
   VaultsSelectors,
   WalletSelectors,
   AppSelectors,
+  NetworkSelectors,
 } from '@store';
 
 import { device } from '@themes/default';
@@ -36,6 +37,7 @@ import {
   formatApy,
   orderApy,
 } from '@src/utils';
+import { getConfig } from '@config';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -127,7 +129,10 @@ export const Vaults = () => {
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   // const { isTablet, isMobile, width: DWidth } = useWindowDimensions();
+  const { NETWORK_SETTINGS } = getConfig();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
   const recommendations = useAppSelector(VaultsSelectors.selectRecommendations);
   const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
@@ -155,18 +160,17 @@ export const Vaults = () => {
     dispatch(ModalsActions.openModal({ modalName: 'withdrawTx' }));
   };
 
+  const summaryCardItems = [{ header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> }];
+  if (currentNetworkSettings.earningsEnabled) {
+    summaryCardItems.push(
+      { header: 'Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
+      { header: 'Est. yearly yield', Component: <Amount value={estYearlyYeild} input="usdc" /> }
+    );
+  }
+
   return (
     <ViewContainer>
-      <SummaryCard
-        header="Dashboard"
-        items={[
-          { header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> },
-          { header: 'Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
-          { header: 'Est. yearly yield', Component: <Amount value={estYearlyYeild} input="usdc" /> },
-        ]}
-        variant="secondary"
-        cardSize="small"
-      />
+      <SummaryCard header="Dashboard" items={summaryCardItems} variant="secondary" cardSize="small" />
 
       {generalLoading && <SpinnerLoading flex="1" width="100%" />}
 
