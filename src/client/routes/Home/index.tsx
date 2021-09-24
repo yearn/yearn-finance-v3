@@ -72,22 +72,21 @@ export const Home = () => {
     .plus(labsSummary.totalDeposits)
     .plus(ibSummary.supplyBalanceUsdc)
     .toString();
+
+  const summaryCardItems = [{ header: 'Total net worth', Component: <Amount value={netWorth} input="usdc" /> }];
+  if (currentNetworkSettings.earningsEnabled) {
+    summaryCardItems.push(
+      { header: 'Vaults earnings', Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" /> },
+      {
+        header: 'Vaults est. yearly yield',
+        Component: <Amount value={vaultsSummary.estYearlyYeild} input="usdc" />,
+      }
+    );
+  }
+
   return (
     <StyledViewContainer>
-      <HeaderCard
-        header="Dashboard"
-        items={[
-          { header: 'Total net worth', Component: <Amount value={netWorth} input="usdc" /> },
-          { header: 'Vaults earnings', Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" /> },
-          {
-            header: 'Vaults est. yearly yield',
-            Component: <Amount value={vaultsSummary.estYearlyYeild} input="usdc" />,
-          },
-        ]}
-        variant="secondary"
-        cardSize="small"
-      />
-
+      <HeaderCard header="Dashboard" items={summaryCardItems} variant="secondary" cardSize="small" />
       <Row>
         <StyledInfoCard
           header="Welcome to your Yearn home screen"
