@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
-import { Button, Text, OptionList } from '@components/common';
+import { Button, Text, OptionList, EthereumIcon, FantomIcon } from '@components/common';
+
+import { Network } from '@types';
 import { device } from '@themes/default';
 
 const BetaButton = styled(Button)`
@@ -53,6 +55,17 @@ const StyledNavbar = styled.nav`
     }
   }
 `;
+
+const getNetworkIcon = (network: Network) => {
+  switch (network) {
+    case 'mainnet':
+      return EthereumIcon;
+    case 'fantom':
+      return FantomIcon;
+    default:
+      return;
+  }
+};
 
 interface NavbarProps {
   className?: string;

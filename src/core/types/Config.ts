@@ -1,5 +1,5 @@
 import { Network, Address, Wei } from './Blockchain';
-import { Theme } from './Settings';
+import { NetworkSettings, Theme } from './Settings';
 
 export interface Config extends Env, Constants {}
 
@@ -25,6 +25,7 @@ export interface Constants {
   MAX_UINT256: Wei;
   YEARN_API: string;
   SUPPORTED_NETWORKS: Network[];
+  NETWORK_SETTINGS: NetworkSettings;
   WEB3_PROVIDER_HTTPS: string;
   WEB3_PROVIDER_WSS: string;
   FANTOM_PROVIDER_HTTPS: string;
