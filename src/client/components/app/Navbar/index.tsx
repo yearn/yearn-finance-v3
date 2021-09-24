@@ -59,16 +59,20 @@ export const Navbar = ({
   networkOptions,
   onNetworkChange,
 }: NavbarProps) => {
+  const dropdownSelectedNetwork = { value: networkOptions.indexOf(selectedNetwork).toString(), label: selectedNetwork };
+  const dropdownNetworkOptions = networkOptions.map((network, i) => ({ value: i.toString(), label: network }));
+
   return (
     <StyledNavbar className={className}>
       {title && <StyledText>{title}</StyledText>}
 
       <StyledNavbarActions>
         <BetaButton outline>BETA</BetaButton>
+
         <SimpleDropdown
-          selected={{ value: networkOptions.indexOf(selectedNetwork).toString(), label: selectedNetwork }}
+          selected={dropdownSelectedNetwork}
           setSelected={(option) => onNetworkChange(option.label)}
-          options={networkOptions.map((network, i) => ({ value: i.toString(), label: network }))}
+          options={dropdownNetworkOptions}
         />
 
         <ConnectWalletButton
