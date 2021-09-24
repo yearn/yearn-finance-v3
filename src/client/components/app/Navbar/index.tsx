@@ -44,8 +44,9 @@ const StyledNavbar = styled.nav`
   background-color: ${({ theme }) => theme.colors.background};
   z-index: ${(props) => props.theme.zindex.navbar};
   max-width: ${({ theme }) => theme.globalMaxWidth};
-  margin-top: 0.4rem;
-  margin-bottom: 1.6rem;
+  margin-top: -${({ theme }) => theme.layoutPadding};
+  padding-top: calc(0.4rem + ${({ theme }) => theme.layoutPadding});
+  padding-bottom: 1.6rem;
 
   @media ${device.mobile} {
     ${BetaButton} {
