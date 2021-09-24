@@ -83,8 +83,12 @@ export const VaultDetail = () => {
   //   },
   // ];
 
-  const chartData = parseHistoricalEarnings(selectedVault?.historicalEarnings);
-  const chartValue = parseLastEarnings(selectedVault?.historicalEarnings);
+  const chartData = currentNetworkSettings.earningsEnabled
+    ? parseHistoricalEarnings(selectedVault?.historicalEarnings)
+    : undefined;
+  const chartValue = currentNetworkSettings.earningsEnabled
+    ? parseLastEarnings(selectedVault?.historicalEarnings)
+    : undefined;
 
   return (
     <VaultDetailView>
