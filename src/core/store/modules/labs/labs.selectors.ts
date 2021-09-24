@@ -210,6 +210,8 @@ function createLab(props: CreateLabProps): GeneralLabView {
     apyData: labData.metadata.apy?.net_apy.toString() ?? '0',
     allowancesMap: labAllowances ?? {},
     pricePerShare: labData.metadata.pricePerShare,
+    allowZapIn: true,
+    allowZapOut: true,
     mainPositionKey,
     DEPOSIT: {
       userBalance: userPositions?.DEPOSIT?.balance ?? '0',

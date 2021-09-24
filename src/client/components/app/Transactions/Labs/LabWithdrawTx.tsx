@@ -40,7 +40,8 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const selectedLabToken = tokenSelectorFilter(selectedLab?.address ?? '');
-  const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
+  let zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
+  zapOutTokens = selectedLab?.allowZapOut ? zapOutTokens : [];
   const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedLab?.defaultDisplayToken ?? '');
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
 

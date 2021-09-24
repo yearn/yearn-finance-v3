@@ -252,6 +252,8 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     earned: userVaultsMetadataMap?.earned ?? '0',
     strategies: vaultData.metadata.strategies?.strategiesMetadata ?? [],
     historicalEarnings: vaultData.metadata.historicEarnings ?? [],
+    allowZapIn: !!vaultData.metadata.allowZapIn,
+    allowZapOut: !!vaultData.metadata.allowZapOut,
     DEPOSIT: {
       userBalance: userVaultPositionsMap?.DEPOSIT?.balance ?? '0',
       userDeposited: userVaultPositionsMap?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',

@@ -25,6 +25,8 @@ export interface GeneralVaultView {
   allowancesMap: { [vaultAddress: string]: string };
   approved: boolean;
   pricePerShare: string;
+  allowZapIn: boolean;
+  allowZapOut: boolean;
   token: TokenView;
   DEPOSIT: PositionView;
 }

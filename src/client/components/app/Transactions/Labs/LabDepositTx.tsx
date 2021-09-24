@@ -28,11 +28,6 @@ import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
 
-const isZapDisabled = (labAddress?: string) => {
-  // TODO: DISABLE ZAPS THROUGH METADATA
-  return false; // NO LAB ADDRESS DISABLED NOW
-};
-
 export interface LabDepositTxProps {
   onClose?: () => void;
 }
@@ -49,7 +44,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
-  const userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
+  let userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
+  userTokens = selectedLab?.allowZapIn ? userTokens : [];
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
 
   // TODO: ADD EXPECTED OUTCOME TO LABS
@@ -57,10 +53,9 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
 
-  const sellTokensOptions = isZapDisabled(selectedLab?.address)
-    ? []
-    : userTokens.filter(({ address }) => address !== selectedLab?.token.address);
-  if (selectedLab) sellTokensOptions.unshift(selectedLab.token);
+  const sellTokensOptions = selectedLab
+    ? [selectedLab.token, ...userTokens.filter(({ address }) => address !== selectedLab.token.address)]
+    : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
 

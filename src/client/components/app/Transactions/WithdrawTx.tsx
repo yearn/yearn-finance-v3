@@ -37,7 +37,8 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
-  const zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
+  let zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
+  zapOutTokens = selectedVault?.allowZapOut ? zapOutTokens : [];
   const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(
     selectedVault?.defaultDisplayToken ?? ''
   );
