@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
-import { Button, Text, SimpleDropdown } from '@components/common';
+import { Button, Text, SimpleDropdown, EthereumIcon, FantomIcon } from '@components/common';
+import { Network } from '@types';
 
 const BetaButton = styled(Button)`
   white-space: nowrap;
@@ -37,6 +38,17 @@ const StyledNavbar = styled.nav`
   z-index: ${(props) => props.theme.zindex.navbar};
   max-width: ${({ theme }) => theme.globalMaxWidth};
 `;
+
+const getNetworkIcon = (network: Network) => {
+  switch (network) {
+    case 'mainnet':
+      return EthereumIcon;
+    case 'fantom':
+      return FantomIcon;
+    default:
+      return;
+  }
+};
 
 interface NavbarProps {
   className?: string;
