@@ -1,6 +1,8 @@
 import styled from 'styled-components';
+
 import { useAppTranslation } from '@hooks';
 import { Button, Text } from '@components/common';
+import { device } from '@themes/default';
 
 interface WalletAddressProps {
   address?: string;
@@ -9,8 +11,13 @@ interface WalletAddressProps {
 }
 
 const StyledButton = styled(Button)`
+  overflow: hidden;
   background-color: ${({ theme }) => theme.colors.walletButton.background};
   color: ${({ theme }) => theme.colors.walletButton.color};
+
+  @media ${device.mobile} {
+    width: auto;
+  }
 `;
 
 export const ConnectWalletButton = ({ address, ensName, onClick }: WalletAddressProps) => {
@@ -25,7 +32,7 @@ export const ConnectWalletButton = ({ address, ensName, onClick }: WalletAddress
 
   return (
     <StyledButton onClick={() => onClick && onClick()}>
-      <Text>{buttonMessage}</Text>
+      <Text ellipsis>{buttonMessage}</Text>
     </StyledButton>
   );
 };

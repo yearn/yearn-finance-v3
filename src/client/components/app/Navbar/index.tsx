@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ConnectWalletButton } from '@components/app';
 import { Button, Text, OptionList, EthereumIcon, FantomIcon } from '@components/common';
 
+import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
@@ -16,13 +17,13 @@ const BetaButton = styled(Button)`
 
 const StyledOptionList = styled(OptionList)`
   width: 14rem;
-  max-width: 14vw;
 `;
 
 const StyledNavbarActions = styled.div`
   display: grid;
   grid-auto-flow: column;
   grid-gap: 0.8rem;
+  padding-left: 0.8rem;
   align-items: center;
   justify-content: flex-end;
   flex: 1;
@@ -54,6 +55,9 @@ const StyledNavbar = styled.nav`
     }
     ${StyledText} {
       font-size: 1.9rem;
+    }
+    ${StyledOptionList} {
+      width: auto;
     }
   }
 `;
@@ -90,6 +94,7 @@ export const Navbar = ({
   networkOptions,
   onNetworkChange,
 }: NavbarProps) => {
+  const { isMobile } = useWindowDimensions();
   const { NETWORK_SETTINGS } = getConfig();
 
   const dropdownSelectedNetwork = {
@@ -114,6 +119,7 @@ export const Navbar = ({
           selected={dropdownSelectedNetwork}
           setSelected={(option) => onNetworkChange(option.value)}
           options={dropdownNetworkOptions}
+          hideIcons={isMobile}
         />
 
         <ConnectWalletButton

@@ -1,7 +1,7 @@
 import { ElementType, FC, useState } from 'react';
 import styled from 'styled-components';
 
-import { Icon } from '@components/common';
+import { Icon, Text } from '@components/common';
 
 const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
   --dropdown-background: ${({ theme }) => theme.colors.surface};
@@ -32,11 +32,16 @@ const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; sele
   `}
 `;
 
+const StyledText = styled(Text)`
+  flex: 1;
+  text-align: center;
+`;
+
 const StyledIcon = styled(Icon)`
   width: 1.6rem;
   height: 1.6rem;
-  left: 0.6rem;
-  position: absolute;
+  margin-right: 0.8rem;
+  flex-shrink: 0;
 `;
 
 const Options = styled.div<{ open?: boolean }>`
@@ -59,7 +64,6 @@ const Options = styled.div<{ open?: boolean }>`
 const OptionChild = styled.div<{ selected?: boolean }>`
   display: flex;
   align-items: center;
-  justify-content: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -93,6 +97,7 @@ export interface OptionListProps {
   options: Option[];
   className?: string;
   disabled?: boolean;
+  hideIcons?: boolean;
   onChange?: (selected: Option) => void;
 }
 
@@ -102,6 +107,7 @@ export const OptionList: FC<OptionListProps> = ({
   options,
   className,
   disabled,
+  hideIcons,
   onChange,
   children,
   ...props
@@ -133,8 +139,8 @@ export const OptionList: FC<OptionListProps> = ({
       {...props}
     >
       <OptionChild onClick={() => (!isSingleOption ? setOpen(!open) : null)}>
-        {selected?.Icon && <StyledIcon Component={selected.Icon} />}
-        {selectedText}
+        {!hideIcons && selected?.Icon && <StyledIcon Component={selected.Icon} />}
+        <StyledText ellipsis>{selectedText}</StyledText>
       </OptionChild>
 
       <Options open={open}>
@@ -144,8 +150,8 @@ export const OptionList: FC<OptionListProps> = ({
             onClick={() => selectOption(option)}
             selected={option.value === selected.value}
           >
-            {option?.Icon && <StyledIcon Component={option.Icon} />}
-            {option.label}
+            {!hideIcons && option?.Icon && <StyledIcon Component={option.Icon} />}
+            <StyledText ellipsis>{option.label}</StyledText>
           </OptionChild>
         ))}
       </Options>
