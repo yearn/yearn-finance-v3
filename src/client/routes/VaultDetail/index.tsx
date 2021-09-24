@@ -6,12 +6,19 @@ import { AppSelectors, TokensSelectors, VaultsSelectors, NetworkSelectors } from
 import { useAppSelector, useIsMounting } from '@hooks';
 import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
 import { SpinnerLoading, Button, Text } from '@components/common';
-import { parseHistoricalEarnings, parseLastEarnings, halfWidthCss } from '@utils';
+
+import { parseHistoricalEarnings, parseLastEarnings } from '@utils';
 import { getConfig } from '@config';
+import { device } from '@themes/default';
 
 const BackButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.surface};
   color: ${({ theme }) => theme.colors.onSurfaceH2};
+`;
+
+const StyledInfoCard = styled(InfoCard)`
+  padding: 3rem;
+  margin: 0 auto;
 `;
 
 const ViewHeader = styled.div`
@@ -22,11 +29,12 @@ const VaultDetailView = styled(ViewContainer)`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-`;
 
-const StyledInfoCard = styled(InfoCard)`
-  flex: 1;
-  ${halfWidthCss}
+  @media ${device.mobile} {
+    ${StyledInfoCard} {
+      padding: 1rem;
+    }
+  }
 `;
 
 export interface VaultDetailRouteParams {
