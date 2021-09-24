@@ -5,6 +5,7 @@ import { Button, Text, OptionList, EthereumIcon, FantomIcon } from '@components/
 
 import { Network } from '@types';
 import { device } from '@themes/default';
+import { getConfig } from '@config';
 
 const BetaButton = styled(Button)`
   white-space: nowrap;
@@ -73,8 +74,8 @@ interface NavbarProps {
   walletAddress?: string;
   addressEnsName?: string;
   onWalletClick?: () => void;
-  selectedNetwork: string;
-  networkOptions: string[];
+  selectedNetwork: Network;
+  networkOptions: Network[];
   onNetworkChange: (network: string) => void;
 }
 
@@ -88,8 +89,18 @@ export const Navbar = ({
   networkOptions,
   onNetworkChange,
 }: NavbarProps) => {
-  const dropdownSelectedNetwork = { value: networkOptions.indexOf(selectedNetwork).toString(), label: selectedNetwork };
-  const dropdownNetworkOptions = networkOptions.map((network, i) => ({ value: i.toString(), label: network }));
+  const { NETWORK_SETTINGS } = getConfig();
+
+  const dropdownSelectedNetwork = {
+    value: selectedNetwork,
+    label: NETWORK_SETTINGS[selectedNetwork].name,
+    icon: getNetworkIcon(selectedNetwork),
+  };
+  const dropdownNetworkOptions = networkOptions.map((network, i) => ({
+    value: network,
+    label: NETWORK_SETTINGS[network].name,
+    icon: getNetworkIcon(network),
+  }));
 
   return (
     <StyledNavbar className={className}>
@@ -100,7 +111,7 @@ export const Navbar = ({
 
         <StyledOptionList
           selected={dropdownSelectedNetwork}
-          setSelected={(option) => onNetworkChange(option.label)}
+          setSelected={(option) => onNetworkChange(option.value)}
           options={dropdownNetworkOptions}
         />
 

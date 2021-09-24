@@ -29,6 +29,8 @@ import { ReactComponent as ChevronLeftIcon } from '@assets/icons/chevron-left.sv
 import { ReactComponent as StatusArrowIcon } from '@assets/icons/status-arrow.svg';
 import { ReactComponent as WalletMissingIcon } from '@assets/icons/wallet-missing.svg';
 import { ReactComponent as ConstructionIcon } from '@assets/icons/construction.svg';
+
+// NOTE NETWORK Icons
 import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
 import { ReactComponent as FantomIcon } from '@assets/icons/networks/fantom.svg';
 

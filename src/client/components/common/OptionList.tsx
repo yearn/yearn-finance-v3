@@ -1,5 +1,7 @@
-import { FC, useState } from 'react';
+import { ElementType, FC, useState } from 'react';
 import styled from 'styled-components';
+
+import { Icon } from '@components/common';
 
 const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
   --dropdown-background: ${({ theme }) => theme.colors.surface};
@@ -87,6 +89,7 @@ const Option = styled.div<{ selected?: boolean }>`
 interface Option {
   value: string;
   label: string;
+  Icon?: ElementType;
 }
 
 export interface OptionListProps {
@@ -110,6 +113,8 @@ export const OptionList: FC<OptionListProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const isSingleOption = options.length === 1;
+
+  // console.log(selected);
 
   let selectedText = 'None';
   if (selected?.value) {
@@ -135,12 +140,14 @@ export const OptionList: FC<OptionListProps> = ({
       {...props}
     >
       <OptionSelected onClick={() => (!isSingleOption ? setOpen(!open) : null)}>
+        {selected?.Icon && <Icon Component={selected.Icon} />}
         <SelectedText>{selectedText}</SelectedText>
       </OptionSelected>
 
       <Options open={open}>
         {options.map((option) => (
           <Option key={option.value} onClick={() => selectOption(option)} selected={option.value === selected.value}>
+            {option?.Icon && <Icon Component={option.Icon} />}
             {option.label}
           </Option>
         ))}
