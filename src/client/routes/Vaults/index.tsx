@@ -27,7 +27,15 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { formatPercent, humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount } from '@src/utils';
+import {
+  formatPercent,
+  humanizeAmount,
+  normalizeUsdc,
+  halfWidthCss,
+  normalizeAmount,
+  formatApy,
+  orderApy,
+} from '@src/utils';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -213,9 +221,9 @@ export const Vaults = () => {
                 className: 'col-name',
               },
               {
-                key: 'apyData',
+                key: 'apy',
                 header: 'APY',
-                format: ({ apyData }) => formatPercent(apyData, 2),
+                format: ({ apyData, apyType }) => formatApy(apyData, apyType),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
@@ -261,6 +269,7 @@ export const Vaults = () => {
             ]}
             data={deposits.map((vault) => ({
               ...vault,
+              apy: orderApy(vault.apyData, vault.apyType),
               balance: normalizeAmount(vault.userDeposited, vault.token.decimals),
               actions: null,
             }))}
@@ -287,9 +296,9 @@ export const Vaults = () => {
                 className: 'col-name',
               },
               {
-                key: 'apyData',
+                key: 'apy',
                 header: 'APY',
-                format: ({ apyData }) => formatPercent(apyData, 2),
+                format: ({ apyData, apyType }) => formatApy(apyData, apyType),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
@@ -326,6 +335,7 @@ export const Vaults = () => {
             ]}
             data={filteredVaults.map((vault) => ({
               ...vault,
+              apy: orderApy(vault.apyData, vault.apyType),
               userTokenBalance: normalizeAmount(vault.token.balance, vault.token.decimals),
               userTokenBalanceUsdc: vault.token.balanceUsdc,
               actions: null,
@@ -342,7 +352,7 @@ export const Vaults = () => {
             }
             searching={opportunities.length > filteredVaults.length}
             onAction={({ address }) => history.push(`/vault/${address}`)}
-            initialSortBy="apyData"
+            initialSortBy="apy"
             wrap
           />
         </>

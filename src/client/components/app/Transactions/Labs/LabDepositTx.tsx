@@ -10,6 +10,7 @@ import {
   VaultsActions,
   VaultsSelectors,
   SettingsSelectors,
+  NetworkSelectors,
 } from '@store';
 import {
   toBN,
@@ -23,9 +24,9 @@ import {
   validateSlippage,
   formatPercent,
 } from '@src/utils';
+import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
-import { getConstants } from '../../../../../config/constants';
 
 const isZapDisabled = (labAddress?: string) => {
   // TODO: DISABLE ZAPS THROUGH METADATA
@@ -37,12 +38,15 @@ export interface LabDepositTxProps {
 }
 
 export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
-  const { YVBOOST, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
+  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
+  const { YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
@@ -185,6 +189,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     error: expectedTxOutcomeStatus.error || error,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
+  const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -261,6 +266,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       targetAmountStatus={expectedAmountStatus}
       actions={txActions}
       status={{ error }}
+      loadingText={loadingText}
       onClose={onClose}
     />
   );

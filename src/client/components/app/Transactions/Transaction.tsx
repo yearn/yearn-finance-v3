@@ -54,6 +54,7 @@ interface TransactionProps {
   targetAmountStatus: Status;
   actions: Action[];
   status: Status;
+  loadingText?: string;
   onClose?: () => void;
 }
 
@@ -81,6 +82,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
     targetAmountStatus,
     actions,
     status,
+    loadingText,
     onClose,
   } = props;
 
@@ -141,7 +143,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         inputError={!!targetAmountStatus.error}
         readOnly
         loading={toBN(sourceAmount).eq(0) ? false : targetAmountStatus.loading}
-        loadingText="Simulating..."
+        loadingText={loadingText ?? 'Simulating...'}
       />
 
       <TxActions>
