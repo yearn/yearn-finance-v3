@@ -13,11 +13,14 @@ const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; sele
   display: flex;
   background: var(--dropdown-background);
   color: var(--dropdown-color);
+  fill: currentColor;
+  stroke: currentColor;
   user-select: none;
   border-radius: ${({ theme }) => theme.globalRadius};
   position: relative;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   cursor: ${({ selectable }) => (selectable ? 'pointer' : null)};
+  padding: 0 0.8rem;
   width: max-content;
   min-width: 9rem;
 
@@ -29,21 +32,11 @@ const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; sele
   `}
 `;
 
-const OptionSelected = styled.div`
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0.8rem;
-  width: 100%;
-`;
-
-const SelectedText = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+const StyledIcon = styled(Icon)`
+  width: 1.6rem;
+  height: 1.6rem;
+  left: 0.6rem;
+  position: absolute;
 `;
 
 const Options = styled.div<{ open?: boolean }>`
@@ -71,8 +64,10 @@ const OptionChild = styled.div<{ selected?: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: ${({ theme }) => theme.globalRadius};
-  padding: 0.4rem;
+  padding: 0.6rem;
   transition: opacity 200ms ease-in-out;
+  width: 100%;
+  position: relative;
 
   ${(props) =>
     props.selected &&
@@ -137,10 +132,10 @@ export const OptionList: FC<OptionListProps> = ({
       onBlur={() => setOpen(false)}
       {...props}
     >
-      <OptionSelected onClick={() => (!isSingleOption ? setOpen(!open) : null)}>
-        {selected?.Icon && <Icon Component={selected.Icon} />}
-        <SelectedText>{selectedText}</SelectedText>
-      </OptionSelected>
+      <OptionChild onClick={() => (!isSingleOption ? setOpen(!open) : null)}>
+        {selected?.Icon && <StyledIcon Component={selected.Icon} />}
+        {selectedText}
+      </OptionChild>
 
       <Options open={open}>
         {options.map((option) => (
@@ -149,7 +144,7 @@ export const OptionList: FC<OptionListProps> = ({
             onClick={() => selectOption(option)}
             selected={option.value === selected.value}
           >
-            {option?.Icon && <Icon Component={option.Icon} />}
+            {option?.Icon && <StyledIcon Component={option.Icon} />}
             {option.label}
           </OptionChild>
         ))}
