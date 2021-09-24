@@ -48,7 +48,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
   async ({ walletName, network }, { dispatch, getState, extra }) => {
     const { context, config } = extra;
     const { wallet, web3Provider, yearnSdk } = context;
-    const { NETWORK, ALLOW_DEV_MODE } = config;
+    const { NETWORK, ALLOW_DEV_MODE, SUPPORTED_NETWORKS, NETWORK_SETTINGS } = config;
     const { theme, settings } = getState();
 
     if (!wallet.isCreated) {
@@ -69,7 +69,10 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
           }
         },
         network: (networkId) => {
-          if (wallet.isConnected) {
+          const supportedNetworkSettings = SUPPORTED_NETWORKS.find(
+            (network) => NETWORK_SETTINGS[network].networkId === networkId
+          );
+          if (wallet.isConnected && supportedNetworkSettings) {
             web3Provider.register('wallet', getEthersProvider(wallet.provider as ExternalProvider));
             const network = getNetwork(networkId);
             const providerType = getProviderType(network);
