@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
-import BigNumber from 'bignumber.js';
 
 import { AllowancesMap, Balance, RootState, Status, Token, TokenView } from '@types';
+import { toBN } from '@utils';
 import { getConfig } from '@config';
 import { memoize } from 'lodash';
 
@@ -24,11 +24,11 @@ const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (to
     const allowancesMap = userTokensAllowancesMap[address] ?? {};
     return createToken({ tokenData, userTokenData, allowancesMap });
   });
-  return tokens;
+  return tokens.filter((token) => toBN(token.balance).gt(0));
 });
 
 const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
-  let totalBalance: BigNumber = new BigNumber('0');
+  let totalBalance = toBN('0');
   userTokens.forEach((userToken) => (totalBalance = totalBalance.plus(userToken.balanceUsdc)));
 
   return {

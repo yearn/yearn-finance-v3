@@ -34,7 +34,7 @@ const getIronBankSummary = createAsyncThunk<{ userIronBankSummary: IronBankUserS
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    if (!NETWORK_SETTINGS[network.current]?.labsEnabled)
+    if (!NETWORK_SETTINGS[network.current]?.ironBankEnabled)
       return {
         userIronBankSummary: {
           supplyBalanceUsdc: '0',
@@ -59,7 +59,7 @@ const getMarketsDynamic = createAsyncThunk<
   const { ironBankService } = extra.services;
   const { NETWORK_SETTINGS } = extra.config;
 
-  if (!NETWORK_SETTINGS[network.current].labsEnabled) return { marketsDynamicData: [] };
+  if (!NETWORK_SETTINGS[network.current].ironBankEnabled) return { marketsDynamicData: [] };
 
   const marketsDynamicData = await ironBankService.getMarketsDynamicData({
     network: network.current,
@@ -75,7 +75,7 @@ const getMarkets = createAsyncThunk<{ ironBankMarkets: IronBankMarket[] }, undef
     const { ironBankService } = extra.services;
     const { NETWORK_SETTINGS } = extra.config;
 
-    if (!NETWORK_SETTINGS[network.current]?.labsEnabled) return { ironBankMarkets: [] };
+    if (!NETWORK_SETTINGS[network.current]?.ironBankEnabled) return { ironBankMarkets: [] };
 
     const ironBankMarkets = await ironBankService.getSupportedMarkets({ network: network.current });
 
@@ -94,7 +94,7 @@ const getUserMarketsPositions = createAsyncThunk<
   const userAddress = wallet.selectedAddress;
 
   if (!userAddress) throw new Error('WALLET NOT CONNECTED');
-  if (!NETWORK_SETTINGS[network.current].labsEnabled) return { userMarketsPositions: [] };
+  if (!NETWORK_SETTINGS[network.current].ironBankEnabled) return { userMarketsPositions: [] };
 
   const userMarketsPositions = await ironBankService.getUserMarketsPositions({
     network: network.current,
@@ -116,7 +116,7 @@ const getUserMarketsMetadata = createAsyncThunk<
   const userAddress = wallet.selectedAddress;
 
   if (!userAddress) throw new Error('WALLET NOT CONNECTED');
-  if (!NETWORK_SETTINGS[network.current].labsEnabled) return { userMarketsMetadata: [] };
+  if (!NETWORK_SETTINGS[network.current].ironBankEnabled) return { userMarketsMetadata: [] };
 
   const userMarketsMetadata = await ironBankService.getUserMarketsMetadata({
     network: network.current,
