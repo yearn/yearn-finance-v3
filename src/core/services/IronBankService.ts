@@ -129,9 +129,10 @@ export class IronBankServiceImpl implements IronBankService {
     actionType,
   }: EnterOrExitMarketProps): Promise<TransactionResponse> {
     const { CONTRACT_ADDRESSES } = this.config;
-    const { ironBankComptroller } = CONTRACT_ADDRESSES;
+    const { ironBankComptroller, ironBankComptrollerFantom } = CONTRACT_ADDRESSES;
+    const comptrollerAddress = network === 'fantom' ? ironBankComptrollerFantom : ironBankComptroller;
     const provider = this.web3Provider.getSigner();
-    const ironBankComptrollerContract = getContract(ironBankComptroller, ironBankComptrollerAbi, provider);
+    const ironBankComptrollerContract = getContract(comptrollerAddress, ironBankComptrollerAbi, provider);
     switch (actionType) {
       case 'enterMarket':
         return await this.transactionService.execute({

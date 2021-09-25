@@ -67,7 +67,11 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   const maxAllowedBorrowBalance = toBN(borrowBalance).div(IRON_BANK_MAX_RATIO).toString();
   const suppliedTokens = normalizeAmount(selectedMarket.LEND.userDeposited, selectedToken.decimals);
   const availableCollateral = toBN(borrowLimit).minus(maxAllowedBorrowBalance).toString();
-  let withdrawableTokens = toBN(availableCollateral).div(collateralFactor).div(underlyingTokenPrice).toString();
+  let withdrawableTokens = suppliedTokens;
+  withdrawableTokens = toBN(borrowBalance).gt(0)
+    ? toBN(availableCollateral).div(collateralFactor).div(underlyingTokenPrice).toString()
+    : withdrawableTokens;
+
   withdrawableTokens = toBN(withdrawableTokens).lt(0) ? '0' : withdrawableTokens;
   withdrawableTokens = toBN(withdrawableTokens).gt(suppliedTokens) ? suppliedTokens : withdrawableTokens;
   withdrawableTokens = toBN(withdrawableTokens).toFixed(selectedToken.decimals);

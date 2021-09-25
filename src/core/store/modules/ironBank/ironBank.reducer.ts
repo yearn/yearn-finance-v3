@@ -161,7 +161,15 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
         state.user.marketsAllowancesMap[address] = allowancesMap;
       });
 
-      state.user.userMarketsPositionsMap = { ...state.user.userMarketsPositionsMap, ...marketsPositionsMap };
+      if (!userMarketsPositions.length) {
+        marketAddresses?.forEach((address) => {
+          const userMarketsPositionsMapClone = { ...state.user.userMarketsPositionsMap };
+          delete userMarketsPositionsMapClone[address];
+          state.user.userMarketsPositionsMap = { ...userMarketsPositionsMapClone };
+        });
+      } else {
+        state.user.userMarketsPositionsMap = { ...state.user.userMarketsPositionsMap, ...marketsPositionsMap };
+      }
       state.statusMap.user.getUserMarketsPositions = {};
     })
     .addCase(getUserMarketsPositions.rejected, (state, { meta, error }) => {

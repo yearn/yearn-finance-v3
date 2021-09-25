@@ -26,7 +26,7 @@ export const toBN = (amount?: string | number) => {
 };
 
 export const formatAmount = (amount: string, decimals: number) => {
-  return new BigNumber(amount).toFormat(decimals, format);
+  return new BigNumber(amount).toFormat(decimals, BigNumber.ROUND_FLOOR, format);
 };
 
 export const weiToUnits = (amount: string, decimals: number) => formatUnits(EthersBN.from(amount), decimals);
