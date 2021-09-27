@@ -125,7 +125,16 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
         state.user.vaultsAllowancesMap[address] = allowancesMap;
       });
 
-      state.user.userVaultsPositionsMap = { ...state.user.userVaultsPositionsMap, ...vaultsPositionsMap };
+      if (!userVaultsPositions.length) {
+        vaultAddresses?.forEach((address) => {
+          const userVaultsPositionsMapClone = { ...state.user.userVaultsPositionsMap };
+          delete userVaultsPositionsMapClone[address];
+          state.user.userVaultsPositionsMap = { ...userVaultsPositionsMapClone };
+        });
+      } else {
+        state.user.userVaultsPositionsMap = { ...state.user.userVaultsPositionsMap, ...vaultsPositionsMap };
+      }
+
       state.statusMap.user.getUserVaultsPositions = {};
     })
     .addCase(getUserVaultsPositions.rejected, (state, { meta, error }) => {
