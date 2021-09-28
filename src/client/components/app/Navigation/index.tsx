@@ -14,7 +14,7 @@ export interface NavigationLink {
   hideMobile?: boolean;
 }
 
-const StyledNavigation = styled.nav``;
+const StyledNavigation = styled.div``;
 
 const navLinks = [
   {

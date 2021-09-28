@@ -22,6 +22,7 @@ import {
 import { ThemeBox } from '@components/app/Settings';
 import { device } from '@themes/default';
 import { formatPercent } from '@utils';
+import React from 'react';
 
 const sectionsGap = '2.2rem';
 const sectionsBorderRadius = '0.8rem';
@@ -63,7 +64,6 @@ const SectionContent = styled.div`
 const SectionTitle = styled.div`
   display: flex;
   align-items: flex-start;
-  color: ${({ theme }) => theme.colors.secondary};
   fill: ${({ theme }) => theme.colors.secondary};
   background: ${({ theme }) => theme.colors.surfaceVariantA};
   padding: ${({ theme }) => theme.cardPadding};
@@ -82,8 +82,18 @@ const SectionTitle = styled.div`
 `;
 
 const SectionIcon = styled(Icon)`
+  display: inline-block;
   fill: inherit;
   margin-right: 0.7rem;
+`;
+
+const SectionHeading = styled.h3`
+  color: ${({ theme }) => theme.colors.secondary};
+  display: inline-block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
 `;
 
 const SlippageOption = styled.div<{ active?: boolean }>`
@@ -175,8 +185,10 @@ export const Settings = () => {
         <SettingsCardContent>
           <SettingsSection>
             <SectionTitle>
-              <SectionIcon Component={ClockIcon} />
-              Slippage Tolerance
+              <SectionHeading>
+                <SectionIcon Component={ClockIcon} />
+                Slippage tolerance
+              </SectionHeading>
             </SectionTitle>
             <SectionContent>
               {availableSlippages.map((slippage) => (
@@ -189,8 +201,10 @@ export const Settings = () => {
 
           <SettingsSection>
             <SectionTitle>
-              <SectionIcon Component={ThemesIcon} />
-              {t('settings.themes')}
+              <SectionHeading>
+                <SectionIcon Component={ThemesIcon} />
+                {t('settings.themes')}
+              </SectionHeading>
             </SectionTitle>
 
             <SectionContent>

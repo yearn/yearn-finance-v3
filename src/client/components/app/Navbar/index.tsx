@@ -29,13 +29,15 @@ const StyledNavbarActions = styled.div`
   flex: 1;
 `;
 
-const StyledText = styled(Text)`
+const StyledText = styled.h1`
   font-size: 2.4rem;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.secondary};
+  margin: 0;
+  padding: 0;
 `;
 
-const StyledNavbar = styled.nav`
+const StyledNavbar = styled.header`
   position: sticky;
   top: 0;
   left: 0;

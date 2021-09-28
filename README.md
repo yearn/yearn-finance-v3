@@ -28,20 +28,19 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 
 ### Working from a forked repo
 
-- set remote to your fork
+- set upstream to your fork
 
-`$ git remote set-url origin https://github.com/pentcle/yearn-finance-v3`
-
-
-- set upstream to original repo 
+`$ git remote add upstream https://github.com/<your-gh>>/yearn-finance-v3`
 
 
-`$ git remote add upstream https://github.com/yearn/yearn-finance-v3.git`
+- set origin to original repo 
 
-`$ git pull upstream master --rebase`
+`$ git remote add origin https://github.com/yearn/yearn-finance-v3.git`
+
+`$ git pull origin master --rebase`
 
 
-- soft reset to squash your commits
+- soft reset to squash your commits (optional)
 
 `$ git reset --soft <SHA of commit prior to your first one>`
 
@@ -49,7 +48,10 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 
 `$ git commit -S -m "message"`
 
-`$ git push --force`
+
+- push to your fork
+
+`$ git push upstream <branch-name> --force`
 
 
 - info about verified commits
