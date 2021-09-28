@@ -4,6 +4,8 @@ import { sharedTheme } from '../default';
 const lightTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
+    logo: '#006AE3',
+
     primary: '#F0F0F0',
     background: '#FFFFFF',
     surface: '#F0F0F0',
@@ -56,7 +58,7 @@ const lightTheme: DefaultTheme = {
       backgroundVariant: '#E8E8EA',
       onBackgroundVariant: '#FFFFFF',
       onBackgroundVariantB: '#F0F0F0',
-      onBackgroundVariantColor: '#555555',
+      onBackgroundVariantColor: '#6e6e6e',
       primary: '#00A3FF',
       loading: '#FFA800',
       error: '#FF005E',

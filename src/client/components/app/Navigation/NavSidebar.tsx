@@ -27,7 +27,7 @@ const SidebarContent = styled.div`
 const StyledLogo = styled(Logo)`
   justify-content: flex-start;
   height: 2.4rem;
-  fill: ${({ theme }) => theme.colors.secondaryVariantA};
+  fill: ${({ theme }) => theme.colors.logo};
 `;
 
 const LinkList = styled.div`

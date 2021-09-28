@@ -9,6 +9,8 @@ const classicTheme: DefaultTheme = {
     image: ClassicBackground,
   },
   colors: {
+    logo: '#006AE3',
+
     primary: '#0A1D3F',
     background: '#1F255F',
     surface: '#0A1D3F',

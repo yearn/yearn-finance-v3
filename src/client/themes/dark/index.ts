@@ -4,11 +4,13 @@ import { sharedTheme } from '../default';
 const darkTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
+    logo: '#006AE3',
+
     primary: '#202020',
     background: '#191919',
     surface: '#202020',
 
-    primaryVariant: '#585858',
+    primaryVariant: '#777777',
 
     secondary: '#FFFFFF',
     secondaryVariantA: '#000000',
@@ -27,7 +29,7 @@ const darkTheme: DefaultTheme = {
     onSurfaceH1Contrast: '#FFFFFF',
     onSurfaceH2: '#FFFFFF',
     onSurfaceH2Hover: '#FFFFFF',
-    onSurfaceSH1: '#555555',
+    onSurfaceSH1: '#6E6E6E',
     onSurfaceSH1Hover: '#FFFFFF',
 
     upTrend: '#C6E11E',
@@ -35,8 +37,8 @@ const darkTheme: DefaultTheme = {
 
     vaultActionButton: {
       background: 'transparent',
-      borderColor: '#555555',
-      color: '#555555',
+      borderColor: '#6E6E6E',
+      color: '#6E6E6E',
       disabledContrast: '1.5',
 
       selected: {
