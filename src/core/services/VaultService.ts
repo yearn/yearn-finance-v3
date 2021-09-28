@@ -1,4 +1,5 @@
-import { toBN, normalizeAmount, USDC_DECIMALS } from '@utils';
+import { getContract } from '@frameworks/ethers';
+import { toBN, normalizeAmount, getProviderType } from '@utils';
 import {
   VaultService,
   YearnSdk,
@@ -17,13 +18,17 @@ import {
   VaultUserMetadata,
   GetVaultsDynamicDataProps,
   GetUserVaultsPositionsProps,
+  Web3Provider,
 } from '@types';
+import v2VaultAbi from './contracts/v2Vault.json';
 
 export class VaultServiceImpl implements VaultService {
   private yearnSdk: YearnSdk;
+  private web3Provider: Web3Provider;
 
-  constructor({ yearnSdk }: { yearnSdk: YearnSdk }) {
+  constructor({ yearnSdk, web3Provider }: { yearnSdk: YearnSdk; web3Provider: Web3Provider }) {
     this.yearnSdk = yearnSdk;
+    this.web3Provider = web3Provider;
   }
 
   public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
@@ -68,19 +73,31 @@ export class VaultServiceImpl implements VaultService {
       const priceUsdc = await yearn.tokens.priceUsdc(tokenAddress);
       const tokens = await yearn.vaults.tokens();
       const decimals = tokens.find((token) => token.address === tokenAddress)?.decimals;
+      let underlyingTokenAmount = sourceTokenAmount;
 
-      const targetTokenAmountUsdc = toBN(normalizeAmount(sourceTokenAmount, toBN(decimals).toNumber()))
+      if (transactionType === 'WITHDRAW') {
+        const providerType = getProviderType(network);
+        const provider = this.web3Provider.getInstanceOf(providerType);
+        const vaultContract = getContract(sourceTokenAddress, v2VaultAbi, provider);
+        console.log('1');
+        const pricePerShare = await vaultContract.pricePerShare();
+        underlyingTokenAmount = toBN(sourceTokenAmount)
+          .times(normalizeAmount(pricePerShare.toString(), toBN(decimals).toNumber()))
+          .toFixed(0);
+      }
+
+      const targetTokenAmountUsdc = toBN(normalizeAmount(underlyingTokenAmount, toBN(decimals).toNumber()))
         .times(priceUsdc)
-        .toString();
+        .toFixed(0);
 
       return {
         sourceTokenAddress,
         sourceTokenAmount,
         targetTokenAddress,
-        targetTokenAmount: sourceTokenAmount,
+        targetTokenAmount: underlyingTokenAmount, // TODO: CALCULATE CORRECTLY IF NEEDED IN UI LATER
         targetTokenAmountUsdc,
         targetUnderlyingTokenAddress: sourceTokenAddress,
-        targetUnderlyingTokenAmount: sourceTokenAmount,
+        targetUnderlyingTokenAmount: underlyingTokenAmount,
         conversionRate: 1,
         slippage: 0,
       };
