@@ -196,7 +196,7 @@ const depositVault = createAsyncThunk<
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    await handleTransaction(tx);
+    await handleTransaction(tx, network.current);
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
@@ -256,7 +256,7 @@ const withdrawVault = createAsyncThunk<
       amountOfShares,
       slippageTolerance,
     });
-    await handleTransaction(tx);
+    await handleTransaction(tx, network.current);
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));

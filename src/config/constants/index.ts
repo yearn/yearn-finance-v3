@@ -29,6 +29,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     labsEnabled: true,
     ironBankEnabled: true,
     earningsEnabled: true,
+    notifyEnabled: true,
   },
   fantom: {
     id: 'fantom',
@@ -39,6 +40,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     labsEnabled: false,
     ironBankEnabled: true,
     earningsEnabled: false,
+    notifyEnabled: false,
   },
 };
 

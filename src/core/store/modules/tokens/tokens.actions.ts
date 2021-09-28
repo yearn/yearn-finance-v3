@@ -90,7 +90,7 @@ const approve = createAsyncThunk<
     spenderAddress,
     amount,
   });
-  await handleTransaction(tx);
+  await handleTransaction(tx, network.current);
 
   return { amount };
 });
