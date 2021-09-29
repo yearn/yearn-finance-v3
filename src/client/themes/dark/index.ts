@@ -21,7 +21,6 @@ const darkTheme: DefaultTheme = {
 
     selectionBar: '#000000',
 
-    onPrimary: '#585858',
     onPrimaryVariant: '#FFFFFF',
     onBackground: '#000000',
 

@@ -89,7 +89,6 @@ declare module 'styled-components' {
 
       selectionBar: string;
 
-      onPrimary: string;
       onPrimaryVariant: string;
       onBackground: string;
 

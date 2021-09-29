@@ -21,7 +21,6 @@ const cyberpunkTheme: DefaultTheme = {
 
     selectionBar: '#D35290',
 
-    onPrimary: '#7AF6FF',
     onPrimaryVariant: '#FBD282',
     onBackground: '#FBD282',
 

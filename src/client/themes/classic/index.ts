@@ -26,7 +26,6 @@ const classicTheme: DefaultTheme = {
 
     selectionBar: '#006AE3',
 
-    onPrimary: '#01E2A0',
     onPrimaryVariant: '#E5E5E5',
     onBackground: '#E5E5E5',
 
