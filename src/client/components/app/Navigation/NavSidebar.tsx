@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useHistory, Link } from 'react-router-dom';
 
 import { useAppTranslation, useAppSelector } from '@hooks';
 import { SettingsSelectors } from '@store';
@@ -28,6 +28,7 @@ const StyledLogo = styled(Logo)`
   justify-content: flex-start;
   height: 2.4rem;
   fill: ${({ theme }) => theme.colors.logo};
+  cursor: pointer;
 `;
 
 const LinkList = styled.div`
@@ -117,6 +118,7 @@ interface NavSidebarProps {
 export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
   const { t } = useAppTranslation('common');
   const location = useLocation();
+  const history = useHistory();
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
   const currentPath = '/' + location.pathname.toLowerCase().split('/')[1];
@@ -144,7 +146,7 @@ export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
   return (
     <StyledSidebar collapsed={collapsedSidebar}>
       <SidebarHeader>
-        <StyledLogo full={!collapsedSidebar} />
+        <StyledLogo full={!collapsedSidebar} onClick={() => history.push('/home')} />
         {/* {!isMobile && <ToggleSidebarButton Component={CollapseIcon} onClick={toggleSidebar} />} */}
       </SidebarHeader>
 
