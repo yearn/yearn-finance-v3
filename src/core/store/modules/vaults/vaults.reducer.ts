@@ -13,11 +13,13 @@ import {
 import { VaultsActions } from './vaults.actions';
 
 export const initialVaultActionsStatusMap: VaultActionsStatusMap = {
+  get: initialStatus,
   approve: initialStatus,
   deposit: initialStatus,
-  withdraw: initialStatus,
   approveZapOut: initialStatus,
-  get: initialStatus,
+  withdraw: initialStatus,
+  approveMigrate: initialStatus,
+  migrate: initialStatus,
 };
 
 export const initialUserVaultsActionsStatusMap: UserVaultActionsStatusMap = {
@@ -56,12 +58,14 @@ export const vaultsInitialState: VaultsState = {
 
 const {
   approveDeposit,
-  approveZapOut,
   depositVault,
+  approveZapOut,
+  withdrawVault,
+  approveMigrate,
+  migrateVault,
   getVaults,
   initiateSaveVaults,
   setSelectedVaultAddress,
-  withdrawVault,
   getVaultsDynamic,
   getUserVaultsPositions,
   clearVaultsData,
@@ -184,18 +188,6 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       });
       state.statusMap.user.getUserVaultsMetadata = { error: error.message };
     })
-    .addCase(depositVault.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { loading: true };
-    })
-    .addCase(depositVault.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = {};
-    })
-    .addCase(depositVault.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { error: error.message };
-    })
     .addCase(approveDeposit.pending, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { loading: true };
@@ -207,6 +199,18 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(approveDeposit.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { error: error.message };
+    })
+    .addCase(depositVault.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { loading: true };
+    })
+    .addCase(depositVault.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = {};
+    })
+    .addCase(depositVault.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { error: error.message };
     })
     .addCase(approveZapOut.pending, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
@@ -231,6 +235,30 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(withdrawVault.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { error: error.message };
+    })
+    .addCase(approveMigrate.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveMigrate = { loading: true };
+    })
+    .addCase(approveMigrate.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveMigrate = {};
+    })
+    .addCase(approveMigrate.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveMigrate = { error: error.message };
+    })
+    .addCase(migrateVault.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { loading: true };
+    })
+    .addCase(migrateVault.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = {};
+    })
+    .addCase(migrateVault.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { error: error.message };
     })
     .addCase(getVaultsDynamic.pending, (state, { meta }) => {
       const vaultAddresses = meta.arg.addresses;

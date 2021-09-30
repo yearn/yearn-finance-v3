@@ -105,8 +105,8 @@ export interface WithdrawProps {
 export interface MigrateProps {
   network: Network;
   accountAddress: Address;
-  sourceVaultAddress: Address;
-  targetVaultAddress: Address;
+  vaultFromAddress: Address;
+  vaultToAddress: Address;
   migrationContractAddress?: Address;
 }
 

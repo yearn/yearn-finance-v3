@@ -63,6 +63,7 @@ export const getConstants = memoize((): Constants => {
       y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
       ironBankComptroller: '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB',
       ironBankComptrollerFantom: '0x4250A6D3BD57455d7C6821eECb6206F507576cD2',
+      trustedVaultMigrator: '0x1824df8D751704FA10FA371d62A37f9B8772ab90',
       ...ADDRESSES,
     },
     SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],

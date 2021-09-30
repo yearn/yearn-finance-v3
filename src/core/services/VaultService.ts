@@ -150,7 +150,7 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async migrate(props: MigrateProps): Promise<TransactionResponse> {
-    // const { network, accountAddress, sourceVaultAddress, targetVaultAddress, migrationContractAddress } = props;
+    // const { network, accountAddress, vaultFromAddress, vaultToAddress, migrationContractAddress } = props;
     throw new Error('Method not implemented');
   }
 }

@@ -23,7 +23,6 @@ import {
   validateVaultWithdrawAllowance,
 } from '@utils';
 import { getConfig } from '@config';
-import { getConstants } from '../../../../config/constants';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 const clearVaultsData = createAction<void>('vaults/clearVaultsData');
@@ -121,7 +120,7 @@ const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddre
     try {
       const vaultData = getState().vaults.vaultsMap[vaultAddress];
       const isZapin = vaultData.tokenId !== tokenAddress;
-      const spenderAddress = isZapin ? getConstants().CONTRACT_ADDRESSES.zapIn : vaultAddress;
+      const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress;
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
       unwrapResult(result);
     } catch (error) {
@@ -265,6 +264,48 @@ const withdrawVault = createAsyncThunk<
   }
 );
 
+const approveMigrate = createAsyncThunk<
+  void,
+  { vaultFromAddress: string; migrationContractAddress?: string },
+  ThunkAPI
+>('vaults/approveMigrate', async ({ vaultFromAddress, migrationContractAddress }, { dispatch }) => {
+  const spenderAddress = migrationContractAddress ?? getConfig().CONTRACT_ADDRESSES.trustedVaultMigrator;
+  const result = await dispatch(TokensActions.approve({ tokenAddress: vaultFromAddress, spenderAddress }));
+  unwrapResult(result);
+});
+
+const migrateVault = createAsyncThunk<
+  void,
+  { vaultFromAddress: string; vaultToAddress: string; migrationContractAddress?: string },
+  ThunkAPI
+>(
+  'vaults/migrateVault',
+  async ({ vaultFromAddress, vaultToAddress, migrationContractAddress }, { extra, getState, dispatch }) => {
+    const { network, wallet } = getState();
+    const { services } = extra;
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    // TODO: MIGRATION VALIDATIONS
+
+    const { vaultService } = services;
+    const tx = await vaultService.migrate({
+      network: network.current,
+      accountAddress: userAddress,
+      vaultFromAddress,
+      vaultToAddress,
+      migrationContractAddress,
+    });
+
+    await handleTransaction(tx, network.current);
+    dispatch(getVaultsDynamic({ addresses: [vaultFromAddress, vaultToAddress] }));
+    dispatch(getUserVaultsSummary());
+    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultFromAddress, vaultToAddress] }));
+    dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultFromAddress, vaultToAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [vaultFromAddress, vaultToAddress] }));
+  }
+);
+
 const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   'vaults/initSubscriptions',
   async (_arg, { extra, dispatch }) => {
@@ -326,13 +367,15 @@ export const VaultsActions = {
   getVaults,
   approveDeposit,
   depositVault,
+  approveZapOut,
   withdrawVault,
+  approveMigrate,
+  migrateVault,
   getVaultsDynamic,
   getUserVaultsPositions,
   initSubscriptions,
   clearVaultsData,
   clearUserData,
-  approveZapOut,
   getExpectedTransactionOutcome,
   clearTransactionData,
   getUserVaultsSummary,
