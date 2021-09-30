@@ -4,6 +4,8 @@ import { sharedTheme } from '../default';
 const cyberpunkTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
+    logo: '#392850',
+
     primary: '#0CA7C9',
     background: '#3D305F',
     surface: '#523C6E',
@@ -19,7 +21,6 @@ const cyberpunkTheme: DefaultTheme = {
 
     selectionBar: '#D35290',
 
-    onPrimary: '#7AF6FF',
     onPrimaryVariant: '#FBD282',
     onBackground: '#FBD282',
 
