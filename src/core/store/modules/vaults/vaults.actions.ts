@@ -282,10 +282,11 @@ const migrateVault = createAsyncThunk<
   'vaults/migrateVault',
   async ({ vaultFromAddress, vaultToAddress, migrationContractAddress }, { extra, getState, dispatch }) => {
     const { network, wallet } = getState();
-    const { services } = extra;
+    const { services, config } = extra;
+    const { trustedVaultMigrator } = config.CONTRACT_ADDRESSES;
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
     // TODO: MIGRATION VALIDATIONS
 
     const { vaultService } = services;
@@ -294,7 +295,7 @@ const migrateVault = createAsyncThunk<
       accountAddress: userAddress,
       vaultFromAddress,
       vaultToAddress,
-      migrationContractAddress,
+      migrationContractAddress: migrationContractAddress ?? trustedVaultMigrator,
     });
 
     await handleTransaction(tx, network.current);
