@@ -5,6 +5,7 @@ import {
   YearnSdk,
   DepositProps,
   WithdrawProps,
+  MigrateProps,
   Position,
   Vault,
   VaultDynamic,
@@ -146,5 +147,10 @@ export class VaultServiceImpl implements VaultService {
     return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
       slippage: slippageTolerance,
     });
+  }
+
+  public async migrate(props: MigrateProps): Promise<TransactionResponse> {
+    // const { network, accountAddress, sourceVaultAddress, targetVaultAddress, migrationContractAddress } = props;
+    throw new Error('Method not implemented');
   }
 }
