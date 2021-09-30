@@ -107,7 +107,7 @@ export interface MigrateProps {
   accountAddress: Address;
   vaultFromAddress: Address;
   vaultToAddress: Address;
-  migrationContractAddress?: Address;
+  migrationContractAddress: Address;
 }
 
 // *************** TOKEN ***************

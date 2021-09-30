@@ -20,16 +20,28 @@ import {
   GetVaultsDynamicDataProps,
   GetUserVaultsPositionsProps,
   Web3Provider,
+  TransactionService,
 } from '@types';
 import v2VaultAbi from './contracts/v2Vault.json';
+import trustedVaultMigratorAbi from './contracts/trustedVaultMigrator.json';
 
 export class VaultServiceImpl implements VaultService {
   private yearnSdk: YearnSdk;
   private web3Provider: Web3Provider;
+  private transactionService: TransactionService;
 
-  constructor({ yearnSdk, web3Provider }: { yearnSdk: YearnSdk; web3Provider: Web3Provider }) {
+  constructor({
+    yearnSdk,
+    web3Provider,
+    transactionService,
+  }: {
+    yearnSdk: YearnSdk;
+    web3Provider: Web3Provider;
+    transactionService: TransactionService;
+  }) {
     this.yearnSdk = yearnSdk;
     this.web3Provider = web3Provider;
+    this.transactionService = transactionService;
   }
 
   public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
@@ -150,7 +162,14 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async migrate(props: MigrateProps): Promise<TransactionResponse> {
-    // const { network, accountAddress, vaultFromAddress, vaultToAddress, migrationContractAddress } = props;
-    throw new Error('Method not implemented');
+    const { network, vaultFromAddress, vaultToAddress, migrationContractAddress } = props;
+
+    const signer = this.web3Provider.getSigner();
+    const trustedVaultMigratorContract = getContract(migrationContractAddress, trustedVaultMigratorAbi, signer);
+    return await this.transactionService.execute({
+      network,
+      fn: trustedVaultMigratorContract.migrateAll,
+      args: [vaultFromAddress, vaultToAddress],
+    });
   }
 }
