@@ -63,7 +63,7 @@ const VaultActions = styled(Card)`
 `;
 
 const OverviewInfo = styled(Card)`
-  padding: ${({ theme }) => theme.cardPadding};
+  padding: ${({ theme }) => theme.card.padding};
 
   a {
     text-decoration: underline;
@@ -126,7 +126,7 @@ const VaultOverview = styled(Card)`
   max-width: 100%;
 
   > div:not(:first-child) {
-    margin-top: ${({ theme }) => theme.cardPadding};
+    margin-top: ${({ theme }) => theme.card.padding};
   }
 
   @media ${device.mobile} {
