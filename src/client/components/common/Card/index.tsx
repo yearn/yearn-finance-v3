@@ -12,7 +12,9 @@ const bigSize = css`
   min-height: 17.6rem;
 `;
 
-const smallSize = css``;
+const smallSize = css`
+  min-height: 12.8rem;
+`;
 
 const defaultVariant = css`
   background-color: ${({ theme }) => theme.colors.surface};

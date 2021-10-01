@@ -112,6 +112,7 @@ const TokenSelector = styled.div<{ onClick?: () => void }>`
   align-items: center;
   justify-content: flex-end;
   width: 8.4rem;
+  height: 9.2rem;
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
