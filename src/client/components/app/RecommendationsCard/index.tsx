@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@co
 import { TokenIcon } from '@components/app';
 
 const ContainerCard = styled(Card)`
-  padding: ${({ theme }) => theme.cardPadding} 0;
+  padding: ${({ theme }) => theme.card.padding} 0;
   width: 100%;
   min-width: 56%;
 `;
@@ -13,9 +13,9 @@ const StyledCardContent = styled(CardContent)`
   align-items: stretch;
   justify-content: center;
   flex-wrap: wrap;
-  grid-gap: ${({ theme }) => theme.cardPadding};
-  margin-top: ${({ theme }) => theme.cardPadding};
-  padding: 0 ${({ theme }) => theme.cardPadding};
+  grid-gap: ${({ theme }) => theme.card.padding};
+  margin-top: ${({ theme }) => theme.card.padding};
+  padding: 0 ${({ theme }) => theme.card.padding};
 `;
 
 const ItemCard = styled(Card)<{ onClick: any }>`

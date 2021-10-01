@@ -45,7 +45,7 @@ const SettingsCard = styled(Card)`
 const SettingsSection = styled.div`
   display: grid;
   grid-template-columns: 18rem 1fr;
-  padding: 0 ${({ theme }) => theme.cardPadding};
+  padding: 0 ${({ theme }) => theme.card.padding};
   gap: 1.5rem;
 `;
 
@@ -65,7 +65,7 @@ const SectionTitle = styled.div`
   align-items: flex-start;
   fill: ${({ theme }) => theme.colors.secondary};
   background: ${({ theme }) => theme.colors.surfaceVariantA};
-  padding: ${({ theme }) => theme.cardPadding};
+  padding: ${({ theme }) => theme.card.padding};
 
   ${SettingsSection}:not(:first-child) & {
     padding-top: ${sectionsGap};
@@ -125,7 +125,7 @@ const SettingsView = styled(ViewContainer)`
       padding: 0;
 
       :not(:first-child) ${SectionTitle} {
-        padding-top: ${({ theme }) => theme.cardPadding};
+        padding-top: ${({ theme }) => theme.card.padding};
       }
       :not(:first-child) ${SectionContent} {
         padding-top: 0;
@@ -136,7 +136,7 @@ const SettingsView = styled(ViewContainer)`
       }
     }
     ${SectionContent} {
-      padding: 0 ${({ theme }) => theme.cardPadding};
+      padding: 0 ${({ theme }) => theme.card.padding};
     }
   }
 `;

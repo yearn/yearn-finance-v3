@@ -5,6 +5,7 @@ import { CardHeader } from './CardHeader';
 import { CardContent } from './CardContent';
 import { CardElement } from './CardElement';
 import { CardEmptyList } from './CardEmptyList';
+import { CardRedirection } from './CardRedirection';
 
 import { styledSystem, StyledSystemProps } from '../styledSystem';
 
@@ -78,7 +79,7 @@ export interface CardProps extends StyledSystemProps {
 
 const StyledDiv = styled.div<CardProps>`
   border-radius: ${({ theme }) => theme.globalRadius};
-  padding: 1.7rem ${({ theme }) => theme.cardPadding};
+  padding: 1.7rem ${({ theme }) => theme.card.padding};
 
   ${variantStyle};
   ${sizeStyle};
@@ -87,4 +88,4 @@ const StyledDiv = styled.div<CardProps>`
 
 export const Card: FC<CardProps> = (props) => <StyledDiv {...props} />;
 
-export { CardHeader, CardContent, CardElement, CardEmptyList };
+export { CardHeader, CardContent, CardElement, CardEmptyList, CardRedirection };

@@ -9,7 +9,7 @@ const Container = styled.div<{ width?: string; align?: string; grow?: string; fo
   width: ${({ width }) => width ?? '17rem'};
   align-items: ${({ align }) => align ?? 'flex-start'};
   flex-grow: ${({ grow }) => grow ?? '0'};
-  margin: 0.825rem ${({ theme }) => theme.cardPadding};
+  margin: 0.825rem ${({ theme }) => theme.card.padding};
   font-weight: ${({ fontWeight }) => fontWeight ?? 400};
 `;
 
