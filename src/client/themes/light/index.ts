@@ -4,11 +4,13 @@ import { sharedTheme } from '../default';
 const lightTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
+    logo: '#006AE3',
+
     primary: '#F0F0F0',
     background: '#FFFFFF',
     surface: '#F0F0F0',
 
-    primaryVariant: '#B4B4B4',
+    primaryVariant: '#929292',
 
     secondary: '#000000',
     secondaryVariantA: '#000000',
@@ -19,7 +21,6 @@ const lightTheme: DefaultTheme = {
 
     selectionBar: '#000000',
 
-    onPrimary: '#B4B4B4',
     onPrimaryVariant: '#000000',
     onBackground: '#000000',
 
@@ -56,7 +57,7 @@ const lightTheme: DefaultTheme = {
       backgroundVariant: '#E8E8EA',
       onBackgroundVariant: '#FFFFFF',
       onBackgroundVariantB: '#F0F0F0',
-      onBackgroundVariantColor: '#555555',
+      onBackgroundVariantColor: '#6e6e6e',
       primary: '#00A3FF',
       loading: '#FFA800',
       error: '#FF005E',

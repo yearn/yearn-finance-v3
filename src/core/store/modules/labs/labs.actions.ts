@@ -199,7 +199,7 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    await handleTransaction(tx);
+    await handleTransaction(tx, network.current);
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -269,7 +269,7 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
       amountOfShares,
       slippageTolerance,
     });
-    await handleTransaction(tx);
+    await handleTransaction(tx, network.current);
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -338,7 +338,7 @@ const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     //   labAddress,
     //   amount: amountInWei.toString(),
     // });
-    // await handleTransaction(tx);
+    // await handleTransaction(tx, network.current);
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, labAddress] }));
@@ -407,7 +407,7 @@ const yvBoostWithdraw = createAsyncThunk<
   //   labAddress,
   //   amountOfShares,
   // });
-  // await handleTransaction(tx);
+  // await handleTransaction(tx, network.current);
 
   dispatch(getLabsDynamic({ addresses: [labAddress] }));
   dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -455,7 +455,7 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultAddress: labAddress,
       amount: amountInWei.toString(),
     });
-    await handleTransaction(tx);
+    await handleTransaction(tx, network.current);
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -478,7 +478,7 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
       network: network.current,
       accountAddress: userAddress,
     });
-    await handleTransaction(tx);
+    await handleTransaction(tx, network.current);
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
@@ -527,7 +527,7 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
       network: network.current,
       accountAddress: userAddress,
     });
-    await handleTransaction(tx);
+    await handleTransaction(tx, network.current);
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
@@ -598,7 +598,7 @@ const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
     //   tokenAddress: tokenData.address,
     //   amount: amountInWei.toString(),
     // });
-    // await handleTransaction(tx);
+    // await handleTransaction(tx, network.current);
 
     dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
     dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));
@@ -666,7 +666,7 @@ const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultAddress: labAddress,
       amount: amountInWei.toString(),
     });
-    await handleTransaction(tx);
+    await handleTransaction(tx, network.current);
 
     dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
     dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));

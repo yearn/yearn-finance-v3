@@ -1,4 +1,4 @@
-import Notify from 'bnc-notify';
+import Notify, { UpdateNotification } from 'bnc-notify';
 
 import { getNetworkId } from '@utils';
 import { getConfig } from '@config';
@@ -9,5 +9,7 @@ const notify = Notify({
   dappId: BLOCKNATIVE_KEY,
   networkId: getNetworkId(NETWORK),
 });
+
+export type { UpdateNotification };
 
 export { notify };

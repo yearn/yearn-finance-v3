@@ -177,11 +177,11 @@ export const Vaults = () => {
           <Row>
             <StyledRecommendationsCard
               header="Recommendations"
-              items={recommendations.map(({ displayName, displayIcon, apyData, address }) => ({
+              items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
                 // header: 'Vault',
                 icon: displayIcon,
                 name: displayName,
-                info: formatPercent(apyData, 2),
+                info: formatApy(apyData, apyType),
                 infoDetail: 'EYY',
                 onAction: () => history.push(`/vault/${address}`),
               }))}

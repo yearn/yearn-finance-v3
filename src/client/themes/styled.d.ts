@@ -72,6 +72,8 @@ declare module 'styled-components' {
   // TODO Restructure theme and generic vars shared between themes
   export interface DefaultTheme extends SharedTheme {
     colors: {
+      logo: string;
+
       primary: string;
       background: string;
       surface: string;
@@ -87,7 +89,6 @@ declare module 'styled-components' {
 
       selectionBar: string;
 
-      onPrimary: string;
       onPrimaryVariant: string;
       onBackground: string;
 

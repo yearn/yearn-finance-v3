@@ -14,5 +14,6 @@ export interface NetworkSettings {
     labsEnabled?: boolean;
     ironBankEnabled?: boolean;
     earningsEnabled?: boolean;
+    notifyEnabled?: boolean;
   };
 }
