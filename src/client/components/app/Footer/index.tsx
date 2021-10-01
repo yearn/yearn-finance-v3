@@ -109,7 +109,7 @@ const AlchemyLogo = styled(AlchemyCertified)`
   fill: ${({ theme }) => theme.colors.secondary};
 `;
 
-const StyledFooter = styled.div`
+const StyledFooter = styled.footer`
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   align-items: center;

@@ -6,14 +6,18 @@ const Container = styled.div`
   padding: 0 ${({ theme }) => theme.cardPadding};
 `;
 
-const Header = styled.div`
+const Header = styled.h2`
   font-size: 1.8rem;
   font-weight: 700;
+  margin: 0;
+  padding: 0;
 `;
 
-const SubHeader = styled.div`
+const SubHeader = styled.h3`
   font-size: 1.4rem;
   font-weight: 600;
+  margin: 0;
+  padding: 0;
 `;
 
 interface CardElementProps {
