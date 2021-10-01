@@ -5,6 +5,7 @@ import {
   YearnSdk,
   DepositProps,
   WithdrawProps,
+  MigrateProps,
   Position,
   Vault,
   VaultDynamic,
@@ -19,16 +20,34 @@ import {
   GetVaultsDynamicDataProps,
   GetUserVaultsPositionsProps,
   Web3Provider,
+  TransactionService,
+  Config,
 } from '@types';
 import v2VaultAbi from './contracts/v2Vault.json';
+import trustedVaultMigratorAbi from './contracts/trustedVaultMigrator.json';
+import triCryptoVaultMigratorAbi from './contracts/triCryptoVaultMigrator.json';
 
 export class VaultServiceImpl implements VaultService {
   private yearnSdk: YearnSdk;
   private web3Provider: Web3Provider;
+  private transactionService: TransactionService;
+  private config: Config;
 
-  constructor({ yearnSdk, web3Provider }: { yearnSdk: YearnSdk; web3Provider: Web3Provider }) {
+  constructor({
+    yearnSdk,
+    web3Provider,
+    transactionService,
+    config,
+  }: {
+    yearnSdk: YearnSdk;
+    web3Provider: Web3Provider;
+    transactionService: TransactionService;
+    config: Config;
+  }) {
     this.yearnSdk = yearnSdk;
     this.web3Provider = web3Provider;
+    this.transactionService = transactionService;
+    this.config = config;
   }
 
   public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
@@ -146,5 +165,28 @@ export class VaultServiceImpl implements VaultService {
     return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
       slippage: slippageTolerance,
     });
+  }
+
+  public async migrate(props: MigrateProps): Promise<TransactionResponse> {
+    const { network, vaultFromAddress, vaultToAddress, migrationContractAddress } = props;
+    const { triCryptoVaultMigrator } = this.config.CONTRACT_ADDRESSES;
+
+    const signer = this.web3Provider.getSigner();
+    switch (migrationContractAddress) {
+      case triCryptoVaultMigrator:
+        const triCryptoVaultMigratorContract = getContract(migrationContractAddress, triCryptoVaultMigratorAbi, signer);
+        return await this.transactionService.execute({
+          network,
+          fn: triCryptoVaultMigratorContract.migrate_to_new_vault,
+        });
+
+      default:
+        const trustedVaultMigratorContract = getContract(migrationContractAddress, trustedVaultMigratorAbi, signer);
+        return await this.transactionService.execute({
+          network,
+          fn: trustedVaultMigratorContract.migrateAll,
+          args: [vaultFromAddress, vaultToAddress],
+        });
+    }
   }
 }

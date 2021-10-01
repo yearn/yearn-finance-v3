@@ -44,6 +44,7 @@ export interface VaultService {
   getExpectedTransactionOutcome: (props: GetExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
+  migrate: (props: MigrateProps) => Promise<TransactionResponse>;
 }
 
 export interface GetSupportedVaultsProps {
@@ -99,6 +100,14 @@ export interface WithdrawProps {
   vaultAddress: Address;
   amountOfShares: Wei;
   slippageTolerance?: number;
+}
+
+export interface MigrateProps {
+  network: Network;
+  accountAddress: Address;
+  vaultFromAddress: Address;
+  vaultToAddress: Address;
+  migrationContractAddress: Address;
 }
 
 // *************** TOKEN ***************
