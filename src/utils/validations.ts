@@ -34,6 +34,14 @@ export interface ValidateVaultAllowanceProps {
   sellTokenAllowancesMap: AllowancesMap;
 }
 
+export interface ValidateMigrateVaultAllowanceProps {
+  amount: BigNumber;
+  vaultAddress: string;
+  vaultDecimals: string;
+  vaultAllowancesMap: AllowancesMap;
+  migrationContractAddress: string;
+}
+
 export interface ValidationResponse {
   approved?: boolean;
   error?: string;
@@ -127,6 +135,18 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
     tokenDecimals: yvTokenDecimals,
     tokenAllowancesMap: yvTokenAllowancesMap,
     spenderAddress: ZAP_OUT_CONTRACT,
+  });
+}
+
+export function validateMigrateVaultAllowance(props: ValidateMigrateVaultAllowanceProps): ValidationResponse {
+  const { amount, vaultAddress, vaultDecimals, vaultAllowancesMap, migrationContractAddress } = props;
+
+  return validateAllowance({
+    tokenAddress: vaultAddress,
+    tokenAmount: amount,
+    tokenDecimals: vaultDecimals,
+    tokenAllowancesMap: vaultAllowancesMap,
+    spenderAddress: migrationContractAddress,
   });
 }
 

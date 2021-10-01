@@ -21,6 +21,7 @@ import {
   validateVaultDeposit,
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
+  validateMigrateVaultAllowance,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -281,13 +282,29 @@ const migrateVault = createAsyncThunk<
 >(
   'vaults/migrateVault',
   async ({ vaultFromAddress, vaultToAddress, migrationContractAddress }, { extra, getState, dispatch }) => {
-    const { network, wallet } = getState();
+    const { network, wallet, vaults, tokens } = getState();
     const { services, config } = extra;
     const { trustedVaultMigrator } = config.CONTRACT_ADDRESSES;
     const userAddress = wallet.selectedAddress;
 
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
-    // TODO: MIGRATION VALIDATIONS
+
+    const vaultData = vaults.vaultsMap[vaultFromAddress];
+    const userDepositPositionData = vaults.user.userVaultsPositionsMap[vaultFromAddress].DEPOSIT;
+    const tokenAllowancesMap = tokens.user.userTokensAllowancesMap[vaultFromAddress] ?? {};
+
+    // TODO: ADD VALIDATION FOR VALID MIGRATABLE VAULTS AND WITH BALANCE
+
+    const { error: allowanceError } = validateMigrateVaultAllowance({
+      amount: toBN(userDepositPositionData.balance),
+      vaultAddress: vaultFromAddress,
+      vaultDecimals: vaultData.decimals,
+      vaultAllowancesMap: tokenAllowancesMap,
+      migrationContractAddress: migrationContractAddress ?? trustedVaultMigrator,
+    });
+
+    const error = allowanceError;
+    if (error) throw new Error(error);
 
     const { vaultService } = services;
     const tx = await vaultService.migrate({
