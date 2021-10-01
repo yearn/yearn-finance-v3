@@ -279,6 +279,7 @@ export const Labs = () => {
   return (
     <ViewContainer>
       <SummaryCard
+        header="Dashboard"
         items={[
           { header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> },
           // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },

@@ -123,6 +123,7 @@ export const Wallet = () => {
   return (
     <ViewContainer>
       <SummaryCard
+        header="Dashboard"
         items={[{ header: 'Available', Component: <Amount value={totalBalance} input="usdc" /> }]}
         variant="secondary"
         cardSize="small"

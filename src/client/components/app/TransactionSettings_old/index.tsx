@@ -1,8 +1,6 @@
-import styled from 'styled-components';
-
 import { Card, Text, SimpleDropdown } from '@components/common';
 import { toBN, formatUsd } from '@utils';
-import React from 'react';
+import styled from 'styled-components';
 
 const Container = styled(Card)`
   display: flex;

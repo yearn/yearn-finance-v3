@@ -1,4 +1,4 @@
-import React, { ElementType, FC, InputHTMLAttributes } from 'react';
+import { ElementType, FC, InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
 import { Icon } from '@components/common';

@@ -22,7 +22,6 @@ import {
 import { ThemeBox } from '@components/app/Settings';
 import { device } from '@themes/default';
 import { formatPercent } from '@utils';
-import React from 'react';
 
 const sectionsGap = '2.2rem';
 const sectionsBorderRadius = '0.8rem';

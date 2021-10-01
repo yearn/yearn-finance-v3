@@ -13,8 +13,6 @@ import { SummaryCard, InfoCard, ViewContainer, NoWalletCard, Amount } from '@com
 import { Text } from '@components/common';
 import { toBN, halfWidthCss } from '@src/utils';
 import { getConfig } from '@config';
-import React from 'react';
-
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -87,7 +85,7 @@ export const Home = () => {
 
   return (
     <StyledViewContainer>
-      <HeaderCard items={summaryCardItems} variant="secondary" cardSize="small" />
+      <HeaderCard header="Dashboard" items={summaryCardItems} variant="secondary" cardSize="small" />
       <Row>
         <StyledInfoCard
           header="Welcome to your Yearn home screen"
