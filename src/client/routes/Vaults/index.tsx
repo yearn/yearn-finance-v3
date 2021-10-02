@@ -183,9 +183,8 @@ export const Vaults = () => {
   };
 
   const migrateHandler = (vaultAddress: string) => {
-    // TODO: migrate modal
-    // dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
-    // dispatch(ModalsActions.openModal({ modalName: 'withdrawTx' }));
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+    dispatch(ModalsActions.openModal({ modalName: 'migrateTx' }));
   };
 
   const summaryCardItems = [{ header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> }];
