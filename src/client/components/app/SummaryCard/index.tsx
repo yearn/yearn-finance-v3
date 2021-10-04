@@ -1,12 +1,13 @@
 import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
-import { Card, CardHeader, CardContent, CardElement, Text } from '@components/common';
+import { Card, CardHeader, CardContent, CardElement, Text, CardRedirection } from '@components/common';
 
 const StyledCard = styled(Card)`
-  padding: ${({ theme }) => theme.cardPadding} 0;
+  padding: ${({ theme }) => theme.card.padding} 0;
   width: 100%;
   flex-shrink: 0;
+  position: relative;
 `;
 
 const StyledCardElement = styled(CardElement)`
@@ -34,13 +35,13 @@ interface SummaryCardProps {
   items: Item[];
   variant?: 'primary' | 'secondary';
   cardSize?: 'small' | 'big';
+  redirectTo?: string;
 }
 
-export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, cardSize, ...props }) => {
+export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, cardSize, redirectTo, ...props }) => {
   return (
     <StyledCard variant={variant} cardSize={cardSize} {...props}>
       {header && <CardHeader header={header} />}
-
       <CardContent wrap>
         {items.map((item) => (
           <StyledCardElement
@@ -52,6 +53,8 @@ export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, card
           </StyledCardElement>
         ))}
       </CardContent>
+
+      {redirectTo && <CardRedirection redirectTo={redirectTo} />}
     </StyledCard>
   );
 };

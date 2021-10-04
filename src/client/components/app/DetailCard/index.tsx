@@ -8,7 +8,7 @@ const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
   display: flex;
   justify-content: center;
   margin: 0;
-  padding: 0.6rem ${({ theme }) => theme.cardPadding};
+  padding: 0.6rem ${({ theme }) => theme.card.padding};
   font-size: 1.4rem;
   flex-shrink: 0;
 
@@ -29,7 +29,7 @@ const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
 
 const TitleCardElement = styled(CardElement)`
   margin: 0;
-  padding: 0.6rem ${({ theme }) => theme.cardPadding};
+  padding: 0.6rem ${({ theme }) => theme.card.padding};
   flex-shrink: 0;
   user-select: none;
 `;
@@ -61,7 +61,7 @@ const StyledCardHeader = styled(CardHeader)`
 `;
 
 const StyledCard = styled(Card)`
-  padding: ${({ theme }) => theme.cardPadding} 0;
+  padding: ${({ theme }) => theme.card.padding} 0;
   width: 100%;
 `;
 

@@ -86,6 +86,7 @@ export const Home = () => {
   return (
     <StyledViewContainer>
       <HeaderCard header="Dashboard" items={summaryCardItems} variant="secondary" cardSize="small" />
+
       <Row>
         <StyledInfoCard
           header="Welcome to your Yearn home screen"
@@ -127,6 +128,7 @@ export const Home = () => {
                   Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
                 },
               ]}
+              redirectTo="wallet"
               cardSize="small"
             />
 
@@ -143,6 +145,7 @@ export const Home = () => {
                     Component: <Amount value={ibSummary.borrowUtilizationRatio} input="weipercent" />,
                   },
                 ]}
+                redirectTo="ironbank"
                 cardSize="small"
               />
             )}
@@ -160,6 +163,7 @@ export const Home = () => {
                 Component: <Amount value={vaultsSummary.apy} input="percent" />,
               },
             ]}
+            redirectTo="vaults"
             cardSize="small"
           />
 
@@ -172,6 +176,7 @@ export const Home = () => {
                   Component: <Amount value={labsSummary.totalDeposits} input="usdc" />,
                 },
               ]}
+              redirectTo="labs"
               cardSize="small"
             />
           )}
