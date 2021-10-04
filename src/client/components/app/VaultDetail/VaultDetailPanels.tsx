@@ -5,10 +5,11 @@ import { formatApy, formatUsd, normalizeUsdc } from '@utils';
 
 import { device } from '@themes/default';
 import { TokenIcon } from '@components/app';
-import { DepositTx, WithdrawTx } from '@components/app/Transactions';
+import { DepositTx, WithdrawTx, MigrateTx } from '@components/app/Transactions';
 import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text, Markdown } from '@components/common';
 import { LineChart } from '@components/common/Charts';
 import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
+import { GeneralVaultView } from '@types';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -148,14 +149,15 @@ const VaultOverview = styled(Card)`
   }
 `;
 export interface VaultDetailPanelsProps {
-  selectedVault?: any;
+  selectedVault: GeneralVaultView;
   chartData?: any;
   chartValue?: string;
 }
 
 export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: VaultDetailPanelsProps) => {
   // const { t } = useAppTranslation('common');
-  const [selectedTab, setSelectedTab] = useState('deposit');
+  const isVaultMigratable = selectedVault.migrationAvailable;
+  const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : 'deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
 
   const handleTabChange = (selectedTab: string) => {
@@ -168,7 +170,7 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
 
         <OverviewTokenInfo>
           <TokenLogo variant="background">
-            <TokenIcon icon={selectedVault.token.icon} symbol={selectedVault.token.name} size="xBig" />
+            <TokenIcon icon={selectedVault.displayIcon} symbol={selectedVault.displayName} size="xBig" />
           </TokenLogo>
 
           <TokenInfo>
@@ -214,13 +216,21 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
         <StyledCardHeader header="Transactions" />
 
         <ActionsTabs value={selectedTab} onChange={handleTabChange}>
-          <Tab value="deposit">Deposit</Tab>
+          {isVaultMigratable && <Tab value="migrate">Migrate</Tab>}
+          {!isVaultMigratable && <Tab value="deposit">Deposit</Tab>}
           <Tab value="withdraw">Withdraw</Tab>
         </ActionsTabs>
 
-        <StyledTabPanel value="deposit" tabValue={selectedTab}>
-          <DepositTx />
-        </StyledTabPanel>
+        {isVaultMigratable && (
+          <StyledTabPanel value="migrate" tabValue={selectedTab}>
+            <MigrateTx />
+          </StyledTabPanel>
+        )}
+        {!isVaultMigratable && (
+          <StyledTabPanel value="deposit" tabValue={selectedTab}>
+            <DepositTx />
+          </StyledTabPanel>
+        )}
         <StyledTabPanel value="withdraw" tabValue={selectedTab}>
           <WithdrawTx />
         </StyledTabPanel>

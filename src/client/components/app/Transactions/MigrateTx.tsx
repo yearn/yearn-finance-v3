@@ -18,6 +18,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
   const vaults = useAppSelector(VaultsSelectors.selectLiveVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
+  const migrateToVault = vaults.find((vault) => vault.address === selectedVault?.migrationTargetVault);
 
   const onExit = () => {
     dispatch(VaultsActions.clearSelectedVaultAndStatus());
@@ -67,18 +68,15 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     decimals: selectedVault.token.decimals,
   };
 
-  const targetVault = vaults
-    .filter(({ address }) => selectedVault.migrationTargetVault === address)
-    .map((vault) => ({
-      address: vault.address,
-      symbol: vault.displayName,
-      icon: vault.displayIcon,
-      balance: vault.DEPOSIT.userDeposited,
-      balanceUsdc: vault.DEPOSIT.userDepositedUsdc,
-      decimals: vault.token.decimals,
-      yield: formatPercent(vault.apyData, 2),
-    }))
-    .pop()!;
+  const targetVault = {
+    address: selectedVault.migrationTargetVault,
+    symbol: migrateToVault?.displayName ?? selectedVault.displayName,
+    icon: migrateToVault?.displayIcon ?? selectedVault.displayIcon,
+    balance: migrateToVault?.DEPOSIT.userDeposited ?? '0',
+    balanceUsdc: migrateToVault?.DEPOSIT.userDepositedUsdc ?? '0',
+    decimals: migrateToVault?.token.decimals ?? selectedVault.token.decimals,
+    yield: migrateToVault?.apyData ? formatPercent(migrateToVault?.apyData, 2) : undefined,
+  };
 
   const loadingText = 'Calculating...';
 
