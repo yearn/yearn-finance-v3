@@ -58,7 +58,7 @@ export const getConstants = memoize((): Constants => {
     FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
     CONTRACT_ADDRESSES: {
       zapIn: '0x92Be6ADB6a12Da0CA607F9d87DB2F9978cD6ec3E',
-      zapOut: '0xA8a3B1A1e09A0f84B2856533DB4eE0Cc88DD4E11',
+      zapOut: '0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c',
       pickleZapIn: '0xc695f73c1862e050059367B2E64489E66c525983',
       y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
       ironBankComptroller: '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB',
