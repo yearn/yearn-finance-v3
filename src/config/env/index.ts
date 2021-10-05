@@ -1,11 +1,11 @@
 import { memoize } from 'lodash';
 
-import { Env, EthereumNetwork } from '@types';
+import { Env, Network } from '@types';
 
 export const getEnv = memoize(
   (): Env => ({
     ENV: process.env.NODE_ENV,
-    ETHEREUM_NETWORK: (process.env.REACT_APP_ETHEREUM_NETWORK ?? 'mainnet') as EthereumNetwork,
+    NETWORK: (process.env.REACT_APP_NETWORK ?? 'mainnet') as Network,
     CUSTOM_PROVIDER_HTTPS: process.env.REACT_APP_CUSTOM_PROVIDER_HTTPS ?? 'http://127.0.0.1:8545/',
     USE_MAINNET_FORK: process.env.REACT_APP_USE_MAINNET_FORK === 'true',
     USE_SDK_MOCK: process.env.REACT_APP_USE_SDK_MOCK === 'true',

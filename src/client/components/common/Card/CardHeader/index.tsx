@@ -3,17 +3,21 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
-  padding: 0 ${({ theme }) => theme.cardPadding};
+  padding: 0 ${({ theme }) => theme.card.padding};
 `;
 
-const Header = styled.div`
+const Header = styled.h2`
   font-size: 1.8rem;
   font-weight: 700;
+  margin: 0;
+  padding: 0;
 `;
 
-const SubHeader = styled.div`
+const SubHeader = styled.h3`
   font-size: 1.4rem;
   font-weight: 600;
+  margin: 0;
+  padding: 0;
 `;
 
 interface CardElementProps {

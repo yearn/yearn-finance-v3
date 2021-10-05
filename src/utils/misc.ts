@@ -37,3 +37,10 @@ export const sort = <T>(data: T[], by: Extract<keyof T, string>, order?: 'asc' |
   );
   return sortedData;
 };
+
+export const orderApy = (apyData: string, apyType: string) => {
+  if (apyType === 'new') return Number.MAX_SAFE_INTEGER;
+  if (apyType === 'n/a') return 0;
+
+  return toNumber(apyData) ?? 0;
+};

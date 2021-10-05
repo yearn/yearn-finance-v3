@@ -83,7 +83,7 @@ export const NavTabbar = ({ navLinks, ...props }: NavTabbarProps) => {
 
   return (
     <StyledTabbar {...props}>
-      <LinkList className="link-list">
+      <LinkList>
         {navLinks.map(
           (link: NavigationLink, index) =>
             !link.hideMobile && (

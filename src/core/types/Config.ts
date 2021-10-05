@@ -1,11 +1,11 @@
-import { EthereumNetwork, EthereumAddress, Wei } from './Ethereum';
-import { Theme } from '@types';
+import { Network, Address, Wei } from './Blockchain';
+import { NetworkSettings, Theme } from './Settings';
 
 export interface Config extends Env, Constants {}
 
 export interface Env {
   ENV: string;
-  ETHEREUM_NETWORK: EthereumNetwork;
+  NETWORK: Network;
   CUSTOM_PROVIDER_HTTPS: string;
   USE_MAINNET_FORK: boolean;
   USE_SDK_MOCK: boolean;
@@ -21,9 +21,11 @@ export interface Env {
 
 export interface Constants {
   STATE_VERSION: number;
-  ETHEREUM_ADDRESS: EthereumAddress;
+  ETHEREUM_ADDRESS: Address;
   MAX_UINT256: Wei;
   YEARN_API: string;
+  SUPPORTED_NETWORKS: Network[];
+  NETWORK_SETTINGS: NetworkSettings;
   WEB3_PROVIDER_HTTPS: string;
   WEB3_PROVIDER_WSS: string;
   FANTOM_PROVIDER_HTTPS: string;

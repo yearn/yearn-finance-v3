@@ -8,11 +8,13 @@ export class TransactionServiceImpl implements TransactionService {
   }
 
   public async execute(props: ExecuteTransactionProps): Promise<TransactionResponse> {
-    const { fn, args, overrides } = props;
+    const { network, fn, args, overrides } = props;
 
     let gasFees: GasFees = {};
     try {
-      gasFees = await this.gasService.getGasFees();
+      if (network === 'mainnet') {
+        gasFees = await this.gasService.getGasFees();
+      }
     } catch (error) {
       console.error(error);
     }

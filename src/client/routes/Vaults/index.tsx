@@ -11,6 +11,7 @@ import {
   VaultsSelectors,
   WalletSelectors,
   AppSelectors,
+  NetworkSelectors,
 } from '@store';
 
 import { device } from '@themes/default';
@@ -27,7 +28,16 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { formatPercent, humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount } from '@src/utils';
+import {
+  formatPercent,
+  humanizeAmount,
+  normalizeUsdc,
+  halfWidthCss,
+  normalizeAmount,
+  formatApy,
+  orderApy,
+} from '@src/utils';
+import { getConfig } from '@config';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -119,7 +129,10 @@ export const Vaults = () => {
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   // const { isTablet, isMobile, width: DWidth } = useWindowDimensions();
+  const { NETWORK_SETTINGS } = getConfig();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
   const recommendations = useAppSelector(VaultsSelectors.selectRecommendations);
   const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
@@ -147,31 +160,28 @@ export const Vaults = () => {
     dispatch(ModalsActions.openModal({ modalName: 'withdrawTx' }));
   };
 
+  const summaryCardItems = [{ header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> }];
+  if (currentNetworkSettings.earningsEnabled) {
+    summaryCardItems.push(
+      { header: 'Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
+      { header: 'Est. yearly yield', Component: <Amount value={estYearlyYeild} input="usdc" /> }
+    );
+  }
+
   return (
     <ViewContainer>
-      <SummaryCard
-        header="Dashboard"
-        items={[
-          { header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> },
-          { header: 'Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
-          { header: 'Est. yearly yield', Component: <Amount value={estYearlyYeild} input="usdc" /> },
-        ]}
-        variant="secondary"
-        cardSize="small"
-      />
-
+      <SummaryCard header="Dashboard" items={summaryCardItems} variant="secondary" cardSize="small" />
       {generalLoading && <SpinnerLoading flex="1" width="100%" />}
-
       {!generalLoading && (
         <>
           <Row>
             <StyledRecommendationsCard
               header="Recommendations"
-              items={recommendations.map(({ displayName, displayIcon, apyData, address }) => ({
+              items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
                 // header: 'Vault',
                 icon: displayIcon,
                 name: displayName,
-                info: formatPercent(apyData, 2),
+                info: formatApy(apyData, apyType),
                 infoDetail: 'EYY',
                 onAction: () => history.push(`/vault/${address}`),
               }))}
@@ -213,9 +223,9 @@ export const Vaults = () => {
                 className: 'col-name',
               },
               {
-                key: 'apyData',
+                key: 'apy',
                 header: 'APY',
-                format: ({ apyData }) => formatPercent(apyData, 2),
+                format: ({ apyData, apyType }) => formatApy(apyData, apyType),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
@@ -261,6 +271,7 @@ export const Vaults = () => {
             ]}
             data={deposits.map((vault) => ({
               ...vault,
+              apy: orderApy(vault.apyData, vault.apyType),
               balance: normalizeAmount(vault.userDeposited, vault.token.decimals),
               actions: null,
             }))}
@@ -287,9 +298,9 @@ export const Vaults = () => {
                 className: 'col-name',
               },
               {
-                key: 'apyData',
+                key: 'apy',
                 header: 'APY',
-                format: ({ apyData }) => formatPercent(apyData, 2),
+                format: ({ apyData, apyType }) => formatApy(apyData, apyType),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
@@ -326,6 +337,7 @@ export const Vaults = () => {
             ]}
             data={filteredVaults.map((vault) => ({
               ...vault,
+              apy: orderApy(vault.apyData, vault.apyType),
               userTokenBalance: normalizeAmount(vault.token.balance, vault.token.decimals),
               userTokenBalanceUsdc: vault.token.balanceUsdc,
               actions: null,
@@ -342,7 +354,7 @@ export const Vaults = () => {
             }
             searching={opportunities.length > filteredVaults.length}
             onAction={({ address }) => history.push(`/vault/${address}`)}
-            initialSortBy="apyData"
+            initialSortBy="apy"
             wrap
           />
         </>

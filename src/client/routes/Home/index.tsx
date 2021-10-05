@@ -1,11 +1,18 @@
 import styled from 'styled-components';
 
 import { useAppSelector } from '@hooks';
-import { IronBankSelectors, LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors } from '@store';
+import {
+  IronBankSelectors,
+  LabsSelectors,
+  TokensSelectors,
+  VaultsSelectors,
+  WalletSelectors,
+  NetworkSelectors,
+} from '@store';
 import { SummaryCard, InfoCard, ViewContainer, NoWalletCard, Amount } from '@components/app';
 import { Text } from '@components/common';
 import { toBN, halfWidthCss } from '@src/utils';
-
+import { getConfig } from '@config';
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -50,32 +57,35 @@ const StyledLink = styled.a`
 export const Home = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
+  const { NETWORK_SETTINGS } = getConfig();
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const vaultsSummary = useAppSelector(VaultsSelectors.selectSummaryData);
   const labsSummary = useAppSelector(LabsSelectors.selectSummaryData);
   const ibSummary = useAppSelector(IronBankSelectors.selectSummaryData);
   const walletSummary = useAppSelector(TokensSelectors.selectSummaryData);
-  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
 
   const netWorth = toBN(vaultsSummary.totalDeposits)
     .plus(walletSummary.totalBalance)
     .plus(labsSummary.totalDeposits)
     .plus(ibSummary.supplyBalanceUsdc)
     .toString();
+
+  const summaryCardItems = [{ header: 'Total net worth', Component: <Amount value={netWorth} input="usdc" /> }];
+  if (currentNetworkSettings.earningsEnabled) {
+    summaryCardItems.push(
+      { header: 'Vaults earnings', Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" /> },
+      {
+        header: 'Vaults est. yearly yield',
+        Component: <Amount value={vaultsSummary.estYearlyYeild} input="usdc" />,
+      }
+    );
+  }
+
   return (
     <StyledViewContainer>
-      <HeaderCard
-        header="Dashboard"
-        items={[
-          { header: 'Total net worth', Component: <Amount value={netWorth} input="usdc" /> },
-          { header: 'Vaults earnings', Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" /> },
-          {
-            header: 'Vaults est. yearly yield',
-            Component: <Amount value={vaultsSummary.estYearlyYeild} input="usdc" />,
-          },
-        ]}
-        variant="secondary"
-        cardSize="small"
-      />
+      <HeaderCard header="Dashboard" items={summaryCardItems} variant="secondary" cardSize="small" />
 
       <Row>
         <StyledInfoCard
@@ -118,22 +128,27 @@ export const Home = () => {
                   Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
                 },
               ]}
+              redirectTo="wallet"
               cardSize="small"
             />
-            <StyledSummaryCard
-              header="Iron Bank"
-              items={[
-                {
-                  header: 'Supplied',
-                  Component: <Amount value={ibSummary.supplyBalanceUsdc} input="usdc" />,
-                },
-                {
-                  header: 'Borrow limit used',
-                  Component: <Amount value={ibSummary.borrowUtilizationRatio} input="weipercent" />,
-                },
-              ]}
-              cardSize="small"
-            />
+
+            {currentNetworkSettings.ironBankEnabled && (
+              <StyledSummaryCard
+                header="Iron Bank"
+                items={[
+                  {
+                    header: 'Supplied',
+                    Component: <Amount value={ibSummary.supplyBalanceUsdc} input="usdc" />,
+                  },
+                  {
+                    header: 'Borrow limit used',
+                    Component: <Amount value={ibSummary.borrowUtilizationRatio} input="weipercent" />,
+                  },
+                ]}
+                redirectTo="ironbank"
+                cardSize="small"
+              />
+            )}
           </Row>
 
           <StyledSummaryCard
@@ -148,19 +163,23 @@ export const Home = () => {
                 Component: <Amount value={vaultsSummary.apy} input="percent" />,
               },
             ]}
+            redirectTo="vaults"
             cardSize="small"
           />
 
-          <StyledSummaryCard
-            header="Labs"
-            items={[
-              {
-                header: 'Holdings',
-                Component: <Amount value={labsSummary.totalDeposits} input="usdc" />,
-              },
-            ]}
-            cardSize="small"
-          />
+          {currentNetworkSettings.labsEnabled && (
+            <StyledSummaryCard
+              header="Labs"
+              items={[
+                {
+                  header: 'Holdings',
+                  Component: <Amount value={labsSummary.totalDeposits} input="usdc" />,
+                },
+              ]}
+              redirectTo="labs"
+              cardSize="small"
+            />
+          )}
         </>
       )}
 

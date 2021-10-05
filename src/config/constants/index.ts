@@ -1,6 +1,6 @@
 import { memoize } from 'lodash';
 
-import { Constants } from '@types';
+import { Constants, NetworkSettings } from '@types';
 import { getEnv } from '@config/env';
 
 const ADDRESSES = {
@@ -19,6 +19,31 @@ const ADDRESSES = {
   PSLPYVBOOSTETH_GAUGE: '0xDA481b277dCe305B97F4091bD66595d57CF31634',
 };
 
+const NETWORK_SETTINGS: NetworkSettings = {
+  mainnet: {
+    id: 'mainnet',
+    name: 'Ethereum',
+    networkId: 1,
+    simulationsEnabled: true,
+    zapsEnabled: true,
+    labsEnabled: true,
+    ironBankEnabled: true,
+    earningsEnabled: true,
+    notifyEnabled: true,
+  },
+  fantom: {
+    id: 'fantom',
+    name: 'Fantom',
+    networkId: 250,
+    simulationsEnabled: false,
+    zapsEnabled: false,
+    labsEnabled: false,
+    ironBankEnabled: true,
+    earningsEnabled: false,
+    notifyEnabled: false,
+  },
+};
+
 export const getConstants = memoize((): Constants => {
   const { ALCHEMY_API_KEY } = getEnv();
   return {
@@ -26,19 +51,20 @@ export const getConstants = memoize((): Constants => {
     ETHEREUM_ADDRESS: ADDRESSES.ETH,
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
     YEARN_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
+    SUPPORTED_NETWORKS: ['mainnet'],
+    NETWORK_SETTINGS,
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-    FANTOM_PROVIDER_HTTPS: 'https://rpcapi.fantom.network',
+    FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
     CONTRACT_ADDRESSES: {
-      oracle: '0xE7eD6747FaC5360f88a2EFC03E00d25789F69291',
-      lens: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
-      registryV2Adapter: '0xFbD588c72B438faD4Cf7cD879c8F730Faa213Da0',
-      helper: '0x420b1099B9eF5baba6D92029594eF45E19A04A4A',
       zapIn: '0x92Be6ADB6a12Da0CA607F9d87DB2F9978cD6ec3E',
       zapOut: '0xA8a3B1A1e09A0f84B2856533DB4eE0Cc88DD4E11',
       pickleZapIn: '0xc695f73c1862e050059367B2E64489E66c525983',
       y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
       ironBankComptroller: '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB',
+      ironBankComptrollerFantom: '0x4250A6D3BD57455d7C6821eECb6206F507576cD2',
+      trustedVaultMigrator: '0x1824df8D751704FA10FA371d62A37f9B8772ab90',
+      triCryptoVaultMigrator: '0xC306a5ef4B990A7F2b3bC2680E022E6a84D75fC1',
       ...ADDRESSES,
     },
     SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],

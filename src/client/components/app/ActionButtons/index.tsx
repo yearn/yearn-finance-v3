@@ -6,7 +6,7 @@ const ActionButtonsContainer = styled.div<{ actions: number }>`
   display: flex;
   align-items: center;
   // grid-template-columns: repeat(${({ actions }) => actions}, 1fr);
-  gap: ${({ theme }) => theme.cardPadding};
+  gap: ${({ theme }) => theme.card.padding};
 `;
 
 const AlertIcon = styled(Icon)`

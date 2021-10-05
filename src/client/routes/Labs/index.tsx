@@ -11,6 +11,7 @@ import {
   TokensSelectors,
   ModalSelectors,
   AppSelectors,
+  NetworkSelectors,
 } from '@store';
 
 import {
@@ -109,11 +110,14 @@ const StyledNoWalletCard = styled(NoWalletCard)`
 export const Labs = () => {
   // TODO: Add translation
   // const { t } = useAppTranslation('common');
-  const { YVECRV, YVBOOST, PSLPYVBOOSTETH, CRV, YVTHREECRV } = getConstants().CONTRACT_ADDRESSES;
+  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConstants();
+  const { YVECRV, YVBOOST, PSLPYVBOOSTETH, CRV, YVTHREECRV } = CONTRACT_ADDRESSES;
   const history = useHistory();
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(LabsSelectors.selectSummaryData);
   const recommendations = useAppSelector(LabsSelectors.selectRecommendations);
   const holdings = useAppSelector(LabsSelectors.selectDepositedLabs);
@@ -289,37 +293,47 @@ export const Labs = () => {
 
       {!generalLoading && (
         <>
-          <Row>
-            <StyledRecommendationsCard
-              header="Recommendations"
-              items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
-                // header: 'Special Token',
-                icon: displayIcon,
-                name: displayName,
-                info: formatPercent(apyData, 2),
-                infoDetail: 'EYY',
-                // onAction: () => history.push(`/vault/${address}`),
-              }))}
-            />
-
+          {currentNetworkSettings.labsEnabled ? (
+            <Row>
+              <StyledRecommendationsCard
+                header="Recommendations"
+                items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
+                  // header: 'Special Token',
+                  icon: displayIcon,
+                  name: displayName,
+                  info: formatPercent(apyData, 2),
+                  infoDetail: 'EYY',
+                  // onAction: () => history.push(`/vault/${address}`),
+                }))}
+              />
+              <StyledInfoCard
+                header="These are not risks for ants"
+                Component={
+                  <Text>
+                    <p>
+                      The emerging strategies you'll find here are the newest and most unconventional around. Be sure to
+                      review the <em>About</em> sections carefully and make sure you understand token locking,
+                      impermanent loss, and other risks before proceeding.
+                    </p>
+                    <p>
+                      As with all Yearn products, you are responsible for educating yourself on the details, and for
+                      actively managing your holdings.
+                    </p>
+                    <p>Welcome to the Lab, but proceed with caution, anon.</p>
+                  </Text>
+                }
+              />
+            </Row>
+          ) : (
             <StyledInfoCard
-              header="These are not risks for ants"
+              header={`No Labs yet on ${currentNetworkSettings.name}`}
               Component={
                 <Text>
-                  <p>
-                    The emerging strategies you'll find here are the newest and most unconventional around. Be sure to
-                    review the <em>About</em> sections carefully and make sure you understand token locking, impermanent
-                    loss, and other risks before proceeding.
-                  </p>
-                  <p>
-                    As with all Yearn products, you are responsible for educating yourself on the details, and for
-                    actively managing your holdings.
-                  </p>
-                  <p>Welcome to the Lab, but proceed with caution, anon.</p>
+                  <p>{`Check back later for some new experiments.`}</p>
                 </Text>
               }
             />
-          </Row>
+          )}
 
           {!walletIsConnected && <StyledNoWalletCard />}
 

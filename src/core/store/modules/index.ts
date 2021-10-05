@@ -14,6 +14,10 @@ import modalsReducer, { modalsInitialState } from './modals/modals.reducer';
 import { ModalsActions } from './modals/modals.actions';
 import { ModalSelectors } from './modals/modals.selectors';
 
+import networkReducer, { networkInitialState } from './network/network.reducer';
+import { NetworkActions } from './network/network.actions';
+import { NetworkSelectors } from './network/network.selectors';
+
 import routeReducer, { routeInitialState } from './route/route.reducer';
 import { RouteActions } from './route/route.actions';
 import { RouteSelectors } from './route/route.selectors';
@@ -49,6 +53,7 @@ const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
   alerts: alertsReducer,
   modals: modalsReducer,
+  network: networkReducer,
   route: routeReducer,
   theme: themeReducer,
   vaults: vaultsReducer,
@@ -67,6 +72,7 @@ export {
   AlertsActions,
   VaultsActions,
   ModalsActions,
+  NetworkActions,
   RouteActions,
   ThemeActions,
   WalletActions,
@@ -81,6 +87,7 @@ export {
   AlertsSelectors,
   AppSelectors,
   ModalSelectors,
+  NetworkSelectors,
   RouteSelectors,
   VaultsSelectors,
   WalletSelectors,
@@ -95,6 +102,7 @@ export {
   alertsInitialState,
   appInitialState,
   modalsInitialState,
+  networkInitialState,
   routeInitialState,
   themeInitialState,
   vaultsInitialState,

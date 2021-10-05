@@ -61,6 +61,7 @@ const {
   approveMarket,
   getMarketsDynamic,
   enterOrExitMarket,
+  clearIronBankData,
   clearUserData,
   clearSelectedMarketAndStatus,
   clearMarketStatus,
@@ -160,7 +161,15 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
         state.user.marketsAllowancesMap[address] = allowancesMap;
       });
 
-      state.user.userMarketsPositionsMap = { ...state.user.userMarketsPositionsMap, ...marketsPositionsMap };
+      if (!userMarketsPositions.length) {
+        marketAddresses?.forEach((address) => {
+          const userMarketsPositionsMapClone = { ...state.user.userMarketsPositionsMap };
+          delete userMarketsPositionsMapClone[address];
+          state.user.userMarketsPositionsMap = { ...userMarketsPositionsMapClone };
+        });
+      } else {
+        state.user.userMarketsPositionsMap = { ...state.user.userMarketsPositionsMap, ...marketsPositionsMap };
+      }
       state.statusMap.user.getUserMarketsPositions = {};
     })
     .addCase(getUserMarketsPositions.rejected, (state, { meta, error }) => {
@@ -247,6 +256,10 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
     .addCase(enterOrExitMarket.rejected, (state, { meta, error }) => {
       const { marketAddress, actionType } = meta.arg;
       state.statusMap.marketsActionsMap[marketAddress][actionType] = { error: error.message };
+    })
+    .addCase(clearIronBankData, (state) => {
+      state.marketsMap = {};
+      state.marketAddresses = [];
     })
     .addCase(clearUserData, (state) => {
       state.user.marketsAllowancesMap = {};

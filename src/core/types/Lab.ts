@@ -14,6 +14,8 @@ export interface GeneralLabView {
   apyData: string;
   allowancesMap: AllowancesMap;
   pricePerShare: string;
+  allowZapIn: boolean;
+  allowZapOut: boolean;
   mainPositionKey: LabsPositionsTypes;
   DEPOSIT: {
     userBalance: string;

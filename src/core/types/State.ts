@@ -1,3 +1,5 @@
+import { Alert } from './Alerts';
+import { Address, Network } from './Blockchain';
 import { Theme } from './Settings';
 import { Status } from './Status';
 import {
@@ -8,18 +10,18 @@ import {
   Balance,
   IronBankMarket,
   Lab,
-  Alert,
   VaultsUserSummary,
   VaultUserMetadata,
-} from '@types';
-import { EthereumAddress } from './Ethereum';
-import { CyTokenUserMetadata, IronBankUserSummary } from '@yfi/sdk';
-import { TransactionOutcome } from './Yearn-Sdk';
+  TransactionOutcome,
+  CyTokenUserMetadata,
+  IronBankUserSummary,
+} from './Yearn-Sdk';
 
 export interface RootState {
   app: AppState;
   alerts: AlertsState;
   modals: ModalsState;
+  network: NetworkState;
   route: RouteState;
   theme: ThemeState;
   vaults: VaultsState;
@@ -34,6 +36,10 @@ export interface AppState {
   isInitialized: boolean;
   isLoading: boolean;
   error: string | undefined;
+}
+
+export interface NetworkState {
+  current: Network;
 }
 
 export interface ModalsState {
@@ -53,11 +59,13 @@ export interface ThemeState {
 }
 
 export interface VaultActionsStatusMap {
-  approve: Status;
-  approveZapOut: Status;
-  deposit: Status;
-  withdraw: Status;
   get: Status;
+  approve: Status;
+  deposit: Status;
+  approveZapOut: Status;
+  withdraw: Status;
+  approveMigrate: Status;
+  migrate: Status;
 }
 export interface UserVaultActionsStatusMap {
   getPosition: Status;
@@ -78,7 +86,7 @@ export interface VaultTransaction {
 export interface VaultsState {
   vaultsAddresses: string[];
   vaultsMap: { [address: string]: Vault };
-  selectedVaultAddress: EthereumAddress | undefined;
+  selectedVaultAddress: Address | undefined;
   transaction: VaultTransaction;
   user: {
     userVaultsSummary: VaultsUserSummary | undefined;
@@ -121,7 +129,7 @@ export interface UserTokenActionsMap {
 export interface TokensState {
   tokensAddresses: string[];
   tokensMap: { [address: string]: Token };
-  selectedTokenAddress: EthereumAddress | undefined;
+  selectedTokenAddress: Address | undefined;
   user: {
     userTokensAddresses: string[];
     userTokensMap: { [address: string]: Balance };
@@ -160,9 +168,9 @@ export interface IronBankMarketPositionsMap {
 }
 
 export interface IronBankState {
-  marketAddresses: EthereumAddress[];
+  marketAddresses: Address[];
   marketsMap: { [marketAddress: string]: IronBankMarket };
-  selectedMarketAddress: EthereumAddress | undefined;
+  selectedMarketAddress: Address | undefined;
   user: {
     userIronBankSummary: IronBankUserSummary | undefined;
     userMarketsPositionsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
@@ -188,7 +196,7 @@ export interface SettingsState {
   defaultSlippage: number;
   devMode: {
     enabled: boolean;
-    walletAddressOverride: EthereumAddress;
+    walletAddressOverride: Address;
   };
 }
 
@@ -222,7 +230,7 @@ export interface UserLabActionsStatusMap {
 export interface LabsState {
   labsAddresses: string[];
   labsMap: { [address: string]: Lab };
-  selectedLabAddress: EthereumAddress | undefined;
+  selectedLabAddress: Address | undefined;
   user: {
     userLabsPositionsMap: { [address: string]: LabsPositionsMap };
     labsAllowancesMap: { [labAddress: string]: AllowancesMap };

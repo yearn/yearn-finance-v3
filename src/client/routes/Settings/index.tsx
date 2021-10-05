@@ -45,7 +45,7 @@ const SettingsCard = styled(Card)`
 const SettingsSection = styled.div`
   display: grid;
   grid-template-columns: 18rem 1fr;
-  padding: 0 ${({ theme }) => theme.cardPadding};
+  padding: 0 ${({ theme }) => theme.card.padding};
   gap: 1.5rem;
 `;
 
@@ -63,10 +63,9 @@ const SectionContent = styled.div`
 const SectionTitle = styled.div`
   display: flex;
   align-items: flex-start;
-  color: ${({ theme }) => theme.colors.secondary};
   fill: ${({ theme }) => theme.colors.secondary};
   background: ${({ theme }) => theme.colors.surfaceVariantA};
-  padding: ${({ theme }) => theme.cardPadding};
+  padding: ${({ theme }) => theme.card.padding};
 
   ${SettingsSection}:not(:first-child) & {
     padding-top: ${sectionsGap};
@@ -82,8 +81,18 @@ const SectionTitle = styled.div`
 `;
 
 const SectionIcon = styled(Icon)`
+  display: inline-block;
   fill: inherit;
   margin-right: 0.7rem;
+`;
+
+const SectionHeading = styled.h3`
+  color: ${({ theme }) => theme.colors.secondary};
+  display: inline-block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
 `;
 
 const SlippageOption = styled.div<{ active?: boolean }>`
@@ -116,7 +125,7 @@ const SettingsView = styled(ViewContainer)`
       padding: 0;
 
       :not(:first-child) ${SectionTitle} {
-        padding-top: ${({ theme }) => theme.cardPadding};
+        padding-top: ${({ theme }) => theme.card.padding};
       }
       :not(:first-child) ${SectionContent} {
         padding-top: 0;
@@ -127,7 +136,7 @@ const SettingsView = styled(ViewContainer)`
       }
     }
     ${SectionContent} {
-      padding: 0 ${({ theme }) => theme.cardPadding};
+      padding: 0 ${({ theme }) => theme.card.padding};
     }
   }
 `;
@@ -175,8 +184,10 @@ export const Settings = () => {
         <SettingsCardContent>
           <SettingsSection>
             <SectionTitle>
-              <SectionIcon Component={ClockIcon} />
-              Slippage Tolerance
+              <SectionHeading>
+                <SectionIcon Component={ClockIcon} />
+                Slippage tolerance
+              </SectionHeading>
             </SectionTitle>
             <SectionContent>
               {availableSlippages.map((slippage) => (
@@ -189,8 +200,10 @@ export const Settings = () => {
 
           <SettingsSection>
             <SectionTitle>
-              <SectionIcon Component={ThemesIcon} />
-              {t('settings.themes')}
+              <SectionHeading>
+                <SectionIcon Component={ThemesIcon} />
+                {t('settings.themes')}
+              </SectionHeading>
             </SectionTitle>
 
             <SectionContent>

@@ -1,8 +1,8 @@
-import { EthereumAddress } from '@types';
+import { Address } from '@types';
 
 // TODO deprecated
 // export interface TokenData {
-//   address: EthereumAddress;
+//   address: Address;
 //   name: string;
 //   symbol: string;
 //   decimals: number;
@@ -21,7 +21,7 @@ export interface UserTokenData {
 }
 
 export interface TokenView {
-  address: EthereumAddress;
+  address: Address;
   name: string;
   symbol: string;
   decimals: number;
@@ -37,6 +37,6 @@ export interface TokenView {
 }
 
 export interface TokenDynamicData {
-  address: EthereumAddress;
+  address: Address;
   priceUsdc: string;
 }

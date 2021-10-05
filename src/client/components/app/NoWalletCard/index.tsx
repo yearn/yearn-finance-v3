@@ -15,7 +15,7 @@ const StyledCard = styled(Card)`
   display: flex;
   align-items: center;
   gap: 5rem;
-  padding: ${({ theme }) => theme.cardPadding} 5rem;
+  padding: ${({ theme }) => theme.card.padding} 5rem;
 `;
 
 interface NoWalletCardProps {}

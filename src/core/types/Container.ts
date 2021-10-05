@@ -1,5 +1,3 @@
-import { Yearn } from '@yfi/sdk';
-
 import {
   Wallet,
   Config,
@@ -12,6 +10,7 @@ import {
   GasService,
   TransactionService,
   SubscriptionService,
+  YearnSdk,
 } from '@types';
 
 export interface DIContainer {
@@ -37,5 +36,3 @@ export interface ServiceContainer {
 }
 
 export interface ConfigContainer extends Config {}
-
-export type YearnSdk = Yearn<1>;

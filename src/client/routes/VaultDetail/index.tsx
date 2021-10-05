@@ -2,16 +2,23 @@ import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AppSelectors, TokensSelectors, VaultsSelectors } from '@store';
+import { AppSelectors, TokensSelectors, VaultsSelectors, NetworkSelectors } from '@store';
 import { useAppSelector, useIsMounting } from '@hooks';
-import { parseHistoricalEarnings, parseLastEarnings } from '@utils';
+import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
+import { SpinnerLoading, Button, Text } from '@components/common';
 
-import { VaultDetailPanels, ViewContainer } from '@components/app';
-import { SpinnerLoading, Button } from '@components/common';
+import { parseHistoricalEarnings, parseLastEarnings } from '@utils';
+import { getConfig } from '@config';
+import { device } from '@themes/default';
 
 const BackButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.surface};
   color: ${({ theme }) => theme.colors.onSurfaceH2};
+`;
+
+const StyledInfoCard = styled(InfoCard)`
+  padding: 3rem;
+  margin: 0 auto;
 `;
 
 const ViewHeader = styled.div`
@@ -22,6 +29,12 @@ const VaultDetailView = styled(ViewContainer)`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+
+  @media ${device.mobile} {
+    ${StyledInfoCard} {
+      padding: 1rem;
+    }
+  }
 `;
 
 export interface VaultDetailRouteParams {
@@ -32,11 +45,14 @@ export const VaultDetail = () => {
   // const { t } = useAppTranslation('common');
   const history = useHistory();
   const isMounting = useIsMounting();
+  const { NETWORK_SETTINGS } = getConfig();
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
 
   const [firstTokensFetch, setFirstTokensFetch] = useState(false);
   const [tokensInitialized, setTokensInitialized] = useState(false);
@@ -75,8 +91,12 @@ export const VaultDetail = () => {
   //   },
   // ];
 
-  const chartData = parseHistoricalEarnings(selectedVault?.historicalEarnings);
-  const chartValue = parseLastEarnings(selectedVault?.historicalEarnings);
+  const chartData = currentNetworkSettings.earningsEnabled
+    ? parseHistoricalEarnings(selectedVault?.historicalEarnings)
+    : undefined;
+  const chartValue = currentNetworkSettings.earningsEnabled
+    ? parseLastEarnings(selectedVault?.historicalEarnings)
+    : undefined;
 
   return (
     <VaultDetailView>
@@ -85,6 +105,17 @@ export const VaultDetail = () => {
       </ViewHeader>
 
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
+
+      {!generalLoading && !selectedVault && (
+        <StyledInfoCard
+          header={`Vault not supported on ${currentNetworkSettings.name}`}
+          Component={
+            <Text>
+              <p>{`Try changing to the correct network.`}</p>
+            </Text>
+          }
+        />
+      )}
 
       {!generalLoading && selectedVault && (
         <VaultDetailPanels selectedVault={selectedVault} chartData={chartData} chartValue={chartValue} />

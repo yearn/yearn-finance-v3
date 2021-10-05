@@ -1,6 +1,6 @@
 import { DefaultTheme } from 'styled-components';
 
-import { ClassicBackground } from '@assets/images';
+import ClassicBackground from './background.jpg';
 import { sharedTheme } from '../default';
 
 const classicTheme: DefaultTheme = {
@@ -9,6 +9,8 @@ const classicTheme: DefaultTheme = {
     image: ClassicBackground,
   },
   colors: {
+    logo: '#006AE3',
+
     primary: '#0A1D3F',
     background: '#1F255F',
     surface: '#0A1D3F',
@@ -24,7 +26,6 @@ const classicTheme: DefaultTheme = {
 
     selectionBar: '#006AE3',
 
-    onPrimary: '#01E2A0',
     onPrimaryVariant: '#E5E5E5',
     onBackground: '#E5E5E5',
 

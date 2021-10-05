@@ -26,7 +26,7 @@ export const toBN = (amount?: string | number) => {
 };
 
 export const formatAmount = (amount: string, decimals: number) => {
-  return new BigNumber(amount).toFormat(decimals, format);
+  return new BigNumber(amount).toFormat(decimals, BigNumber.ROUND_FLOOR, format);
 };
 
 export const weiToUnits = (amount: string, decimals: number) => formatUnits(EthersBN.from(amount), decimals);
@@ -73,4 +73,11 @@ export const normalizeUsdc = (amount?: string, decimals = 2) => {
 export const toWei = (amount: string, decimals: number) => {
   const ONE_UNIT = new BigNumber(10).pow(decimals);
   return new BigNumber(amount).times(ONE_UNIT).toFixed(0);
+};
+
+export const formatApy = (apyData: string, apyType: string) => {
+  if (apyType === 'new') return 'NEW ✨';
+  if (apyType === 'n/a') return 'N/A';
+
+  return formatPercent(apyData, 2);
 };

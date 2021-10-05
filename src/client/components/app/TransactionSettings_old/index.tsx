@@ -1,7 +1,6 @@
-import styled from 'styled-components';
-
 import { Card, Text, SimpleDropdown } from '@components/common';
 import { toBN, formatUsd } from '@utils';
+import styled from 'styled-components';
 
 const Container = styled(Card)`
   display: flex;
@@ -58,7 +57,7 @@ export const TransactionSettings = ({
   return (
     <Container variant="primary" {...props}>
       <Row>
-        <StyledText>Slippage Tolerance</StyledText>
+        <StyledText>Slippage tolerance</StyledText>
         <StyledSimpleDropdown
           selected={selectedSlippage}
           setSelected={onSelectedSlippageChange}
@@ -66,7 +65,7 @@ export const TransactionSettings = ({
         />
       </Row>
       <Row>
-        <StyledText>Minimum Received</StyledText>
+        <StyledText>Minimum received</StyledText>
         <StyledText>{formatUsd(minimumAmountReceived)}</StyledText>
       </Row>
     </Container>

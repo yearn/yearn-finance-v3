@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-const StyledViewContainer = styled.div`
+const StyledViewContainer = styled.main`
   display: flex;
   flex-direction: column;
   align-items: flex-start;

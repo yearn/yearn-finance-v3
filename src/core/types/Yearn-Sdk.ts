@@ -2,10 +2,10 @@ import { TransactionRequest, TransactionResponse, TransactionReceipt } from '@et
 import { Overrides } from '@ethersproject/contracts';
 
 import {
+  Yearn,
   Position,
   Asset,
   Vault,
-  Yearn,
   Balance,
   VaultDynamic,
   Token,
@@ -24,6 +24,15 @@ import {
   TransactionOutcome,
   EarningsDayData,
 } from '@yfi/sdk';
+
+import { Network } from './Blockchain';
+
+type SdkNetwork = 1 | 250;
+interface YearnSdk {
+  hasInstanceOf: (network: Network) => boolean;
+  getInstanceOf: (network: Network) => Yearn<SdkNetwork>;
+  register: (network: Network, instance: Yearn<SdkNetwork>) => void;
+}
 
 declare type Lab = LabStatic & LabDynamic;
 interface LabStatic {
@@ -58,6 +67,8 @@ interface LabMetadata {
 interface LabUserMetadata {}
 
 export type {
+  SdkNetwork,
+  YearnSdk,
   Position,
   Asset,
   Vault,

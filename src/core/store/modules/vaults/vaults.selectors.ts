@@ -10,7 +10,8 @@ import {
   AllowancesMap,
   VaultPositionsMap,
   VaultUserMetadata,
-  EthereumAddress,
+  Address,
+  GeneralVaultView,
 } from '@types';
 import BigNumber from 'bignumber.js';
 import { memoize } from 'lodash';
@@ -205,7 +206,7 @@ const selectVault = createSelector(
     })
 );
 
-const selectUnderlyingTokensAddresses = createSelector([selectVaultsMap], (vaults): EthereumAddress[] => {
+const selectUnderlyingTokensAddresses = createSelector([selectVaultsMap], (vaults): Address[] => {
   return Object.values(vaults).map((vault) => vault.tokenId);
 });
 
@@ -219,7 +220,7 @@ interface CreateVaultProps {
   vaultAllowancesMap: AllowancesMap;
 }
 
-function createVault(props: CreateVaultProps) {
+function createVault(props: CreateVaultProps): GeneralVaultView {
   const {
     tokenAllowancesMap,
     tokenData,
@@ -244,12 +245,15 @@ function createVault(props: CreateVaultProps) {
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
     emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
     apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
+    apyType: vaultData.metadata.apy?.type ?? '',
     allowancesMap: vaultAllowancesMap ?? {},
     approved: new BigNumber(currentAllowance).gt(0),
     pricePerShare: vaultData?.metadata.pricePerShare,
     earned: userVaultsMetadataMap?.earned ?? '0',
     strategies: vaultData.metadata.strategies?.strategiesMetadata ?? [],
     historicalEarnings: vaultData.metadata.historicEarnings ?? [],
+    allowZapIn: !!vaultData.metadata.allowZapIn,
+    allowZapOut: !!vaultData.metadata.allowZapOut,
     DEPOSIT: {
       userBalance: userVaultPositionsMap?.DEPOSIT?.balance ?? '0',
       userDeposited: userVaultPositionsMap?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',
