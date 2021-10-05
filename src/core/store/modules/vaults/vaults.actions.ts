@@ -251,7 +251,7 @@ const withdrawVault = createAsyncThunk<
     const tx = await vaultService.withdraw({
       network: network.current,
       accountAddress: userAddress,
-      tokenAddress: vaultData.tokenId,
+      tokenAddress: targetTokenAddress,
       vaultAddress,
       amountOfShares,
       slippageTolerance,
