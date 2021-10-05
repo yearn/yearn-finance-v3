@@ -139,11 +139,7 @@ export const Layout: FC = ({ children }) => {
   }
 
   async function fetchData(path: string) {
-    if (isFetching) {
-      console.log('STOP FETCH');
-      return;
-    }
-    console.log('FETCH DATA');
+    if (isFetching) return;
     isFetching = true;
 
     const promises: Promise<any>[] = [];
