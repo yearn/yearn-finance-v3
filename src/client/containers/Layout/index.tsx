@@ -143,7 +143,9 @@ export const Layout: FC = ({ children }) => {
     isFetching = true;
 
     const promises: Promise<any>[] = [];
-    promises.push(dispatch(TokensActions.getUserTokens({}))); // always fetch all user tokens
+    if (selectedAddress) {
+      promises.push(dispatch(TokensActions.getUserTokens({}))); // always fetch all user tokens
+    }
     switch (path) {
       case 'home':
         promises.push(dispatch(LabsActions.initiateLabs()));
