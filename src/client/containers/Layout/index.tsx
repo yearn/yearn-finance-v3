@@ -81,6 +81,7 @@ export const Layout: FC = ({ children }) => {
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const history = useHistory();
+  let isFetching = false;
 
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1];
@@ -113,15 +114,15 @@ export const Layout: FC = ({ children }) => {
   }, [location]);
 
   // TODO: ENABLE WHEN ADDING MULTICHAIN SUPPORT
-  // useEffect(() => {
-  //   clearData();
-  //   clearUserData();
-  //   dispatch(TokensActions.getTokens());
-  //   fetchData(path);
-  //   if (selectedAddress) {
-  //     fetchUserData(path);
-  //   }
-  // }, [currentNetwork]);
+  useEffect(() => {
+    clearData();
+    clearUserData();
+    dispatch(TokensActions.getTokens());
+    fetchData(path);
+    if (selectedAddress) {
+      fetchUserData(path);
+    }
+  }, [currentNetwork]);
 
   function clearUserData() {
     dispatch(TokensActions.clearUserTokenState());
@@ -137,38 +138,47 @@ export const Layout: FC = ({ children }) => {
     dispatch(IronBankActions.clearIronBankData());
   }
 
-  function fetchData(path: string) {
-    dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
+  async function fetchData(path: string) {
+    if (isFetching) return;
+    isFetching = true;
+
+    const promises: Promise<any>[] = [];
+    if (selectedAddress) {
+      promises.push(dispatch(TokensActions.getUserTokens({}))); // always fetch all user tokens
+    }
     switch (path) {
       case 'home':
-        dispatch(LabsActions.initiateLabs());
+        promises.push(dispatch(LabsActions.initiateLabs()));
         break;
       case 'wallet':
-        dispatch(VaultsActions.initiateSaveVaults());
-        dispatch(IronBankActions.initiateIronBank());
+        promises.push(dispatch(VaultsActions.initiateSaveVaults()));
+        promises.push(dispatch(IronBankActions.initiateIronBank()));
         break;
       case 'vaults':
-        dispatch(VaultsActions.initiateSaveVaults());
+        promises.push(dispatch(VaultsActions.initiateSaveVaults()));
         break;
       case 'vault':
         if (!assetAddress) break;
         if (!isValidAddress(assetAddress)) {
-          dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
+          promises.push(dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' })));
           history.push('/home');
           break;
         }
         dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));
-        dispatch(VaultsActions.getVaults({ addresses: [assetAddress] }));
+        promises.push(dispatch(VaultsActions.getVaults({ addresses: [assetAddress] })));
         break;
       case 'labs':
-        dispatch(LabsActions.initiateLabs());
+        promises.push(dispatch(LabsActions.initiateLabs()));
         break;
       case 'ironbank':
-        dispatch(IronBankActions.initiateIronBank());
+        promises.push(dispatch(IronBankActions.initiateIronBank()));
         break;
       default:
         break;
     }
+
+    await Promise.all(promises);
+    isFetching = false;
   }
 
   function fetchUserData(path: string) {
