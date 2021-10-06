@@ -21,14 +21,12 @@ const StyledInfoCard = styled(InfoCard)`
   margin: 0 auto;
 `;
 
-const ViewHeader = styled.div`
-  flex: 1 100%;
-`;
+const ViewHeader = styled.div``;
 
 const VaultDetailView = styled(ViewContainer)`
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
 
   @media ${device.mobile} {
     ${StyledInfoCard} {
