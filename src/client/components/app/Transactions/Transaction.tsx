@@ -150,7 +150,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         {actions.map(({ label, onAction, status, disabled, contrast }) => (
           <TxActionButton
             key={label}
-            onClick={onAction}
+            onClick={!status.loading ? onAction : undefined}
             disabled={disabled}
             contrast={contrast}
             isLoading={status.loading}
