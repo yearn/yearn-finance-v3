@@ -112,15 +112,16 @@ export const Layout: FC = ({ children }) => {
     }
   }, [location]);
 
-  useEffect(() => {
-    clearData();
-    clearUserData();
-    dispatch(TokensActions.getTokens());
-    fetchData(path);
-    if (selectedAddress) {
-      fetchUserData(path);
-    }
-  }, [currentNetwork]);
+  // TODO: ENABLE WHEN ADDING MULTICHAIN SUPPORT
+  // useEffect(() => {
+  //   clearData();
+  //   clearUserData();
+  //   dispatch(TokensActions.getTokens());
+  //   fetchData(path);
+  //   if (selectedAddress) {
+  //     fetchUserData(path);
+  //   }
+  // }, [currentNetwork]);
 
   function clearUserData() {
     dispatch(TokensActions.clearUserTokenState());
