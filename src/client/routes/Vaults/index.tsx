@@ -36,6 +36,7 @@ import {
   normalizeAmount,
   formatApy,
   orderApy,
+  toBN,
 } from '@src/utils';
 import { getConfig } from '@config';
 
@@ -249,7 +250,7 @@ export const Vaults = () => {
               {
                 key: 'earned',
                 header: 'Earned',
-                format: ({ earned }) => normalizeUsdc(earned, 2),
+                format: ({ earned }) => (!toBN(earned).isZero ? normalizeUsdc(earned, 2) : '-'),
                 sortable: true,
                 width: '11rem',
                 className: 'col-earned',
