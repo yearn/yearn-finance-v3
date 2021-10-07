@@ -10,14 +10,20 @@ import {
   VaultsActions,
   LabsActions,
   IronBankActions,
+  VaultsSelectors,
+  LabsSelectors,
+  IronBankSelectors,
   WalletSelectors,
+  TokensSelectors,
   NetworkSelectors,
+  AppSelectors,
+  ModalSelectors,
   SettingsSelectors,
   AlertsActions,
   NetworkActions,
 } from '@store';
 
-import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
+import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, useIsMounting } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
@@ -73,6 +79,7 @@ const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean }>`
 export const Layout: FC = ({ children }) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+  const isMounting = useIsMounting();
   const location = useLocation();
   const { SUPPORTED_NETWORKS } = getConfig();
   const { isMobile } = useWindowDimensions();
@@ -81,7 +88,23 @@ export const Layout: FC = ({ children }) => {
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const history = useHistory();
+
   let isFetching = false;
+  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
+  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
+  const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
+  const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
+  const labsStatus = useAppSelector(LabsSelectors.selectLabsStatus);
+  const ironBankStatus = useAppSelector(IronBankSelectors.selectIronBankStatus);
+  const generalLoading =
+    (appStatus.loading ||
+      tokensStatus.loading ||
+      vaultsStatus.loading ||
+      labsStatus.loading ||
+      ironBankStatus.loading ||
+      isMounting ||
+      isFetching) &&
+    !activeModal;
 
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1];
