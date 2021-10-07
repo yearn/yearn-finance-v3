@@ -10,14 +10,20 @@ import {
   VaultsActions,
   LabsActions,
   IronBankActions,
+  VaultsSelectors,
+  LabsSelectors,
+  IronBankSelectors,
   WalletSelectors,
+  TokensSelectors,
   NetworkSelectors,
+  AppSelectors,
+  ModalSelectors,
   SettingsSelectors,
   AlertsActions,
   NetworkActions,
 } from '@store';
 
-import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
+import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, useIsMounting } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
@@ -73,6 +79,7 @@ const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean }>`
 export const Layout: FC = ({ children }) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+  const isMounting = useIsMounting();
   const location = useLocation();
   const { SUPPORTED_NETWORKS } = getConfig();
   const { isMobile } = useWindowDimensions();
@@ -81,6 +88,23 @@ export const Layout: FC = ({ children }) => {
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const history = useHistory();
+
+  let isFetching = false;
+  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
+  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
+  const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
+  const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
+  const labsStatus = useAppSelector(LabsSelectors.selectLabsStatus);
+  const ironBankStatus = useAppSelector(IronBankSelectors.selectIronBankStatus);
+  const generalLoading =
+    (appStatus.loading ||
+      tokensStatus.loading ||
+      vaultsStatus.loading ||
+      labsStatus.loading ||
+      ironBankStatus.loading ||
+      isMounting ||
+      isFetching) &&
+    !activeModal;
 
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1];
@@ -113,15 +137,15 @@ export const Layout: FC = ({ children }) => {
   }, [location]);
 
   // TODO: ENABLE WHEN ADDING MULTICHAIN SUPPORT
-  // useEffect(() => {
-  //   clearData();
-  //   clearUserData();
-  //   dispatch(TokensActions.getTokens());
-  //   fetchData(path);
-  //   if (selectedAddress) {
-  //     fetchUserData(path);
-  //   }
-  // }, [currentNetwork]);
+  useEffect(() => {
+    clearData();
+    clearUserData();
+    dispatch(TokensActions.getTokens());
+    fetchData(path);
+    if (selectedAddress) {
+      fetchUserData(path);
+    }
+  }, [currentNetwork]);
 
   function clearUserData() {
     dispatch(TokensActions.clearUserTokenState());
@@ -137,38 +161,47 @@ export const Layout: FC = ({ children }) => {
     dispatch(IronBankActions.clearIronBankData());
   }
 
-  function fetchData(path: string) {
-    dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
+  async function fetchData(path: string) {
+    if (isFetching) return;
+    isFetching = true;
+
+    const promises: Promise<any>[] = [];
+    if (selectedAddress) {
+      promises.push(dispatch(TokensActions.getUserTokens({}))); // always fetch all user tokens
+    }
     switch (path) {
       case 'home':
-        dispatch(LabsActions.initiateLabs());
+        promises.push(dispatch(LabsActions.initiateLabs()));
         break;
       case 'wallet':
-        dispatch(VaultsActions.initiateSaveVaults());
-        dispatch(IronBankActions.initiateIronBank());
+        promises.push(dispatch(VaultsActions.initiateSaveVaults()));
+        promises.push(dispatch(IronBankActions.initiateIronBank()));
         break;
       case 'vaults':
-        dispatch(VaultsActions.initiateSaveVaults());
+        promises.push(dispatch(VaultsActions.initiateSaveVaults()));
         break;
       case 'vault':
         if (!assetAddress) break;
         if (!isValidAddress(assetAddress)) {
-          dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
+          promises.push(dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' })));
           history.push('/home');
           break;
         }
         dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));
-        dispatch(VaultsActions.getVaults({ addresses: [assetAddress] }));
+        promises.push(dispatch(VaultsActions.getVaults({ addresses: [assetAddress] })));
         break;
       case 'labs':
-        dispatch(LabsActions.initiateLabs());
+        promises.push(dispatch(LabsActions.initiateLabs()));
         break;
       case 'ironbank':
-        dispatch(IronBankActions.initiateIronBank());
+        promises.push(dispatch(IronBankActions.initiateIronBank()));
         break;
       default:
         break;
     }
+
+    await Promise.all(promises);
+    isFetching = false;
   }
 
   function fetchUserData(path: string) {
@@ -228,6 +261,7 @@ export const Layout: FC = ({ children }) => {
           selectedNetwork={currentNetwork}
           networkOptions={SUPPORTED_NETWORKS}
           onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
+          disableNetworkChange={generalLoading}
         />
         {children}
         <Footer />

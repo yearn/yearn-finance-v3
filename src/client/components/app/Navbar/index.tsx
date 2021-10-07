@@ -84,6 +84,7 @@ interface NavbarProps {
   selectedNetwork: Network;
   networkOptions: Network[];
   onNetworkChange: (network: string) => void;
+  disableNetworkChange?: boolean;
 }
 
 export const Navbar = ({
@@ -95,6 +96,7 @@ export const Navbar = ({
   selectedNetwork,
   networkOptions,
   onNetworkChange,
+  disableNetworkChange,
 }: NavbarProps) => {
   const { isMobile } = useWindowDimensions();
   const { NETWORK_SETTINGS } = getConfig();
@@ -122,6 +124,7 @@ export const Navbar = ({
           setSelected={(option) => onNetworkChange(option.value)}
           options={dropdownNetworkOptions}
           hideIcons={isMobile}
+          disabled={disableNetworkChange}
         />
 
         <ConnectWalletButton

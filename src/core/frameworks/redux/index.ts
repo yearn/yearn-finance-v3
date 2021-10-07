@@ -15,7 +15,7 @@ export const getStore = (extraArgument?: any) => {
   };
   const persistConfig = {
     namespace: 'yearn',
-    states: ['theme', 'wallet.name', 'settings'],
+    states: ['theme', 'wallet.name', 'settings', 'network'],
   };
   const logger = createLogger({ collapsed: true });
   const middlewareOptions = {
