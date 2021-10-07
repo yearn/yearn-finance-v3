@@ -261,6 +261,7 @@ export const Layout: FC = ({ children }) => {
           selectedNetwork={currentNetwork}
           networkOptions={SUPPORTED_NETWORKS}
           onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
+          disableNetworkChange={generalLoading}
         />
         {children}
         <Footer />
