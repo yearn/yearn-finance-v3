@@ -206,7 +206,9 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
           {selectedVault.token.description && (
             <OverviewInfo variant="surface" cardSize="small">
               <StyledCardHeader subHeader="About" />
-              <StyledCardContent>{selectedVault.token.description}</StyledCardContent>
+              <StyledCardContent>
+                <Markdown>{selectedVault.token.description}</Markdown>
+              </StyledCardContent>
             </OverviewInfo>
           )}
 
