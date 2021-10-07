@@ -250,7 +250,7 @@ export const Vaults = () => {
               {
                 key: 'earned',
                 header: 'Earned',
-                format: ({ earned }) => (!toBN(earned).isZero ? normalizeUsdc(earned, 2) : '-'),
+                format: ({ earned }) => (!toBN(earned).isZero() ? normalizeUsdc(earned, 2) : '-'),
                 sortable: true,
                 width: '11rem',
                 className: 'col-earned',
