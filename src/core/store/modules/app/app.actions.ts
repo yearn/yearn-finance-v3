@@ -7,7 +7,10 @@ import { VaultsActions } from '../vaults/vaults.actions';
 
 const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_arg, { dispatch, getState }) => {
   const { wallet, network } = getState();
-  if (wallet.name) {
+  if (window !== window.top) {
+    //We are in an IFRAME, just like for ledger
+    await dispatch(WalletActions.walletSelect({ walletName: 'Iframe', network: 'mainnet' }));
+  } else if (wallet.name) {
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
   await dispatch(TokensActions.getTokens());
