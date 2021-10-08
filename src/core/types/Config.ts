@@ -5,6 +5,7 @@ export interface Config extends Env, Constants {}
 
 export interface Env {
   ENV: string;
+  APP_VERSION: string | undefined;
   NETWORK: Network;
   CUSTOM_PROVIDER_HTTPS: string;
   USE_MAINNET_FORK: boolean;

@@ -10,6 +10,7 @@ import { AlertTypes, ModalName, Theme } from '@types';
 import { ViewContainer } from '@components/app';
 import {
   ThemesIcon,
+  ConstructionIcon,
   ClockIcon,
   Icon,
   Button,
@@ -49,11 +50,11 @@ const SettingsSection = styled.div`
   gap: 1.5rem;
 `;
 
-const SectionContent = styled.div`
+const SectionContent = styled.div<{ alignCenter?: boolean }>`
   display: flex;
   flex-wrap: wrap;
   gap: 1.2rem;
-  align-items: center;
+  align-items: ${({ alignCenter }) => (alignCenter ? 'center' : 'flex-start')};
 
   ${SettingsSection}:not(:first-child) & {
     padding-top: ${sectionsGap};
@@ -66,6 +67,7 @@ const SectionTitle = styled.div`
   fill: ${({ theme }) => theme.colors.secondary};
   background: ${({ theme }) => theme.colors.surfaceVariantA};
   padding: ${({ theme }) => theme.card.padding};
+  white-space: nowrap;
 
   ${SettingsSection}:not(:first-child) & {
     padding-top: ${sectionsGap};
@@ -83,12 +85,15 @@ const SectionTitle = styled.div`
 const SectionIcon = styled(Icon)`
   display: inline-block;
   fill: inherit;
+  margin-top: 0.2rem;
   margin-right: 0.7rem;
+  width: 1.6rem;
 `;
 
 const SectionHeading = styled.h3`
   color: ${({ theme }) => theme.colors.secondary};
-  display: inline-block;
+  display: flex;
+  align-items: flex-start;
   font-size: 1.6rem;
   font-weight: 500;
   margin: 0;
@@ -145,13 +150,14 @@ export const Settings = () => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const history = useHistory();
-  const { isMobile } = useWindowDimensions();
+  // const { isMobile } = useWindowDimensions();
 
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
   const defaultSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
+  const appVersion = getConfig().APP_VERSION ?? '-';
   const availableSlippages = getConfig().SLIPPAGE_OPTIONS;
   const { ALLOW_DEV_MODE, AVAILABLE_THEMES } = getConfig();
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
@@ -222,10 +228,12 @@ export const Settings = () => {
           {ALLOW_DEV_MODE && (
             <SettingsSection>
               <SectionTitle>
-                <SectionIcon Component={ThemesIcon} />
-                Dev Mode
+                <SectionHeading>
+                  <SectionIcon Component={ThemesIcon} />
+                  Dev Mode
+                </SectionHeading>
               </SectionTitle>
-              <SectionContent>
+              <SectionContent alignCenter>
                 Enable Dev Mode
                 <ToggleButton
                   selected={devModeSettings.enabled}
@@ -248,18 +256,16 @@ export const Settings = () => {
                   />
                 </SectionContent>
               </SettingsSection>
-
               <SettingsSection>
                 <SectionTitle>
                   <SectionIcon Component={ThemesIcon} />
                   Additional settings
                 </SectionTitle>
-                <SectionContent>
+                <SectionContent alignCenter>
                   Expanded sidenav
                   <ToggleButton selected={!collapsedSidebar} setSelected={toggleSidebar} />
                 </SectionContent>
               </SettingsSection>
-
               <SettingsSection>
                 <SectionTitle>
                   <SectionIcon Component={ThemesIcon} />
@@ -274,7 +280,6 @@ export const Settings = () => {
                   </Button>
                 </SectionContent>
               </SettingsSection>
-
               <SettingsSection>
                 <SectionTitle>
                   <SectionIcon Component={ThemesIcon} />
@@ -290,6 +295,15 @@ export const Settings = () => {
               </SettingsSection>
             </>
           )}
+
+          <SettingsSection>
+            <SectionTitle>
+              <SectionIcon Component={ConstructionIcon} />
+              App Version
+            </SectionTitle>
+
+            <SectionContent>{appVersion}</SectionContent>
+          </SettingsSection>
         </SettingsCardContent>
       </SettingsCard>
     </SettingsView>
