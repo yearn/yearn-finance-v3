@@ -28,7 +28,7 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount, formatApy, orderApy } from '@src/utils';
+import { humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@src/utils';
 import { getConfig } from '@config';
 
 const SearchBarContainer = styled.div`
@@ -351,7 +351,7 @@ export const Vaults = () => {
               {
                 key: 'earned',
                 header: 'Earned',
-                format: ({ earned }) => normalizeUsdc(earned, 2),
+                format: ({ earned }) => (!toBN(earned).isZero() ? normalizeUsdc(earned, 2) : '-'),
                 sortable: true,
                 width: '11rem',
                 className: 'col-earned',

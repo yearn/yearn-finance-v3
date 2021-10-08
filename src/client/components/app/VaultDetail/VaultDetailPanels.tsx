@@ -32,7 +32,6 @@ const ChartValueContainer = styled.div`
 `;
 
 const VaultChart = styled(Card)`
-  flex: 1 100%;
   width: 100%;
 `;
 
@@ -81,9 +80,11 @@ const StyledText = styled(Text)`
 
 const StyledLink = styled.a`
   display: block;
-  white-space: initial;
   text-decoration: underline;
   color: inherit;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 const InfoValueRow = styled.div`
@@ -117,6 +118,14 @@ const OverviewTokenInfo = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
   grid-gap: 4.7rem;
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: ${({ theme }) => theme.layoutPadding};
 `;
 
 const VaultOverview = styled(Card)`
@@ -165,76 +174,72 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
   };
   return (
     <>
-      <VaultOverview>
-        <StyledCardHeader header="Overview" />
+      <Row>
+        <VaultOverview>
+          <StyledCardHeader header="Overview" />
 
-        <OverviewTokenInfo>
-          <TokenLogo variant="background">
-            <TokenIcon icon={selectedVault.displayIcon} symbol={selectedVault.displayName} size="xBig" />
-          </TokenLogo>
+          <OverviewTokenInfo>
+            <TokenLogo variant="background">
+              <TokenIcon icon={selectedVault.token.icon} symbol={selectedVault.token.name} size="xBig" />
+            </TokenLogo>
 
-          <TokenInfo>
-            <InfoValueTitle>{selectedVault?.displayName}</InfoValueTitle>
+            <TokenInfo>
+              <InfoValueTitle>{selectedVault?.displayName}</InfoValueTitle>
 
-            <InfoValueRow>
-              <span>APY</span>
-              <StyledText fontWeight="bold">{formatApy(selectedVault.apyData, selectedVault.apyType)}</StyledText>
-            </InfoValueRow>
-            <InfoValueRow>
-              <span>Total assets</span>
-              <StyledText>{normalizeUsdc(selectedVault.vaultBalanceUsdc, 0)}</StyledText>
-            </InfoValueRow>
-            <InfoValueRow>
-              <span>Type</span>
-              <StyledText>{selectedVault.token.categories}</StyledText>
-            </InfoValueRow>
-            <InfoValueRow>
-              <span>Website</span>
-              <StyledLink href={selectedVault.token.website}>{selectedVault.token.website}</StyledLink>
-            </InfoValueRow>
-          </TokenInfo>
-        </OverviewTokenInfo>
+              <InfoValueRow>
+                <span>APY</span>
+                <StyledText fontWeight="bold">{formatApy(selectedVault.apyData, selectedVault.apyType)}</StyledText>
+              </InfoValueRow>
+              <InfoValueRow>
+                <span>Total assets</span>
+                <StyledText>{normalizeUsdc(selectedVault.vaultBalanceUsdc, 0)}</StyledText>
+              </InfoValueRow>
+              <InfoValueRow>
+                <span>Type</span>
+                <StyledText>{selectedVault.token.categories}</StyledText>
+              </InfoValueRow>
+              <InfoValueRow>
+                <span>Website</span>
+                <StyledLink href={selectedVault.token.website}>{selectedVault.token.website}</StyledLink>
+              </InfoValueRow>
+            </TokenInfo>
+          </OverviewTokenInfo>
 
-        {selectedVault.token.description && (
-          <OverviewInfo variant="surface" cardSize="small">
-            <StyledCardHeader subHeader="About" />
-            <StyledCardContent>{selectedVault.token.description}</StyledCardContent>
-          </OverviewInfo>
-        )}
+          {selectedVault.token.description && (
+            <OverviewInfo variant="surface" cardSize="small">
+              <StyledCardHeader subHeader="About" />
+              <StyledCardContent>
+                <Markdown>{selectedVault.token.description}</Markdown>
+              </StyledCardContent>
+            </OverviewInfo>
+          )}
 
-        {strategy && (
-          <OverviewInfo variant="surface" cardSize="small">
-            <StyledCardHeader subHeader="Strategies" />
-            <StyledCardContent>
-              <Markdown>{strategy.description}</Markdown>
-            </StyledCardContent>
-          </OverviewInfo>
-        )}
-      </VaultOverview>
+          {strategy && (
+            <OverviewInfo variant="surface" cardSize="small">
+              <StyledCardHeader subHeader="Strategies" />
+              <StyledCardContent>
+                <Markdown>{strategy.description}</Markdown>
+              </StyledCardContent>
+            </OverviewInfo>
+          )}
+        </VaultOverview>
 
-      <VaultActions>
-        <StyledCardHeader header="Transactions" />
+        <VaultActions>
+          <StyledCardHeader header="Transactions" />
 
-        <ActionsTabs value={selectedTab} onChange={handleTabChange}>
-          {isVaultMigratable && <Tab value="migrate">Migrate</Tab>}
-          {!isVaultMigratable && <Tab value="deposit">Deposit</Tab>}
-          <Tab value="withdraw">Withdraw</Tab>
-        </ActionsTabs>
+          <ActionsTabs value={selectedTab} onChange={handleTabChange}>
+            <Tab value="deposit">Deposit</Tab>
+            <Tab value="withdraw">Withdraw</Tab>
+          </ActionsTabs>
 
-        {isVaultMigratable && (
-          <StyledTabPanel value="migrate" tabValue={selectedTab}>
-            <MigrateTx />
-          </StyledTabPanel>
-        )}
-        {!isVaultMigratable && (
           <StyledTabPanel value="deposit" tabValue={selectedTab}>
             <DepositTx />
           </StyledTabPanel>
-        )}
-        <StyledTabPanel value="withdraw" tabValue={selectedTab}>
-          <WithdrawTx />
-        </StyledTabPanel>
-      </VaultActions>
+          <StyledTabPanel value="withdraw" tabValue={selectedTab}>
+            <WithdrawTx />
+          </StyledTabPanel>
+        </VaultActions>
+      </Row>
 
       {chartData && (
         <VaultChart>

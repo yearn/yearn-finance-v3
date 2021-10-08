@@ -33,9 +33,7 @@ const getUserTokens = createAsyncThunk<{ userTokens: Balance[] }, { addresses?: 
   async ({ addresses }, { extra, getState }) => {
     const { network, wallet } = getState();
     const accountAddress = wallet.selectedAddress;
-    if (!accountAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { tokenService } = extra.services;
     const userTokens = await tokenService.getUserTokensData({
