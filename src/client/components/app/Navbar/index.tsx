@@ -7,6 +7,7 @@ import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
+import { inIframe } from '@utils';
 
 const BetaButton = styled(Button)`
   white-space: nowrap;
@@ -100,6 +101,7 @@ export const Navbar = ({
 }: NavbarProps) => {
   const { isMobile } = useWindowDimensions();
   const { NETWORK_SETTINGS } = getConfig();
+  const isInIframe = inIframe();
 
   const dropdownSelectedNetwork = {
     value: selectedNetwork,
@@ -124,13 +126,14 @@ export const Navbar = ({
           setSelected={(option) => onNetworkChange(option.value)}
           options={dropdownNetworkOptions}
           hideIcons={isMobile}
-          disabled={disableNetworkChange}
+          disabled={disableNetworkChange || isInIframe}
         />
 
         <ConnectWalletButton
           address={walletAddress}
           ensName={addressEnsName}
           onClick={() => onWalletClick && onWalletClick()}
+          disabled={isInIframe}
         />
       </StyledNavbarActions>
     </StyledNavbar>
