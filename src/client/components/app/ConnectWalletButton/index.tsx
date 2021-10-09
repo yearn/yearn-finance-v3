@@ -14,6 +14,7 @@ const StyledButton = styled(Button)`
   overflow: hidden;
   background-color: ${({ theme }) => theme.colors.walletButton.background};
   color: ${({ theme }) => theme.colors.walletButton.color};
+  min-width: 7.4rem;
 
   @media ${device.mobile} {
     width: auto;
