@@ -2144,7 +2144,7 @@
     "@ledgerhq/errors" "^5.50.0"
     events "^3.3.0"
 
-"@ledgerhq/iframe-provider@^0.4.2":
+"@ledgerhq/iframe-provider@0.4.2":
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@ledgerhq/iframe-provider/-/iframe-provider-0.4.2.tgz#2b63892bb3ab9a0719d2b00488be18b176ad6b7e"
   integrity sha512-RbdwvQow/ITLk0TLb6c3M7y8IyjopIGXhhuUEMjqTU6PZhAL9Gl7TzH8INit9x9cOeG2WCuV+ZbHQ2oWsLfJ+A==
