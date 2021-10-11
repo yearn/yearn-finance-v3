@@ -98,7 +98,6 @@ export class VaultServiceImpl implements VaultService {
         const providerType = getProviderType(network);
         const provider = this.web3Provider.getInstanceOf(providerType);
         const vaultContract = getContract(sourceTokenAddress, v2VaultAbi, provider);
-        console.log('1');
         const pricePerShare = await vaultContract.pricePerShare();
         underlyingTokenAmount = toBN(sourceTokenAmount)
           .times(normalizeAmount(pricePerShare.toString(), toBN(decimals).toNumber()))
