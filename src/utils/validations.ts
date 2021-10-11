@@ -60,16 +60,16 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   } = props;
   userTokenBalance = userTokenBalance ?? '0';
   const depositLimitBN = depositLimit ? toBN(depositLimit) : undefined;
-  // const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
-  // const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
-
-  // TODO we need to wait until we decide what to do with the convertion rate from sdk.
-  // if (depositLimitBN && depositLimitBN.gt(0) && TODO CHECK IF depositLimit.lt(...)))) {
-  //   return { error: 'EXCEEDED DEPOSIT LIMIT' };
-  // }
+  const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
+  const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
 
   if (emergencyShutdown) {
     return { error: 'VAULT IS DISABLED' };
+  }
+
+  if (depositLimitBN && depositLimitBN.gt(0)) {
+    const availableAmountToDepositInVault = depositLimitBN.minus(vaultUnderlyingBalance);
+    if (availableAmountToDepositInVault.lt(amountInWei)) return { error: 'EXCEEDED DEPOSIT LIMIT' };
   }
 
   return basicValidateAmount({ sellTokenAmount, sellTokenDecimals, totalAmountAvailable: userTokenBalance });

@@ -7,6 +7,7 @@ import { device } from '@themes/default';
 interface WalletAddressProps {
   address?: string;
   ensName?: string;
+  disabled?: boolean;
   onClick: () => void;
 }
 
@@ -21,7 +22,7 @@ const StyledButton = styled(Button)`
   }
 `;
 
-export const ConnectWalletButton = ({ address, ensName, onClick }: WalletAddressProps) => {
+export const ConnectWalletButton = ({ address, ensName, disabled, onClick }: WalletAddressProps) => {
   const { t } = useAppTranslation('common');
   let buttonMessage;
 
@@ -32,7 +33,7 @@ export const ConnectWalletButton = ({ address, ensName, onClick }: WalletAddress
   }
 
   return (
-    <StyledButton onClick={() => onClick && onClick()}>
+    <StyledButton onClick={() => onClick && onClick()} disabled={disabled}>
       <Text ellipsis>{buttonMessage}</Text>
     </StyledButton>
   );
