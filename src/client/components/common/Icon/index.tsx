@@ -24,6 +24,7 @@ import { ReactComponent as LabsIcon } from '@assets/icons/labs.svg';
 import { ReactComponent as CheckRoundIcon } from '@assets/icons/check-round.svg';
 import { ReactComponent as WarningIcon } from '@assets/icons/warning.svg';
 import { ReactComponent as WarningFilledIcon } from '@assets/icons/warning-filled.svg';
+import { ReactComponent as ChevronDownIcon } from '@assets/icons/chevron-down.svg';
 import { ReactComponent as ChevronRightIcon } from '@assets/icons/chevron-right.svg';
 import { ReactComponent as ChevronLeftIcon } from '@assets/icons/chevron-left.svg';
 import { ReactComponent as StatusArrowIcon } from '@assets/icons/status-arrow.svg';
@@ -80,6 +81,7 @@ export {
   CheckRoundIcon,
   WarningIcon,
   WarningFilledIcon,
+  ChevronDownIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
   StatusArrowIcon,
