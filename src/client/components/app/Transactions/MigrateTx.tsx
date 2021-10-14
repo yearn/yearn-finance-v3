@@ -99,6 +99,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
         VaultsActions.migrateVault({
           vaultFromAddress: selectedVault.address,
           vaultToAddress: selectedVault.migrationTargetVault!,
+          migrationContractAddress: selectedVault.migrationContract!,
         })
       );
       setTxCompleted(true);
