@@ -7,6 +7,7 @@ import { device } from '@themes/default';
 interface WalletAddressProps {
   address?: string;
   ensName?: string;
+  disabled?: boolean;
   onClick: () => void;
 }
 
@@ -14,13 +15,14 @@ const StyledButton = styled(Button)`
   overflow: hidden;
   background-color: ${({ theme }) => theme.colors.walletButton.background};
   color: ${({ theme }) => theme.colors.walletButton.color};
+  min-width: 7.4rem;
 
   @media ${device.mobile} {
     width: auto;
   }
 `;
 
-export const ConnectWalletButton = ({ address, ensName, onClick }: WalletAddressProps) => {
+export const ConnectWalletButton = ({ address, ensName, disabled, onClick }: WalletAddressProps) => {
   const { t } = useAppTranslation('common');
   let buttonMessage;
 
@@ -31,7 +33,7 @@ export const ConnectWalletButton = ({ address, ensName, onClick }: WalletAddress
   }
 
   return (
-    <StyledButton onClick={() => onClick && onClick()}>
+    <StyledButton onClick={() => onClick && onClick()} disabled={disabled}>
       <Text ellipsis>{buttonMessage}</Text>
     </StyledButton>
   );

@@ -1,6 +1,6 @@
 {
   "name": "yearn-finance-v3",
-  "version": "0.2.9",
+  "version": "0.2.11",
   "private": true,
   "scripts": {
     "start": "craco start",
@@ -16,6 +16,7 @@
     "@ethersproject/address": "^5.4.0",
     "@ethersproject/contracts": "^5.4.1",
     "@ethersproject/providers": "^5.4.4",
+    "@ledgerhq/iframe-provider": "0.4.2",
     "@nivo/core": "^0.68.0",
     "@nivo/line": "^0.68.0",
     "@reduxjs/toolkit": "^1.5.0",
@@ -33,7 +34,7 @@
     "@types/redux-logger": "^3.0.8",
     "@types/styled-components": "^5.1.9",
     "@types/styled-system": "^5.1.10",
-    "@yfi/sdk": "1.0.0-23",
+    "@yfi/sdk": "^1.0.2",
     "awilix": "^4.3.3",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",

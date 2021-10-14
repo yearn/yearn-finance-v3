@@ -18,7 +18,7 @@ const BackButton = styled(Button)`
 
 const StyledInfoCard = styled(InfoCard)`
   padding: 3rem;
-  margin: 0 auto;
+  margin: auto;
 `;
 
 const ViewHeader = styled.div``;

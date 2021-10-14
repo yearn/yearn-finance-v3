@@ -5,6 +5,7 @@ import { getConfig } from '@config';
 import { getNetworkId, getNetworkRpc } from '@utils';
 import { Wallet, Subscriptions, Network, Theme } from '@types';
 import { getAddress } from '@ethersproject/address';
+import ledgerIframeWallet from '@core/frameworks/blocknative/IframeWallet';
 
 export class BlocknativeWalletImpl implements Wallet {
   private onboard?: API;
@@ -114,7 +115,7 @@ export class BlocknativeWalletImpl implements Wallet {
       darkMode: theme !== 'light',
       subscriptions,
       walletSelect: {
-        wallets,
+        wallets: [...wallets, ledgerIframeWallet],
       },
       walletCheck,
     });

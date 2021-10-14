@@ -44,3 +44,11 @@ export const orderApy = (apyData: string, apyType: string) => {
 
   return toNumber(apyData) ?? 0;
 };
+
+export const inIframe = () => {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+};
