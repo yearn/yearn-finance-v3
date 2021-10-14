@@ -228,13 +228,21 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
           <StyledCardHeader header="Transactions" />
 
           <ActionsTabs value={selectedTab} onChange={handleTabChange}>
-            <Tab value="deposit">Deposit</Tab>
+            {isVaultMigratable && <Tab value="migrate">Migrate</Tab>}
+            {!isVaultMigratable && <Tab value="deposit">Deposit</Tab>}
             <Tab value="withdraw">Withdraw</Tab>
           </ActionsTabs>
 
-          <StyledTabPanel value="deposit" tabValue={selectedTab}>
-            <DepositTx />
-          </StyledTabPanel>
+          {isVaultMigratable && (
+            <StyledTabPanel value="migrate" tabValue={selectedTab}>
+              <MigrateTx />
+            </StyledTabPanel>
+          )}
+          {!isVaultMigratable && (
+            <StyledTabPanel value="deposit" tabValue={selectedTab}>
+              <DepositTx />
+            </StyledTabPanel>
+          )}
           <StyledTabPanel value="withdraw" tabValue={selectedTab}>
             <WithdrawTx />
           </StyledTabPanel>
