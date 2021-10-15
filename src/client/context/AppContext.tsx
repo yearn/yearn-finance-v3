@@ -2,7 +2,7 @@ import { FC, createContext } from 'react';
 
 import { ContextContainer } from '@types';
 
-export const AppContext = createContext<Partial<ContextContainer>>({});
+export const AppContext = createContext<ContextContainer | undefined>(undefined);
 
 interface AppContextProviderProps {
   context: ContextContainer;
