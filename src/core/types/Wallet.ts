@@ -6,7 +6,7 @@ export interface Wallet {
   networkVersion: number | undefined;
   balance: string | undefined;
   name: string | undefined;
-  provider: unknown | undefined;
+  provider: any | undefined;
   isCreated: Promise<boolean> | boolean;
   isConnected: Promise<boolean> | boolean;
   create: (
