@@ -1,11 +1,8 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { Layout } from '@containers';
 
-import { Save } from './Save';
-import { Invest } from './Invest';
 import { Home } from './Home';
 import { VaultDetail } from './VaultDetail';
-import { Borrow } from './Borrow';
 import { Wallet } from './Wallet';
 import { Vaults } from './Vaults';
 import { Labs } from './Labs';
@@ -14,22 +11,6 @@ import { Settings } from './Settings';
 import { Disclaimer } from './Disclaimer';
 
 const routesMap = [
-  {
-    path: '/invest',
-    component: Invest,
-  },
-  {
-    path: '/Save',
-    component: Save,
-  },
-  {
-    path: '/vault/:vaultAddress',
-    component: VaultDetail,
-  },
-  {
-    path: '/borrow',
-    component: Borrow,
-  },
   {
     path: '/home',
     component: Home,
@@ -57,6 +38,11 @@ const routesMap = [
   {
     path: '/disclaimer',
     component: Disclaimer,
+  },
+
+  {
+    path: '/vault/:vaultAddress',
+    component: VaultDetail,
   },
 ];
 

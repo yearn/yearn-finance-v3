@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { Button, Text } from '@components/common';
-import { ListCard, ListCardsWrapper, ListHeaders } from '@src/client/components/app/AssetLists';
+import { ListCard, ListCardsWrapper, ListHeaders } from '@src/client/components/app/AssetLists_old';
 import { useAppTranslation } from '@hooks';
 
 const StyledDepositsList = styled.div<{ className?: string }>`
