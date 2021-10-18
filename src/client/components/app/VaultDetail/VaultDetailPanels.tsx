@@ -180,7 +180,7 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
 
           <OverviewTokenInfo>
             <TokenLogo variant="background">
-              <TokenIcon icon={selectedVault.token.icon} symbol={selectedVault.token.name} size="xBig" />
+              <TokenIcon icon={selectedVault.displayIcon} symbol={selectedVault.displayName} size="xBig" />
             </TokenLogo>
 
             <TokenInfo>
