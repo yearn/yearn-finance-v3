@@ -4,16 +4,18 @@ import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 import { isDev } from '@utils';
+import { getConfig } from '@config';
 
 i18n
   .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    supportedLngs: ['en', 'es'],
+    supportedLngs: getConfig().SUPPORTED_LANGS,
     nonExplicitSupportedLngs: true,
-    fallbackLng: 'en',
-    preload: ['en'],
+    fallbackLng: getConfig().DEFAULT_LANG,
+    preload: [getConfig().DEFAULT_LANG],
+    load: 'languageOnly',
     defaultNS: 'common',
     lowerCaseLng: true,
     debug: isDev(),

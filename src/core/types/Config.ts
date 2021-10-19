@@ -1,3 +1,4 @@
+import { Language } from '.';
 import { Network, Address, Wei } from './Blockchain';
 import { NetworkSettings, Theme } from './Settings';
 
@@ -39,4 +40,6 @@ export interface Constants {
   DEFAULT_THEME: Theme;
   AVAILABLE_THEMES: Theme[];
   DEFAULT_ALERT_TIMEOUT: number;
+  DEFAULT_LANG: Language;
+  SUPPORTED_LANGS: Language[];
 }
