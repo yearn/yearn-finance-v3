@@ -13,6 +13,11 @@
   "components": {
     "connect-button": {
       "connect": "Conectar Billetera"
+    },
+    "no-wallet": "Billetera no conectada",
+    "beta-card": {
+      "header": "¡La Beta está aquí!",
+      "desc-1": "Este sitio web todavía está en versión beta y probablemente contenga errores. Si encuentra un error o desea enviar comentarios, háganoslo saber en"
     }
   },
   "errors": {
@@ -24,7 +29,7 @@
     "wallet": "Billetera",
     "vaults": "Vaults",
     "vault": "Detalle de vault",
-    "labs": "Labs",
+    "labs": "Laboratorios",
     "ironbank": "Iron Bank",
     "settings": "Ajustes",
     "disclaimer": "Disclaimer",

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
   LabsSelectors,
   WalletSelectors,
@@ -108,8 +108,8 @@ const StyledNoWalletCard = styled(NoWalletCard)`
 `;
 
 export const Labs = () => {
-  // TODO: Add translation
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation('labs');
+
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConstants();
   const { YVECRV, YVBOOST, PSLPYVBOOSTETH, CRV, YVTHREECRV } = CONTRACT_ADDRESSES;
   const history = useHistory();
@@ -307,19 +307,12 @@ export const Labs = () => {
                 }))}
               />
               <StyledInfoCard
-                header="These are not risks for ants"
+                header={t('labs:risks-card.header')}
                 Component={
                   <Text>
-                    <p>
-                      The emerging strategies you'll find here are the newest and most unconventional around. Be sure to
-                      review the <em>About</em> sections carefully and make sure you understand token locking,
-                      impermanent loss, and other risks before proceeding.
-                    </p>
-                    <p>
-                      As with all Yearn products, you are responsible for educating yourself on the details, and for
-                      actively managing your holdings.
-                    </p>
-                    <p>Welcome to the Lab, but proceed with caution, anon.</p>
+                    <p>{t('labs:risks-card.desc-1')}</p>
+                    <p>{t('labs:risks-card.desc-2')}</p>
+                    <p>{t('labs:risks-card.desc-3')}</p>
                   </Text>
                 }
               />

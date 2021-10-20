@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
   WalletSelectors,
   TokensSelectors,
@@ -70,8 +70,7 @@ const StyledLink = styled.a`
 `;
 
 export const Wallet = () => {
-  // TODO: Add translation
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation(['common', 'wallet']);
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -131,31 +130,23 @@ export const Wallet = () => {
 
       <Row>
         <StyledInfoCard
-          header="Your Wallet"
+          header={t('wallet:your-wallet-card.header')}
           Component={
             <Text>
-              <p>
-                Once you are familiar with the risks and nuances of Vaults and other Yearn products, this screen helps
-                you put your tokens to work with as few clicks as possible. If the 'Supply' or 'Deposit' buttons are
-                active, there's a lending and/or vault opportunity available for that token. Just click to see the
-                strategy and current yield.
-              </p>
-              <p>
-                Remember, these tools make it easy to access the tech, but you are responsible for understanding and
-                actively managing your positions.
-              </p>
+              <p>{t('wallet:your-wallet-card.desc-1')}</p>
+              <p>{t('wallet:your-wallet-card.desc-2')}</p>
             </Text>
           }
           cardSize="big"
         />
 
         <StyledInfoCard
-          header="Beta is here!"
+          header={t('components.beta-card.header')}
           Component={
             <Text>
               <p>
-                This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
-                feedback, please let us know on <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>.
+                {t('components.beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>
+                .
               </p>
             </Text>
           }

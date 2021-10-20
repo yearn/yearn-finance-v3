@@ -100,11 +100,12 @@ export const Home = () => {
         />
 
         <StyledInfoCard
-          header={t('home:beta-card.header')}
+          header={t('components.beta-card.header')}
           Component={
             <Text>
               <p>
-                {t('home:beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>.
+                {t('components.beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>
+                .
               </p>
             </Text>
           }

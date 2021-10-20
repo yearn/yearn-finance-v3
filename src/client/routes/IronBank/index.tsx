@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
   ModalsActions,
   IronBankActions,
@@ -132,8 +132,8 @@ const OpportunitiesCard = styled(DetailCard)`
 ` as typeof DetailCard;
 
 export const IronBank = () => {
-  // TODO: Add translation
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation('ironbank');
+
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   const { NETWORK_SETTINGS } = getConfig();
@@ -222,18 +222,11 @@ export const IronBank = () => {
               />
 
               <StyledInfoCard
-                header="Let your crypto work for you"
+                header={t('ironbank:ironbank-card.header')}
                 Component={
                   <Text>
-                    <p>
-                      Iron Bank offers a simple way to get exposure to new tokens. Borrow using your crypto as
-                      collateral, without having to sell. Didn’t find the right Vault for your tokens? Supply them to
-                      Iron Bank and earn more crypto.
-                    </p>
-                    <p>
-                      Remember, even with simple tools like Iron Bank, smart contract risks and systemic risks of the
-                      underlying crypto assets exist.
-                    </p>
+                    <p>{t('ironbank:ironbank-card.desc-1')}</p>
+                    <p>{t('ironbank:ironbank-card.desc-2')}</p>
                   </Text>
                 }
               />

@@ -3,9 +3,5 @@
     "header": "Bienvenido a la pantalla de inicio de Yearn",
     "desc-1": "Hay muchos como este, pero este es el tuyo. Siempre puede regresar aquí para tener una vista panorámica de sus propiedades. Las tarjetas a continuación muestran el balance total y la utilización de su billetera, y las existencias y el rendimiento de cada producto de Yearn que usa.",
     "desc-2": "¿No estás seguro por dónde empezar? Echa un vistazo a \"Vaults\" en el panel de navegación del lado izquierdo."
-  },
-  "beta-card": {
-    "header": "¡La Beta está aquí!",
-    "desc-1": "Este sitio web todavía está en versión beta y probablemente contenga errores. Si encuentra un error o desea enviar comentarios, háganoslo saber en"
   }
 }

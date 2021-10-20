@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
   ModalsActions,
   ModalSelectors,
@@ -124,8 +124,7 @@ const DepositsCard = styled(DetailCard)`
 ` as typeof DetailCard;
 
 export const Vaults = () => {
-  // TODO: Add translation
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation('vaults');
   const history = useHistory();
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
@@ -189,16 +188,12 @@ export const Vaults = () => {
             />
 
             <StyledInfoCard
-              header="Spend your time wisely"
+              header={t('vaults:your-time-card.header')}
               Component={
                 <Text>
-                  <p>
-                    Yearn Vaults are a way to use technology to help manage your holdings. You choose the strategy that
-                    best suits you, deposit into that vault, and Yearn tech helps maximize yield through shifting
-                    capital, auto-compounding, and rebalancing.
-                  </p>
-                  <p>Custody, and responsibility, for your holdings remains yours.</p>
-                  <p>You can withdraw anytime.</p>
+                  <p>{t('vaults:your-time-card.desc-1')}</p>
+                  <p>{t('vaults:your-time-card.desc-2')}</p>
+                  <p>{t('vaults:your-time-card.desc-3')}</p>
                 </Text>
               }
             />

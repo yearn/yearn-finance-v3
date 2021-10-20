@@ -13,6 +13,11 @@
   "components": {
     "connect-button": {
       "connect": "Connect Wallet"
+    },
+    "no-wallet": "Wallet not connected",
+    "beta-card": {
+      "header": "Beta is here!",
+      "desc-1": "This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide feedback, please let us know on"
     }
   },
   "errors": {
