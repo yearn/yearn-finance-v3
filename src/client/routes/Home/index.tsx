@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { useAppSelector } from '@hooks';
+import { useAppSelector, useAppTranslation } from '@hooks';
 import {
   IronBankSelectors,
   LabsSelectors,
@@ -56,7 +56,7 @@ const StyledLink = styled.a`
 
 export const Home = () => {
   // TODO: Add translation
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation(['common', 'home']);
   const { NETWORK_SETTINGS } = getConfig();
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
@@ -89,27 +89,22 @@ export const Home = () => {
 
       <Row>
         <StyledInfoCard
-          header="Welcome to your Yearn home screen"
+          header={t('home:welcome-card.header')}
           Component={
             <Text>
-              <p>
-                There are many like it, but this one is yours. You can always return here for a bird's-eye view of your
-                holdings. The cards below show the total balance and utilization of your wallet, and the holdings and
-                performance for every Yearn product you use.
-              </p>
-              <p>Not sure where to start? Check out “Vaults” on the left side navigation.</p>
+              <p>{t('home:welcome-card.desc-1')}</p>
+              <p>{t('home:welcome-card.desc-2')}</p>
             </Text>
           }
           cardSize="big"
         />
 
         <StyledInfoCard
-          header="Beta is here!"
+          header={t('home:beta-card.header')}
           Component={
             <Text>
               <p>
-                This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
-                feedback, please let us know on <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>.
+                {t('home:beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>.
               </p>
             </Text>
           }

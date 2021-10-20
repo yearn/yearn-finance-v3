@@ -23,7 +23,7 @@
     "home": "Inicio",
     "wallet": "Billetera",
     "vaults": "Vaults",
-    "vault": "Vault details",
+    "vault": "Detalle de vault",
     "labs": "Labs",
     "ironbank": "Iron Bank",
     "settings": "Ajustes",
@@ -40,11 +40,5 @@
       "security": "Security",
       "disclaimer": "Disclaimer"
     }
-  },
-
-  "settings": {
-    "themes": "Temas",
-    "preferences": "Preferencias",
-    "language": "Lenguaje"
   }
 }

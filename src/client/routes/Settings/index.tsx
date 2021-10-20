@@ -145,7 +145,7 @@ const SettingsView = styled(ViewContainer)`
 `;
 
 export const Settings = () => {
-  const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation(['common', 'settings']);
   const dispatch = useAppDispatch();
   const history = useHistory();
 
@@ -201,14 +201,14 @@ export const Settings = () => {
   return (
     <SettingsView>
       <SettingsCard>
-        <SettingsCardHeader header={t('settings.preferences')} />
+        <SettingsCardHeader header={t('settings:preferences')} />
 
         <SettingsCardContent>
           <SettingsSection>
             <SectionTitle>
               <SectionHeading>
                 <SectionIcon Component={ClockIcon} />
-                Slippage tolerance
+                {t('settings:slippage-tolerance')}
               </SectionHeading>
             </SectionTitle>
             <SectionContent>
@@ -228,7 +228,7 @@ export const Settings = () => {
             <SectionTitle>
               <SectionHeading>
                 <SectionIcon Component={ThemesIcon} />
-                {t('settings.themes')}
+                {t('settings:themes')}
               </SectionHeading>
             </SectionTitle>
 
@@ -249,7 +249,7 @@ export const Settings = () => {
             <SectionTitle>
               <SectionHeading>
                 <SectionIcon Component={ThemesIcon} />
-                {t('settings.language')}
+                {t('settings:language')}
               </SectionHeading>
             </SectionTitle>
 
