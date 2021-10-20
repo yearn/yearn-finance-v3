@@ -124,7 +124,7 @@ const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddre
       const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress;
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -139,7 +139,7 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>
         TokensActions.approve({ tokenAddress: vaultAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -277,7 +277,7 @@ const approveMigrate = createAsyncThunk<
 
 const migrateVault = createAsyncThunk<
   void,
-  { vaultFromAddress: string; vaultToAddress: string; migrationContractAddress?: string },
+  { vaultFromAddress: string; vaultToAddress: string; migrationContractAddress: string },
   ThunkAPI
 >(
   'vaults/migrateVault',
