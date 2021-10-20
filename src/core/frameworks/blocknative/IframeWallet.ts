@@ -1,10 +1,3 @@
-/*
- * @Author:				Thomas Bouder <Tbouder>
- * @Email:					Tbouder@protonmail.com
- * @Date:					Thursday October 21st 2021
- * @Filename:				IframeWallet.ts
- */
-
 import { ethers } from 'ethers';
 import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces';
