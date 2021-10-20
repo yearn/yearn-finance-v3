@@ -132,8 +132,7 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
         state.user.vaultsAllowancesMap[address] = allowancesMap;
       });
 
-      const notIncludedAddresses = difference(positionsAddresses, vaultAddresses ?? []);
-
+      const notIncludedAddresses = difference(vaultAddresses ?? [], positionsAddresses);
       if (!positionsAddresses.length || notIncludedAddresses.length) {
         const addresses = union(positionsAddresses, notIncludedAddresses);
         addresses.forEach((address) => {

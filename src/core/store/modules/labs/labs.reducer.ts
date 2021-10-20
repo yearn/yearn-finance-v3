@@ -152,8 +152,7 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
         state.user.labsAllowancesMap[address] = allowancesMap;
       });
 
-      const notIncludedAddresses = difference(positionsAddresses, labsAddresses ?? []);
-
+      const notIncludedAddresses = difference(labsAddresses ?? [], positionsAddresses);
       if (!positionsAddresses.length || notIncludedAddresses.length) {
         const addresses = union(positionsAddresses, notIncludedAddresses);
         addresses.forEach((address) => {

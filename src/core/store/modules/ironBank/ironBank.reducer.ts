@@ -164,8 +164,7 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
         state.user.marketsAllowancesMap[address] = allowancesMap;
       });
 
-      const notIncludedAddresses = difference(positionsAddresses, marketAddresses ?? []);
-
+      const notIncludedAddresses = difference(marketAddresses ?? [], positionsAddresses);
       if (!positionsAddresses.length || notIncludedAddresses.length) {
         const addresses = union(positionsAddresses, notIncludedAddresses);
         addresses.forEach((address) => {
