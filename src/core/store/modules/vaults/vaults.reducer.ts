@@ -1,4 +1,4 @@
-import { groupBy, keyBy, union } from 'lodash';
+import { difference, groupBy, keyBy, union } from 'lodash';
 
 import { createReducer } from '@reduxjs/toolkit';
 import {
@@ -121,16 +121,22 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
         state.statusMap.user.userVaultsActionsStatusMap[address].getPosition = {};
       });
 
+      const positionsAddresses: string[] = [];
+
       userVaultsPositions.forEach((position) => {
         const address = position.assetAddress;
+        positionsAddresses.push(address);
         const allowancesMap: any = {};
         position.assetAllowances.forEach((allowance) => (allowancesMap[allowance.spender] = allowance.amount));
 
         state.user.vaultsAllowancesMap[address] = allowancesMap;
       });
 
-      if (!userVaultsPositions.length) {
-        vaultAddresses?.forEach((address) => {
+      const notIncludedAddresses = difference(positionsAddresses, vaultAddresses ?? []);
+
+      if (!positionsAddresses.length || notIncludedAddresses.length) {
+        const addresses = union(positionsAddresses, notIncludedAddresses);
+        addresses.forEach((address) => {
           const userVaultsPositionsMapClone = { ...state.user.userVaultsPositionsMap };
           delete userVaultsPositionsMapClone[address];
           state.user.userVaultsPositionsMap = { ...userVaultsPositionsMapClone };
