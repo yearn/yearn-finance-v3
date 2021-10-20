@@ -27,6 +27,9 @@ export interface GeneralVaultView {
   pricePerShare: string;
   allowZapIn: boolean;
   allowZapOut: boolean;
+  migrationAvailable: boolean;
+  migrationContract?: Address;
+  migrationTargetVault?: Address;
   token: TokenView;
   DEPOSIT: PositionView;
 }

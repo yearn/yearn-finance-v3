@@ -7,7 +7,7 @@ import {
   Position,
   LabsPositionsMap,
 } from '@types';
-import { groupBy, keyBy, union } from 'lodash';
+import { difference, groupBy, keyBy, union } from 'lodash';
 import { getConstants } from '../../../../config/constants';
 import { LabsActions } from './labs.actions';
 
@@ -141,15 +141,29 @@ const labsReducer = createReducer(labsInitialState, (builder) => {
         state.statusMap.user.userLabsActionsStatusMap[address].getPositions = {};
       });
 
+      const positionsAddresses: string[] = [];
+
       userLabsPositions.forEach((position) => {
         const address = position.assetAddress;
+        positionsAddresses.push(address);
         const allowancesMap: any = {};
         position.assetAllowances.forEach((allowance) => (allowancesMap[allowance.spender] = allowance.amount));
 
         state.user.labsAllowancesMap[address] = allowancesMap;
       });
 
-      state.user.userLabsPositionsMap = { ...state.user.userLabsPositionsMap, ...labsPositionsMap };
+      const notIncludedAddresses = difference(labsAddresses ?? [], positionsAddresses);
+      if (!positionsAddresses.length || notIncludedAddresses.length) {
+        const addresses = union(positionsAddresses, notIncludedAddresses);
+        addresses.forEach((address) => {
+          const userLabsPositionsMapClone = { ...state.user.userLabsPositionsMap };
+          delete userLabsPositionsMapClone[address];
+          state.user.userLabsPositionsMap = { ...userLabsPositionsMapClone };
+        });
+      } else {
+        state.user.userLabsPositionsMap = { ...state.user.userLabsPositionsMap, ...labsPositionsMap };
+      }
+
       state.statusMap.user.getUserLabsPositions = {};
     })
     .addCase(getUserLabsPositions.rejected, (state, { meta, error }) => {

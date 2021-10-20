@@ -1,5 +1,5 @@
 import { AnyAction, AsyncThunk, createReducer } from '@reduxjs/toolkit';
-import { groupBy, keyBy, union } from 'lodash';
+import { difference, groupBy, keyBy, union } from 'lodash';
 
 import {
   MarketActionsStatusMap,
@@ -153,16 +153,21 @@ const ironBankReducer = createReducer(ironBankInitialState, (builder) => {
         state.statusMap.user.userMarketsActionsMap[address].getPosition = {};
       });
 
+      const positionsAddresses: string[] = [];
+
       userMarketsPositions.forEach((position) => {
         const address = position.assetAddress;
+        positionsAddresses.push(address);
         const allowancesMap: any = {};
         position.assetAllowances.forEach((allowance) => (allowancesMap[allowance.spender] = allowance.amount));
 
         state.user.marketsAllowancesMap[address] = allowancesMap;
       });
 
-      if (!userMarketsPositions.length) {
-        marketAddresses?.forEach((address) => {
+      const notIncludedAddresses = difference(marketAddresses ?? [], positionsAddresses);
+      if (!positionsAddresses.length || notIncludedAddresses.length) {
+        const addresses = union(positionsAddresses, notIncludedAddresses);
+        addresses.forEach((address) => {
           const userMarketsPositionsMapClone = { ...state.user.userMarketsPositionsMap };
           delete userMarketsPositionsMapClone[address];
           state.user.userMarketsPositionsMap = { ...userMarketsPositionsMapClone };

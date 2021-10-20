@@ -13,7 +13,6 @@ import {
   Address,
   GeneralVaultView,
 } from '@types';
-import BigNumber from 'bignumber.js';
 import { memoize } from 'lodash';
 import { toBN } from '../../../../utils';
 import { createToken } from '../tokens/tokens.selectors';
@@ -84,14 +83,25 @@ const selectVaults = createSelector(
   }
 );
 
-const selectDepositedVaults = createSelector([selectVaults], (vaults): VaultView[] => {
-  const depositVaults = vaults.map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
-  return depositVaults.filter((vault) => new BigNumber(vault.userDeposited).gt(0));
+const selectLiveVaults = createSelector([selectVaults], (vaults): GeneralVaultView[] => {
+  return vaults.filter((vault) => !vault.migrationAvailable);
 });
 
-const selectVaultsOpportunities = createSelector([selectVaults], (vaults): VaultView[] => {
+const selectDeprecatedVaults = createSelector([selectVaults], (vaults): VaultView[] => {
+  const deprecatedVaults = vaults
+    .filter((vault) => vault.migrationAvailable)
+    .map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
+  return deprecatedVaults.filter((vault) => toBN(vault.userDeposited).gt(0));
+});
+
+const selectDepositedVaults = createSelector([selectLiveVaults], (vaults): VaultView[] => {
   const depositVaults = vaults.map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
-  const opportunities = depositVaults.filter((vault) => new BigNumber(vault.userDeposited).lte(0));
+  return depositVaults.filter((vault) => toBN(vault.userDeposited).gt(0));
+});
+
+const selectVaultsOpportunities = createSelector([selectLiveVaults], (vaults): VaultView[] => {
+  const depositVaults = vaults.map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
+  const opportunities = depositVaults.filter((vault) => toBN(vault.userDeposited).lte(0));
 
   return opportunities;
 });
@@ -128,7 +138,7 @@ const selectSummaryData = createSelector([selectUserVaultsSummary], (userVaultsS
   };
 });
 
-const selectRecommendations = createSelector([selectVaults], (vaults) => {
+const selectRecommendations = createSelector([selectLiveVaults], (vaults) => {
   // const stableCoinsSymbols = ['DAI', 'USDC', 'USDT', 'sUSD'];
   // const stableVaults: GeneralVaultView[] = [];
   // stableCoinsSymbols.forEach((symbol) => {
@@ -247,13 +257,16 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
     apyType: vaultData.metadata.apy?.type ?? '',
     allowancesMap: vaultAllowancesMap ?? {},
-    approved: new BigNumber(currentAllowance).gt(0),
+    approved: toBN(currentAllowance).gt(0),
     pricePerShare: vaultData?.metadata.pricePerShare,
     earned: userVaultsMetadataMap?.earned ?? '0',
     strategies: vaultData.metadata.strategies?.strategiesMetadata ?? [],
     historicalEarnings: vaultData.metadata.historicEarnings ?? [],
     allowZapIn: !!vaultData.metadata.allowZapIn,
     allowZapOut: !!vaultData.metadata.allowZapOut,
+    migrationAvailable: vaultData.metadata.migrationAvailable,
+    migrationContract: vaultData.metadata.migrationContract,
+    migrationTargetVault: vaultData.metadata.migrationTargetVault,
     DEPOSIT: {
       userBalance: userVaultPositionsMap?.DEPOSIT?.balance ?? '0',
       userDeposited: userVaultPositionsMap?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',
@@ -266,6 +279,8 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
 export const VaultsSelectors = {
   selectVaultsState,
   selectVaults,
+  selectLiveVaults,
+  selectDeprecatedVaults,
   selectUserVaultsPositionsMap,
   selectUserTokensMap,
   selectTokensMap,
