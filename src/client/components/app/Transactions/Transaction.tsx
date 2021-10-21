@@ -51,9 +51,9 @@ interface TransactionProps {
   onSelectedTargetAssetChange?: (assetAddress: string) => void;
   targetAmount: string;
   targetAmountValue?: string;
-  targetAmountStatus: Status;
+  targetStatus: Status;
   actions: Action[];
-  status: Status;
+  sourceStatus: Status;
   loadingText?: string;
   onClose?: () => void;
 }
@@ -79,9 +79,9 @@ export const Transaction: FC<TransactionProps> = (props) => {
     onSelectedTargetAssetChange,
     targetAmount,
     targetAmountValue,
-    targetAmountStatus,
+    targetStatus,
     actions,
-    status,
+    sourceStatus,
     loadingText,
     onClose,
   } = props;
@@ -94,8 +94,8 @@ export const Transaction: FC<TransactionProps> = (props) => {
   if (actions.length && actions.length > 1) {
     if (!actions[0].disabled && !actions[0].status.loading) {
       txArrowStatus = 'preparing';
-      if (targetAmountStatus.loading) txArrowStatus = 'firstPending';
-    } else if (actions[0].status.loading || targetAmountStatus.loading) {
+      if (targetStatus.loading) txArrowStatus = 'firstPending';
+    } else if (actions[0].status.loading || targetStatus.loading) {
       txArrowStatus = 'firstPending';
     } else if (!actions[1].status.loading) {
       txArrowStatus = 'secondPreparing';
@@ -112,6 +112,13 @@ export const Transaction: FC<TransactionProps> = (props) => {
     );
   }
 
+  const outputLoading = toBN(sourceAmount).eq(0) ? false : targetStatus.loading;
+
+  const generalStatus = {
+    loading: sourceStatus.loading || targetStatus.loading,
+    error: sourceStatus.error || targetStatus.error,
+  };
+
   return (
     <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
       <TxTokenInput
@@ -124,25 +131,25 @@ export const Transaction: FC<TransactionProps> = (props) => {
         selectedToken={selectedSourceAsset}
         tokenOptions={sourceAssetOptions}
         onSelectedTokenChange={onSelectedSourceAssetChange}
-        inputError={!!status.error}
+        inputError={!!sourceStatus.error}
         readOnly={!onSourceAmountChange}
       />
 
-      {!status.error && <TxArrowStatus status={txArrowStatus} />}
-      {status.error && <TxError errorText={status.error} />}
+      {!generalStatus.error && <TxArrowStatus status={txArrowStatus} />}
+      {generalStatus.error && <TxError errorText={generalStatus.error} />}
 
       <TxTokenInput
         headerText={targetHeader}
         inputText={`Balance ${formatAmount(targetBalance, 4)} ${selectedTargetAsset.symbol}`}
-        amount={targetAmount}
+        amount={outputLoading || sourceStatus.error ? '' : targetAmount}
         amountValue={targetAmountValue}
         selectedToken={selectedTargetAsset}
         tokenOptions={targetAssetOptions}
         onSelectedTokenChange={onSelectedTargetAssetChange}
         yieldPercent={selectedTargetAsset.yield}
-        inputError={!!targetAmountStatus.error}
+        inputError={!!targetStatus.error}
         readOnly
-        loading={toBN(sourceAmount).eq(0) ? false : targetAmountStatus.loading}
+        loading={outputLoading}
         loadingText={loadingText ?? 'Simulating...'}
       />
 
