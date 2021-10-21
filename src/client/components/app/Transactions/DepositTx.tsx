@@ -153,15 +153,6 @@ export const DepositTx: FC<DepositTxProps> = ({
     expectedSlippage: expectedTxOutcome?.slippage,
   });
 
-  // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error =
-    allowanceError ||
-    inputError ||
-    actionsStatus.approve.error ||
-    actionsStatus.deposit.error ||
-    expectedTxOutcomeStatus.error ||
-    slippageError;
-
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
     .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData }) => ({
@@ -182,10 +173,23 @@ export const DepositTx: FC<DepositTxProps> = ({
   const expectedAmountValue = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
-  const expectedAmountStatus = {
-    error: expectedTxOutcomeStatus.error || error,
+  // const expectedAmountStatus = {
+  //   error: expectedTxOutcomeStatus.error || error,
+  //   loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+  // };
+
+  const sourceError = allowanceError || inputError;
+
+  const targetStatus = {
+    error:
+      expectedTxOutcomeStatus.error ||
+      actionsStatus.approve.error ||
+      actionsStatus.deposit.error ||
+      expectedTxOutcomeStatus.error ||
+      slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
+
   const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
@@ -257,9 +261,9 @@ export const DepositTx: FC<DepositTxProps> = ({
       onSelectedTargetAssetChange={onSelectedVaultChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedAmountStatus}
+      targetAmountStatus={targetStatus}
       actions={txActions}
-      status={{ error }}
+      status={{ error: sourceError }}
       loadingText={loadingText}
       onClose={onClose}
     />

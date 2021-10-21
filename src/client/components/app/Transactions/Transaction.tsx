@@ -79,9 +79,9 @@ export const Transaction: FC<TransactionProps> = (props) => {
     onSelectedTargetAssetChange,
     targetAmount,
     targetAmountValue,
-    targetAmountStatus,
+    targetAmountStatus, // targetStatus
     actions,
-    status,
+    status, // sourceStatus
     loadingText,
     onClose,
   } = props;
@@ -112,6 +112,13 @@ export const Transaction: FC<TransactionProps> = (props) => {
     );
   }
 
+  const outputLoading = toBN(sourceAmount).eq(0) ? false : targetAmountStatus.loading;
+
+  const generalStatus = {
+    loading: status.loading || targetAmountStatus.loading,
+    error: status.error || targetAmountStatus.error,
+  };
+
   return (
     <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
       <TxTokenInput
@@ -128,13 +135,13 @@ export const Transaction: FC<TransactionProps> = (props) => {
         readOnly={!onSourceAmountChange}
       />
 
-      {!status.error && <TxArrowStatus status={txArrowStatus} />}
-      {status.error && <TxError errorText={status.error} />}
+      {!generalStatus.error && <TxArrowStatus status={txArrowStatus} />}
+      {generalStatus.error && <TxError errorText={generalStatus.error} />}
 
       <TxTokenInput
         headerText={targetHeader}
         inputText={`Balance ${formatAmount(targetBalance, 4)} ${selectedTargetAsset.symbol}`}
-        amount={targetAmount}
+        amount={outputLoading ? '' : targetAmount}
         amountValue={targetAmountValue}
         selectedToken={selectedTargetAsset}
         tokenOptions={targetAssetOptions}
@@ -142,7 +149,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         yieldPercent={selectedTargetAsset.yield}
         inputError={!!targetAmountStatus.error}
         readOnly
-        loading={toBN(sourceAmount).eq(0) ? false : targetAmountStatus.loading}
+        loading={outputLoading}
         loadingText={loadingText ?? 'Simulating...'}
       />
 
