@@ -141,7 +141,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
       <TxTokenInput
         headerText={targetHeader}
         inputText={`Balance ${formatAmount(targetBalance, 4)} ${selectedTargetAsset.symbol}`}
-        amount={outputLoading ? '' : targetAmount}
+        amount={outputLoading || sourceStatus.error ? '' : targetAmount}
         amountValue={targetAmountValue}
         selectedToken={selectedTargetAsset}
         tokenOptions={targetAssetOptions}
