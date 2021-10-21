@@ -57,7 +57,8 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     migrationContractAddress: selectedVault.migrationContract,
   });
 
-  const error = allowanceError || actionsStatus.approveMigrate.error || actionsStatus.migrate.error;
+  const sourceError = allowanceError;
+  const targetError = actionsStatus.approveMigrate.error || actionsStatus.migrate.error;
 
   const sourceVault = {
     address: selectedVault.address,
@@ -138,9 +139,9 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
       selectedTargetAsset={targetVault}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetStatus={{}}
+      targetStatus={{ error: targetError }}
       actions={txActions}
-      sourceStatus={{ error }}
+      sourceStatus={{ error: sourceError }}
       loadingText={loadingText}
       onClose={onClose}
     />
