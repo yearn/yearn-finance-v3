@@ -1,49 +1,47 @@
 {
-  "languages": {
-    "en": "English",
-    "es": "Español"
-  },
-
-  "themes": {
-    "light": "Mono Light",
-    "dark": "Mono Dark",
-    "cyberpunk": "Cyberpunk",
-    "classic": "Classic v2"
-  },
   "components": {
+    "beta-card": {
+      "desc-1": "This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide feedback, please let us know on",
+      "header": "Beta is here!"
+    },
     "connect-button": {
       "connect": "Connect Wallet"
     },
-    "no-wallet": "Wallet not connected",
-    "beta-card": {
-      "header": "Beta is here!",
-      "desc-1": "This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide feedback, please let us know on"
-    }
+    "no-wallet": "Wallet not connected"
   },
   "errors": {
     "default": "There was an unexpected error"
   },
-
-  "navigation": {
-    "home": "Home",
-    "wallet": "Wallet",
-    "vaults": "Vaults",
-    "vault": "Vault details",
-    "labs": "Labs",
-    "ironbank": "Iron Bank",
-    "settings": "Settings",
-    "disclaimer": "Disclaimer",
-    "copyright": {
-      "small": "©",
-      "big": "© Yearn 2021"
-    }
-  },
   "footer": {
     "links": {
-      "gov": "Gov",
+      "disclaimer": "Disclaimer",
       "docs": "Docs",
-      "security": "Security",
-      "disclaimer": "Disclaimer"
+      "gov": "Gov",
+      "security": "Security"
     }
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "Disclaimer",
+    "home": "Home",
+    "ironbank": "Iron Bank",
+    "labs": "Labs",
+    "settings": "Settings",
+    "vault": "Vault details",
+    "vaults": "Vaults",
+    "wallet": "Wallet"
+  },
+  "themes": {
+    "classic": "Classic v2",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "light": "Mono Light"
   }
 }

@@ -1,8 +1,8 @@
 {
   "risks-card": {
-    "header": "Estos no son riesgos pequeños",
     "desc-1": "Las estrategias emergentes que encontrará aquí son las más nuevas y poco convencionales que existen. Asegúrese de revisar detenidamente las secciones \"Acerca de\" y asegúrese de comprender el bloqueo de tokens, impermanent-loss, y otros riesgos antes de continuar.",
     "desc-2": "Al igual que con todos los productos Yearn, usted es responsable de informarse sobre los detalles y de administrar activamente sus posesiones.",
-    "desc-3": "Bienvenido al Laboratorio, pero proceda con precaución, anon."
+    "desc-3": "Bienvenido al Laboratorio, pero proceda con precaución, anon.",
+    "header": "Estos no son riesgos pequeños"
   }
 }

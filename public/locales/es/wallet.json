@@ -1,7 +1,7 @@
 {
   "your-wallet-card": {
-    "header": "Tu Billetera",
     "desc-1": "Una vez que esté familiarizado con los riesgos y matices de Vaults y otros productos de Yearn, esta pantalla le ayudará a poner sus tokens a trabajar con la menor cantidad de clics posible. Si los botones 'Supply' o 'Depositar' están activos, hay lending y/o una vault disponible para ese token. Simplemente haga clic para ver la estrategia y el rendimiento actual.",
-    "desc-2": "Recuerde, estas herramientas facilitan el acceso a la tecnología, pero usted es responsable de comprender y administrar activamente sus posiciones."
+    "desc-2": "Recuerde, estas herramientas facilitan el acceso a la tecnología, pero usted es responsable de comprender y administrar activamente sus posiciones.",
+    "header": "Tu Billetera"
   }
 }

@@ -21,6 +21,15 @@ $ yarn build
 $ yarn start
 ```
 
+## Translations
+We use i18n react with locize cli to update/download translations
+`npm install -g locize-cli`
+
+Refer to main repo for documentation:
+https://github.com/locize/locize-cli
+
+Sync with: `npm run syncLocales`
+
 ## Contributing
 
 Code style follows prettier conventions (`yarn prettier`). Commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) spec.
@@ -33,7 +42,7 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 `$ git remote add upstream https://github.com/<your-gh>>/yearn-finance-v3`
 
 
-- set origin to original repo 
+- set origin to original repo
 
 `$ git remote add origin https://github.com/yearn/yearn-finance-v3.git`
 

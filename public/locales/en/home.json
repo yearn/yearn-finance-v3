@@ -1,7 +1,7 @@
 {
   "welcome-card": {
-    "header": "Welcome to your Yearn home screen",
     "desc-1": "There are many like it, but this one is yours. You can always return here for a bird's-eye view of your holdings. The cards below show the total balance and utilization of your wallet, and the holdings and performance for every Yearn product you use.",
-    "desc-2": "Not sure where to start? Check out “Vaults” on the left side navigation."
+    "desc-2": "Not sure where to start? Check out “Vaults” on the left side navigation.",
+    "header": "Welcome to your Yearn home screen"
   }
 }

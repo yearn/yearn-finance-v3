@@ -8,7 +8,8 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "upgrade-sdk": "yarn add yearn/yearn-sdk"
+    "upgrade-sdk": "yarn add yearn/yearn-sdk",
+    "syncLocales": "locize sync --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=latest --api-key=xxxx --path=./public/locales --format json"
   },
   "dependencies": {
     "@craco/craco": "^6.1.1",
