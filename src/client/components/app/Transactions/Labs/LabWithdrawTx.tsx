@@ -128,15 +128,6 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     expectedSlippage: expectedTxOutcome?.slippage,
   });
 
-  // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error =
-    allowanceError ||
-    inputError ||
-    actionsStatus.approveWithdraw.error ||
-    actionsStatus.withdraw.error ||
-    expectedTxOutcomeStatus.error ||
-    slippageError;
-
   const selectedLabOption = {
     address: selectedLab.address,
     symbol: selectedLab.displayName,
@@ -153,10 +144,18 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const expectedAmountValue = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
-  const expectedAmountStatus = {
-    error: expectedTxOutcomeStatus.error,
+
+  const sourceError = allowanceError || inputError;
+  const targetStatus = {
+    error:
+      expectedTxOutcomeStatus.error ||
+      actionsStatus.approveWithdraw.error ||
+      actionsStatus.withdraw.error ||
+      expectedTxOutcomeStatus.error ||
+      slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
+
   const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
@@ -220,9 +219,9 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       onSelectedTargetAssetChange={onSelectedTargetTokenChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetStatus={expectedAmountStatus}
+      targetStatus={targetStatus}
       actions={txActions}
-      sourceStatus={{ error }}
+      sourceStatus={{ error: sourceError }}
       loadingText={loadingText}
       onClose={onClose}
     />
