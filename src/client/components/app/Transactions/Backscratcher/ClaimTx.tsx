@@ -92,7 +92,7 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
       targetAmountValue={expectedAmountValue}
       targetStatus={{}}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error }}
       onClose={onClose}
     />
   );

@@ -173,7 +173,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
       targetAmountValue={expectedAmountValue}
       targetStatus={{}}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error }}
       onClose={onClose}
     />
   );

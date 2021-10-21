@@ -53,7 +53,7 @@ interface TransactionProps {
   targetAmountValue?: string;
   targetStatus: Status;
   actions: Action[];
-  status: Status;
+  sourceStatus: Status;
   loadingText?: string;
   onClose?: () => void;
 }
@@ -81,7 +81,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
     targetAmountValue,
     targetStatus,
     actions,
-    status,
+    sourceStatus,
     loadingText,
     onClose,
   } = props;
@@ -115,8 +115,8 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const outputLoading = toBN(sourceAmount).eq(0) ? false : targetStatus.loading;
 
   const generalStatus = {
-    loading: status.loading || targetStatus.loading,
-    error: status.error || targetStatus.error,
+    loading: sourceStatus.loading || targetStatus.loading,
+    error: sourceStatus.error || targetStatus.error,
   };
 
   return (
@@ -131,7 +131,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         selectedToken={selectedSourceAsset}
         tokenOptions={sourceAssetOptions}
         onSelectedTokenChange={onSelectedSourceAssetChange}
-        inputError={!!status.error}
+        inputError={!!sourceStatus.error}
         readOnly={!onSourceAmountChange}
       />
 

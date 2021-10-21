@@ -222,7 +222,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       targetAmountValue={expectedAmountValue}
       targetStatus={expectedAmountStatus}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error }}
       loadingText={loadingText}
       onClose={onClose}
     />

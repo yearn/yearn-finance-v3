@@ -263,7 +263,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}
       actions={txActions}
-      status={{ error: sourceError }}
+      sourceStatus={{ error: sourceError }}
       loadingText={loadingText}
       onClose={onClose}
     />

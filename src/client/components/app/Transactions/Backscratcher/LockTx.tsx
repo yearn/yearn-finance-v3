@@ -157,7 +157,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
       targetAmountValue={expectedAmountValue}
       targetStatus={{ error }}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error }}
     />
   );
 };

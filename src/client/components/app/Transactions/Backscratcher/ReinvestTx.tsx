@@ -137,7 +137,7 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
       targetAmountValue={expectedAmountValue}
       targetStatus={{}}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error }}
       onClose={onClose}
     />
   );
