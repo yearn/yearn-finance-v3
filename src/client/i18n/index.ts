@@ -17,6 +17,7 @@ i18n
     preload: [getConfig().DEFAULT_LANG],
     load: 'languageOnly',
     defaultNS: 'common',
+    ns: ['common', 'home', 'ironbank', 'labs', 'settings', 'vaults', 'wallet'],
     lowerCaseLng: true,
     debug: isDev(),
     interpolation: {
