@@ -79,9 +79,9 @@ export const Transaction: FC<TransactionProps> = (props) => {
     onSelectedTargetAssetChange,
     targetAmount,
     targetAmountValue,
-    targetAmountStatus, // targetStatus
+    targetAmountStatus,
     actions,
-    status, // sourceStatus
+    status,
     loadingText,
     onClose,
   } = props;
