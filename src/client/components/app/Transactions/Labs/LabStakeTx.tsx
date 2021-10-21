@@ -55,7 +55,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
         spenderAddress,
       })
     );
-  }, [selectedSellTokenAddress]);
+  }, [selectedSellTokenAddress, selectedLab?.address]);
 
   useEffect(() => {
     if (!selectedLab) return;
