@@ -5,7 +5,8 @@
     "light": "Mono Light",
     "dark": "Mono Dark",
     "cyberpunk": "Cyberpunk",
-    "classic": "Classic v2"
+    "classic": "Classic v2",
+    "explorer": "Explorer"
   },
   "commons": {
     "connect-button": {

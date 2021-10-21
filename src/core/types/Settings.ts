@@ -2,7 +2,7 @@ import { Network } from './Blockchain';
 
 export type Language = 'en' | 'es';
 
-export type Theme = 'light' | 'dark' | 'cyberpunk' | 'classic';
+export type Theme = 'light' | 'dark' | 'cyberpunk' | 'classic' | 'explorer';
 
 export interface NetworkSettings {
   [network: string]: {

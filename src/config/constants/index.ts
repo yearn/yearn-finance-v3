@@ -72,7 +72,7 @@ export const getConstants = memoize((): Constants => {
     IRON_BANK_MAX_RATIO: 0.8,
     ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
     DEFAULT_THEME: 'light',
-    AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk', 'classic'],
+    AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk', 'classic', 'explorer'],
     DEFAULT_ALERT_TIMEOUT: 3000,
   };
 });
