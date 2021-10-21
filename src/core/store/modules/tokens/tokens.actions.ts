@@ -66,7 +66,6 @@ const getTokenAllowance = createAsyncThunk<
     tokenAddress,
     spenderAddress,
   });
-  console.log({ allowance });
   return { allowance };
 });
 
