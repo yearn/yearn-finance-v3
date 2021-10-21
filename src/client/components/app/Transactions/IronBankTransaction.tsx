@@ -54,7 +54,8 @@ interface IronBankTransactionProps {
   projectedBorrowingTokens?: string;
   yieldType: 'SUPPLY' | 'BORROW';
   actions: Action[];
-  status: Status;
+  sourceStatus: Status;
+  targetStatus: Status;
   onClose?: () => void;
 }
 
@@ -82,7 +83,8 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
     projectedBorrowingTokens,
     yieldType,
     actions,
-    status,
+    sourceStatus,
+    targetStatus,
     onClose,
   } = props;
 
@@ -98,6 +100,11 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
     );
   }
 
+  const generalStatus: Status = {
+    loading: sourceStatus.loading || targetStatus.loading,
+    error: sourceStatus.error || targetStatus.error,
+  };
+
   return (
     <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
       <TxTokenInput
@@ -109,7 +116,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         maxAmount={safeMax ?? assetBalance}
         maxLabel={maxLabel ?? (safeMax ? 'SAFE MAX' : 'MAX')}
         selectedToken={asset}
-        inputError={!!status.error}
+        inputError={!!sourceStatus.error}
         readOnly={!onAmountChange}
       />
 
@@ -125,7 +132,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         tokenSymbol={asset.symbol}
       />
 
-      {status.error && <TxError errorText={status.error} />}
+      {generalStatus.error && <TxError errorText={generalStatus.error} />}
 
       <TxActions>
         {actions.map(({ label, onAction, status, disabled, contrast }) => (

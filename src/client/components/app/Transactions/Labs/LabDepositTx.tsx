@@ -155,13 +155,16 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     expectedSlippage: expectedTxOutcome?.slippage,
   });
 
-  const error =
-    allowanceError ||
-    inputError ||
-    actionsStatus.approveDeposit.error ||
-    actionsStatus.deposit.error ||
-    expectedTxOutcomeStatus.error ||
-    slippageError;
+  const sourceError = allowanceError || inputError;
+
+  const targetStatus = {
+    error:
+      expectedTxOutcomeStatus.error ||
+      actionsStatus.approveDeposit.error ||
+      actionsStatus.deposit.error ||
+      slippageError,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+  };
 
   const selectedLabOption = {
     address: selectedLab.address,
@@ -180,10 +183,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const expectedAmountValue = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
-  const expectedAmountStatus = {
-    error: expectedTxOutcomeStatus.error || error,
-    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
-  };
+
   const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
@@ -258,9 +258,9 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       onSelectedTargetAssetChange={onSelectedLabChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedAmountStatus}
+      targetStatus={targetStatus}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error: sourceError }}
       loadingText={loadingText}
       onClose={onClose}
     />
