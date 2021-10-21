@@ -84,8 +84,8 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
     vaultUnderlyingBalance: selectedLab.labBalance,
   });
 
-  // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError || actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
+  const sourceError = allowanceError || inputError;
+  const targetError = actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
 
   const selectedLabOption = {
     address: selectedLab.address,
@@ -171,9 +171,9 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
       onSelectedTargetAssetChange={onSelectedLabChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetStatus={{}}
+      targetStatus={{ error: targetError }}
       actions={txActions}
-      sourceStatus={{ error }}
+      sourceStatus={{ error: sourceError }}
       onClose={onClose}
     />
   );
