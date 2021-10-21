@@ -138,7 +138,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
       selectedTargetAsset={targetVault}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={{}}
+      targetStatus={{}}
       actions={txActions}
       status={{ error }}
       loadingText={loadingText}

@@ -51,7 +51,7 @@ interface TransactionProps {
   onSelectedTargetAssetChange?: (assetAddress: string) => void;
   targetAmount: string;
   targetAmountValue?: string;
-  targetAmountStatus: Status;
+  targetStatus: Status;
   actions: Action[];
   status: Status;
   loadingText?: string;
@@ -79,7 +79,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
     onSelectedTargetAssetChange,
     targetAmount,
     targetAmountValue,
-    targetAmountStatus,
+    targetStatus,
     actions,
     status,
     loadingText,
@@ -94,8 +94,8 @@ export const Transaction: FC<TransactionProps> = (props) => {
   if (actions.length && actions.length > 1) {
     if (!actions[0].disabled && !actions[0].status.loading) {
       txArrowStatus = 'preparing';
-      if (targetAmountStatus.loading) txArrowStatus = 'firstPending';
-    } else if (actions[0].status.loading || targetAmountStatus.loading) {
+      if (targetStatus.loading) txArrowStatus = 'firstPending';
+    } else if (actions[0].status.loading || targetStatus.loading) {
       txArrowStatus = 'firstPending';
     } else if (!actions[1].status.loading) {
       txArrowStatus = 'secondPreparing';
@@ -112,11 +112,11 @@ export const Transaction: FC<TransactionProps> = (props) => {
     );
   }
 
-  const outputLoading = toBN(sourceAmount).eq(0) ? false : targetAmountStatus.loading;
+  const outputLoading = toBN(sourceAmount).eq(0) ? false : targetStatus.loading;
 
   const generalStatus = {
-    loading: status.loading || targetAmountStatus.loading,
-    error: status.error || targetAmountStatus.error,
+    loading: status.loading || targetStatus.loading,
+    error: status.error || targetStatus.error,
   };
 
   return (
@@ -147,7 +147,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         tokenOptions={targetAssetOptions}
         onSelectedTokenChange={onSelectedTargetAssetChange}
         yieldPercent={selectedTargetAsset.yield}
-        inputError={!!targetAmountStatus.error}
+        inputError={!!targetStatus.error}
         readOnly
         loading={outputLoading}
         loadingText={loadingText ?? 'Simulating...'}

@@ -258,7 +258,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       onSelectedTargetAssetChange={onSelectedLabChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedAmountStatus}
+      targetStatus={expectedAmountStatus}
       actions={txActions}
       status={{ error }}
       loadingText={loadingText}
