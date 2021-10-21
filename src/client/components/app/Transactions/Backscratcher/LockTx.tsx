@@ -79,7 +79,8 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     vaultUnderlyingBalance: selectedLab.labBalance,
   });
 
-  const error = allowanceError || inputError || actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
+  const sourceError = allowanceError || inputError;
+  const targetError = actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
 
   const selectedLabOption = {
     address: selectedLab.address,
@@ -155,9 +156,9 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
       selectedTargetAsset={selectedLabOption}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetStatus={{ error }}
+      targetStatus={{ error: targetError }}
       actions={txActions}
-      sourceStatus={{ error }}
+      sourceStatus={{ error: sourceError }}
     />
   );
 };
