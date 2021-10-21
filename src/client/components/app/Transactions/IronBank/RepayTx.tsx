@@ -51,7 +51,7 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
   }, [selectedMarket?.address]);
 
   useEffect(() => {
-    if (!selectedMarket || !error) return;
+    if (!selectedMarket || !generalError) return;
     dispatch(IronBankActions.clearMarketStatus({ marketAddress: selectedMarket.address }));
   }, [debouncedAmount]);
 
@@ -96,7 +96,9 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
     maxAmountAllowed: toWei(repayableTokens, selectedToken.decimals),
   });
 
-  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.repay.error;
+  const sourceError = allowanceError || inputError;
+  const targetError = actionsStatus.approve.error || actionsStatus.repay.error;
+  const generalError = sourceError || targetError;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -168,8 +170,8 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
       projectedBorrowingTokens={projectedBorrowingTokens}
       yieldType={'BORROW'}
       actions={txActions}
-      sourceStatus={{ error }}
-      targetStatus={{ error }}
+      sourceStatus={{ error: sourceError }}
+      targetStatus={{ error: targetError }}
       onClose={onClose}
     />
   );
