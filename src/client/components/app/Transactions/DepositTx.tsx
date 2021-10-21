@@ -181,12 +181,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   const sourceError = allowanceError || inputError;
 
   const targetStatus = {
-    error:
-      expectedTxOutcomeStatus.error ||
-      actionsStatus.approve.error ||
-      actionsStatus.deposit.error ||
-      expectedTxOutcomeStatus.error ||
-      slippageError,
+    error: expectedTxOutcomeStatus.error || actionsStatus.approve.error || actionsStatus.deposit.error || slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
 

@@ -151,7 +151,6 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       expectedTxOutcomeStatus.error ||
       actionsStatus.approveWithdraw.error ||
       actionsStatus.withdraw.error ||
-      expectedTxOutcomeStatus.error ||
       slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };

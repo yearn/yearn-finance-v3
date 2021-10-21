@@ -162,7 +162,6 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       expectedTxOutcomeStatus.error ||
       actionsStatus.approveDeposit.error ||
       actionsStatus.deposit.error ||
-      expectedTxOutcomeStatus.error ||
       slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
