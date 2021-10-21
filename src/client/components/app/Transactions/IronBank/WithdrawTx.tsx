@@ -48,7 +48,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
   }, []);
 
   useEffect(() => {
-    if (!selectedMarket || !error) return;
+    if (!selectedMarket || !generalError) return;
     dispatch(IronBankActions.clearMarketStatus({ marketAddress: selectedMarket.address }));
   }, [debouncedAmount]);
 
@@ -90,7 +90,9 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
     totalAmountAvailable: toWei(withdrawableTokens, selectedToken.decimals),
   });
 
-  const error = inputError || actionsStatus.withdraw.error;
+  const sourceError = inputError;
+  const targetError = actionsStatus.withdraw.error;
+  const generalError = sourceError || targetError;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -144,8 +146,8 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
       projectedBorrowLimit={projectedBorrowLimit}
       yieldType={'SUPPLY'}
       actions={txActions}
-      sourceStatus={{ error }}
-      targetStatus={{ error }}
+      sourceStatus={{ error: sourceError }}
+      targetStatus={{ error: targetError }}
       onClose={onClose}
     />
   );
