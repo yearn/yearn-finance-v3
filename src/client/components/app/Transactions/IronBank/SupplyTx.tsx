@@ -64,7 +64,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   }, [selectedMarket?.address]);
 
   useEffect(() => {
-    if (!selectedMarket || !error) return;
+    if (!selectedMarket || !generalError) return;
     dispatch(IronBankActions.clearMarketStatus({ marketAddress: selectedMarket.address }));
   }, [debouncedAmount]);
 
@@ -96,7 +96,9 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
     totalAmountAvailable: selectedToken.balance,
   });
 
-  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.supply.error;
+  const sourceError = allowanceError || inputError;
+  const targetError = actionsStatus.approve.error || actionsStatus.supply.error;
+  const generalError = sourceError || targetError;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -156,7 +158,8 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
       projectedBorrowLimit={projectedBorrowLimit}
       yieldType={'SUPPLY'}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error: sourceError }}
+      targetStatus={{ error: targetError }}
       onClose={onClose}
     />
   );

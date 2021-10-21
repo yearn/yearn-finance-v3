@@ -144,7 +144,8 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
       projectedBorrowLimit={projectedBorrowLimit}
       yieldType={'SUPPLY'}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error }}
+      targetStatus={{ error }}
       onClose={onClose}
     />
   );

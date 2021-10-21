@@ -168,7 +168,8 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
       projectedBorrowingTokens={projectedBorrowingTokens}
       yieldType={'BORROW'}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error }}
+      targetStatus={{ error }}
       onClose={onClose}
     />
   );
