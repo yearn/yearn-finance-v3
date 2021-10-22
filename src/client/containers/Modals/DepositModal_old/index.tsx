@@ -136,7 +136,7 @@ export const DepositModal: FC<DepositModalProps> = ({ onClose, ...props }) => {
         spenderAddress: selectedVault.address,
       })
     );
-  }, [selectedSellTokenAddress]);
+  }, [selectedSellTokenAddress, selectedVault?.address]);
 
   if (!selectedVault || !selectedSellTokenAddress || !sellTokensOptions) {
     return null;

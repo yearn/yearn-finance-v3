@@ -87,7 +87,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
         spenderAddress,
       })
     );
-  }, [selectedSellTokenAddress]);
+  }, [selectedSellTokenAddress, selectedLab?.address]);
 
   useEffect(() => {
     if (!selectedLab) return;

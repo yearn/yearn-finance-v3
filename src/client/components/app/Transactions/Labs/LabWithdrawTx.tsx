@@ -82,7 +82,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
         spenderAddress: CONTRACT_ADDRESSES.zapOut,
       })
     );
-  }, [selectedTargetTokenAddress]);
+  }, [selectedTargetTokenAddress, selectedLab?.address]);
 
   useEffect(() => {
     if (!selectedLab) return;

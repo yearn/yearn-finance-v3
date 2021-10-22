@@ -42,7 +42,7 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
     return () => {
       onExit();
     };
-  }, []);
+  }, [selectedTargetToken?.address]);
 
   if (!selectedLab || !selectedTargetVault || !selectedTargetToken) {
     return null;

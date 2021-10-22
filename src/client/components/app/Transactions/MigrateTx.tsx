@@ -40,7 +40,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
         spenderAddress: selectedVault.migrationContract,
       })
     );
-  }, []);
+  }, [selectedVault?.address]);
 
   if (!selectedVault || !selectedVault.migrationContract || !selectedVault.migrationTargetVault) return null;
 
