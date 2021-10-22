@@ -199,9 +199,15 @@ export interface VaultDetailPanelsProps {
   selectedVault: GeneralVaultView;
   chartData?: any;
   chartValue?: string;
+  displayAddToken?: boolean;
 }
 
-export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: VaultDetailPanelsProps) => {
+export const VaultDetailPanels = ({
+  selectedVault,
+  chartData,
+  chartValue,
+  displayAddToken,
+}: VaultDetailPanelsProps) => {
   // const { t } = useAppTranslation('common');
   const isVaultMigratable = selectedVault.migrationAvailable;
   const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : 'deposit');
@@ -216,10 +222,12 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
         <VaultOverview>
           <StyledCardHeaderContainer>
             <StyledCardHeader header="Overview" />
-            <RelativeContainer>
-              <StyledImg src={MetamaskLogo} />
-              <IconOverImage Component={AddCircleIcon} />
-            </RelativeContainer>
+            {displayAddToken ? (
+              <RelativeContainer>
+                <StyledImg src={MetamaskLogo} />
+                <IconOverImage Component={AddCircleIcon} />
+              </RelativeContainer>
+            ) : null}
           </StyledCardHeaderContainer>
 
           <OverviewTokenInfo>
