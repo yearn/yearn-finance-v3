@@ -6,10 +6,22 @@ import { formatApy, formatUsd, normalizeUsdc } from '@utils';
 import { device } from '@themes/default';
 import { TokenIcon } from '@components/app';
 import { DepositTx, WithdrawTx, MigrateTx } from '@components/app/Transactions';
-import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text, Markdown } from '@components/common';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Tab,
+  TabPanel,
+  Tabs,
+  Text,
+  Markdown,
+  Icon,
+  AddCircleIcon,
+} from '@components/common';
 import { LineChart } from '@components/common/Charts';
 import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 import { GeneralVaultView } from '@types';
+import { MetamaskLogo } from '@assets/images';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -41,6 +53,32 @@ const StyledCardContent = styled(CardContent)`
 
 const StyledCardHeader = styled(CardHeader)`
   padding: 0;
+`;
+
+const StyledCardHeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-items: between;
+`;
+
+const StyledImg = styled.img`
+  object-fit: cover;
+  width: 30px;
+  height: 30px;
+`;
+
+const RelativeContainer = styled.span`
+  cursor: pointer;
+  position: relative;
+`;
+
+const IconOverImage = styled(Icon)`
+  background: white;
+  border-radius: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50%;
 `;
 
 const StyledTabPanel = styled(TabPanel)`
@@ -176,7 +214,13 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
     <>
       <Row>
         <VaultOverview>
-          <StyledCardHeader header="Overview" />
+          <StyledCardHeaderContainer>
+            <StyledCardHeader header="Overview" />
+            <RelativeContainer>
+              <StyledImg src={MetamaskLogo} />
+              <IconOverImage Component={AddCircleIcon} />
+            </RelativeContainer>
+          </StyledCardHeaderContainer>
 
           <OverviewTokenInfo>
             <TokenLogo variant="background">
