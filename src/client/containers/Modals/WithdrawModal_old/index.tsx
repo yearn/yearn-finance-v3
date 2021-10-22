@@ -122,7 +122,7 @@ export const WithdrawModal: FC<WithdrawModalProps> = ({ onClose, ...props }) => 
         spenderAddress: selectedVault.address,
       })
     );
-  }, [selectedTargetTokenAddress]);
+  }, [selectedTargetTokenAddress, selectedVault?.address]);
 
   if (!selectedVault || !selectedTargetToken || !targetTokensOptions) {
     return null;
