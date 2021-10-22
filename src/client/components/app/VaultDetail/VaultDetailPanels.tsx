@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
 import { formatApy, formatUsd, normalizeUsdc } from '@utils';
@@ -22,6 +22,7 @@ import { LineChart } from '@components/common/Charts';
 import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 import { GeneralVaultView } from '@types';
 import { MetamaskLogo } from '@assets/images';
+import { AppContext } from '@src/client/context';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -212,9 +213,15 @@ export const VaultDetailPanels = ({
   const isVaultMigratable = selectedVault.migrationAvailable;
   const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : 'deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
+  const context = useContext(AppContext);
 
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
+  };
+
+  const handleAddToken = () => {
+    const { address, symbol, decimals, icon } = selectedVault.token;
+    context?.wallet.addToken(address, symbol, decimals, icon || '');
   };
   return (
     <>
@@ -223,7 +230,7 @@ export const VaultDetailPanels = ({
           <StyledCardHeaderContainer>
             <StyledCardHeader header="Overview" />
             {displayAddToken ? (
-              <RelativeContainer>
+              <RelativeContainer onClick={handleAddToken}>
                 <StyledImg src={MetamaskLogo} />
                 <IconOverImage Component={AddCircleIcon} />
               </RelativeContainer>
