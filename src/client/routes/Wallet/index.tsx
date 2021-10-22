@@ -102,7 +102,7 @@ export const Wallet = () => {
   const investButton = (tokenAddress: string, isZapable: boolean) => {
     return [
       {
-        name: 'Deposit',
+        name: t('components.transaction.deposit'),
         handler: () => actionHandler('invest', tokenAddress),
         disabled: !walletIsConnected || !(isZapable || vaultsUnderlyingTokens.includes(tokenAddress)),
       },
@@ -112,7 +112,7 @@ export const Wallet = () => {
   const supplyButton = (tokenAddress: string) => {
     return [
       {
-        name: 'Supply',
+        name: t('components.transaction.supply'),
         handler: () => actionHandler('supply', tokenAddress),
         disabled: !walletIsConnected || !ironBankUnderlyingTokens.includes(tokenAddress),
       },
@@ -159,7 +159,7 @@ export const Wallet = () => {
       {generalLoading && walletIsConnected && <SpinnerLoading flex="1" width="100%" />}
       {!generalLoading && walletIsConnected && (
         <TokensCard
-          header="Tokens"
+          header={t('components.list-card.tokens')}
           metadata={[
             {
               key: 'displayIcon',
@@ -167,10 +167,16 @@ export const Wallet = () => {
               width: '6rem',
               className: 'col-icon',
             },
-            { key: 'displayName', header: 'Name', sortable: true, width: '17rem', className: 'col-name' },
+            {
+              key: 'displayName',
+              header: t('components.list-card.name'),
+              sortable: true,
+              width: '17rem',
+              className: 'col-name',
+            },
             {
               key: 'tokenBalance',
-              header: 'Balance',
+              header: t('components.list-card.balance'),
               format: ({ balance, decimals }) => humanizeAmount(balance, decimals, 2),
               sortable: true,
               width: '13rem',
@@ -178,7 +184,7 @@ export const Wallet = () => {
             },
             {
               key: 'priceUsdc',
-              header: 'Price',
+              header: t('components.list-card.price'),
               format: ({ priceUsdc }) => normalizeUsdc(priceUsdc, 2),
               sortable: true,
               width: '11rem',
@@ -186,7 +192,7 @@ export const Wallet = () => {
             },
             {
               key: 'balanceUsdc',
-              header: 'Value',
+              header: t('components.list-card.value'),
               format: ({ balanceUsdc }) => normalizeUsdc(balanceUsdc, 2),
               sortable: true,
               width: '11rem',

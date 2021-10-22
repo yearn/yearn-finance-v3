@@ -178,7 +178,7 @@ export const Vaults = () => {
         <>
           <Row>
             <StyledRecommendationsCard
-              header="Recommendations"
+              header={t('components.recommendations.header')}
               items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
                 // header: 'Vault',
                 icon: displayIcon,
@@ -204,7 +204,7 @@ export const Vaults = () => {
           {!walletIsConnected && <StyledNoWalletCard />}
 
           <DepositsCard
-            header="Deposits"
+            header={t('components.list-card.deposits')}
             metadata={[
               {
                 key: 'displayIcon',
@@ -214,7 +214,7 @@ export const Vaults = () => {
               },
               {
                 key: 'displayName',
-                header: 'Name',
+                header: t('components.list-card.name'),
                 sortable: true,
                 fontWeight: 600,
                 width: '17rem',
@@ -222,7 +222,7 @@ export const Vaults = () => {
               },
               {
                 key: 'apy',
-                header: 'APY',
+                header: t('components.list-card.apy'),
                 format: ({ apyData, apyType }) => formatApy(apyData, apyType),
                 sortable: true,
                 width: '8rem',
@@ -230,7 +230,7 @@ export const Vaults = () => {
               },
               {
                 key: 'balance',
-                header: 'Balance',
+                header: t('components.list-card.balance'),
                 format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
@@ -238,7 +238,7 @@ export const Vaults = () => {
               },
               {
                 key: 'userDepositedUsdc',
-                header: 'Value',
+                header: t('components.list-card.value'),
                 format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc, 2),
                 sortable: true,
                 width: '11rem',
@@ -246,7 +246,7 @@ export const Vaults = () => {
               },
               {
                 key: 'earned',
-                header: 'Earned',
+                header: t('components.list-card.earned'),
                 format: ({ earned }) => (!toBN(earned).isZero() ? normalizeUsdc(earned, 2) : '-'),
                 sortable: true,
                 width: '11rem',
@@ -257,8 +257,8 @@ export const Vaults = () => {
                 transform: ({ address }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Deposit', handler: () => depositHandler(address) },
-                      { name: 'Withdraw', handler: () => withdrawHandler(address) },
+                      { name: t('components.transaction.deposit'), handler: () => depositHandler(address) },
+                      { name: t('components.transaction.withdraw'), handler: () => withdrawHandler(address) },
                     ]}
                   />
                 ),
@@ -279,7 +279,7 @@ export const Vaults = () => {
           />
 
           <OpportunitiesCard
-            header="Opportunities"
+            header={t('components.list-card.opportunities')}
             metadata={[
               {
                 key: 'displayIcon',
@@ -289,7 +289,7 @@ export const Vaults = () => {
               },
               {
                 key: 'displayName',
-                header: 'Name',
+                header: t('components.list-card.name'),
                 sortable: true,
                 fontWeight: 600,
                 width: '17rem',
@@ -297,7 +297,7 @@ export const Vaults = () => {
               },
               {
                 key: 'apy',
-                header: 'APY',
+                header: t('components.list-card.apy'),
                 format: ({ apyData, apyType }) => formatApy(apyData, apyType),
                 sortable: true,
                 width: '8rem',
@@ -305,7 +305,7 @@ export const Vaults = () => {
               },
               {
                 key: 'vaultBalanceUsdc',
-                header: 'Total assets',
+                header: t('components.list-card.total-assets'),
                 format: ({ vaultBalanceUsdc }) => normalizeUsdc(vaultBalanceUsdc, 0),
                 sortable: true,
                 width: '15rem',
@@ -313,7 +313,7 @@ export const Vaults = () => {
               },
               {
                 key: 'userTokenBalance',
-                header: 'Available to deposit',
+                header: t('components.list-card.available-deposit'),
                 format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
                 sortable: true,
                 width: '15rem',
@@ -324,7 +324,11 @@ export const Vaults = () => {
                 transform: ({ address }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Deposit', handler: () => depositHandler(address), disabled: !walletIsConnected },
+                      {
+                        name: t('components.transaction.deposit'),
+                        handler: () => depositHandler(address),
+                        disabled: !walletIsConnected,
+                      },
                     ]}
                   />
                 ),

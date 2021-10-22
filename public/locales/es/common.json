@@ -7,10 +7,41 @@
     "connect-button": {
       "connect": "Conectar Billetera"
     },
-    "no-wallet": "Billetera no conectada"
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "Disp. para depositar",
+      "available-stake": "Disponible para stake",
+      "available-supply": "Disp. para suministrar",
+      "balance": "Balance",
+      "collateral": "Colateral",
+      "deposits": "Depósitos",
+      "earned": "Ganado",
+      "market-liquidity": "Liquidez de mercado",
+      "name": "Nombre",
+      "opportunities": "Oportunidades",
+      "price": "Precio",
+      "supplying": "Suministrando",
+      "tokens": "Tokens",
+      "total-assets": "Activos totales",
+      "value": "Valor"
+    },
+    "no-wallet": "Billetera no conectada",
+    "recommendations": {
+      "header": "Recomendaciones"
+    },
+    "transaction": {
+      "approve": "Aprobar",
+      "claim": "Reclamar",
+      "deposit": "Depositar",
+      "reinvest": "Reinvertir",
+      "supply": "Suministrar",
+      "withdraw": "Retirar"
+    }
   },
   "dashboard": {
+    "apy": "APY",
     "available": "Disponible",
+    "available-deposit": "Disponible para depositar",
     "borrow-limit-total": "Límite de préstamo total",
     "borrow-limit-used": "Límite de préstamo utilizado",
     "borrowed": "Prestado",

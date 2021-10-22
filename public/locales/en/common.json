@@ -7,10 +7,48 @@
     "connect-button": {
       "connect": "Connect Wallet"
     },
-    "no-wallet": "Wallet not connected"
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "Available to deposit",
+      "available-stake": "Available to stake",
+      "available-supply": "Available to supply",
+      "balance": "Balance",
+      "borrow-apy": "Borrow APY",
+      "borrowing": "Borrowing",
+      "collateral": "Collateral",
+      "deposits": "Deposits",
+      "earned": "Earned",
+      "lend-apy": "Lend APY",
+      "market-liquidity": "Market liquidity",
+      "name": "Name",
+      "opportunities": "Opportunities",
+      "price": "Price",
+      "supplying": "Supplying",
+      "tokens": "Tokens",
+      "total-assets": "Total assets",
+      "value": "Value"
+    },
+    "no-wallet": "Wallet not connected",
+    "recommendations": {
+      "header": "Recommendations"
+    },
+    "transaction": {
+      "approve": "Approve",
+      "borrow": "Borrow",
+      "claim": "Claim",
+      "deposit": "Deposit",
+      "lock": "Lock",
+      "reinvest": "Reinvest",
+      "repay": "Repay",
+      "stake": "Stake",
+      "supply": "Supply",
+      "withdraw": "Withdraw"
+    }
   },
   "dashboard": {
+    "apy": "APY",
     "available": "Available",
+    "available-deposit": "Available to deposit",
     "borrow-limit-total": "Total borrow limit",
     "borrow-limit-used": "Borrow limit used",
     "borrowed": "Borrowed",

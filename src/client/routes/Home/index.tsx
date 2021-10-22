@@ -125,7 +125,7 @@ export const Home = () => {
               header={t('navigation.wallet')}
               items={[
                 {
-                  header: 'Available to deposit',
+                  header: t('dashboard.available-deposit'),
                   Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
                 },
               ]}
@@ -138,11 +138,11 @@ export const Home = () => {
                 header={t('navigation.ironbank')}
                 items={[
                   {
-                    header: 'Supplied',
+                    header: t('dashboard.supplied'),
                     Component: <Amount value={ibSummary.supplyBalanceUsdc} input="usdc" />,
                   },
                   {
-                    header: 'Borrow limit used',
+                    header: t('dashboard.borrow-limit-used'),
                     Component: <Amount value={ibSummary.borrowUtilizationRatio} input="weipercent" />,
                   },
                 ]}
@@ -156,11 +156,11 @@ export const Home = () => {
             header={t('navigation.vaults')}
             items={[
               {
-                header: 'Holdings',
+                header: t('dashboard.holdings'),
                 Component: <Amount value={vaultsSummary.totalDeposits} input="usdc" />,
               },
               {
-                header: 'APY',
+                header: t('dashboard.apy'),
                 Component: <Amount value={vaultsSummary.apy} input="percent" />,
               },
             ]}
@@ -173,7 +173,7 @@ export const Home = () => {
               header={t('navigation.labs')}
               items={[
                 {
-                  header: 'Holdings',
+                  header: t('dashboard.holdings'),
                   Component: <Amount value={labsSummary.totalDeposits} input="usdc" />,
                 },
               ]}

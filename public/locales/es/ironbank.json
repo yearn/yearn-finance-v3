@@ -3,5 +3,9 @@
     "desc-1": "Iron Bank ofrece una forma sencilla de exponerse a nuevos tokens. Pida prestado usando su crypto como garantía, sin tener que vender. ¿No encontraste la Bóveda adecuada para tus tokens? Suminístralos a Iron Bank y gane más crypto.",
     "desc-2": "Recuerde, incluso con herramientas simples como Iron Bank, existen riesgos de smart contracts y riesgos sistémicos de los activos crypto subyacentes.",
     "header": "Deja que tu crypto trabaje para ti"
+  },
+  "no-ironbank-card": {
+    "header": "Todavía no esta disponible Iron bank en {{network}}",
+    "text": "Vuelva a consultar pronto."
   }
 }
