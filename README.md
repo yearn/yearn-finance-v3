@@ -22,13 +22,16 @@ $ yarn start
 ```
 
 ## Translations
-We use i18n react with locize cli to update/download translations
-`npm install -g locize-cli`
+We use i18n react with locize cli to update/download translations.
 
 Refer to main repo for documentation:
 https://github.com/locize/locize-cli
 
-Sync with: `npm run syncLocales`
+Sync with: `npm run syncLocales` **must provide api key**
+
+Check sync changes with: `npm run checkLocales`
+
+Download locales with: `npm run downloadLocales`
 
 ## Contributing
 
