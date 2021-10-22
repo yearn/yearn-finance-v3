@@ -132,7 +132,7 @@ const OpportunitiesCard = styled(DetailCard)`
 ` as typeof DetailCard;
 
 export const IronBank = () => {
-  const { t } = useAppTranslation('ironbank');
+  const { t } = useAppTranslation(['common', 'ironbank']);
 
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
@@ -140,7 +140,7 @@ export const IronBank = () => {
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, netAPY, borrowLimitUsdc } = useAppSelector(
+  const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, borrowLimitUsdc } = useAppSelector(
     IronBankSelectors.selectSummaryData
   );
   const recommendations = useAppSelector(IronBankSelectors.selectRecommendations);
@@ -192,13 +192,13 @@ export const IronBank = () => {
       <SummaryCard
         header="Dashboard"
         items={[
-          { header: 'Supplied', Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
-          { header: 'Borrowed', Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },
+          { header: t('dashboard.supplied'), Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
+          { header: t('dashboard.borrowed'), Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },
           {
-            header: 'Borrow limit used',
+            header: t('dashboard.borrow-limit-used'),
             Component: <Amount value={borrowUtilizationRatio} input="weipercent" />,
           },
-          { header: 'Total borrow limit', Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
+          { header: t('dashboard.borrow-limit-total'), Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
         ]}
         variant="secondary"
         cardSize="small"

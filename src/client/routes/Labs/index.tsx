@@ -108,7 +108,7 @@ const StyledNoWalletCard = styled(NoWalletCard)`
 `;
 
 export const Labs = () => {
-  const { t } = useAppTranslation('labs');
+  const { t } = useAppTranslation(['common', 'labs']);
 
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConstants();
   const { YVECRV, YVBOOST, PSLPYVBOOSTETH, CRV, YVTHREECRV } = CONTRACT_ADDRESSES;
@@ -281,7 +281,7 @@ export const Labs = () => {
       <SummaryCard
         header="Dashboard"
         items={[
-          { header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> },
+          { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
           // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
           // { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
         ]}

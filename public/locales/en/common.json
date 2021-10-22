@@ -9,6 +9,19 @@
     },
     "no-wallet": "Wallet not connected"
   },
+  "dashboard": {
+    "available": "Available",
+    "borrow-limit-total": "Total borrow limit",
+    "borrow-limit-used": "Borrow limit used",
+    "borrowed": "Borrowed",
+    "earnings": "Earnings",
+    "est-yearly-yield": "Est. yearly yield",
+    "holdings": "Holdings",
+    "supplied": "Supplied",
+    "total-net-worth": "Total net worth",
+    "vaults-earnings": "Vaults earnings",
+    "vaults-est-yearly-yield": "Vaults est. yearly yield"
+  },
   "errors": {
     "default": "There was an unexpected error"
   },

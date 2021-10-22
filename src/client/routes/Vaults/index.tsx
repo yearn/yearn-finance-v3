@@ -124,7 +124,7 @@ const DepositsCard = styled(DetailCard)`
 ` as typeof DetailCard;
 
 export const Vaults = () => {
-  const { t } = useAppTranslation('vaults');
+  const { t } = useAppTranslation(['common', 'vaults']);
   const history = useHistory();
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
@@ -160,11 +160,13 @@ export const Vaults = () => {
     dispatch(ModalsActions.openModal({ modalName: 'withdrawTx' }));
   };
 
-  const summaryCardItems = [{ header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> }];
+  const summaryCardItems = [
+    { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
+  ];
   if (currentNetworkSettings.earningsEnabled) {
     summaryCardItems.push(
-      { header: 'Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
-      { header: 'Est. yearly yield', Component: <Amount value={estYearlyYeild} input="usdc" /> }
+      { header: t('dashboard.earnings'), Component: <Amount value={totalEarnings} input="usdc" /> },
+      { header: t('dashboard.est-yearly-yield'), Component: <Amount value={estYearlyYeild} input="usdc" /> }
     );
   }
 

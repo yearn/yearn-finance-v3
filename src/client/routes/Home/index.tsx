@@ -72,12 +72,17 @@ export const Home = () => {
     .plus(ibSummary.supplyBalanceUsdc)
     .toString();
 
-  const summaryCardItems = [{ header: 'Total net worth', Component: <Amount value={netWorth} input="usdc" /> }];
+  const summaryCardItems = [
+    { header: t('dashboard.total-net-worth'), Component: <Amount value={netWorth} input="usdc" /> },
+  ];
   if (currentNetworkSettings.earningsEnabled) {
     summaryCardItems.push(
-      { header: 'Vaults earnings', Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" /> },
       {
-        header: 'Vaults est. yearly yield',
+        header: t('dashboard.vaults-earnings'),
+        Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" />,
+      },
+      {
+        header: t('dashboard.vaults-est-yearly-yield'),
         Component: <Amount value={vaultsSummary.estYearlyYeild} input="usdc" />,
       }
     );
@@ -117,7 +122,7 @@ export const Home = () => {
         <>
           <Row>
             <StyledSummaryCard
-              header="Wallet"
+              header={t('navigation.wallet')}
               items={[
                 {
                   header: 'Available to deposit',
@@ -130,7 +135,7 @@ export const Home = () => {
 
             {currentNetworkSettings.ironBankEnabled && (
               <StyledSummaryCard
-                header="Iron Bank"
+                header={t('navigation.ironbank')}
                 items={[
                   {
                     header: 'Supplied',
@@ -148,7 +153,7 @@ export const Home = () => {
           </Row>
 
           <StyledSummaryCard
-            header="Vaults"
+            header={t('navigation.vaults')}
             items={[
               {
                 header: 'Holdings',
@@ -165,7 +170,7 @@ export const Home = () => {
 
           {currentNetworkSettings.labsEnabled && (
             <StyledSummaryCard
-              header="Labs"
+              header={t('navigation.labs')}
               items={[
                 {
                   header: 'Holdings',

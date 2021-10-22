@@ -9,6 +9,19 @@
     },
     "no-wallet": "Billetera no conectada"
   },
+  "dashboard": {
+    "available": "Disponible",
+    "borrow-limit-total": "Límite de préstamo total",
+    "borrow-limit-used": "Límite de préstamo utilizado",
+    "borrowed": "Prestado",
+    "earnings": "Ganancias",
+    "est-yearly-yield": "Rendimiento anual est.",
+    "holdings": "Activos",
+    "supplied": "Suministrado",
+    "total-net-worth": "Valor total neto",
+    "vaults-earnings": "Ganancias de Vaults",
+    "vaults-est-yearly-yield": "Rendimiento anual est. de Vaults"
+  },
   "errors": {
     "default": "Hubo un error inesperado"
   },
