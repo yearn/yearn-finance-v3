@@ -28,16 +28,7 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import {
-  formatPercent,
-  humanizeAmount,
-  normalizeUsdc,
-  halfWidthCss,
-  normalizeAmount,
-  formatApy,
-  orderApy,
-  toBN,
-} from '@src/utils';
+import { humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@src/utils';
 import { getConfig } from '@config';
 
 const SearchBarContainer = styled.div`
@@ -123,6 +114,35 @@ const DepositsCard = styled(DetailCard)`
   }
 ` as typeof DetailCard;
 
+const DeprecatedCard = styled(DetailCard)`
+  @media ${device.tablet} {
+    .col-name {
+      width: 10rem;
+    }
+    .col-balance {
+      width: 10rem;
+    }
+  }
+  @media (max-width: 670px) {
+    .col-value {
+      display: none;
+    }
+  }
+  @media ${device.mobile} {
+    .col-name {
+      width: 7rem;
+    }
+    .col-apy {
+      display: none;
+    }
+  }
+  @media (max-width: 500px) {
+    .col-earned {
+      display: none;
+    }
+  }
+` as typeof DetailCard;
+
 export const Vaults = () => {
   const { t } = useAppTranslation(['common', 'vaults']);
   const history = useHistory();
@@ -135,6 +155,7 @@ export const Vaults = () => {
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
   const recommendations = useAppSelector(VaultsSelectors.selectRecommendations);
+  const deprecated = useAppSelector(VaultsSelectors.selectDeprecatedVaults);
   const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOpportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
@@ -160,9 +181,15 @@ export const Vaults = () => {
     dispatch(ModalsActions.openModal({ modalName: 'withdrawTx' }));
   };
 
+  const migrateHandler = (vaultAddress: string) => {
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+    dispatch(ModalsActions.openModal({ modalName: 'migrateTx' }));
+  };
+
   const summaryCardItems = [
     { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
   ];
+
   if (currentNetworkSettings.earningsEnabled) {
     summaryCardItems.push(
       { header: t('dashboard.earnings'), Component: <Amount value={totalEarnings} input="usdc" /> },
@@ -202,6 +229,81 @@ export const Vaults = () => {
           </Row>
 
           {!walletIsConnected && <StyledNoWalletCard />}
+
+          <DeprecatedCard
+            header="Deprecated"
+            metadata={[
+              {
+                key: 'displayIcon',
+                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
+                width: '6rem',
+                className: 'col-icon',
+              },
+              {
+                key: 'displayName',
+                header: 'Name',
+                sortable: true,
+                fontWeight: 600,
+                width: '17rem',
+                className: 'col-name',
+              },
+              {
+                key: 'apy',
+                header: 'APY',
+                format: ({ apyData, apyType }) => formatApy(apyData, apyType),
+                sortable: true,
+                width: '8rem',
+                className: 'col-apy',
+              },
+              {
+                key: 'balance',
+                header: 'Balance',
+                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                sortable: true,
+                width: '13rem',
+                className: 'col-balance',
+              },
+              {
+                key: 'userDepositedUsdc',
+                header: 'Value',
+                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc, 2),
+                sortable: true,
+                width: '11rem',
+                className: 'col-value',
+              },
+              {
+                key: 'earned',
+                header: 'Earned',
+                format: ({ earned }) => normalizeUsdc(earned, 2),
+                sortable: true,
+                width: '11rem',
+                className: 'col-earned',
+              },
+              {
+                key: 'actions',
+                transform: ({ address }) => (
+                  <ActionButtons
+                    actions={[
+                      { name: 'Migrate', handler: () => migrateHandler(address) },
+                      { name: 'Withdraw', handler: () => withdrawHandler(address) },
+                    ]}
+                  />
+                ),
+                align: 'flex-end',
+                width: 'auto',
+                grow: '1',
+              },
+            ]}
+            data={deprecated.map((vault) => ({
+              ...vault,
+              apy: orderApy(vault.apyData, vault.apyType),
+              balance: normalizeAmount(vault.userDeposited, vault.token.decimals),
+              actions: null,
+            }))}
+            onAction={({ address }) => history.push(`/vault/${address}`)}
+            initialSortBy="userDepositedUsdc"
+            wrap
+          />
 
           <DepositsCard
             header={t('components.list-card.deposits')}

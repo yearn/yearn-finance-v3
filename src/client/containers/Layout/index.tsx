@@ -28,7 +28,7 @@ import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
 import { isValidAddress } from '@utils';
-import { Network } from '@types';
+import { Network, Vault } from '@types';
 
 const contentSeparation = '1.6rem';
 
@@ -188,7 +188,14 @@ export const Layout: FC = ({ children }) => {
           break;
         }
         dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));
-        promises.push(dispatch(VaultsActions.getVaults({ addresses: [assetAddress] })));
+        promises.push(
+          dispatch(VaultsActions.getVaults({ addresses: [assetAddress] })).then(({ payload }: any) => {
+            const vaults: Vault[] = payload.vaultsData;
+            const vault = vaults.pop();
+            if (vault && vault.metadata.migrationTargetVault)
+              dispatch(VaultsActions.getVaults({ addresses: [vault.metadata.migrationTargetVault] }));
+          })
+        );
         break;
       case 'labs':
         promises.push(dispatch(LabsActions.initiateLabs()));

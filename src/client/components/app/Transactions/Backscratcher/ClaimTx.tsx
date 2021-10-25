@@ -38,7 +38,7 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
     return null;
   }
 
-  const error = actionsStatus.claimReward.error;
+  const targetError = actionsStatus.claimReward.error;
 
   const selectedLabOption = {
     address: selectedLab.address,
@@ -90,9 +90,9 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
       selectedTargetAsset={selectedTargetToken}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={{}}
+      targetStatus={{ error: targetError }}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{}}
       onClose={onClose}
     />
   );

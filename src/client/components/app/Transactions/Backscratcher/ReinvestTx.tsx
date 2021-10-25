@@ -42,7 +42,7 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
     return () => {
       onExit();
     };
-  }, []);
+  }, [selectedTargetToken?.address]);
 
   if (!selectedLab || !selectedTargetVault || !selectedTargetToken) {
     return null;
@@ -82,7 +82,8 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
     sellTokenAllowancesMap: selectedTargetToken.allowancesMap,
   });
 
-  const error = allowanceError || actionsStatus.approveReinvest.error || actionsStatus.reinvest.error;
+  const sourceError = allowanceError;
+  const targetError = actionsStatus.approveReinvest.error || actionsStatus.reinvest.error;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -135,9 +136,9 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
       selectedTargetAsset={selectedVaultOption}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={{}}
+      targetStatus={{ error: targetError }}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error: sourceError }}
       onClose={onClose}
     />
   );

@@ -83,7 +83,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
         spenderAddress: CONTRACT_ADDRESSES.zapOut,
       })
     );
-  }, [selectedTargetTokenAddress]);
+  }, [selectedVault?.address, CONTRACT_ADDRESSES?.zapOut]);
 
   useEffect(() => {
     if (!selectedVault) return;
@@ -128,15 +128,6 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     expectedSlippage: expectedTxOutcome?.slippage,
   });
 
-  // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error =
-    allowanceError ||
-    inputError ||
-    actionsStatus.approveZapOut.error ||
-    actionsStatus.withdraw.error ||
-    expectedTxOutcomeStatus.error ||
-    slippageError;
-
   const selectedVaultOption = {
     address: selectedVault.address,
     symbol: selectedVault.displayName,
@@ -152,8 +143,14 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const expectedAmountValue = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
-  const expectedAmountStatus = {
-    error: expectedTxOutcomeStatus.error,
+
+  const sourceError = allowanceError || inputError;
+  const targetStatus = {
+    error:
+      expectedTxOutcomeStatus.error ||
+      actionsStatus.approveZapOut.error ||
+      actionsStatus.withdraw.error ||
+      slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
   const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
@@ -219,9 +216,9 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       onSelectedTargetAssetChange={onSelectedTargetTokenChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedAmountStatus}
+      targetStatus={targetStatus}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error: sourceError }}
       loadingText={loadingText}
       onClose={onClose}
     />
