@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
 import { formatApy, formatUsd, normalizeUsdc } from '@utils';
@@ -6,10 +6,23 @@ import { formatApy, formatUsd, normalizeUsdc } from '@utils';
 import { device } from '@themes/default';
 import { TokenIcon } from '@components/app';
 import { DepositTx, WithdrawTx, MigrateTx } from '@components/app/Transactions';
-import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text, Markdown } from '@components/common';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Tab,
+  TabPanel,
+  Tabs,
+  Text,
+  Markdown,
+  Icon,
+  AddCircleIcon,
+} from '@components/common';
 import { LineChart } from '@components/common/Charts';
 import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 import { GeneralVaultView } from '@types';
+import { MetamaskLogo } from '@assets/images';
+import { AppContext } from '@src/client/context';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -41,6 +54,32 @@ const StyledCardContent = styled(CardContent)`
 
 const StyledCardHeader = styled(CardHeader)`
   padding: 0;
+`;
+
+const StyledCardHeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-items: between;
+`;
+
+const StyledImg = styled.img`
+  object-fit: cover;
+  width: 30px;
+  height: 30px;
+`;
+
+const RelativeContainer = styled.span`
+  cursor: pointer;
+  position: relative;
+`;
+
+const IconOverImage = styled(Icon)`
+  background: white;
+  border-radius: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50%;
 `;
 
 const StyledTabPanel = styled(TabPanel)`
@@ -161,22 +200,42 @@ export interface VaultDetailPanelsProps {
   selectedVault: GeneralVaultView;
   chartData?: any;
   chartValue?: string;
+  displayAddToken?: boolean;
 }
 
-export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: VaultDetailPanelsProps) => {
+export const VaultDetailPanels = ({
+  selectedVault,
+  chartData,
+  chartValue,
+  displayAddToken,
+}: VaultDetailPanelsProps) => {
   // const { t } = useAppTranslation('common');
   const isVaultMigratable = selectedVault.migrationAvailable;
   const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : 'deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
+  const context = useContext(AppContext);
 
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
+  };
+
+  const handleAddToken = () => {
+    const { address, symbol, decimals, icon } = selectedVault.token;
+    context?.wallet.addToken(address, symbol, decimals, icon || '');
   };
   return (
     <>
       <Row>
         <VaultOverview>
-          <StyledCardHeader header="Overview" />
+          <StyledCardHeaderContainer>
+            <StyledCardHeader header="Overview" />
+            {displayAddToken ? (
+              <RelativeContainer onClick={handleAddToken}>
+                <StyledImg src={MetamaskLogo} />
+                <IconOverImage Component={AddCircleIcon} />
+              </RelativeContainer>
+            ) : null}
+          </StyledCardHeaderContainer>
 
           <OverviewTokenInfo>
             <TokenLogo variant="background">
