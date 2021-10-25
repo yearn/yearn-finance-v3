@@ -1,8 +1,9 @@
 import { useState, useEffect, ReactNode } from 'react';
 import styled from 'styled-components';
 
-import { Card, CardHeader, CardContent, CardElement, CardEmptyList } from '@components/common';
+import { Card, CardHeader, CardContent, CardElement, CardEmptyList, ToggleButton } from '@components/common';
 import { sort } from '@utils';
+import { filter } from 'lodash';
 
 const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
   display: flex;
@@ -89,6 +90,7 @@ interface DetailCardProps<T> {
   SearchBar?: ReactNode;
   searching?: boolean;
   onAction?: (item: T) => void;
+  filterBy?: (item: T) => boolean;
 }
 
 export const DetailCard = <T,>({
@@ -101,18 +103,21 @@ export const DetailCard = <T,>({
   SearchBar,
   searching,
   onAction,
+  filterBy,
   ...props
 }: DetailCardProps<T>) => {
   const [sortedData, setSortedData] = useState(initialSortBy ? sort(data, initialSortBy) : data);
   const [sortedBy, setSortedBy] = useState(initialSortBy);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+  const filteredData = filterBy ? sortedData.filter(filterBy) : sortedData;
+  const displayData = filterBy ? filteredData : sortedData;
 
   const handleSort = (key: Extract<keyof T, string>) => {
     if (sortedBy === key) {
-      setSortedData([...sortedData].reverse());
+      setSortedData([...displayData].reverse());
       setOrder(order === 'desc' ? 'asc' : 'desc');
     } else {
-      setSortedData(sort(sortedData, key));
+      setSortedData(sort(displayData, key));
       setSortedBy(key);
       setOrder('desc');
     }
@@ -131,7 +136,7 @@ export const DetailCard = <T,>({
       <StyledCardHeader header={header} />
       {SearchBar}
 
-      {!!sortedData.length && (
+      {!!displayData.length && (
         <CardContent>
           {metadata.map(
             ({ key, sortable, hide, className, transform, format, ...rest }) =>
@@ -150,7 +155,7 @@ export const DetailCard = <T,>({
         </CardContent>
       )}
 
-      {sortedData.map((item, i) => (
+      {displayData.map((item, i) => (
         <StyledCardContent
           key={`content-${i}`}
           wrap={wrap}
@@ -179,7 +184,7 @@ export const DetailCard = <T,>({
         </StyledCardContent>
       ))}
 
-      {!sortedData.length && <CardEmptyList searching={searching} />}
+      {!displayData.length && <CardEmptyList searching={searching} />}
     </StyledCard>
   );
 };
