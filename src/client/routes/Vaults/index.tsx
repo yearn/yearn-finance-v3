@@ -145,6 +145,7 @@ const DeprecatedCard = styled(DetailCard)`
 
 export const Vaults = () => {
   const { t } = useAppTranslation(['common', 'vaults']);
+
   const history = useHistory();
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();

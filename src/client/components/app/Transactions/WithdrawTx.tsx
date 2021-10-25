@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import {
   TokensSelectors,
   VaultsSelectors,
@@ -28,6 +28,8 @@ export interface WithdrawTxProps {
 }
 
 export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
@@ -153,7 +155,10 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
-  const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
+
+  const loadingText = currentNetworkSettings.simulationsEnabled
+    ? t('components.transaction.status.simulating')
+    : t('components.transaction.status.calculating');
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -184,13 +189,13 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveZapOut,
       disabled: isApproved,
     },
     {
-      label: 'Withdraw',
+      label: t('components.transaction.withdraw'),
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading,
@@ -202,15 +207,15 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="From vault"
+      sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[selectedVaultOption]}
       selectedSourceAsset={selectedVaultOption}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To wallet"
+      targetHeader={t('components.transaction.to-wallet')}
       targetAssetOptions={targetTokensOptions}
       selectedTargetAsset={selectedTargetToken}
       onSelectedTargetAssetChange={onSelectedTargetTokenChange}

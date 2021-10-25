@@ -1,14 +1,15 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import { formatAmount, normalizeAmount, toBN } from '@src/utils';
+import { useAppTranslation } from '@hooks';
+
 import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
 import { TxStatus } from './components/TxStatus';
 import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
-
-import { formatAmount, normalizeAmount, toBN } from '@src/utils';
 
 interface Status {
   loading?: boolean;
@@ -61,6 +62,8 @@ interface TransactionProps {
 const StyledTransaction = styled(TxContainer)``;
 
 export const Transaction: FC<TransactionProps> = (props) => {
+  const { t } = useAppTranslation('common');
+
   const {
     transactionLabel,
     transactionCompleted,
@@ -119,11 +122,18 @@ export const Transaction: FC<TransactionProps> = (props) => {
     error: sourceStatus.error || targetStatus.error,
   };
 
+  const sourceInputText = `${t('components.transaction.token-input.balance')} ${formatAmount(sourceBalance, 4)} ${
+    selectedSourceAsset.symbol
+  }`;
+  const targetInputText = `${t('components.transaction.token-input.balance')} ${formatAmount(targetBalance, 4)} ${
+    selectedTargetAsset.symbol
+  }`;
+
   return (
     <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
       <TxTokenInput
         headerText={sourceHeader}
-        inputText={`Balance ${formatAmount(sourceBalance, 4)} ${selectedSourceAsset.symbol}`}
+        inputText={sourceInputText}
         amount={sourceAmount}
         onAmountChange={onSourceAmountChange}
         amountValue={sourceAmountValue}
@@ -140,7 +150,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
 
       <TxTokenInput
         headerText={targetHeader}
-        inputText={`Balance ${formatAmount(targetBalance, 4)} ${selectedTargetAsset.symbol}`}
+        inputText={targetInputText}
         amount={outputLoading || sourceStatus.error ? '' : targetAmount}
         amountValue={targetAmountValue}
         selectedToken={selectedTargetAsset}
@@ -150,7 +160,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         inputError={!!targetStatus.error}
         readOnly
         loading={outputLoading}
-        loadingText={loadingText ?? 'Simulating...'}
+        loadingText={loadingText ?? t('components.transaction.status.simulating')}
       />
 
       <TxActions>

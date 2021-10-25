@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import { useAppTranslation } from '@hooks';
 import { CheckRoundIcon, Text, Icon } from '@components/common';
 
 import { TxActionButton, TxActions } from './TxActions';
@@ -41,17 +42,19 @@ export interface TxStatusProps {
 }
 
 export const TxStatus: FC<TxStatusProps> = ({ exit, children, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   return (
     <StyledTxStatus {...props}>
       <TxStatusContent>
-        <StyledText>Transaction completed</StyledText>
+        <StyledText>{t('components.transaction.status.transaction-completed')}</StyledText>
 
         <StyledIcon Component={CheckRoundIcon} />
       </TxStatusContent>
 
       <TxActions>
         <TxActionButton onClick={exit} success>
-          Exit
+          {t('components.transaction.status.exit')}
         </TxActionButton>
       </TxActions>
 

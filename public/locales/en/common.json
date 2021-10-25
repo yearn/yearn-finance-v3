@@ -1,5 +1,8 @@
 {
   "components": {
+    "back-button": {
+      "label": "Back to previous page"
+    },
     "beta-card": {
       "desc-1": "This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide feedback, please let us know on",
       "header": "Beta is here!"
@@ -34,14 +37,45 @@
     },
     "transaction": {
       "approve": "Approve",
+      "available-borrow": "Available to borrow",
       "borrow": "Borrow",
+      "borrow-limit": {
+        "borrow-apy": "Borrow APY",
+        "borrowing": "Borrowing",
+        "supply-apy": "Supply APY",
+        "total-borrow-limit": "Total borrow limit",
+        "total-borrow-limit-used": "Total borrow limit used"
+      },
       "claim": "Claim",
       "deposit": "Deposit",
+      "from-iron-bank": "From Iron Bank",
+      "from-vault": "From vault",
+      "from-wallet": "From wallet",
       "lock": "Lock",
+      "max": "MAX",
+      "migrate": "Migrate",
       "reinvest": "Reinvest",
       "repay": "Repay",
+      "reward": "Reward",
       "stake": "Stake",
+      "status": {
+        "calculating": "Calculating...",
+        "exit": "Exit",
+        "simulating": "Simulating...",
+        "transaction-completed": "Transaction completed"
+      },
       "supply": "Supply",
+      "to-gauge": "To gauge",
+      "to-iron-bank": "To Iron Bank",
+      "to-vault": "To vault",
+      "to-wallet": "To wallet",
+      "token-input": {
+        "balance": "Balance",
+        "search-select-token": "Select a Token",
+        "search-select-vault": "Select a Vault",
+        "yield": "Yield"
+      },
+      "wallet-balance": "Wallet Balance",
       "withdraw": "Withdraw"
     }
   },
@@ -61,7 +95,8 @@
     "vaults-est-yearly-yield": "Vaults est. yearly yield"
   },
   "errors": {
-    "default": "There was an unexpected error"
+    "default": "There was an unexpected error",
+    "unknown": "Unknown error"
   },
   "footer": {
     "links": {

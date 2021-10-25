@@ -1,5 +1,8 @@
 {
   "components": {
+    "back-button": {
+      "label": "Volver a la última página"
+    },
     "beta-card": {
       "desc-1": "Este sitio web todavía está en versión beta y probablemente contenga errores. Si encuentra un error o desea enviar comentarios, háganoslo saber en",
       "header": "¡La Beta está aquí!"
@@ -33,8 +36,28 @@
       "approve": "Aprobar",
       "claim": "Reclamar",
       "deposit": "Depositar",
+      "from-iron-bank": "Desde Iron Bank",
+      "from-vault": "Desde vault",
+      "from-wallet": "Desde billetera",
+      "migrate": "Migrar",
       "reinvest": "Reinvertir",
+      "reward": "Recompensa",
+      "status": {
+        "calculating": "Calculando...",
+        "exit": "Cerrar",
+        "simulating": "Simulando...",
+        "transaction-completed": "Transacción completada"
+      },
       "supply": "Suministrar",
+      "to-iron-bank": "A Iron Bank",
+      "to-vault": "A vault",
+      "to-wallet": "A billetera",
+      "token-input": {
+        "balance": "Balance",
+        "search-select-token": "Selecciona un Token",
+        "search-select-vault": "Selecciona una Vault"
+      },
+      "wallet-balance": "Balance Billetera",
       "withdraw": "Retirar"
     }
   },
@@ -54,7 +77,8 @@
     "vaults-est-yearly-yield": "Rendimiento anual est. de Vaults"
   },
   "errors": {
-    "default": "Hubo un error inesperado"
+    "default": "Hubo un error inesperado",
+    "unknown": "Error desconocido"
   },
   "footer": {
     "links": {

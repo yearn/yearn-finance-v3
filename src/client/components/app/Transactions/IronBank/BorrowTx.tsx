@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import { IronBankSelectors, IronBankActions } from '@store';
 import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS, basicValidateAmount, toWei } from '@src/utils';
 import { getConfig } from '@config';
@@ -12,6 +12,8 @@ export interface IronBankBorrowTxProps {
 }
 
 export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
+  const { t } = useAppTranslation('common');
+
   const { IRON_BANK_MAX_RATIO } = getConfig();
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
@@ -93,7 +95,7 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
 
   const txActions = [
     {
-      label: 'Borrow',
+      label: t('components.transaction.borrow'),
       onAction: borrow,
       status: actionsStatus.borrow,
       disabled: !isValidAmount,
@@ -103,12 +105,12 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
 
   return (
     <IronBankTransaction
-      transactionLabel="Borrow"
+      transactionLabel={t('components.transaction.borrow')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      assetHeader="From Iron Bank"
-      assetLabel="Available to Borrow"
+      assetHeader={t('components.transaction.from-iron-bank')}
+      assetLabel={t('components.transaction.available-borrow')}
       asset={asset}
       amount={amount}
       amountValue={amountValue}
