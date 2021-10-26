@@ -39,4 +39,5 @@ export interface Constants {
   DEFAULT_THEME: Theme;
   AVAILABLE_THEMES: Theme[];
   DEFAULT_ALERT_TIMEOUT: number;
+  DUST_AMOUNT_USD: string;
 }
