@@ -23,6 +23,7 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
+import { getConstants } from '@config/constants';
 import { halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc } from '@src/utils';
 import { device } from '@themes/default';
 
@@ -84,6 +85,7 @@ export const Wallet = () => {
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const generalLoading = (appStatus.loading || tokensListStatus.loading || isMounting) && !activeModal;
+  const { DUST_AMOUNT_USD } = getConstants();
 
   const actionHandler = (action: string, tokenAddress: string) => {
     switch (action) {
@@ -118,6 +120,10 @@ export const Wallet = () => {
         disabled: !walletIsConnected || !ironBankUnderlyingTokens.includes(tokenAddress),
       },
     ];
+  };
+
+  const filterDustTokens = (item: { balanceUsdc: string }) => {
+    return parseInt(item.balanceUsdc) > parseInt(DUST_AMOUNT_USD);
   };
 
   return (
@@ -221,6 +227,8 @@ export const Wallet = () => {
           }))}
           initialSortBy="balanceUsdc"
           wrap
+          filterBy={filterDustTokens}
+          filterLabel="Show Dust"
         />
       )}
     </ViewContainer>
