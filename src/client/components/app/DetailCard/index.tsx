@@ -58,12 +58,22 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolea
 `;
 
 const StyledCardHeader = styled(CardHeader)`
+  display: flex;
+  flex-wrap: center;
+  justify-content: space-between;
   margin-bottom: 0.6rem;
 `;
 
 const StyledCard = styled(Card)`
   padding: ${({ theme }) => theme.card.padding} 0;
   width: 100%;
+`;
+
+const SectionContent = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  align-items: center;
 `;
 
 interface Metadata<T> {
@@ -91,6 +101,7 @@ interface DetailCardProps<T> {
   searching?: boolean;
   onAction?: (item: T) => void;
   filterBy?: (item: T) => boolean;
+  filterLabel?: string;
 }
 
 export const DetailCard = <T,>({
@@ -104,20 +115,22 @@ export const DetailCard = <T,>({
   searching,
   onAction,
   filterBy,
+  filterLabel,
   ...props
 }: DetailCardProps<T>) => {
   const [sortedData, setSortedData] = useState(initialSortBy ? sort(data, initialSortBy) : data);
   const [sortedBy, setSortedBy] = useState(initialSortBy);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+  const [filterToggle, setFilterToggle] = useState(filterBy ? false : true);
   const filteredData = filterBy ? sortedData.filter(filterBy) : sortedData;
-  const displayData = filterBy ? filteredData : sortedData;
+  const displayData = filterToggle ? sortedData : filteredData;
 
   const handleSort = (key: Extract<keyof T, string>) => {
     if (sortedBy === key) {
-      setSortedData([...displayData].reverse());
+      setSortedData([...sortedData].reverse());
       setOrder(order === 'desc' ? 'asc' : 'desc');
     } else {
-      setSortedData(sort(displayData, key));
+      setSortedData(sort(sortedData, key));
       setSortedBy(key);
       setOrder('desc');
     }
@@ -133,7 +146,14 @@ export const DetailCard = <T,>({
 
   return (
     <StyledCard {...props}>
-      <StyledCardHeader header={header} />
+      <StyledCardHeader header={header}>
+        {!!filterBy && (
+          <SectionContent>
+            {filterLabel}
+            <ToggleButton selected={filterToggle} setSelected={setFilterToggle} />
+          </SectionContent>
+        )}
+      </StyledCardHeader>
       {SearchBar}
 
       {!!displayData.length && (

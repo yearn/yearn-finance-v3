@@ -228,6 +228,7 @@ export const Wallet = () => {
           initialSortBy="balanceUsdc"
           wrap
           filterBy={filterDustTokens}
+          filterLabel="Show Dust"
         />
       )}
     </ViewContainer>
