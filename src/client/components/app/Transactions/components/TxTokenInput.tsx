@@ -283,7 +283,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         <TokenData>
           <AmountTitle>{inputText || 'Balance'}</AmountTitle>
           <StyledAmountInput
-            value={loading || (inputError && readOnly) ? '' : amount}
+            value={amount}
             onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
             placeholder={loading ? loadingText : '00000000.00'}
             readOnly={readOnly}

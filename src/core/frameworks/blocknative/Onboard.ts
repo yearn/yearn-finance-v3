@@ -146,4 +146,29 @@ export class BlocknativeWalletImpl implements Wallet {
       this.onboard.config({ networkId });
     }
   }
+
+  public async addToken(
+    tokenAddress: string,
+    tokenSymbol: string,
+    tokenDecimals: number,
+    tokenImage: string
+  ): Promise<boolean> {
+    try {
+      await this.getState()?.wallet.provider.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20',
+          options: {
+            address: tokenAddress,
+            symbol: tokenSymbol,
+            decimals: tokenDecimals,
+            image: tokenImage,
+          },
+        },
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
