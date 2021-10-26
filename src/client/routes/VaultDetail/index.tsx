@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AppSelectors, TokensSelectors, VaultsSelectors, NetworkSelectors } from '@store';
+import { AppSelectors, TokensSelectors, VaultsSelectors, NetworkSelectors, WalletSelectors } from '@store';
 import { useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
 import { SpinnerLoading, Button, Text } from '@components/common';
@@ -51,6 +51,9 @@ export const VaultDetail = () => {
   const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const walletName = useAppSelector(WalletSelectors.selectWallet);
+
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
 
   const [firstTokensFetch, setFirstTokensFetch] = useState(false);
@@ -97,6 +100,8 @@ export const VaultDetail = () => {
     ? parseLastEarnings(selectedVault?.historicalEarnings)
     : undefined;
 
+  const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';
+
   return (
     <VaultDetailView>
       <ViewHeader>
@@ -117,7 +122,12 @@ export const VaultDetail = () => {
       )}
 
       {!generalLoading && selectedVault && (
-        <VaultDetailPanels selectedVault={selectedVault} chartData={chartData} chartValue={chartValue} />
+        <VaultDetailPanels
+          selectedVault={selectedVault}
+          chartData={chartData}
+          chartValue={chartValue}
+          displayAddToken={displayAddToken}
+        />
       )}
     </VaultDetailView>
   );
