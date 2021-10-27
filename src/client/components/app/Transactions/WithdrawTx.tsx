@@ -193,7 +193,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       label: 'Withdraw',
       onAction: withdraw,
       status: actionsStatus.withdraw,
-      disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading,
+      disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading || selectedVault.withdrawalsDisabled,
       contrast: true,
     },
   ];

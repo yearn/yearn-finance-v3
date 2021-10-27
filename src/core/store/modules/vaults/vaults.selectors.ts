@@ -255,6 +255,7 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
     emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
     depositsDisabled: vaultData?.metadata.depositsDisabled ?? false,
+    withdrawalsDisabled: vaultData?.metadata.withdrawalsDisabled ?? false,
     apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
     apyType: vaultData.metadata.apy?.type ?? '',
     allowancesMap: vaultAllowancesMap ?? {},
