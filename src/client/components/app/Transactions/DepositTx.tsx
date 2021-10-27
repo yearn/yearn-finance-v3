@@ -239,7 +239,8 @@ export const DepositTx: FC<DepositTxProps> = ({
         !isValidAmount ||
         expectedTxOutcomeStatus.loading ||
         isDebouncePending ||
-        selectedVault.depositsDisabled,
+        selectedVault.depositsDisabled ||
+        true,
       contrast: true,
     },
   ];
