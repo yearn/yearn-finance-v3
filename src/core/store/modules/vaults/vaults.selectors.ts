@@ -243,6 +243,9 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
   const vaultAddress = vaultData.address;
   const currentAllowance = tokenAllowancesMap[vaultAddress] ?? '0';
 
+  // TODO DEHARDODE AFTER PROBLEM SOLVED
+  const isYUSD = vaultData.address === '0x4B5BfD52124784745c1071dcB244C6688d2533d3';
+
   return {
     address: vaultData.address,
     name: vaultData.name,
@@ -253,7 +256,9 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     decimals: vaultData.decimals,
     vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
-    emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
+    emergencyShutdown: (vaultData?.metadata.emergencyShutdown ?? false) || isYUSD,
+    depositsDisabled: (vaultData?.metadata.depositsDisabled ?? false) || isYUSD,
+    withdrawalsDisabled: (vaultData?.metadata.withdrawalsDisabled ?? false) || isYUSD,
     apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
     apyType: vaultData.metadata.apy?.type ?? '',
     allowancesMap: vaultAllowancesMap ?? {},

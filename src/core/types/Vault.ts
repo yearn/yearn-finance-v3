@@ -17,6 +17,8 @@ export interface GeneralVaultView {
   vaultBalanceUsdc: string;
   depositLimit: string;
   emergencyShutdown: boolean;
+  depositsDisabled: boolean;
+  withdrawalsDisabled: boolean;
   apyData: string;
   apyType: string;
   strategies: StrategyMetadata[];
