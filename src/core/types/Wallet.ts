@@ -18,6 +18,7 @@ export interface Wallet {
   connect: (args?: any) => Promise<boolean>;
   changeTheme?: (theme: Theme) => void;
   changeNetwork?: (network: Network) => void;
+  addToken: (tokenAddress: string, tokenSymbol: string, tokenDecimals: number, tokenImage: string) => Promise<boolean>;
 }
 
 export interface Subscriptions {
