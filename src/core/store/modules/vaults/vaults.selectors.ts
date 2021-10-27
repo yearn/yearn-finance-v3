@@ -15,8 +15,11 @@ import {
 } from '@types';
 import { memoize } from 'lodash';
 import { toBN } from '../../../../utils';
+import { getConstants } from '@config/constants';
 import { createToken } from '../tokens/tokens.selectors';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
+
+const { YUSD } = getConstants().CONTRACT_ADDRESSES;
 
 const selectVaultsState = (state: RootState) => state.vaults;
 const selectUserVaultsPositionsMap = (state: RootState) => state.vaults.user.userVaultsPositionsMap;
@@ -244,7 +247,7 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
   const currentAllowance = tokenAllowancesMap[vaultAddress] ?? '0';
 
   // TODO DEHARDODE AFTER PROBLEM SOLVED
-  const isYUSD = vaultData.address === '0x4B5BfD52124784745c1071dcB244C6688d2533d3';
+  const isYUSD = vaultData.address === YUSD;
 
   return {
     address: vaultData.address,
