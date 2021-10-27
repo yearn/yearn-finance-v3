@@ -182,8 +182,6 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     } catch (error) {}
   };
 
-  console.log({ withdrawalsDisabled: selectedVault.withdrawalsDisabled });
-
   const txActions = [
     {
       label: 'Approve',
