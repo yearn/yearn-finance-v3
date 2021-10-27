@@ -42,4 +42,5 @@ export interface Constants {
   DEFAULT_ALERT_TIMEOUT: number;
   DEFAULT_LANG: Language;
   SUPPORTED_LANGS: Language[];
+  DUST_AMOUNT_USD: string;
 }

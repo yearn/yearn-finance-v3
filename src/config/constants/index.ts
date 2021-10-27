@@ -76,5 +76,6 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_ALERT_TIMEOUT: 3000,
     DEFAULT_LANG: 'en',
     SUPPORTED_LANGS: ['en', 'es'],
+    DUST_AMOUNT_USD: '10000000',
   };
 });
