@@ -27,7 +27,7 @@ export const ConnectWalletButton = ({ address, ensName, disabled, onClick }: Wal
   let buttonMessage;
 
   if (!address) {
-    buttonMessage = t('commons.connect-button.connect');
+    buttonMessage = t('components.connect-button.connect');
   } else {
     buttonMessage = ensName ?? address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length);
   }

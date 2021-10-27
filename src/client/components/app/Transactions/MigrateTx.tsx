@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useAppTranslation } from '@hooks';
 import { VaultsSelectors, VaultsActions, TokensActions } from '@store';
 import { toBN, normalizeAmount, USDC_DECIMALS, validateMigrateVaultAllowance, formatPercent } from '@utils';
 
@@ -12,6 +12,8 @@ export interface MigrateTxProps {
 }
 
 export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [txCompleted, setTxCompleted] = useState(false);
@@ -79,7 +81,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     yield: migrateToVault?.apyData ? formatPercent(migrateToVault?.apyData, 2) : undefined,
   };
 
-  const loadingText = 'Calculating...';
+  const loadingText = t('components.transaction.status.calculating');
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -109,13 +111,13 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveMigrate,
       disabled: isApproved,
     },
     {
-      label: 'Migrate',
+      label: t('components.transaction.migrate'),
       onAction: migrate,
       status: actionsStatus.migrate,
       disabled: !isApproved,
@@ -127,14 +129,14 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="From vault"
+      sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[sourceVault]}
       selectedSourceAsset={sourceVault}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
-      targetHeader="To vault"
+      targetHeader={t('components.transaction.to-vault')}
       targetAssetOptions={[targetVault]}
       selectedTargetAsset={targetVault}
       targetAmount={expectedAmount}

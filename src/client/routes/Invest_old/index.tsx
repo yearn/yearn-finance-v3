@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { DepositsList } from '@src/client/components/app/AssetLists';
+import { DepositsList } from '@src/client/components/app/AssetLists_old';
 
 // import { useAppTranslation } from '@hooks';
 

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { useAppSelector } from '@hooks';
+import { useAppSelector, useAppTranslation } from '@hooks';
 import {
   IronBankSelectors,
   LabsSelectors,
@@ -56,7 +56,7 @@ const StyledLink = styled.a`
 
 export const Home = () => {
   // TODO: Add translation
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation(['common', 'home']);
   const { NETWORK_SETTINGS } = getConfig();
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
@@ -72,12 +72,17 @@ export const Home = () => {
     .plus(ibSummary.supplyBalanceUsdc)
     .toString();
 
-  const summaryCardItems = [{ header: 'Total net worth', Component: <Amount value={netWorth} input="usdc" /> }];
+  const summaryCardItems = [
+    { header: t('dashboard.total-net-worth'), Component: <Amount value={netWorth} input="usdc" /> },
+  ];
   if (currentNetworkSettings.earningsEnabled) {
     summaryCardItems.push(
-      { header: 'Vaults earnings', Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" /> },
       {
-        header: 'Vaults est. yearly yield',
+        header: t('dashboard.vaults-earnings'),
+        Component: <Amount value={vaultsSummary.totalEarnings} input="usdc" />,
+      },
+      {
+        header: t('dashboard.vaults-est-yearly-yield'),
         Component: <Amount value={vaultsSummary.estYearlyYeild} input="usdc" />,
       }
     );
@@ -89,27 +94,23 @@ export const Home = () => {
 
       <Row>
         <StyledInfoCard
-          header="Welcome to your Yearn home screen"
+          header={t('home:welcome-card.header')}
           Component={
             <Text>
-              <p>
-                There are many like it, but this one is yours. You can always return here for a bird's-eye view of your
-                holdings. The cards below show the total balance and utilization of your wallet, and the holdings and
-                performance for every Yearn product you use.
-              </p>
-              <p>Not sure where to start? Check out “Vaults” on the left side navigation.</p>
+              <p>{t('home:welcome-card.desc-1')}</p>
+              <p>{t('home:welcome-card.desc-2')}</p>
             </Text>
           }
           cardSize="big"
         />
 
         <StyledInfoCard
-          header="Beta is here!"
+          header={t('components.beta-card.header')}
           Component={
             <Text>
               <p>
-                This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
-                feedback, please let us know on <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>.
+                {t('components.beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>
+                .
               </p>
             </Text>
           }
@@ -121,10 +122,10 @@ export const Home = () => {
         <>
           <Row>
             <StyledSummaryCard
-              header="Wallet"
+              header={t('navigation.wallet')}
               items={[
                 {
-                  header: 'Available to deposit',
+                  header: t('dashboard.available-deposit'),
                   Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
                 },
               ]}
@@ -134,14 +135,14 @@ export const Home = () => {
 
             {currentNetworkSettings.ironBankEnabled && (
               <StyledSummaryCard
-                header="Iron Bank"
+                header={t('navigation.ironbank')}
                 items={[
                   {
-                    header: 'Supplied',
+                    header: t('dashboard.supplied'),
                     Component: <Amount value={ibSummary.supplyBalanceUsdc} input="usdc" />,
                   },
                   {
-                    header: 'Borrow limit used',
+                    header: t('dashboard.borrow-limit-used'),
                     Component: <Amount value={ibSummary.borrowUtilizationRatio} input="weipercent" />,
                   },
                 ]}
@@ -152,14 +153,14 @@ export const Home = () => {
           </Row>
 
           <StyledSummaryCard
-            header="Vaults"
+            header={t('navigation.vaults')}
             items={[
               {
-                header: 'Holdings',
+                header: t('dashboard.holdings'),
                 Component: <Amount value={vaultsSummary.totalDeposits} input="usdc" />,
               },
               {
-                header: 'APY',
+                header: t('dashboard.apy'),
                 Component: <Amount value={vaultsSummary.apy} input="percent" />,
               },
             ]}
@@ -169,10 +170,10 @@ export const Home = () => {
 
           {currentNetworkSettings.labsEnabled && (
             <StyledSummaryCard
-              header="Labs"
+              header={t('navigation.labs')}
               items={[
                 {
-                  header: 'Holdings',
+                  header: t('dashboard.holdings'),
                   Component: <Amount value={labsSummary.totalDeposits} input="usdc" />,
                 },
               ]}

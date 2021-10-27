@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import { IronBankSelectors, TokensActions, IronBankActions, TokensSelectors } from '@store';
 import {
   toBN,
@@ -19,6 +19,8 @@ export interface IronBankSupplyTxProps {
 }
 
 export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
@@ -127,13 +129,13 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approve,
       disabled: isApproved,
     },
     {
-      label: 'Supply',
+      label: t('components.transaction.supply'),
       onAction: supply,
       status: actionsStatus.supply,
       disabled: !isApproved || !isValidAmount,
@@ -143,12 +145,12 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
 
   return (
     <IronBankTransaction
-      transactionLabel="Supply"
+      transactionLabel={t('components.transaction.supply')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      assetHeader="To Iron Bank"
-      assetLabel="Wallet Balance"
+      assetHeader={t('components.transaction.to-iron-bank')}
+      assetLabel={t('components.transaction.wallet-balance')}
       asset={asset}
       amount={amount}
       amountValue={amountValue}

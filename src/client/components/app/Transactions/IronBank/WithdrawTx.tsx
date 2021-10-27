@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import { IronBankSelectors, IronBankActions } from '@store';
 import {
   toBN,
@@ -20,6 +20,8 @@ export interface IronBankWithdrawTxProps {
 }
 
 export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => {
+  const { t } = useAppTranslation('common');
+
   const { IRON_BANK_MAX_RATIO } = getConfig();
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
@@ -120,7 +122,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
 
   const txActions = [
     {
-      label: 'Withdraw',
+      label: t('components.transaction.withdraw'),
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isValidAmount,
@@ -130,12 +132,12 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
 
   return (
     <IronBankTransaction
-      transactionLabel="Withdraw"
+      transactionLabel={t('components.transaction.withdraw')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      assetHeader="From Iron Bank"
-      assetLabel="Supplied Balance"
+      assetHeader={t('components.transaction.from-iron-bank')}
+      assetLabel={t('components.transaction.supplied-balance')}
       asset={asset}
       amount={amount}
       amountValue={amountValue}
