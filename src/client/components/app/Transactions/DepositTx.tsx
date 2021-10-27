@@ -221,8 +221,6 @@ export const DepositTx: FC<DepositTxProps> = ({
     } catch (error) {}
   };
 
-  console.log({ depositsDisabled: selectedVault.depositsDisabled });
-
   const txActions = [
     {
       label: 'Approve',
@@ -239,8 +237,7 @@ export const DepositTx: FC<DepositTxProps> = ({
         !isValidAmount ||
         expectedTxOutcomeStatus.loading ||
         isDebouncePending ||
-        selectedVault.depositsDisabled ||
-        true,
+        selectedVault.depositsDisabled,
       contrast: true,
     },
   ];
