@@ -32,6 +32,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     ironBankEnabled: true,
     earningsEnabled: true,
     notifyEnabled: true,
+    blockExplorerUrl: 'https://etherscan.io/',
   },
   fantom: {
     id: 'fantom',
@@ -43,6 +44,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     ironBankEnabled: true,
     earningsEnabled: false,
     notifyEnabled: false,
+    blockExplorerUrl: 'https://ftmscan.com/',
   },
 };
 
