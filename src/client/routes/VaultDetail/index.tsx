@@ -126,6 +126,7 @@ export const VaultDetail = () => {
           chartData={chartData}
           chartValue={chartValue}
           displayAddToken={displayAddToken}
+          currentNetworkSettings={currentNetworkSettings}
         />
       )}
     </VaultDetailView>

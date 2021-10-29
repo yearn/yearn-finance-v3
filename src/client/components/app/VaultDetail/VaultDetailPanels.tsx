@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { formatApy, formatUsd, normalizeUsdc } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
+
 import { device } from '@themes/default';
 import { DepositTx, WithdrawTx, MigrateTx, TokenIcon } from '@components/app';
 import {
@@ -18,9 +19,12 @@ import {
   Icon,
   AddCircleIcon,
   LineChart,
+  EtherscanIcon,
+  FtmscanIcon,
+  DefaultscanIcon,
 } from '@components/common';
 import { MetamaskLogo } from '@assets/images';
-import { GeneralVaultView, StrategyMetadata } from '@types';
+import { GeneralVaultView, StrategyMetadata, Network } from '@types';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -78,6 +82,12 @@ const IconOverImage = styled(Icon)`
   right: 0;
   top: 0;
   width: 50%;
+`;
+
+const IconScan = styled(Icon)`
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const StyledTabPanel = styled(TabPanel)`
@@ -194,11 +204,26 @@ const VaultOverview = styled(Card)`
     }
   }
 `;
+
+export interface currentNetworkSettings {
+  id: Network;
+  name: string;
+  networkId: number;
+  simulationsEnabled?: boolean;
+  zapsEnabled?: boolean;
+  labsEnabled?: boolean;
+  ironBankEnabled?: boolean;
+  earningsEnabled?: boolean;
+  notifyEnabled?: boolean;
+  blockExplorerUrl: string;
+}
+
 export interface VaultDetailPanelsProps {
   selectedVault: GeneralVaultView;
   chartData?: any;
   chartValue?: string;
   displayAddToken?: boolean;
+  currentNetworkSettings: currentNetworkSettings;
 }
 
 export const VaultDetailPanels = ({
@@ -206,6 +231,7 @@ export const VaultDetailPanels = ({
   chartData,
   chartValue,
   displayAddToken,
+  currentNetworkSettings,
 }: VaultDetailPanelsProps) => {
   const { t } = useAppTranslation('vaultdetails');
 
@@ -213,9 +239,32 @@ export const VaultDetailPanels = ({
   const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : 'deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
   const context = useContext(AppContext);
-
+  const currentNetwork = currentNetworkSettings.id;
+  const scanSiteUrl = currentNetworkSettings.blockExplorerUrl;
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
+  };
+
+  const handleScanSiteExplorer = () => {
+    switch (currentNetwork) {
+      case 'mainnet':
+        return window.open(`${scanSiteUrl}${selectedVault.address}`);
+      case 'fantom':
+        return window.open(`${scanSiteUrl}${selectedVault.address}`);
+      default:
+        return window.open('https://etherscan.io/');
+    }
+  };
+
+  const selectScanIcon = () => {
+    switch (currentNetwork) {
+      case 'mainnet':
+        return EtherscanIcon;
+      case 'fantom':
+        return FtmscanIcon;
+      default:
+        return DefaultscanIcon;
+    }
   };
 
   const handleAddToken = () => {
@@ -234,6 +283,7 @@ export const VaultDetailPanels = ({
                 <IconOverImage Component={AddCircleIcon} />
               </RelativeContainer>
             ) : null}
+            <IconScan Component={selectScanIcon()} onClick={handleScanSiteExplorer} />
           </StyledCardHeaderContainer>
 
           <OverviewTokenInfo>
