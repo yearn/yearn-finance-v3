@@ -15,11 +15,8 @@ import {
 } from '@types';
 import { memoize } from 'lodash';
 import { toBN } from '../../../../utils';
-import { getConstants } from '@config/constants';
 import { createToken } from '../tokens/tokens.selectors';
 import { initialVaultActionsStatusMap } from './vaults.reducer';
-
-const { YUSD } = getConstants().CONTRACT_ADDRESSES;
 
 const selectVaultsState = (state: RootState) => state.vaults;
 const selectUserVaultsPositionsMap = (state: RootState) => state.vaults.user.userVaultsPositionsMap;
@@ -246,9 +243,6 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
   const vaultAddress = vaultData.address;
   const currentAllowance = tokenAllowancesMap[vaultAddress] ?? '0';
 
-  // TODO DEHARDODE AFTER PROBLEM SOLVED
-  const isYUSD = vaultData.address === YUSD;
-
   return {
     address: vaultData.address,
     name: vaultData.name,
@@ -259,9 +253,9 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     decimals: vaultData.decimals,
     vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
-    emergencyShutdown: (vaultData?.metadata.emergencyShutdown ?? false) || isYUSD,
-    depositsDisabled: (vaultData?.metadata.depositsDisabled ?? false) || isYUSD,
-    withdrawalsDisabled: (vaultData?.metadata.withdrawalsDisabled ?? false) || isYUSD,
+    emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
+    depositsDisabled: vaultData?.metadata.depositsDisabled ?? false,
+    withdrawalsDisabled: vaultData?.metadata.withdrawalsDisabled ?? false,
     apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
     apyType: vaultData.metadata.apy?.type ?? '',
     allowancesMap: vaultAllowancesMap ?? {},
