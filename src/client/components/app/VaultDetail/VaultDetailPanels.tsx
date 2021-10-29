@@ -85,6 +85,8 @@ const IconOverImage = styled(Icon)`
 `;
 
 const IconScan = styled(Icon)`
+  padding-left: 5px;
+  padding-bottom: 4px;
   &:hover {
     cursor: pointer;
   }
