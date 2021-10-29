@@ -15,6 +15,6 @@ export interface NetworkSettings {
     ironBankEnabled?: boolean;
     earningsEnabled?: boolean;
     notifyEnabled?: boolean;
-    blockExplorerUrl: string;
+    blockExplorerUrl?: string;
   };
 }

@@ -207,25 +207,13 @@ const VaultOverview = styled(Card)`
   }
 `;
 
-export interface currentNetworkSettings {
-  id: Network;
-  name: string;
-  networkId: number;
-  simulationsEnabled?: boolean;
-  zapsEnabled?: boolean;
-  labsEnabled?: boolean;
-  ironBankEnabled?: boolean;
-  earningsEnabled?: boolean;
-  notifyEnabled?: boolean;
-  blockExplorerUrl: string;
-}
-
 export interface VaultDetailPanelsProps {
   selectedVault: GeneralVaultView;
   chartData?: any;
   chartValue?: string;
   displayAddToken?: boolean;
-  currentNetworkSettings: currentNetworkSettings;
+  currentNetwork?: Network;
+  blockExplorerUrl?: string;
 }
 
 export const VaultDetailPanels = ({
@@ -233,7 +221,8 @@ export const VaultDetailPanels = ({
   chartData,
   chartValue,
   displayAddToken,
-  currentNetworkSettings,
+  currentNetwork,
+  blockExplorerUrl,
 }: VaultDetailPanelsProps) => {
   const { t } = useAppTranslation('vaultdetails');
 
@@ -241,8 +230,6 @@ export const VaultDetailPanels = ({
   const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : 'deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
   const context = useContext(AppContext);
-  const currentNetwork = currentNetworkSettings.id;
-  const scanSiteUrl = currentNetworkSettings.blockExplorerUrl;
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
   };
@@ -250,11 +237,11 @@ export const VaultDetailPanels = ({
   const handleScanSiteExplorer = () => {
     switch (currentNetwork) {
       case 'mainnet':
-        return window.open(`${scanSiteUrl}${selectedVault.address}`);
+        return window.open(`${blockExplorerUrl}${selectedVault.address}`);
       case 'fantom':
-        return window.open(`${scanSiteUrl}${selectedVault.address}`);
+        return window.open(`${blockExplorerUrl}${selectedVault.address}`);
       default:
-        return window.open('https://etherscan.io/');
+        return;
     }
   };
 
