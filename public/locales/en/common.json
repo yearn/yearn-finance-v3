@@ -33,7 +33,7 @@
     },
     "no-wallet": "Wallet not connected",
     "recommendations": {
-      "header": "Recommendations"
+      "header": "Highest APY"
     },
     "transaction": {
       "approve": "Approve",
