@@ -2,6 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { Icon, Text, WarningIcon } from '@components/common';
+import { useAppTranslation } from '@hooks';
 
 const StyledIcon = styled(Icon)`
   width: 4rem;
@@ -39,10 +40,14 @@ export interface TxErrorProps {
   errorText?: string;
 }
 
-export const TxError: FC<TxErrorProps> = ({ errorText, children, ...props }) => (
-  <StyledTxError {...props}>
-    <StyledIcon Component={WarningIcon} />
+export const TxError: FC<TxErrorProps> = ({ errorText, children, ...props }) => {
+  const { t } = useAppTranslation('common');
 
-    <StyledText>{errorText || 'Unknown error'}</StyledText>
-  </StyledTxError>
-);
+  return (
+    <StyledTxError {...props}>
+      <StyledIcon Component={WarningIcon} />
+
+      <StyledText>{errorText || t('errors.unknown')}</StyledText>
+    </StyledTxError>
+  );
+};

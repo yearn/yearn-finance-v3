@@ -18,6 +18,7 @@ const ADDRESSES = {
   YUSD: '0x4B5BfD52124784745c1071dcB244C6688d2533d3',
   PSLPYVBOOSTETH: '0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378',
   PSLPYVBOOSTETH_GAUGE: '0xDA481b277dCe305B97F4091bD66595d57CF31634',
+  YFI: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
 };
 
 const NETWORK_SETTINGS: NetworkSettings = {
@@ -75,6 +76,8 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_THEME: 'light',
     AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk', 'classic'],
     DEFAULT_ALERT_TIMEOUT: 3000,
+    DEFAULT_LANG: 'en',
+    SUPPORTED_LANGS: ['en', 'es'],
     DUST_AMOUNT_USD: '10000000',
   };
 });

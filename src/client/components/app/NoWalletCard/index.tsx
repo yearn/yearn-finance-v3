@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useAppTranslation } from '@hooks';
 
 import { Card, Icon, Text, WalletMissingIcon } from '@components/common';
 
@@ -21,10 +22,12 @@ const StyledCard = styled(Card)`
 interface NoWalletCardProps {}
 
 export const NoWalletCard = ({ ...props }: NoWalletCardProps) => {
+  const { t } = useAppTranslation('common');
+
   return (
     <StyledCard cardSize="small" {...props}>
       <StyledIcon Component={WalletMissingIcon} />
-      <StyledText>Wallet not connected</StyledText>
+      <StyledText>{t('components.no-wallet')}</StyledText>
     </StyledCard>
   );
 };

@@ -20,7 +20,6 @@ import {
 } from '@types';
 import { getContract } from '@frameworks/ethers';
 import { get, getUniqueAndCombine, toBN, USDC_DECIMALS } from '@utils';
-import { getConfig } from '@config';
 import erc20Abi from './contracts/erc20.json';
 
 export class TokenServiceImpl implements TokenService {
@@ -79,7 +78,7 @@ export class TokenServiceImpl implements TokenService {
     accountAddress,
     tokenAddresses,
   }: GetUserTokensDataProps): Promise<Balance[]> {
-    const { USE_MAINNET_FORK } = getConfig();
+    const { USE_MAINNET_FORK } = this.config;
     const yearn = this.yearnSdk.getInstanceOf(network);
     const balances = await yearn.tokens.balances(accountAddress);
     if (USE_MAINNET_FORK) {
@@ -121,7 +120,7 @@ export class TokenServiceImpl implements TokenService {
   }
 
   private async getYvBoostToken(): Promise<Token> {
-    const { YVBOOST } = getConfig().CONTRACT_ADDRESSES;
+    const { YVBOOST } = this.config.CONTRACT_ADDRESSES;
     const pricesResponse = await get('https://api.coingecko.com/api/v3/simple/price?ids=yvboost&vs_currencies=usd');
     const yvBoostPrice = pricesResponse.data['yvboost']['usd'];
     return {
@@ -141,7 +140,7 @@ export class TokenServiceImpl implements TokenService {
 
   private async getPSLPyvBoostEthToken(): Promise<Token> {
     const { ZAPPER_API_KEY } = this.config;
-    const { PSLPYVBOOSTETH } = getConfig().CONTRACT_ADDRESSES;
+    const { PSLPYVBOOSTETH } = this.config.CONTRACT_ADDRESSES;
     const pricesResponse = await get(
       `https://api.zapper.fi/v1/protocols/pickle/token-market-data?api_key=${ZAPPER_API_KEY}&type=vault`
     );
@@ -166,16 +165,14 @@ export class TokenServiceImpl implements TokenService {
   private async getBalancesForFork(balances: Balance[], userAddress: string): Promise<Balance[]> {
     const signer = this.web3Provider.getSigner();
     const provider = this.web3Provider.getInstanceOf('custom');
+    const { DAI, YFI, ETH } = this.config.CONTRACT_ADDRESSES;
 
-    const DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
     const daiContract = getContract(DAI, erc20Abi, signer);
     const userDaiData = balances.find((balance) => balance.address === DAI);
 
-    const YFI = '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e';
     const yfiContract = getContract(YFI, erc20Abi, signer);
     const userYfiData = balances.find((balance) => balance.address === YFI);
 
-    const ETH = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
     const userEthData = balances.find((balance) => balance.address === ETH);
 
     const [daiBalance, ethBalance, yfiBalance] = await Promise.all([

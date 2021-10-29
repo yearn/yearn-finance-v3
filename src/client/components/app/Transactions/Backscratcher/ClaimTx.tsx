@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useAppTranslation } from '@hooks';
 import { TokensSelectors, LabsSelectors, LabsActions, VaultsActions, TokensActions } from '@store';
 import { normalizeAmount, USDC_DECIMALS } from '@src/utils';
 import { getConfig } from '@config';
@@ -12,6 +12,8 @@ export interface BackscratcherClaimTxProps {
 }
 
 export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, children, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   const { CONTRACT_ADDRESSES } = getConfig();
   const { THREECRV } = CONTRACT_ADDRESSES;
   const dispatch = useAppDispatch();
@@ -67,7 +69,7 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
 
   const txActions = [
     {
-      label: 'Claim',
+      label: t('components.transaction.claim'),
       onAction: claim,
       status: actionsStatus.claimReward,
       disabled: false,
@@ -76,16 +78,16 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
 
   return (
     <Transaction
-      transactionLabel="Claim"
+      transactionLabel={t('components.transaction.claim')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="Reward"
+      sourceHeader={t('components.transaction.reward')}
       sourceAssetOptions={[selectedLabOption]}
       selectedSourceAsset={selectedLabOption}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
-      targetHeader="To Wallet"
+      targetHeader={t('components.transaction.to-wallet')}
       targetAssetOptions={[selectedTargetToken]}
       selectedTargetAsset={selectedTargetToken}
       targetAmount={expectedAmount}
