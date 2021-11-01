@@ -26,11 +26,20 @@ import {
 import { getConfig } from '@config';
 
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
+
+/* -------------------------------------------------------------------------- */
+/*                         Clear data from state                              */
+/* -------------------------------------------------------------------------- */
+
 const clearVaultsData = createAction<void>('vaults/clearVaultsData');
 const clearUserData = createAction<void>('vaults/clearUserData');
 const clearTransactionData = createAction<void>('vaults/clearTransactionData');
 const clearSelectedVaultAndStatus = createAction<void>('vaults/clearSelectedVaultAndStatus');
 const clearVaultStatus = createAction<{ vaultAddress: string }>('vaults/clearVaultStatus');
+
+/* -------------------------------------------------------------------------- */
+/*                                 Fetch Data                                 */
+/* -------------------------------------------------------------------------- */
 
 const initiateSaveVaults = createAsyncThunk<void, string | undefined, ThunkAPI>(
   'vaults/initiateSaveVaults',
@@ -114,6 +123,42 @@ const getUserVaultsMetadata = createAsyncThunk<
 
   return { userVaultsMetadata };
 });
+
+export interface GetExpectedTransactionOutcomeProps {
+  transactionType: 'DEPOSIT' | 'WITHDRAW';
+  sourceTokenAddress: Address;
+  sourceTokenAmount: Wei;
+  targetTokenAddress: Address;
+}
+
+const getExpectedTransactionOutcome = createAsyncThunk<
+  { txOutcome: TransactionOutcome },
+  GetExpectedTransactionOutcomeProps,
+  ThunkAPI
+>('vaults/getExpectedTransactionOutcome', async (getExpectedTxOutcomeProps, { getState, extra }) => {
+  const { network } = getState();
+  const { services } = extra;
+  const { vaultService } = services;
+  const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
+  const accountAddress = getState().wallet.selectedAddress;
+  if (!accountAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
+
+  const txOutcome = await vaultService.getExpectedTransactionOutcome({
+    network: network.current,
+    transactionType,
+    accountAddress,
+    sourceTokenAddress,
+    sourceTokenAmount,
+    targetTokenAddress,
+  });
+  return { txOutcome };
+});
+
+/* -------------------------------------------------------------------------- */
+/*                             Transaction Methods                            */
+/* -------------------------------------------------------------------------- */
 
 const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveDeposit',
@@ -324,6 +369,10 @@ const migrateVault = createAsyncThunk<
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                Subscriptions                               */
+/* -------------------------------------------------------------------------- */
+
 const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   'vaults/initSubscriptions',
   async (_arg, { extra, dispatch }) => {
@@ -347,37 +396,9 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   }
 );
 
-export interface GetExpectedTransactionOutcomeProps {
-  transactionType: 'DEPOSIT' | 'WITHDRAW';
-  sourceTokenAddress: Address;
-  sourceTokenAmount: Wei;
-  targetTokenAddress: Address;
-}
-
-const getExpectedTransactionOutcome = createAsyncThunk<
-  { txOutcome: TransactionOutcome },
-  GetExpectedTransactionOutcomeProps,
-  ThunkAPI
->('vaults/getExpectedTransactionOutcome', async (getExpectedTxOutcomeProps, { getState, extra }) => {
-  const { network } = getState();
-  const { services } = extra;
-  const { vaultService } = services;
-  const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
-  const accountAddress = getState().wallet.selectedAddress;
-  if (!accountAddress) {
-    throw new Error('WALLET NOT CONNECTED');
-  }
-
-  const txOutcome = await vaultService.getExpectedTransactionOutcome({
-    network: network.current,
-    transactionType,
-    accountAddress,
-    sourceTokenAddress,
-    sourceTokenAmount,
-    targetTokenAddress,
-  });
-  return { txOutcome };
-});
+/* -------------------------------------------------------------------------- */
+/*                                   Exports                                  */
+/* -------------------------------------------------------------------------- */
 
 export const VaultsActions = {
   setSelectedVaultAddress,
