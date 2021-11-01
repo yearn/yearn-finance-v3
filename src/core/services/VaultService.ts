@@ -50,6 +50,10 @@ export class VaultServiceImpl implements VaultService {
     this.config = config;
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                                 Fetch Methods                              */
+  /* -------------------------------------------------------------------------- */
+
   public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
     const vaults = await yearn.vaults.get(addresses);
@@ -149,6 +153,10 @@ export class VaultServiceImpl implements VaultService {
 
     return expectedOutcome;
   }
+
+  /* -------------------------------------------------------------------------- */
+  /*                             Transaction Methods                            */
+  /* -------------------------------------------------------------------------- */
 
   public async deposit(props: DepositProps): Promise<TransactionResponse> {
     const { network, accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;
