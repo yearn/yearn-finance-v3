@@ -25,6 +25,10 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 
+/* -------------------------------------------------------------------------- */
+/*                                   Setters                                  */
+/* -------------------------------------------------------------------------- */
+
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 
 /* -------------------------------------------------------------------------- */

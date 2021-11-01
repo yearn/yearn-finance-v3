@@ -5,6 +5,7 @@ import { toBN } from '@utils';
 import { getConfig } from '@config';
 import { memoize } from 'lodash';
 
+/* ---------------------------------- State --------------------------------- */
 const selectTokensState = (state: RootState) => state.tokens;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedTokenAddress = (state: RootState) => state.tokens.selectedTokenAddress;
@@ -16,6 +17,7 @@ const selectGetUserTokensStatus = (state: RootState) => state.tokens.statusMap.u
 const selectUserTokensAddresses = (state: RootState) => state.tokens.user.userTokensAddresses;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
 
+/* ----------------------------- Processed Data ----------------------------- */
 const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user): TokenView[] => {
   const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
   const tokens = userTokensAddresses.map((address) => {
@@ -60,16 +62,6 @@ const selectZapOutTokens = createSelector([selectTokensMap, selectUserTokensMap]
   return tokens;
 });
 
-const selectWalletTokensStatus = createSelector(
-  [selectGetTokensStatus, selectGetUserTokensStatus],
-  (getTokensStatus, getUserTokensStatus): Status => {
-    return {
-      loading: getTokensStatus.loading || getUserTokensStatus.loading,
-      error: getTokensStatus.error || getUserTokensStatus.error,
-    };
-  }
-);
-
 const selectToken = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user) =>
   memoize((tokenAddress: string): TokenView => {
     const { userTokensMap, userTokensAllowancesMap } = user; // use specific selectors, is not a big performance improvement in this case
@@ -80,6 +72,18 @@ const selectToken = createSelector([selectTokensMap, selectTokensUser], (tokensM
   })
 );
 
+/* -------------------------------- Statuses -------------------------------- */
+const selectWalletTokensStatus = createSelector(
+  [selectGetTokensStatus, selectGetUserTokensStatus],
+  (getTokensStatus, getUserTokensStatus): Status => {
+    return {
+      loading: getTokensStatus.loading || getUserTokensStatus.loading,
+      error: getTokensStatus.error || getUserTokensStatus.error,
+    };
+  }
+);
+
+/* --------------------------------- Helper --------------------------------- */
 interface CreateTokenProps {
   tokenData: Token;
   userTokenData: Balance;
@@ -105,6 +109,7 @@ export function createToken(props: CreateTokenProps): TokenView {
   };
 }
 
+/* --------------------------------- Exports -------------------------------- */
 export const TokensSelectors = {
   selectTokensState,
   selectTokensMap,

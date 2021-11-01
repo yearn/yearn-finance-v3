@@ -332,7 +332,9 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { error: error.message };
     })
 
-    /* ------------------------------- Clear Data ------------------------------- */
+    /* -------------------------------------------------------------------------- */
+    /*                                 Clear Data                                 */
+    /* -------------------------------------------------------------------------- */
     .addCase(clearVaultsData, (state) => {
       state.vaultsMap = {};
       state.vaultsAddresses = [];
@@ -360,7 +362,9 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.statusMap.vaultsActionsStatusMap[vaultAddress] = initialVaultActionsStatusMap;
     })
 
-    /* --------------------------------- Setter --------------------------------- */
+    /* -------------------------------------------------------------------------- */
+    /*                                   Setters                                  */
+    /* -------------------------------------------------------------------------- */
     .addCase(setSelectedVaultAddress, (state, { payload: { vaultAddress } }) => {
       state.selectedVaultAddress = vaultAddress;
     });
