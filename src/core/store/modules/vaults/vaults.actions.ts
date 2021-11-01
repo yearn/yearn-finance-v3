@@ -32,7 +32,7 @@ import { getConfig } from '@config';
 const setSelectedVaultAddress = createAction<{ vaultAddress?: string }>('vaults/setSelectedVaultAddress');
 
 /* -------------------------------------------------------------------------- */
-/*                         Clear data from state                              */
+/*                                 Clear State                                */
 /* -------------------------------------------------------------------------- */
 
 const clearVaultsData = createAction<void>('vaults/clearVaultsData');

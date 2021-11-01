@@ -39,7 +39,7 @@ const selectUserVaultsSummaryStatus = (state: RootState) => state.vaults.statusM
 const selectGetVaultsStatus = (state: RootState) => state.vaults.statusMap.getVaults;
 const selectGetUserVaultsPositionsStatus = (state: RootState) => state.vaults.statusMap.user.getUserVaultsPositions;
 
-/* ----------------------------- Processed Data ----------------------------- */
+/* ----------------------------- Main Selectors ----------------------------- */
 const selectVaults = createSelector(
   [
     selectVaultsMap,

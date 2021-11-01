@@ -43,6 +43,26 @@ const tokensReducer = createReducer(tokensInitialState, (builder) => {
   builder
 
     /* -------------------------------------------------------------------------- */
+    /*                                   Setters                                  */
+    /* -------------------------------------------------------------------------- */
+    .addCase(setSelectedTokenAddress, (state, { payload: { tokenAddress } }) => {
+      state.selectedTokenAddress = tokenAddress;
+    })
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Clear State                                */
+    /* -------------------------------------------------------------------------- */
+    .addCase(clearTokensData, (state) => {
+      state.tokensMap = {};
+      state.tokensAddresses = [];
+    })
+    .addCase(clearUserTokenState, (state) => {
+      state.user.userTokensAddresses = [];
+      state.user.userTokensAllowancesMap = {};
+      state.user.userTokensMap = {};
+    })
+
+    /* -------------------------------------------------------------------------- */
     /*                                 Fetch Data                                 */
     /* -------------------------------------------------------------------------- */
 
@@ -138,26 +158,6 @@ const tokensReducer = createReducer(tokensInitialState, (builder) => {
         ...state.user.userTokensAllowancesMap[tokenAddress],
         [spenderAddress]: amount,
       };
-    })
-
-    /* -------------------------------------------------------------------------- */
-    /*                                 Clear Data                                 */
-    /* -------------------------------------------------------------------------- */
-    .addCase(clearTokensData, (state) => {
-      state.tokensMap = {};
-      state.tokensAddresses = [];
-    })
-    .addCase(clearUserTokenState, (state) => {
-      state.user.userTokensAddresses = [];
-      state.user.userTokensAllowancesMap = {};
-      state.user.userTokensMap = {};
-    })
-
-    /* -------------------------------------------------------------------------- */
-    /*                                   Setters                                  */
-    /* -------------------------------------------------------------------------- */
-    .addCase(setSelectedTokenAddress, (state, { payload: { tokenAddress } }) => {
-      state.selectedTokenAddress = tokenAddress;
     });
 });
 

@@ -4,13 +4,13 @@ import { TokenDynamicData, Token, Balance, Integer } from '@types';
 import { handleTransaction } from '@src/utils';
 
 /* -------------------------------------------------------------------------- */
-/*                             Transaction Methods                            */
+/*                                   Setters                                  */
 /* -------------------------------------------------------------------------- */
 
 const setSelectedTokenAddress = createAction<{ tokenAddress?: string }>('tokens/setSelectedTokenAddress');
 
 /* -------------------------------------------------------------------------- */
-/*                         Clear data from state                              */
+/*                                 Clear State                                */
 /* -------------------------------------------------------------------------- */
 
 const clearTokensData = createAction<void>('tokens/clearTokensData');

@@ -17,7 +17,7 @@ const selectGetUserTokensStatus = (state: RootState) => state.tokens.statusMap.u
 const selectUserTokensAddresses = (state: RootState) => state.tokens.user.userTokensAddresses;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
 
-/* ----------------------------- Processed Data ----------------------------- */
+/* ----------------------------- Main Selectors ----------------------------- */
 const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user): TokenView[] => {
   const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
   const tokens = userTokensAddresses.map((address) => {

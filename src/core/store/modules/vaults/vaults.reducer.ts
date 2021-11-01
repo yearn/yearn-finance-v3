@@ -82,6 +82,43 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
   builder
 
     /* -------------------------------------------------------------------------- */
+    /*                                   Setters                                  */
+    /* -------------------------------------------------------------------------- */
+    .addCase(setSelectedVaultAddress, (state, { payload: { vaultAddress } }) => {
+      state.selectedVaultAddress = vaultAddress;
+    })
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Clear State                                */
+    /* -------------------------------------------------------------------------- */
+    .addCase(clearVaultsData, (state) => {
+      state.vaultsMap = {};
+      state.vaultsAddresses = [];
+    })
+    .addCase(clearUserData, (state) => {
+      state.user.userVaultsPositionsMap = {};
+      state.user.vaultsAllowancesMap = {};
+      state.user.userVaultsMetadataMap = {};
+      state.user.userVaultsSummary = undefined;
+    })
+
+    .addCase(clearTransactionData, (state) => {
+      state.transaction = initialTransaction;
+      state.statusMap.getExpectedTransactionOutcome = {};
+    })
+
+    .addCase(clearSelectedVaultAndStatus, (state) => {
+      if (!state.selectedVaultAddress) return;
+      const currentAddress = state.selectedVaultAddress;
+      state.statusMap.vaultsActionsStatusMap[currentAddress] = initialVaultActionsStatusMap;
+      state.selectedVaultAddress = undefined;
+    })
+
+    .addCase(clearVaultStatus, (state, { payload: { vaultAddress } }) => {
+      state.statusMap.vaultsActionsStatusMap[vaultAddress] = initialVaultActionsStatusMap;
+    })
+
+    /* -------------------------------------------------------------------------- */
     /*                                 Fetch data                                 */
     /* -------------------------------------------------------------------------- */
 
@@ -330,43 +367,6 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(migrateVault.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultFromAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { error: error.message };
-    })
-
-    /* -------------------------------------------------------------------------- */
-    /*                                 Clear Data                                 */
-    /* -------------------------------------------------------------------------- */
-    .addCase(clearVaultsData, (state) => {
-      state.vaultsMap = {};
-      state.vaultsAddresses = [];
-    })
-    .addCase(clearUserData, (state) => {
-      state.user.userVaultsPositionsMap = {};
-      state.user.vaultsAllowancesMap = {};
-      state.user.userVaultsMetadataMap = {};
-      state.user.userVaultsSummary = undefined;
-    })
-
-    .addCase(clearTransactionData, (state) => {
-      state.transaction = initialTransaction;
-      state.statusMap.getExpectedTransactionOutcome = {};
-    })
-
-    .addCase(clearSelectedVaultAndStatus, (state) => {
-      if (!state.selectedVaultAddress) return;
-      const currentAddress = state.selectedVaultAddress;
-      state.statusMap.vaultsActionsStatusMap[currentAddress] = initialVaultActionsStatusMap;
-      state.selectedVaultAddress = undefined;
-    })
-
-    .addCase(clearVaultStatus, (state, { payload: { vaultAddress } }) => {
-      state.statusMap.vaultsActionsStatusMap[vaultAddress] = initialVaultActionsStatusMap;
-    })
-
-    /* -------------------------------------------------------------------------- */
-    /*                                   Setters                                  */
-    /* -------------------------------------------------------------------------- */
-    .addCase(setSelectedVaultAddress, (state, { payload: { vaultAddress } }) => {
-      state.selectedVaultAddress = vaultAddress;
     });
 });
 
