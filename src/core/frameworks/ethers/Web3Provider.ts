@@ -3,6 +3,7 @@ import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers';
 import { getConfig } from '@config';
 import { getProviderType, getNetworkRpc } from '@utils';
 import { ProviderType, Web3Provider as AppWeb3Provider } from '@types';
+
 import { getJsonRpcProvider } from './';
 
 export class EthersWeb3ProviderImpl implements AppWeb3Provider {

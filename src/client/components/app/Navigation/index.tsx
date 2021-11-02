@@ -1,9 +1,10 @@
 import { ElementType, useEffect } from 'react';
 import styled from 'styled-components';
+
 import { useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
-
 import { HomeIcon, WalletIcon, VaultIcon, LabsIcon, IronBankIcon, SettingsIcon } from '@components/common';
+
 import { NavSidebar } from './NavSidebar';
 import { NavTabbar } from './NavTabbar';
 

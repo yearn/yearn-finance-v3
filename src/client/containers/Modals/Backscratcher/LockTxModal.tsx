@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { ModalTx } from '@components/common';
-import { BackscratcherLockTx } from '@components/app/Transactions';
+import { BackscratcherLockTx } from '@components/app';
 
 const StyledBackscratcherLockTxModal = styled(ModalTx)``;
 export interface BackscratcherLockTxModalProps {

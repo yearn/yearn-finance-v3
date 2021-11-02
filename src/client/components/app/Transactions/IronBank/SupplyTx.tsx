@@ -10,7 +10,7 @@ import {
   validateAllowance,
   basicValidateAmount,
   COLLATERAL_FACTOR_DECIMALS,
-} from '@src/utils';
+} from '@utils';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 

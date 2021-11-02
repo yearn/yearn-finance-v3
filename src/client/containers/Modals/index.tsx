@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, ModalSelectors } from '@core/store';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
+import { useAppSelector, useAppDispatch } from '@hooks';
+import { ModalsActions, ModalSelectors } from '@store';
 
 import { TestModal } from './TestModal';
 import { ComingSoonModal } from './ComingSoonModal';
-
 import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';

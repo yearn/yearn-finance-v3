@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { Text } from '@components/common';
+import { Text } from '../../Text';
 
 const StyledCardEmptyList = styled.div<{ wrap?: string }>`
   display: flex;

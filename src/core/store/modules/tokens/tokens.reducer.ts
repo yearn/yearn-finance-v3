@@ -1,7 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { TokensState, UserTokenActionsMap } from '@types';
 import { union } from 'lodash';
-import { initialStatus } from '../../../types/Status';
+
+import { TokensState, UserTokenActionsMap } from '@types';
+import { initialStatus } from '@types';
+
 import { TokensActions } from './tokens.actions';
 
 export const initialUserTokenActionsMap: UserTokenActionsMap = {

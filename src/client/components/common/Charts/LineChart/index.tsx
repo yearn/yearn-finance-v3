@@ -2,11 +2,11 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { Serie, ResponsiveLine } from '@nivo/line';
 
-import { Text } from '@components/common';
-
 import { useAppSelector, useWindowDimensions } from '@hooks';
 import { getTheme } from '@themes';
 import { formatUsd } from '@utils';
+
+import { Text } from '../../Text';
 
 export interface LineChartProps {
   className?: string;

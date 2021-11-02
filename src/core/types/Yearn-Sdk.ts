@@ -23,6 +23,7 @@ import {
   VaultUserMetadata,
   TransactionOutcome,
   EarningsDayData,
+  StrategyMetadata,
 } from '@yfi/sdk';
 
 import { Network } from './Blockchain';
@@ -96,4 +97,5 @@ export type {
   Overrides,
   VaultUserMetadata,
   EarningsDayData,
+  StrategyMetadata,
 };

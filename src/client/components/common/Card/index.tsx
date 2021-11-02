@@ -6,7 +6,6 @@ import { CardContent } from './CardContent';
 import { CardElement } from './CardElement';
 import { CardEmptyList } from './CardEmptyList';
 import { CardRedirection } from './CardRedirection';
-
 import { styledSystem, StyledSystemProps } from '../styledSystem';
 
 const bigSize = css`

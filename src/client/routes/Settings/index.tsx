@@ -11,7 +11,7 @@ import { getConfig } from '@config';
 import { AlertTypes, ModalName, Theme, Language } from '@types';
 import { formatPercent, getCurrentLanguage } from '@utils';
 
-import { ViewContainer } from '@components/app';
+import { ViewContainer, ThemeBox } from '@components/app';
 import {
   ThemesIcon,
   ClockIcon,
@@ -24,7 +24,6 @@ import {
   CardContent,
   OptionList,
 } from '@components/common';
-import { ThemeBox } from '@components/app/Settings';
 
 const sectionsGap = '2.2rem';
 const sectionsBorderRadius = '0.8rem';

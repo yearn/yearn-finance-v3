@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import { styledSystem, StyledSystemProps } from '@components/common/styledSystem';
+
+import { styledSystem, StyledSystemProps } from './styledSystem';
 
 export interface ProgressBarProps extends StyledSystemProps {
   value: number;

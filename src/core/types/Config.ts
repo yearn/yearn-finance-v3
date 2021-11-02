@@ -1,6 +1,5 @@
-import { Language } from '.';
 import { Network, Address, Wei } from './Blockchain';
-import { NetworkSettings, Theme } from './Settings';
+import { NetworkSettings, Theme, Language } from './Settings';
 
 export interface Config extends Env, Constants {}
 

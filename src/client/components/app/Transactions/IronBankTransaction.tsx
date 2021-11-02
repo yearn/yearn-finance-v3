@@ -1,14 +1,14 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import { formatAmount, normalizeAmount } from '@utils';
+
 import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
 import { TxStatus } from './components/TxStatus';
 import { TxBorrowLimit } from './components/TxBorrowLimit';
-
-import { formatAmount, normalizeAmount } from '@src/utils';
 
 interface Status {
   loading?: boolean;

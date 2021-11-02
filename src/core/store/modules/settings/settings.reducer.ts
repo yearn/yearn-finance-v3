@@ -1,6 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
+
 import { SettingsState } from '@types';
 import { getConfig } from '@config';
+
 import { SettingsActions } from './settings.actions';
 
 export const settingsInitialState: SettingsState = {

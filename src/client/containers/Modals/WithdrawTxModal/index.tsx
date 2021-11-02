@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useAppTranslation } from '@hooks';
 import { ModalTx } from '@components/common';
-import { WithdrawTx } from '@components/app/Transactions';
+import { WithdrawTx } from '@components/app';
 
 const StyledWithdrawTxModal = styled(ModalTx)``;
 export interface WithdrawTxModalProps {

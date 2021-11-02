@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { ModalTx } from '@components/common';
-import { BackscratcherClaimTx } from '@components/app/Transactions';
+import { BackscratcherClaimTx } from '@components/app';
 
 const StyledBackscratcherClaimTxModal = styled(ModalTx)``;
 export interface BackscratcherClaimTxModalProps {

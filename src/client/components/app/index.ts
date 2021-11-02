@@ -8,6 +8,7 @@ export * from './Navbar';
 export * from './Navigation';
 export * from './NoWalletCard';
 export * from './RecommendationsCard';
+export * from './Settings';
 export * from './SummaryCard';
 export * from './TokenIcon';
 export * from './Transactions';

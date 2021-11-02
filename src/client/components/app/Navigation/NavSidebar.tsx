@@ -3,7 +3,6 @@ import { useLocation, useHistory, Link } from 'react-router-dom';
 
 import { useAppTranslation, useAppSelector } from '@hooks';
 import { SettingsSelectors } from '@store';
-
 import { NavigationLink } from '@components/app';
 import { Icon, Logo } from '@components/common';
 

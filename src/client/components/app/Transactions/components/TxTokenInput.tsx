@@ -5,8 +5,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
 import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from '@components/common';
-
-import { formatUsd, normalizeUsdc } from '@src/utils';
+import { formatUsd, normalizeUsdc } from '@utils';
 
 const StyledButton = styled(Button)`
   background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};

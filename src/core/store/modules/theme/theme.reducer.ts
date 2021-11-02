@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
+
 import { ThemeState } from '@types';
 import { getConfig } from '@config';
 

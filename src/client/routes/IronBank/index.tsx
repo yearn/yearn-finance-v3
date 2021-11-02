@@ -12,7 +12,6 @@ import {
   AppSelectors,
   NetworkSelectors,
 } from '@store';
-
 import { SpinnerLoading, ToggleButton, SearchInput, Text } from '@components/common';
 import {
   SummaryCard,
@@ -25,7 +24,7 @@ import {
   InfoCard,
   Amount,
 } from '@components/app';
-import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss, normalizeAmount } from '@src/utils';
+import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss, normalizeAmount } from '@utils';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
 

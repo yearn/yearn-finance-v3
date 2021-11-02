@@ -2,12 +2,10 @@ import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
 import { formatApy, formatUsd, normalizeUsdc } from '@utils';
+import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
-import { GeneralVaultView } from '@types';
-
 import { device } from '@themes/default';
-import { TokenIcon } from '@components/app';
-import { DepositTx, WithdrawTx, MigrateTx } from '@components/app/Transactions';
+import { DepositTx, WithdrawTx, MigrateTx, TokenIcon } from '@components/app';
 import {
   Card,
   CardContent,
@@ -19,11 +17,10 @@ import {
   Markdown,
   Icon,
   AddCircleIcon,
+  LineChart,
 } from '@components/common';
-import { LineChart } from '@components/common/Charts';
-import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 import { MetamaskLogo } from '@assets/images';
-import { AppContext } from '@src/client/context';
+import { GeneralVaultView, StrategyMetadata } from '@types';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;

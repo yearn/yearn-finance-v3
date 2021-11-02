@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import styled from 'styled-components';
+
 import { Modal } from '@components/common';
 
 const StyledTestModal = styled(Modal)`

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { Modal } from '@components/common';
+import { Modal } from './Modal';
 
 const StyledModalTx = styled(Modal)`
   background: transparent;

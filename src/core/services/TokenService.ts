@@ -20,6 +20,7 @@ import {
 } from '@types';
 import { getContract } from '@frameworks/ethers';
 import { get, getUniqueAndCombine, toBN, USDC_DECIMALS } from '@utils';
+
 import erc20Abi from './contracts/erc20.json';
 
 export class TokenServiceImpl implements TokenService {

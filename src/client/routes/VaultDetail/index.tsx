@@ -6,7 +6,6 @@ import { AppSelectors, TokensSelectors, VaultsSelectors, NetworkSelectors, Walle
 import { useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
 import { SpinnerLoading, Button, Text } from '@components/common';
-
 import { parseHistoricalEarnings, parseLastEarnings } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';

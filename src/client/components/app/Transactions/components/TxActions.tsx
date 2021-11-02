@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-// import { Button, SpinnerLoading } from '@components/common';
 import { Button, SpinnerLoading } from '@components/common';
 
 export const TxSpinnerLoading = styled(SpinnerLoading)`

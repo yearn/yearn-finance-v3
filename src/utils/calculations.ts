@@ -1,6 +1,8 @@
 import BigNumber from 'bignumber.js';
-import { formatUnits } from '../core/frameworks/ethers';
+
+import { formatUnits } from '@frameworks/ethers';
 import { Wei } from '@types';
+
 import { toBN } from './format';
 
 interface CalculateSharesAmountProps {
