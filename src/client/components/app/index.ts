@@ -1,7 +1,5 @@
 export * from './ActionButtons';
 export * from './Amount';
-export * from './AssetCard_old';
-export * from './Blade_old';
 export * from './ConnectWalletButton';
 export * from './DetailCard';
 export * from './Footer';
@@ -11,9 +9,7 @@ export * from './Navigation';
 export * from './NoWalletCard';
 export * from './RecommendationsCard';
 export * from './SummaryCard';
-export * from './TokenAmountInput_old';
 export * from './TokenIcon';
 export * from './Transactions';
-export * from './TransactionSettings_old';
 export * from './VaultDetail';
 export * from './ViewContainer';
