@@ -84,14 +84,6 @@ const IconOverImage = styled(Icon)`
   width: 50%;
 `;
 
-const IconScan = styled(Icon)`
-  padding-left: 5px;
-  padding-bottom: 4px;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
 const StyledTabPanel = styled(TabPanel)`
   margin-top: 1.5rem;
 `;
@@ -234,28 +226,6 @@ export const VaultDetailPanels = ({
     setSelectedTab(selectedTab);
   };
 
-  const handleScanSiteExplorer = () => {
-    switch (currentNetwork) {
-      case 'mainnet':
-        return window.open(`${blockExplorerUrl}${selectedVault.address}`);
-      case 'fantom':
-        return window.open(`${blockExplorerUrl}${selectedVault.address}`);
-      default:
-        return;
-    }
-  };
-
-  const selectScanIcon = () => {
-    switch (currentNetwork) {
-      case 'mainnet':
-        return EtherscanIcon;
-      case 'fantom':
-        return FtmscanIcon;
-      default:
-        return DefaultscanIcon;
-    }
-  };
-
   const handleAddToken = () => {
     const { address, symbol, decimals, icon } = selectedVault.token;
     context?.wallet.addToken(address, symbol, decimals, icon || '');
@@ -272,7 +242,11 @@ export const VaultDetailPanels = ({
                 <IconOverImage Component={AddCircleIcon} />
               </RelativeContainer>
             ) : null}
-            <IconScan Component={selectScanIcon()} onClick={handleScanSiteExplorer} />
+            <ScanNetworkIcon
+              currentNetwork={currentNetwork}
+              blockExplorerUrl={blockExplorerUrl}
+              selectedVault={selectedVault}
+            />
           </StyledCardHeaderContainer>
 
           <OverviewTokenInfo>
