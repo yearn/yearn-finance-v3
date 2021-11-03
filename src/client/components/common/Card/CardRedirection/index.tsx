@@ -2,7 +2,8 @@ import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { ChevronRightIcon, Icon } from '../../Icon';
+// NOTE: App errors out when trying to import directly from 'common'
+import { ChevronRightIcon, Icon } from '@components/common/Icon';
 
 const Arrow = styled(Icon)`
   height: 1.6rem;

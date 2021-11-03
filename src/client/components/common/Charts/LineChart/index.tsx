@@ -5,8 +5,7 @@ import { Serie, ResponsiveLine } from '@nivo/line';
 import { useAppSelector, useWindowDimensions } from '@hooks';
 import { getTheme } from '@themes';
 import { formatUsd } from '@utils';
-
-import { Text } from '../../Text';
+import { Text } from '@components/common';
 
 export interface LineChartProps {
   className?: string;
