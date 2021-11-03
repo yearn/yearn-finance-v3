@@ -1,5 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
+
 import { AppState } from '@types';
+
 import { AppActions } from './app.actions';
 
 export const appInitialState: AppState = {

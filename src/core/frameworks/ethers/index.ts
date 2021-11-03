@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 
 import { Network, RpcUrl } from '@types';
+
 import { EthersWeb3ProviderImpl } from './Web3Provider';
 
 export const getEthersDefaultProvider = (

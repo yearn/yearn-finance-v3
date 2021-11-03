@@ -23,7 +23,7 @@ import {
   validateYvBoostEthActionsAllowance,
   validateSlippage,
   formatPercent,
-} from '@src/utils';
+} from '@utils';
 import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';

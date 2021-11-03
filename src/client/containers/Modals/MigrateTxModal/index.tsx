@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useAppTranslation } from '@hooks';
 import { ModalTx } from '@components/common';
-import { MigrateTx } from '@components/app/Transactions';
+import { MigrateTx } from '@components/app';
 
 const StyledMigrateTxModal = styled(ModalTx)``;
 export interface MigrateTxModalProps {

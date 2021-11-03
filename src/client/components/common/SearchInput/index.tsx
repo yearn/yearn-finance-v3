@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { get } from 'lodash';
 
-import { SearchIcon, Input } from '@components/common';
+import { SearchIcon } from '../Icon';
+import { Input } from '../Input';
 
 const StyledSearchInput = styled(Input)``;
 

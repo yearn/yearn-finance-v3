@@ -19,6 +19,7 @@ import {
   GetSupportedLabsProps,
 } from '@types';
 import { get, toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress, getProviderType } from '@utils';
+
 import backscratcherAbi from './contracts/backscratcher.json';
 import y3CrvBackZapperAbi from './contracts/y3CrvBackZapper.json';
 import yvBoostAbi from './contracts/yvBoost.json';

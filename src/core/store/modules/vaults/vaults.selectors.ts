@@ -1,4 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { memoize } from 'lodash';
+
 import {
   RootState,
   Status,
@@ -13,10 +15,10 @@ import {
   Address,
   GeneralVaultView,
 } from '@types';
-import { memoize } from 'lodash';
-import { toBN } from '../../../../utils';
-import { createToken } from '../tokens/tokens.selectors';
+import { toBN } from '@utils';
+
 import { initialVaultActionsStatusMap } from './vaults.reducer';
+import { createToken } from '../tokens/tokens.selectors';
 
 /* ---------------------------------- State --------------------------------- */
 const selectVaultsState = (state: RootState) => state.vaults;

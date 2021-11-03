@@ -11,7 +11,6 @@ import {
   IronBankSelectors,
   AppSelectors,
 } from '@store';
-
 import {
   SummaryCard,
   DetailCard,
@@ -24,7 +23,7 @@ import {
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
 import { getConstants } from '@config/constants';
-import { halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc } from '@src/utils';
+import { halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc } from '@utils';
 import { device } from '@themes/default';
 
 const TokensCard = styled(DetailCard)`

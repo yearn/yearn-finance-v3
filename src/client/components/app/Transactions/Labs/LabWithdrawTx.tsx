@@ -20,10 +20,11 @@ import {
   validateVaultWithdrawAllowance,
   validateSlippage,
   calculateSharesAmount,
-} from '@src/utils';
+} from '@utils';
 import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
+
 export interface LabWithdrawTxProps {
   onClose?: () => void;
 }

@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import { IronBankSelectors, IronBankActions } from '@store';
-import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS, basicValidateAmount, toWei } from '@src/utils';
+import { toBN, normalizeAmount, normalizePercent, USDC_DECIMALS, basicValidateAmount, toWei } from '@utils';
 import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';

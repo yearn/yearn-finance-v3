@@ -1,5 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
+
 import { RouteState } from '@types';
+
 import { RouteActions } from './route.actions';
 
 export const routeInitialState: RouteState = {

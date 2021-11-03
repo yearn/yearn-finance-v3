@@ -1,6 +1,6 @@
+import { createReducer } from '@reduxjs/toolkit';
 import { difference, groupBy, keyBy, union } from 'lodash';
 
-import { createReducer } from '@reduxjs/toolkit';
 import {
   initialStatus,
   VaultsState,
@@ -10,6 +10,7 @@ import {
   VaultActionsStatusMap,
   VaultTransaction,
 } from '@types';
+
 import { VaultsActions } from './vaults.actions';
 
 export const initialVaultActionsStatusMap: VaultActionsStatusMap = {

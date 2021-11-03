@@ -10,6 +10,7 @@ import {
   MarketActionsTypes,
   initialStatus,
 } from '@types';
+
 import { IronBankActions } from './ironBank.actions';
 
 export const initialMarketsActionsMap: MarketActionsStatusMap = {

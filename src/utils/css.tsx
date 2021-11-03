@@ -1,4 +1,5 @@
 import { css } from 'styled-components';
+
 import { device } from '@themes/default';
 
 export const halfWidthCss = css`

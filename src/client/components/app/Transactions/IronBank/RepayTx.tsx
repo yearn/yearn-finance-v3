@@ -10,7 +10,7 @@ import {
   basicValidateAmount,
   toWei,
   validateAllowance,
-} from '@src/utils';
+} from '@utils';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 

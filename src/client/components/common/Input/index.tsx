@@ -1,7 +1,7 @@
 import { ElementType, FC, InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
-import { Icon } from '@components/common';
+import { Icon } from '../Icon';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;

@@ -23,6 +23,7 @@ import {
   TransactionService,
   Config,
 } from '@types';
+
 import v2VaultAbi from './contracts/v2Vault.json';
 import trustedVaultMigratorAbi from './contracts/trustedVaultMigrator.json';
 import triCryptoVaultMigratorAbi from './contracts/triCryptoVaultMigrator.json';

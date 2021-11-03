@@ -19,7 +19,8 @@ import {
 import { getConfig } from '@config';
 
 import { VaultsActions } from '../vaults/vaults.actions';
-import { AlertsActions, TokensActions } from '../..';
+import { AlertsActions } from '../alerts/alerts.actions';
+import { TokensActions } from '../tokens/tokens.actions';
 
 const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
 
@@ -216,7 +217,7 @@ const approveWithdraw = createAsyncThunk<void, ApproveWithdrawProps, ThunkAPI>(
         TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -288,7 +289,7 @@ const yvBoostApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkA
       const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : labAddress;
       const result = await dispatch(TokensActions.approve({ tokenAddress: tokenAddress, spenderAddress }));
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -354,7 +355,7 @@ const yvBoostApproveZapOut = createAsyncThunk<void, { labAddress: string }, Thun
         TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -422,7 +423,7 @@ const yveCrvApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAP
     try {
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: labAddress }));
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -548,7 +549,7 @@ const yvBoostEthApproveInvest = createAsyncThunk<void, ApproveDepositProps, Thun
         TokensActions.approve({ tokenAddress, spenderAddress: getZapInContractAddress(PSLPYVBOOSTETH) })
       );
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -614,7 +615,7 @@ const yvBoostEthApproveStake = createAsyncThunk<void, { labAddress: string }, Th
         TokensActions.approve({ tokenAddress: PSLPYVBOOSTETH, spenderAddress: PSLPYVBOOSTETH_GAUGE })
       );
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }

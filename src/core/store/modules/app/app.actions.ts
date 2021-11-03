@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
 import { inIframe } from '@utils';
+
 import { WalletActions } from '../wallet/wallet.actions';
 import { TokensActions } from '../tokens/tokens.actions';
 import { VaultsActions } from '../vaults/vaults.actions';

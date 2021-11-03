@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { useLocation, Link } from 'react-router-dom';
 
 import { useAppTranslation } from '@hooks';
-
 import { NavigationLink } from '@components/app';
 import { Icon } from '@components/common';
 

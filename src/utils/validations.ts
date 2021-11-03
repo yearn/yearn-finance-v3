@@ -1,6 +1,8 @@
-import { AllowancesMap, IronBankUserSummary } from '@types';
 import BigNumber from 'bignumber.js';
+
+import { AllowancesMap, IronBankUserSummary } from '@types';
 import { getConfig } from '@config';
+
 import { COLLATERAL_FACTOR_DECIMALS, normalizeAmount, toBN, formatPercent } from './format';
 
 interface ValidateVaultDepositProps {

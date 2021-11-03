@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useAppTranslation } from '@hooks';
 import { TokensSelectors, LabsSelectors, LabsActions, VaultsActions, TokensActions } from '@store';
-import { normalizeAmount, USDC_DECIMALS } from '@src/utils';
+import { normalizeAmount, USDC_DECIMALS } from '@utils';
 import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';

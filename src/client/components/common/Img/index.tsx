@@ -1,5 +1,4 @@
 import { useState, useEffect, ImgHTMLAttributes } from 'react';
-
 import styled from 'styled-components';
 
 const StyledImg = styled.img<{ loaded?: boolean }>`

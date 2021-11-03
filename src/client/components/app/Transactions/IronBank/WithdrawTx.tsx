@@ -10,7 +10,7 @@ import {
   basicValidateAmount,
   toWei,
   COLLATERAL_FACTOR_DECIMALS,
-} from '@src/utils';
+} from '@utils';
 import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';

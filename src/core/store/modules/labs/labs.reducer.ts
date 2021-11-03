@@ -1,4 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { difference, groupBy, keyBy, union } from 'lodash';
+
 import {
   initialStatus,
   LabsState,
@@ -7,8 +9,8 @@ import {
   Position,
   LabsPositionsMap,
 } from '@types';
-import { difference, groupBy, keyBy, union } from 'lodash';
-import { getConstants } from '../../../../config/constants';
+import { getConfig } from '@config';
+
 import { LabsActions } from './labs.actions';
 
 export const initialLabActionsStatusMap: LabActionsStatusMap = {
@@ -72,7 +74,7 @@ const { yvBoostApproveDeposit, yvBoostDeposit, yvBoostApproveZapOut, yvBoostWith
 const { yveCrvApproveDeposit, yveCrvDeposit, yveCrvClaimReward, yveCrvApproveReinvest, yveCrvReinvest } = yveCrv;
 const { yvBoostEthApproveInvest, yvBoostEthInvest, yvBoostEthApproveStake, yvBoostEthStake } = yvBoostEth;
 
-const { YVECRV, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
+const { YVECRV, PSLPYVBOOSTETH } = getConfig().CONTRACT_ADDRESSES;
 
 const labsReducer = createReducer(labsInitialState, (builder) => {
   builder

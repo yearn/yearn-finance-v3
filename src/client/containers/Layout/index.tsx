@@ -22,7 +22,6 @@ import {
   AlertsActions,
   NetworkActions,
 } from '@store';
-
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, useIsMounting } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';

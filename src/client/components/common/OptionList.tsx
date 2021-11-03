@@ -1,7 +1,9 @@
 import { ElementType, FC, useState } from 'react';
 import styled from 'styled-components';
 
-import { ChevronDownIcon, Icon, SpinnerLoading, Text } from '@components/common';
+import { ChevronDownIcon, Icon } from './Icon';
+import { Text } from './Text';
+import { SpinnerLoading } from './SpinnerLoading';
 
 const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
   --dropdown-background: ${({ theme }) => theme.colors.surface};

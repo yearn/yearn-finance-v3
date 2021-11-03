@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { ModalTx } from '@components/common';
-import { LabWithdrawTx } from '@components/app/Transactions';
+import { LabWithdrawTx } from '@components/app';
 
 const StyledLabWithdrawTxModal = styled(ModalTx)``;
 export interface LabWithdrawTxModalProps {

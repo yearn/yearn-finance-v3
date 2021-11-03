@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { Card, CardHeader, CardContent, CardElement, CardEmptyList, ToggleButton } from '@components/common';
 import { sort } from '@utils';
-import { filter } from 'lodash';
 
 const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
   display: flex;

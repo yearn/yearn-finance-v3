@@ -13,9 +13,7 @@ import {
   AppSelectors,
   NetworkSelectors,
 } from '@store';
-
 import { device } from '@themes/default';
-
 import {
   SummaryCard,
   DetailCard,
@@ -28,7 +26,7 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@src/utils';
+import { humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@utils';
 import { getConfig } from '@config';
 
 const SearchBarContainer = styled.div`
