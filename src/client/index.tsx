@@ -4,7 +4,7 @@ import { createGlobalStyle } from 'styled-components';
 
 import { Container } from '@container';
 import { getStore } from '@frameworks/redux';
-import { AppContextProvider, BladeContextProvider, NavSideMenuContextProvider } from '@context';
+import { AppContextProvider, NavSideMenuContextProvider } from '@context';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
 import '@i18n';
@@ -78,14 +78,12 @@ export const App = () => {
     <Provider store={store}>
       <AppContextProvider context={container.context}>
         <NavSideMenuContextProvider>
-          <BladeContextProvider>
-            <Themable>
-              <GlobalStyle />
-              <Suspense fallback={null}>
-                <Routes />
-              </Suspense>
-            </Themable>
-          </BladeContextProvider>
+          <Themable>
+            <GlobalStyle />
+            <Suspense fallback={null}>
+              <Routes />
+            </Suspense>
+          </Themable>
         </NavSideMenuContextProvider>
       </AppContextProvider>
     </Provider>
