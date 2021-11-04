@@ -245,7 +245,7 @@ export const VaultDetailPanels = ({
             <ScanNetworkIcon
               currentNetwork={currentNetwork}
               blockExplorerUrl={blockExplorerUrl}
-              selectedVault={selectedVault}
+              address={selectedVault.address}
             />
           </StyledCardHeaderContainer>
 

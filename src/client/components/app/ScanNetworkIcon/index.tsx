@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { GeneralVaultView, Network } from '@types';
+import { Address, Network } from '@types';
 import { DefaultscanIcon, EtherscanIcon, FtmscanIcon, Icon } from '@components/common';
 
 interface ScanNetworkIconProps {
   currentNetwork?: Network;
   blockExplorerUrl?: string;
-  selectedVault: GeneralVaultView;
+  address: Address;
 }
 
 const IconScan = styled(Icon)`
@@ -17,16 +17,9 @@ const IconScan = styled(Icon)`
   }
 `;
 
-export const ScanNetworkIcon = ({ currentNetwork, blockExplorerUrl, selectedVault }: ScanNetworkIconProps) => {
+export const ScanNetworkIcon = ({ currentNetwork, blockExplorerUrl, address }: ScanNetworkIconProps) => {
   const handleScanSiteExplorer = () => {
-    switch (currentNetwork) {
-      case 'mainnet':
-        return window.open(`${blockExplorerUrl}${selectedVault.address}`);
-      case 'fantom':
-        return window.open(`${blockExplorerUrl}${selectedVault.address}`);
-      default:
-        return;
-    }
+    return window.open(`${blockExplorerUrl}${address}`);
   };
 
   const selectScanIcon = () => {
