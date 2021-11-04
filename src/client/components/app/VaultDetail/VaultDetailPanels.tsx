@@ -6,7 +6,7 @@ import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
 
 import { device } from '@themes/default';
-import { DepositTx, WithdrawTx, MigrateTx, TokenIcon } from '@components/app';
+import { DepositTx, WithdrawTx, MigrateTx, TokenIcon, ScanNetworkIcon } from '@components/app';
 import {
   Card,
   CardContent,
