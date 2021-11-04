@@ -19,9 +19,6 @@ import {
   Icon,
   AddCircleIcon,
   LineChart,
-  EtherscanIcon,
-  FtmscanIcon,
-  DefaultscanIcon,
 } from '@components/common';
 import { MetamaskLogo } from '@assets/images';
 import { GeneralVaultView, StrategyMetadata, Network } from '@types';
