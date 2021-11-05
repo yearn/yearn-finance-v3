@@ -9,7 +9,7 @@ interface ScanNetworkIconProps {
 }
 
 const IconScan = styled(Icon)`
-  fill: black;
+  fill: ${({ theme }) => theme.colors.onPrimaryVariant};
   padding-left: 5px;
   padding-bottom: 4px;
   &:hover {
