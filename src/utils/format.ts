@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { formatUnits, BigNumber as EthersBN } from '@frameworks/ethers';
+import { Wei, Unit, Amount, FormattedAmount, Fraction } from '@types';
 
 BigNumber.set({ EXPONENTIAL_AT: 50 });
 
@@ -19,66 +19,86 @@ const format = {
   suffix: '',
 };
 
-export const toBN = (amount?: string | number) => {
+/* -------------------------------------------------------------------------- */
+/*                                    Parse                                   */
+/* -------------------------------------------------------------------------- */
+
+export const toBN = (amount?: Amount | number): BigNumber => {
   if (!amount || amount === '') {
     amount = '0';
   }
   return new BigNumber(amount);
 };
 
-export const formatAmount = (amount: string, decimals: number) => {
-  return new BigNumber(amount).toFormat(decimals, BigNumber.ROUND_FLOOR, format);
+export const toWei = (amount: Unit, decimals: number): Wei => {
+  const ONE_UNIT = toBN(10).pow(decimals);
+  return toBN(amount).times(ONE_UNIT).toFixed(0);
 };
 
-export const weiToUnits = (amount: string, decimals: number) => formatUnits(EthersBN.from(amount), decimals);
+export const toUnit = (amount: Wei | undefined, decimals: number): Unit => normalizeAmount(amount, decimals);
 
-export const normalizeAmount = (amount: string | undefined, decimals: number) => {
+/* -------------------------------------------------------------------------- */
+/*                                  Normalize                                 */
+/* -------------------------------------------------------------------------- */
+
+export const normalizeAmount = (amount: Wei | undefined, decimals: number): Unit => {
   if (!amount || amount === '') {
     amount = '0';
   }
-  const ONE_UNIT = new BigNumber(10).pow(decimals);
-  return new BigNumber(amount).div(ONE_UNIT).toString();
+  const ONE_UNIT = toBN(10).pow(decimals);
+  return toBN(amount).div(ONE_UNIT).toString();
 };
 
-export const formatPercent = (amount: string, decimals: number) => {
-  return new BigNumber(amount).times(100).toFormat(decimals, { ...format, suffix: '%' });
+export const normalizePercent = (amount: Fraction, decimals: number): Unit =>
+  formatPercent(
+    toBN(amount)
+      .div(10 ** 4)
+      .toString(),
+    decimals
+  );
+
+export const normalizeUsdc = (amount?: Wei, decimals = 2): Unit => {
+  if (!amount || amount === '') {
+    amount = '0';
+  }
+  const units = toUnit(amount, USDC_DECIMALS);
+  return formatUsd(units, decimals);
 };
 
-export const normalizePercent = (amount: string, decimals: number) => {
-  return formatPercent(new BigNumber(amount).div(10 ** 4).toString(), decimals);
+/* -------------------------------------------------------------------------- */
+/*                                   Format                                   */
+/* -------------------------------------------------------------------------- */
+
+export const formatAmount = (amount: Amount, decimals: number): FormattedAmount => {
+  return toBN(amount).toFormat(decimals, BigNumber.ROUND_FLOOR, format);
 };
+
+export const formatPercent = (amount: Fraction, decimals: number): FormattedAmount => {
+  return toBN(amount)
+    .times(100)
+    .toFormat(decimals, { ...format, suffix: '%' });
+};
+
+export const formatUsd = (amount?: Amount, decimals = 2): FormattedAmount => {
+  if (!amount || amount === '') {
+    amount = '0';
+  }
+  return toBN(amount ?? '0').toFormat(decimals, { ...format, prefix: '$ ' });
+};
+
+export const formatApy = (apyData: Fraction, apyType: string): FormattedAmount => {
+  if (apyType === 'new') return 'NEW ✨';
+  if (apyType === 'n/a') return 'N/A';
+
+  return formatPercent(apyData, 2);
+};
+
+/* -------------------------------------------------------------------------- */
 
 export const humanizeAmount = (amount: string | undefined, tokenDecimals: number, wantedDecimals: number) => {
   if (!amount || !tokenDecimals) {
     return '0';
   }
-  const units = weiToUnits(amount, tokenDecimals);
+  const units = toUnit(amount, tokenDecimals);
   return formatAmount(units, wantedDecimals);
-};
-
-export const formatUsd = (amount?: string, decimals = 2) => {
-  if (!amount || amount === '') {
-    amount = '0';
-  }
-  return new BigNumber(amount ?? '0').toFormat(decimals, { ...format, prefix: '$ ' });
-};
-
-export const normalizeUsdc = (amount?: string, decimals = 2) => {
-  if (!amount || amount === '') {
-    amount = '0';
-  }
-  const units = weiToUnits(amount, USDC_DECIMALS);
-  return formatUsd(units, decimals);
-};
-
-export const toWei = (amount: string, decimals: number) => {
-  const ONE_UNIT = new BigNumber(10).pow(decimals);
-  return new BigNumber(amount).times(ONE_UNIT).toFixed(0);
-};
-
-export const formatApy = (apyData: string, apyType: string) => {
-  if (apyType === 'new') return 'NEW ✨';
-  if (apyType === 'n/a') return 'N/A';
-
-  return formatPercent(apyData, 2);
 };
