@@ -48,34 +48,22 @@ export const normalizeAmount = (amount: Wei | undefined, decimals: number): Unit
 
 export const normalizePercent = (amount: Wei): Unit => toUnit(amount, 4);
 
-export const normalizeUsdc = (amount?: Wei, decimals = 2): Unit => {
-  if (!amount || amount === '') {
-    amount = '0';
-  }
-  const units = toUnit(amount, USDC_DECIMALS);
-  return formatUsd(units, decimals);
-};
+export const normalizeUsdc = (amount?: Wei): Unit => toUnit(amount, USDC_DECIMALS);
 
 /* -------------------------------------------------------------------------- */
 /*                                   Format                                   */
 /* -------------------------------------------------------------------------- */
 
-export const formatAmount = (amount: Amount, decimals: number): FormattedAmount => {
-  return toBN(amount).toFormat(decimals, BigNumber.ROUND_FLOOR, format);
-};
+export const formatAmount = (amount: Amount, decimals: number): FormattedAmount =>
+  toBN(amount).toFormat(decimals, BigNumber.ROUND_FLOOR, format);
 
-export const formatPercent = (amount: Fraction, decimals: number): FormattedAmount => {
-  return toBN(amount)
+export const formatPercent = (amount: Fraction, decimals: number): FormattedAmount =>
+  toBN(amount)
     .times(100)
     .toFormat(decimals, { ...format, suffix: '%' });
-};
 
-export const formatUsd = (amount?: Amount, decimals = 2): FormattedAmount => {
-  if (!amount || amount === '') {
-    amount = '0';
-  }
-  return toBN(amount ?? '0').toFormat(decimals, { ...format, prefix: '$ ' });
-};
+export const formatUsd = (amount?: Amount, decimals = 2): FormattedAmount =>
+  toBN(amount).toFormat(decimals, { ...format, prefix: '$ ' });
 
 export const formatApy = (apyData: Fraction, apyType: string): FormattedAmount => {
   if (apyType === 'new') return 'NEW ✨';

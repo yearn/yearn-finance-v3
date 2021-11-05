@@ -235,7 +235,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
     id: selectedToken.address,
     icon: selectedToken.icon,
     label: selectedToken.symbol,
-    value: selectedToken.yield ?? normalizeUsdc(selectedToken.balanceUsdc),
+    value: selectedToken.yield ?? formatUsd(normalizeUsdc(selectedToken.balanceUsdc)),
   };
 
   if (tokenOptions && tokenOptions.length > 1) {
@@ -245,7 +245,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           id: item.address,
           icon: item.icon,
           label: item.symbol,
-          value: item.yield ?? normalizeUsdc(item.balanceUsdc),
+          value: item.yield ?? formatUsd(normalizeUsdc(item.balanceUsdc)),
         };
       })
       .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));

@@ -26,7 +26,16 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@utils';
+import {
+  humanizeAmount,
+  normalizeUsdc,
+  formatUsd,
+  halfWidthCss,
+  normalizeAmount,
+  formatApy,
+  orderApy,
+  toBN,
+} from '@utils';
 import { getConfig } from '@config';
 
 const SearchBarContainer = styled.div`
@@ -265,7 +274,7 @@ export const Vaults = () => {
               {
                 key: 'userDepositedUsdc',
                 header: 'Value',
-                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc, 2),
+                format: ({ userDepositedUsdc }) => formatUsd(normalizeUsdc(userDepositedUsdc)),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -273,7 +282,7 @@ export const Vaults = () => {
               {
                 key: 'earned',
                 header: 'Earned',
-                format: ({ earned }) => normalizeUsdc(earned, 2),
+                format: ({ earned }) => formatUsd(normalizeUsdc(earned)),
                 sortable: true,
                 width: '11rem',
                 className: 'col-earned',
@@ -340,7 +349,7 @@ export const Vaults = () => {
               {
                 key: 'userDepositedUsdc',
                 header: t('components.list-card.value'),
-                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc, 2),
+                format: ({ userDepositedUsdc }) => formatUsd(normalizeUsdc(userDepositedUsdc)),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -348,7 +357,7 @@ export const Vaults = () => {
               {
                 key: 'earned',
                 header: t('components.list-card.earned'),
-                format: ({ earned }) => (!toBN(earned).isZero() ? normalizeUsdc(earned, 2) : '-'),
+                format: ({ earned }) => (!toBN(earned).isZero() ? formatUsd(normalizeUsdc(earned)) : '-'),
                 sortable: true,
                 width: '11rem',
                 className: 'col-earned',
@@ -407,7 +416,7 @@ export const Vaults = () => {
               {
                 key: 'vaultBalanceUsdc',
                 header: t('components.list-card.total-assets'),
-                format: ({ vaultBalanceUsdc }) => normalizeUsdc(vaultBalanceUsdc, 0),
+                format: ({ vaultBalanceUsdc }) => formatUsd(normalizeUsdc(vaultBalanceUsdc), 0),
                 sortable: true,
                 width: '15rem',
                 className: 'col-assets',

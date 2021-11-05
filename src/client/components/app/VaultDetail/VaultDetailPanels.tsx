@@ -250,7 +250,7 @@ export const VaultDetailPanels = ({
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.total-assets')}</span>
-                <StyledText>{normalizeUsdc(selectedVault.vaultBalanceUsdc, 0)}</StyledText>
+                <StyledText>{formatUsd(normalizeUsdc(selectedVault.vaultBalanceUsdc), 0)}</StyledText>
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.type')}</span>

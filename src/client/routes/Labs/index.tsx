@@ -25,7 +25,7 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { formatPercent, halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc, toBN } from '@utils';
+import { formatPercent, halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc, formatUsd, toBN } from '@utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
@@ -365,7 +365,7 @@ export const Labs = () => {
               {
                 key: 'value',
                 header: t('components.list-card.value'),
-                format: (lab) => normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
+                format: (lab) => formatUsd(normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc)),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -419,7 +419,7 @@ export const Labs = () => {
               {
                 key: 'labBalanceUsdc',
                 header: t('components.list-card.total-assets'),
-                format: ({ labBalanceUsdc }) => normalizeUsdc(labBalanceUsdc, 0),
+                format: ({ labBalanceUsdc }) => formatUsd(normalizeUsdc(labBalanceUsdc), 0),
                 sortable: true,
                 width: '15rem',
                 className: 'col-assets',
