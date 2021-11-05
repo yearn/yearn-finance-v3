@@ -25,7 +25,7 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { formatPercent, halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc, formatUsd, toBN } from '@utils';
+import { formatPercent, halfWidthCss, humanize, normalizeAmount, normalizeUsdc, formatUsd, toBN } from '@utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
@@ -357,7 +357,7 @@ export const Labs = () => {
               {
                 key: 'balance',
                 header: t('components.list-card.balance'),
-                format: (lab) => humanizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
+                format: (lab) => humanize('amount', lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
@@ -427,7 +427,8 @@ export const Labs = () => {
               {
                 key: 'userTokenBalance',
                 header: t('components.list-card.available-deposit'),
-                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                format: ({ token }) =>
+                  token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
                 sortable: true,
                 width: '15rem',
                 className: 'col-available',

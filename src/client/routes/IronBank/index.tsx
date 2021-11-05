@@ -29,7 +29,7 @@ import {
   formatUsd,
   normalizePercent,
   formatPercent,
-  humanizeAmount,
+  humanize,
   halfWidthCss,
   normalizeAmount,
 } from '@utils';
@@ -279,7 +279,7 @@ export const IronBank = () => {
               {
                 key: 'balance',
                 header: t('components.list-card.balance'),
-                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
@@ -361,7 +361,7 @@ export const IronBank = () => {
               {
                 key: 'balance',
                 header: t('components.list-card.balance'),
-                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
@@ -444,7 +444,8 @@ export const IronBank = () => {
               {
                 key: 'userTokenBalance',
                 header: t('components.list-card.available-supply'),
-                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                format: ({ token }) =>
+                  token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
                 sortable: true,
                 width: '15rem',
                 className: 'col-available',

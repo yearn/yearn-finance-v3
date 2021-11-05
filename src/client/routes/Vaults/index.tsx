@@ -26,16 +26,7 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import {
-  humanizeAmount,
-  normalizeUsdc,
-  formatUsd,
-  halfWidthCss,
-  normalizeAmount,
-  formatApy,
-  orderApy,
-  toBN,
-} from '@utils';
+import { humanize, normalizeUsdc, formatUsd, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@utils';
 import { getConfig } from '@config';
 
 const SearchBarContainer = styled.div`
@@ -266,7 +257,7 @@ export const Vaults = () => {
               {
                 key: 'balance',
                 header: 'Balance',
-                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
@@ -341,7 +332,7 @@ export const Vaults = () => {
               {
                 key: 'balance',
                 header: t('components.list-card.balance'),
-                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
@@ -424,7 +415,8 @@ export const Vaults = () => {
               {
                 key: 'userTokenBalance',
                 header: t('components.list-card.available-deposit'),
-                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                format: ({ token }) =>
+                  token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
                 sortable: true,
                 width: '15rem',
                 className: 'col-available',

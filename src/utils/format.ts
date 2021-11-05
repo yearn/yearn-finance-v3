@@ -103,11 +103,16 @@ export const formatApy = (apyData: Fraction, apyType: string): FormattedAmount =
 };
 
 /* -------------------------------------------------------------------------- */
+/*                                  Humanize                                  */
+/* -------------------------------------------------------------------------- */
 
-export const humanizeAmount = (amount: string | undefined, tokenDecimals: number, wantedDecimals: number) => {
-  if (!amount || !tokenDecimals) {
-    return '0';
-  }
-  const units = toUnit(amount, tokenDecimals);
-  return formatAmount(units, wantedDecimals);
+export const humanize = (
+  dataType: DataType,
+  amount: Amount | undefined,
+  tokenDecimals?: number,
+  formatDecimals?: number
+) => {
+  if (!tokenDecimals) return '0';
+  const units = normalize(dataType, amount, tokenDecimals);
+  return format(dataType, units, formatDecimals);
 };

@@ -23,7 +23,7 @@ import {
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
 import { getConstants } from '@config/constants';
-import { halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc, formatUsd } from '@utils';
+import { halfWidthCss, humanize, normalizeAmount, normalizeUsdc, formatUsd } from '@utils';
 import { device } from '@themes/default';
 
 const TokensCard = styled(DetailCard)`
@@ -182,7 +182,7 @@ export const Wallet = () => {
             {
               key: 'tokenBalance',
               header: t('components.list-card.balance'),
-              format: ({ balance, decimals }) => humanizeAmount(balance, decimals, 2),
+              format: ({ balance, decimals }) => humanize('amount', balance, decimals, 2),
               sortable: true,
               width: '13rem',
               className: 'col-balance',
