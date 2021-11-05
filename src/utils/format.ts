@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { Wei, Unit, Amount, FormattedAmount, Fraction } from '@types';
+import { Wei, Unit, Amount, FormattedAmount, Fraction, DataType } from '@types';
 
 BigNumber.set({ EXPONENTIAL_AT: 50 });
 
@@ -8,7 +8,7 @@ export const USDC_DECIMALS = 6;
 export const COLLATERAL_FACTOR_DECIMALS = 18;
 export const GWEI = 9;
 
-const format = {
+const FORMAT = {
   prefix: '',
   decimalSeparator: '.',
   groupSeparator: ',',
@@ -24,9 +24,7 @@ const format = {
 /* -------------------------------------------------------------------------- */
 
 export const toBN = (amount?: Amount | number): BigNumber => {
-  if (!amount || amount === '') {
-    amount = '0';
-  }
+  if (!amount || amount === '') amount = '0';
   return new BigNumber(amount);
 };
 
@@ -44,6 +42,22 @@ export const toUnit = (amount: Wei | undefined, decimals: number): Unit => {
 /*                                  Normalize                                 */
 /* -------------------------------------------------------------------------- */
 
+export const normalize = (dataType: DataType, amount?: Wei, decimals?: number): FormattedAmount => {
+  if (!amount || amount === '') amount = '0';
+
+  switch (dataType) {
+    case 'amount':
+      if (!decimals) throw new Error('Invalid Decimals to Format Amount');
+      return normalizeAmount(amount, decimals);
+    case 'percent':
+      return normalizePercent(amount);
+    case 'usd':
+      return normalizeUsdc(amount);
+    default:
+      throw new Error('Invalid Format Data Type');
+  }
+};
+
 export const normalizeAmount = (amount: Wei | undefined, decimals: number): Unit => toUnit(amount, decimals);
 
 export const normalizePercent = (amount: Wei): Unit => toUnit(amount, 4);
@@ -54,16 +68,32 @@ export const normalizeUsdc = (amount?: Wei): Unit => toUnit(amount, USDC_DECIMAL
 /*                                   Format                                   */
 /* -------------------------------------------------------------------------- */
 
-export const formatAmount = (amount: Amount, decimals: number): FormattedAmount =>
-  toBN(amount).toFormat(decimals, BigNumber.ROUND_FLOOR, format);
+export const format = (dataType: DataType, amount?: Amount, decimals?: number): FormattedAmount => {
+  if (!amount || amount === '') amount = '0';
 
-export const formatPercent = (amount: Fraction, decimals: number): FormattedAmount =>
+  switch (dataType) {
+    case 'amount':
+      if (!decimals) throw new Error('Invalid Decimals to Format Amount');
+      return formatAmount(amount, decimals);
+    case 'percent':
+      return formatPercent(amount, decimals);
+    case 'usd':
+      return formatUsd(amount, decimals);
+    default:
+      throw new Error('Invalid Format Data Type');
+  }
+};
+
+export const formatAmount = (amount: Amount, decimals: number): FormattedAmount =>
+  toBN(amount).toFormat(decimals, BigNumber.ROUND_FLOOR, FORMAT);
+
+export const formatPercent = (amount: Fraction, decimals = 2): FormattedAmount =>
   toBN(amount)
     .times(100)
-    .toFormat(decimals, { ...format, suffix: '%' });
+    .toFormat(decimals, { ...FORMAT, suffix: '%' });
 
 export const formatUsd = (amount?: Amount, decimals = 2): FormattedAmount =>
-  toBN(amount).toFormat(decimals, { ...format, prefix: '$ ' });
+  toBN(amount).toFormat(decimals, { ...FORMAT, prefix: '$ ' });
 
 export const formatApy = (apyData: Fraction, apyType: string): FormattedAmount => {
   if (apyType === 'new') return 'NEW ✨';
