@@ -35,27 +35,18 @@ export const toWei = (amount: Unit, decimals: number): Wei => {
   return toBN(amount).times(ONE_UNIT).toFixed(0);
 };
 
-export const toUnit = (amount: Wei | undefined, decimals: number): Unit => normalizeAmount(amount, decimals);
+export const toUnit = (amount: Wei | undefined, decimals: number): Unit => {
+  const ONE_UNIT = toBN(10).pow(decimals);
+  return toBN(amount).div(ONE_UNIT).toString();
+};
 
 /* -------------------------------------------------------------------------- */
 /*                                  Normalize                                 */
 /* -------------------------------------------------------------------------- */
 
-export const normalizeAmount = (amount: Wei | undefined, decimals: number): Unit => {
-  if (!amount || amount === '') {
-    amount = '0';
-  }
-  const ONE_UNIT = toBN(10).pow(decimals);
-  return toBN(amount).div(ONE_UNIT).toString();
-};
+export const normalizeAmount = (amount: Wei | undefined, decimals: number): Unit => toUnit(amount, decimals);
 
-export const normalizePercent = (amount: Fraction, decimals: number): Unit =>
-  formatPercent(
-    toBN(amount)
-      .div(10 ** 4)
-      .toString(),
-    decimals
-  );
+export const normalizePercent = (amount: Wei): Unit => toUnit(amount, 4);
 
 export const normalizeUsdc = (amount?: Wei, decimals = 2): Unit => {
   if (!amount || amount === '') {

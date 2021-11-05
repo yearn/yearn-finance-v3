@@ -6,6 +6,7 @@ import {
   toBN,
   normalizeAmount,
   normalizePercent,
+  formatPercent,
   USDC_DECIMALS,
   basicValidateAmount,
   toWei,
@@ -80,7 +81,7 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
     ...selectedToken,
     balance: selectedToken.balance,
     balanceUsdc: selectedToken.balanceUsdc,
-    yield: normalizePercent(selectedMarket.borrowApy, 2),
+    yield: formatPercent(normalizePercent(selectedMarket.borrowApy), 2),
   };
 
   const { approved: isApproved, error: allowanceError } = validateAllowance({

@@ -6,6 +6,7 @@ import {
   toBN,
   normalizeAmount,
   normalizePercent,
+  formatPercent,
   USDC_DECIMALS,
   basicValidateAmount,
   toWei,
@@ -81,7 +82,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
     ...selectedToken,
     balance: selectedMarket.LEND.userDeposited,
     balanceUsdc: selectedMarket.LEND.userDepositedUsdc,
-    yield: normalizePercent(selectedMarket.lendApy, 2),
+    yield: formatPercent(normalizePercent(selectedMarket.lendApy), 2),
   };
   const percentageToWithdraw = toBN(amount).div(suppliedTokens).times(100).toString();
   const willWithdrawAll = toBN(percentageToWithdraw).gte(99);
