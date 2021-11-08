@@ -5,12 +5,11 @@ import { IronBankSelectors, IronBankActions } from '@store';
 import {
   toBN,
   normalizeAmount,
-  normalizePercent,
-  formatPercent,
   USDC_DECIMALS,
   basicValidateAmount,
   toWei,
   COLLATERAL_FACTOR_DECIMALS,
+  humanize,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -82,7 +81,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
     ...selectedToken,
     balance: selectedMarket.LEND.userDeposited,
     balanceUsdc: selectedMarket.LEND.userDepositedUsdc,
-    yield: formatPercent(normalizePercent(selectedMarket.lendApy), 2),
+    yield: humanize('percent', selectedMarket.lendApy),
   };
   const percentageToWithdraw = toBN(amount).div(suppliedTokens).times(100).toString();
   const willWithdrawAll = toBN(percentageToWithdraw).gte(99);

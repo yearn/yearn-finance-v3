@@ -2,15 +2,7 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import { IronBankSelectors, IronBankActions } from '@store';
-import {
-  toBN,
-  normalizeAmount,
-  normalizePercent,
-  formatPercent,
-  USDC_DECIMALS,
-  basicValidateAmount,
-  toWei,
-} from '@utils';
+import { toBN, normalizeAmount, USDC_DECIMALS, basicValidateAmount, toWei, humanize } from '@utils';
 import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';
@@ -72,7 +64,7 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
     ...selectedToken,
     balance: toWei(borrowableTokens, selectedToken.decimals),
     balanceUsdc: toWei(toBN(borrowableTokens).times(underlyingTokenPrice).toString(), USDC_DECIMALS),
-    yield: formatPercent(normalizePercent(selectedMarket.borrowApy), 2),
+    yield: humanize('percent', selectedMarket.borrowApy),
   };
 
   const { approved: isValidAmount, error: inputError } = basicValidateAmount({
