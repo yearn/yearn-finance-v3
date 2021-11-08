@@ -112,7 +112,7 @@ export const humanize = (
   tokenDecimals?: number,
   formatDecimals?: number
 ) => {
-  if (!tokenDecimals) return '0';
+  if (!tokenDecimals && dataType === 'amount') return '0';
   const units = normalize(dataType, amount, tokenDecimals);
   return format(dataType, units, formatDecimals);
 };
