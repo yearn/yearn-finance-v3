@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import { formatApy, formatUsd, normalizeUsdc } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
+
 import { device } from '@themes/default';
-import { DepositTx, WithdrawTx, MigrateTx, TokenIcon } from '@components/app';
+import { DepositTx, WithdrawTx, MigrateTx, TokenIcon, ScanNetworkIcon } from '@components/app';
 import {
   Card,
   CardContent,
@@ -20,7 +21,7 @@ import {
   LineChart,
 } from '@components/common';
 import { MetamaskLogo } from '@assets/images';
-import { GeneralVaultView, StrategyMetadata } from '@types';
+import { GeneralVaultView, StrategyMetadata, Network } from '@types';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -194,11 +195,14 @@ const VaultOverview = styled(Card)`
     }
   }
 `;
+
 export interface VaultDetailPanelsProps {
   selectedVault: GeneralVaultView;
   chartData?: any;
   chartValue?: string;
   displayAddToken?: boolean;
+  currentNetwork?: Network;
+  blockExplorerUrl?: string;
 }
 
 export const VaultDetailPanels = ({
@@ -206,6 +210,8 @@ export const VaultDetailPanels = ({
   chartData,
   chartValue,
   displayAddToken,
+  currentNetwork,
+  blockExplorerUrl,
 }: VaultDetailPanelsProps) => {
   const { t } = useAppTranslation('vaultdetails');
 
@@ -213,7 +219,6 @@ export const VaultDetailPanels = ({
   const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : 'deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
   const context = useContext(AppContext);
-
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
   };
@@ -234,6 +239,11 @@ export const VaultDetailPanels = ({
                 <IconOverImage Component={AddCircleIcon} />
               </RelativeContainer>
             ) : null}
+            <ScanNetworkIcon
+              currentNetwork={currentNetwork}
+              blockExplorerUrl={blockExplorerUrl}
+              address={selectedVault.address}
+            />
           </StyledCardHeaderContainer>
 
           <OverviewTokenInfo>
