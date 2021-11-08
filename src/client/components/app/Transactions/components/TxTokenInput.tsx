@@ -5,7 +5,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
 import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from '@components/common';
-import { formatUsd, normalizeUsdc } from '@utils';
+import { formatUsd, humanize } from '@utils';
 
 const StyledButton = styled(Button)`
   background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
@@ -235,7 +235,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
     id: selectedToken.address,
     icon: selectedToken.icon,
     label: selectedToken.symbol,
-    value: selectedToken.yield ?? formatUsd(normalizeUsdc(selectedToken.balanceUsdc)),
+    value: selectedToken.yield ?? humanize('usd', selectedToken.balanceUsdc),
   };
 
   if (tokenOptions && tokenOptions.length > 1) {
@@ -245,7 +245,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           id: item.address,
           icon: item.icon,
           label: item.symbol,
-          value: item.yield ?? formatUsd(normalizeUsdc(item.balanceUsdc)),
+          value: item.yield ?? humanize('usd', item.balanceUsdc),
         };
       })
       .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));

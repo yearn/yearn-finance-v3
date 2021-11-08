@@ -26,7 +26,7 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { humanize, normalizeUsdc, formatUsd, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@utils';
+import { humanize, USDC_DECIMALS, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@utils';
 import { getConfig } from '@config';
 
 const SearchBarContainer = styled.div`
@@ -265,7 +265,7 @@ export const Vaults = () => {
               {
                 key: 'userDepositedUsdc',
                 header: 'Value',
-                format: ({ userDepositedUsdc }) => formatUsd(normalizeUsdc(userDepositedUsdc)),
+                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -273,7 +273,7 @@ export const Vaults = () => {
               {
                 key: 'earned',
                 header: 'Earned',
-                format: ({ earned }) => formatUsd(normalizeUsdc(earned)),
+                format: ({ earned }) => humanize('usd', earned),
                 sortable: true,
                 width: '11rem',
                 className: 'col-earned',
@@ -340,7 +340,7 @@ export const Vaults = () => {
               {
                 key: 'userDepositedUsdc',
                 header: t('components.list-card.value'),
-                format: ({ userDepositedUsdc }) => formatUsd(normalizeUsdc(userDepositedUsdc)),
+                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -348,7 +348,7 @@ export const Vaults = () => {
               {
                 key: 'earned',
                 header: t('components.list-card.earned'),
-                format: ({ earned }) => (!toBN(earned).isZero() ? formatUsd(normalizeUsdc(earned)) : '-'),
+                format: ({ earned }) => (!toBN(earned).isZero() ? humanize('usd', earned) : '-'),
                 sortable: true,
                 width: '11rem',
                 className: 'col-earned',
@@ -407,7 +407,7 @@ export const Vaults = () => {
               {
                 key: 'vaultBalanceUsdc',
                 header: t('components.list-card.total-assets'),
-                format: ({ vaultBalanceUsdc }) => formatUsd(normalizeUsdc(vaultBalanceUsdc), 0),
+                format: ({ vaultBalanceUsdc }) => humanize('usd', vaultBalanceUsdc, USDC_DECIMALS, 0),
                 sortable: true,
                 width: '15rem',
                 className: 'col-assets',

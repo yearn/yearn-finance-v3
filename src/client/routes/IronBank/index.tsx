@@ -24,7 +24,7 @@ import {
   InfoCard,
   Amount,
 } from '@components/app';
-import { normalizeUsdc, formatUsd, humanize, halfWidthCss, normalizeAmount } from '@utils';
+import { humanize, halfWidthCss, normalizeAmount, USDC_DECIMALS } from '@utils';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
 
@@ -279,7 +279,7 @@ export const IronBank = () => {
               {
                 key: 'userDepositedUsdc',
                 header: t('components.list-card.value'),
-                format: ({ userDepositedUsdc }) => formatUsd(normalizeUsdc(userDepositedUsdc)),
+                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -361,7 +361,7 @@ export const IronBank = () => {
               {
                 key: 'userDepositedUsdc',
                 header: t('components.list-card.value'),
-                format: ({ userDepositedUsdc }) => formatUsd(normalizeUsdc(userDepositedUsdc)),
+                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -428,7 +428,7 @@ export const IronBank = () => {
               {
                 key: 'liquidity',
                 header: t('components.list-card.market-liquidity'),
-                format: ({ liquidity }) => formatUsd(normalizeUsdc(liquidity), 0),
+                format: ({ liquidity }) => humanize('usd', liquidity, USDC_DECIMALS, 0),
                 sortable: true,
                 width: '15rem',
                 className: 'col-market',

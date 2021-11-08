@@ -23,7 +23,7 @@ import {
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
 import { getConstants } from '@config/constants';
-import { halfWidthCss, humanize, normalizeAmount, normalizeUsdc, formatUsd } from '@utils';
+import { halfWidthCss, humanize, normalizeAmount } from '@utils';
 import { device } from '@themes/default';
 
 const TokensCard = styled(DetailCard)`
@@ -190,7 +190,7 @@ export const Wallet = () => {
             {
               key: 'priceUsdc',
               header: t('components.list-card.price'),
-              format: ({ priceUsdc }) => formatUsd(normalizeUsdc(priceUsdc)),
+              format: ({ priceUsdc }) => humanize('usd', priceUsdc),
               sortable: true,
               width: '11rem',
               className: 'col-price',
@@ -198,7 +198,7 @@ export const Wallet = () => {
             {
               key: 'balanceUsdc',
               header: t('components.list-card.value'),
-              format: ({ balanceUsdc }) => formatUsd(normalizeUsdc(balanceUsdc)),
+              format: ({ balanceUsdc }) => humanize('usd', balanceUsdc),
               sortable: true,
               width: '11rem',
               className: 'col-value',
