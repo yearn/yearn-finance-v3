@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatApy, formatUsd, normalizeUsdc } from '@utils';
+import { formatApy, formatUsd, USDC_DECIMALS, humanize } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
 
@@ -260,7 +260,7 @@ export const VaultDetailPanels = ({
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.total-assets')}</span>
-                <StyledText>{normalizeUsdc(selectedVault.vaultBalanceUsdc, 0)}</StyledText>
+                <StyledText>{humanize('usd', selectedVault.vaultBalanceUsdc, USDC_DECIMALS, 0)}</StyledText>
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.type')}</span>

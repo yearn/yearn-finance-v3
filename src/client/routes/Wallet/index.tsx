@@ -23,7 +23,7 @@ import {
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
 import { getConstants } from '@config/constants';
-import { halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc } from '@utils';
+import { halfWidthCss, humanize, normalizeAmount } from '@utils';
 import { device } from '@themes/default';
 
 const TokensCard = styled(DetailCard)`
@@ -182,7 +182,7 @@ export const Wallet = () => {
             {
               key: 'tokenBalance',
               header: t('components.list-card.balance'),
-              format: ({ balance, decimals }) => humanizeAmount(balance, decimals, 2),
+              format: ({ balance, decimals }) => humanize('amount', balance, decimals, 2),
               sortable: true,
               width: '13rem',
               className: 'col-balance',
@@ -190,7 +190,7 @@ export const Wallet = () => {
             {
               key: 'priceUsdc',
               header: t('components.list-card.price'),
-              format: ({ priceUsdc }) => normalizeUsdc(priceUsdc, 2),
+              format: ({ priceUsdc }) => humanize('usd', priceUsdc),
               sortable: true,
               width: '11rem',
               className: 'col-price',
@@ -198,7 +198,7 @@ export const Wallet = () => {
             {
               key: 'balanceUsdc',
               header: t('components.list-card.value'),
-              format: ({ balanceUsdc }) => normalizeUsdc(balanceUsdc, 2),
+              format: ({ balanceUsdc }) => humanize('usd', balanceUsdc),
               sortable: true,
               width: '11rem',
               className: 'col-value',

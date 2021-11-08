@@ -24,7 +24,7 @@ import {
   InfoCard,
   Amount,
 } from '@components/app';
-import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss, normalizeAmount } from '@utils';
+import { humanize, halfWidthCss, normalizeAmount, USDC_DECIMALS } from '@utils';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
 
@@ -214,7 +214,7 @@ export const IronBank = () => {
                 items={recommendations.map(({ token, lendApy, address }) => ({
                   icon: token.icon ?? '',
                   name: token.symbol,
-                  info: normalizePercent(lendApy, 2),
+                  info: humanize('percent', lendApy),
                   infoDetail: 'EYY',
                   onAction: () => actionHandler('supply', address),
                 }))}
@@ -263,7 +263,7 @@ export const IronBank = () => {
               {
                 key: 'lendApy',
                 header: t('components.list-card.apy'),
-                format: ({ lendApy }) => normalizePercent(lendApy, 2),
+                format: ({ lendApy }) => humanize('percent', lendApy),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
@@ -271,7 +271,7 @@ export const IronBank = () => {
               {
                 key: 'balance',
                 header: t('components.list-card.balance'),
-                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
@@ -279,7 +279,7 @@ export const IronBank = () => {
               {
                 key: 'userDepositedUsdc',
                 header: t('components.list-card.value'),
-                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc),
+                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -345,7 +345,7 @@ export const IronBank = () => {
               {
                 key: 'borrowApy',
                 header: t('components.list-card.apy'),
-                format: ({ borrowApy }) => normalizePercent(borrowApy, 2),
+                format: ({ borrowApy }) => humanize('percent', borrowApy),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
@@ -353,7 +353,7 @@ export const IronBank = () => {
               {
                 key: 'balance',
                 header: t('components.list-card.balance'),
-                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
@@ -361,7 +361,7 @@ export const IronBank = () => {
               {
                 key: 'userDepositedUsdc',
                 header: t('components.list-card.value'),
-                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc),
+                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -412,7 +412,7 @@ export const IronBank = () => {
               {
                 key: 'lendApy',
                 header: t('components.list-card.lend-apy'),
-                format: ({ lendApy }) => normalizePercent(lendApy, 2),
+                format: ({ lendApy }) => humanize('percent', lendApy),
                 sortable: true,
                 width: '8rem',
                 className: 'col-lend-apy',
@@ -420,7 +420,7 @@ export const IronBank = () => {
               {
                 key: 'borrowApy',
                 header: t('components.list-card.borrow-apy'),
-                format: ({ borrowApy }) => normalizePercent(borrowApy, 2),
+                format: ({ borrowApy }) => humanize('percent', borrowApy),
                 sortable: true,
                 width: '8rem',
                 className: 'col-borrow-apy',
@@ -428,7 +428,7 @@ export const IronBank = () => {
               {
                 key: 'liquidity',
                 header: t('components.list-card.market-liquidity'),
-                format: ({ liquidity }) => normalizeUsdc(liquidity, 0),
+                format: ({ liquidity }) => humanize('usd', liquidity, USDC_DECIMALS, 0),
                 sortable: true,
                 width: '15rem',
                 className: 'col-market',
@@ -436,7 +436,8 @@ export const IronBank = () => {
               {
                 key: 'userTokenBalance',
                 header: t('components.list-card.available-supply'),
-                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                format: ({ token }) =>
+                  token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
                 sortable: true,
                 width: '15rem',
                 className: 'col-available',
