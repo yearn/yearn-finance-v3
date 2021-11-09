@@ -65,7 +65,6 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
   const {
     transactionLabel,
     transactionCompleted,
-    transactionCompletedLabel,
     onTransactionCompletedDismissed,
     assetHeader,
     assetLabel,

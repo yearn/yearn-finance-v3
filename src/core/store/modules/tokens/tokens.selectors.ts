@@ -14,7 +14,6 @@ const selectUserTokensStatusMap = (state: RootState) => state.tokens.statusMap;
 const selectGetTokensStatus = (state: RootState) => state.tokens.statusMap.getTokens;
 const selectGetUserTokensStatus = (state: RootState) => state.tokens.statusMap.user.getUserTokens;
 
-const selectUserTokensAddresses = (state: RootState) => state.tokens.user.userTokensAddresses;
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
 
 /* ----------------------------- Main Selectors ----------------------------- */
