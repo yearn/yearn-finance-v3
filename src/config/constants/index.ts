@@ -79,7 +79,7 @@ export const getConstants = memoize((): Constants => {
     AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk', 'classic'],
     DEFAULT_ALERT_TIMEOUT: 3000,
     DEFAULT_LANG: 'en',
-    SUPPORTED_LANGS: ['en', 'es'],
+    SUPPORTED_LANGS: ['en', 'de', 'es', 'hi', 'pt', 'zh'],
     DUST_AMOUNT_USD: '10000000',
   };
 });

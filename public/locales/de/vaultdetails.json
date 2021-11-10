@@ -1,0 +1,25 @@
+{
+  "no-vault-supported-card": {
+    "content": "Versuchen Sie, in das richtige Netz zu wechseln.",
+    "header": "Tresor wird in {{Netzwerk}} nicht unterstützt"
+  },
+  "overview-panel": {
+    "about": "About",
+    "apy": "APY",
+    "header": "Überblick",
+    "strategies": "Strategien",
+    "total-assets": "Gesamtvermögen",
+    "type": "Typ",
+    "web": "Website"
+  },
+  "performance-panel": {
+    "earnings-over-time": "Erträge im Laufe der Zeit",
+    "header": "Performance"
+  },
+  "vault-actions-panel": {
+    "deposit": "Einzahlung",
+    "header": "Transaktionen",
+    "migrate": "Migrieren",
+    "withdraw": "Abhebung"
+  }
+}

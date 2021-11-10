@@ -70,6 +70,7 @@
     "borrowed": "Prestado",
     "earnings": "Ganancias",
     "est-yearly-yield": "Rendimiento anual est.",
+    "header": "Panel de control",
     "holdings": "Activos",
     "supplied": "Suministrado",
     "total-net-worth": "Valor total neto",
@@ -89,8 +90,16 @@
     }
   },
   "languages": {
+    "de": "Deutsch",
     "en": "English",
-    "es": "Español"
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "ja": "日本",
+    "pt": "Português",
+    "tr": "Türk",
+    "vi": "Tiếng Việt",
+    "zh": "中国人"
   },
   "navigation": {
     "copyright": {

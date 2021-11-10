@@ -189,7 +189,7 @@ export const IronBank = () => {
   return (
     <ViewContainer>
       <SummaryCard
-        header="Dashboard"
+        header={t('dashboard.header')}
         items={[
           { header: t('dashboard.supplied'), Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
           { header: t('dashboard.borrowed'), Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },

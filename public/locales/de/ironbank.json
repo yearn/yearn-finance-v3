@@ -1,0 +1,11 @@
+{
+  "ironbank-card": {
+    "desc-1": "Iron Bank bietet eine einfache Möglichkeit, sich an neuen Token zu beteiligen. Leihen Sie sich Ihre Kryptowährungen als Sicherheiten, ohne sie verkaufen zu müssen. Haben Sie nicht den richtigen Tresor für Ihre Token gefunden? Liefern Sie sie an Iron Bank und verdienen Sie mehr Krypto.",
+    "desc-2": "Denken Sie daran, dass selbst bei einfachen Tools wie Iron Bank Risiken durch intelligente Verträge und systemische Risiken der zugrunde liegenden Krypto-Assets bestehen.",
+    "header": "Lassen Sie Ihre Kryptowährung für Sie arbeiten"
+  },
+  "no-ironbank-card": {
+    "header": "Noch keine Iron Bank im {{Netzwerk}}",
+    "text": "Schauen Sie bald wieder vorbei."
+  }
+}

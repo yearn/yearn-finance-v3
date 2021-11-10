@@ -1,0 +1,25 @@
+{
+  "no-vault-supported-card": {
+    "content": "Tente mudar para a rede correta.",
+    "header": "Vault não suportado em {{network}}"
+  },
+  "overview-panel": {
+    "about": "Sobre",
+    "apy": "APY",
+    "header": "Visão geral",
+    "strategies": "Estratégias",
+    "total-assets": "Ativos totais",
+    "type": "Tipo",
+    "web": "Website"
+  },
+  "performance-panel": {
+    "earnings-over-time": "Rendimentos totais",
+    "header": "Performance"
+  },
+  "vault-actions-panel": {
+    "deposit": "Depósito",
+    "header": "Transações",
+    "migrate": "Migrar",
+    "withdraw": "Retirar"
+  }
+}

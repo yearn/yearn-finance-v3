@@ -198,7 +198,7 @@ export const Vaults = () => {
 
   return (
     <ViewContainer>
-      <SummaryCard header="Dashboard" items={summaryCardItems} variant="secondary" cardSize="small" />
+      <SummaryCard header={t('dashboard.header')} items={summaryCardItems} variant="secondary" cardSize="small" />
       {generalLoading && <SpinnerLoading flex="1" width="100%" />}
       {!generalLoading && (
         <>

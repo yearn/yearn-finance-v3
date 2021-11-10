@@ -276,7 +276,7 @@ export const Labs = () => {
   return (
     <ViewContainer>
       <SummaryCard
-        header="Dashboard"
+        header={t('dashboard.header')}
         items={[
           { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
           // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },

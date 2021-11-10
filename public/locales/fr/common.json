@@ -1,0 +1,141 @@
+{
+  "components": {
+    "back-button": {
+      "label": "Retour à la page précédente"
+    },
+    "beta-card": {
+      "desc-1": "Ce site Web est encore en version bêta et contient probablement des bugs. Si vous en découvrez un ou si vous souhaitez faire part de vos commentaires, veuillez nous le faire savoir sur",
+      "header": "La Beta est enfin là ! "
+    },
+    "connect-button": {
+      "connect": "Connectez votre portefeuille"
+    },
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "Disponible pour dépôser",
+      "available-stake": "Disponible pour staker",
+      "available-supply": "Disponible pour fournir ",
+      "balance": "Balance",
+      "borrow-apy": "APY pour l'emprunt",
+      "borrowing": "Emprunter",
+      "collateral": "Collatéral",
+      "deposits": "Dépôts",
+      "earned": "Gagné",
+      "lend-apy": "APY de prêt",
+      "market-liquidity": "Liquidité du marché",
+      "name": "Nom",
+      "opportunities": "Opportunités",
+      "price": "Prix",
+      "supplying": "Approvisionnement",
+      "tokens": "Jetons",
+      "total-assets": "Actifs totaux",
+      "value": "Valeur"
+    },
+    "no-wallet": "Portefeuille non connecté",
+    "recommendations": {
+      "header": "Plus haut APY"
+    },
+    "transaction": {
+      "approve": "Approuver",
+      "available-borrow": "Disponible pour empruntet",
+      "borrow": "Emprunter",
+      "borrow-limit": {
+        "borrow-apy": "APY d'emprunt",
+        "borrowing": "Emprunt",
+        "supply-apy": "APY pour la Fourniture",
+        "total-borrow-limit": "Limite d'emprunt totale",
+        "total-borrow-limit-used": "Limite d'emprunt totale"
+      },
+      "claim": "Réclamer",
+      "deposit": "Déposer",
+      "from-iron-bank": "De l'Iron Bank",
+      "from-vault": "Du vault",
+      "from-wallet": "Du wallet",
+      "lock": "Verrouiller",
+      "max": "MAX",
+      "migrate": "Migrer",
+      "reinvest": "Réinvestir",
+      "repay": "Rembourser",
+      "reward": "Récompense",
+      "stake": "Stake",
+      "status": {
+        "calculating": "En train de calculer...",
+        "exit": "Sortir",
+        "simulating": "Simulation en cours ...",
+        "transaction-completed": "Transaction terminée"
+      },
+      "supply": "Fournir",
+      "to-gauge": "Vers la gauge",
+      "to-iron-bank": "Vers l' Iron Bank",
+      "to-vault": "Vers le coffre",
+      "to-wallet": "Vers le portefeuille",
+      "token-input": {
+        "balance": "Balance",
+        "search-select-token": "Selectionner un jeton",
+        "search-select-vault": "Selectionner un coffre",
+        "yield": "Rendement"
+      },
+      "wallet-balance": "Solde du portefeuille",
+      "withdraw": "Retirer"
+    }
+  },
+  "dashboard": {
+    "apy": "APY",
+    "available": "Disponible",
+    "available-deposit": "Disponible pour dépôser",
+    "borrow-limit-total": "Limite d'emprunt totale",
+    "borrow-limit-used": "Limite d'emprunt utilisée",
+    "borrowed": "Emprunté",
+    "earnings": "Gains",
+    "est-yearly-yield": "Rendement annuel Est.",
+    "holdings": "Avoirs",
+    "supplied": "Fournie",
+    "total-net-worth": "Valeur totale nette",
+    "vaults-earnings": "Gains de coffres",
+    "vaults-est-yearly-yield": "Rendement annuel estimé des coffres"
+  },
+  "errors": {
+    "default": "Il y a eu une erreur inattendue",
+    "unknown": "Erreur inconnue"
+  },
+  "footer": {
+    "links": {
+      "disclaimer": "Clause de non-responsabilité",
+      "docs": "Documents",
+      "gov": "Gouvernance",
+      "security": "Sécurité"
+    }
+  },
+  "languages": {
+    "de": "Deutsch",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "ja": "日本",
+    "pt": "Português",
+    "tr": "Türk",
+    "vi": "Tiếng Việt",
+    "zh": "中国人"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "Clause de non-responsabilité",
+    "home": "Accueil",
+    "ironbank": "Iron Bank",
+    "labs": "Labs",
+    "settings": "Paramètres",
+    "vault": "Details du coffre",
+    "vaults": "Coffres",
+    "wallet": "Portefeuille"
+  },
+  "themes": {
+    "classic": "V2 classique",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "light": "Mono Light"
+  }
+}
