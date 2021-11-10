@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
@@ -110,14 +109,13 @@ export const Labs = () => {
   const { t } = useAppTranslation(['common', 'labs']);
 
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConstants();
-  const { YVECRV, YVBOOST, PSLPYVBOOSTETH, CRV, YVTHREECRV } = CONTRACT_ADDRESSES;
-  const history = useHistory();
+  const { YVECRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(LabsSelectors.selectSummaryData);
+  const { totalDeposits } = useAppSelector(LabsSelectors.selectSummaryData);
   const recommendations = useAppSelector(LabsSelectors.selectRecommendations);
   const holdings = useAppSelector(LabsSelectors.selectDepositedLabs);
   const opportunities = useAppSelector(LabsSelectors.selectLabsOpportunities);

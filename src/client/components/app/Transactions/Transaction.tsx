@@ -67,7 +67,6 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const {
     transactionLabel,
     transactionCompleted,
-    transactionCompletedLabel,
     onTransactionCompletedDismissed,
     sourceHeader,
     sourceAssetOptions,
