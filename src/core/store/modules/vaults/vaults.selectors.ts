@@ -248,6 +248,9 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
   const vaultAddress = vaultData.address;
   const currentAllowance = tokenAllowancesMap[vaultAddress] ?? '0';
 
+  // TODO: REMOVE AFTER PROBLEM SOLVED
+  const isUSDM = vaultData.address === '0x6FAfCA7f49B4Fd9dC38117469cd31A1E5aec91F5';
+
   return {
     address: vaultData.address,
     name: vaultData.name,
@@ -259,7 +262,7 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
     emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
-    depositsDisabled: vaultData?.metadata.depositsDisabled ?? false,
+    depositsDisabled: (vaultData?.metadata.depositsDisabled ?? false) || isUSDM,
     withdrawalsDisabled: vaultData?.metadata.withdrawalsDisabled ?? false,
     apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
     apyType: vaultData.metadata.apy?.type ?? '',

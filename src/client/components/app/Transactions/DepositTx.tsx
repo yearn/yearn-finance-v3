@@ -180,7 +180,9 @@ export const DepositTx: FC<DepositTxProps> = ({
   //   loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   // };
 
-  const sourceError = allowanceError || inputError;
+  const depositsDisabledError = selectedVault.depositsDisabled ? 'Vault Deposits Temporarily Disabled' : undefined;
+
+  const sourceError = allowanceError || inputError || depositsDisabledError;
 
   const targetStatus = {
     error: expectedTxOutcomeStatus.error || actionsStatus.approve.error || actionsStatus.deposit.error || slippageError,
@@ -230,7 +232,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approve,
-      disabled: isApproved,
+      disabled: isApproved || selectedVault.depositsDisabled,
     },
     {
       label: t('components.transaction.deposit'),
