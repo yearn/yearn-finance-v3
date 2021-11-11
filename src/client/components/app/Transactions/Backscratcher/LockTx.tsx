@@ -9,7 +9,7 @@ import {
   validateVaultDeposit,
   formatPercent,
   validateYveCrvActionsAllowance,
-} from '@src/utils';
+} from '@utils';
 
 import { Transaction } from '../Transaction';
 

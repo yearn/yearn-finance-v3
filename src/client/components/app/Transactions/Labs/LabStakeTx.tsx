@@ -10,7 +10,7 @@ import {
   validateYvBoostEthActionsAllowance,
   getStakingContractAddress,
   formatPercent,
-} from '@src/utils';
+} from '@utils';
 
 import { Transaction } from '../Transaction';
 

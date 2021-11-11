@@ -1,8 +1,10 @@
 import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { Icon, ChevronLeftIcon, SearchInput } from '@components/common';
 import { TokenIcon } from '@components/app';
+
+import { Icon, ChevronLeftIcon } from './Icon';
+import { SearchInput } from './SearchInput';
 
 const ItemLabel = styled.div`
   flex: 1;

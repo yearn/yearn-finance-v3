@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+
 import { getTheme } from '../themes';
+
 export interface Dimension {
   width: number;
   height: number;

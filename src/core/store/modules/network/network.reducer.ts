@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 
 import { NetworkState } from '@types';
 import { getConfig } from '@config';
+
 import { NetworkActions } from './network.actions';
 
 export const networkInitialState: NetworkState = {

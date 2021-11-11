@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { formatAmount, normalizeAmount, toBN } from '@src/utils';
+import { formatAmount, normalizeAmount, toBN } from '@utils';
 import { useAppTranslation } from '@hooks';
 
 import { TxActionButton, TxActions } from './components/TxActions';
@@ -67,7 +67,6 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const {
     transactionLabel,
     transactionCompleted,
-    transactionCompletedLabel,
     onTransactionCompletedDismissed,
     sourceHeader,
     sourceAssetOptions,

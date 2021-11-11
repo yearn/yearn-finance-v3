@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import { AlertTypes } from '@types';
-import { useAppDispatch } from '@hooks';
-import { AlertsActions } from '@core/store';
 
-import { Icon, CloseIcon } from '@components/common/Icon';
+import { useAppDispatch } from '@hooks';
+import { AlertsActions } from '@store';
+import { Icon, CloseIcon } from '@components/common';
+import { AlertTypes } from '@types';
 
 const StyledAlert = styled.div<{ type: AlertTypes }>`
   overflow: hidden;

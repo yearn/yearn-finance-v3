@@ -1,6 +1,8 @@
-import { getAddress } from '@ethersproject/address';
 import { createReducer } from '@reduxjs/toolkit';
+import { getAddress } from '@ethersproject/address';
+
 import { WalletState } from '@types';
+
 import { WalletActions } from './wallet.actions';
 
 export const walletInitialState: WalletState = {

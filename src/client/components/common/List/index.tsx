@@ -1,6 +1,6 @@
 import { ComponentType, PropsWithChildren } from 'react';
 
-import { Box, BoxProps } from '@components/common';
+import { Box, BoxProps } from '../Box';
 
 interface ListProps<T1> extends BoxProps {
   Component: ComponentType<T1>;

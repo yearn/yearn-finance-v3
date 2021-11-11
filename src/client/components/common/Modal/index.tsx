@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import { Icon, CloseIcon } from '@components/common/Icon';
+
+import { Icon, CloseIcon } from '../Icon';
 
 const StyledModal = styled.div`
   overflow: hidden;

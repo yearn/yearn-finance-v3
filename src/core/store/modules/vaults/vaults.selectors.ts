@@ -1,4 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { memoize } from 'lodash';
+
 import {
   RootState,
   Status,
@@ -13,11 +15,12 @@ import {
   Address,
   GeneralVaultView,
 } from '@types';
-import { memoize } from 'lodash';
-import { toBN } from '../../../../utils';
-import { createToken } from '../tokens/tokens.selectors';
-import { initialVaultActionsStatusMap } from './vaults.reducer';
+import { toBN } from '@utils';
 
+import { initialVaultActionsStatusMap } from './vaults.reducer';
+import { createToken } from '../tokens/tokens.selectors';
+
+/* ---------------------------------- State --------------------------------- */
 const selectVaultsState = (state: RootState) => state.vaults;
 const selectUserVaultsPositionsMap = (state: RootState) => state.vaults.user.userVaultsPositionsMap;
 const selectUserVaultsMetadataMap = (state: RootState) => state.vaults.user.userVaultsMetadataMap;
@@ -33,11 +36,11 @@ const selectVaultsStatusMap = (state: RootState) => state.vaults.statusMap;
 const selectExpectedTxOutcome = (state: RootState) => state.vaults.transaction.expectedOutcome;
 const selectExpectedTxOutcomeStatus = (state: RootState) => state.vaults.statusMap.getExpectedTransactionOutcome;
 const selectUserVaultsSummary = (state: RootState) => state.vaults.user.userVaultsSummary;
-const selectUserVaultsSummaryStatus = (state: RootState) => state.vaults.statusMap.user.getUserVaultsSummary;
 
 const selectGetVaultsStatus = (state: RootState) => state.vaults.statusMap.getVaults;
 const selectGetUserVaultsPositionsStatus = (state: RootState) => state.vaults.statusMap.user.getUserVaultsPositions;
 
+/* ----------------------------- Main Selectors ----------------------------- */
 const selectVaults = createSelector(
   [
     selectVaultsMap,
@@ -106,22 +109,6 @@ const selectVaultsOpportunities = createSelector([selectLiveVaults], (vaults): V
   return opportunities;
 });
 
-const selectVaultsGeneralStatus = createSelector([selectVaultsStatusMap], (statusMap): Status => {
-  const loading = statusMap.getVaults.loading || statusMap.initiateSaveVaults.loading;
-  const error = statusMap.getVaults.error || statusMap.initiateSaveVaults.error;
-  return { loading, error };
-});
-
-const selectSelectedVault = createSelector(
-  [selectVaults, selectSelectedVaultAddress],
-  (vaults, selectedVaultAddress) => {
-    if (!selectedVaultAddress) {
-      return undefined;
-    }
-    return vaults.find((vault) => vault.address === selectedVaultAddress);
-  }
-);
-
 const selectSelectedVaultActionsStatusMap = createSelector(
   [selectVaultsActionsStatusMap, selectSelectedVaultAddress],
   (vaultsActionsStatusMap, selectedVaultAddress): VaultActionsStatusMap => {
@@ -168,16 +155,6 @@ const selectRecommendations = createSelector([selectLiveVaults], (vaults) => {
   return sortedVaults.slice(0, 3);
 });
 
-const selectVaultsStatus = createSelector(
-  [selectGetVaultsStatus, selectGetUserVaultsPositionsStatus],
-  (getVaultsStatus, getUserVaultsPositionsStatus): Status => {
-    return {
-      loading: getVaultsStatus.loading || getUserVaultsPositionsStatus.loading,
-      error: getVaultsStatus.error || getUserVaultsPositionsStatus.error,
-    };
-  }
-);
-
 const selectVault = createSelector(
   [
     selectVaultsMap,
@@ -220,6 +197,34 @@ const selectUnderlyingTokensAddresses = createSelector([selectVaultsMap], (vault
   return Object.values(vaults).map((vault) => vault.tokenId);
 });
 
+/* -------------------------------- Statuses -------------------------------- */
+const selectVaultsGeneralStatus = createSelector([selectVaultsStatusMap], (statusMap): Status => {
+  const loading = statusMap.getVaults.loading || statusMap.initiateSaveVaults.loading;
+  const error = statusMap.getVaults.error || statusMap.initiateSaveVaults.error;
+  return { loading, error };
+});
+
+const selectSelectedVault = createSelector(
+  [selectVaults, selectSelectedVaultAddress],
+  (vaults, selectedVaultAddress) => {
+    if (!selectedVaultAddress) {
+      return undefined;
+    }
+    return vaults.find((vault) => vault.address === selectedVaultAddress);
+  }
+);
+
+const selectVaultsStatus = createSelector(
+  [selectGetVaultsStatus, selectGetUserVaultsPositionsStatus],
+  (getVaultsStatus, getUserVaultsPositionsStatus): Status => {
+    return {
+      loading: getVaultsStatus.loading || getUserVaultsPositionsStatus.loading,
+      error: getVaultsStatus.error || getUserVaultsPositionsStatus.error,
+    };
+  }
+);
+
+/* --------------------------------- Helper --------------------------------- */
 interface CreateVaultProps {
   vaultData: Vault;
   tokenData: Token;
@@ -243,6 +248,9 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
   const vaultAddress = vaultData.address;
   const currentAllowance = tokenAllowancesMap[vaultAddress] ?? '0';
 
+  // TODO: REMOVE AFTER PROBLEM SOLVED
+  const isUSDM = vaultData.address === '0x6FAfCA7f49B4Fd9dC38117469cd31A1E5aec91F5';
+
   return {
     address: vaultData.address,
     name: vaultData.name,
@@ -254,7 +262,7 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
     depositLimit: vaultData?.metadata.depositLimit ?? '0',
     emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
-    depositsDisabled: vaultData?.metadata.depositsDisabled ?? false,
+    depositsDisabled: (vaultData?.metadata.depositsDisabled ?? false) || isUSDM,
     withdrawalsDisabled: vaultData?.metadata.withdrawalsDisabled ?? false,
     apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
     apyType: vaultData.metadata.apy?.type ?? '',

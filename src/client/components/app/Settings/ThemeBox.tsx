@@ -1,7 +1,7 @@
 import styled, { DefaultTheme } from 'styled-components';
-import { Theme } from '@types';
 
 import { useAppTranslation } from '@hooks';
+import { Theme } from '@types';
 
 const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boolean }>`
   display: flex;

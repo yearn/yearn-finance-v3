@@ -1,10 +1,11 @@
+import React from 'react';
 import styled from 'styled-components';
-import { useAppSelector } from '@hooks';
-import { AlertsSelectors } from '@core/store';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
+import { useAppSelector } from '@hooks';
+import { AlertsSelectors } from '@store';
+
 import { Alert } from './Alert';
-import React from 'react';
 
 const StyledAlerts = styled(TransitionGroup)`
   position: fixed;

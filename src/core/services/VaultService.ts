@@ -23,6 +23,7 @@ import {
   TransactionService,
   Config,
 } from '@types';
+
 import v2VaultAbi from './contracts/v2Vault.json';
 import trustedVaultMigratorAbi from './contracts/trustedVaultMigrator.json';
 import triCryptoVaultMigratorAbi from './contracts/triCryptoVaultMigrator.json';
@@ -49,6 +50,10 @@ export class VaultServiceImpl implements VaultService {
     this.transactionService = transactionService;
     this.config = config;
   }
+
+  /* -------------------------------------------------------------------------- */
+  /*                                 Fetch Methods                              */
+  /* -------------------------------------------------------------------------- */
 
   public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
@@ -149,6 +154,10 @@ export class VaultServiceImpl implements VaultService {
 
     return expectedOutcome;
   }
+
+  /* -------------------------------------------------------------------------- */
+  /*                             Transaction Methods                            */
+  /* -------------------------------------------------------------------------- */
 
   public async deposit(props: DepositProps): Promise<TransactionResponse> {
     const { network, accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;

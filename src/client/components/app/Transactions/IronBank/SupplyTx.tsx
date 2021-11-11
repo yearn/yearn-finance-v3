@@ -5,12 +5,12 @@ import { IronBankSelectors, TokensActions, IronBankActions, TokensSelectors } fr
 import {
   toBN,
   normalizeAmount,
-  normalizePercent,
   USDC_DECIMALS,
   validateAllowance,
   basicValidateAmount,
   COLLATERAL_FACTOR_DECIMALS,
-} from '@src/utils';
+  humanize,
+} from '@utils';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 
@@ -82,7 +82,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
   const projectedBorrowLimit = toBN(borrowLimit).plus(collateralAmount).toString();
-  const asset = { ...selectedToken, yield: normalizePercent(selectedMarket.lendApy, 2) };
+  const asset = { ...selectedToken, yield: humanize('percent', selectedMarket.lendApy) };
 
   const { approved: isApproved, error: allowanceError } = validateAllowance({
     tokenAmount: toBN(amount),

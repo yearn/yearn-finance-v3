@@ -11,8 +11,9 @@ import {
 } from '@store';
 import { SummaryCard, InfoCard, ViewContainer, NoWalletCard, Amount } from '@components/app';
 import { Text } from '@components/common';
-import { toBN, halfWidthCss } from '@src/utils';
+import { toBN, halfWidthCss } from '@utils';
 import { getConfig } from '@config';
+
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
   grid-template-columns: 1fr 1fr;

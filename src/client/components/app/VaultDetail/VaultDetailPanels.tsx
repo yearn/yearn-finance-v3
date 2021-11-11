@@ -1,13 +1,12 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatApy, formatUsd, normalizeUsdc } from '@utils';
+import { formatApy, formatUsd, USDC_DECIMALS, humanize } from '@utils';
+import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
-import { GeneralVaultView } from '@types';
 
 import { device } from '@themes/default';
-import { TokenIcon } from '@components/app';
-import { DepositTx, WithdrawTx, MigrateTx } from '@components/app/Transactions';
+import { DepositTx, WithdrawTx, MigrateTx, TokenIcon, ScanNetworkIcon } from '@components/app';
 import {
   Card,
   CardContent,
@@ -19,11 +18,10 @@ import {
   Markdown,
   Icon,
   AddCircleIcon,
+  LineChart,
 } from '@components/common';
-import { LineChart } from '@components/common/Charts';
-import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
 import { MetamaskLogo } from '@assets/images';
-import { AppContext } from '@src/client/context';
+import { GeneralVaultView, StrategyMetadata, Network } from '@types';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -197,11 +195,14 @@ const VaultOverview = styled(Card)`
     }
   }
 `;
+
 export interface VaultDetailPanelsProps {
   selectedVault: GeneralVaultView;
   chartData?: any;
   chartValue?: string;
   displayAddToken?: boolean;
+  currentNetwork?: Network;
+  blockExplorerUrl?: string;
 }
 
 export const VaultDetailPanels = ({
@@ -209,6 +210,8 @@ export const VaultDetailPanels = ({
   chartData,
   chartValue,
   displayAddToken,
+  currentNetwork,
+  blockExplorerUrl,
 }: VaultDetailPanelsProps) => {
   const { t } = useAppTranslation('vaultdetails');
 
@@ -216,7 +219,6 @@ export const VaultDetailPanels = ({
   const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : 'deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
   const context = useContext(AppContext);
-
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
   };
@@ -237,6 +239,11 @@ export const VaultDetailPanels = ({
                 <IconOverImage Component={AddCircleIcon} />
               </RelativeContainer>
             ) : null}
+            <ScanNetworkIcon
+              currentNetwork={currentNetwork}
+              blockExplorerUrl={blockExplorerUrl}
+              address={selectedVault.address}
+            />
           </StyledCardHeaderContainer>
 
           <OverviewTokenInfo>
@@ -253,7 +260,7 @@ export const VaultDetailPanels = ({
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.total-assets')}</span>
-                <StyledText>{normalizeUsdc(selectedVault.vaultBalanceUsdc, 0)}</StyledText>
+                <StyledText>{humanize('usd', selectedVault.vaultBalanceUsdc, USDC_DECIMALS, 0)}</StyledText>
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.type')}</span>

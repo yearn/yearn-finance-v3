@@ -13,9 +13,7 @@ import {
   AppSelectors,
   NetworkSelectors,
 } from '@store';
-
 import { device } from '@themes/default';
-
 import {
   SummaryCard,
   DetailCard,
@@ -28,7 +26,7 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { humanizeAmount, normalizeUsdc, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@src/utils';
+import { humanize, USDC_DECIMALS, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@utils';
 import { getConfig } from '@config';
 
 const SearchBarContainer = styled.div`
@@ -259,7 +257,7 @@ export const Vaults = () => {
               {
                 key: 'balance',
                 header: 'Balance',
-                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
@@ -267,7 +265,7 @@ export const Vaults = () => {
               {
                 key: 'userDepositedUsdc',
                 header: 'Value',
-                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc, 2),
+                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -275,7 +273,7 @@ export const Vaults = () => {
               {
                 key: 'earned',
                 header: 'Earned',
-                format: ({ earned }) => normalizeUsdc(earned, 2),
+                format: ({ earned }) => humanize('usd', earned),
                 sortable: true,
                 width: '11rem',
                 className: 'col-earned',
@@ -334,7 +332,7 @@ export const Vaults = () => {
               {
                 key: 'balance',
                 header: t('components.list-card.balance'),
-                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
@@ -342,7 +340,7 @@ export const Vaults = () => {
               {
                 key: 'userDepositedUsdc',
                 header: t('components.list-card.value'),
-                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc, 2),
+                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -350,7 +348,7 @@ export const Vaults = () => {
               {
                 key: 'earned',
                 header: t('components.list-card.earned'),
-                format: ({ earned }) => (!toBN(earned).isZero() ? normalizeUsdc(earned, 2) : '-'),
+                format: ({ earned }) => (!toBN(earned).isZero() ? humanize('usd', earned) : '-'),
                 sortable: true,
                 width: '11rem',
                 className: 'col-earned',
@@ -409,7 +407,7 @@ export const Vaults = () => {
               {
                 key: 'vaultBalanceUsdc',
                 header: t('components.list-card.total-assets'),
-                format: ({ vaultBalanceUsdc }) => normalizeUsdc(vaultBalanceUsdc, 0),
+                format: ({ vaultBalanceUsdc }) => humanize('usd', vaultBalanceUsdc, USDC_DECIMALS, 0),
                 sortable: true,
                 width: '15rem',
                 className: 'col-assets',
@@ -417,7 +415,8 @@ export const Vaults = () => {
               {
                 key: 'userTokenBalance',
                 header: t('components.list-card.available-deposit'),
-                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                format: ({ token }) =>
+                  token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
                 sortable: true,
                 width: '15rem',
                 className: 'col-available',

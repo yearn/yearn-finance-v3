@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import { ReactComponent as AlchemyCertified } from '@assets/images/alchemy-certified.svg';
-
 import { Icon, MediumIcon, Link, TwitterIcon, DiscordIcon, GithubIcon, TelegramIcon } from '@components/common';
 import { useAppTranslation } from '@hooks';
 import { device } from '@themes/default';

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { ModalTx } from '@components/common';
-import { TestTx } from '@components/app/Transactions';
+import { TestTx } from '@components/app';
 
 const StyledTestTxModal = styled(ModalTx)``;
 export interface TestTxModalProps {

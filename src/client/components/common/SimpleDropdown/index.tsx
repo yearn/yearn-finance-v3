@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
-import { ArrowDownIcon, Icon } from '@components/common';
+
+import { ArrowDownIcon, Icon } from '../Icon';
 
 const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
   --dropdown-background: ${({ theme }) => theme.colors.onSurfaceH1};

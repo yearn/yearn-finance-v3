@@ -6,7 +6,6 @@ import { AppSelectors, TokensSelectors, VaultsSelectors, NetworkSelectors, Walle
 import { useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
 import { SpinnerLoading, Button, Text } from '@components/common';
-
 import { parseHistoricalEarnings, parseLastEarnings } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
@@ -55,6 +54,7 @@ export const VaultDetail = () => {
   const walletName = useAppSelector(WalletSelectors.selectWallet);
 
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
+  const blockExplorerUrl = currentNetworkSettings.blockExplorerUrl;
 
   const [firstTokensFetch, setFirstTokensFetch] = useState(false);
   const [tokensInitialized, setTokensInitialized] = useState(false);
@@ -127,6 +127,8 @@ export const VaultDetail = () => {
           chartData={chartData}
           chartValue={chartValue}
           displayAddToken={displayAddToken}
+          currentNetwork={currentNetwork}
+          blockExplorerUrl={blockExplorerUrl}
         />
       )}
     </VaultDetailView>

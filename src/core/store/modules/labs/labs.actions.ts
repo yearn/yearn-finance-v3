@@ -19,7 +19,8 @@ import {
 import { getConfig } from '@config';
 
 import { VaultsActions } from '../vaults/vaults.actions';
-import { AlertsActions, TokensActions } from '../..';
+import { AlertsActions } from '../alerts/alerts.actions';
+import { TokensActions } from '../tokens/tokens.actions';
 
 const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
 
@@ -216,7 +217,7 @@ const approveWithdraw = createAsyncThunk<void, ApproveWithdrawProps, ThunkAPI>(
         TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -288,7 +289,7 @@ const yvBoostApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkA
       const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : labAddress;
       const result = await dispatch(TokensActions.approve({ tokenAddress: tokenAddress, spenderAddress }));
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -298,7 +299,6 @@ const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoost/yvBoostDeposit',
   async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
     const { wallet } = getState();
-    const { services } = extra;
     const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
@@ -307,8 +307,6 @@ const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const tokenData = getState().tokens.tokensMap[tokenAddress];
     const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
     const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
-    const decimals = toBN(tokenData.decimals);
-    const ONE_UNIT = toBN('10').pow(decimals);
 
     const { error: allowanceError } = validateVaultAllowance({
       amount,
@@ -330,8 +328,8 @@ const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const error = allowanceError || depositError;
     if (error) throw new Error(error);
 
-    const amountInWei = amount.multipliedBy(ONE_UNIT);
-    const { labService } = services;
+    // const amountInWei = amount.multipliedBy(ONE_UNIT);
+    // const { labService } = services;
     // const tx = await labService.yvBoostDeposit({
     //   accountAddress: userAddress,
     //   tokenAddress: tokenData.address,
@@ -354,7 +352,7 @@ const yvBoostApproveZapOut = createAsyncThunk<void, { labAddress: string }, Thun
         TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -366,7 +364,6 @@ const yvBoostWithdraw = createAsyncThunk<
   ThunkAPI
 >('labs/yvBoost/yvBoostWithdraw', async ({ labAddress, amount, targetTokenAddress }, { dispatch, extra, getState }) => {
   const { wallet } = getState();
-  const { services } = extra;
   const userAddress = wallet.selectedAddress;
   if (!userAddress) {
     throw new Error('WALLET NOT CONNECTED');
@@ -400,7 +397,7 @@ const yvBoostWithdraw = createAsyncThunk<
   const error = withdrawError || allowanceError;
   if (error) throw new Error(error);
 
-  const { labService } = services;
+  // const { labService } = services;
   // const tx = await labService.withdraw({
   //   accountAddress: userAddress,
   //   tokenAddress: labData.tokenId,
@@ -422,7 +419,7 @@ const yveCrvApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAP
     try {
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: labAddress }));
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -437,10 +434,7 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
-    const labData = getState().labs.labsMap[labAddress];
     const tokenData = getState().tokens.tokensMap[tokenAddress];
-    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
-    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
     const amountInWei = amount.multipliedBy(ONE_UNIT);
@@ -548,7 +542,7 @@ const yvBoostEthApproveInvest = createAsyncThunk<void, ApproveDepositProps, Thun
         TokensActions.approve({ tokenAddress, spenderAddress: getZapInContractAddress(PSLPYVBOOSTETH) })
       );
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -559,7 +553,6 @@ const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
   async ({ labAddress, tokenAddress, amount }, { dispatch, extra, getState }) => {
     // labAddress is PSLPYVBOOSTETH
     const { wallet } = getState();
-    const { services } = extra;
     const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
@@ -569,8 +562,6 @@ const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const tokenData = getState().tokens.tokensMap[tokenAddress];
     const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
     const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
-    const decimals = toBN(tokenData.decimals);
-    const ONE_UNIT = toBN('10').pow(decimals);
 
     const { error: allowanceError } = validateYvBoostEthActionsAllowance({
       action: 'INVEST',
@@ -592,7 +583,7 @@ const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const error = allowanceError || depositError;
     if (error) throw new Error(error);
 
-    const { labService } = services;
+    // const { labService } = services;
     // const tx = await labService.yvBoostEthInvest({
     //   accountAddress: userAddress,
     //   tokenAddress: tokenData.address,
@@ -614,7 +605,7 @@ const yvBoostEthApproveStake = createAsyncThunk<void, { labAddress: string }, Th
         TokensActions.approve({ tokenAddress: PSLPYVBOOSTETH, spenderAddress: PSLPYVBOOSTETH_GAUGE })
       );
       unwrapResult(result);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }

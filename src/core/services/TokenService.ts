@@ -20,6 +20,7 @@ import {
 } from '@types';
 import { getContract } from '@frameworks/ethers';
 import { get, getUniqueAndCombine, toBN, USDC_DECIMALS } from '@utils';
+
 import erc20Abi from './contracts/erc20.json';
 
 export class TokenServiceImpl implements TokenService {
@@ -45,6 +46,9 @@ export class TokenServiceImpl implements TokenService {
     this.config = config;
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                                Fetch Methods                               */
+  /* -------------------------------------------------------------------------- */
   public async getSupportedTokens({ network }: GetSupportedTokensProps): Promise<Token[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
     const [zapperTokens, vaultsTokens, ironBankTokens]: [Token[], Token[], Token[]] = await Promise.all([
@@ -100,17 +104,6 @@ export class TokenServiceImpl implements TokenService {
     const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
     const allowance = await erc20Contract.allowance(accountAddress, spenderAddress);
     return allowance.toString();
-  }
-
-  public async approve(props: ApproveProps): Promise<TransactionResponse> {
-    const { network, tokenAddress, spenderAddress, amount } = props;
-    const signer = this.web3Provider.getSigner();
-    const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
-    return await this.transactionService.execute({
-      network,
-      fn: erc20Contract.approve,
-      args: [spenderAddress, amount],
-    });
   }
 
   public async getLabsTokens({ network }: { network: Network }): Promise<Token[]> {
@@ -220,5 +213,19 @@ export class TokenServiceImpl implements TokenService {
     }
 
     return newBalances;
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /*                             Transaction Methods                            */
+  /* -------------------------------------------------------------------------- */
+  public async approve(props: ApproveProps): Promise<TransactionResponse> {
+    const { network, tokenAddress, spenderAddress, amount } = props;
+    const signer = this.web3Provider.getSigner();
+    const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
+    return await this.transactionService.execute({
+      network,
+      fn: erc20Contract.approve,
+      args: [spenderAddress, amount],
+    });
   }
 }

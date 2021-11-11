@@ -1,6 +1,7 @@
-import { Address, EarningsDayData, PositionView, Usdc } from '@types';
-import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
+import { Address } from './Blockchain';
 import { TokenView } from './Token';
+import { PositionView } from './Position';
+import { EarningsDayData, Usdc, StrategyMetadata } from './Yearn-Sdk';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
 

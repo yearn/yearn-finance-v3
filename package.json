@@ -1,6 +1,6 @@
 {
   "name": "yearn-finance-v3",
-  "version": "0.2.15",
+  "version": "0.2.16",
   "private": true,
   "scripts": {
     "start": "craco start",
@@ -9,9 +9,9 @@
     "test": "craco test",
     "eject": "react-scripts eject",
     "upgrade-sdk": "yarn add yearn/yearn-sdk",
-    "syncLocales": "locize sync --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=latest --api-key=xxxx --path=./public/locales --format json --reference-language-only false --dry true",
-    "downloadLocales": "locize download --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=latest --path=./public/locales --clean true",
-    "checkLocales": "npm run syncLocales --dry true"
+    "syncDevLocales": "locize sync --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=dev --api-key=xxxx --path=./public/locales --format json --reference-language-only false",
+    "downloadProdLocales": "locize download --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=latest --path=./public/locales --clean true",
+    "checkDevLocales": "npm run syncLocales --dry true"
   },
   "dependencies": {
     "@craco/craco": "^6.1.1",

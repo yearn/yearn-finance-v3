@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { useAppTranslation } from '@hooks';
 import { ModalTx } from '@components/common';
-import { DepositTx } from '@components/app/Transactions';
+import { DepositTx } from '@components/app';
 
 const StyledDepositTxModal = styled(ModalTx)``;
 export interface DepositTxModalProps {

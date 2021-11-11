@@ -1,11 +1,10 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
-import { Text, ProgressBar } from '@components/common';
+import { ProgressBar } from '@components/common';
 
-import { TxActionButton, TxActions, TxSpinnerLoading } from './components/TxActions';
+import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
-import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
 import { TxArrowStatus } from './components/TxArrowStatus';
 
