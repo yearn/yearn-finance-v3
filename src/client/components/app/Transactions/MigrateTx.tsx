@@ -44,7 +44,8 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     );
   }, [selectedVault?.address]);
 
-  if (!selectedVault || !selectedVault.migrationContract || !selectedVault.migrationTargetVault) return null;
+  if (!selectedVault || !selectedVault.migrationContract || !selectedVault.migrationTargetVault || !migrateToVault)
+    return null;
 
   const amount = normalizeAmount(selectedVault.DEPOSIT.userDeposited, selectedVault.token.decimals);
   const amountValue = normalizeAmount(selectedVault.DEPOSIT.userDepositedUsdc, USDC_DECIMALS);
