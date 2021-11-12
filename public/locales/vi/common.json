@@ -2,6 +2,29 @@
   "components": {
     "back-button": {
       "label": "Trở lại trang trước"
+    },
+    "beta-card": {
+      "desc-1": "Website này đang thử nghiệm và nhiều khả năng có lỗi. Nếu tìm thấy lỗi hoặc muốn góp ý, xin vui lòng liên hệ với chúng tôi qua",
+      "header": "Beta đã đến!"
+    },
+    "connect-button": {
+      "connect": "Kết nối Ví"
+    },
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "Đang có để ký gửi",
+      "available-stake": "Đang có để cọc",
+      "available-supply": "Đang có để cấp",
+      "balance": "Số dư",
+      "borrow-apy": "APY vay",
+      "borrowing": "Sắp vay",
+      "collateral": "Thế chấp",
+      "deposits": "Ký gửi",
+      "earned": "Đã nhận",
+      "lend-apy": "APY cho vay",
+      "market-liquidity": "Thanh khoản",
+      "name": "Tên",
+      "opportunities": "Cơ hội"
     }
   },
   "languages": {

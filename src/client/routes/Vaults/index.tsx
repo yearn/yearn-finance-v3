@@ -230,7 +230,7 @@ export const Vaults = () => {
           {!walletIsConnected && <StyledNoWalletCard />}
 
           <DeprecatedCard
-            header="Deprecated"
+            header={t('components.list-card.deprecated')}
             metadata={[
               {
                 key: 'displayIcon',
