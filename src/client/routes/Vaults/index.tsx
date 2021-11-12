@@ -283,7 +283,7 @@ export const Vaults = () => {
                 transform: ({ address, migrationAvailable }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Migrate', handler: () => migrateHandler(address), disabled: migrationAvailable },
+                      { name: 'Migrate', handler: () => migrateHandler(address), disabled: !migrationAvailable },
                       { name: 'Withdraw', handler: () => withdrawHandler(address) },
                     ]}
                   />
