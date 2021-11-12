@@ -280,10 +280,10 @@ export const Vaults = () => {
               },
               {
                 key: 'actions',
-                transform: ({ address, hideIfNoDeposits }) => (
+                transform: ({ address, migrationAvailable }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Migrate', handler: () => migrateHandler(address), disabled: hideIfNoDeposits },
+                      { name: 'Migrate', handler: () => migrateHandler(address), disabled: migrationAvailable },
                       { name: 'Withdraw', handler: () => withdrawHandler(address) },
                     ]}
                   />
