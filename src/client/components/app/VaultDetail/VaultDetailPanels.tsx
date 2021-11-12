@@ -216,7 +216,8 @@ export const VaultDetailPanels = ({
   const { t } = useAppTranslation('vaultdetails');
 
   const isVaultMigratable = selectedVault.migrationAvailable;
-  const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : 'deposit');
+  const hideDeposit = selectedVault.hideIfNoDeposits || isVaultMigratable;
+  const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : hideDeposit ? 'withdraw' : 'deposit');
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
   const context = useContext(AppContext);
   const handleTabChange = (selectedTab: string) => {
@@ -296,7 +297,7 @@ export const VaultDetailPanels = ({
           <StyledCardHeader header={t('vaultdetails:vault-actions-panel.header')} />
           <ActionsTabs value={selectedTab} onChange={handleTabChange}>
             {isVaultMigratable && <Tab value="migrate">{t('vaultdetails:vault-actions-panel.migrate')}</Tab>}
-            {!isVaultMigratable && <Tab value="deposit">{t('vaultdetails:vault-actions-panel.deposit')}</Tab>}
+            {!hideDeposit && <Tab value="deposit">{t('vaultdetails:vault-actions-panel.deposit')}</Tab>}
             <Tab value="withdraw">{t('vaultdetails:vault-actions-panel.withdraw')}</Tab>
           </ActionsTabs>
 
@@ -305,7 +306,7 @@ export const VaultDetailPanels = ({
               <MigrateTx />
             </StyledTabPanel>
           )}
-          {!isVaultMigratable && (
+          {!hideDeposit && (
             <StyledTabPanel value="deposit" tabValue={selectedTab}>
               <DepositTx />
             </StyledTabPanel>

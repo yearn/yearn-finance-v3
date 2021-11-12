@@ -87,12 +87,12 @@ const selectVaults = createSelector(
 );
 
 const selectLiveVaults = createSelector([selectVaults], (vaults): GeneralVaultView[] => {
-  return vaults.filter((vault) => !vault.migrationAvailable);
+  return vaults.filter((vault) => !vault.hideIfNoDeposits);
 });
 
 const selectDeprecatedVaults = createSelector([selectVaults], (vaults): VaultView[] => {
   const deprecatedVaults = vaults
-    .filter((vault) => vault.migrationAvailable)
+    .filter((vault) => vault.hideIfNoDeposits)
     .map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
   return deprecatedVaults.filter((vault) => toBN(vault.userDeposited).gt(0));
 });
@@ -248,9 +248,6 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
   const vaultAddress = vaultData.address;
   const currentAllowance = tokenAllowancesMap[vaultAddress] ?? '0';
 
-  // TODO: REMOVE AFTER PROBLEM SOLVED
-  const isUSDM = vaultData.address === '0x6FAfCA7f49B4Fd9dC38117469cd31A1E5aec91F5';
-
   return {
     address: vaultData.address,
     name: vaultData.name,
@@ -260,10 +257,11 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     vaultBalance: vaultData.underlyingTokenBalance.amount,
     decimals: vaultData.decimals,
     vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
-    depositLimit: vaultData?.metadata.depositLimit ?? '0',
-    emergencyShutdown: vaultData?.metadata.emergencyShutdown ?? false,
-    depositsDisabled: (vaultData?.metadata.depositsDisabled ?? false) || isUSDM,
-    withdrawalsDisabled: vaultData?.metadata.withdrawalsDisabled ?? false,
+    depositLimit: vaultData.metadata.depositLimit ?? '0',
+    emergencyShutdown: vaultData.metadata.emergencyShutdown,
+    depositsDisabled: vaultData.metadata.depositsDisabled || vaultData.metadata.hideIfNoDeposits,
+    withdrawalsDisabled: vaultData.metadata.withdrawalsDisabled ?? false,
+    hideIfNoDeposits: vaultData.metadata.hideIfNoDeposits ?? false,
     apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
     apyType: vaultData.metadata.apy?.type ?? '',
     allowancesMap: vaultAllowancesMap ?? {},

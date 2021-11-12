@@ -20,6 +20,7 @@ export interface GeneralVaultView {
   emergencyShutdown: boolean;
   depositsDisabled: boolean;
   withdrawalsDisabled: boolean;
+  hideIfNoDeposits: boolean;
   apyData: string;
   apyType: string;
   strategies: StrategyMetadata[];
