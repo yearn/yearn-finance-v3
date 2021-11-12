@@ -180,7 +180,8 @@ export const DepositTx: FC<DepositTxProps> = ({
   //   loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   // };
 
-  const depositsDisabledError = selectedVault.depositsDisabled ? 'Vault Deposits Temporarily Disabled' : undefined;
+  const depositsDisabledError =
+    selectedVault.depositsDisabled || selectedVault.hideIfNoDeposits ? 'Vault Deposits Disabled' : undefined;
 
   const sourceError = allowanceError || inputError || depositsDisabledError;
 
