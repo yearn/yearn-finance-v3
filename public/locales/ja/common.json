@@ -1,4 +1,81 @@
 {
+  "components": {
+    "back-button": {
+      "label": "前のページに戻る"
+    },
+    "beta-card": {
+      "desc-1": "このウェブサイトはまだベータ版であるため、バグが含まれる可能性があります。バグを発見された場合やご意見をお寄せいただける場合は下記までご連絡ください。",
+      "header": "ベータ版はこちら"
+    },
+    "connect-button": {
+      "connect": "ウォレットに接続する"
+    },
+    "empty-list": {
+      "searching-text": "別の資産をお探しください",
+      "text": "表示する資産がありません"
+    },
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "入金可能額",
+      "available-stake": "ステーキング可能額",
+      "available-supply": "供給可能額",
+      "balance": "残高",
+      "borrow-apy": "借入APY",
+      "borrowing": "借入中",
+      "collateral": "証拠金",
+      "deposits": "入金",
+      "deprecated": "非推奨",
+      "earned": "獲得",
+      "lend-apy": "貸出APY",
+      "market-liquidity": "市場流動性",
+      "name": "名前",
+      "opportunities": "機会",
+      "price": "値段",
+      "supplying": "供給中",
+      "tokens": "トークン",
+      "total-assets": "総資産",
+      "value": "バリュー"
+    },
+    "no-wallet": "ウォレットが接続されていません",
+    "recommendations": {
+      "header": "最高APY"
+    },
+    "transaction": {
+      "approve": "承認",
+      "available-borrow": "貸出可能額",
+      "borrow": "貸出",
+      "borrow-limit": {
+        "borrow-apy": "貸出APY",
+        "borrowing": "貸出中",
+        "supply-apy": "供給APY",
+        "total-borrow-limit": "総貸出上限",
+        "total-borrow-limit-used": "使用中の総貸出上限"
+      },
+      "claim": "請求",
+      "deposit": "入金",
+      "from-iron-bank": "アイロンバンクから",
+      "from-vault": "ボールトから",
+      "from-wallet": "ウォレットから",
+      "lock": "ロック",
+      "max": "最高",
+      "migrate": "移行",
+      "reinvest": "再投資",
+      "repay": "返済",
+      "reward": "報酬",
+      "stake": "ステーク",
+      "status": {
+        "calculating": "計算中…",
+        "exit": "出口",
+        "simulating": "シミュレーション中…",
+        "transaction-completed": "取引完了"
+      },
+      "supply": "供給",
+      "to-gauge": "ゲージへ",
+      "to-iron-bank": "アイロンバンクへ",
+      "to-vault": "ボールトへ",
+      "to-wallet": "ウォレットへ"
+    }
+  },
   "languages": {
     "de": "Deutsch",
     "en": "English",

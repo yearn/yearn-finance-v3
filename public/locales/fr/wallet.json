@@ -1,5 +1,7 @@
 {
   "your-wallet-card": {
+    "desc-1": "Une fois que vous êtes familiarisé avec les risques et les nuances entre les coffres et les autres produits Yearn, cet écran vous aide à utiliser vos jetons en un minimum de clics. Si les boutons « Approvisionnement » ou « Dépôt » sont actifs, vous pouvez de prêter et/ou déposer ce jeton dans un coffre. Cliquez simplement pour voir la stratégie et le rendement actuel.  ",
+    "desc-2": "N'oubliez pas que ces outils facilitent l'accès à la technologie, mais vous êtes responsable de la compréhension et de la gestion active de vos positions.",
     "header": "Ton portefeuille"
   }
 }

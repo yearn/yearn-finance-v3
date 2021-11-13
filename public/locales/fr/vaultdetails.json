@@ -1,0 +1,25 @@
+{
+  "no-vault-supported-card": {
+    "content": "Essayez d'utiliser le bon réseau.",
+    "header": "Coffre non pris en charge sur {{network}}"
+  },
+  "overview-panel": {
+    "about": "À propos",
+    "apy": "APY",
+    "header": "Aperçu",
+    "strategies": "Stratégies",
+    "total-assets": "Actifs totals",
+    "type": "Type",
+    "web": "Website"
+  },
+  "performance-panel": {
+    "earnings-over-time": "Gains au fil du temps",
+    "header": "Performance"
+  },
+  "vault-actions-panel": {
+    "deposit": "Déposer",
+    "header": "Transactions ",
+    "migrate": "Migrer ",
+    "withdraw": "Retirer"
+  }
+}

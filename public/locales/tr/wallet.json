@@ -1,0 +1,7 @@
+{
+  "your-wallet-card": {
+    "desc-1": "Vault'ların ve diğer Yearn ürünlerinin risklerine ve nüanslarına aşina olduğunuzda, bu ekran Token'lerinizi mümkün olduğunca az tıklama ile çalıştırmanıza yardımcı olur. 'Sğla' veya 'Yatır' tuşları etkinse, o token için bir ödünç verme ve/veya vault fırsatı vardır. Stratejiyi ve mevcut getiriyi görmek için tıklamanız yeterli.",
+    "desc-2": "Unutmayın, bu araçlar teknolojiye erişmeyi kolaylaştırır, ancak pozisyonlarınızı anlamaktan ve aktif olarak yönetmekten siz sorumlusunuz.",
+    "header": "Cüzdanınız"
+  }
+}

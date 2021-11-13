@@ -10,6 +10,10 @@
     "connect-button": {
       "connect": "Cüzdanı Bağla"
     },
+    "empty-list": {
+      "searching-text": "Lütfen başka bir varlık için arama yapın",
+      "text": "Gösterilecek herhangi bir varlık yok"
+    },
     "list-card": {
       "apy": "YFG",
       "available-deposit": "Yatırım yapılabilir",
@@ -20,6 +24,7 @@
       "borrowing": "Borçlanma",
       "collateral": "Teminat",
       "deposits": "Mevduat",
+      "deprecated": "Artık  kullanılmayan",
       "earned": "Kazanç",
       "lend-apy": "Borç verme YFG",
       "market-liquidity": "Piyasa likiditesi",
@@ -88,6 +93,7 @@
     "borrowed": "Borç alınan",
     "earnings": "kazançlar",
     "est-yearly-yield": "Tahmini yıllık gelir",
+    "header": "Pano",
     "holdings": "Varlıklar",
     "supplied": "Yatırılan",
     "total-net-worth": "Toplam net değer",
