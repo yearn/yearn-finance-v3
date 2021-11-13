@@ -5,7 +5,7 @@
     },
     "beta-card": {
       "desc-1": "Website này đang thử nghiệm và nhiều khả năng có lỗi. Nếu tìm thấy lỗi hoặc muốn góp ý, xin vui lòng liên hệ với chúng tôi qua",
-      "header": "Beta đã đến!"
+      "header": "Beta đây!"
     },
     "connect-button": {
       "connect": "Kết nối Ví"
@@ -24,7 +24,87 @@
       "lend-apy": "APY cho vay",
       "market-liquidity": "Thanh khoản",
       "name": "Tên",
-      "opportunities": "Cơ hội"
+      "opportunities": "Cơ hội",
+      "price": "Giá",
+      "supplying": "Sắp cấp",
+      "tokens": "Tôken",
+      "total-assets": "Tổng tài sản",
+      "value": "Trị giá"
+    },
+    "no-wallet": "Chưa kết nối ví",
+    "recommendations": {
+      "header": "APY cao nhất"
+    },
+    "transaction": {
+      "approve": "Duyệt",
+      "available-borrow": "Đang có thể vay",
+      "borrow": "Vay",
+      "borrow-limit": {
+        "borrow-apy": "APY vay",
+        "borrowing": "Sắp vay",
+        "supply-apy": "APY cho vay",
+        "total-borrow-limit": "Tổng giới hạn vay",
+        "total-borrow-limit-used": "Tổng hạn vay đã dùng"
+      },
+      "claim": "Lấy",
+      "deposit": "Ký gửi",
+      "from-iron-bank": "Từ Iron Bank",
+      "from-vault": "Từ kho bạc",
+      "from-wallet": "Từ ví",
+      "lock": "Khóa",
+      "max": "TẤT",
+      "migrate": "Chuyển",
+      "reinvest": "Tái đầu tư",
+      "repay": "Trả nợ",
+      "reward": "Thưởng",
+      "stake": "Cọc",
+      "status": {
+        "calculating": "Đang tính...",
+        "exit": "Thoát",
+        "simulating": "Mô phỏng...",
+        "transaction-completed": "Giao dịch hoàn tất"
+      },
+      "supply": "Cấp",
+      "to-gauge": "Đến tỷ xích",
+      "to-iron-bank": "Đến Iron Bank",
+      "to-vault": "Đến kho bạc",
+      "to-wallet": "Đến ví",
+      "token-input": {
+        "balance": "Số dư",
+        "search-select-token": "Chọn Tôken",
+        "search-select-vault": "Chọn Kho bạc",
+        "yield": "Lãi"
+      },
+      "wallet-balance": "Số dư Ví",
+      "withdraw": "Rút"
+    }
+  },
+  "dashboard": {
+    "apy": "APY",
+    "available": "Đang có",
+    "available-deposit": "Có thể ký gửi",
+    "borrow-limit-total": "Tổng giới hạn vay",
+    "borrow-limit-used": "Hạn vay đã dùng",
+    "borrowed": "Đã vay",
+    "earnings": "Thu nhập",
+    "est-yearly-yield": "Ước tính lãi/năm",
+    "header": "Tổng quan",
+    "holdings": "Nắm giữ",
+    "supplied": "Đã cấp",
+    "total-net-worth": "Tổng tài sản",
+    "vaults-earnings": "Thu nhập từ Kho",
+    "vaults-est-yearly-yield": "Ước tính lãi/năm từ Kho"
+  },
+  "errors": {
+    "default": "Đã xảy ra lỗi bất ngờ",
+    "unknown": "Lỗi không rõ"
+  },
+  "footer": {
+    "links": {
+      "disclaimer": "Thông cáo!",
+      "docs": "Tư liệu",
+      "gov": "Q.trị",
+      "security": "Bảo an"
     }
   },
   "languages": {
@@ -38,5 +118,25 @@
     "tr": "Türk",
     "vi": "Tiếng Việt",
     "zh": "中国人"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "Thông cáo!",
+    "home": "Chính",
+    "ironbank": "Iron Bank",
+    "labs": "Thí điểm",
+    "settings": "Thiết lập",
+    "vault": "Chi tiết Kho",
+    "vaults": "Kho bạc",
+    "wallet": "Ví"
+  },
+  "themes": {
+    "classic": "v2 Kinh điển",
+    "cyberpunk": "Dân Xai-bơ",
+    "dark": "Tối Đơn sắc",
+    "light": "Sáng Đơn sắc"
   }
 }

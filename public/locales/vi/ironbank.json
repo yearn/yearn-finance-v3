@@ -1,0 +1,11 @@
+{
+  "ironbank-card": {
+    "desc-1": "Iron Bank là phương án đơn giản hơn để tiếp cận tôken mới. Vay bằng cách thế chấp tiền mã thuật số (`crypto`) của bạn, khỏi phải bán. Không tìm thấy Kho bạc phù hợp cho mình? Cấp chúng vào Iron Bank và thu lời thêm.",
+    "desc-2": "Đừng quên, ngay cả với công cụ đơn giản như Iron Bank, luôn có rủi ro về hợp đồng thông minh và toàn hệ thống tài sản `crypto` nền.",
+    "header": "Để tiền làm việc cho mình"
+  },
+  "no-ironbank-card": {
+    "header": "Iron Bank chưa hỗ trợ {{network}}",
+    "text": "Hãy quay lại sau."
+  }
+}

@@ -4,8 +4,8 @@
       "label": "Voltar à página anterior"
     },
     "beta-card": {
-      "desc-1": "Este website ainda está em beta, e provalvemente contém erros. Caso encontre algum, ou deseje fornecer feedback, fale conosco",
-      "header": "Beta está aqui!"
+      "desc-1": "Este website ainda está em beta, e provalvemente contém erros. Caso encontre algum, ou deseje fornecer feedback, fale conosco no",
+      "header": "A versão Beta está aqui!"
     },
     "connect-button": {
       "connect": "Conectar Carteira"
@@ -20,6 +20,7 @@
       "borrowing": "Emprestando",
       "collateral": "Garantia",
       "deposits": "Depósito",
+      "deprecated": "Aposentado",
       "earned": "Rendimento",
       "lend-apy": "APY Fornecer",
       "market-liquidity": "Liquidez do mercado",
@@ -72,7 +73,7 @@
       "token-input": {
         "balance": "Saldo",
         "search-select-token": "Escolha um Token",
-        "search-select-vault": "Escolha um token",
+        "search-select-vault": "Escolha um Vault",
         "yield": "Rendimento"
       },
       "wallet-balance": "Saldo na Carteira",
@@ -88,6 +89,7 @@
     "borrowed": "Emprestado",
     "earnings": "Rendimentos",
     "est-yearly-yield": "Rend. anual est",
+    "header": "Painel de Controle",
     "holdings": "Ativos",
     "supplied": "Fornecido",
     "total-net-worth": "Valor total",
@@ -127,7 +129,7 @@
     "home": "Início",
     "ironbank": "Iron Bank",
     "labs": "Labs",
-    "settings": "Configurações",
+    "settings": "Configuração",
     "vault": "Detalhes Vaults",
     "vaults": "Vaults",
     "wallet": "Carteira"
