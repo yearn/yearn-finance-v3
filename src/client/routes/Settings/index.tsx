@@ -11,7 +11,7 @@ import { getConfig } from '@config';
 import { AlertTypes, ModalName, Theme, Language } from '@types';
 import { formatPercent, getCurrentLanguage } from '@utils';
 
-import { ViewContainer, ThemeBox } from '@components/app';
+import { ViewContainer, ThemeBox, CustomThemeButton } from '@components/app';
 import {
   ThemesIcon,
   ClockIcon,
@@ -241,6 +241,7 @@ export const Settings = () => {
                   onClick={() => changeTheme(theme)}
                 />
               ))}
+              <CustomThemeButton onClick={() => openModal('communityThemes')} />
             </SectionContent>
           </SettingsSection>
 
