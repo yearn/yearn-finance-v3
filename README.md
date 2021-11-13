@@ -24,6 +24,7 @@ $ yarn start
 ```
 
 ## Translations
+
 We use i18n react with locize cli to update/download translations.
 
 Refer to main repo for documentation:
@@ -42,17 +43,17 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 
 ### Working from a forked repo
 
+- Getting Started
+
 - set upstream to your fork
 
 `$ git remote add upstream https://github.com/<your-gh>>/yearn-finance-v3`
-
 
 - set origin to original repo
 
 `$ git remote add origin https://github.com/yearn/yearn-finance-v3.git`
 
 `$ git pull origin master --rebase`
-
 
 - soft reset to squash your commits (optional)
 
@@ -62,11 +63,9 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 
 `$ git commit -S -m "message"`
 
-
 - push to your fork
 
 `$ git push upstream <branch-name> --force`
-
 
 - info about verified commits
 
