@@ -5,7 +5,7 @@
     "header": "Lassen Sie Ihre Kryptowährung für Sie arbeiten"
   },
   "no-ironbank-card": {
-    "header": "Noch keine Iron Bank im {{Netzwerk}}",
+    "header": "Noch keine Iron Bank im {{network}}",
     "text": "Schauen Sie bald wieder vorbei."
   }
 }

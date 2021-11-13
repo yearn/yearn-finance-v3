@@ -1,7 +1,7 @@
 {
   "no-vault-supported-card": {
     "content": "请切换正确的网络",
-    "header": "不支持该机枪池{{网络}}"
+    "header": "不支持该机枪池{{network}}"
   },
   "overview-panel": {
     "about": "关于",

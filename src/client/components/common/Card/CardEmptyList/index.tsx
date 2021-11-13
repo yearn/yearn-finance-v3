@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import { useAppTranslation } from '@hooks';
+
 import { Text } from '@components/common';
 
 const StyledCardEmptyList = styled.div<{ wrap?: string }>`
@@ -21,12 +23,14 @@ interface CardEmptyListProps {
 }
 
 export const CardEmptyList: FC<CardEmptyListProps> = ({ children, text, searching, onClick, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   return (
     <StyledCardEmptyList onClick={onClick} {...props}>
       {text ?? (
         <Text>
-          <Text fontWeight="bold">No assets to display</Text>
-          {searching && <Text>Please search for another asset</Text>}
+          <Text fontWeight="bold">{t('components.empty-list.text')}</Text>
+          {searching && <Text>{t('components.empty-list.searching-text')}</Text>}
         </Text>
       )}
     </StyledCardEmptyList>

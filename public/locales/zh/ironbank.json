@@ -5,7 +5,7 @@
     "header": "让你的加密资产为你工作"
   },
   "no-ironbank-card": {
-    "header": "还没有Iron Bank {{网络}}",
+    "header": "还没有Iron Bank {{network}}",
     "text": "稍后检查"
   }
 }

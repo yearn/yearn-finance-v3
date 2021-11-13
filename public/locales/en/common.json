@@ -10,6 +10,10 @@
     "connect-button": {
       "connect": "Connect Wallet"
     },
+    "empty-list": {
+      "searching-text": "Please search for another asset",
+      "text": "No assets to display"
+    },
     "list-card": {
       "apy": "APY",
       "available-deposit": "Available to deposit",

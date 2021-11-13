@@ -316,10 +316,10 @@ export const Labs = () => {
             </Row>
           ) : (
             <StyledInfoCard
-              header={`No Labs yet on ${currentNetworkSettings.name}`}
+              header={t('labs:no-labs-card.header', { network: currentNetworkSettings.name })}
               Component={
                 <Text>
-                  <p>{`Check back later for some new experiments.`}</p>
+                  <p>{t('labs:no-labs-card.text')}</p>
                 </Text>
               }
             />

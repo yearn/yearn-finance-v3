@@ -1,4 +1,8 @@
 {
+  "no-labs-card": {
+    "header": "No Labs yet on {{network}}",
+    "text": "Check back later for some new experiments."
+  },
   "risks-card": {
     "desc-1": "The emerging strategies you'll find here are the newest and most unconventional around. Be sure to review the About sections carefully and make sure you understand token locking, impermanent loss, and other risks before proceeding.",
     "desc-2": "As with all Yearn products, you are responsible for educating yourself on the details, and for actively managing your holdings.",
