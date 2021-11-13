@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { ModalTx } from '@components/common';
-import { LabDepositTx } from '@components/app/Transactions';
+import { LabDepositTx } from '@components/app';
 
 const StyledLabDepositTxModal = styled(ModalTx)``;
 export interface LabDepositTxModalProps {

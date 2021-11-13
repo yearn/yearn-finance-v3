@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import {
   TokensSelectors,
   LabsSelectors,
@@ -20,15 +20,18 @@ import {
   validateVaultWithdrawAllowance,
   validateSlippage,
   calculateSharesAmount,
-} from '@src/utils';
+} from '@utils';
 import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
+
 export interface LabWithdrawTxProps {
   onClose?: () => void;
 }
 
 export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
@@ -155,7 +158,9 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
 
-  const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
+  const loadingText = currentNetworkSettings.simulationsEnabled
+    ? t('components.transaction.status.simulating')
+    : t('components.transaction.status.calculating');
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -186,13 +191,13 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveWithdraw,
       disabled: isApproved,
     },
     {
-      label: 'Withdraw',
+      label: t('components.transaction.withdraw'),
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading,
@@ -202,17 +207,17 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
 
   return (
     <Transaction
-      transactionLabel="Withdraw"
+      transactionLabel={t('components.transaction.withdraw')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="From Vault"
+      sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[selectedLabOption]}
       selectedSourceAsset={selectedLabOption}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To Wallet"
+      targetHeader={t('components.transaction.to-wallet')}
       targetAssetOptions={targetTokensOptions}
       selectedTargetAsset={selectedTargetToken}
       onSelectedTargetAssetChange={onSelectedTargetTokenChange}

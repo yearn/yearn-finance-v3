@@ -1,75 +1,116 @@
 {
-  "language": "es",
-
-  "themes": {
-    "light": "Mono Light",
-    "dark": "Mono Dark",
-    "cyberpunk": "Cyberpunk",
-    "classic": "Classic v2",
-    "explorer": "Explorer"
-  },
-  "commons": {
+  "components": {
+    "back-button": {
+      "label": "Volver a la última página"
+    },
+    "beta-card": {
+      "desc-1": "Este sitio web todavía está en versión beta y probablemente contenga errores. Si encuentra un error o desea enviar comentarios, háganoslo saber en",
+      "header": "¡La Beta está aquí!"
+    },
     "connect-button": {
       "connect": "Conectar Billetera"
+    },
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "Disp. para depositar",
+      "available-stake": "Disponible para stake",
+      "available-supply": "Disp. para suministrar",
+      "balance": "Balance",
+      "collateral": "Colateral",
+      "deposits": "Depósitos",
+      "earned": "Ganado",
+      "market-liquidity": "Liquidez de mercado",
+      "name": "Nombre",
+      "opportunities": "Oportunidades",
+      "price": "Precio",
+      "supplying": "Suministrando",
+      "tokens": "Tokens",
+      "total-assets": "Activos totales",
+      "value": "Valor"
+    },
+    "no-wallet": "Billetera no conectada",
+    "recommendations": {
+      "header": "Mayor APY"
+    },
+    "transaction": {
+      "approve": "Aprobar",
+      "claim": "Reclamar",
+      "deposit": "Depositar",
+      "from-iron-bank": "Desde Iron Bank",
+      "from-vault": "Desde vault",
+      "from-wallet": "Desde billetera",
+      "migrate": "Migrar",
+      "reinvest": "Reinvertir",
+      "reward": "Recompensa",
+      "status": {
+        "calculating": "Calculando...",
+        "exit": "Cerrar",
+        "simulating": "Simulando...",
+        "transaction-completed": "Transacción completada"
+      },
+      "supply": "Suministrar",
+      "to-iron-bank": "A Iron Bank",
+      "to-vault": "A vault",
+      "to-wallet": "A billetera",
+      "token-input": {
+        "balance": "Balance",
+        "search-select-token": "Selecciona un Token",
+        "search-select-vault": "Selecciona una Vault"
+      },
+      "wallet-balance": "Balance Billetera",
+      "withdraw": "Retirar"
     }
+  },
+  "dashboard": {
+    "apy": "APY",
+    "available": "Disponible",
+    "available-deposit": "Disponible para depositar",
+    "borrow-limit-total": "Límite de préstamo total",
+    "borrow-limit-used": "Límite de préstamo utilizado",
+    "borrowed": "Prestado",
+    "earnings": "Ganancias",
+    "est-yearly-yield": "Rendimiento anual est.",
+    "holdings": "Activos",
+    "supplied": "Suministrado",
+    "total-net-worth": "Valor total neto",
+    "vaults-earnings": "Ganancias de Vaults",
+    "vaults-est-yearly-yield": "Rendimiento anual est. de Vaults"
   },
   "errors": {
-    "default": "Hubo un error inesperado"
-  },
-
-  "assetLists": {
-    "deposits": "Deposits",
-    "headers": {
-      "asset": "Asset",
-      "deposited": "Depositado",
-      "wallet": "Wallet",
-      "roi": "ROI"
-    }
-  },
-  "navigation": {
-    "dashboard": "Dashboard",
-    "invest": "Invest",
-    "save": "Save",
-    "borrow": "Borrow",
-    "home": "Inicio",
-    "wallet": "Billetera",
-    "vaults": "Vaults",
-    "vault": "Vault details",
-    "labs": "Labs",
-    "ironbank": "Iron Bank",
-    "settings": "Ajustes",
-    "disclaimer": "Disclaimer",
-    "copyright": {
-      "small": "©",
-      "big": "© Yearn 2021"
-    }
+    "default": "Hubo un error inesperado",
+    "unknown": "Error desconocido"
   },
   "footer": {
     "links": {
-      "gov": "Gov",
+      "disclaimer": "Disclaimer",
       "docs": "Docs",
-      "security": "Security",
-      "v1": "v1",
-      "v2": "v2",
-      "disclaimer": "Disclaimer"
+      "gov": "Gov",
+      "security": "Seguridad"
     }
   },
-  "landing": {
-    "title-1": "EL",
-    "title-2": "Protocolo de Crecimiento",
-    "subtitle": "Yearn Finance es una puerta de entrada a los productos DeFi. Soluciones simples, intuitivas y descentralizadas accesibles para cualquier persona.",
-    "action-button": "Ir a la App"
+  "languages": {
+    "en": "English",
+    "es": "Español"
   },
-  "save": {
-    "assets-headers": {
-      "asset": "Asset",
-      "balance": "Balance",
-      "earning": "Rendimiento"
-    }
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "Disclaimer",
+    "home": "Inicio",
+    "ironbank": "Iron Bank",
+    "labs": "Laboratorios",
+    "settings": "Ajustes",
+    "vault": "Detalle de vault",
+    "vaults": "Vaults",
+    "wallet": "Billetera"
   },
-
-  "settings": {
-    "themes": "Temas",
-    "preferences": "Preferencias"
+  "themes": {
+    "classic": "Classic v2",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "light": "Mono Light",
+    "explorer": "Explorer"
   }
 }

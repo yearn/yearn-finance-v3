@@ -1,6 +1,7 @@
 import { last, uniqBy } from 'lodash';
 
 import { EarningsDayData } from '@types';
+
 import { normalizeAmount, toBN, USDC_DECIMALS } from './format';
 
 export function parseHistoricalEarnings(earnings?: EarningsDayData[]) {

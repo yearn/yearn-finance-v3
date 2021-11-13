@@ -15,8 +15,10 @@ const ADDRESSES = {
   THREECRV: '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490',
   YVTHREECRV: '0x84E13785B5a27879921D6F685f041421C7F482dA',
   YVBOOST: '0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a',
+  YUSD: '0x4B5BfD52124784745c1071dcB244C6688d2533d3',
   PSLPYVBOOSTETH: '0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378',
   PSLPYVBOOSTETH_GAUGE: '0xDA481b277dCe305B97F4091bD66595d57CF31634',
+  YFI: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
 };
 
 const NETWORK_SETTINGS: NetworkSettings = {
@@ -30,6 +32,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     ironBankEnabled: true,
     earningsEnabled: true,
     notifyEnabled: true,
+    blockExplorerUrl: 'https://etherscan.io/address/',
   },
   fantom: {
     id: 'fantom',
@@ -41,6 +44,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     ironBankEnabled: true,
     earningsEnabled: false,
     notifyEnabled: false,
+    blockExplorerUrl: 'https://ftmscan.com/address/',
   },
 };
 
@@ -74,5 +78,8 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_THEME: 'light',
     AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk', 'classic', 'explorer'],
     DEFAULT_ALERT_TIMEOUT: 3000,
+    DEFAULT_LANG: 'en',
+    SUPPORTED_LANGS: ['en', 'es'],
+    DUST_AMOUNT_USD: '10000000',
   };
 });

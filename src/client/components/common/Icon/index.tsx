@@ -35,6 +35,9 @@ import { ReactComponent as AddCircleIcon } from '@assets/icons/add-circle.svg';
 // NOTE NETWORK Icons
 import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
 import { ReactComponent as FantomIcon } from '@assets/icons/networks/fantom.svg';
+import { ReactComponent as EtherscanIcon } from '@assets/icons/etherscan.svg';
+import { ReactComponent as FtmscanIcon } from '@assets/icons/ftmscan.svg';
+import { ReactComponent as DefaultscanIcon } from '@assets/icons/defaultscan.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
@@ -91,4 +94,7 @@ export {
   EthereumIcon,
   FantomIcon,
   AddCircleIcon,
+  EtherscanIcon,
+  FtmscanIcon,
+  DefaultscanIcon,
 };

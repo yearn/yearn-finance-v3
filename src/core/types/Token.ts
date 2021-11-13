@@ -1,18 +1,5 @@
 import { Address } from '@types';
 
-// TODO deprecated
-// export interface TokenData {
-//   address: Address;
-//   name: string;
-//   symbol: string;
-//   decimals: number;
-//   icon: string;
-//   priceUsdc: string;
-//   supported: {
-//     zapper: boolean;
-//   };
-// }
-
 export interface UserTokenData {
   address: string;
   balance: string;

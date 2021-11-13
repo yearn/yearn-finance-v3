@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { TokenIcon } from '@components/app';
+import { useAppTranslation } from '@hooks';
 import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from '@components/common';
-
-import { formatUsd, normalizeUsdc } from '@src/utils';
+import { formatUsd, humanize } from '@utils';
 
 const StyledButton = styled(Button)`
   background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
@@ -228,12 +228,14 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   children,
   ...props
 }) => {
+  const { t } = useAppTranslation('common');
+
   let listItems: SearchListItem[] = [];
   let selectedItem: SearchListItem = {
     id: selectedToken.address,
     icon: selectedToken.icon,
     label: selectedToken.symbol,
-    value: selectedToken.yield ?? normalizeUsdc(selectedToken.balanceUsdc),
+    value: selectedToken.yield ?? humanize('usd', selectedToken.balanceUsdc),
   };
 
   if (tokenOptions && tokenOptions.length > 1) {
@@ -243,7 +245,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           id: item.address,
           icon: item.icon,
           label: item.symbol,
-          value: item.yield ?? normalizeUsdc(item.balanceUsdc),
+          value: item.yield ?? humanize('usd', item.balanceUsdc),
         };
       })
       .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));
@@ -255,6 +257,9 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   };
 
   const [openedSearch, setOpenedSearch] = useState(false);
+  const searchListHeader = selectedToken.yield
+    ? t('components.transaction.token-input.search-select-vault')
+    : t('components.transaction.token-input.search-select-token');
 
   return (
     <StyledTxTokenInput {...props}>
@@ -263,7 +268,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
           <StyledSearchList
             list={listItems}
-            headerText={`Select a ${selectedToken.yield ? 'Vault' : 'Token'}`}
+            headerText={searchListHeader}
             selected={selectedItem}
             setSelected={(item) => (onSelectedTokenChange ? onSelectedTokenChange(item.id) : undefined)}
             onCloseList={() => setOpenedSearch(false)}
@@ -281,7 +286,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         </TokenSelector>
 
         <TokenData>
-          <AmountTitle>{inputText || 'Balance'}</AmountTitle>
+          <AmountTitle>{inputText || t('components.transaction.token-input.balance')}</AmountTitle>
           <StyledAmountInput
             value={amount}
             onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
@@ -299,7 +304,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
             )}
             {yieldPercent && (
               <StyledText>
-                Yield <ContrastText>{yieldPercent}</ContrastText>
+                {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
               </StyledText>
             )}
           </TokenExtras>

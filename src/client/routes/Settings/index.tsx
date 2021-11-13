@@ -1,13 +1,17 @@
+import { useEffect, useState } from 'react';
+import i18n from 'i18next';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppTranslation, useAppSelector, useAppDispatch, useWindowDimensions } from '@hooks';
+import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
 import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions, ModalsActions } from '@store';
 import { getTheme } from '@themes';
+import { device } from '@themes/default';
 import { getConfig } from '@config';
-import { AlertTypes, ModalName, Theme } from '@types';
+import { AlertTypes, ModalName, Theme, Language } from '@types';
+import { formatPercent, getCurrentLanguage } from '@utils';
 
-import { ViewContainer } from '@components/app';
+import { ViewContainer, ThemeBox } from '@components/app';
 import {
   ThemesIcon,
   ClockIcon,
@@ -18,10 +22,8 @@ import {
   Card,
   CardHeader,
   CardContent,
+  OptionList,
 } from '@components/common';
-import { ThemeBox } from '@components/app/Settings';
-import { device } from '@themes/default';
-import { formatPercent } from '@utils';
 
 const sectionsGap = '2.2rem';
 const sectionsBorderRadius = '0.8rem';
@@ -142,10 +144,9 @@ const SettingsView = styled(ViewContainer)`
 `;
 
 export const Settings = () => {
-  const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation(['common', 'settings']);
   const dispatch = useAppDispatch();
   const history = useHistory();
-  const { isMobile } = useWindowDimensions();
 
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
@@ -153,7 +154,23 @@ export const Settings = () => {
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
   const availableSlippages = getConfig().SLIPPAGE_OPTIONS;
-  const { ALLOW_DEV_MODE, AVAILABLE_THEMES } = getConfig();
+  const { ALLOW_DEV_MODE, AVAILABLE_THEMES, SUPPORTED_LANGS } = getConfig();
+
+  const currentLang = getCurrentLanguage().toString();
+  const [dropdownSelectedLanguage, setDropdownSelectedLanguage] = useState({
+    value: currentLang,
+    label: t(`languages.${currentLang}`),
+  });
+
+  const dropdownLanguageOptions = SUPPORTED_LANGS.map((lang: Language) => {
+    return { value: lang, label: t(`languages.${lang}`) };
+  });
+
+  const changeLanguage = (dropdownOption: { value: string; label: string }) => {
+    setDropdownSelectedLanguage(dropdownOption);
+    i18n.changeLanguage(dropdownOption.value);
+  };
+
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
   const changeSlippage = (slippage: number) => {
@@ -176,22 +193,30 @@ export const Settings = () => {
     dispatch(AlertsActions.openAlert({ message, type, persistent }));
   };
 
+  useEffect(() => {
+    setDropdownSelectedLanguage({ value: currentLang, label: t(`languages.${currentLang}`) });
+  }, [currentLang]);
+
   return (
     <SettingsView>
       <SettingsCard>
-        <SettingsCardHeader header={t('settings.preferences')} />
+        <SettingsCardHeader header={t('settings:preferences')} />
 
         <SettingsCardContent>
           <SettingsSection>
             <SectionTitle>
               <SectionHeading>
                 <SectionIcon Component={ClockIcon} />
-                Slippage tolerance
+                {t('settings:slippage-tolerance')}
               </SectionHeading>
             </SectionTitle>
             <SectionContent>
               {availableSlippages.map((slippage) => (
-                <SlippageOption onClick={() => changeSlippage(slippage)} active={slippage === defaultSlippage}>
+                <SlippageOption
+                  onClick={() => changeSlippage(slippage)}
+                  active={slippage === defaultSlippage}
+                  key={`s-${slippage}`}
+                >
                   {formatPercent(slippage.toString(), 0)}
                 </SlippageOption>
               ))}
@@ -202,7 +227,7 @@ export const Settings = () => {
             <SectionTitle>
               <SectionHeading>
                 <SectionIcon Component={ThemesIcon} />
-                {t('settings.themes')}
+                {t('settings:themes')}
               </SectionHeading>
             </SectionTitle>
 
@@ -216,6 +241,23 @@ export const Settings = () => {
                   onClick={() => changeTheme(theme)}
                 />
               ))}
+            </SectionContent>
+          </SettingsSection>
+
+          <SettingsSection>
+            <SectionTitle>
+              <SectionHeading>
+                <SectionIcon Component={ThemesIcon} />
+                {t('settings:language')}
+              </SectionHeading>
+            </SectionTitle>
+
+            <SectionContent>
+              <OptionList
+                selected={dropdownSelectedLanguage}
+                setSelected={changeLanguage}
+                options={dropdownLanguageOptions}
+              />
             </SectionContent>
           </SettingsSection>
 

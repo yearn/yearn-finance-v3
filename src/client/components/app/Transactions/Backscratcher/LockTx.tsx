@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import { TokensActions, LabsSelectors, LabsActions, VaultsActions } from '@store';
 import {
   toBN,
@@ -9,7 +9,7 @@ import {
   validateVaultDeposit,
   formatPercent,
   validateYveCrvActionsAllowance,
-} from '@src/utils';
+} from '@utils';
 
 import { Transaction } from '../Transaction';
 
@@ -18,6 +18,8 @@ export interface BackscratcherLockTxProps {
 }
 
 export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, children, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
@@ -125,13 +127,13 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveDeposit,
       disabled: isApproved,
     },
     {
-      label: 'Lock',
+      label: t('components.transaction.lock'),
       onAction: lock,
       status: actionsStatus.deposit,
       disabled: !isApproved || !isValidAmount,
@@ -141,17 +143,17 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
 
   return (
     <Transaction
-      transactionLabel="Lock"
+      transactionLabel={t('components.transaction.lock')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="From Wallet"
+      sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={[selectedSellToken]}
       selectedSourceAsset={selectedSellToken}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To Vault"
+      targetHeader={t('components.transaction.to-vault')}
       targetAssetOptions={[selectedLabOption]}
       selectedTargetAsset={selectedLabOption}
       targetAmount={expectedAmount}

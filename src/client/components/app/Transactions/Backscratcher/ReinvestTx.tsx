@@ -1,8 +1,8 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useAppTranslation } from '@hooks';
 import { VaultsSelectors, LabsSelectors, LabsActions, VaultsActions, TokensActions } from '@store';
-import { formatPercent, normalizeAmount, toBN, USDC_DECIMALS, validateYveCrvActionsAllowance } from '@src/utils';
+import { formatPercent, normalizeAmount, toBN, USDC_DECIMALS, validateYveCrvActionsAllowance } from '@utils';
 import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
@@ -12,6 +12,8 @@ export interface BackscratcherReinvestTxProps {
 }
 
 export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onClose, children, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   const { CONTRACT_ADDRESSES } = getConfig();
   const { YVTHREECRV, y3CrvBackZapper } = CONTRACT_ADDRESSES;
   const dispatch = useAppDispatch();
@@ -107,13 +109,13 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveReinvest,
       disabled: isApproved,
     },
     {
-      label: 'Reinvest',
+      label: t('components.transaction.reinvest'),
       onAction: reinvest,
       status: actionsStatus.reinvest,
       disabled: !isApproved,
@@ -122,16 +124,16 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
 
   return (
     <Transaction
-      transactionLabel="Reinvest"
+      transactionLabel={t('components.transaction.reinvest')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="Reward"
+      sourceHeader={t('components.transaction.reward')}
       sourceAssetOptions={[selectedLabOption]}
       selectedSourceAsset={selectedLabOption}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
-      targetHeader="To Vault"
+      targetHeader={t('components.transaction.to-vault')}
       targetAssetOptions={[selectedVaultOption]}
       selectedTargetAsset={selectedVaultOption}
       targetAmount={expectedAmount}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
   ModalsActions,
   IronBankActions,
@@ -12,7 +12,6 @@ import {
   AppSelectors,
   NetworkSelectors,
 } from '@store';
-
 import { SpinnerLoading, ToggleButton, SearchInput, Text } from '@components/common';
 import {
   SummaryCard,
@@ -25,7 +24,7 @@ import {
   InfoCard,
   Amount,
 } from '@components/app';
-import { normalizeUsdc, normalizePercent, humanizeAmount, halfWidthCss, normalizeAmount } from '@src/utils';
+import { humanize, halfWidthCss, normalizeAmount, USDC_DECIMALS } from '@utils';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
 
@@ -132,15 +131,15 @@ const OpportunitiesCard = styled(DetailCard)`
 ` as typeof DetailCard;
 
 export const IronBank = () => {
-  // TODO: Add translation
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation(['common', 'ironbank']);
+
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   const { NETWORK_SETTINGS } = getConfig();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, netAPY, borrowLimitUsdc } = useAppSelector(
+  const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, borrowLimitUsdc } = useAppSelector(
     IronBankSelectors.selectSummaryData
   );
   const recommendations = useAppSelector(IronBankSelectors.selectRecommendations);
@@ -192,13 +191,13 @@ export const IronBank = () => {
       <SummaryCard
         header="Dashboard"
         items={[
-          { header: 'Supplied', Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
-          { header: 'Borrowed', Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },
+          { header: t('dashboard.supplied'), Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
+          { header: t('dashboard.borrowed'), Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },
           {
-            header: 'Borrow limit used',
+            header: t('dashboard.borrow-limit-used'),
             Component: <Amount value={borrowUtilizationRatio} input="weipercent" />,
           },
-          { header: 'Total borrow limit', Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
+          { header: t('dashboard.borrow-limit-total'), Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
         ]}
         variant="secondary"
         cardSize="small"
@@ -211,39 +210,32 @@ export const IronBank = () => {
           {currentNetworkSettings.ironBankEnabled ? (
             <Row>
               <StyledRecommendationsCard
-                header="Recommendations"
+                header={t('components.recommendations.header')}
                 items={recommendations.map(({ token, lendApy, address }) => ({
                   icon: token.icon ?? '',
                   name: token.symbol,
-                  info: normalizePercent(lendApy, 2),
+                  info: humanize('percent', lendApy),
                   infoDetail: 'EYY',
                   onAction: () => actionHandler('supply', address),
                 }))}
               />
 
               <StyledInfoCard
-                header="Let your crypto work for you"
+                header={t('ironbank:ironbank-card.header')}
                 Component={
                   <Text>
-                    <p>
-                      Iron Bank offers a simple way to get exposure to new tokens. Borrow using your crypto as
-                      collateral, without having to sell. Didn’t find the right Vault for your tokens? Supply them to
-                      Iron Bank and earn more crypto.
-                    </p>
-                    <p>
-                      Remember, even with simple tools like Iron Bank, smart contract risks and systemic risks of the
-                      underlying crypto assets exist.
-                    </p>
+                    <p>{t('ironbank:ironbank-card.desc-1')}</p>
+                    <p>{t('ironbank:ironbank-card.desc-2')}</p>
                   </Text>
                 }
               />
             </Row>
           ) : (
             <StyledInfoCard
-              header={`No Iron Bank yet on ${currentNetworkSettings.name}`}
+              header={t('ironbank:no-ironbank-card.header', { network: currentNetworkSettings.name })}
               Component={
                 <Text>
-                  <p>{`Check back soon.`}</p>
+                  <p>{t('ironbank:no-ironbank-card.text')}</p>
                 </Text>
               }
             />
@@ -252,7 +244,7 @@ export const IronBank = () => {
           {!walletIsConnected && <StyledNoWalletCard />}
 
           <SupplyingCard
-            header="Supplying"
+            header={t('components.list-card.supplying')}
             metadata={[
               {
                 key: 'displayIcon',
@@ -262,7 +254,7 @@ export const IronBank = () => {
               },
               {
                 key: 'displayName',
-                header: 'Name',
+                header: t('components.list-card.name'),
                 sortable: true,
                 fontWeight: 600,
                 width: '17rem',
@@ -270,31 +262,31 @@ export const IronBank = () => {
               },
               {
                 key: 'lendApy',
-                header: 'APY',
-                format: ({ lendApy }) => normalizePercent(lendApy, 2),
+                header: t('components.list-card.apy'),
+                format: ({ lendApy }) => humanize('percent', lendApy),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
               },
               {
                 key: 'balance',
-                header: 'Balance',
-                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                header: t('components.list-card.balance'),
+                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
               },
               {
                 key: 'userDepositedUsdc',
-                header: 'Value',
-                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc),
+                header: t('components.list-card.value'),
+                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
               },
               {
                 key: 'collateral',
-                header: 'Collateral',
+                header: t('components.list-card.collateral'),
                 transform: ({ collateral, address }) => (
                   <ToggleButton
                     selected={collateral}
@@ -311,8 +303,8 @@ export const IronBank = () => {
                 transform: ({ address }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Supply', handler: () => actionHandler('supply', address) },
-                      { name: 'Withdraw', handler: () => actionHandler('withdraw', address) },
+                      { name: t('components.transaction.supply'), handler: () => actionHandler('supply', address) },
+                      { name: t('components.transaction.withdraw'), handler: () => actionHandler('withdraw', address) },
                     ]}
                   />
                 ),
@@ -334,7 +326,7 @@ export const IronBank = () => {
           />
 
           <BorrowingCard
-            header="Borrowing"
+            header={t('components.list-card.borrowing')}
             metadata={[
               {
                 key: 'displayIcon',
@@ -344,7 +336,7 @@ export const IronBank = () => {
               },
               {
                 key: 'displayName',
-                header: 'Name',
+                header: t('components.list-card.name'),
                 sortable: true,
                 fontWeight: 600,
                 width: '17rem',
@@ -352,24 +344,24 @@ export const IronBank = () => {
               },
               {
                 key: 'borrowApy',
-                header: 'APY',
-                format: ({ borrowApy }) => normalizePercent(borrowApy, 2),
+                header: t('components.list-card.apy'),
+                format: ({ borrowApy }) => humanize('percent', borrowApy),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
               },
               {
                 key: 'balance',
-                header: 'Balance',
-                format: ({ userDeposited, token }) => humanizeAmount(userDeposited, token.decimals, 4),
+                header: t('components.list-card.balance'),
+                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
               },
               {
                 key: 'userDepositedUsdc',
-                header: 'Value',
-                format: ({ userDepositedUsdc }) => normalizeUsdc(userDepositedUsdc),
+                header: t('components.list-card.value'),
+                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -379,8 +371,8 @@ export const IronBank = () => {
                 transform: ({ address }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Borrow', handler: () => actionHandler('borrow', address) },
-                      { name: 'Repay', handler: () => actionHandler('repay', address) },
+                      { name: t('components.transaction.borrow'), handler: () => actionHandler('borrow', address) },
+                      { name: t('components.transaction.repay'), handler: () => actionHandler('repay', address) },
                     ]}
                   />
                 ),
@@ -401,7 +393,7 @@ export const IronBank = () => {
           />
 
           <OpportunitiesCard
-            header="Opportunities"
+            header={t('components.list-card.opportunities')}
             metadata={[
               {
                 key: 'displayIcon',
@@ -411,7 +403,7 @@ export const IronBank = () => {
               },
               {
                 key: 'displayName',
-                header: 'Name',
+                header: t('components.list-card.name'),
                 sortable: true,
                 fontWeight: 600,
                 width: '17rem',
@@ -419,32 +411,33 @@ export const IronBank = () => {
               },
               {
                 key: 'lendApy',
-                header: 'Lend APY',
-                format: ({ lendApy }) => normalizePercent(lendApy, 2),
+                header: t('components.list-card.lend-apy'),
+                format: ({ lendApy }) => humanize('percent', lendApy),
                 sortable: true,
                 width: '8rem',
                 className: 'col-lend-apy',
               },
               {
                 key: 'borrowApy',
-                header: 'Borrow APY',
-                format: ({ borrowApy }) => normalizePercent(borrowApy, 2),
+                header: t('components.list-card.borrow-apy'),
+                format: ({ borrowApy }) => humanize('percent', borrowApy),
                 sortable: true,
                 width: '8rem',
                 className: 'col-borrow-apy',
               },
               {
                 key: 'liquidity',
-                header: 'Market liquidity',
-                format: ({ liquidity }) => normalizeUsdc(liquidity, 0),
+                header: t('components.list-card.market-liquidity'),
+                format: ({ liquidity }) => humanize('usd', liquidity, USDC_DECIMALS, 0),
                 sortable: true,
                 width: '15rem',
                 className: 'col-market',
               },
               {
                 key: 'userTokenBalance',
-                header: 'Available to supply',
-                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                header: t('components.list-card.available-supply'),
+                format: ({ token }) =>
+                  token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
                 sortable: true,
                 width: '15rem',
                 className: 'col-available',
@@ -454,8 +447,16 @@ export const IronBank = () => {
                 transform: ({ address }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Supply', handler: () => actionHandler('supply', address), disabled: !walletIsConnected },
-                      { name: 'Borrow', handler: () => actionHandler('borrow', address), disabled: !walletIsConnected },
+                      {
+                        name: t('components.transaction.supply'),
+                        handler: () => actionHandler('supply', address),
+                        disabled: !walletIsConnected,
+                      },
+                      {
+                        name: t('components.transaction.borrow'),
+                        handler: () => actionHandler('borrow', address),
+                        disabled: !walletIsConnected,
+                      },
                     ]}
                   />
                 ),

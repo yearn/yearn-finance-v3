@@ -1,6 +1,7 @@
 export * from './Box';
 export * from './Button';
 export * from './Card';
+export * from './Charts';
 export * from './Icon';
 export * from './Img';
 export * from './Input';

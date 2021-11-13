@@ -1,75 +1,134 @@
 {
-  "language": "en",
-
-  "themes": {
-    "light": "Mono Light",
-    "dark": "Mono Dark",
-    "cyberpunk": "Cyberpunk",
-    "classic": "Classic v2",
-    "explorer": "Explorer"
-  },
-  "commons": {
+  "components": {
+    "back-button": {
+      "label": "Back to previous page"
+    },
+    "beta-card": {
+      "desc-1": "This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide feedback, please let us know on",
+      "header": "Beta is here!"
+    },
     "connect-button": {
       "connect": "Connect Wallet"
+    },
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "Available to deposit",
+      "available-stake": "Available to stake",
+      "available-supply": "Available to supply",
+      "balance": "Balance",
+      "borrow-apy": "Borrow APY",
+      "borrowing": "Borrowing",
+      "collateral": "Collateral",
+      "deposits": "Deposits",
+      "earned": "Earned",
+      "lend-apy": "Lend APY",
+      "market-liquidity": "Market liquidity",
+      "name": "Name",
+      "opportunities": "Opportunities",
+      "price": "Price",
+      "supplying": "Supplying",
+      "tokens": "Tokens",
+      "total-assets": "Total assets",
+      "value": "Value"
+    },
+    "no-wallet": "Wallet not connected",
+    "recommendations": {
+      "header": "Highest APY"
+    },
+    "transaction": {
+      "approve": "Approve",
+      "available-borrow": "Available to borrow",
+      "borrow": "Borrow",
+      "borrow-limit": {
+        "borrow-apy": "Borrow APY",
+        "borrowing": "Borrowing",
+        "supply-apy": "Supply APY",
+        "total-borrow-limit": "Total borrow limit",
+        "total-borrow-limit-used": "Total borrow limit used"
+      },
+      "claim": "Claim",
+      "deposit": "Deposit",
+      "from-iron-bank": "From Iron Bank",
+      "from-vault": "From vault",
+      "from-wallet": "From wallet",
+      "lock": "Lock",
+      "max": "MAX",
+      "migrate": "Migrate",
+      "reinvest": "Reinvest",
+      "repay": "Repay",
+      "reward": "Reward",
+      "stake": "Stake",
+      "status": {
+        "calculating": "Calculating...",
+        "exit": "Exit",
+        "simulating": "Simulating...",
+        "transaction-completed": "Transaction completed"
+      },
+      "supply": "Supply",
+      "to-gauge": "To gauge",
+      "to-iron-bank": "To Iron Bank",
+      "to-vault": "To vault",
+      "to-wallet": "To wallet",
+      "token-input": {
+        "balance": "Balance",
+        "search-select-token": "Select a Token",
+        "search-select-vault": "Select a Vault",
+        "yield": "Yield"
+      },
+      "wallet-balance": "Wallet Balance",
+      "withdraw": "Withdraw"
     }
+  },
+  "dashboard": {
+    "apy": "APY",
+    "available": "Available",
+    "available-deposit": "Available to deposit",
+    "borrow-limit-total": "Total borrow limit",
+    "borrow-limit-used": "Borrow limit used",
+    "borrowed": "Borrowed",
+    "earnings": "Earnings",
+    "est-yearly-yield": "Est. yearly yield",
+    "holdings": "Holdings",
+    "supplied": "Supplied",
+    "total-net-worth": "Total net worth",
+    "vaults-earnings": "Vaults earnings",
+    "vaults-est-yearly-yield": "Vaults est. yearly yield"
   },
   "errors": {
-    "default": "There was an unexpected error"
-  },
-
-  "asset-lists": {
-    "deposits": "Deposits",
-    "headers": {
-      "asset": "Asset",
-      "deposited": "Deposited",
-      "wallet": "Wallet",
-      "roi": "ROI"
-    }
-  },
-  "navigation": {
-    "dashboard": "Dashboard",
-    "invest": "Invest",
-    "save": "Save",
-    "borrow": "Borrow",
-    "home": "Home",
-    "wallet": "Wallet",
-    "vaults": "Vaults",
-    "vault": "Vault details",
-    "labs": "Labs",
-    "ironbank": "Iron Bank",
-    "settings": "Settings",
-    "disclaimer": "Disclaimer",
-    "copyright": {
-      "small": "©",
-      "big": "© Yearn 2021"
-    }
+    "default": "There was an unexpected error",
+    "unknown": "Unknown error"
   },
   "footer": {
     "links": {
-      "gov": "Gov",
+      "disclaimer": "Disclaimer",
       "docs": "Docs",
-      "security": "Security",
-      "v1": "v1",
-      "v2": "v2",
-      "disclaimer": "Disclaimer"
+      "gov": "Gov",
+      "security": "Security"
     }
   },
-  "landing": {
-    "title-1": "THE",
-    "title-2": "Growth Protocol",
-    "subtitle": "Yearn finance is a gateway to DeFi products. Simple intuitive and decentralized solutions accessible to anyone.",
-    "action-button": "Go to App"
+  "languages": {
+    "en": "English",
+    "es": "Español"
   },
-  "save": {
-    "assets-headers": {
-      "asset": "Asset",
-      "balance": "Asset balance",
-      "earning": "Earning"
-    }
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "Disclaimer",
+    "home": "Home",
+    "ironbank": "Iron Bank",
+    "labs": "Labs",
+    "settings": "Settings",
+    "vault": "Vault details",
+    "vaults": "Vaults",
+    "wallet": "Wallet"
   },
-
-  "settings": {
-    "themes": "Themes",
-    "preferences": "Preferences"
+  "themes": {
+    "classic": "Classic v2",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "light": "Mono Light",
+    "explorer": "Explorer"
   }
 }

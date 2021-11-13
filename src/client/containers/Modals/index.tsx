@@ -1,13 +1,11 @@
 import styled from 'styled-components';
-import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, ModalSelectors } from '@core/store';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
+import { useAppSelector, useAppDispatch } from '@hooks';
+import { ModalsActions, ModalSelectors } from '@store';
 
 import { TestModal } from './TestModal';
 import { ComingSoonModal } from './ComingSoonModal';
-// import { DepositModal } from './DepositModal_old';
-// import { WithdrawModal } from './WithdrawModal_old';
-
 import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
@@ -123,17 +121,6 @@ export const Modals = () => {
           <ComingSoonModal modalProps={modalProps} onClose={closeModal} />
         </CSSTransition>
       )}
-
-      {/* {activeModal === 'deposit' && (
-        <CSSTransition key={'deposit'} timeout={modalTimeout} classNames="slideBottom">
-          <DepositModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-      {activeModal === 'withdraw' && (
-        <CSSTransition key={'withdraw'} timeout={modalTimeout} classNames="slideBottom">
-          <WithdrawModal onClose={closeModal} />
-        </CSSTransition>
-      )} */}
 
       {activeModal === 'testTx' && (
         <CSSTransition key={'testTx'} timeout={modalTimeout} classNames="slideBottom">

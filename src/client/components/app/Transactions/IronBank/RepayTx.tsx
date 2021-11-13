@@ -1,16 +1,8 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import { IronBankSelectors, IronBankActions, TokensActions } from '@store';
-import {
-  toBN,
-  normalizeAmount,
-  normalizePercent,
-  USDC_DECIMALS,
-  basicValidateAmount,
-  toWei,
-  validateAllowance,
-} from '@src/utils';
+import { toBN, normalizeAmount, USDC_DECIMALS, basicValidateAmount, toWei, validateAllowance, humanize } from '@utils';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 
@@ -19,6 +11,8 @@ export interface IronBankRepayTxProps {
 }
 
 export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
@@ -78,7 +72,7 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
     ...selectedToken,
     balance: selectedToken.balance,
     balanceUsdc: selectedToken.balanceUsdc,
-    yield: normalizePercent(selectedMarket.borrowApy, 2),
+    yield: humanize('percent', selectedMarket.borrowApy),
   };
 
   const { approved: isApproved, error: allowanceError } = validateAllowance({
@@ -135,13 +129,13 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approve,
       disabled: isApproved,
     },
     {
-      label: 'Repay',
+      label: t('components.transaction.repay'),
       onAction: repay,
       status: actionsStatus.repay,
       disabled: !isApproved || !isValidAmount,
@@ -151,17 +145,17 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
 
   return (
     <IronBankTransaction
-      transactionLabel="Repay"
+      transactionLabel={t('components.transaction.repay')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      assetHeader="To Iron Bank"
-      assetLabel="Wallet Balance"
+      assetHeader={t('components.transaction.to-iron-bank')}
+      assetLabel={t('components.transaction.wallet-balance')}
       asset={asset}
       amount={amount}
       amountValue={amountValue}
       safeMax={repayableTokens}
-      maxLabel="MAX"
+      maxLabel={t('components.transaction.max')}
       onAmountChange={setAmount}
       borrowBalance={borrowBalance}
       projectedBorrowBalance={projectedBorrowBalance}

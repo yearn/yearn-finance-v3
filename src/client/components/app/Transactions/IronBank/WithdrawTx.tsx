@@ -1,16 +1,16 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import { IronBankSelectors, IronBankActions } from '@store';
 import {
   toBN,
   normalizeAmount,
-  normalizePercent,
   USDC_DECIMALS,
   basicValidateAmount,
   toWei,
   COLLATERAL_FACTOR_DECIMALS,
-} from '@src/utils';
+  humanize,
+} from '@utils';
 import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';
@@ -20,6 +20,8 @@ export interface IronBankWithdrawTxProps {
 }
 
 export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => {
+  const { t } = useAppTranslation('common');
+
   const { IRON_BANK_MAX_RATIO } = getConfig();
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
@@ -79,7 +81,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
     ...selectedToken,
     balance: selectedMarket.LEND.userDeposited,
     balanceUsdc: selectedMarket.LEND.userDepositedUsdc,
-    yield: normalizePercent(selectedMarket.lendApy, 2),
+    yield: humanize('percent', selectedMarket.lendApy),
   };
   const percentageToWithdraw = toBN(amount).div(suppliedTokens).times(100).toString();
   const willWithdrawAll = toBN(percentageToWithdraw).gte(99);
@@ -120,7 +122,7 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
 
   const txActions = [
     {
-      label: 'Withdraw',
+      label: t('components.transaction.withdraw'),
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isValidAmount,
@@ -130,12 +132,12 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
 
   return (
     <IronBankTransaction
-      transactionLabel="Withdraw"
+      transactionLabel={t('components.transaction.withdraw')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      assetHeader="From Iron Bank"
-      assetLabel="Supplied Balance"
+      assetHeader={t('components.transaction.from-iron-bank')}
+      assetLabel={t('components.transaction.supplied-balance')}
       asset={asset}
       amount={amount}
       amountValue={amountValue}

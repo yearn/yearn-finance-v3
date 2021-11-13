@@ -2,8 +2,9 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 
+import { useAppTranslation } from '@hooks';
 import { ModalTx } from '@components/common';
-import { DepositTx } from '@components/app/Transactions';
+import { DepositTx } from '@components/app';
 
 const StyledDepositTxModal = styled(ModalTx)``;
 export interface DepositTxModalProps {
@@ -11,6 +12,8 @@ export interface DepositTxModalProps {
 }
 
 export const DepositTxModal: FC<DepositTxModalProps> = ({ onClose, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   const location = useLocation();
 
   const path = location.pathname.toLowerCase().split('/')[1];
@@ -25,7 +28,7 @@ export const DepositTxModal: FC<DepositTxModalProps> = ({ onClose, ...props }) =
   return (
     <StyledDepositTxModal {...props}>
       <DepositTx
-        header="Deposit"
+        header={t('components.transaction.deposit')}
         allowTokenSelect={allowTokenSelect}
         allowVaultSelect={allowVaultSelect}
         onClose={onClose}

@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
 import { Button, OptionList, EthereumIcon, FantomIcon } from '@components/common';
-
 import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';

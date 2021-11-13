@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
   WalletSelectors,
   TokensSelectors,
@@ -11,7 +11,6 @@ import {
   IronBankSelectors,
   AppSelectors,
 } from '@store';
-
 import {
   SummaryCard,
   DetailCard,
@@ -23,7 +22,8 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
-import { halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc } from '@src/utils';
+import { getConstants } from '@config/constants';
+import { halfWidthCss, humanize, normalizeAmount } from '@utils';
 import { device } from '@themes/default';
 
 const TokensCard = styled(DetailCard)`
@@ -70,8 +70,7 @@ const StyledLink = styled.a`
 `;
 
 export const Wallet = () => {
-  // TODO: Add translation
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation(['common', 'wallet']);
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -84,6 +83,7 @@ export const Wallet = () => {
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const generalLoading = (appStatus.loading || tokensListStatus.loading || isMounting) && !activeModal;
+  const { DUST_AMOUNT_USD } = getConstants();
 
   const actionHandler = (action: string, tokenAddress: string) => {
     switch (action) {
@@ -103,7 +103,7 @@ export const Wallet = () => {
   const investButton = (tokenAddress: string, isZapable: boolean) => {
     return [
       {
-        name: 'Deposit',
+        name: t('components.transaction.deposit'),
         handler: () => actionHandler('invest', tokenAddress),
         disabled: !walletIsConnected || !(isZapable || vaultsUnderlyingTokens.includes(tokenAddress)),
       },
@@ -113,49 +113,45 @@ export const Wallet = () => {
   const supplyButton = (tokenAddress: string) => {
     return [
       {
-        name: 'Supply',
+        name: t('components.transaction.supply'),
         handler: () => actionHandler('supply', tokenAddress),
         disabled: !walletIsConnected || !ironBankUnderlyingTokens.includes(tokenAddress),
       },
     ];
   };
 
+  const filterDustTokens = (item: { balanceUsdc: string }) => {
+    return parseInt(item.balanceUsdc) > parseInt(DUST_AMOUNT_USD);
+  };
+
   return (
     <ViewContainer>
       <SummaryCard
         header="Dashboard"
-        items={[{ header: 'Available', Component: <Amount value={totalBalance} input="usdc" /> }]}
+        items={[{ header: t('dashboard.available'), Component: <Amount value={totalBalance} input="usdc" /> }]}
         variant="secondary"
         cardSize="small"
       />
 
       <Row>
         <StyledInfoCard
-          header="Your Wallet"
+          header={t('wallet:your-wallet-card.header')}
           Component={
             <Text>
-              <p>
-                Once you are familiar with the risks and nuances of Vaults and other Yearn products, this screen helps
-                you put your tokens to work with as few clicks as possible. If the 'Supply' or 'Deposit' buttons are
-                active, there's a lending and/or vault opportunity available for that token. Just click to see the
-                strategy and current yield.
-              </p>
-              <p>
-                Remember, these tools make it easy to access the tech, but you are responsible for understanding and
-                actively managing your positions.
-              </p>
+              <p>{t('wallet:your-wallet-card.desc-1')}</p>
+              <p>{t('wallet:your-wallet-card.desc-2')}</p>
             </Text>
           }
           cardSize="big"
         />
 
         <StyledInfoCard
-          header="Beta is here!"
+          header={t('components.beta-card.header')}
           Component={
             <Text>
               <p>
-                This website is still in beta, and will likely contain bugs. If you find a bug or would like to provide
-                feedback, please let us know on <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>.
+                {t('components.beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>
+                .
               </p>
             </Text>
           }
@@ -168,7 +164,7 @@ export const Wallet = () => {
       {generalLoading && walletIsConnected && <SpinnerLoading flex="1" width="100%" />}
       {!generalLoading && walletIsConnected && (
         <TokensCard
-          header="Tokens"
+          header={t('components.list-card.tokens')}
           metadata={[
             {
               key: 'displayIcon',
@@ -176,27 +172,33 @@ export const Wallet = () => {
               width: '6rem',
               className: 'col-icon',
             },
-            { key: 'displayName', header: 'Name', sortable: true, width: '17rem', className: 'col-name' },
+            {
+              key: 'displayName',
+              header: t('components.list-card.name'),
+              sortable: true,
+              width: '17rem',
+              className: 'col-name',
+            },
             {
               key: 'tokenBalance',
-              header: 'Balance',
-              format: ({ balance, decimals }) => humanizeAmount(balance, decimals, 2),
+              header: t('components.list-card.balance'),
+              format: ({ balance, decimals }) => humanize('amount', balance, decimals, 2),
               sortable: true,
               width: '13rem',
               className: 'col-balance',
             },
             {
               key: 'priceUsdc',
-              header: 'Price',
-              format: ({ priceUsdc }) => normalizeUsdc(priceUsdc, 2),
+              header: t('components.list-card.price'),
+              format: ({ priceUsdc }) => humanize('usd', priceUsdc),
               sortable: true,
               width: '11rem',
               className: 'col-price',
             },
             {
               key: 'balanceUsdc',
-              header: 'Value',
-              format: ({ balanceUsdc }) => normalizeUsdc(balanceUsdc, 2),
+              header: t('components.list-card.value'),
+              format: ({ balanceUsdc }) => humanize('usd', balanceUsdc),
               sortable: true,
               width: '11rem',
               className: 'col-value',
@@ -221,6 +223,8 @@ export const Wallet = () => {
           }))}
           initialSortBy="balanceUsdc"
           wrap
+          filterBy={filterDustTokens}
+          filterLabel="Show Dust"
         />
       )}
     </ViewContainer>

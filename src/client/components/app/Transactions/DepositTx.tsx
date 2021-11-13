@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import {
   TokensSelectors,
   VaultsSelectors,
@@ -38,6 +38,8 @@ export const DepositTx: FC<DepositTxProps> = ({
   allowTokenSelect = true,
   allowVaultSelect = false,
 }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const { NETWORK_SETTINGS } = getConfig();
@@ -178,14 +180,19 @@ export const DepositTx: FC<DepositTxProps> = ({
   //   loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   // };
 
-  const sourceError = allowanceError || inputError;
+  const depositsDisabledError =
+    selectedVault.depositsDisabled || selectedVault.hideIfNoDeposits ? 'Vault Deposits Disabled' : undefined;
+
+  const sourceError = allowanceError || inputError || depositsDisabledError;
 
   const targetStatus = {
     error: expectedTxOutcomeStatus.error || actionsStatus.approve.error || actionsStatus.deposit.error || slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
 
-  const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
+  const loadingText = currentNetworkSettings.simulationsEnabled
+    ? t('components.transaction.status.simulating')
+    : t('components.transaction.status.calculating');
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -223,16 +230,21 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approve,
-      disabled: isApproved,
+      disabled: isApproved || selectedVault.depositsDisabled,
     },
     {
-      label: 'Deposit',
+      label: t('components.transaction.deposit'),
       onAction: deposit,
       status: actionsStatus.deposit,
-      disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading || isDebouncePending,
+      disabled:
+        !isApproved ||
+        !isValidAmount ||
+        expectedTxOutcomeStatus.loading ||
+        isDebouncePending ||
+        selectedVault.depositsDisabled,
       contrast: true,
     },
   ];
@@ -241,16 +253,16 @@ export const DepositTx: FC<DepositTxProps> = ({
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="From wallet"
+      sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={allowTokenSelect ? sellTokensOptions : [selectedSellToken]}
       selectedSourceAsset={selectedSellToken}
       onSelectedSourceAssetChange={onSelectedSellTokenChange}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To vault"
+      targetHeader={t('components.transaction.to-vault')}
       targetAssetOptions={vaultsOptions}
       selectedTargetAsset={selectedVaultOption}
       onSelectedTargetAssetChange={onSelectedVaultChange}

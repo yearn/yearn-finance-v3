@@ -1,14 +1,14 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import { formatAmount, normalizeAmount } from '@utils';
+
 import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
 import { TxStatus } from './components/TxStatus';
 import { TxBorrowLimit } from './components/TxBorrowLimit';
-
-import { formatAmount, normalizeAmount } from '@src/utils';
 
 interface Status {
   loading?: boolean;
@@ -65,7 +65,6 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
   const {
     transactionLabel,
     transactionCompleted,
-    transactionCompletedLabel,
     onTransactionCompletedDismissed,
     assetHeader,
     assetLabel,
@@ -88,8 +87,6 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
     onClose,
   } = props;
 
-  const showBorrowing = yieldType === 'BORROW';
-  const yieldLabel = showBorrowing ? 'Borrow APY' : 'Supply APY';
   const assetBalance = normalizeAmount(asset.balance, asset.decimals);
 
   if (transactionCompleted) {
@@ -125,7 +122,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         projectedBorrowBalance={projectedBorrowBalance}
         borrowLimit={borrowLimit}
         projectedBorrowLimit={projectedBorrowLimit}
-        yieldLabel={yieldLabel}
+        yieldType={yieldType}
         yieldPercent={asset.yield ?? ''}
         borrowingTokens={borrowingTokens}
         projectedBorrowingTokens={projectedBorrowingTokens}

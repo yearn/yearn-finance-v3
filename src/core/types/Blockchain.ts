@@ -6,6 +6,8 @@ export type Address = string;
 
 export type Wei = string;
 
+export type Unit = string;
+
 export type RpcUrl = string;
 
 export interface GasFees {

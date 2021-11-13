@@ -3,10 +3,9 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { AppSelectors, TokensSelectors, VaultsSelectors, NetworkSelectors, WalletSelectors } from '@store';
-import { useAppSelector, useIsMounting } from '@hooks';
+import { useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
 import { SpinnerLoading, Button, Text } from '@components/common';
-
 import { parseHistoricalEarnings, parseLastEarnings } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
@@ -40,7 +39,8 @@ export interface VaultDetailRouteParams {
 }
 
 export const VaultDetail = () => {
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation(['common', 'vaultdetails']);
+
   const history = useHistory();
   const isMounting = useIsMounting();
   const { NETWORK_SETTINGS } = getConfig();
@@ -54,6 +54,7 @@ export const VaultDetail = () => {
   const walletName = useAppSelector(WalletSelectors.selectWallet);
 
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
+  const blockExplorerUrl = currentNetworkSettings.blockExplorerUrl;
 
   const [firstTokensFetch, setFirstTokensFetch] = useState(false);
   const [tokensInitialized, setTokensInitialized] = useState(false);
@@ -104,17 +105,17 @@ export const VaultDetail = () => {
   return (
     <VaultDetailView>
       <ViewHeader>
-        <BackButton onClick={() => history.push(`/vaults`)}>Back to Vaults page</BackButton>
+        <BackButton onClick={() => history.push(`/vaults`)}>{t('components.back-button.label')}</BackButton>
       </ViewHeader>
 
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
 
       {!generalLoading && !selectedVault && (
         <StyledInfoCard
-          header={`Vault not supported on ${currentNetworkSettings.name}`}
+          header={t('vaultdetails:no-vault-supported-card.header', { network: currentNetworkSettings.name })}
           Component={
             <Text>
-              <p>{`Try changing to the correct network.`}</p>
+              <p>{t('vaultdetails:no-vault-supported-card.content')}</p>
             </Text>
           }
         />
@@ -126,6 +127,8 @@ export const VaultDetail = () => {
           chartData={chartData}
           chartValue={chartValue}
           displayAddToken={displayAddToken}
+          currentNetwork={currentNetwork}
+          blockExplorerUrl={blockExplorerUrl}
         />
       )}
     </VaultDetailView>

@@ -1,8 +1,9 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import { useAppTranslation } from '@hooks';
 import { ModalTx } from '@components/common';
-import { MigrateTx } from '@components/app/Transactions';
+import { MigrateTx } from '@components/app';
 
 const StyledMigrateTxModal = styled(ModalTx)``;
 export interface MigrateTxModalProps {
@@ -10,9 +11,11 @@ export interface MigrateTxModalProps {
 }
 
 export const MigrateTxModal: FC<MigrateTxModalProps> = ({ onClose, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   return (
     <StyledMigrateTxModal {...props}>
-      <MigrateTx header="Migrate" onClose={onClose} />
+      <MigrateTx header={t('components.transaction.migrate')} onClose={onClose} />
     </StyledMigrateTxModal>
   );
 };

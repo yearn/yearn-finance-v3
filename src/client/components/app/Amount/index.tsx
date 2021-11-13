@@ -2,7 +2,7 @@ import { useState } from 'react';
 import CountUp from 'react-countup';
 
 import { Text, TextProps } from '@components/common';
-import { normalizeAmount, USDC_DECIMALS } from '@src/utils';
+import { normalizeAmount, USDC_DECIMALS } from '@utils';
 
 export interface AmountProps extends TextProps {
   value: number | string;
