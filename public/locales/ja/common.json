@@ -4,7 +4,7 @@
       "label": "前のページに戻る"
     },
     "beta-card": {
-      "desc-1": "このウェブサイトはまだベータ版であるため、バグが含まれる可能性があります。バグを発見された場合やご意見をお寄せいただける場合は下記までご連絡ください。",
+      "desc-1": "このウェブサイトはまだベータ版です。バグが発生する可能性があります。バグを発見された場合やご意見をお聞かせいただける場合は下記までご連絡ください。",
       "header": "ベータ版はこちら"
     },
     "connect-button": {
@@ -73,19 +73,75 @@
       "to-gauge": "ゲージへ",
       "to-iron-bank": "アイロンバンクへ",
       "to-vault": "ボールトへ",
-      "to-wallet": "ウォレットへ"
+      "to-wallet": "ウォレットへ",
+      "token-input": {
+        "balance": "残高",
+        "search-select-token": "トークンを選択する",
+        "search-select-vault": "ボールトを選択する",
+        "yield": "利回り"
+      },
+      "wallet-balance": "ウォレット残高",
+      "withdraw": "出金"
+    }
+  },
+  "dashboard": {
+    "apy": "APY",
+    "available": "利用可能",
+    "available-deposit": "入金可能額",
+    "borrow-limit-total": "総貸出上限",
+    "borrow-limit-used": "利用中の貸出上限",
+    "borrowed": "貸出済",
+    "earnings": "収益",
+    "est-yearly-yield": "推定年間利回り",
+    "header": "ダッシュボード",
+    "holdings": "保有中",
+    "supplied": "供給済",
+    "total-net-worth": "総純資産",
+    "vaults-earnings": "ボールト収益",
+    "vaults-est-yearly-yield": "ボールトの年間推定利回り"
+  },
+  "errors": {
+    "default": "予期しないエラーが発生しました",
+    "unknown": "未確認エラー"
+  },
+  "footer": {
+    "links": {
+      "disclaimer": "免責事項",
+      "docs": "資料",
+      "gov": "ガバナンス",
+      "security": "セキュリティ"
     }
   },
   "languages": {
-    "de": "Deutsch",
-    "en": "English",
-    "es": "Español",
-    "fr": "Français",
-    "hi": "हिंदी",
+    "de": "ドイツ語",
+    "en": "英語",
+    "es": "スペイン語",
+    "fr": "フランス語",
+    "hi": "ヒンディー語",
     "ja": "日本語",
-    "pt": "Português",
-    "tr": "Türk",
-    "vi": "Tiếng Việt",
-    "zh": "中国人"
+    "pt": "ポルトガル語",
+    "tr": "トルコ語",
+    "vi": "ベトナム語",
+    "zh": "中国語"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "免責事項",
+    "home": "ホーム",
+    "ironbank": "Iron Bank",
+    "labs": "研究所",
+    "settings": "設定",
+    "vault": "ボールト詳細",
+    "vaults": "ボールト",
+    "wallet": "ウォレット"
+  },
+  "themes": {
+    "classic": "Classic v2",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "light": "Mono Light"
   }
 }
