@@ -1,0 +1,12 @@
+{
+  "no-labs-card": {
+    "header": "Chưa có `Lab` ở {{network}}",
+    "text": "Hãy quay lại sau khi có thử nghiệm mới."
+  },
+  "risks-card": {
+    "desc-1": "Các chiến lược cách tân ở đây thuộc hàng mới nhất và rất khác thường. Đừng quên kiểm tra kỹ mục `Chi tiết` để hiểu rõ các rủi ro như khóa tôken, lỗ tạm thời (`impermanent loss`), v.v... trước khi sử dụng.",
+    "desc-2": "Như mọi sản phẩm khác của Yearn, bạn phải tự chịu trách nhiệm, nghiên cứu kỹ và chủ động quản lý tài sản của mình.",
+    "desc-3": "Chào mừng đến khu vực Thí điểm, nhưng hãy cẩn trọng.",
+    "header": "Rủi ro ở đây không phải dạng vừa đâu"
+  }
+}

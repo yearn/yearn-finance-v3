@@ -10,6 +10,10 @@
     "connect-button": {
       "connect": "बटुआ कनेक्ट करें"
     },
+    "empty-list": {
+      "searching-text": "कृपया कोई अन्य संपत्ति खोजें",
+      "text": "प्रदर्शित करने के लिए कोई संपत्ति नहीं"
+    },
     "list-card": {
       "apy": "APY",
       "available-deposit": "जमा करने के लिए उपलब्ध",
@@ -20,6 +24,7 @@
       "borrowing": "उधार लें",
       "collateral": "संपार्श्विक",
       "deposits": "जमा",
+      "deprecated": "पदावनत",
       "earned": "अर्जित",
       "lend-apy": "APY उधार दें",
       "market-liquidity": "बाजार की तरलता",
@@ -88,6 +93,7 @@
     "borrowed": "उधारित",
     "earnings": "आय",
     "est-yearly-yield": "अनुमानित वार्षिक उपज ",
+    "header": "डैशबोर्ड",
     "holdings": "संपत्ति",
     "supplied": "आपूर्तित",
     "total-net-worth": "कुल संपत्ति",
@@ -120,7 +126,7 @@
   },
   "navigation": {
     "copyright": {
-      "big": "© Yearn 2021",
+      "big": "© यर्न २०२१",
       "small": "©"
     },
     "disclaimer": "अस्वीकरण",

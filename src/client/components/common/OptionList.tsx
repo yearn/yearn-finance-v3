@@ -24,7 +24,7 @@ const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; sele
   cursor: ${({ selectable }) => (selectable ? 'pointer' : null)};
   padding: 0 0.8rem;
   width: max-content;
-  min-width: 9rem;
+  min-width: 11rem;
 
   ${(props) =>
     props.disabled &&
@@ -65,12 +65,14 @@ const Options = styled.div<{ open?: boolean }>`
   position: absolute;
   background-color: var(--dropdown-background);
   width: 100%;
+  max-height: 20rem;
   left: 0;
   bottom: -0.8rem;
   transform: translateY(100%);
   border-radius: ${({ theme }) => theme.globalRadius};
   padding: 0.8rem;
   overflow: hidden;
+  overflow-y: auto;
   z-index: 1;
 
   ${(props) => props.open && `display: flex;`}
@@ -87,6 +89,7 @@ const OptionChild = styled.div<{ selected?: boolean }>`
   transition: opacity 200ms ease-in-out;
   width: 100%;
   position: relative;
+  flex-shrink: 0;
 
   ${(props) =>
     props.selected &&

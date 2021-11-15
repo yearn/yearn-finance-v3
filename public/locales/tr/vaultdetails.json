@@ -1,0 +1,25 @@
+{
+  "no-vault-supported-card": {
+    "content": "Doğru ağa geçmeyi deneyin.",
+    "header": "Vault {{network}} üzerinde desteklenmiyor"
+  },
+  "overview-panel": {
+    "about": "Hakkında",
+    "apy": "YGY",
+    "header": "Genel bakış",
+    "strategies": "Stratejiler",
+    "total-assets": "Toplam Belirteç",
+    "type": "Tür",
+    "web": "websitesi"
+  },
+  "performance-panel": {
+    "earnings-over-time": "Zaman içinde kazanç",
+    "header": "Performans"
+  },
+  "vault-actions-panel": {
+    "deposit": "Yatırmak",
+    "header": "İşlemler",
+    "migrate": "Taşı",
+    "withdraw": "Çek"
+  }
+}

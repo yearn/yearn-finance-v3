@@ -10,6 +10,10 @@
     "connect-button": {
       "connect": "Kết nối Ví"
     },
+    "empty-list": {
+      "searching-text": "Xin vui lòng tìm tài sản khác",
+      "text": "Không có tài sản nào"
+    },
     "list-card": {
       "apy": "APY",
       "available-deposit": "Đang có để ký gửi",
@@ -20,12 +24,13 @@
       "borrowing": "Sắp vay",
       "collateral": "Thế chấp",
       "deposits": "Ký gửi",
+      "deprecated": "Đã lỗi thời",
       "earned": "Đã nhận",
       "lend-apy": "APY cho vay",
       "market-liquidity": "Thanh khoản",
       "name": "Tên",
       "opportunities": "Cơ hội",
-      "price": "Giá",
+      "price": "Tỷ giá",
       "supplying": "Sắp cấp",
       "tokens": "Tôken",
       "total-assets": "Tổng tài sản",
@@ -89,7 +94,7 @@
     "earnings": "Thu nhập",
     "est-yearly-yield": "Ước tính lãi/năm",
     "header": "Tổng quan",
-    "holdings": "Nắm giữ",
+    "holdings": "Đang nắm giữ",
     "supplied": "Đã cấp",
     "total-net-worth": "Tổng tài sản",
     "vaults-earnings": "Thu nhập từ Kho",
@@ -103,7 +108,7 @@
     "links": {
       "disclaimer": "Thông cáo!",
       "docs": "Tư liệu",
-      "gov": "Q.trị",
+      "gov": "Quản trị",
       "security": "Bảo an"
     }
   },

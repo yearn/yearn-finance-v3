@@ -5,7 +5,7 @@
     "header": "Để tiền làm việc cho mình"
   },
   "no-ironbank-card": {
-    "header": "Iron Bank chưa hỗ trợ {{network}}",
+    "header": "Chưa có Iron Bank ở {{network}}",
     "text": "Hãy quay lại sau."
   }
 }
