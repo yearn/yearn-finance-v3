@@ -26,6 +26,7 @@ const StyledModal = styled.div`
   overflow-y: auto;
   padding: 1.6rem;
   background: ${({ theme }) => theme.colors.txModalColors.background};
+  border-radius: ${({ theme }) => theme.globalRadius};
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   position: relative;
   pointer-events: all;

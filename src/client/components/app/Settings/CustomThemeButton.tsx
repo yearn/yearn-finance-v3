@@ -14,8 +14,8 @@ const StyledCustomThemeButton = styled.div`
   color: ${({ theme }) => theme.colors.secondary};
   border-radius: ${({ theme }) => theme.globalRadius};
   min-width: 10rem;
-  width: 24rem;
-  height: 12rem;
+  width: 12.8rem;
+  height: 6.4rem;
   cursor: pointer;
 `;
 

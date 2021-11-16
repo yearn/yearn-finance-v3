@@ -8,13 +8,13 @@ const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boole
   background-color: ${(props) => props.themePallete.colors.background};
   color: ${(props) => props.themePallete.colors.primaryVariant};
   min-width: 10rem;
-  width: 24rem;
-  height: 12rem;
-  border-radius: ${({ theme }) => theme.globalRadius};
+  width: 12.8rem;
+  height: 6.4rem;
+  border-radius: 0.6rem;
   overflow: hidden;
   border: 2px solid transparent;
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
-  padding: 1.2rem;
+  padding: 0.6rem;
   user-select: none;
 
   ${(props) =>
@@ -29,15 +29,15 @@ const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boole
   }
 
   .themebox-sidebar {
-    width: 3.2rem;
+    width: 1.6rem;
     height: 100%;
     background-color: ${(props) => props.themePallete.colors.primary};
-    margin-right: 0.8rem;
+    margin-right: 0.4rem;
   }
   .themebox-content {
     display: grid;
     grid-auto-rows: auto 1fr;
-    gap: 0.8rem;
+    gap: 0.4rem;
     flex: 1;
     height: 100%;
 
@@ -46,12 +46,23 @@ const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boole
       align-items: center;
       padding: 0 1rem;
       background: ${(props) => props.themePallete.colors.secondaryVariantA};
-      height: 3.2rem;
-      font-size: 1.2rem;
+      height: 1.6rem;
+      font-size: 1rem;
     }
     .content-card {
       background: ${(props) => props.themePallete.colors.surface};
       flex: 1;
+      overflow: hidden;
+      position: relative;
+
+      &:after {
+        content: '';
+        width: 100%;
+        height: 0.6rem;
+        margin-top: 0.6rem;
+        background: ${(theme) => theme.themePallete.colors.selectionBar};
+        position: absolute;
+      }
     }
   }
 `;
