@@ -14,21 +14,25 @@ const CustomThemesList = styled(Card)`
   display: grid;
   grid-auto-rows: min-content;
   grid-template-columns: repeat(auto-fill, minmax(12.8rem, 0fr));
-  // justify-content: space-between;
+  justify-content: space-between;
   grid-gap: 1.2rem;
   flex: 1;
   background-color: ${({ theme }) => theme.colors.surface};
   margin-top: 1.2rem;
   padding: 2.8rem 2.3rem;
+  overflow: hidden;
+  overflow-y: auto;
 `;
 
 const StyledTabPanel = styled(TabPanel)`
   display: flex;
+  flex-direction: column;
   flex: 1;
+  overflow: hidden;
 `;
 
 const StyledTabs = styled(Tabs)`
-  margin-top: 1.2rem;
+  margin-top: 1.3rem;
 `;
 
 const StyledCommunityThemesModal = styled(Modal)`
