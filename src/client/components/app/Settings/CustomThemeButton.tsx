@@ -2,11 +2,18 @@ import styled from 'styled-components';
 
 import { Icon, AddIcon } from '@components/common';
 
-const StyledIcon = styled(Icon)`
-  width: 2.8rem;
+const ButtonText = styled.span`
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 1rem;
+  flex: 1;
 `;
 
-const StyledCustomThemeButton = styled.div`
+const StyledIcon = styled(Icon)`
+  width: 1.6rem;
+`;
+
+const AddButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,6 +26,11 @@ const StyledCustomThemeButton = styled.div`
   cursor: pointer;
 `;
 
+const StyledCustomThemeButton = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 interface CustomThemeButtonProps {
   onClick?: () => void;
 }
@@ -26,7 +38,11 @@ interface CustomThemeButtonProps {
 export const CustomThemeButton = ({ onClick }: CustomThemeButtonProps) => {
   return (
     <StyledCustomThemeButton onClick={onClick}>
-      <StyledIcon Component={AddIcon} />
+      <AddButton>
+        <StyledIcon Component={AddIcon} />
+      </AddButton>
+
+      <ButtonText>Custom</ButtonText>
     </StyledCustomThemeButton>
   );
 };

@@ -48,13 +48,13 @@ const SettingsSection = styled.div`
   display: grid;
   grid-template-columns: 18rem 1fr;
   padding: 0 ${({ theme }) => theme.card.padding};
-  gap: 1.5rem;
+  grid-gap: 1.5rem;
 `;
 
 const SectionContent = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2rem;
+  grid-gap: 1.2rem;
   align-items: center;
 
   ${SettingsSection}:not(:first-child) & {
@@ -154,7 +154,7 @@ export const Settings = () => {
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
 
   const availableSlippages = getConfig().SLIPPAGE_OPTIONS;
-  const { ALLOW_DEV_MODE, AVAILABLE_THEMES, SUPPORTED_LANGS } = getConfig();
+  const { ALLOW_DEV_MODE, AVAILABLE_THEMES, AVAILABLE_CUSTOM_THEMES, SUPPORTED_LANGS } = getConfig();
 
   const currentLang = getCurrentLanguage().toString();
   const [dropdownSelectedLanguage, setDropdownSelectedLanguage] = useState({
@@ -242,7 +242,7 @@ export const Settings = () => {
                 />
               ))}
 
-              <CustomThemeButton onClick={() => openModal('communityThemes')} />
+              {!!AVAILABLE_CUSTOM_THEMES.length && <CustomThemeButton onClick={() => openModal('communityThemes')} />}
             </SectionContent>
           </SettingsSection>
 

@@ -3,7 +3,14 @@ import styled, { DefaultTheme } from 'styled-components';
 import { useAppTranslation } from '@hooks';
 import { Theme } from '@types';
 
-const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boolean }>`
+const ThemeName = styled.span`
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 1rem;
+  flex: 1;
+`;
+
+const ThemePreview = styled.div<{ selected?: boolean; themePallete: DefaultTheme }>`
   display: flex;
   background-color: ${(props) => props.themePallete.colors.background};
   color: ${(props) => props.themePallete.colors.primaryVariant};
@@ -13,16 +20,8 @@ const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boole
   border-radius: 0.6rem;
   overflow: hidden;
   border: 2px solid transparent;
-  cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
   padding: 0.6rem;
   user-select: none;
-
-  ${(props) =>
-    props.selected &&
-    `
-    cursor: default;
-    // border-color: ${props.theme.colors.surface};
-  `};
 
   * {
     border-radius: 0.4rem;
@@ -67,6 +66,23 @@ const StyledThemeBox = styled.div<{ themePallete: DefaultTheme; selected?: boole
   }
 `;
 
+const StyledThemeBox = styled.div<{ selected?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  cursor: ${(props) => (props.onClick && !props.selected ? 'pointer' : 'default')};
+  border-radius: ${({ theme }) => theme.globalRadius};
+  border: 2px solid transparent;
+  overflow: hidden;
+
+  ${(props) =>
+    props.selected &&
+    `
+    background-color: ${props.theme.colors.secondary};
+    border-color: ${props.theme.colors.secondary};
+    color: ${props.theme.colors.surface};
+  `};
+`;
+
 interface ThemeBoxProps {
   themePallete: DefaultTheme;
   name: Theme;
@@ -78,13 +94,16 @@ export const ThemeBox = ({ themePallete, name, selected, onClick }: ThemeBoxProp
   const { t } = useAppTranslation('common');
 
   return (
-    <StyledThemeBox themePallete={themePallete} selected={selected} onClick={onClick}>
-      {selected}
-      <div className="themebox-sidebar"></div>
-      <div className="themebox-content">
-        <div className="content-portfolio">{t(`themes.${name}`)}</div>
-        <div className="content-card"></div>
-      </div>
+    <StyledThemeBox selected={selected} onClick={onClick}>
+      <ThemePreview selected={selected} themePallete={themePallete}>
+        <div className="themebox-sidebar"></div>
+        <div className="themebox-content">
+          <div className="content-portfolio"></div>
+          <div className="content-card"></div>
+        </div>
+      </ThemePreview>
+
+      <ThemeName>{t(`themes.${name}`)}</ThemeName>
     </StyledThemeBox>
   );
 };
