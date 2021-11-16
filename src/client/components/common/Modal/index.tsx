@@ -3,19 +3,9 @@ import styled from 'styled-components';
 
 import { Icon, CloseIcon } from '../Icon';
 
-const StyledModal = styled.div`
-  overflow: hidden;
-  overflow-y: auto;
-  padding: 1.6rem;
-  background: ${({ theme }) => theme.colors.txModalColors.background};
-  color: ${({ theme }) => theme.colors.txModalColors.textContrast};
-  position: relative;
-  pointer-events: all;
-  z-index: 1;
-  width: 32rem;
-  height: 32rem;
-  max-width: 85%;
-  max-height: 85%;
+const ModalHeader = styled.div`
+  font-weight: bold;
+  font-size: 1.8rem;
 `;
 
 const CloseModal = styled.div`
@@ -31,12 +21,28 @@ const CloseModal = styled.div`
   }
 `;
 
+const StyledModal = styled.div`
+  overflow: hidden;
+  overflow-y: auto;
+  padding: 1.6rem;
+  background: ${({ theme }) => theme.colors.txModalColors.background};
+  color: ${({ theme }) => theme.colors.txModalColors.textContrast};
+  position: relative;
+  pointer-events: all;
+  z-index: 1;
+  width: 32rem;
+  height: 32rem;
+  max-width: 85%;
+  max-height: 85%;
+`;
+
 export interface ModalProps {
   className?: string;
+  header?: string;
   onClose?: () => void;
 }
 
-export const Modal: FC<ModalProps> = ({ className, onClose, children, ...props }) => {
+export const Modal: FC<ModalProps> = ({ className, header, onClose, children, ...props }) => {
   let closeButton;
 
   if (onClose) {
@@ -49,6 +55,8 @@ export const Modal: FC<ModalProps> = ({ className, onClose, children, ...props }
   return (
     <StyledModal className={className} {...props}>
       {closeButton}
+      <ModalHeader>{header}</ModalHeader>
+
       {children}
     </StyledModal>
   );

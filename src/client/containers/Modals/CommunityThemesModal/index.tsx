@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 
 import { getConfig } from '@config';
@@ -8,7 +8,7 @@ import { getTheme } from '@themes';
 import { Theme } from '@types';
 
 import { ThemeBox } from '@components/app';
-import { Card, Modal } from '@components/common';
+import { Card, Modal, Tabs, Tab, TabPanel } from '@components/common';
 
 const CustomThemesList = styled(Card)`
   display: flex;
@@ -31,20 +31,29 @@ export const CommunityThemesModal: FC<CommunityThemesModalProps> = ({ onClose, .
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
+  const [selectedTab, setSelectedTab] = useState('community');
+
   return (
-    <StyledCommunityThemesModal onClose={onClose} {...props}>
-      Custom Theme Gallery
-      <CustomThemesList>
-        {AVAILABLE_CUSTOM_THEMES.map((theme: Theme, index) => (
-          <ThemeBox
-            themePallete={getTheme(theme)}
-            name={theme}
-            key={index}
-            selected={theme === currentTheme}
-            onClick={() => changeTheme(theme)}
-          />
-        ))}
-      </CustomThemesList>
+    <StyledCommunityThemesModal header="Custom Theme Gallery" onClose={onClose} {...props}>
+      <Tabs value={selectedTab} onChange={setSelectedTab}>
+        <Tab value="community">Community</Tab>
+        {/* <Tab value="favorites" disabled>
+          Favorites
+        </Tab> */}
+      </Tabs>
+      <TabPanel value="community" tabValue={selectedTab}>
+        <CustomThemesList>
+          {AVAILABLE_CUSTOM_THEMES.map((theme: Theme, index) => (
+            <ThemeBox
+              themePallete={getTheme(theme)}
+              name={theme}
+              key={index}
+              selected={theme === currentTheme}
+              onClick={() => changeTheme(theme)}
+            />
+          ))}
+        </CustomThemesList>
+      </TabPanel>
     </StyledCommunityThemesModal>
   );
 };
