@@ -1,6 +1,6 @@
 {
   "your-wallet-card": {
-    "desc-1": "Sau khi đã quen và hiểu rõ rủi ro, đặc điểm của các Kho bạc (`Vault`) cũng như những sản phẩm khác của Yearn, màn hình này giúp bạn bắt đầu khiến tôken của mình \"làm việc\", tối thiểu hóa tác vụ thủ công. Nút `Cấp` hoặc `Ký gửi` sẽ bật sáng với tôken nào có thể cho vay và/hoặc ký gửi vào kho bạc. Chỉ cần click để xem chiến lược và lãi suất hiện tại.",
+    "desc-1": "Sau khi đã quen và hiểu rõ rủi ro, đặc điểm của các Kho bạc (`Vault`) cũng như những sản phẩm khác ở Yearn, màn hình này giúp bạn bắt đầu khiến tôken của mình \"làm việc\", tối thiểu hóa tác vụ thủ công. Nút `Cấp` hoặc `Ký gửi` sẽ bật sáng với tôken nào có thể cho vay và/hoặc ký gửi vào kho bạc. Chỉ cần click để xem chiến lược và lãi suất hiện tại.",
     "desc-2": "Đừng quên, các công cụ này giúp tiếp cận công nghệ dễ hơn, nhưng bản thân bạn phải có trách nhiệm tìm hiểu và chủ động quản lý tài sản của mình.",
     "header": "Ví của bạn"
   }
