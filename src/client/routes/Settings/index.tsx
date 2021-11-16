@@ -241,6 +241,7 @@ export const Settings = () => {
                   onClick={() => changeTheme(theme)}
                 />
               ))}
+
               <CustomThemeButton onClick={() => openModal('communityThemes')} />
             </SectionContent>
           </SettingsSection>
