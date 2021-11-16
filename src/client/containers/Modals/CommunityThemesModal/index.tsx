@@ -1,12 +1,7 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 
-import { Modal } from '@components/common';
-
-const CustomThemesList = styled.div`
-  display: flex;
-  flex: 1;
-`;
+import { Modal, Tabs, Tab, TabPanel } from '@components/common';
 
 const StyledCommunityThemesModal = styled(Modal)`
   width: 38.5rem;
@@ -16,10 +11,19 @@ export interface CommunityThemesModalProps {
 }
 
 export const CommunityThemesModal: FC<CommunityThemesModalProps> = ({ onClose, ...props }) => {
+  const [selectedTab, setSelectedTab] = useState('community');
+
   return (
-    <StyledCommunityThemesModal {...props} onClose={onClose}>
-      Custom theme gallery
-      <CustomThemesList>test</CustomThemesList>
+    <StyledCommunityThemesModal header="Custom Theme Gallery" onClose={onClose} {...props}>
+      <Tabs value={selectedTab} onChange={setSelectedTab}>
+        <Tab value="community">Community</Tab>
+        {/* <Tab value="favorites" disabled>
+          Favorites
+        </Tab> */}
+      </Tabs>
+      <TabPanel value="community" tabValue={selectedTab}>
+        test
+      </TabPanel>
     </StyledCommunityThemesModal>
   );
 };

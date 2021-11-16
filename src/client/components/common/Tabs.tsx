@@ -52,6 +52,7 @@ export const Tabs: FC<TabsProps> = ({ value, onChange, children, ...props }) => 
 export interface TabProps extends StyledSystemProps {
   value?: number | string;
   selected?: boolean;
+  disabled?: boolean;
   onChange?: (value: any) => void;
 }
 
