@@ -1,6 +1,6 @@
 import { DefaultTheme } from 'styled-components';
 
-import { ExplorerBackgroundDesktop } from '../../assets/images';
+import ExplorerBackground from './background.jpg';
 
 import { sharedTheme } from '../default';
 
@@ -8,7 +8,8 @@ const explorerTheme: DefaultTheme = {
   ...sharedTheme,
 
   background: {
-    image: ExplorerBackgroundDesktop,
+    image: ExplorerBackground,
+    position: 'right center',
   },
 
   colors: {
@@ -67,7 +68,7 @@ const explorerTheme: DefaultTheme = {
       onBackgroundVariantB: '#cfa368',
       onBackgroundVariantColor: '#212121',
       primary: '#212121',
-      loading: '#FFA800',
+      loading: '#9f1431',
       error: '#EF1E02',
       success: '#01E2A0',
       text: '#eeeeee',
