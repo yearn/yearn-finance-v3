@@ -40,6 +40,7 @@ const StyledCommunityThemesModal = styled(Modal)`
   flex-direction: column;
   width: 38.5rem;
   height: 52rem;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 export interface CommunityThemesModalProps {
   onClose: () => void;
