@@ -4,6 +4,7 @@ declare module 'styled-components' {
   export interface SharedTheme {
     background?: {
       image: string;
+      position?: string;
     };
 
     blade: {

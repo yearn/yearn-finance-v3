@@ -42,7 +42,7 @@ const StyledLayout = styled.div`
     `
       background-size: cover;
       background-image: url(${theme.background.image});
-      background-position: center;
+      background-position: ${theme.background.position ?? 'center'};
       background-repeat: no-repeat;
       background-attachment: fixed;
       top: 0;
