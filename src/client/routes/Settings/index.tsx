@@ -173,6 +173,8 @@ export const Settings = () => {
 
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
+  const isCustomThemeSelected = AVAILABLE_CUSTOM_THEMES.includes(currentTheme);
+
   const changeSlippage = (slippage: number) => {
     dispatch(SettingsActions.setDefaultSlippage({ slippage }));
   };
@@ -241,6 +243,8 @@ export const Settings = () => {
                   onClick={() => changeTheme(theme)}
                 />
               ))}
+
+              {isCustomThemeSelected && <ThemeBox themePallete={getTheme(currentTheme)} name={currentTheme} selected />}
 
               {!!AVAILABLE_CUSTOM_THEMES.length && <CustomThemeButton onClick={() => openModal('communityThemes')} />}
             </SectionContent>
