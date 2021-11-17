@@ -31,6 +31,7 @@ import { ReactComponent as StatusArrowIcon } from '@assets/icons/status-arrow.sv
 import { ReactComponent as WalletMissingIcon } from '@assets/icons/wallet-missing.svg';
 import { ReactComponent as ConstructionIcon } from '@assets/icons/construction.svg';
 import { ReactComponent as AddCircleIcon } from '@assets/icons/add-circle.svg';
+import { ReactComponent as AddIcon } from '@assets/icons/add.svg';
 
 // NOTE NETWORK Icons
 import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
@@ -94,6 +95,7 @@ export {
   EthereumIcon,
   FantomIcon,
   AddCircleIcon,
+  AddIcon,
   EtherscanIcon,
   FtmscanIcon,
   DefaultscanIcon,

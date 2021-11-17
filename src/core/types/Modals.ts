@@ -1,6 +1,7 @@
 export type ModalName =
   | 'test'
   | 'comingSoon'
+  | 'communityThemes'
   | 'deposit'
   | 'withdraw'
   | 'testTx'
