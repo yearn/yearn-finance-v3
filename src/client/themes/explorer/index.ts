@@ -30,7 +30,7 @@ const explorerTheme: DefaultTheme = {
 
     selectionBar: '#AD3235',
 
-    onPrimaryVariant: 'green',
+    onPrimaryVariant: '#fff',
     onBackground: '#E5E5E5',
 
     onSurfaceH1: '#fff',
