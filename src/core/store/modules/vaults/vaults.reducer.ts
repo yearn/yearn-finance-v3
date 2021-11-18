@@ -1,6 +1,6 @@
-import { groupBy, keyBy, union } from 'lodash';
-
 import { createReducer } from '@reduxjs/toolkit';
+import { difference, groupBy, keyBy, union } from 'lodash';
+
 import {
   initialStatus,
   VaultsState,
@@ -10,6 +10,7 @@ import {
   VaultActionsStatusMap,
   VaultTransaction,
 } from '@types';
+
 import { VaultsActions } from './vaults.actions';
 
 export const initialVaultActionsStatusMap: VaultActionsStatusMap = {
@@ -80,6 +81,49 @@ const {
 
 const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
   builder
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   Setters                                  */
+    /* -------------------------------------------------------------------------- */
+    .addCase(setSelectedVaultAddress, (state, { payload: { vaultAddress } }) => {
+      state.selectedVaultAddress = vaultAddress;
+    })
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Clear State                                */
+    /* -------------------------------------------------------------------------- */
+    .addCase(clearVaultsData, (state) => {
+      state.vaultsMap = {};
+      state.vaultsAddresses = [];
+    })
+    .addCase(clearUserData, (state) => {
+      state.user.userVaultsPositionsMap = {};
+      state.user.vaultsAllowancesMap = {};
+      state.user.userVaultsMetadataMap = {};
+      state.user.userVaultsSummary = undefined;
+    })
+
+    .addCase(clearTransactionData, (state) => {
+      state.transaction = initialTransaction;
+      state.statusMap.getExpectedTransactionOutcome = {};
+    })
+
+    .addCase(clearSelectedVaultAndStatus, (state) => {
+      if (!state.selectedVaultAddress) return;
+      const currentAddress = state.selectedVaultAddress;
+      state.statusMap.vaultsActionsStatusMap[currentAddress] = initialVaultActionsStatusMap;
+      state.selectedVaultAddress = undefined;
+    })
+
+    .addCase(clearVaultStatus, (state, { payload: { vaultAddress } }) => {
+      state.statusMap.vaultsActionsStatusMap[vaultAddress] = initialVaultActionsStatusMap;
+    })
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Fetch data                                 */
+    /* -------------------------------------------------------------------------- */
+
+    /* --------------------------- initiateSaveVaults --------------------------- */
     .addCase(initiateSaveVaults.pending, (state) => {
       state.statusMap.initiateSaveVaults = { loading: true };
     })
@@ -89,6 +133,8 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(initiateSaveVaults.rejected, (state, { error }) => {
       state.statusMap.initiateSaveVaults = { error: error.message };
     })
+
+    /* -------------------------------- getVaults ------------------------------- */
     .addCase(getVaults.pending, (state) => {
       state.statusMap.getVaults = { loading: true };
     })
@@ -106,6 +152,8 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(getVaults.rejected, (state, { error }) => {
       state.statusMap.getVaults = { error: error.message };
     })
+
+    /* ------------------------- getUserVaultsPositions ------------------------- */
     .addCase(getUserVaultsPositions.pending, (state, { meta }) => {
       const vaultAddresses = meta.arg.vaultAddresses || [];
       vaultAddresses.forEach((address) => {
@@ -121,16 +169,21 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
         state.statusMap.user.userVaultsActionsStatusMap[address].getPosition = {};
       });
 
+      const positionsAddresses: string[] = [];
+
       userVaultsPositions.forEach((position) => {
         const address = position.assetAddress;
+        positionsAddresses.push(address);
         const allowancesMap: any = {};
         position.assetAllowances.forEach((allowance) => (allowancesMap[allowance.spender] = allowance.amount));
 
         state.user.vaultsAllowancesMap[address] = allowancesMap;
       });
 
-      if (!userVaultsPositions.length) {
-        vaultAddresses?.forEach((address) => {
+      const notIncludedAddresses = difference(vaultAddresses ?? [], positionsAddresses);
+      if (!positionsAddresses.length || notIncludedAddresses.length) {
+        const addresses = union(positionsAddresses, notIncludedAddresses);
+        addresses.forEach((address) => {
           const userVaultsPositionsMapClone = { ...state.user.userVaultsPositionsMap };
           delete userVaultsPositionsMapClone[address];
           state.user.userVaultsPositionsMap = { ...userVaultsPositionsMapClone };
@@ -148,9 +201,8 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       });
       state.statusMap.user.getUserVaultsPositions = { error: error.message };
     })
-    .addCase(setSelectedVaultAddress, (state, { payload: { vaultAddress } }) => {
-      state.selectedVaultAddress = vaultAddress;
-    })
+
+    /* -------------------------- getUserVaultsSummary -------------------------- */
     .addCase(getUserVaultsSummary.pending, (state) => {
       state.statusMap.user.getUserVaultsSummary = { loading: true };
     })
@@ -161,6 +213,8 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(getUserVaultsSummary.rejected, (state, { error }) => {
       state.statusMap.user.getUserVaultsSummary = { error: error.message };
     })
+
+    /* -------------------------- getUserVaultsMetadata ------------------------- */
     .addCase(getUserVaultsMetadata.pending, (state, { meta }) => {
       const vaultsAddresses = meta.arg.vaultsAddresses || [];
       vaultsAddresses.forEach((address) => {
@@ -188,78 +242,8 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       });
       state.statusMap.user.getUserVaultsMetadata = { error: error.message };
     })
-    .addCase(approveDeposit.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { loading: true };
-    })
-    .addCase(approveDeposit.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = {};
-    })
-    .addCase(approveDeposit.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { error: error.message };
-    })
-    .addCase(depositVault.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { loading: true };
-    })
-    .addCase(depositVault.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = {};
-    })
-    .addCase(depositVault.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { error: error.message };
-    })
-    .addCase(approveZapOut.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = { loading: true };
-    })
-    .addCase(approveZapOut.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = {};
-    })
-    .addCase(approveZapOut.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = { error: error.message };
-    })
-    .addCase(withdrawVault.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { loading: true };
-    })
-    .addCase(withdrawVault.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = {};
-    })
-    .addCase(withdrawVault.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { error: error.message };
-    })
-    .addCase(approveMigrate.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultFromAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveMigrate = { loading: true };
-    })
-    .addCase(approveMigrate.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultFromAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveMigrate = {};
-    })
-    .addCase(approveMigrate.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultFromAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveMigrate = { error: error.message };
-    })
-    .addCase(migrateVault.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultFromAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { loading: true };
-    })
-    .addCase(migrateVault.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultFromAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = {};
-    })
-    .addCase(migrateVault.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultFromAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { error: error.message };
-    })
+
+    /* ---------------------------- getVaultsDynamic ---------------------------- */
     .addCase(getVaultsDynamic.pending, (state, { meta }) => {
       const vaultAddresses = meta.arg.addresses;
       vaultAddresses.forEach((address) => {
@@ -284,16 +268,8 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
         state.statusMap.vaultsActionsStatusMap[address].get = { error: error.message };
       });
     })
-    .addCase(clearVaultsData, (state) => {
-      state.vaultsMap = {};
-      state.vaultsAddresses = [];
-    })
-    .addCase(clearUserData, (state) => {
-      state.user.userVaultsPositionsMap = {};
-      state.user.vaultsAllowancesMap = {};
-      state.user.userVaultsMetadataMap = {};
-      state.user.userVaultsSummary = undefined;
-    })
+
+    /* ---------------------- getExpectedTransactionOutcome --------------------- */
     .addCase(getExpectedTransactionOutcome.pending, (state) => {
       state.transaction = initialTransaction;
       state.statusMap.getExpectedTransactionOutcome = { loading: true };
@@ -305,18 +281,93 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(getExpectedTransactionOutcome.rejected, (state, { error }) => {
       state.statusMap.getExpectedTransactionOutcome = { error: 'Simulation Failed' };
     })
-    .addCase(clearTransactionData, (state) => {
-      state.transaction = initialTransaction;
-      state.statusMap.getExpectedTransactionOutcome = {};
+
+    /* -------------------------------------------------------------------------- */
+    /*                                Transactions                                */
+    /* -------------------------------------------------------------------------- */
+
+    /* ----------------------------- approveDeposit ----------------------------- */
+    .addCase(approveDeposit.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { loading: true };
     })
-    .addCase(clearSelectedVaultAndStatus, (state) => {
-      if (!state.selectedVaultAddress) return;
-      const currentAddress = state.selectedVaultAddress;
-      state.statusMap.vaultsActionsStatusMap[currentAddress] = initialVaultActionsStatusMap;
-      state.selectedVaultAddress = undefined;
+    .addCase(approveDeposit.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = {};
     })
-    .addCase(clearVaultStatus, (state, { payload: { vaultAddress } }) => {
-      state.statusMap.vaultsActionsStatusMap[vaultAddress] = initialVaultActionsStatusMap;
+    .addCase(approveDeposit.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { error: error.message };
+    })
+
+    /* ------------------------------ depositVault ------------------------------ */
+    .addCase(depositVault.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { loading: true };
+    })
+    .addCase(depositVault.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = {};
+    })
+    .addCase(depositVault.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { error: error.message };
+    })
+
+    /* ------------------------------ approveZapOut ----------------------------- */
+    .addCase(approveZapOut.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = { loading: true };
+    })
+    .addCase(approveZapOut.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = {};
+    })
+    .addCase(approveZapOut.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = { error: error.message };
+    })
+
+    /* ------------------------------ withdrawVault ----------------------------- */
+    .addCase(withdrawVault.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { loading: true };
+    })
+    .addCase(withdrawVault.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = {};
+    })
+    .addCase(withdrawVault.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { error: error.message };
+    })
+
+    /* ----------------------------- approveMigrate ----------------------------- */
+    .addCase(approveMigrate.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveMigrate = { loading: true };
+    })
+    .addCase(approveMigrate.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveMigrate = {};
+    })
+    .addCase(approveMigrate.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveMigrate = { error: error.message };
+    })
+
+    /* ------------------------------ migrateVault ------------------------------ */
+    .addCase(migrateVault.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { loading: true };
+    })
+    .addCase(migrateVault.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = {};
+    })
+    .addCase(migrateVault.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultFromAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { error: error.message };
     });
 });
 

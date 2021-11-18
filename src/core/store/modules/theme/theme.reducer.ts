@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
+
 import { ThemeState } from '@types';
 import { getConfig } from '@config';
 
@@ -12,7 +13,7 @@ const { changeTheme } = ThemeActions;
 
 const themeReducer = createReducer(themeInitialState, (builder) => {
   builder.addCase(changeTheme.fulfilled, (state, { payload: { theme } }) => {
-    // TODO Check that the theme exists on AVAILABLE_THEMES
+    // TODO Check that the theme exists on AVAILABLE_THEMES or AVAILABLE_CUSTOM_THEMES
     state.current = theme;
   });
 });

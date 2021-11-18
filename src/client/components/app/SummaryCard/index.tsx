@@ -10,6 +10,10 @@ const StyledCard = styled(Card)`
   position: relative;
 `;
 
+const StyledCardContent = styled(CardContent)<{ withArrow?: boolean }>`
+  ${({ withArrow }) => withArrow && `margin-right: 5rem`};
+`;
+
 const StyledCardElement = styled(CardElement)`
   max-width: 100%;
   overflow: hidden;
@@ -42,7 +46,7 @@ export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, card
   return (
     <StyledCard variant={variant} cardSize={cardSize} {...props}>
       {header && <CardHeader header={header} />}
-      <CardContent wrap>
+      <StyledCardContent wrap withArrow={!!redirectTo}>
         {items.map((item) => (
           <StyledCardElement
             key={item.header}
@@ -52,7 +56,7 @@ export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, card
             {item.Component && <StyledText variant={variant}>{item.Component}</StyledText>}
           </StyledCardElement>
         ))}
-      </CardContent>
+      </StyledCardContent>
 
       {redirectTo && <CardRedirection redirectTo={redirectTo} />}
     </StyledCard>

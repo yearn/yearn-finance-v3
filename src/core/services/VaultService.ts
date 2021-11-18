@@ -23,6 +23,7 @@ import {
   TransactionService,
   Config,
 } from '@types';
+
 import v2VaultAbi from './contracts/v2Vault.json';
 import trustedVaultMigratorAbi from './contracts/trustedVaultMigrator.json';
 import triCryptoVaultMigratorAbi from './contracts/triCryptoVaultMigrator.json';
@@ -50,10 +51,14 @@ export class VaultServiceImpl implements VaultService {
     this.config = config;
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                                 Fetch Methods                              */
+  /* -------------------------------------------------------------------------- */
+
   public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
     const vaults = await yearn.vaults.get(addresses);
-    return vaults.filter((vault) => !vault.metadata.migrationAvailable); // removing old v2 vaults.
+    return vaults;
   }
 
   public async getVaultsDynamicData({ network, addresses }: GetVaultsDynamicDataProps): Promise<VaultDynamic[]> {
@@ -98,7 +103,6 @@ export class VaultServiceImpl implements VaultService {
         const providerType = getProviderType(network);
         const provider = this.web3Provider.getInstanceOf(providerType);
         const vaultContract = getContract(sourceTokenAddress, v2VaultAbi, provider);
-        console.log('1');
         const pricePerShare = await vaultContract.pricePerShare();
         underlyingTokenAmount = toBN(sourceTokenAmount)
           .times(normalizeAmount(pricePerShare.toString(), toBN(decimals).toNumber()))
@@ -150,6 +154,10 @@ export class VaultServiceImpl implements VaultService {
 
     return expectedOutcome;
   }
+
+  /* -------------------------------------------------------------------------- */
+  /*                             Transaction Methods                            */
+  /* -------------------------------------------------------------------------- */
 
   public async deposit(props: DepositProps): Promise<TransactionResponse> {
     const { network, accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;

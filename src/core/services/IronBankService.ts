@@ -18,6 +18,7 @@ import {
   GetSupportedMarketsProps,
   GetMarketDynamicDataProps,
 } from '@types';
+
 import ironBankMarketAbi from './contracts/ironBankMarket.json';
 import ironBankComptrollerAbi from './contracts/ironBankComptroller.json';
 

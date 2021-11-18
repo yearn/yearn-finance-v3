@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
-import { Button, Text, OptionList, EthereumIcon, FantomIcon } from '@components/common';
-
+import { Button, OptionList, EthereumIcon, FantomIcon } from '@components/common';
 import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
+import { inIframe } from '@utils';
 
 const BetaButton = styled(Button)`
   white-space: nowrap;
@@ -16,7 +16,7 @@ const BetaButton = styled(Button)`
 `;
 
 const StyledOptionList = styled(OptionList)`
-  width: 14rem;
+  width: 15rem;
 `;
 
 const StyledNavbarActions = styled.div`
@@ -27,6 +27,10 @@ const StyledNavbarActions = styled.div`
   align-items: center;
   justify-content: flex-end;
   flex: 1;
+
+  > * {
+    height: 2.8rem;
+  }
 `;
 
 const StyledText = styled.h1`
@@ -84,6 +88,7 @@ interface NavbarProps {
   selectedNetwork: Network;
   networkOptions: Network[];
   onNetworkChange: (network: string) => void;
+  disableNetworkChange?: boolean;
 }
 
 export const Navbar = ({
@@ -95,9 +100,11 @@ export const Navbar = ({
   selectedNetwork,
   networkOptions,
   onNetworkChange,
+  disableNetworkChange,
 }: NavbarProps) => {
   const { isMobile } = useWindowDimensions();
   const { NETWORK_SETTINGS } = getConfig();
+  const isInIframe = inIframe();
 
   const dropdownSelectedNetwork = {
     value: selectedNetwork,
@@ -122,12 +129,15 @@ export const Navbar = ({
           setSelected={(option) => onNetworkChange(option.value)}
           options={dropdownNetworkOptions}
           hideIcons={isMobile}
+          isLoading={disableNetworkChange}
+          disabled={disableNetworkChange || isInIframe}
         />
 
         <ConnectWalletButton
           address={walletAddress}
           ensName={addressEnsName}
           onClick={() => onWalletClick && onWalletClick()}
+          disabled={isInIframe}
         />
       </StyledNavbarActions>
     </StyledNavbar>

@@ -1,4 +1,5 @@
 import { DefaultTheme } from 'styled-components';
+
 import { sharedTheme } from '../default';
 
 const lightTheme: DefaultTheme = {

@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import { TokensSelectors, LabsSelectors, LabsActions, TokensActions, VaultsActions } from '@store';
 import {
   toBN,
@@ -10,7 +10,7 @@ import {
   validateYvBoostEthActionsAllowance,
   getStakingContractAddress,
   formatPercent,
-} from '@src/utils';
+} from '@utils';
 
 import { Transaction } from '../Transaction';
 
@@ -19,6 +19,8 @@ export interface LabStakeTxProps {
 }
 
 export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
@@ -55,7 +57,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
         spenderAddress,
       })
     );
-  }, [selectedSellTokenAddress]);
+  }, [selectedSellTokenAddress, selectedLab?.address]);
 
   useEffect(() => {
     if (!selectedLab) return;
@@ -84,8 +86,8 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
     vaultUnderlyingBalance: selectedLab.labBalance,
   });
 
-  // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error = allowanceError || inputError || actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
+  const sourceError = allowanceError || inputError;
+  const targetError = actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
 
   const selectedLabOption = {
     address: selectedLab.address,
@@ -138,13 +140,13 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveStake,
       disabled: isApproved,
     },
     {
-      label: 'Deposit',
+      label: t('components.transaction.deposit'),
       onAction: deposit,
       status: actionsStatus.stake,
       disabled: !isApproved || !isValidAmount,
@@ -154,26 +156,26 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
 
   return (
     <Transaction
-      transactionLabel="Stake"
+      transactionLabel={t('components.transaction.stake')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="From Wallet"
+      sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={sellTokensOptions}
       selectedSourceAsset={selectedSellToken}
       onSelectedSourceAssetChange={onSelectedSellTokenChange}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To Gauge"
+      targetHeader={t('components.transaction.to-gauge')}
       targetAssetOptions={[selectedLabOption]}
       selectedTargetAsset={selectedLabOption}
       onSelectedTargetAssetChange={onSelectedLabChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={{}}
+      targetStatus={{ error: targetError }}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error: sourceError }}
       onClose={onClose}
     />
   );

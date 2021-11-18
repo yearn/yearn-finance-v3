@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import {
   TokensSelectors,
   LabsSelectors,
@@ -23,7 +23,7 @@ import {
   validateYvBoostEthActionsAllowance,
   validateSlippage,
   formatPercent,
-} from '@src/utils';
+} from '@utils';
 import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
@@ -33,6 +33,8 @@ export interface LabDepositTxProps {
 }
 
 export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
@@ -87,7 +89,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
         spenderAddress,
       })
     );
-  }, [selectedSellTokenAddress]);
+  }, [selectedSellTokenAddress, selectedLab?.address]);
 
   useEffect(() => {
     if (!selectedLab) return;
@@ -155,13 +157,16 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     expectedSlippage: expectedTxOutcome?.slippage,
   });
 
-  const error =
-    allowanceError ||
-    inputError ||
-    actionsStatus.approveDeposit.error ||
-    actionsStatus.deposit.error ||
-    expectedTxOutcomeStatus.error ||
-    slippageError;
+  const sourceError = allowanceError || inputError;
+
+  const targetStatus = {
+    error:
+      expectedTxOutcomeStatus.error ||
+      actionsStatus.approveDeposit.error ||
+      actionsStatus.deposit.error ||
+      slippageError,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+  };
 
   const selectedLabOption = {
     address: selectedLab.address,
@@ -180,11 +185,10 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const expectedAmountValue = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
-  const expectedAmountStatus = {
-    error: expectedTxOutcomeStatus.error || error,
-    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
-  };
-  const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
+
+  const loadingText = currentNetworkSettings.simulationsEnabled
+    ? t('components.transaction.status.simulating')
+    : t('components.transaction.status.calculating');
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -225,13 +229,13 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveDeposit,
       disabled: isApproved,
     },
     {
-      label: 'Deposit',
+      label: t('components.transaction.deposit'),
       onAction: deposit,
       status: actionsStatus.deposit,
       disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading,
@@ -240,27 +244,28 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   ];
 
   return (
+    // TODO Check transactionCompletedLabel (I think it's not used)
     <Transaction
-      transactionLabel="Deposit"
+      transactionLabel={t('components.transaction.deposit')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="From Wallet"
+      sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={sellTokensOptions}
       selectedSourceAsset={selectedSellToken}
       onSelectedSourceAssetChange={onSelectedSellTokenChange}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To Vault"
+      targetHeader={t('components.transaction.to-vault')}
       targetAssetOptions={[selectedLabOption]}
       selectedTargetAsset={selectedLabOption}
       onSelectedTargetAssetChange={onSelectedLabChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedAmountStatus}
+      targetStatus={targetStatus}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error: sourceError }}
       loadingText={loadingText}
       onClose={onClose}
     />

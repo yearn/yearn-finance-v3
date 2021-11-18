@@ -1,7 +1,9 @@
 import { ElementType, FC, useState } from 'react';
 import styled from 'styled-components';
 
-import { Icon, Text } from '@components/common';
+import { ChevronDownIcon, Icon } from './Icon';
+import { Text } from './Text';
+import { SpinnerLoading } from './SpinnerLoading';
 
 const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
   --dropdown-background: ${({ theme }) => theme.colors.surface};
@@ -37,6 +39,18 @@ const StyledText = styled(Text)`
   text-align: center;
 `;
 
+const StyledSpinnerLoading = styled(SpinnerLoading)`
+  font-size: 1rem;
+  flex: 1;
+`;
+
+const ArrowIcon = styled(Icon)<{ open?: boolean }>`
+  margin-left: 0.8rem;
+  height: 1rem;
+  transition: transform 150ms ease-in-out;
+  transform: rotate(${({ open }) => (open ? '180deg' : '0deg')});
+`;
+
 const StyledIcon = styled(Icon)`
   width: 1.6rem;
   height: 1.6rem;
@@ -58,6 +72,7 @@ const Options = styled.div<{ open?: boolean }>`
   padding: 0.8rem;
   overflow: hidden;
   z-index: 1;
+
   ${(props) => props.open && `display: flex;`}
 `;
 
@@ -96,6 +111,7 @@ export interface OptionListProps {
   setSelected: (selected: Option) => void;
   options: Option[];
   className?: string;
+  isLoading?: boolean;
   disabled?: boolean;
   hideIcons?: boolean;
   onChange?: (selected: Option) => void;
@@ -106,6 +122,7 @@ export const OptionList: FC<OptionListProps> = ({
   setSelected,
   options,
   className,
+  isLoading,
   disabled,
   hideIcons,
   onChange,
@@ -121,6 +138,10 @@ export const OptionList: FC<OptionListProps> = ({
   }
 
   const selectOption = (option: Option) => {
+    if (disabled) {
+      return;
+    }
+
     setSelected(option);
     setOpen(false);
 
@@ -138,9 +159,13 @@ export const OptionList: FC<OptionListProps> = ({
       onBlur={() => setOpen(false)}
       {...props}
     >
-      <OptionChild onClick={() => (!isSingleOption ? setOpen(!open) : null)}>
+      <OptionChild onClick={() => (!isSingleOption && !disabled ? setOpen(!open) : null)}>
         {!hideIcons && selected?.Icon && <StyledIcon Component={selected.Icon} />}
-        <StyledText ellipsis>{selectedText}</StyledText>
+
+        {!isLoading && <StyledText ellipsis>{selectedText}</StyledText>}
+        {isLoading && <StyledSpinnerLoading />}
+
+        <ArrowIcon Component={ChevronDownIcon} open={open} />
       </OptionChild>
 
       <Options open={open}>

@@ -6,7 +6,7 @@ export interface Wallet {
   networkVersion: number | undefined;
   balance: string | undefined;
   name: string | undefined;
-  provider: unknown | undefined;
+  provider: any | undefined;
   isCreated: Promise<boolean> | boolean;
   isConnected: Promise<boolean> | boolean;
   create: (
@@ -18,6 +18,7 @@ export interface Wallet {
   connect: (args?: any) => Promise<boolean>;
   changeTheme?: (theme: Theme) => void;
   changeNetwork?: (network: Network) => void;
+  addToken: (tokenAddress: string, tokenSymbol: string, tokenDecimals: number, tokenImage: string) => Promise<boolean>;
 }
 
 export interface Subscriptions {

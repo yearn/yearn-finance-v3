@@ -1,11 +1,25 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+
 import { ThunkAPI } from '@frameworks/redux';
 import { TokenDynamicData, Token, Balance, Integer } from '@types';
-import { handleTransaction } from '@src/utils';
+import { handleTransaction } from '@utils';
+
+/* -------------------------------------------------------------------------- */
+/*                                   Setters                                  */
+/* -------------------------------------------------------------------------- */
 
 const setSelectedTokenAddress = createAction<{ tokenAddress?: string }>('tokens/setSelectedTokenAddress');
+
+/* -------------------------------------------------------------------------- */
+/*                                 Clear State                                */
+/* -------------------------------------------------------------------------- */
+
 const clearTokensData = createAction<void>('tokens/clearTokensData');
 const clearUserTokenState = createAction<void>('tokens/clearUserTokenState');
+
+/* -------------------------------------------------------------------------- */
+/*                                 Fetch Data                                 */
+/* -------------------------------------------------------------------------- */
 
 const getTokens = createAsyncThunk<{ tokensData: Token[] }, string | undefined, ThunkAPI>(
   'tokens/getTokens',
@@ -33,9 +47,7 @@ const getUserTokens = createAsyncThunk<{ userTokens: Balance[] }, { addresses?: 
   async ({ addresses }, { extra, getState }) => {
     const { network, wallet } = getState();
     const accountAddress = wallet.selectedAddress;
-    if (!accountAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { tokenService } = extra.services;
     const userTokens = await tokenService.getUserTokensData({
@@ -71,6 +83,10 @@ const getTokenAllowance = createAsyncThunk<
   return { allowance };
 });
 
+/* -------------------------------------------------------------------------- */
+/*                             Transaction Methods                            */
+/* -------------------------------------------------------------------------- */
+
 const approve = createAsyncThunk<
   { amount: string },
   { tokenAddress: string; spenderAddress: string; amountToApprove?: string },
@@ -94,6 +110,10 @@ const approve = createAsyncThunk<
 
   return { amount };
 });
+
+/* -------------------------------------------------------------------------- */
+/*                                Subscriptions                               */
+/* -------------------------------------------------------------------------- */
 
 const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   'tokens/initSubscriptions',
@@ -122,6 +142,10 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
     });
   }
 );
+
+/* -------------------------------------------------------------------------- */
+/*                                   Exports                                  */
+/* -------------------------------------------------------------------------- */
 
 export const TokensActions = {
   setSelectedTokenAddress,

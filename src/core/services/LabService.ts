@@ -19,6 +19,7 @@ import {
   GetSupportedLabsProps,
 } from '@types';
 import { get, toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress, getProviderType } from '@utils';
+
 import backscratcherAbi from './contracts/backscratcher.json';
 import y3CrvBackZapperAbi from './contracts/y3CrvBackZapper.json';
 import yvBoostAbi from './contracts/yvBoost.json';
@@ -93,8 +94,7 @@ export class LabServiceImpl implements LabService {
             .toFixed(0),
           apy: backscratcherData.apy,
           displayName: backscratcherData.name,
-          displayIcon:
-            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0xc5bDdf9843308380375a611c18B50Fb9341f502A/logo-128.png',
+          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVECRV}/logo-128.png`,
           defaultDisplayToken: CRV,
         },
       };
@@ -138,8 +138,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: pricePerShare.toString(),
           apy: yvBoostData.apy,
           displayName: yvBoostData.symbol,
-          displayIcon:
-            'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/logo-128.png',
+          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVBOOST}/logo-128.png`,
           defaultDisplayToken: YVECRV,
         },
       };

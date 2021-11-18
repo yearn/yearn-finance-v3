@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
+
 import {
   AllowancesMap,
   Balance,
@@ -13,6 +14,7 @@ import {
 } from '@types';
 import { getConstants } from '@config/constants';
 import { toBN } from '@utils';
+
 import { initialLabActionsStatusMap } from './labs.reducer';
 import { createToken } from '../tokens/tokens.selectors';
 

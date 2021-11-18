@@ -11,5 +11,6 @@ export * from './IronBank';
 export * from './Labs';
 
 export * from './DepositTx';
+export * from './MigrateTx';
 export * from './TestTx';
 export * from './WithdrawTx';

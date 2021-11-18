@@ -1,7 +1,7 @@
 import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
-import { Icon, ArrowDownIcon, IconProps } from '@components/common/Icon';
+import { Icon, ArrowDownIcon, IconProps } from '@components/common';
 
 const Container = styled.div<{ width?: string; align?: string; grow?: string; fontWeight?: number }>`
   display: flex;

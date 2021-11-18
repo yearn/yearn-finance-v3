@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { ProgressBar, Text } from '@components/common';
 import { toBN, formatAmount, formatUsd, formatPercent } from '@utils';
+import { useAppTranslation } from '@hooks';
 
 type TextColor = 'primary' | 'contrast' | 'positive' | 'negative';
 
@@ -60,7 +61,7 @@ export interface TxBorrowLimitProps {
   projectedBorrowBalance?: string;
   borrowLimit: string;
   projectedBorrowLimit?: string;
-  yieldLabel: string;
+  yieldType: 'BORROW' | 'SUPPLY';
   yieldPercent: string;
   borrowingTokens?: string;
   projectedBorrowingTokens?: string;
@@ -72,12 +73,14 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
   projectedBorrowBalance,
   borrowLimit,
   projectedBorrowLimit,
-  yieldLabel,
+  yieldType,
   yieldPercent,
   borrowingTokens,
   projectedBorrowingTokens,
   tokenSymbol,
 }) => {
+  const { t } = useAppTranslation('common');
+
   if (!projectedBorrowBalance) projectedBorrowBalance = borrowBalance;
   if (!projectedBorrowLimit) projectedBorrowLimit = borrowLimit;
 
@@ -96,7 +99,7 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
   return (
     <StyledTxBorrowLimit>
       <Info>
-        <Text>Total borrow limit</Text>
+        <Text>{t('components.transaction.borrow-limit.total-borrow-limit')}</Text>
         <Text>
           <Text>{formatUsd(borrowLimit)}</Text>
           {borrowLimit !== projectedBorrowLimit && <>{` → ${formatUsd(projectedBorrowLimit)}`}</>}
@@ -104,7 +107,7 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
       </Info>
 
       <Info>
-        <Text>Total borrow limit used</Text>
+        <Text>{t('components.transaction.borrow-limit.total-borrow-limit-used')}</Text>
         <Text>
           <CustomText color="primary">{formatPercent(borrowRatio, 0)}&nbsp;</CustomText>
           <CustomText color={diffType ?? 'primary'}>
@@ -120,7 +123,7 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
       <BottomInfo>
         {borrowingTokens && (
           <Info>
-            <Text>Borrowing</Text>
+            <Text>{t('components.transaction.borrow-limit.borrowing')}</Text>
             <Text>
               <CustomText color={diffType ?? 'primary'}>
                 {formatAmount(projectedBorrowingTokens ?? borrowingTokens, 4)}
@@ -131,7 +134,11 @@ export const TxBorrowLimit: FC<TxBorrowLimitProps> = ({
         )}
 
         <Info>
-          <Text>{yieldLabel}</Text>
+          <Text>
+            {yieldType === 'BORROW'
+              ? t('components.transaction.borrow-limit.borrow-apy')
+              : t('components.transaction.borrow-limit.supply-apy')}
+          </Text>
           <CustomText color="contrast">{yieldPercent}</CustomText>
         </Info>
       </BottomInfo>

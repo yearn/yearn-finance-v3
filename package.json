@@ -1,6 +1,6 @@
 {
   "name": "yearn-finance-v3",
-  "version": "0.2.8",
+  "version": "0.2.19",
   "private": true,
   "scripts": {
     "start": "craco start",
@@ -8,7 +8,10 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "upgrade-sdk": "yarn add yearn/yearn-sdk"
+    "upgrade-sdk": "yarn add yearn/yearn-sdk",
+    "syncDevLocales": "locize sync --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=dev --api-key=xxxx --path=./public/locales --format json --reference-language-only false",
+    "downloadProdLocales": "locize download --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=latest --path=./public/locales --clean true",
+    "checkDevLocales": "npm run syncLocales --dry true"
   },
   "dependencies": {
     "@craco/craco": "^6.1.1",
@@ -16,6 +19,7 @@
     "@ethersproject/address": "^5.4.0",
     "@ethersproject/contracts": "^5.4.1",
     "@ethersproject/providers": "^5.4.4",
+    "@ledgerhq/iframe-provider": "0.4.2",
     "@nivo/core": "^0.68.0",
     "@nivo/line": "^0.68.0",
     "@reduxjs/toolkit": "^1.5.0",
@@ -33,7 +37,7 @@
     "@types/redux-logger": "^3.0.8",
     "@types/styled-components": "^5.1.9",
     "@types/styled-system": "^5.1.10",
-    "@yfi/sdk": "1.0.0-21",
+    "@yfi/sdk": "1.0.9",
     "awilix": "^4.3.3",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
@@ -66,7 +70,9 @@
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "locize-cli": "7.6.17"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",

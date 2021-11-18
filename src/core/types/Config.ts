@@ -1,5 +1,5 @@
 import { Network, Address, Wei } from './Blockchain';
-import { NetworkSettings, Theme } from './Settings';
+import { NetworkSettings, Theme, Language } from './Settings';
 
 export interface Config extends Env, Constants {}
 
@@ -39,5 +39,9 @@ export interface Constants {
   ZAP_OUT_TOKENS: string[];
   DEFAULT_THEME: Theme;
   AVAILABLE_THEMES: Theme[];
+  AVAILABLE_CUSTOM_THEMES: Theme[];
   DEFAULT_ALERT_TIMEOUT: number;
+  DEFAULT_LANG: Language;
+  SUPPORTED_LANGS: Language[];
+  DUST_AMOUNT_USD: string;
 }

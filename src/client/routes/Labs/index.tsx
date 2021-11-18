@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch, useIsMounting } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
   LabsSelectors,
   WalletSelectors,
@@ -13,7 +12,6 @@ import {
   AppSelectors,
   NetworkSelectors,
 } from '@store';
-
 import {
   SummaryCard,
   DetailCard,
@@ -26,7 +24,7 @@ import {
   Amount,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { formatPercent, halfWidthCss, humanizeAmount, normalizeAmount, normalizeUsdc, toBN } from '@src/utils';
+import { formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECIMALS } from '@utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
@@ -108,17 +106,16 @@ const StyledNoWalletCard = styled(NoWalletCard)`
 `;
 
 export const Labs = () => {
-  // TODO: Add translation
-  // const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation(['common', 'labs']);
+
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConstants();
-  const { YVECRV, YVBOOST, PSLPYVBOOSTETH, CRV, YVTHREECRV } = CONTRACT_ADDRESSES;
-  const history = useHistory();
+  const { YVECRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(LabsSelectors.selectSummaryData);
+  const { totalDeposits } = useAppSelector(LabsSelectors.selectSummaryData);
   const recommendations = useAppSelector(LabsSelectors.selectRecommendations);
   const holdings = useAppSelector(LabsSelectors.selectDepositedLabs);
   const opportunities = useAppSelector(LabsSelectors.selectLabsOpportunities);
@@ -147,7 +144,7 @@ export const Labs = () => {
           <ActionButtons
             actions={[
               {
-                name: 'Lock',
+                name: t('components.transaction.lock'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' }));
@@ -155,7 +152,7 @@ export const Labs = () => {
                 disabled: !walletIsConnected,
               },
               {
-                name: 'Claim',
+                name: t('components.transaction.claim'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'backscratcherClaimTx' }));
@@ -163,7 +160,7 @@ export const Labs = () => {
                 disabled: !walletIsConnected,
               },
               {
-                name: 'Reinvest',
+                name: t('components.transaction.reinvest'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'backscratcherReinvestTx' }));
@@ -178,7 +175,7 @@ export const Labs = () => {
           <ActionButtons
             actions={[
               {
-                name: 'Deposit',
+                name: t('components.transaction.deposit'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
@@ -186,7 +183,7 @@ export const Labs = () => {
                 disabled: !walletIsConnected,
               },
               {
-                name: 'Withdraw',
+                name: t('components.transaction.withdraw'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'labWithdrawTx' }));
@@ -202,7 +199,7 @@ export const Labs = () => {
             alert={alert}
             actions={[
               {
-                name: 'Deposit',
+                name: t('components.transaction.deposit'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
@@ -210,7 +207,7 @@ export const Labs = () => {
                 disabled: !walletIsConnected,
               },
               {
-                name: 'Stake',
+                name: t('components.transaction.stake'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'labStakeTx' }));
@@ -232,7 +229,7 @@ export const Labs = () => {
           <ActionButtons
             actions={[
               {
-                name: 'Lock',
+                name: t('components.transaction.lock'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' }));
@@ -248,7 +245,7 @@ export const Labs = () => {
           <ActionButtons
             actions={[
               {
-                name: 'Deposit',
+                name: t('components.transaction.deposit'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
@@ -267,7 +264,7 @@ export const Labs = () => {
     switch (lab.address) {
       case PSLPYVBOOSTETH:
         if (toBN(lab.DEPOSIT.userBalance).gt(0)) {
-          return 'Available to stake';
+          return t('components.list-card.available-stake');
         }
         break;
 
@@ -281,7 +278,7 @@ export const Labs = () => {
       <SummaryCard
         header="Dashboard"
         items={[
-          { header: 'Holdings', Component: <Amount value={totalDeposits} input="usdc" /> },
+          { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
           // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
           // { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
         ]}
@@ -296,7 +293,7 @@ export const Labs = () => {
           {currentNetworkSettings.labsEnabled ? (
             <Row>
               <StyledRecommendationsCard
-                header="Recommendations"
+                header={t('components.recommendations.header')}
                 items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
                   // header: 'Special Token',
                   icon: displayIcon,
@@ -307,19 +304,12 @@ export const Labs = () => {
                 }))}
               />
               <StyledInfoCard
-                header="These are not risks for ants"
+                header={t('labs:risks-card.header')}
                 Component={
                   <Text>
-                    <p>
-                      The emerging strategies you'll find here are the newest and most unconventional around. Be sure to
-                      review the <em>About</em> sections carefully and make sure you understand token locking,
-                      impermanent loss, and other risks before proceeding.
-                    </p>
-                    <p>
-                      As with all Yearn products, you are responsible for educating yourself on the details, and for
-                      actively managing your holdings.
-                    </p>
-                    <p>Welcome to the Lab, but proceed with caution, anon.</p>
+                    <p>{t('labs:risks-card.desc-1')}</p>
+                    <p>{t('labs:risks-card.desc-2')}</p>
+                    <p>{t('labs:risks-card.desc-3')}</p>
                   </Text>
                 }
               />
@@ -348,7 +338,7 @@ export const Labs = () => {
               },
               {
                 key: 'displayName',
-                header: 'Name',
+                header: t('components.list-card.name'),
                 sortable: true,
                 fontWeight: 600,
                 width: '17rem',
@@ -356,7 +346,7 @@ export const Labs = () => {
               },
               {
                 key: 'apyData',
-                header: 'APY',
+                header: t('components.list-card.apy'),
                 format: ({ apyData }) => formatPercent(apyData, 2),
                 sortable: true,
                 width: '8rem',
@@ -364,16 +354,16 @@ export const Labs = () => {
               },
               {
                 key: 'balance',
-                header: 'Balance',
-                format: (lab) => humanizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
+                header: t('components.list-card.balance'),
+                format: (lab) => humanize('amount', lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
                 sortable: true,
                 width: '13rem',
                 className: 'col-balance',
               },
               {
                 key: 'value',
-                header: 'Value',
-                format: (lab) => normalizeUsdc(lab[lab.mainPositionKey].userDepositedUsdc, 2),
+                header: t('components.list-card.value'),
+                format: (lab) => humanize('usd', lab[lab.mainPositionKey].userDepositedUsdc),
                 sortable: true,
                 width: '11rem',
                 className: 'col-value',
@@ -400,7 +390,7 @@ export const Labs = () => {
           />
 
           <OpportunitiesCard
-            header="Opportunities"
+            header={t('components.list-card.opportunities')}
             metadata={[
               {
                 key: 'displayIcon',
@@ -410,7 +400,7 @@ export const Labs = () => {
               },
               {
                 key: 'displayName',
-                header: 'Name',
+                header: t('components.list-card.name'),
                 sortable: true,
                 fontWeight: 600,
                 width: '17rem',
@@ -418,7 +408,7 @@ export const Labs = () => {
               },
               {
                 key: 'apyData',
-                header: 'APY',
+                header: t('components.list-card.apy'),
                 format: ({ apyData }) => formatPercent(apyData, 2),
                 sortable: true,
                 width: '8rem',
@@ -426,16 +416,17 @@ export const Labs = () => {
               },
               {
                 key: 'labBalanceUsdc',
-                header: 'Total assets',
-                format: ({ labBalanceUsdc }) => normalizeUsdc(labBalanceUsdc, 0),
+                header: t('components.list-card.total-assets'),
+                format: ({ labBalanceUsdc }) => humanize('usd', labBalanceUsdc, USDC_DECIMALS, 0),
                 sortable: true,
                 width: '15rem',
                 className: 'col-assets',
               },
               {
                 key: 'userTokenBalance',
-                header: 'Available to deposit',
-                format: ({ token }) => (token.balance === '0' ? '-' : humanizeAmount(token.balance, token.decimals, 4)),
+                header: t('components.list-card.available-deposit'),
+                format: ({ token }) =>
+                  token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
                 sortable: true,
                 width: '15rem',
                 className: 'col-available',

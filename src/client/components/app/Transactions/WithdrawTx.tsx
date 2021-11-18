@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import {
   TokensSelectors,
   VaultsSelectors,
@@ -18,16 +18,19 @@ import {
   validateVaultWithdrawAllowance,
   validateSlippage,
   calculateSharesAmount,
-} from '@src/utils';
+} from '@utils';
 import { getConfig } from '@config';
 
 import { Transaction } from './Transaction';
+
 export interface WithdrawTxProps {
   header?: string;
   onClose?: () => void;
 }
 
 export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...props }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
@@ -83,7 +86,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
         spenderAddress: CONTRACT_ADDRESSES.zapOut,
       })
     );
-  }, [selectedTargetTokenAddress]);
+  }, [selectedVault?.address, CONTRACT_ADDRESSES?.zapOut]);
 
   useEffect(() => {
     if (!selectedVault) return;
@@ -128,15 +131,6 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     expectedSlippage: expectedTxOutcome?.slippage,
   });
 
-  // TODO: NEED A CLEAR ERROR ACTION ON MODAL UNMOUNT
-  const error =
-    allowanceError ||
-    inputError ||
-    actionsStatus.approveZapOut.error ||
-    actionsStatus.withdraw.error ||
-    expectedTxOutcomeStatus.error ||
-    slippageError;
-
   const selectedVaultOption = {
     address: selectedVault.address,
     symbol: selectedVault.displayName,
@@ -152,11 +146,20 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const expectedAmountValue = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
-  const expectedAmountStatus = {
-    error: expectedTxOutcomeStatus.error,
+
+  const sourceError = allowanceError || inputError;
+  const targetStatus = {
+    error:
+      expectedTxOutcomeStatus.error ||
+      actionsStatus.approveZapOut.error ||
+      actionsStatus.withdraw.error ||
+      slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
-  const loadingText = currentNetworkSettings.simulationsEnabled ? 'Simulating...' : 'Calculating...';
+
+  const loadingText = currentNetworkSettings.simulationsEnabled
+    ? t('components.transaction.status.simulating')
+    : t('components.transaction.status.calculating');
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -187,16 +190,16 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveZapOut,
       disabled: isApproved,
     },
     {
-      label: 'Withdraw',
+      label: t('components.transaction.withdraw'),
       onAction: withdraw,
       status: actionsStatus.withdraw,
-      disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading,
+      disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading || selectedVault.withdrawalsDisabled,
       contrast: true,
     },
   ];
@@ -205,23 +208,23 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader="From vault"
+      sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[selectedVaultOption]}
       selectedSourceAsset={selectedVaultOption}
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
-      targetHeader="To wallet"
+      targetHeader={t('components.transaction.to-wallet')}
       targetAssetOptions={targetTokensOptions}
       selectedTargetAsset={selectedTargetToken}
       onSelectedTargetAssetChange={onSelectedTargetTokenChange}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
-      targetAmountStatus={expectedAmountStatus}
+      targetStatus={targetStatus}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error: sourceError }}
       loadingText={loadingText}
       onClose={onClose}
     />

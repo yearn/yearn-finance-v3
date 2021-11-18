@@ -1,14 +1,14 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import { formatAmount, normalizeAmount } from '@utils';
+
 import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
 import { TxStatus } from './components/TxStatus';
 import { TxBorrowLimit } from './components/TxBorrowLimit';
-
-import { formatAmount, normalizeAmount } from '@src/utils';
 
 interface Status {
   loading?: boolean;
@@ -54,7 +54,8 @@ interface IronBankTransactionProps {
   projectedBorrowingTokens?: string;
   yieldType: 'SUPPLY' | 'BORROW';
   actions: Action[];
-  status: Status;
+  sourceStatus: Status;
+  targetStatus: Status;
   onClose?: () => void;
 }
 
@@ -64,7 +65,6 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
   const {
     transactionLabel,
     transactionCompleted,
-    transactionCompletedLabel,
     onTransactionCompletedDismissed,
     assetHeader,
     assetLabel,
@@ -82,12 +82,11 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
     projectedBorrowingTokens,
     yieldType,
     actions,
-    status,
+    sourceStatus,
+    targetStatus,
     onClose,
   } = props;
 
-  const showBorrowing = yieldType === 'BORROW';
-  const yieldLabel = showBorrowing ? 'Borrow APY' : 'Supply APY';
   const assetBalance = normalizeAmount(asset.balance, asset.decimals);
 
   if (transactionCompleted) {
@@ -97,6 +96,11 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
       </StyledTransaction>
     );
   }
+
+  const generalStatus: Status = {
+    loading: sourceStatus.loading || targetStatus.loading,
+    error: sourceStatus.error || targetStatus.error,
+  };
 
   return (
     <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
@@ -109,7 +113,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         maxAmount={safeMax ?? assetBalance}
         maxLabel={maxLabel ?? (safeMax ? 'SAFE MAX' : 'MAX')}
         selectedToken={asset}
-        inputError={!!status.error}
+        inputError={!!sourceStatus.error}
         readOnly={!onAmountChange}
       />
 
@@ -118,14 +122,14 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         projectedBorrowBalance={projectedBorrowBalance}
         borrowLimit={borrowLimit}
         projectedBorrowLimit={projectedBorrowLimit}
-        yieldLabel={yieldLabel}
+        yieldType={yieldType}
         yieldPercent={asset.yield ?? ''}
         borrowingTokens={borrowingTokens}
         projectedBorrowingTokens={projectedBorrowingTokens}
         tokenSymbol={asset.symbol}
       />
 
-      {status.error && <TxError errorText={status.error} />}
+      {generalStatus.error && <TxError errorText={generalStatus.error} />}
 
       <TxActions>
         {actions.map(({ label, onAction, status, disabled, contrast }) => (

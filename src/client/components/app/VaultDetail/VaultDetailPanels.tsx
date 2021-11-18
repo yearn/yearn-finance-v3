@@ -1,14 +1,27 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatApy, formatUsd, normalizeUsdc } from '@utils';
+import { formatApy, formatUsd, USDC_DECIMALS, humanize } from '@utils';
+import { AppContext } from '@context';
+import { useAppTranslation } from '@hooks';
 
 import { device } from '@themes/default';
-import { TokenIcon } from '@components/app';
-import { DepositTx, WithdrawTx } from '@components/app/Transactions';
-import { Card, CardContent, CardHeader, Tab, TabPanel, Tabs, Text, Markdown } from '@components/common';
-import { LineChart } from '@components/common/Charts';
-import { StrategyMetadata } from '@yfi/sdk/dist/types/metadata';
+import { DepositTx, WithdrawTx, MigrateTx, TokenIcon, ScanNetworkIcon } from '@components/app';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Tab,
+  TabPanel,
+  Tabs,
+  Text,
+  Markdown,
+  Icon,
+  AddCircleIcon,
+  LineChart,
+} from '@components/common';
+import { MetamaskLogo } from '@assets/images';
+import { GeneralVaultView, StrategyMetadata, Network } from '@types';
 
 const StyledLineChart = styled(LineChart)`
   margin-top: 2.4rem;
@@ -40,6 +53,32 @@ const StyledCardContent = styled(CardContent)`
 
 const StyledCardHeader = styled(CardHeader)`
   padding: 0;
+`;
+
+const StyledCardHeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-items: between;
+`;
+
+const StyledImg = styled.img`
+  object-fit: cover;
+  width: 30px;
+  height: 30px;
+`;
+
+const RelativeContainer = styled.span`
+  cursor: pointer;
+  position: relative;
+`;
+
+const IconOverImage = styled(Icon)`
+  background: white;
+  border-radius: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50%;
 `;
 
 const StyledTabPanel = styled(TabPanel)`
@@ -156,48 +195,80 @@ const VaultOverview = styled(Card)`
     }
   }
 `;
+
 export interface VaultDetailPanelsProps {
-  selectedVault?: any;
+  selectedVault: GeneralVaultView;
   chartData?: any;
   chartValue?: string;
+  displayAddToken?: boolean;
+  currentNetwork?: Network;
+  blockExplorerUrl?: string;
 }
 
-export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: VaultDetailPanelsProps) => {
-  // const { t } = useAppTranslation('common');
-  const [selectedTab, setSelectedTab] = useState('deposit');
-  const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
+export const VaultDetailPanels = ({
+  selectedVault,
+  chartData,
+  chartValue,
+  displayAddToken,
+  currentNetwork,
+  blockExplorerUrl,
+}: VaultDetailPanelsProps) => {
+  const { t } = useAppTranslation('vaultdetails');
 
+  const isVaultMigratable = selectedVault.migrationAvailable;
+  const hideDeposit = selectedVault.hideIfNoDeposits || isVaultMigratable;
+  const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : hideDeposit ? 'withdraw' : 'deposit');
+  const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
+  const context = useContext(AppContext);
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
+  };
+
+  const handleAddToken = () => {
+    const { address, symbol, decimals, icon } = selectedVault.token;
+    context?.wallet.addToken(address, symbol, decimals, icon || '');
   };
   return (
     <>
       <Row>
         <VaultOverview>
-          <StyledCardHeader header="Overview" />
+          <StyledCardHeaderContainer>
+            <StyledCardHeader header={t('vaultdetails:overview-panel.header')} />
+            {displayAddToken ? (
+              <RelativeContainer onClick={handleAddToken}>
+                <StyledImg src={MetamaskLogo} />
+                <IconOverImage Component={AddCircleIcon} />
+              </RelativeContainer>
+            ) : null}
+            <ScanNetworkIcon
+              currentNetwork={currentNetwork}
+              blockExplorerUrl={blockExplorerUrl}
+              address={selectedVault.address}
+            />
+          </StyledCardHeaderContainer>
 
           <OverviewTokenInfo>
             <TokenLogo variant="background">
-              <TokenIcon icon={selectedVault.token.icon} symbol={selectedVault.token.name} size="xBig" />
+              <TokenIcon icon={selectedVault.displayIcon} symbol={selectedVault.displayName} size="xBig" />
             </TokenLogo>
 
             <TokenInfo>
               <InfoValueTitle>{selectedVault?.displayName}</InfoValueTitle>
 
               <InfoValueRow>
-                <span>APY</span>
+                <span>{t('vaultdetails:overview-panel.apy')}</span>
                 <StyledText fontWeight="bold">{formatApy(selectedVault.apyData, selectedVault.apyType)}</StyledText>
               </InfoValueRow>
               <InfoValueRow>
-                <span>Total assets</span>
-                <StyledText>{normalizeUsdc(selectedVault.vaultBalanceUsdc, 0)}</StyledText>
+                <span>{t('vaultdetails:overview-panel.total-assets')}</span>
+                <StyledText>{humanize('usd', selectedVault.vaultBalanceUsdc, USDC_DECIMALS, 0)}</StyledText>
               </InfoValueRow>
               <InfoValueRow>
-                <span>Type</span>
+                <span>{t('vaultdetails:overview-panel.type')}</span>
                 <StyledText>{selectedVault.token.categories}</StyledText>
               </InfoValueRow>
               <InfoValueRow>
-                <span>Website</span>
+                <span>{t('vaultdetails:overview-panel.web')}</span>
                 <StyledLink href={selectedVault.token.website}>{selectedVault.token.website}</StyledLink>
               </InfoValueRow>
             </TokenInfo>
@@ -205,14 +276,16 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
 
           {selectedVault.token.description && (
             <OverviewInfo variant="surface" cardSize="small">
-              <StyledCardHeader subHeader="About" />
-              <StyledCardContent>{selectedVault.token.description}</StyledCardContent>
+              <StyledCardHeader subHeader={t('vaultdetails:overview-panel.about')} />
+              <StyledCardContent>
+                <Markdown>{selectedVault.token.description}</Markdown>
+              </StyledCardContent>
             </OverviewInfo>
           )}
 
           {strategy && (
             <OverviewInfo variant="surface" cardSize="small">
-              <StyledCardHeader subHeader="Strategies" />
+              <StyledCardHeader subHeader={t('vaultdetails:overview-panel.strategies')} />
               <StyledCardContent>
                 <Markdown>{strategy.description}</Markdown>
               </StyledCardContent>
@@ -221,16 +294,23 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
         </VaultOverview>
 
         <VaultActions>
-          <StyledCardHeader header="Transactions" />
-
+          <StyledCardHeader header={t('vaultdetails:vault-actions-panel.header')} />
           <ActionsTabs value={selectedTab} onChange={handleTabChange}>
-            <Tab value="deposit">Deposit</Tab>
-            <Tab value="withdraw">Withdraw</Tab>
+            {isVaultMigratable && <Tab value="migrate">{t('vaultdetails:vault-actions-panel.migrate')}</Tab>}
+            {!hideDeposit && <Tab value="deposit">{t('vaultdetails:vault-actions-panel.deposit')}</Tab>}
+            <Tab value="withdraw">{t('vaultdetails:vault-actions-panel.withdraw')}</Tab>
           </ActionsTabs>
 
-          <StyledTabPanel value="deposit" tabValue={selectedTab}>
-            <DepositTx />
-          </StyledTabPanel>
+          {isVaultMigratable && (
+            <StyledTabPanel value="migrate" tabValue={selectedTab}>
+              <MigrateTx />
+            </StyledTabPanel>
+          )}
+          {!hideDeposit && (
+            <StyledTabPanel value="deposit" tabValue={selectedTab}>
+              <DepositTx />
+            </StyledTabPanel>
+          )}
           <StyledTabPanel value="withdraw" tabValue={selectedTab}>
             <WithdrawTx />
           </StyledTabPanel>
@@ -239,14 +319,17 @@ export const VaultDetailPanels = ({ selectedVault, chartData, chartValue }: Vaul
 
       {chartData && (
         <VaultChart>
-          <StyledCardHeader header="Performance" />
+          <StyledCardHeader header={t('vaultdetails:performance-panel.header')} />
 
           <ChartValueContainer>
-            <ChartValueLabel>Earnings over time</ChartValueLabel>
+            <ChartValueLabel>{t('vaultdetails:performance-panel.earnings-over-time')}</ChartValueLabel>
             <ChartValue>{formatUsd(chartValue)}</ChartValue>
           </ChartValueContainer>
 
-          <StyledLineChart chartData={chartData} tooltipLabel="Earnings over time" />
+          <StyledLineChart
+            chartData={chartData}
+            tooltipLabel={t('vaultdetails:performance-panel.earnings-over-time')}
+          />
         </VaultChart>
       )}
     </>

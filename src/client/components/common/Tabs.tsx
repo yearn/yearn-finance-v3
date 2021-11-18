@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
-import { styledSystem, StyledSystemProps } from '@components/common/styledSystem';
-import React from 'react';
+
+import { styledSystem, StyledSystemProps } from './styledSystem';
 
 export interface TabsProps extends StyledSystemProps {
   value: number | string;
@@ -20,7 +20,7 @@ const StyledTabs = styled.div`
   text-transform: uppercase;
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.onSurfaceH2}
+  color: ${({ theme }) => theme.colors.onSurfaceH2};
   overflow: hidden;
   user-select: none;
 
@@ -52,6 +52,7 @@ export const Tabs: FC<TabsProps> = ({ value, onChange, children, ...props }) => 
 export interface TabProps extends StyledSystemProps {
   value?: number | string;
   selected?: boolean;
+  disabled?: boolean;
   onChange?: (value: any) => void;
 }
 

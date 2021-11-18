@@ -24,15 +24,21 @@ import { ReactComponent as LabsIcon } from '@assets/icons/labs.svg';
 import { ReactComponent as CheckRoundIcon } from '@assets/icons/check-round.svg';
 import { ReactComponent as WarningIcon } from '@assets/icons/warning.svg';
 import { ReactComponent as WarningFilledIcon } from '@assets/icons/warning-filled.svg';
+import { ReactComponent as ChevronDownIcon } from '@assets/icons/chevron-down.svg';
 import { ReactComponent as ChevronRightIcon } from '@assets/icons/chevron-right.svg';
 import { ReactComponent as ChevronLeftIcon } from '@assets/icons/chevron-left.svg';
 import { ReactComponent as StatusArrowIcon } from '@assets/icons/status-arrow.svg';
 import { ReactComponent as WalletMissingIcon } from '@assets/icons/wallet-missing.svg';
 import { ReactComponent as ConstructionIcon } from '@assets/icons/construction.svg';
+import { ReactComponent as AddCircleIcon } from '@assets/icons/add-circle.svg';
+import { ReactComponent as AddIcon } from '@assets/icons/add.svg';
 
 // NOTE NETWORK Icons
 import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
 import { ReactComponent as FantomIcon } from '@assets/icons/networks/fantom.svg';
+import { ReactComponent as EtherscanIcon } from '@assets/icons/etherscan.svg';
+import { ReactComponent as FtmscanIcon } from '@assets/icons/ftmscan.svg';
+import { ReactComponent as DefaultscanIcon } from '@assets/icons/defaultscan.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
 
@@ -80,6 +86,7 @@ export {
   CheckRoundIcon,
   WarningIcon,
   WarningFilledIcon,
+  ChevronDownIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
   StatusArrowIcon,
@@ -87,4 +94,9 @@ export {
   ConstructionIcon,
   EthereumIcon,
   FantomIcon,
+  AddCircleIcon,
+  AddIcon,
+  EtherscanIcon,
+  FtmscanIcon,
+  DefaultscanIcon,
 };

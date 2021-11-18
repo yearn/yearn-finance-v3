@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import { useAppSelector, useAppDispatch } from '@hooks';
-import { ModalsActions, ModalSelectors } from '@core/store';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
+import { useAppSelector, useAppDispatch } from '@hooks';
+import { ModalsActions, ModalSelectors } from '@store';
 
 import { TestModal } from './TestModal';
 import { ComingSoonModal } from './ComingSoonModal';
-// import { DepositModal } from './DepositModal_old';
-// import { WithdrawModal } from './WithdrawModal_old';
-
+import { CommunityThemesModal } from './CommunityThemesModal';
 import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
+import { MigrateTxModal } from './MigrateTxModal';
 import { BackscratcherLockTxModal, BackscratcherClaimTxModal, BackscratcherReinvestTxModal } from './Backscratcher';
 import { LabDepositTxModal } from './LabDepositTxModal';
 import { LabWithdrawTxModal } from './LabWithdrawTxModal';
@@ -112,6 +112,8 @@ export const Modals = () => {
 
   return (
     <StyledModals>
+      {/* //////////////////////////// MODALS ///////////////////////////// */}
+
       {activeModal === 'test' && (
         <CSSTransition key={'test'} timeout={modalTimeout} classNames="slideBottom">
           <TestModal modalProps={modalProps} onClose={closeModal} />
@@ -122,17 +124,6 @@ export const Modals = () => {
           <ComingSoonModal modalProps={modalProps} onClose={closeModal} />
         </CSSTransition>
       )}
-
-      {/* {activeModal === 'deposit' && (
-        <CSSTransition key={'deposit'} timeout={modalTimeout} classNames="slideBottom">
-          <DepositModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-      {activeModal === 'withdraw' && (
-        <CSSTransition key={'withdraw'} timeout={modalTimeout} classNames="slideBottom">
-          <WithdrawModal onClose={closeModal} />
-        </CSSTransition>
-      )} */}
 
       {activeModal === 'testTx' && (
         <CSSTransition key={'testTx'} timeout={modalTimeout} classNames="slideBottom">
@@ -149,6 +140,12 @@ export const Modals = () => {
       {activeModal === 'withdrawTx' && (
         <CSSTransition key={'withdrawTx'} timeout={modalTimeout} classNames="slideBottom">
           <WithdrawTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'migrateTx' && (
+        <CSSTransition key={'migrateTx'} timeout={modalTimeout} classNames="slideBottom">
+          <MigrateTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
@@ -211,6 +208,14 @@ export const Modals = () => {
           <IronBankRepayTxModal onClose={closeModal} />
         </CSSTransition>
       )}
+
+      {activeModal === 'communityThemes' && (
+        <CSSTransition key={'communityThemes'} timeout={modalTimeout} classNames="slideBottom">
+          <CommunityThemesModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {/* //////////////////////////// BACKDROP ///////////////////////////// */}
 
       {backdrop && (
         <CSSTransition key={'backdrop'} timeout={modalTimeout} classNames="opacity">

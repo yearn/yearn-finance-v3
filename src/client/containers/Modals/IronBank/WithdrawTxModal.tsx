@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { ModalTx } from '@components/common';
-import { IronBankWithdrawTx } from '@components/app/Transactions';
+import { IronBankWithdrawTx } from '@components/app';
 
 const StyledIronBankWithdrawTxModal = styled(ModalTx)``;
 

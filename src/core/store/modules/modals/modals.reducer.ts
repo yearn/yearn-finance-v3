@@ -1,5 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
+
 import { ModalsState } from '@types';
+
 import { ModalsActions } from './modals.actions';
 
 export const modalsInitialState: ModalsState = {

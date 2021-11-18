@@ -1,16 +1,16 @@
 import { FC, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import { IronBankSelectors, TokensActions, IronBankActions, TokensSelectors } from '@store';
 import {
   toBN,
   normalizeAmount,
-  normalizePercent,
   USDC_DECIMALS,
   validateAllowance,
   basicValidateAmount,
   COLLATERAL_FACTOR_DECIMALS,
-} from '@src/utils';
+  humanize,
+} from '@utils';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 
@@ -19,6 +19,8 @@ export interface IronBankSupplyTxProps {
 }
 
 export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
+  const { t } = useAppTranslation('common');
+
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [amount, setAmount] = useState('');
@@ -64,7 +66,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   }, [selectedMarket?.address]);
 
   useEffect(() => {
-    if (!selectedMarket || !error) return;
+    if (!selectedMarket || !generalError) return;
     dispatch(IronBankActions.clearMarketStatus({ marketAddress: selectedMarket.address }));
   }, [debouncedAmount]);
 
@@ -80,7 +82,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const borrowLimit = normalizeAmount(userIronBankSummary.borrowLimitUsdc, USDC_DECIMALS);
 
   const projectedBorrowLimit = toBN(borrowLimit).plus(collateralAmount).toString();
-  const asset = { ...selectedToken, yield: normalizePercent(selectedMarket.lendApy, 2) };
+  const asset = { ...selectedToken, yield: humanize('percent', selectedMarket.lendApy) };
 
   const { approved: isApproved, error: allowanceError } = validateAllowance({
     tokenAmount: toBN(amount),
@@ -96,7 +98,9 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
     totalAmountAvailable: selectedToken.balance,
   });
 
-  const error = allowanceError || inputError || actionsStatus.approve.error || actionsStatus.supply.error;
+  const sourceError = allowanceError || inputError;
+  const targetError = actionsStatus.approve.error || actionsStatus.supply.error;
+  const generalError = sourceError || targetError;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -125,13 +129,13 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
 
   const txActions = [
     {
-      label: 'Approve',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approve,
       disabled: isApproved,
     },
     {
-      label: 'Supply',
+      label: t('components.transaction.supply'),
       onAction: supply,
       status: actionsStatus.supply,
       disabled: !isApproved || !isValidAmount,
@@ -141,12 +145,12 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
 
   return (
     <IronBankTransaction
-      transactionLabel="Supply"
+      transactionLabel={t('components.transaction.supply')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel="Exit"
+      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      assetHeader="To Iron Bank"
-      assetLabel="Wallet Balance"
+      assetHeader={t('components.transaction.to-iron-bank')}
+      assetLabel={t('components.transaction.wallet-balance')}
       asset={asset}
       amount={amount}
       amountValue={amountValue}
@@ -156,7 +160,8 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
       projectedBorrowLimit={projectedBorrowLimit}
       yieldType={'SUPPLY'}
       actions={txActions}
-      status={{ error }}
+      sourceStatus={{ error: sourceError }}
+      targetStatus={{ error: targetError }}
       onClose={onClose}
     />
   );

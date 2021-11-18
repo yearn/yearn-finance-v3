@@ -1,7 +1,7 @@
 import { useState, useEffect, ReactNode } from 'react';
 import styled from 'styled-components';
 
-import { Card, CardHeader, CardContent, CardElement, CardEmptyList } from '@components/common';
+import { Card, CardHeader, CardContent, CardElement, CardEmptyList, ToggleButton } from '@components/common';
 import { sort } from '@utils';
 
 const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
@@ -57,12 +57,22 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolea
 `;
 
 const StyledCardHeader = styled(CardHeader)`
+  display: flex;
+  flex-wrap: center;
+  justify-content: space-between;
   margin-bottom: 0.6rem;
 `;
 
 const StyledCard = styled(Card)`
   padding: ${({ theme }) => theme.card.padding} 0;
   width: 100%;
+`;
+
+const SectionContent = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  align-items: center;
 `;
 
 interface Metadata<T> {
@@ -89,6 +99,8 @@ interface DetailCardProps<T> {
   SearchBar?: ReactNode;
   searching?: boolean;
   onAction?: (item: T) => void;
+  filterBy?: (item: T) => boolean;
+  filterLabel?: string;
 }
 
 export const DetailCard = <T,>({
@@ -101,11 +113,16 @@ export const DetailCard = <T,>({
   SearchBar,
   searching,
   onAction,
+  filterBy,
+  filterLabel,
   ...props
 }: DetailCardProps<T>) => {
   const [sortedData, setSortedData] = useState(initialSortBy ? sort(data, initialSortBy) : data);
   const [sortedBy, setSortedBy] = useState(initialSortBy);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+  const [filterToggle, setFilterToggle] = useState(filterBy ? false : true);
+  const filteredData = filterBy ? sortedData.filter(filterBy) : sortedData;
+  const displayData = filterToggle ? sortedData : filteredData;
 
   const handleSort = (key: Extract<keyof T, string>) => {
     if (sortedBy === key) {
@@ -128,10 +145,17 @@ export const DetailCard = <T,>({
 
   return (
     <StyledCard {...props}>
-      <StyledCardHeader header={header} />
+      <StyledCardHeader header={header}>
+        {!!filterBy && (
+          <SectionContent>
+            {filterLabel}
+            <ToggleButton selected={filterToggle} setSelected={setFilterToggle} />
+          </SectionContent>
+        )}
+      </StyledCardHeader>
       {SearchBar}
 
-      {!!sortedData.length && (
+      {!!displayData.length && (
         <CardContent>
           {metadata.map(
             ({ key, sortable, hide, className, transform, format, ...rest }) =>
@@ -150,7 +174,7 @@ export const DetailCard = <T,>({
         </CardContent>
       )}
 
-      {sortedData.map((item, i) => (
+      {displayData.map((item, i) => (
         <StyledCardContent
           key={`content-${i}`}
           wrap={wrap}
@@ -179,7 +203,7 @@ export const DetailCard = <T,>({
         </StyledCardContent>
       ))}
 
-      {!sortedData.length && <CardEmptyList searching={searching} />}
+      {!displayData.length && <CardEmptyList searching={searching} />}
     </StyledCard>
   );
 };

@@ -1,10 +1,12 @@
 import Onboard from 'bnc-onboard';
 import { API } from 'bnc-onboard/dist/src/interfaces';
+import { getAddress } from '@ethersproject/address';
 
 import { getConfig } from '@config';
 import { getNetworkId, getNetworkRpc } from '@utils';
 import { Wallet, Subscriptions, Network, Theme } from '@types';
-import { getAddress } from '@ethersproject/address';
+
+import ledgerIframeWallet from './IframeWallet';
 
 export class BlocknativeWalletImpl implements Wallet {
   private onboard?: API;
@@ -114,7 +116,7 @@ export class BlocknativeWalletImpl implements Wallet {
       darkMode: theme !== 'light',
       subscriptions,
       walletSelect: {
-        wallets,
+        wallets: [...wallets, ledgerIframeWallet],
       },
       walletCheck,
     });
@@ -143,6 +145,31 @@ export class BlocknativeWalletImpl implements Wallet {
     const networkId = getNetworkId(network);
     if (this.onboard) {
       this.onboard.config({ networkId });
+    }
+  }
+
+  public async addToken(
+    tokenAddress: string,
+    tokenSymbol: string,
+    tokenDecimals: number,
+    tokenImage: string
+  ): Promise<boolean> {
+    try {
+      await this.getState()?.wallet.provider.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20',
+          options: {
+            address: tokenAddress,
+            symbol: tokenSymbol,
+            decimals: tokenDecimals,
+            image: tokenImage,
+          },
+        },
+      });
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 }
