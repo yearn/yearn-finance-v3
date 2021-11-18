@@ -6,6 +6,7 @@ import { ModalsActions, ModalSelectors } from '@store';
 
 import { TestModal } from './TestModal';
 import { ComingSoonModal } from './ComingSoonModal';
+import { CommunityThemesModal } from './CommunityThemesModal';
 import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
@@ -111,6 +112,8 @@ export const Modals = () => {
 
   return (
     <StyledModals>
+      {/* //////////////////////////// MODALS ///////////////////////////// */}
+
       {activeModal === 'test' && (
         <CSSTransition key={'test'} timeout={modalTimeout} classNames="slideBottom">
           <TestModal modalProps={modalProps} onClose={closeModal} />
@@ -205,6 +208,14 @@ export const Modals = () => {
           <IronBankRepayTxModal onClose={closeModal} />
         </CSSTransition>
       )}
+
+      {activeModal === 'communityThemes' && (
+        <CSSTransition key={'communityThemes'} timeout={modalTimeout} classNames="slideBottom">
+          <CommunityThemesModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {/* //////////////////////////// BACKDROP ///////////////////////////// */}
 
       {backdrop && (
         <CSSTransition key={'backdrop'} timeout={modalTimeout} classNames="opacity">
