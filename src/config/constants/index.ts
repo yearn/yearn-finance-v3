@@ -77,6 +77,7 @@ export const getConstants = memoize((): Constants => {
     ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
     DEFAULT_THEME: 'light',
     AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk', 'classic'],
+    AVAILABLE_CUSTOM_THEMES: ['explorer'],
     DEFAULT_ALERT_TIMEOUT: 3000,
     DEFAULT_LANG: 'en',
     SUPPORTED_LANGS: ['en', 'es'],
