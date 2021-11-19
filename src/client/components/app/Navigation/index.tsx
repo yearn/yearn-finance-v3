@@ -12,6 +12,7 @@ export interface NavigationLink {
   to: string;
   text: string;
   icon: ElementType;
+  hideIframe?: boolean;
   hideMobile?: boolean;
 }
 
@@ -42,6 +43,7 @@ const navLinks = [
     to: '/ironbank',
     text: 'navigation.ironbank',
     icon: IronBankIcon,
+    hideIframe: true,
   },
   {
     to: '/settings',

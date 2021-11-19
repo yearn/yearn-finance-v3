@@ -5,6 +5,7 @@ import { useAppTranslation, useAppSelector } from '@hooks';
 import { SettingsSelectors } from '@store';
 import { NavigationLink } from '@components/app';
 import { Icon, Logo } from '@components/common';
+import { inLedgerIframe } from '@utils';
 
 const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
@@ -130,9 +131,13 @@ export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
   //   dispatch(SettingsActions.toggleSidebar());
   // };
 
+  const isInIframe = inLedgerIframe();
   const linkList = (
     <LinkList className="link-list">
       {navLinks.map((link, index) => {
+        if (isInIframe && link.hideIframe) {
+          return null;
+        }
         return (
           <RouterLink to={link.to} key={index} selected={currentPath === link.to}>
             <LinkIcon Component={link.icon} /> <LinkText>{t(link.text)}</LinkText>
