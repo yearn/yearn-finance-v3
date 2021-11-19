@@ -5,7 +5,7 @@ import { useAppTranslation, useAppSelector } from '@hooks';
 import { SettingsSelectors } from '@store';
 import { NavigationLink } from '@components/app';
 import { Icon, Logo } from '@components/common';
-import { inIframe } from '@utils';
+import { inLedgerIframe } from '@utils';
 
 const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
@@ -131,7 +131,7 @@ export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
   //   dispatch(SettingsActions.toggleSidebar());
   // };
 
-  const isInIframe = inIframe();
+  const isInIframe = inLedgerIframe();
   const linkList = (
     <LinkList className="link-list">
       {navLinks.map((link, index) => {
