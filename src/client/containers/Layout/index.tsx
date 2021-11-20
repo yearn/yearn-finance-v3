@@ -22,7 +22,14 @@ import {
   AlertsActions,
   NetworkActions,
 } from '@store';
-import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, useIsMounting } from '@hooks';
+import {
+  useAppTranslation,
+  useAppDispatch,
+  useAppSelector,
+  useWindowDimensions,
+  useIsMounting,
+  usePrevious,
+} from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
@@ -87,6 +94,8 @@ export const Layout: FC = ({ children }) => {
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const history = useHistory();
+  const previousAddress = usePrevious(selectedAddress);
+  const previousNetwork = usePrevious(currentNetwork);
 
   let isFetching = false;
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
@@ -119,31 +128,21 @@ export const Layout: FC = ({ children }) => {
   useEffect(() => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
     fetchData(path);
+    if (selectedAddress) fetchUserData(path);
   }, [location]);
 
   // TODO: MOVE THIS LOGIC TO THUNKS
   useEffect(() => {
-    clearUserData();
-    if (selectedAddress) {
-      fetchUserData(path);
-    }
+    if (previousAddress) clearUserData();
+    if (selectedAddress) fetchUserData(path);
   }, [selectedAddress]);
 
   useEffect(() => {
-    if (selectedAddress) {
-      fetchUserData(path);
-    }
-  }, [location]);
-
-  // TODO: ENABLE WHEN ADDING MULTICHAIN SUPPORT
-  useEffect(() => {
-    clearData();
-    clearUserData();
+    if (previousNetwork) clearData();
+    if (selectedAddress) clearUserData();
     dispatch(TokensActions.getTokens());
     fetchData(path);
-    if (selectedAddress) {
-      fetchUserData(path);
-    }
+    if (selectedAddress) fetchUserData(path);
   }, [currentNetwork]);
 
   function clearUserData() {
@@ -165,9 +164,6 @@ export const Layout: FC = ({ children }) => {
     isFetching = true;
 
     const promises: Promise<any>[] = [];
-    if (selectedAddress) {
-      promises.push(dispatch(TokensActions.getUserTokens({}))); // always fetch all user tokens
-    }
     switch (path) {
       case 'home':
         promises.push(dispatch(LabsActions.initiateLabs()));
