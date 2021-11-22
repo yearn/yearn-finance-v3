@@ -29,7 +29,7 @@
       "lend-apy": "貸出APY",
       "market-liquidity": "市場流動性",
       "name": "名前",
-      "opportunities": "機会",
+      "opportunities": "リスト",
       "price": "値段",
       "supplying": "供給中",
       "tokens": "トークン",
@@ -38,7 +38,7 @@
     },
     "no-wallet": "ウォレットが接続されていません",
     "recommendations": {
-      "header": "最高APY"
+      "header": "高APYボールト"
     },
     "transaction": {
       "approve": "承認",
@@ -86,7 +86,7 @@
   },
   "dashboard": {
     "apy": "APY",
-    "available": "利用可能",
+    "available": "利用可能額",
     "available-deposit": "入金可能額",
     "borrow-limit-total": "総貸出上限",
     "borrow-limit-used": "利用中の貸出上限",
