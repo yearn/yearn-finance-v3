@@ -37,6 +37,9 @@ export interface AppState {
   statusMap: {
     initApp: Status;
     getAppData: Status;
+    user: {
+      getUserAppData: Status;
+    };
   };
 }
 

@@ -176,46 +176,9 @@ export const Layout: FC = ({ children }) => {
     isFetching = false;
   }
 
-  function fetchUserData(path: Route) {
-    dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
-    switch (path) {
-      case 'home':
-        dispatch(VaultsActions.getUserVaultsSummary());
-        dispatch(LabsActions.getUserLabsPositions({}));
-
-        dispatch(IronBankActions.getIronBankSummary()); // use only this when lens summary calculation fixed
-        dispatch(IronBankActions.getUserMarketsPositions({})); // remove this when lens summary calculation fixed
-        dispatch(IronBankActions.getUserMarketsMetadata({})); // remove this when lens summary calculation fixed
-        break;
-      case 'wallet':
-        dispatch(VaultsActions.getUserVaultsPositions({}));
-
-        dispatch(IronBankActions.getIronBankSummary());
-        dispatch(IronBankActions.getUserMarketsPositions({}));
-        dispatch(IronBankActions.getUserMarketsMetadata({}));
-        break;
-      case 'vaults':
-        dispatch(VaultsActions.getUserVaultsSummary());
-        dispatch(VaultsActions.getUserVaultsPositions({}));
-        dispatch(VaultsActions.getUserVaultsMetadata({}));
-        break;
-      case 'vault':
-        if (!assetAddress || !isValidAddress(assetAddress)) break;
-        dispatch(VaultsActions.getUserVaultsSummary());
-        dispatch(VaultsActions.getUserVaultsPositions({ vaultAddresses: [assetAddress] }));
-        dispatch(VaultsActions.getUserVaultsMetadata({ vaultsAddresses: [assetAddress] }));
-        break;
-      case 'labs':
-        dispatch(LabsActions.getUserLabsPositions({}));
-        break;
-      case 'ironbank':
-        dispatch(IronBankActions.getIronBankSummary());
-        dispatch(IronBankActions.getUserMarketsPositions({}));
-        dispatch(IronBankActions.getUserMarketsMetadata({}));
-        break;
-      default:
-        break;
-    }
+  async function fetchUserData(path: Route) {
+    if (path === 'vault' && (!assetAddress || !isValidAddress(assetAddress))) return;
+    await dispatch(AppActions.getUserAppData({ route: path, addresses: assetAddress ? [assetAddress] : undefined }));
   }
 
   return (

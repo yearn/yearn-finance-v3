@@ -7,12 +7,15 @@ import { AppActions } from './app.actions';
 export const appInitialState: AppState = {
   isInitialized: false,
   statusMap: {
-    initApp: { ...initialStatus },
-    getAppData: { ...initialStatus },
+    initApp: initialStatus,
+    getAppData: initialStatus,
+    user: {
+      getUserAppData: initialStatus,
+    },
   },
 };
 
-const { initApp, getAppData } = AppActions;
+const { initApp, getAppData, getUserAppData } = AppActions;
 
 const appReducer = createReducer(appInitialState, (builder) => {
   builder
@@ -23,7 +26,7 @@ const appReducer = createReducer(appInitialState, (builder) => {
     })
     .addCase(initApp.fulfilled, (state) => {
       state.isInitialized = true;
-      state.statusMap.initApp = { ...initialStatus };
+      state.statusMap.initApp = initialStatus;
     })
     .addCase(initApp.rejected, (state, { error }) => {
       state.statusMap.initApp = {
@@ -43,10 +46,26 @@ const appReducer = createReducer(appInitialState, (builder) => {
       };
     })
     .addCase(getAppData.fulfilled, (state) => {
-      state.statusMap.getAppData = { ...initialStatus };
+      state.statusMap.getAppData = initialStatus;
     })
     .addCase(getAppData.rejected, (state, { error }) => {
       state.statusMap.getAppData = {
+        loading: false,
+        error: error.message,
+      };
+    })
+
+    /* ----------------------------- getUserAppData ----------------------------- */
+    .addCase(getUserAppData.pending, (state) => {
+      state.statusMap.user.getUserAppData = {
+        loading: true,
+      };
+    })
+    .addCase(getUserAppData.fulfilled, (state) => {
+      state.statusMap.user.getUserAppData = initialStatus;
+    })
+    .addCase(getUserAppData.rejected, (state, { error }) => {
+      state.statusMap.user.getUserAppData = {
         loading: false,
         error: error.message,
       };

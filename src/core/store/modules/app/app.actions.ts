@@ -52,6 +52,42 @@ const getAppData = createAsyncThunk<void, { route: Route; addresses?: Address[] 
   }
 );
 
+const getUserAppData = createAsyncThunk<void, { route: Route; addresses?: Address[] }, ThunkAPI>(
+  'app/getUserAppData',
+  async ({ route, addresses }, { dispatch }) => {
+    dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
+    switch (route) {
+      case 'home':
+        dispatch(VaultsActions.getUserVaultsSummary());
+        dispatch(LabsActions.getUserLabsPositions({}));
+
+        dispatch(IronBankActions.getIronBankSummary()); // use only this when lens summary calculation fixed
+        dispatch(IronBankActions.getUserMarketsPositions({})); // remove this when lens summary calculation fixed
+        dispatch(IronBankActions.getUserMarketsMetadata({})); // remove this when lens summary calculation fixed
+        break;
+      case 'wallet':
+        break;
+      case 'vaults':
+        dispatch(VaultsActions.getUserVaultsSummary());
+        dispatch(VaultsActions.getUserVaultsPositions({}));
+        dispatch(VaultsActions.getUserVaultsMetadata({}));
+        break;
+      case 'vault':
+        dispatch(VaultsActions.getUserVaultsPositions({ vaultAddresses: addresses }));
+        dispatch(VaultsActions.getUserVaultsMetadata({ vaultsAddresses: addresses }));
+        break;
+      case 'labs':
+        dispatch(LabsActions.getUserLabsPositions({}));
+        break;
+      case 'ironbank':
+        dispatch(IronBankActions.getIronBankSummary());
+        dispatch(IronBankActions.getUserMarketsPositions({}));
+        dispatch(IronBankActions.getUserMarketsMetadata({}));
+        break;
+    }
+  }
+);
+
 const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   'app/initSubscriptions',
   async (_arg, { dispatch }) => {
@@ -63,5 +99,6 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
 export const AppActions = {
   initApp,
   getAppData,
+  getUserAppData,
   initSubscriptions,
 };

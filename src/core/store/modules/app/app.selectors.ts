@@ -8,10 +8,10 @@ const selectAppStatusMap = (state: RootState) => state.app.statusMap;
 
 const selectAppStatus = createSelector([selectAppState], (appState): Status => {
   const { isInitialized, statusMap } = appState;
-  const { initApp, getAppData } = statusMap;
+  const { initApp, getAppData, user } = statusMap;
   return {
-    loading: !isInitialized || initApp.loading || getAppData.loading,
-    error: initApp.error || getAppData.error,
+    loading: !isInitialized || initApp.loading || getAppData.loading || user.getUserAppData.loading,
+    error: initApp.error || getAppData.error || user.getUserAppData.error,
   };
 });
 
