@@ -14,7 +14,6 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   } else if (wallet.name) {
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
-  await dispatch(TokensActions.getTokens());
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
 });

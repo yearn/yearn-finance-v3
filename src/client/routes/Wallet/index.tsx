@@ -86,6 +86,7 @@ export const Wallet = () => {
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const generalLoading = (appStatus.loading || tokensListStatus.loading || isMounting) && !activeModal;
+  const userTokensLoading = generalLoading && !userTokens.length;
   const { DUST_AMOUNT_USD } = getConstants();
 
   const actionHandler = (action: string, tokenAddress: string) => {
@@ -162,10 +163,10 @@ export const Wallet = () => {
         />
       </Row>
 
-      {!walletIsConnected && <StyledNoWalletCard />}
+      {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 
-      {generalLoading && walletIsConnected && <SpinnerLoading flex="1" width="100%" />}
-      {!generalLoading && walletIsConnected && (
+      {userTokensLoading && <SpinnerLoading flex="1" width="100%" />}
+      {!userTokensLoading && (
         <TokensCard
           header={t('components.list-card.tokens')}
           metadata={[
