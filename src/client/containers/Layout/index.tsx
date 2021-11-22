@@ -34,7 +34,7 @@ import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
 import { isValidAddress } from '@utils';
-import { Network, Vault } from '@types';
+import { Network, Route } from '@types';
 
 const contentSeparation = '1.6rem';
 
@@ -115,7 +115,7 @@ export const Layout: FC = ({ children }) => {
     !activeModal;
 
   // const path = useAppSelector(({ route }) => route.path);
-  const path = location.pathname.toLowerCase().split('/')[1];
+  const path = location.pathname.toLowerCase().split('/')[1] as Route;
 
   // TODO This is only assetAddress on the vault page
   const assetAddress: string | undefined = location.pathname.split('/')[2];
@@ -159,54 +159,24 @@ export const Layout: FC = ({ children }) => {
     dispatch(IronBankActions.clearIronBankData());
   }
 
-  async function fetchData(path: string) {
+  async function fetchData(path: Route) {
     if (isFetching) return;
     isFetching = true;
 
-    const promises: Promise<any>[] = [];
-    switch (path) {
-      case 'home':
-        promises.push(dispatch(LabsActions.initiateLabs()));
-        break;
-      case 'wallet':
-        promises.push(dispatch(VaultsActions.initiateSaveVaults()));
-        promises.push(dispatch(IronBankActions.initiateIronBank()));
-        break;
-      case 'vaults':
-        promises.push(dispatch(VaultsActions.initiateSaveVaults()));
-        break;
-      case 'vault':
-        if (!assetAddress) break;
-        if (!isValidAddress(assetAddress)) {
-          promises.push(dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' })));
-          history.push('/home');
-          break;
-        }
-        dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));
-        promises.push(
-          dispatch(VaultsActions.getVaults({ addresses: [assetAddress] })).then(({ payload }: any) => {
-            const vaults: Vault[] = payload.vaultsData;
-            const vault = vaults.pop();
-            if (vault && vault.metadata.migrationTargetVault)
-              dispatch(VaultsActions.getVaults({ addresses: [vault.metadata.migrationTargetVault] }));
-          })
-        );
-        break;
-      case 'labs':
-        promises.push(dispatch(LabsActions.initiateLabs()));
-        break;
-      case 'ironbank':
-        promises.push(dispatch(IronBankActions.initiateIronBank()));
-        break;
-      default:
-        break;
+    if (path === 'vault') {
+      if (!assetAddress || !isValidAddress(assetAddress)) {
+        dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
+        history.push('/home');
+        return;
+      }
+      dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));
     }
+    await dispatch(AppActions.getAppData({ route: path, addresses: assetAddress ? [assetAddress] : undefined }));
 
-    await Promise.all(promises);
     isFetching = false;
   }
 
-  function fetchUserData(path: string) {
+  function fetchUserData(path: Route) {
     dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
     switch (path) {
       case 'home':

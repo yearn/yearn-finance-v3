@@ -34,8 +34,10 @@ export interface RootState {
 
 export interface AppState {
   isInitialized: boolean;
-  isLoading: boolean;
-  error: string | undefined;
+  statusMap: {
+    initApp: Status;
+    getAppData: Status;
+  };
 }
 
 export interface NetworkState {

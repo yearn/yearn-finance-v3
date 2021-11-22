@@ -1,30 +1,55 @@
 import { createReducer } from '@reduxjs/toolkit';
 
-import { AppState } from '@types';
+import { AppState, initialStatus } from '@types';
 
 import { AppActions } from './app.actions';
 
 export const appInitialState: AppState = {
   isInitialized: false,
-  isLoading: false,
-  error: undefined,
+  statusMap: {
+    initApp: { ...initialStatus },
+    getAppData: { ...initialStatus },
+  },
 };
 
-const { initApp } = AppActions;
+const { initApp, getAppData } = AppActions;
 
 const appReducer = createReducer(appInitialState, (builder) => {
   builder
     .addCase(initApp.pending, (state) => {
-      state.isLoading = true;
-      state.error = undefined;
+      state.statusMap.initApp = {
+        loading: true,
+      };
     })
     .addCase(initApp.fulfilled, (state) => {
       state.isInitialized = true;
-      state.isLoading = false;
+      state.statusMap.initApp = { ...initialStatus };
     })
     .addCase(initApp.rejected, (state, { error }) => {
-      state.isLoading = false;
-      state.error = error.message;
+      state.statusMap.initApp = {
+        loading: false,
+        error: error.message,
+      };
+    })
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Fetch Data                                 */
+    /* -------------------------------------------------------------------------- */
+
+    /* ------------------------------- getAppData ------------------------------- */
+    .addCase(getAppData.pending, (state) => {
+      state.statusMap.getAppData = {
+        loading: true,
+      };
+    })
+    .addCase(getAppData.fulfilled, (state) => {
+      state.statusMap.getAppData = { ...initialStatus };
+    })
+    .addCase(getAppData.rejected, (state, { error }) => {
+      state.statusMap.getAppData = {
+        loading: false,
+        error: error.message,
+      };
     });
 });
 
