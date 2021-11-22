@@ -59,7 +59,7 @@ const StyledNoWalletCard = styled(NoWalletCard)`
 const SupplyingCard = styled(DetailCard)`
   @media (max-width: 860px) {
     .col-name {
-      width: 7rem;
+      width: 9rem;
     }
   }
   @media (max-width: 760px) {
@@ -92,7 +92,7 @@ const SupplyingCard = styled(DetailCard)`
 const BorrowingCard = styled(DetailCard)`
   @media (max-width: 800px) {
     .col-name {
-      width: 7rem;
+      width: 9rem;
     }
   }
   @media (max-width: 700px) {
@@ -115,7 +115,7 @@ const OpportunitiesCard = styled(DetailCard)`
   }
   @media (max-width: 700px) {
     .col-name {
-      width: 7rem;
+      width: 9rem;
     }
   }
   @media ${device.mobile} {

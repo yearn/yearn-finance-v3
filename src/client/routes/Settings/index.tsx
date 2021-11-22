@@ -14,6 +14,7 @@ import { formatPercent, getCurrentLanguage } from '@utils';
 import { ViewContainer, ThemeBox, CustomThemeButton } from '@components/app';
 import {
   ThemesIcon,
+  WorldIcon,
   ClockIcon,
   Icon,
   Button,
@@ -253,7 +254,7 @@ export const Settings = () => {
           <SettingsSection>
             <SectionTitle>
               <SectionHeading>
-                <SectionIcon Component={ThemesIcon} />
+                <SectionIcon Component={WorldIcon} />
                 {t('settings:language')}
               </SectionHeading>
             </SectionTitle>

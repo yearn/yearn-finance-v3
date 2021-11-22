@@ -53,7 +53,7 @@ const StyledInfoCard = styled(InfoCard)`
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 10rem;
+      width: 15rem;
     }
   }
   @media (max-width: 820px) {
@@ -63,7 +63,7 @@ const OpportunitiesCard = styled(DetailCard)`
   }
   @media ${device.mobile} {
     .col-name {
-      width: 7rem;
+      width: 12rem;
     }
     .col-available {
       width: 10rem;
@@ -79,7 +79,7 @@ const OpportunitiesCard = styled(DetailCard)`
 const HoldingsCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 10rem;
+      width: 15rem;
     }
     .col-balance {
       width: 10rem;
@@ -92,7 +92,7 @@ const HoldingsCard = styled(DetailCard)`
   }
   @media ${device.mobile} {
     .col-name {
-      width: 7rem;
+      width: 12rem;
     }
     .col-apy {
       display: none;

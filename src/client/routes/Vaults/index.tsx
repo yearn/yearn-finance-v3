@@ -60,7 +60,7 @@ const StyledNoWalletCard = styled(NoWalletCard)`
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 10rem;
+      width: 12rem;
     }
   }
   @media (max-width: 750px) {
@@ -69,9 +69,6 @@ const OpportunitiesCard = styled(DetailCard)`
     }
   }
   @media ${device.mobile} {
-    .col-name {
-      width: 7rem;
-    }
     .col-available {
       width: 10rem;
     }
@@ -86,7 +83,7 @@ const OpportunitiesCard = styled(DetailCard)`
 const DepositsCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 10rem;
+      width: 12rem;
     }
     .col-balance {
       width: 10rem;
@@ -98,9 +95,6 @@ const DepositsCard = styled(DetailCard)`
     }
   }
   @media ${device.mobile} {
-    .col-name {
-      width: 7rem;
-    }
     .col-apy {
       display: none;
     }
@@ -115,7 +109,7 @@ const DepositsCard = styled(DetailCard)`
 const DeprecatedCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 10rem;
+      width: 12rem;
     }
     .col-balance {
       width: 10rem;
@@ -127,9 +121,6 @@ const DeprecatedCard = styled(DetailCard)`
     }
   }
   @media ${device.mobile} {
-    .col-name {
-      width: 7rem;
-    }
     .col-apy {
       display: none;
     }

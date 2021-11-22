@@ -34,10 +34,13 @@ const TokensCard = styled(DetailCard)`
   }
   @media (max-width: 700px) {
     .col-name {
-      width: 7rem;
+      width: 12rem;
     }
   }
   @media ${device.mobile} {
+    .col-name {
+      width: 11rem;
+    }
     .col-balance {
       display: none;
     }
