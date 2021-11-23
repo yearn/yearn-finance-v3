@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -7,7 +7,6 @@ import {
   RouteActions,
   TokensActions,
   WalletActions,
-  VaultsActions,
   VaultsSelectors,
   LabsSelectors,
   IronBankSelectors,
@@ -17,7 +16,6 @@ import {
   AppSelectors,
   ModalSelectors,
   SettingsSelectors,
-  AlertsActions,
   NetworkActions,
 } from '@store';
 import {
@@ -31,7 +29,6 @@ import {
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
-import { isValidAddress } from '@utils';
 import { Network, Route } from '@types';
 
 const contentSeparation = '1.6rem';
@@ -91,11 +88,11 @@ export const Layout: FC = ({ children }) => {
   const addressEnsName = useAppSelector(WalletSelectors.selectAddressEnsName);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
-  const history = useHistory();
   const previousAddress = usePrevious(selectedAddress);
   const previousNetwork = usePrevious(currentNetwork);
 
-  let isFetching = false;
+  let isFetchingAppData = false;
+  let isFetchingUserData = false;
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
@@ -109,7 +106,7 @@ export const Layout: FC = ({ children }) => {
       labsStatus.loading ||
       ironBankStatus.loading ||
       isMounting ||
-      isFetching) &&
+      isFetchingAppData) &&
     !activeModal;
 
   // const path = useAppSelector(({ route }) => route.path);
@@ -124,7 +121,7 @@ export const Layout: FC = ({ children }) => {
 
   useEffect(() => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
-    fetchData(path);
+    fetchAppData(path);
     if (selectedAddress) fetchUserData(path);
   }, [location]);
 
@@ -137,28 +134,22 @@ export const Layout: FC = ({ children }) => {
     if (previousNetwork) dispatch(AppActions.clearAppData());
     if (selectedAddress) dispatch(AppActions.clearUserAppData());
     dispatch(TokensActions.getTokens());
-    fetchData(path);
+    fetchAppData(path);
     if (selectedAddress) fetchUserData(path);
   }, [currentNetwork]);
 
-  async function fetchData(path: Route) {
-    if (isFetching) return;
-    isFetching = true;
-    if (path === 'vault') {
-      if (!assetAddress || !isValidAddress(assetAddress)) {
-        dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
-        history.push('/home');
-        return;
-      }
-      dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));
-    }
+  async function fetchAppData(path: Route) {
+    if (isFetchingAppData) return;
+    isFetchingAppData = true;
     await dispatch(AppActions.getAppData({ route: path, addresses: assetAddress ? [assetAddress] : undefined }));
-    isFetching = false;
+    isFetchingAppData = false;
   }
 
   async function fetchUserData(path: Route) {
-    if (path === 'vault' && (!assetAddress || !isValidAddress(assetAddress))) return;
+    if (isFetchingUserData) return;
+    isFetchingUserData = true;
     await dispatch(AppActions.getUserAppData({ route: path, addresses: assetAddress ? [assetAddress] : undefined }));
+    isFetchingUserData = false;
   }
 
   return (
