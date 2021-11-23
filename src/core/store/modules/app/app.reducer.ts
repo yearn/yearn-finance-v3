@@ -9,16 +9,60 @@ export const appInitialState: AppState = {
   statusMap: {
     initApp: initialStatus,
     getAppData: initialStatus,
+    clearAppData: initialStatus,
     user: {
       getUserAppData: initialStatus,
+      clearUserAppData: initialStatus,
     },
   },
 };
 
-const { initApp, getAppData, getUserAppData } = AppActions;
+const { initApp, getAppData, getUserAppData, clearAppData, clearUserAppData } = AppActions;
 
 const appReducer = createReducer(appInitialState, (builder) => {
   builder
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Clear State                                */
+    /* -------------------------------------------------------------------------- */
+
+    /* ------------------------------ clearAppData ------------------------------ */
+    .addCase(clearAppData.pending, (state) => {
+      state.statusMap.clearAppData = {
+        loading: true,
+      };
+    })
+    .addCase(clearAppData.fulfilled, (state) => {
+      state.statusMap.clearAppData = initialStatus;
+    })
+    .addCase(clearAppData.rejected, (state, { error }) => {
+      state.statusMap.clearAppData = {
+        loading: false,
+        error: error.message,
+      };
+    })
+
+    /* ---------------------------- clearUserAppData ---------------------------- */
+    .addCase(clearUserAppData.pending, (state) => {
+      state.statusMap.user.clearUserAppData = {
+        loading: true,
+      };
+    })
+    .addCase(clearUserAppData.fulfilled, (state) => {
+      state.statusMap.user.clearUserAppData = initialStatus;
+    })
+    .addCase(clearUserAppData.rejected, (state, { error }) => {
+      state.statusMap.user.clearUserAppData = {
+        loading: false,
+        error: error.message,
+      };
+    })
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Fetch Data                                 */
+    /* -------------------------------------------------------------------------- */
+
+    /* --------------------------------- initApp -------------------------------- */
     .addCase(initApp.pending, (state) => {
       state.statusMap.initApp = {
         loading: true,
@@ -34,10 +78,6 @@ const appReducer = createReducer(appInitialState, (builder) => {
         error: error.message,
       };
     })
-
-    /* -------------------------------------------------------------------------- */
-    /*                                 Fetch Data                                 */
-    /* -------------------------------------------------------------------------- */
 
     /* ------------------------------- getAppData ------------------------------- */
     .addCase(getAppData.pending, (state) => {

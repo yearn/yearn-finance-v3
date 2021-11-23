@@ -10,6 +10,32 @@ import { VaultsActions } from '../vaults/vaults.actions';
 import { LabsActions } from '../labs/labs.actions';
 import { IronBankActions } from '../ironBank/ironBank.actions';
 
+/* -------------------------------------------------------------------------- */
+/*                                 Clear State                                */
+/* -------------------------------------------------------------------------- */
+
+const clearAppData = createAsyncThunk<void, void, ThunkAPI>('app/clearAppData', async (_, { dispatch }) => {
+  await Promise.all([
+    dispatch(TokensActions.clearTokensData()),
+    dispatch(VaultsActions.clearVaultsData()),
+    dispatch(LabsActions.clearLabsData()),
+    dispatch(IronBankActions.clearIronBankData()),
+  ]);
+});
+
+const clearUserAppData = createAsyncThunk<void, void, ThunkAPI>('app/clearUserAppData', async (_, { dispatch }) => {
+  await Promise.all([
+    dispatch(TokensActions.clearUserTokenState()),
+    dispatch(VaultsActions.clearUserData()),
+    dispatch(LabsActions.clearUserData()),
+    dispatch(IronBankActions.clearUserData()),
+  ]);
+});
+
+/* -------------------------------------------------------------------------- */
+/*                                 Fetch Data                                 */
+/* -------------------------------------------------------------------------- */
+
 const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_arg, { dispatch, getState }) => {
   const { wallet, network } = getState();
   if (inIframe()) {
@@ -88,6 +114,10 @@ const getUserAppData = createAsyncThunk<void, { route: Route; addresses?: Addres
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                Subscriptions                               */
+/* -------------------------------------------------------------------------- */
+
 const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   'app/initSubscriptions',
   async (_arg, { dispatch }) => {
@@ -96,7 +126,13 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                   Exports                                  */
+/* -------------------------------------------------------------------------- */
+
 export const AppActions = {
+  clearAppData,
+  clearUserAppData,
   initApp,
   getAppData,
   getUserAppData,

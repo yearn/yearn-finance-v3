@@ -8,8 +8,6 @@ import {
   TokensActions,
   WalletActions,
   VaultsActions,
-  LabsActions,
-  IronBankActions,
   VaultsSelectors,
   LabsSelectors,
   IronBankSelectors,
@@ -124,45 +122,28 @@ export const Layout: FC = ({ children }) => {
     dispatch(AppActions.initApp());
   }, []);
 
-  // TODO: MOVE THIS LOGIC TO THUNKS
   useEffect(() => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
     fetchData(path);
     if (selectedAddress) fetchUserData(path);
   }, [location]);
 
-  // TODO: MOVE THIS LOGIC TO THUNKS
   useEffect(() => {
-    if (previousAddress) clearUserData();
+    if (previousAddress) dispatch(AppActions.clearUserAppData());
     if (selectedAddress) fetchUserData(path);
   }, [selectedAddress]);
 
   useEffect(() => {
-    if (previousNetwork) clearData();
-    if (selectedAddress) clearUserData();
+    if (previousNetwork) dispatch(AppActions.clearAppData());
+    if (selectedAddress) dispatch(AppActions.clearUserAppData());
     dispatch(TokensActions.getTokens());
     fetchData(path);
     if (selectedAddress) fetchUserData(path);
   }, [currentNetwork]);
 
-  function clearUserData() {
-    dispatch(TokensActions.clearUserTokenState());
-    dispatch(VaultsActions.clearUserData());
-    dispatch(LabsActions.clearUserData());
-    dispatch(IronBankActions.clearUserData());
-  }
-
-  function clearData() {
-    dispatch(TokensActions.clearTokensData());
-    dispatch(VaultsActions.clearVaultsData());
-    dispatch(LabsActions.clearLabsData());
-    dispatch(IronBankActions.clearIronBankData());
-  }
-
   async function fetchData(path: Route) {
     if (isFetching) return;
     isFetching = true;
-
     if (path === 'vault') {
       if (!assetAddress || !isValidAddress(assetAddress)) {
         dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
@@ -172,7 +153,6 @@ export const Layout: FC = ({ children }) => {
       dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));
     }
     await dispatch(AppActions.getAppData({ route: path, addresses: assetAddress ? [assetAddress] : undefined }));
-
     isFetching = false;
   }
 
