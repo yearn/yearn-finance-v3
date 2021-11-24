@@ -148,6 +148,7 @@ export const DepositTx: FC<DepositTxProps> = ({
     sellTokenDecimals: selectedSellToken.decimals.toString(),
     userTokenBalance: selectedSellToken.balance,
     vaultUnderlyingBalance: selectedVault.vaultBalance,
+    targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
   });
 
   const { error: slippageError } = validateSlippage({
@@ -222,6 +223,7 @@ export const DepositTx: FC<DepositTxProps> = ({
           tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
           slippageTolerance: selectedSlippage,
+          targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
         })
       );
       setTxCompleted(true);
