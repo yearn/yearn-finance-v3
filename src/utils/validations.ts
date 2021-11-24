@@ -12,6 +12,7 @@ interface ValidateVaultDepositProps {
   userTokenBalance: string;
   sellTokenDecimals: string;
   vaultUnderlyingBalance: string;
+  targetUnderlyingTokenAmount: string | undefined;
 }
 interface ValidateVaultWithdrawProps {
   yvTokenAmount: BigNumber;
@@ -59,19 +60,18 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
     sellTokenDecimals,
     userTokenBalance,
     vaultUnderlyingBalance,
+    targetUnderlyingTokenAmount,
   } = props;
   userTokenBalance = userTokenBalance ?? '0';
   const depositLimitBN = depositLimit ? toBN(depositLimit) : undefined;
-  const ONE_UNIT = toBN('10').pow(sellTokenDecimals);
-  const amountInWei = sellTokenAmount.multipliedBy(ONE_UNIT);
 
   if (emergencyShutdown) {
     return { error: 'VAULT IS DISABLED' };
   }
 
-  if (depositLimitBN && depositLimitBN.gt(0)) {
+  if (depositLimitBN && depositLimitBN.gt(0) && targetUnderlyingTokenAmount) {
     const availableAmountToDepositInVault = depositLimitBN.minus(vaultUnderlyingBalance);
-    if (availableAmountToDepositInVault.lt(amountInWei)) return { error: 'EXCEEDED DEPOSIT LIMIT' };
+    if (availableAmountToDepositInVault.lt(targetUnderlyingTokenAmount)) return { error: 'EXCEEDED DEPOSIT LIMIT' };
   }
 
   return basicValidateAmount({ sellTokenAmount, sellTokenDecimals, totalAmountAvailable: userTokenBalance });

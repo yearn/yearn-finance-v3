@@ -84,6 +84,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
     sellTokenDecimals: selectedSellToken.decimals.toString(),
     userTokenBalance: selectedSellToken.balance,
     vaultUnderlyingBalance: selectedLab.labBalance,
+    targetUnderlyingTokenAmount: amount,
   });
 
   const sourceError = allowanceError || inputError;
@@ -132,6 +133,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
           labAddress: selectedLab.address,
           tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
+          targetUnderlyingTokenAmount: amount,
         })
       );
       setTxCompleted(true);
