@@ -48,7 +48,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
   },
 };
 
-export const tgetConstants = memoize((): Constants => {
+export const getConstants = memoize((): Constants => {
   const { ALCHEMY_API_KEY } = getEnv();
   return {
     STATE_VERSION: 1,
