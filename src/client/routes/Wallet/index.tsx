@@ -157,6 +157,10 @@ export const Wallet = () => {
                 {t('components.beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>
                 .
               </p>
+              <p>
+                {t('components.beta-card.desc-2')}{' '}
+                <StyledLink href="https://v2.yearn.finance">v2.yearn.finance</StyledLink>.
+              </p>
             </Text>
           }
           cardSize="big"
