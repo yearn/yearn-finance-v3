@@ -79,6 +79,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     sellTokenDecimals: selectedSellToken.decimals.toString(),
     userTokenBalance: selectedSellToken.balance,
     vaultUnderlyingBalance: selectedLab.labBalance,
+    targetUnderlyingTokenAmount: amount,
   });
 
   const sourceError = allowanceError || inputError;
@@ -117,6 +118,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
           labAddress: selectedLab.address,
           tokenAddress: selectedSellToken.address,
           amount: toBN(amount),
+          targetUnderlyingTokenAmount: amount,
         })
       );
       setTxCompleted(true);

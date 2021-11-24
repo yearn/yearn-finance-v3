@@ -197,11 +197,20 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>
 
 const depositVault = createAsyncThunk<
   void,
-  { vaultAddress: string; tokenAddress: string; amount: BigNumber; slippageTolerance?: number },
+  {
+    vaultAddress: string;
+    tokenAddress: string;
+    amount: BigNumber;
+    targetUnderlyingTokenAmount: string | undefined;
+    slippageTolerance?: number;
+  },
   ThunkAPI
 >(
   'vaults/depositVault',
-  async ({ vaultAddress, tokenAddress, amount, slippageTolerance }, { extra, getState, dispatch }) => {
+  async (
+    { vaultAddress, tokenAddress, amount, targetUnderlyingTokenAmount, slippageTolerance },
+    { extra, getState, dispatch }
+  ) => {
     const { network, wallet, vaults, tokens } = getState();
     const { services } = extra;
     const userAddress = wallet.selectedAddress;
@@ -222,6 +231,7 @@ const depositVault = createAsyncThunk<
       sellTokenDecimals: tokenData?.decimals ?? '0',
       userTokenBalance: userTokenData?.balance ?? '0',
       vaultUnderlyingBalance: vaultData?.underlyingTokenBalance.amount ?? '0',
+      targetUnderlyingTokenAmount,
     });
 
     const { error: allowanceError } = validateVaultAllowance({

@@ -127,6 +127,7 @@ interface DepositProps {
   labAddress: string;
   tokenAddress: string;
   amount: BigNumber;
+  targetUnderlyingTokenAmount: string | undefined;
   slippageTolerance?: number;
 }
 
@@ -155,7 +156,10 @@ const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
 
 const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/deposit',
-  async ({ labAddress, tokenAddress, amount, slippageTolerance }, { dispatch, getState, extra }) => {
+  async (
+    { labAddress, tokenAddress, amount, slippageTolerance, targetUnderlyingTokenAmount },
+    { dispatch, getState, extra }
+  ) => {
     const { services } = extra;
     const { labService } = services;
     const { wallet, labs, tokens, network } = getState();
@@ -187,6 +191,7 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       sellTokenDecimals: tokenData?.decimals ?? '0',
       userTokenBalance: userTokenData?.balance ?? '0',
       vaultUnderlyingBalance: labData?.underlyingTokenBalance.amount ?? '0',
+      targetUnderlyingTokenAmount,
     });
 
     const error = allowanceError || depositError;
@@ -297,7 +302,7 @@ const yvBoostApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkA
 
 const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoost/yvBoostDeposit',
-  async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
+  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, getState, extra }) => {
     const { wallet } = getState();
     const userAddress = wallet.selectedAddress;
     if (!userAddress) {
@@ -324,6 +329,7 @@ const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       sellTokenDecimals: tokenData?.decimals ?? '0',
       userTokenBalance: userTokenData?.balance ?? '0',
       vaultUnderlyingBalance: labData?.underlyingTokenBalance.amount ?? '0',
+      targetUnderlyingTokenAmount,
     });
     const error = allowanceError || depositError;
     if (error) throw new Error(error);
@@ -550,7 +556,7 @@ const yvBoostEthApproveInvest = createAsyncThunk<void, ApproveDepositProps, Thun
 
 const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthInvest',
-  async ({ labAddress, tokenAddress, amount }, { dispatch, extra, getState }) => {
+  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, extra, getState }) => {
     // labAddress is PSLPYVBOOSTETH
     const { wallet } = getState();
     const userAddress = wallet.selectedAddress;
@@ -578,6 +584,7 @@ const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultUnderlyingBalance: labData?.underlyingTokenBalance.amount ?? '0',
       depositLimit: labData?.metadata.depositLimit ?? '0',
       emergencyShutdown: labData?.metadata.emergencyShutdown || false,
+      targetUnderlyingTokenAmount,
     });
 
     const error = allowanceError || depositError;
@@ -613,7 +620,7 @@ const yvBoostEthApproveStake = createAsyncThunk<void, { labAddress: string }, Th
 
 const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthStake',
-  async ({ labAddress, amount }, { dispatch, extra, getState }) => {
+  async ({ labAddress, amount, targetUnderlyingTokenAmount }, { dispatch, extra, getState }) => {
     const { network, wallet } = getState();
     const { services } = extra;
     const userAddress = wallet.selectedAddress;
@@ -644,6 +651,7 @@ const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultUnderlyingBalance: labData?.underlyingTokenBalance.amount ?? '0',
       depositLimit: labData?.metadata.depositLimit ?? '0',
       emergencyShutdown: labData?.metadata.emergencyShutdown || false,
+      targetUnderlyingTokenAmount,
     });
 
     const error = allowanceError || depositError;
