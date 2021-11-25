@@ -1,19 +1,12 @@
 import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
-import { Button, OptionList, EthereumIcon, FantomIcon } from '@components/common';
+import { OptionList, EthereumIcon, FantomIcon } from '@components/common';
 import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
 import { inIframe } from '@utils';
-
-const BetaButton = styled(Button)`
-  white-space: nowrap;
-  cursor: default;
-  border-color: ${({ theme }) => theme.colors.walletButton.background};
-  color: ${({ theme }) => theme.colors.walletButton.background};
-`;
 
 const StyledOptionList = styled(OptionList)`
   width: 15rem;
@@ -56,9 +49,6 @@ const StyledNavbar = styled.header`
   padding-bottom: 1.6rem;
 
   @media ${device.mobile} {
-    ${BetaButton} {
-      display: none;
-    }
     ${StyledText} {
       font-size: 1.9rem;
     }
@@ -122,8 +112,6 @@ export const Navbar = ({
       {title && <StyledText>{title}</StyledText>}
 
       <StyledNavbarActions>
-        <BetaButton outline>BETA</BetaButton>
-
         <StyledOptionList
           selected={dropdownSelectedNetwork}
           setSelected={(option) => onNetworkChange(option.value)}

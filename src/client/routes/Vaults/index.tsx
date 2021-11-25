@@ -156,6 +156,8 @@ export const Vaults = () => {
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const generalLoading =
     (appStatus.loading || vaultsStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
+  const opportunitiesLoading = generalLoading && !filteredVaults.length;
+  const depositsLoading = generalLoading && !deposits.length;
 
   useEffect(() => {
     setFilteredVaults(opportunities);
@@ -190,8 +192,8 @@ export const Vaults = () => {
   return (
     <ViewContainer>
       <SummaryCard header={t('dashboard.header')} items={summaryCardItems} variant="secondary" cardSize="small" />
-      {generalLoading && <SpinnerLoading flex="1" width="100%" />}
-      {!generalLoading && (
+      {opportunitiesLoading && <SpinnerLoading flex="1" width="100%" />}
+      {!opportunitiesLoading && (
         <>
           <Row>
             <StyledRecommendationsCard
@@ -218,7 +220,7 @@ export const Vaults = () => {
             />
           </Row>
 
-          {!walletIsConnected && <StyledNoWalletCard />}
+          {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 
           <DeprecatedCard
             header={t('components.list-card.deprecated')}
@@ -295,163 +297,167 @@ export const Vaults = () => {
             wrap
           />
 
-          <DepositsCard
-            header={t('components.list-card.deposits')}
-            metadata={[
-              {
-                key: 'displayIcon',
-                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                width: '6rem',
-                className: 'col-icon',
-              },
-              {
-                key: 'displayName',
-                header: t('components.list-card.name'),
-                sortable: true,
-                fontWeight: 600,
-                width: '17rem',
-                className: 'col-name',
-              },
-              {
-                key: 'apy',
-                header: t('components.list-card.apy'),
-                format: ({ apyData, apyType }) => formatApy(apyData, apyType),
-                sortable: true,
-                width: '8rem',
-                className: 'col-apy',
-              },
-              {
-                key: 'balance',
-                header: t('components.list-card.balance'),
-                format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
-                sortable: true,
-                width: '13rem',
-                className: 'col-balance',
-              },
-              {
-                key: 'userDepositedUsdc',
-                header: t('components.list-card.value'),
-                format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
-                sortable: true,
-                width: '11rem',
-                className: 'col-value',
-              },
-              {
-                key: 'earned',
-                header: t('components.list-card.earned'),
-                format: ({ earned }) => (!toBN(earned).isZero() ? humanize('usd', earned) : '-'),
-                sortable: true,
-                width: '11rem',
-                className: 'col-earned',
-              },
-              {
-                key: 'actions',
-                transform: ({ address }) => (
-                  <ActionButtons
-                    actions={[
-                      { name: t('components.transaction.deposit'), handler: () => depositHandler(address) },
-                      { name: t('components.transaction.withdraw'), handler: () => withdrawHandler(address) },
-                    ]}
-                  />
-                ),
-                align: 'flex-end',
-                width: 'auto',
-                grow: '1',
-              },
-            ]}
-            data={deposits.map((vault) => ({
-              ...vault,
-              apy: orderApy(vault.apyData, vault.apyType),
-              balance: normalizeAmount(vault.userDeposited, vault.token.decimals),
-              actions: null,
-            }))}
-            onAction={({ address }) => history.push(`/vault/${address}`)}
-            initialSortBy="userDepositedUsdc"
-            wrap
-          />
+          {!depositsLoading && (
+            <DepositsCard
+              header={t('components.list-card.deposits')}
+              metadata={[
+                {
+                  key: 'displayIcon',
+                  transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
+                  width: '6rem',
+                  className: 'col-icon',
+                },
+                {
+                  key: 'displayName',
+                  header: t('components.list-card.name'),
+                  sortable: true,
+                  fontWeight: 600,
+                  width: '17rem',
+                  className: 'col-name',
+                },
+                {
+                  key: 'apy',
+                  header: t('components.list-card.apy'),
+                  format: ({ apyData, apyType }) => formatApy(apyData, apyType),
+                  sortable: true,
+                  width: '8rem',
+                  className: 'col-apy',
+                },
+                {
+                  key: 'balance',
+                  header: t('components.list-card.balance'),
+                  format: ({ userDeposited, token }) => humanize('amount', userDeposited, token.decimals, 4),
+                  sortable: true,
+                  width: '13rem',
+                  className: 'col-balance',
+                },
+                {
+                  key: 'userDepositedUsdc',
+                  header: t('components.list-card.value'),
+                  format: ({ userDepositedUsdc }) => humanize('usd', userDepositedUsdc),
+                  sortable: true,
+                  width: '11rem',
+                  className: 'col-value',
+                },
+                {
+                  key: 'earned',
+                  header: t('components.list-card.earned'),
+                  format: ({ earned }) => (!toBN(earned).isZero() ? humanize('usd', earned) : '-'),
+                  sortable: true,
+                  width: '11rem',
+                  className: 'col-earned',
+                },
+                {
+                  key: 'actions',
+                  transform: ({ address }) => (
+                    <ActionButtons
+                      actions={[
+                        { name: t('components.transaction.deposit'), handler: () => depositHandler(address) },
+                        { name: t('components.transaction.withdraw'), handler: () => withdrawHandler(address) },
+                      ]}
+                    />
+                  ),
+                  align: 'flex-end',
+                  width: 'auto',
+                  grow: '1',
+                },
+              ]}
+              data={deposits.map((vault) => ({
+                ...vault,
+                apy: orderApy(vault.apyData, vault.apyType),
+                balance: normalizeAmount(vault.userDeposited, vault.token.decimals),
+                actions: null,
+              }))}
+              onAction={({ address }) => history.push(`/vault/${address}`)}
+              initialSortBy="userDepositedUsdc"
+              wrap
+            />
+          )}
 
-          <OpportunitiesCard
-            header={t('components.list-card.opportunities')}
-            metadata={[
-              {
-                key: 'displayIcon',
-                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                width: '6rem',
-                className: 'col-icon',
-              },
-              {
-                key: 'displayName',
-                header: t('components.list-card.name'),
-                sortable: true,
-                fontWeight: 600,
-                width: '17rem',
-                className: 'col-name',
-              },
-              {
-                key: 'apy',
-                header: t('components.list-card.apy'),
-                format: ({ apyData, apyType }) => formatApy(apyData, apyType),
-                sortable: true,
-                width: '8rem',
-                className: 'col-apy',
-              },
-              {
-                key: 'vaultBalanceUsdc',
-                header: t('components.list-card.total-assets'),
-                format: ({ vaultBalanceUsdc }) => humanize('usd', vaultBalanceUsdc, USDC_DECIMALS, 0),
-                sortable: true,
-                width: '15rem',
-                className: 'col-assets',
-              },
-              {
-                key: 'userTokenBalance',
-                header: t('components.list-card.available-deposit'),
-                format: ({ token }) =>
-                  token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
-                sortable: true,
-                width: '15rem',
-                className: 'col-available',
-              },
-              {
-                key: 'actions',
-                transform: ({ address }) => (
-                  <ActionButtons
-                    actions={[
-                      {
-                        name: t('components.transaction.deposit'),
-                        handler: () => depositHandler(address),
-                        disabled: !walletIsConnected,
-                      },
-                    ]}
+          {!opportunitiesLoading && (
+            <OpportunitiesCard
+              header={t('components.list-card.opportunities')}
+              metadata={[
+                {
+                  key: 'displayIcon',
+                  transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
+                  width: '6rem',
+                  className: 'col-icon',
+                },
+                {
+                  key: 'displayName',
+                  header: t('components.list-card.name'),
+                  sortable: true,
+                  fontWeight: 600,
+                  width: '17rem',
+                  className: 'col-name',
+                },
+                {
+                  key: 'apy',
+                  header: t('components.list-card.apy'),
+                  format: ({ apyData, apyType }) => formatApy(apyData, apyType),
+                  sortable: true,
+                  width: '8rem',
+                  className: 'col-apy',
+                },
+                {
+                  key: 'vaultBalanceUsdc',
+                  header: t('components.list-card.total-assets'),
+                  format: ({ vaultBalanceUsdc }) => humanize('usd', vaultBalanceUsdc, USDC_DECIMALS, 0),
+                  sortable: true,
+                  width: '15rem',
+                  className: 'col-assets',
+                },
+                {
+                  key: 'userTokenBalance',
+                  header: t('components.list-card.available-deposit'),
+                  format: ({ token }) =>
+                    token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
+                  sortable: true,
+                  width: '15rem',
+                  className: 'col-available',
+                },
+                {
+                  key: 'actions',
+                  transform: ({ address }) => (
+                    <ActionButtons
+                      actions={[
+                        {
+                          name: t('components.transaction.deposit'),
+                          handler: () => depositHandler(address),
+                          disabled: !walletIsConnected,
+                        },
+                      ]}
+                    />
+                  ),
+                  align: 'flex-end',
+                  width: 'auto',
+                  grow: '1',
+                },
+              ]}
+              data={filteredVaults.map((vault) => ({
+                ...vault,
+                apy: orderApy(vault.apyData, vault.apyType),
+                userTokenBalance: normalizeAmount(vault.token.balance, vault.token.decimals),
+                userTokenBalanceUsdc: vault.token.balanceUsdc,
+                actions: null,
+              }))}
+              SearchBar={
+                <SearchBarContainer>
+                  <SearchInput
+                    searchableData={opportunities}
+                    searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
+                    placeholder=""
+                    onSearch={(data) => setFilteredVaults(data)}
                   />
-                ),
-                align: 'flex-end',
-                width: 'auto',
-                grow: '1',
-              },
-            ]}
-            data={filteredVaults.map((vault) => ({
-              ...vault,
-              apy: orderApy(vault.apyData, vault.apyType),
-              userTokenBalance: normalizeAmount(vault.token.balance, vault.token.decimals),
-              userTokenBalanceUsdc: vault.token.balanceUsdc,
-              actions: null,
-            }))}
-            SearchBar={
-              <SearchBarContainer>
-                <SearchInput
-                  searchableData={opportunities}
-                  searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
-                  placeholder=""
-                  onSearch={(data) => setFilteredVaults(data)}
-                />
-              </SearchBarContainer>
-            }
-            searching={opportunities.length > filteredVaults.length}
-            onAction={({ address }) => history.push(`/vault/${address}`)}
-            initialSortBy="apy"
-            wrap
-          />
+                </SearchBarContainer>
+              }
+              searching={opportunities.length > filteredVaults.length}
+              onAction={({ address }) => history.push(`/vault/${address}`)}
+              initialSortBy="apy"
+              wrap
+            />
+          )}
         </>
       )}
     </ViewContainer>
