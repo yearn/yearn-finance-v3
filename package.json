@@ -12,7 +12,7 @@
     "syncDevLocales": "locize sync --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=dev --api-key=xxxx --path=./public/locales --format json --reference-language-only false",
     "downloadProdLocales": "locize download --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=latest --path=./public/locales --clean true",
     "downloadDevLocales": "locize download --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=dev --path=./public/locales --clean true",
-    "checkDevLocales": "npm run syncLocales --dry true"
+    "checkDevLocales": "npm run syncDevLocales --dry true"
   },
   "dependencies": {
     "@craco/craco": "^6.1.1",
