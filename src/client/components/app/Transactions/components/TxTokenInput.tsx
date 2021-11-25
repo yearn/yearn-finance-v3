@@ -88,12 +88,13 @@ const TokenName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
 `;
 
 const TokenListIcon = styled(Icon)`
   position: absolute;
-  right: 0;
+  right: 0.7rem;
+  top: 3.4rem;
   fill: inherit;
   color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
 `;
@@ -102,7 +103,6 @@ const TokenIconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   width: 100%;
 `;
 
@@ -110,7 +110,7 @@ const TokenSelector = styled.div<{ onClick?: () => void }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   width: 8.4rem;
   height: 9.2rem;
   border-radius: ${({ theme }) => theme.globalRadius};
@@ -118,9 +118,10 @@ const TokenSelector = styled.div<{ onClick?: () => void }>`
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   fill: ${({ theme }) => theme.colors.txModalColors.text};
   flex-shrink: 0;
-  padding: 0.7rem;
+  padding: 0 0.7rem;
   gap: 0.7rem;
   user-select: none;
+  position: relative;
   ${({ onClick }) => onClick && 'cursor: pointer;'}
 `;
 
