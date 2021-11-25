@@ -3,7 +3,7 @@ import i18n from 'i18next';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppTranslation, useAppSelector, useAppDispatch } from '@hooks';
+import { useAppTranslation, useAppSelector, useAppDispatch, useWindowDimensions } from '@hooks';
 import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions, ModalsActions } from '@store';
 import { getTheme } from '@themes';
 import { device } from '@themes/default';
@@ -146,6 +146,7 @@ const SettingsView = styled(ViewContainer)`
 
 export const Settings = () => {
   const { t } = useAppTranslation(['common', 'settings']);
+  const { isTablet } = useWindowDimensions();
   const dispatch = useAppDispatch();
   const history = useHistory();
 
@@ -264,6 +265,7 @@ export const Settings = () => {
                 selected={dropdownSelectedLanguage}
                 setSelected={changeLanguage}
                 options={dropdownLanguageOptions}
+                listPosition={isTablet ? 'top' : 'bottom'}
               />
             </SectionContent>
           </SettingsSection>

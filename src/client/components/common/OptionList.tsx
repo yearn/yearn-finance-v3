@@ -58,7 +58,7 @@ const StyledIcon = styled(Icon)`
   flex-shrink: 0;
 `;
 
-const Options = styled.div<{ open?: boolean }>`
+const Options = styled.div<{ open?: boolean; listPosition: 'top' | 'bottom' }>`
   display: none;
   flex-direction: column;
   flex-grow: 1;
@@ -67,8 +67,6 @@ const Options = styled.div<{ open?: boolean }>`
   width: 100%;
   max-height: 20rem;
   left: 0;
-  bottom: -0.8rem;
-  transform: translateY(100%);
   border-radius: ${({ theme }) => theme.globalRadius};
   padding: 0.8rem;
   overflow: hidden;
@@ -76,6 +74,18 @@ const Options = styled.div<{ open?: boolean }>`
   z-index: 1;
 
   ${(props) => props.open && `display: flex;`}
+  ${(props) =>
+    props.listPosition === 'top' &&
+    `
+    top: -0.8rem;
+    transform: translateY(-100%);
+  `}
+  ${(props) =>
+    props.listPosition === 'bottom' &&
+    `
+      bottom: -0.8rem;
+      transform: translateY(100%);
+  `}
 `;
 
 const OptionChild = styled.div<{ selected?: boolean }>`
@@ -117,6 +127,7 @@ export interface OptionListProps {
   isLoading?: boolean;
   disabled?: boolean;
   hideIcons?: boolean;
+  listPosition?: 'top' | 'bottom' | undefined;
   onChange?: (selected: Option) => void;
 }
 
@@ -129,6 +140,7 @@ export const OptionList: FC<OptionListProps> = ({
   disabled,
   hideIcons,
   onChange,
+  listPosition,
   children,
   ...props
 }) => {
@@ -171,7 +183,7 @@ export const OptionList: FC<OptionListProps> = ({
         <ArrowIcon Component={ChevronDownIcon} open={open} />
       </OptionChild>
 
-      <Options open={open}>
+      <Options open={open} listPosition={listPosition ? listPosition : 'bottom'}>
         {options.map((option) => (
           <OptionChild
             key={option.value}
