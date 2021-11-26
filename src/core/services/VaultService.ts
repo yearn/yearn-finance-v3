@@ -190,10 +190,11 @@ export class VaultServiceImpl implements VaultService {
 
       default:
         const trustedVaultMigratorContract = getContract(migrationContractAddress, trustedVaultMigratorAbi, signer);
+        const usdcFixedAmount = '100000000'; // 100 usdc TODO DEHARDCODE
         return await this.transactionService.execute({
           network,
-          fn: trustedVaultMigratorContract.migrateAll,
-          args: [vaultFromAddress, vaultToAddress],
+          fn: trustedVaultMigratorContract.migrateShares,
+          args: [vaultFromAddress, vaultToAddress, usdcFixedAmount],
         });
     }
   }
