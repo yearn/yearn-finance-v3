@@ -34,10 +34,13 @@ const TokensCard = styled(DetailCard)`
   }
   @media (max-width: 700px) {
     .col-name {
-      width: 7rem;
+      width: 12rem;
     }
   }
   @media ${device.mobile} {
+    .col-name {
+      width: 11rem;
+    }
     .col-balance {
       display: none;
     }
@@ -83,6 +86,7 @@ export const Wallet = () => {
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const generalLoading = (appStatus.loading || tokensListStatus.loading || isMounting) && !activeModal;
+  const userTokensLoading = generalLoading && !userTokens.length;
   const { DUST_AMOUNT_USD } = getConstants();
 
   const actionHandler = (action: string, tokenAddress: string) => {
@@ -153,16 +157,20 @@ export const Wallet = () => {
                 {t('components.beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>
                 .
               </p>
+              <p>
+                {t('components.beta-card.desc-2')}{' '}
+                <StyledLink href="https://v2.yearn.finance">v2.yearn.finance</StyledLink>.
+              </p>
             </Text>
           }
           cardSize="big"
         />
       </Row>
 
-      {!walletIsConnected && <StyledNoWalletCard />}
+      {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 
-      {generalLoading && walletIsConnected && <SpinnerLoading flex="1" width="100%" />}
-      {!generalLoading && walletIsConnected && (
+      {userTokensLoading && <SpinnerLoading flex="1" width="100%" />}
+      {!userTokensLoading && (
         <TokensCard
           header={t('components.list-card.tokens')}
           metadata={[

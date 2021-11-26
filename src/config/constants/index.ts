@@ -75,7 +75,7 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_SLIPPAGE: 0.01,
     IRON_BANK_MAX_RATIO: 0.8,
     ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
-    DEFAULT_THEME: 'light',
+    DEFAULT_THEME: 'classic',
     AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk', 'classic'],
     AVAILABLE_CUSTOM_THEMES: ['explorer'],
     DEFAULT_ALERT_TIMEOUT: 3000,

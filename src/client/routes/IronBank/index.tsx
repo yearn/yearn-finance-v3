@@ -59,7 +59,7 @@ const StyledNoWalletCard = styled(NoWalletCard)`
 const SupplyingCard = styled(DetailCard)`
   @media (max-width: 860px) {
     .col-name {
-      width: 7rem;
+      width: 9rem;
     }
   }
   @media (max-width: 760px) {
@@ -92,7 +92,7 @@ const SupplyingCard = styled(DetailCard)`
 const BorrowingCard = styled(DetailCard)`
   @media (max-width: 800px) {
     .col-name {
-      width: 7rem;
+      width: 9rem;
     }
   }
   @media (max-width: 700px) {
@@ -115,7 +115,7 @@ const OpportunitiesCard = styled(DetailCard)`
   }
   @media (max-width: 700px) {
     .col-name {
-      width: 7rem;
+      width: 9rem;
     }
   }
   @media ${device.mobile} {
@@ -154,6 +154,7 @@ export const IronBank = () => {
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const generalLoading =
     (appStatus.loading || ironBankStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
+  const marketsLoading = generalLoading && !filteredMarkets.length;
 
   useEffect(() => {
     setFilteredMarkets(markets);
@@ -203,9 +204,9 @@ export const IronBank = () => {
         cardSize="small"
       />
 
-      {generalLoading && <SpinnerLoading flex="1" width="100%" />}
+      {marketsLoading && <SpinnerLoading flex="1" width="100%" />}
 
-      {!generalLoading && (
+      {!marketsLoading && (
         <>
           {currentNetworkSettings.ironBankEnabled ? (
             <Row>
@@ -241,7 +242,7 @@ export const IronBank = () => {
             />
           )}
 
-          {!walletIsConnected && <StyledNoWalletCard />}
+          {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 
           <SupplyingCard
             header={t('components.list-card.supplying')}
@@ -392,100 +393,102 @@ export const IronBank = () => {
             wrap
           />
 
-          <OpportunitiesCard
-            header={t('components.list-card.opportunities')}
-            metadata={[
-              {
-                key: 'displayIcon',
-                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                width: '6rem',
-                className: 'col-icon',
-              },
-              {
-                key: 'displayName',
-                header: t('components.list-card.name'),
-                sortable: true,
-                fontWeight: 600,
-                width: '17rem',
-                className: 'col-name',
-              },
-              {
-                key: 'lendApy',
-                header: t('components.list-card.lend-apy'),
-                format: ({ lendApy }) => humanize('percent', lendApy),
-                sortable: true,
-                width: '8rem',
-                className: 'col-lend-apy',
-              },
-              {
-                key: 'borrowApy',
-                header: t('components.list-card.borrow-apy'),
-                format: ({ borrowApy }) => humanize('percent', borrowApy),
-                sortable: true,
-                width: '8rem',
-                className: 'col-borrow-apy',
-              },
-              {
-                key: 'liquidity',
-                header: t('components.list-card.market-liquidity'),
-                format: ({ liquidity }) => humanize('usd', liquidity, USDC_DECIMALS, 0),
-                sortable: true,
-                width: '15rem',
-                className: 'col-market',
-              },
-              {
-                key: 'userTokenBalance',
-                header: t('components.list-card.available-supply'),
-                format: ({ token }) =>
-                  token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
-                sortable: true,
-                width: '15rem',
-                className: 'col-available',
-              },
-              {
-                key: 'actions',
-                transform: ({ address }) => (
-                  <ActionButtons
-                    actions={[
-                      {
-                        name: t('components.transaction.supply'),
-                        handler: () => actionHandler('supply', address),
-                        disabled: !walletIsConnected,
-                      },
-                      {
-                        name: t('components.transaction.borrow'),
-                        handler: () => actionHandler('borrow', address),
-                        disabled: !walletIsConnected,
-                      },
-                    ]}
+          {!marketsLoading && (
+            <OpportunitiesCard
+              header={t('components.list-card.opportunities')}
+              metadata={[
+                {
+                  key: 'displayIcon',
+                  transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
+                  width: '6rem',
+                  className: 'col-icon',
+                },
+                {
+                  key: 'displayName',
+                  header: t('components.list-card.name'),
+                  sortable: true,
+                  fontWeight: 600,
+                  width: '17rem',
+                  className: 'col-name',
+                },
+                {
+                  key: 'lendApy',
+                  header: t('components.list-card.lend-apy'),
+                  format: ({ lendApy }) => humanize('percent', lendApy),
+                  sortable: true,
+                  width: '8rem',
+                  className: 'col-lend-apy',
+                },
+                {
+                  key: 'borrowApy',
+                  header: t('components.list-card.borrow-apy'),
+                  format: ({ borrowApy }) => humanize('percent', borrowApy),
+                  sortable: true,
+                  width: '8rem',
+                  className: 'col-borrow-apy',
+                },
+                {
+                  key: 'liquidity',
+                  header: t('components.list-card.market-liquidity'),
+                  format: ({ liquidity }) => humanize('usd', liquidity, USDC_DECIMALS, 0),
+                  sortable: true,
+                  width: '15rem',
+                  className: 'col-market',
+                },
+                {
+                  key: 'userTokenBalance',
+                  header: t('components.list-card.available-supply'),
+                  format: ({ token }) =>
+                    token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
+                  sortable: true,
+                  width: '15rem',
+                  className: 'col-available',
+                },
+                {
+                  key: 'actions',
+                  transform: ({ address }) => (
+                    <ActionButtons
+                      actions={[
+                        {
+                          name: t('components.transaction.supply'),
+                          handler: () => actionHandler('supply', address),
+                          disabled: !walletIsConnected,
+                        },
+                        {
+                          name: t('components.transaction.borrow'),
+                          handler: () => actionHandler('borrow', address),
+                          disabled: !walletIsConnected,
+                        },
+                      ]}
+                    />
+                  ),
+                  align: 'flex-end',
+                  width: 'auto',
+                  grow: '1',
+                },
+              ]}
+              data={filteredMarkets.map((market) => ({
+                ...market,
+                displayIcon: market.token.icon ?? '',
+                displayName: market.token.symbol,
+                userTokenBalance: normalizeAmount(market.token.balance, market.token.decimals),
+                actions: null,
+              }))}
+              SearchBar={
+                <SearchBarContainer>
+                  <SearchInput
+                    searchableData={markets}
+                    searchableKeys={['name', 'token.symbol', 'token.name']}
+                    placeholder=""
+                    onSearch={(data) => setFilteredMarkets(data)}
                   />
-                ),
-                align: 'flex-end',
-                width: 'auto',
-                grow: '1',
-              },
-            ]}
-            data={filteredMarkets.map((market) => ({
-              ...market,
-              displayIcon: market.token.icon ?? '',
-              displayName: market.token.symbol,
-              userTokenBalance: normalizeAmount(market.token.balance, market.token.decimals),
-              actions: null,
-            }))}
-            SearchBar={
-              <SearchBarContainer>
-                <SearchInput
-                  searchableData={markets}
-                  searchableKeys={['name', 'token.symbol', 'token.name']}
-                  placeholder=""
-                  onSearch={(data) => setFilteredMarkets(data)}
-                />
-              </SearchBarContainer>
-            }
-            searching={markets.length > filteredMarkets.length}
-            initialSortBy="lendApy"
-            wrap
-          />
+                </SearchBarContainer>
+              }
+              searching={markets.length > filteredMarkets.length}
+              initialSortBy="lendApy"
+              wrap
+            />
+          )}
         </>
       )}
     </ViewContainer>
