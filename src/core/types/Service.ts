@@ -28,10 +28,16 @@ import {
 
 export interface UserService {
   getAddressEnsName: (props: GetAddressEnsNameProps) => Promise<string>;
+  getNftBalance: (props: GetAddressEnsNameProps) => Promise<NFTBalances>;
 }
 
 export interface GetAddressEnsNameProps {
   address: string;
+}
+
+export interface NFTBalances {
+  bluePillNFTBalance: number;
+  woofyNFTBalance: number;
 }
 
 // *************** VAULT ***************
