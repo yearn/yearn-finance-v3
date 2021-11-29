@@ -4,9 +4,9 @@
       "label": "Zurück zur vorherigen Seite"
     },
     "beta-card": {
-      "desc-1": "Diese Website befindet sich noch im Beta-Stadium und wird wahrscheinlich noch Fehler enthalten. Wenn Sie einen Fehler finden oder uns Feedback geben möchten, lassen Sie es uns bitte wissen",
+      "desc-1": "Diese Website befindet sich noch im Beta-Stadium und wird wahrscheinlich noch Fehler enthalten. Wenn Sie einen Fehler finden oder uns Rückmeldung geben möchten, lassen Sie es uns bitte wissen",
       "desc-2": "Für die Umstellung von v1 Vaults (oder wenn du sentimental bist), behalten wir eine alte v2 UI bei, die immer noch verfügbar ist als",
-      "header": "Die Beta ist da!"
+      "header": "Die Beta gibt es nicht mehr!"
     },
     "connect-button": {
       "connect": "Verbinde Wallet"

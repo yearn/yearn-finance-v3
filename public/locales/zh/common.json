@@ -4,9 +4,9 @@
       "label": "回到前页"
     },
     "beta-card": {
-      "desc-1": "这个网页还是beta，可能有代码错误。如果你有发现错误，请在Discord上联系我们。",
+      "desc-1": "Yearn的v3 beta网页已开始运作，加了存款模拟，Iron Bank功能，新的Labs部分，和可定制的主题等。如果你有发现错误，请在Discord上联系我们。",
       "desc-2": "v1 机枪池的迁移 (但如果你怀旧），我们维护着原来的v2用户界面，仍然可在这里用",
-      "header": "Beta在这里！"
+      "header": "已经不是Beta了！"
     },
     "connect-button": {
       "connect": "连接钱包"
@@ -65,9 +65,9 @@
       "reward": "奖励",
       "stake": "抵押",
       "status": {
-        "calculating": "计算中",
+        "calculating": "计算中...",
         "exit": "离开",
-        "simulating": "模拟",
+        "simulating": "模拟...",
         "transaction-completed": "交易完成"
       },
       "supply": "供应",
