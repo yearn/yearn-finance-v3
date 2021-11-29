@@ -4,7 +4,7 @@
       "label": "Volver a la última página"
     },
     "beta-card": {
-      "desc-1": "Este sitio ha sido promovido de versión Beta a producción. Se añaden simulaciones en depósitos, funcionalidad del Iron Bank, nueva sección de Labs, temas personalizados, y más. Continuaremos agregando funcionalidades y mejoras, si encuentras algun defecto o quieres dar retroalimentación, háznoslo saber en",
+      "desc-1": "Este sitio ha pasado a la fase de producción, y añade simulaciones en depósitos, funcionalidad del Iron Bank, una nueva sección de Labs, temas personalizables, y más. Seguiremos añadiendo funciones y correcciones cada semana, y si encuentra algún fallo o quiere hacernos llegar sus comentarios, háganoslo saber en",
       "desc-2": "Para migraciones de vaults v1 (o si te sientes sentimental), seguimos manteniendo la versión anterior en",
       "header": "¡No más Beta!"
     },
@@ -40,6 +40,7 @@
       "from-iron-bank": "Desde Iron Bank",
       "from-vault": "Desde vault",
       "from-wallet": "Desde billetera",
+      "max": "MAX",
       "migrate": "Migrar",
       "reinvest": "Reinvertir",
       "reward": "Recompensa",
@@ -71,6 +72,7 @@
     "borrowed": "Prestado",
     "earnings": "Ganancias",
     "est-yearly-yield": "Rendimiento anual est.",
+    "header": "Panel de control",
     "holdings": "Activos",
     "supplied": "Suministrado",
     "total-net-worth": "Valor total neto",
@@ -90,8 +92,16 @@
     }
   },
   "languages": {
+    "de": "Deutsch",
     "en": "English",
-    "es": "Español"
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "ja": "日本語",
+    "pt": "Português",
+    "tr": "Türk",
+    "vi": "Tiếng Việt",
+    "zh": "中国人"
   },
   "navigation": {
     "copyright": {
@@ -111,7 +121,7 @@
     "classic": "Classic v2",
     "cyberpunk": "Cyberpunk",
     "dark": "Mono Dark",
-    "light": "Mono Light",
-    "explorer": "Explorer"
+    "explorer": "Explorer",
+    "light": "Mono Light"
   }
 }

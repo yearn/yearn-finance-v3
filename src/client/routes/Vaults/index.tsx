@@ -191,7 +191,7 @@ export const Vaults = () => {
 
   return (
     <ViewContainer>
-      <SummaryCard header="Dashboard" items={summaryCardItems} variant="secondary" cardSize="small" />
+      <SummaryCard header={t('dashboard.header')} items={summaryCardItems} variant="secondary" cardSize="small" />
       {opportunitiesLoading && <SpinnerLoading flex="1" width="100%" />}
       {!opportunitiesLoading && (
         <>
@@ -223,7 +223,7 @@ export const Vaults = () => {
           {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 
           <DeprecatedCard
-            header="Deprecated"
+            header={t('components.list-card.deprecated')}
             metadata={[
               {
                 key: 'displayIcon',

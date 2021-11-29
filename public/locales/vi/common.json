@@ -1,0 +1,149 @@
+{
+  "components": {
+    "back-button": {
+      "label": "Trở lại trang trước"
+    },
+    "beta-card": {
+      "desc-1": "Trang web Yearn v3 đã chính thức ra mắt với tính năng mô phỏng ký gửi, Iron Bank, mục Thí điểm (`Lab`) mới, giao diện tùy chỉnh, v.v... Chúng tôi sẽ tiếp tục tối ưu hóa và bổ sung thêm tiện ích hàng tuần. Nếu tìm thấy lỗi hoặc muốn góp ý, xin vui lòng liên hệ với chúng tôi qua",
+      "desc-2": "Để tiện di chuyển khỏi kho bạc v1 (hoặc nếu bạn còn nhớ nhung), chúng tôi vẫn giữ lại di sản UI v2 tại",
+      "header": "Hết Beta rồi!"
+    },
+    "connect-button": {
+      "connect": "Kết nối Ví"
+    },
+    "empty-list": {
+      "searching-text": "Xin vui lòng tìm tài sản khác",
+      "text": "Không có tài sản nào"
+    },
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "Đang có để ký gửi",
+      "available-stake": "Đang có để cọc",
+      "available-supply": "Đang có để cấp",
+      "balance": "Số dư",
+      "borrow-apy": "APY vay",
+      "borrowing": "Sắp vay",
+      "collateral": "Thế chấp",
+      "deposits": "Ký gửi",
+      "deprecated": "Đã lỗi thời",
+      "earned": "Đã nhận",
+      "lend-apy": "APY cho vay",
+      "market-liquidity": "Thanh khoản",
+      "name": "Tên",
+      "opportunities": "Cơ hội",
+      "price": "Tỷ giá",
+      "supplying": "Sắp cấp",
+      "tokens": "Tôken",
+      "total-assets": "Tổng tài sản",
+      "value": "Trị giá"
+    },
+    "no-wallet": "Chưa kết nối ví",
+    "recommendations": {
+      "header": "APY cao nhất"
+    },
+    "transaction": {
+      "approve": "Duyệt",
+      "available-borrow": "Đang có thể vay",
+      "borrow": "Vay",
+      "borrow-limit": {
+        "borrow-apy": "APY vay",
+        "borrowing": "Sắp vay",
+        "supply-apy": "APY cho vay",
+        "total-borrow-limit": "Tổng giới hạn vay",
+        "total-borrow-limit-used": "Tổng hạn vay đã dùng"
+      },
+      "claim": "Lấy",
+      "deposit": "Ký gửi",
+      "from-iron-bank": "Từ Iron Bank",
+      "from-vault": "Từ kho bạc",
+      "from-wallet": "Từ ví",
+      "lock": "Khóa",
+      "max": "MAX",
+      "migrate": "Chuyển",
+      "reinvest": "Tái đầu tư",
+      "repay": "Trả nợ",
+      "reward": "Thưởng",
+      "stake": "Cọc",
+      "status": {
+        "calculating": "Đang tính...",
+        "exit": "Thoát",
+        "simulating": "Mô phỏng...",
+        "transaction-completed": "Giao dịch hoàn tất"
+      },
+      "supply": "Cấp",
+      "to-gauge": "Đến tỷ xích",
+      "to-iron-bank": "Đến Iron Bank",
+      "to-vault": "Đến kho bạc",
+      "to-wallet": "Đến ví",
+      "token-input": {
+        "balance": "Số dư",
+        "search-select-token": "Chọn Tôken",
+        "search-select-vault": "Chọn Kho bạc",
+        "yield": "Lãi"
+      },
+      "wallet-balance": "Số dư Ví",
+      "withdraw": "Rút"
+    }
+  },
+  "dashboard": {
+    "apy": "APY",
+    "available": "Đang có",
+    "available-deposit": "Có thể ký gửi",
+    "borrow-limit-total": "Tổng giới hạn vay",
+    "borrow-limit-used": "Hạn vay đã dùng",
+    "borrowed": "Đã vay",
+    "earnings": "Thu nhập",
+    "est-yearly-yield": "Ước tính lãi/năm",
+    "header": "Tổng quan",
+    "holdings": "Đang nắm giữ",
+    "supplied": "Đã cấp",
+    "total-net-worth": "Tổng tài sản",
+    "vaults-earnings": "Thu nhập từ Kho",
+    "vaults-est-yearly-yield": "Ước tính lãi/năm từ Kho"
+  },
+  "errors": {
+    "default": "Đã xảy ra lỗi bất ngờ",
+    "unknown": "Lỗi không rõ"
+  },
+  "footer": {
+    "links": {
+      "disclaimer": "Thông cáo!",
+      "docs": "Tư liệu",
+      "gov": "Quản trị",
+      "security": "Bảo an"
+    }
+  },
+  "languages": {
+    "de": "Deutsch",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "ja": "日本語",
+    "pt": "Português",
+    "tr": "Türk",
+    "vi": "Tiếng Việt",
+    "zh": "中国人"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "Thông cáo!",
+    "home": "Chính",
+    "ironbank": "Iron Bank",
+    "labs": "Thí điểm",
+    "settings": "Thiết lập",
+    "vault": "Chi tiết Kho",
+    "vaults": "Kho bạc",
+    "wallet": "Ví"
+  },
+  "themes": {
+    "classic": "v2 Kinh điển",
+    "cyberpunk": "Dân Xai-bơ",
+    "dark": "Tối Đơn sắc",
+    "explorer": "Thám hiểm",
+    "light": "Sáng Đơn sắc"
+  }
+}

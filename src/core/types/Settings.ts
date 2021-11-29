@@ -1,6 +1,6 @@
 import { Network } from './Blockchain';
 
-export type Language = 'en' | 'es';
+export type Language = 'en' | 'de' | 'es' | 'fr' | 'hi' | 'ja' | 'pt' | 'tr' | 'vi' | 'zh';
 
 export type Theme = 'light' | 'dark' | 'cyberpunk' | 'classic' | 'explorer';
 

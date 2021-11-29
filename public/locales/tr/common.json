@@ -1,0 +1,149 @@
+{
+  "components": {
+    "back-button": {
+      "label": "Önceki sayfaya geri dön"
+    },
+    "beta-card": {
+      "desc-1": "Yearn'in v3 beta sitesi artık üretime geçti ve para yatırma simülasyonları, Iron Bank işlevi, yeni bir Lab bölümü, kişiselleştirilebilen temalar ve daha fazlasını ekledi. Her hafta özellikler ve düzeltmeler eklemeye devam edeceğiz ve herhangi bir hatayla karşılaşırsanız veya geri bildirimde bulunmak isterseniz lütfen bize bildirin.",
+      "desc-2": "v1 vault'larının taşınması için, hala şu adreste bulunan eski bir v2 kullanıcı arayüzünü sürdürüyoruz:",
+      "header": "Beta artık yok!"
+    },
+    "connect-button": {
+      "connect": "Cüzdanı Bağla"
+    },
+    "empty-list": {
+      "searching-text": "Lütfen başka bir varlık için arama yapın",
+      "text": "Gösterilecek herhangi bir varlık yok"
+    },
+    "list-card": {
+      "apy": "YFG",
+      "available-deposit": "Yatırım yapılabilir",
+      "available-stake": "Stake yapılabilir",
+      "available-supply": "Arz edilebilir",
+      "balance": "Bakiye",
+      "borrow-apy": "Borçlanma YFG",
+      "borrowing": "Borçlanma",
+      "collateral": "Teminat",
+      "deposits": "Mevduat",
+      "deprecated": "Artık  kullanılmayan",
+      "earned": "Kazanç",
+      "lend-apy": "Borç verme YFG",
+      "market-liquidity": "Piyasa likiditesi",
+      "name": "ad",
+      "opportunities": "Olanaklar",
+      "price": "Fiyat",
+      "supplying": "Tedarik",
+      "tokens": "token'ler",
+      "total-assets": "Toplam varlıkları",
+      "value": "Bedel"
+    },
+    "no-wallet": "Cüzdan bağlanamadı",
+    "recommendations": {
+      "header": "En yüksek YFG"
+    },
+    "transaction": {
+      "approve": "Onayla",
+      "available-borrow": "Borç alınabilir",
+      "borrow": "Borçlan",
+      "borrow-limit": {
+        "borrow-apy": "Borçlanma YFG",
+        "borrowing": "Borçlanma",
+        "supply-apy": "Arz YFG",
+        "total-borrow-limit": "Toplam borçlanma limiti",
+        "total-borrow-limit-used": "Kullanılan toplam borçlanma limti"
+      },
+      "claim": "İstihkak",
+      "deposit": "Mevduat",
+      "from-iron-bank": "Iron Bank'dan",
+      "from-vault": "Vault'dan",
+      "from-wallet": "Cüzdandan",
+      "lock": "Bağla",
+      "max": "MAX",
+      "migrate": "Göç",
+      "reinvest": "Geri yatır",
+      "repay": "Geri öde",
+      "reward": "Ödül",
+      "stake": "Stake",
+      "status": {
+        "calculating": "Hesaplanıyor...",
+        "exit": "Çıkış",
+        "simulating": "Simüle ediliyor...",
+        "transaction-completed": "İşlem tamamlandı"
+      },
+      "supply": "Arz",
+      "to-gauge": "Ölçmek için",
+      "to-iron-bank": "Iron Bank'e",
+      "to-vault": "Vault'a",
+      "to-wallet": "Cüzdana",
+      "token-input": {
+        "balance": "Bakiye",
+        "search-select-token": "Bir Token Seç",
+        "search-select-vault": "Bir Vault seç",
+        "yield": "Verim"
+      },
+      "wallet-balance": "Cüzdan Bakiyesi",
+      "withdraw": "Çek"
+    }
+  },
+  "dashboard": {
+    "apy": "YFG",
+    "available": "Mevcut",
+    "available-deposit": "Yatırılabilir",
+    "borrow-limit-total": "Borç alma toplam limiti",
+    "borrow-limit-used": "kullanılan borçlanma limiti",
+    "borrowed": "Borç alınan",
+    "earnings": "kazançlar",
+    "est-yearly-yield": "Tahmini yıllık gelir",
+    "header": "Pano",
+    "holdings": "Varlıklar",
+    "supplied": "Yatırılan",
+    "total-net-worth": "Toplam net değer",
+    "vaults-earnings": "Vault'lar getirileri",
+    "vaults-est-yearly-yield": "yıllık tahmini vault'lar getirisi"
+  },
+  "errors": {
+    "default": "Beklenmedik hata oluştu",
+    "unknown": "Bilinmeyen hata"
+  },
+  "footer": {
+    "links": {
+      "disclaimer": "Feragat",
+      "docs": "dokümanlar",
+      "gov": "Yönetim",
+      "security": "Güvenlik"
+    }
+  },
+  "languages": {
+    "de": "Deutsch",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "ja": "日本語",
+    "pt": "Português",
+    "tr": "Türk",
+    "vi": "Tiếng Việt",
+    "zh": "中国人"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "Feragat",
+    "home": "Ana sayfa",
+    "ironbank": "Iron Bank",
+    "labs": "Lablar",
+    "settings": "Ayarlar",
+    "vault": "Vault detayları",
+    "vaults": "Vault'lar",
+    "wallet": "Cüzdan"
+  },
+  "themes": {
+    "classic": "Klasik v2",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "explorer": "Explorer",
+    "light": "Mono Light"
+  }
+}

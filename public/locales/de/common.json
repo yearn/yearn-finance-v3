@@ -1,0 +1,143 @@
+{
+  "components": {
+    "back-button": {
+      "label": "Zurück zur vorherigen Seite"
+    },
+    "beta-card": {
+      "desc-1": "Diese Website befindet sich noch im Beta-Stadium und wird wahrscheinlich noch Fehler enthalten. Wenn Sie einen Fehler finden oder uns Rückmeldung geben möchten, lassen Sie es uns bitte wissen",
+      "desc-2": "Für die Umstellung von v1 Vaults (oder wenn du sentimental bist), behalten wir eine alte v2 UI bei, die immer noch verfügbar ist als",
+      "header": "Die Beta gibt es nicht mehr!"
+    },
+    "connect-button": {
+      "connect": "Verbinde Wallet"
+    },
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "Einzahlungen sind verfügbar",
+      "available-stake": "Staking verfügbar",
+      "available-supply": "Verfügbares Kapital",
+      "balance": "Vermögen",
+      "borrow-apy": "APY für Ausleihen",
+      "borrowing": "Ausleihen",
+      "collateral": "Sicherheiten",
+      "deposits": "Einzahlungen",
+      "earned": "Verdient",
+      "lend-apy": "APY für Verleihen",
+      "market-liquidity": "Marktliquidität",
+      "name": "Name",
+      "opportunities": "Möglichkeiten",
+      "price": "Preis",
+      "supplying": "Bereitstellen",
+      "tokens": "Tokens",
+      "total-assets": "Gesamtvermögen",
+      "value": "Wert"
+    },
+    "no-wallet": "Wallet nicht verbunden",
+    "recommendations": {
+      "header": "Höchste APY"
+    },
+    "transaction": {
+      "approve": "Bestätigen",
+      "available-borrow": "Verfügbar zum Ausleihen",
+      "borrow": "Ausleihen",
+      "borrow-limit": {
+        "borrow-apy": "APY für Ausleihen",
+        "borrowing": "Ausleihen",
+        "supply-apy": "APY für Bereitstellung",
+        "total-borrow-limit": "Gesamtkreditrahmen",
+        "total-borrow-limit-used": "Ausgeschöpfter Kreditrahmen insgesamt"
+      },
+      "claim": "Anspruch",
+      "deposit": "Einzahlung",
+      "from-iron-bank": "Von Iron Bank",
+      "from-vault": "Vom Tresor",
+      "from-wallet": "Von der Wallet",
+      "lock": "Sperre",
+      "max": "MAX",
+      "migrate": "Migrieren",
+      "reinvest": "Reinvestieren",
+      "repay": "Zurückzahlen",
+      "reward": "Vergütung",
+      "stake": "Stake",
+      "status": {
+        "calculating": "Berechnung...",
+        "exit": "Ausgang",
+        "simulating": "Simulierung...",
+        "transaction-completed": "Übersetzung komplett"
+      },
+      "supply": "Angebot",
+      "to-gauge": "Zum Messen",
+      "to-iron-bank": "Zu Iron Bank",
+      "to-vault": "Zum Tresor",
+      "to-wallet": "Zur Wallet",
+      "token-input": {
+        "balance": "Bilanz",
+        "search-select-token": "Wähle ein Token",
+        "search-select-vault": "Wähle ein Tresor",
+        "yield": "Rendite"
+      },
+      "wallet-balance": "Wallet Bilanz",
+      "withdraw": "Auszahlung"
+    }
+  },
+  "dashboard": {
+    "apy": "APY",
+    "available": "Verfügbar",
+    "available-deposit": "Verfügbar zur Einzahlung",
+    "borrow-limit-total": "Gesamtkreditrahmen",
+    "borrow-limit-used": "Ausgenutzter Kreditrahmen",
+    "borrowed": "Geliehen",
+    "earnings": "Erträge",
+    "est-yearly-yield": "Geschätzter jährlicher Ertrag",
+    "holdings": "Bestand",
+    "supplied": "Bereitgestellt",
+    "total-net-worth": "Nettovermögen gesamt",
+    "vaults-earnings": "Erträge aus Tresoren",
+    "vaults-est-yearly-yield": "Geschätzter jährlicher Ertrag der Tresore"
+  },
+  "errors": {
+    "default": "Es ist ein unerwarteter Fehler aufgetreten",
+    "unknown": "Unbekannter Fehler"
+  },
+  "footer": {
+    "links": {
+      "disclaimer": "Disclaimer",
+      "docs": "Dokumente",
+      "gov": "Gov",
+      "security": "Sicherheit"
+    }
+  },
+  "languages": {
+    "de": "Deutsch",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "ja": "日本語",
+    "pt": "Português",
+    "tr": "Türk",
+    "vi": "Tiếng Việt",
+    "zh": "中国人"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "Disclaimer",
+    "home": "Home",
+    "ironbank": "Iron Bank",
+    "labs": "Labore",
+    "settings": "Einstellungen",
+    "vault": "Details Tresore",
+    "vaults": "Tresore",
+    "wallet": "Wallet"
+  },
+  "themes": {
+    "classic": "Classic v2",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "explorer": "Explorer",
+    "light": "Mono Light"
+  }
+}
