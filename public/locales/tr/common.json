@@ -4,8 +4,9 @@
       "label": "Önceki sayfaya geri dön"
     },
     "beta-card": {
-      "desc-1": "Bu web sitesi hala beta sürümündedir ve büyük olasılıkla hatalar içerecektir. Bir hata bulursanız veya geri bildirimde bulunmak isterseniz, lütfen bize bildirin.",
-      "header": "Beta burada!"
+      "desc-1": "Yearn'in v3 beta sitesi artık üretime geçti ve para yatırma simülasyonları, Iron Bank işlevi, yeni bir Lab bölümü, kişiselleştirilebilen temalar ve daha fazlasını ekledi. Her hafta özellikler ve düzeltmeler eklemeye devam edeceğiz ve herhangi bir hatayla karşılaşırsanız veya geri bildirimde bulunmak isterseniz lütfen bize bildirin.",
+      "desc-2": "v1 vault'larının taşınması için, hala şu adreste bulunan eski bir v2 kullanıcı arayüzünü sürdürüyoruz:",
+      "header": "Beta artık yok!"
     },
     "connect-button": {
       "connect": "Cüzdanı Bağla"
