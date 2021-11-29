@@ -114,16 +114,16 @@
     }
   },
   "languages": {
-    "de": "ドイツ語",
-    "en": "英語",
-    "es": "スペイン語",
-    "fr": "フランス語",
-    "hi": "ヒンディー語",
+    "de": "Deutsch",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
     "ja": "日本語",
-    "pt": "ポルトガル語",
-    "tr": "トルコ語",
-    "vi": "ベトナム語",
-    "zh": "中国語"
+    "pt": "Português",
+    "tr": "Türk",
+    "vi": "Tiếng Việt",
+    "zh": "中文"
   },
   "navigation": {
     "copyright": {
