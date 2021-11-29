@@ -4,9 +4,9 @@
       "label": "Voltar à página anterior"
     },
     "beta-card": {
-      "desc-1": "O site Yearn beta v3 agora está no ar, e ele adiciona simulações de depósitos, acesso ao iron Bank, uma nova seção Labs, temas customizáveis e mais. Vamos continuar a adicionar recursos toda semana e, caso encontre algum erro, ou deseje fornecer feedback, fale conosco no",
+      "desc-1": "Este website ainda está em beta, e provalvemente contém erros. Caso encontre algum, ou deseje fornecer feedback, fale conosco no",
       "desc-2": "Para migração de vaults v1 (ou caso se sinta nostálgico), vamos manter a UI v2 legado, disponível em",
-      "header": "Não é mais beta!"
+      "header": "A versão Beta está aqui!"
     },
     "connect-button": {
       "connect": "Conectar Carteira"
@@ -123,7 +123,7 @@
     "pt": "Português",
     "tr": "Türk",
     "vi": "Tiếng Việt",
-    "zh": "中国人"
+    "zh": "中文"
   },
   "navigation": {
     "copyright": {

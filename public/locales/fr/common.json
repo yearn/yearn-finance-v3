@@ -4,9 +4,9 @@
       "label": "Retour à la page précédente"
     },
     "beta-card": {
-      "desc-1": "La version bêta v3 du site Yearn est maintenant dispo et propose des simulations de dépôt, des fonctionnalités concernant l'Iron Bank, une nouvelle section Labs, des thèmes personnalisables, etc. Nous continuerons à ajouter des fonctionnalités et des correctifs chaque semaine. Si vous rencontrez des bugs ou souhaitez faire part de votre expérience, veuillez nous tenir au courant. ",
+      "desc-1": "Ce site Web est encore en version bêta et contient probablement des bugs. Si vous en découvrez un ou si vous souhaitez faire part de vos commentaires, veuillez nous le faire savoir sur",
       "desc-2": "Pour la migration des coffres v1 (ou si vous vous nostalgique ), nous conservant l'ancienne interface utilisateur v2 sur",
-      "header": "La bete c'est fini !"
+      "header": "La Beta est enfin là ! "
     },
     "connect-button": {
       "connect": "Connectez votre portefeuille"
@@ -123,7 +123,7 @@
     "pt": "Português",
     "tr": "Türk",
     "vi": "Tiếng Việt",
-    "zh": "中国人"
+    "zh": "中文"
   },
   "navigation": {
     "copyright": {
