@@ -53,6 +53,7 @@ export class BlocknativeWalletImpl implements Wallet {
 
     const wallets = [
       { walletName: 'detectedwallet' },
+      { walletName: 'tally' },
       { walletName: 'metamask' },
       {
         walletName: 'walletConnect',
@@ -97,10 +98,6 @@ export class BlocknativeWalletImpl implements Wallet {
         appName,
       },
       { walletName: 'liquality' },
-      {
-        walletName: 'mewwallet',
-        rpcUrl,
-      },
     ];
 
     const walletCheck = [
