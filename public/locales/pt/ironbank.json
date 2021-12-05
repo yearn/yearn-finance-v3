@@ -1,0 +1,11 @@
+{
+  "ironbank-card": {
+    "desc-1": "Iron Bank é uma forma simples de obter novos tokens. Pegue um empréstimo usando sua cripto como garantia. Não encontrou o Vault certo para seu token? O forneça para o Iron Bank e receba mais cripto.",
+    "desc-2": "Lembre-se, mesmo com ferramentas simples como o Iron Bank, ainda existem riscos sistêmicos e de contratos inteligentes.",
+    "header": "Deixe sua cripto trabalhar por você."
+  },
+  "no-ironbank-card": {
+    "header": "Não há Iron Bank em {{network}}",
+    "text": "Confira mais tarde."
+  }
+}

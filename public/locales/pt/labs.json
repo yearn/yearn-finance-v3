@@ -1,0 +1,12 @@
+{
+  "no-labs-card": {
+    "header": "Sem Labs ainda em {{network}}",
+    "text": "Volte mais tarde em busca de novos experimentos."
+  },
+  "risks-card": {
+    "desc-1": "As estratégias que encontra aqui são as mais novas e não-convencionais. Certifique-se de avaliar as seções \"Sobre\" para entender o bloqueio de tokens, perdas impermanentes, e outros riscos antes de prosseguir.",
+    "desc-2": "Como em todos os produtos Yearn, você é responsável por entender os detalhes, e por gerir ativamente seus ativos.",
+    "desc-3": "Bem-vindo ao Lab, mas proceda com cautela, anon.",
+    "header": "O risco aqui é mais alto"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "no-vault-supported-card": {
+    "content": "正しいネットワークに変更してお試しください。",
+    "header": "ボールトは{{network}}をサポートしていません"
+  },
+  "overview-panel": {
+    "about": "詳細",
+    "apy": "APY",
+    "header": "概要",
+    "strategies": "戦略",
+    "total-assets": "総資産",
+    "type": "種類",
+    "web": "ウェブサイト"
+  },
+  "performance-panel": {
+    "earnings-over-time": "収益の経時変化",
+    "header": "性能"
+  },
+  "vault-actions-panel": {
+    "deposit": "入金",
+    "header": "トランザクション",
+    "migrate": "移行",
+    "withdraw": "出金"
+  }
+}

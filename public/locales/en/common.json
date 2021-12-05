@@ -11,6 +11,10 @@
     "connect-button": {
       "connect": "Connect Wallet"
     },
+    "empty-list": {
+      "searching-text": "Please search for another asset",
+      "text": "No assets to display"
+    },
     "list-card": {
       "apy": "APY",
       "available-deposit": "Available to deposit",
@@ -21,6 +25,7 @@
       "borrowing": "Borrowing",
       "collateral": "Collateral",
       "deposits": "Deposits",
+      "deprecated": "Deprecated",
       "earned": "Earned",
       "lend-apy": "Lend APY",
       "market-liquidity": "Market liquidity",
@@ -89,6 +94,7 @@
     "borrowed": "Borrowed",
     "earnings": "Earnings",
     "est-yearly-yield": "Est. yearly yield",
+    "header": "Dashboard",
     "holdings": "Holdings",
     "supplied": "Supplied",
     "total-net-worth": "Total net worth",
@@ -108,8 +114,16 @@
     }
   },
   "languages": {
+    "de": "Deutsch",
     "en": "English",
-    "es": "Español"
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "ja": "日本語",
+    "pt": "Português",
+    "tr": "Türk",
+    "vi": "Tiếng Việt",
+    "zh": "中文"
   },
   "navigation": {
     "copyright": {
@@ -129,7 +143,7 @@
     "classic": "Classic v2",
     "cyberpunk": "Cyberpunk",
     "dark": "Mono Dark",
-    "light": "Mono Light",
-    "explorer": "Explorer"
+    "explorer": "Explorer",
+    "light": "Mono Light"
   }
 }

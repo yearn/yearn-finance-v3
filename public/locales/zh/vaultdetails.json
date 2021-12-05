@@ -1,0 +1,25 @@
+{
+  "no-vault-supported-card": {
+    "content": "请切换正确的网络",
+    "header": "不支持该机枪池{{network}}"
+  },
+  "overview-panel": {
+    "about": "关于",
+    "apy": "APY",
+    "header": "概况",
+    "strategies": "策略",
+    "total-assets": "总资产",
+    "type": "类型",
+    "web": "网站"
+  },
+  "performance-panel": {
+    "earnings-over-time": "过去赚取的收益",
+    "header": "性能"
+  },
+  "vault-actions-panel": {
+    "deposit": "存款",
+    "header": "交易",
+    "migrate": "迁移",
+    "withdraw": "撤离"
+  }
+}

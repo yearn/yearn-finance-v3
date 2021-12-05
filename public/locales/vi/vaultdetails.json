@@ -1,0 +1,25 @@
+{
+  "no-vault-supported-card": {
+    "content": "Hãy thử đổi sang mạng phù hợp.",
+    "header": "Kho này chưa có trên {{network}}"
+  },
+  "overview-panel": {
+    "about": "Chi tiết",
+    "apy": "APY",
+    "header": "Tổng quan",
+    "strategies": "Chiến lược",
+    "total-assets": "Tổng tài sản",
+    "type": "Loại",
+    "web": "Trang web"
+  },
+  "performance-panel": {
+    "earnings-over-time": "Thu nhập theo thời gian",
+    "header": "Hiệu suất"
+  },
+  "vault-actions-panel": {
+    "deposit": "Ký gửi",
+    "header": "Giao dịch",
+    "migrate": "Chuyển",
+    "withdraw": "Rút"
+  }
+}
