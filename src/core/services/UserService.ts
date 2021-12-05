@@ -1,8 +1,10 @@
-import { GetAddressEnsNameProps, UserService, Web3Provider, NFTBalances, Config } from '@types';
+import { GetAddressEnsNameProps, UserService, Web3Provider, NftBalances, Config } from '@types';
 import { getContract } from '@frameworks/ethers';
 
 import bluePillNFTAbi from './contracts/bluePillNFT.json';
 import woofyNFTAbi from './contracts/woofyNFT.json';
+import BigNumber from 'bignumber.js';
+import { Contract } from 'ethers';
 
 export class UserServiceImpl implements UserService {
   private web3Provider: Web3Provider;
@@ -16,26 +18,84 @@ export class UserServiceImpl implements UserService {
   public async getAddressEnsName(props: GetAddressEnsNameProps) {
     const { address } = props;
     const provider = this.web3Provider.getInstanceOf('ethereum');
-
     const addressEnsName = await provider.lookupAddress(address);
     return addressEnsName;
   }
 
-  private async getWoofyNFTBalance(props: GetAddressEnsNameProps): Promise<number> {
-    const provider = this.web3Provider.getSigner();
-    const { WOOFYNFT } = this.config.CONTRACT_ADDRESSES;
-    const woofyNFTContract = getContract(WOOFYNFT, woofyNFTAbi, provider);
-    return await Promise.resolve(1);
+  /* -------------------------------------------------------------------------- */
+  /*                                NFT Methods                                 */
+  /* -------------------------------------------------------------------------- */
+  public async getNftBalance(address: string): Promise<NftBalances> {
+    const bluePillNftBalance = await this.getBluePillNftBalance(address);
+    const woofyNftBalance = await this.getWoofyNftBalance(address);
+    return { bluePillNftBalance: bluePillNftBalance, woofyNftBalance: woofyNftBalance };
   }
 
-  private async getBluePillNFTBalance(props: GetAddressEnsNameProps): Promise<number> {
-    const provider = this.web3Provider.getSigner();
+  public async getBluePillNftBalance(address: string): Promise<number> {
+    const provider = this.web3Provider.getInstanceOf('ethereum');
     const { BLUEPILLNFT } = this.config.CONTRACT_ADDRESSES;
-    const bluePillNFTContract = getContract(BLUEPILLNFT, bluePillNFTAbi, provider);
-    return await Promise.resolve(1);
+    const bluePillNftContract = getContract(BLUEPILLNFT, bluePillNFTAbi, provider);
+    return this.getUserNftContractBalance(address, bluePillNftContract);
   }
 
-  public async getNftBalance(props: GetAddressEnsNameProps): Promise<NFTBalances> {
-    return await Promise.resolve({ bluePillNFTBalance: 0, woofyNFTBalance: 0 });
+  public async getWoofyNftBalance(address: string): Promise<number> {
+    const provider = this.web3Provider.getInstanceOf('ethereum');
+    const { WOOFYNFT } = this.config.CONTRACT_ADDRESSES;
+    const woofyNftContract = getContract(WOOFYNFT, woofyNFTAbi, provider);
+    return this.getUserNftContractBalance(address, woofyNftContract);
+  }
+
+  private async getUserNftContractBalance(userAddress: string, nftContract: Contract): Promise<number> {
+    const contractAddress = nftContract.address;
+    let starCount;
+    // Woofy doesn't have its own starCount method in contract, so use custom function
+    switch (contractAddress) {
+      case this.config.CONTRACT_ADDRESSES.WOOFYNFT: {
+        starCount = await this.getWoofyStarCount(nftContract);
+        break;
+      }
+      case this.config.CONTRACT_ADDRESSES.BLUEPILLNFT: {
+        starCount = await nftContract.starCount();
+        starCount = starCount.toNumber();
+        break;
+      }
+      default:
+        starCount = 1;
+        break;
+    }
+    const nftIDs = this.generateNftIds(starCount);
+    const addressArray = this.generateRepeatedAddresses(starCount, userAddress);
+    const balanceArray = await nftContract.balanceOfBatch(addressArray, nftIDs);
+    return this.calculateNftBalanceFromBatch(balanceArray);
+  }
+
+  private async getWoofyStarCount(woofNftContract: Contract): Promise<number> {
+    // Call URI Method with increasing ID's until it fails to find starCount
+    let moreIdsAvailable = true;
+    let knownMax = 2790;
+    while (moreIdsAvailable) {
+      try {
+        const uriPass = await woofNftContract.uri(knownMax);
+        knownMax++;
+      } catch (error) {
+        moreIdsAvailable = false;
+      }
+    }
+    return knownMax - 1;
+  }
+
+  private generateNftIds(starCount: number): number[] {
+    return Array.from({ length: starCount }, (_, i) => i + 1);
+  }
+
+  private generateRepeatedAddresses(starCount: number, address: string): string[] {
+    return Array(starCount).fill(address);
+  }
+
+  private calculateNftBalanceFromBatch(batchBalance: BigNumber[]): number {
+    let calculatedBalance = batchBalance.map((element: BigNumber) => {
+      return element.toNumber();
+    });
+    return calculatedBalance.filter((x: number) => x === 1).length;
   }
 }
