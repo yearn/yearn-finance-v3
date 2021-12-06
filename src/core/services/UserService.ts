@@ -75,7 +75,7 @@ export class UserServiceImpl implements UserService {
     let knownMax = 2790;
     while (moreIdsAvailable) {
       try {
-        const uriPass = await woofNftContract.uri(knownMax);
+        await woofNftContract.uri(knownMax);
         knownMax++;
       } catch (error) {
         moreIdsAvailable = false;
