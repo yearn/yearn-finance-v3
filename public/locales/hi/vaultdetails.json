@@ -1,0 +1,25 @@
+{
+  "no-vault-supported-card": {
+    "content": "सही नेटवर्क में बदलने का प्रयास करें।",
+    "header": "{{network}} पर तिजोरी समर्थित नहीं है"
+  },
+  "overview-panel": {
+    "about": "जानकारी",
+    "apy": "APY",
+    "header": "अवलोकन",
+    "strategies": "सारांश",
+    "total-assets": "कुल संपत्ति",
+    "type": "प्रकार",
+    "web": "वेबसाइट"
+  },
+  "performance-panel": {
+    "earnings-over-time": "समय के साथ कमाई",
+    "header": "प्रदर्शन"
+  },
+  "vault-actions-panel": {
+    "deposit": "जमा",
+    "header": "लेनदेन",
+    "migrate": "माइग्रेट",
+    "withdraw": "निकालें"
+  }
+}

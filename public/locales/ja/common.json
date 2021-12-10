@@ -1,0 +1,149 @@
+{
+  "components": {
+    "back-button": {
+      "label": "前のページに戻る"
+    },
+    "beta-card": {
+      "desc-1": "Yearnのv3ベータサイトは本格稼動をはじめました。入金シミュレーション、Iron Bank機能、新しいラボセクション、カスタマイズ可能なテーマなどが追加されています。今後も毎週、機能追加や修正を行っていきます。バグが発生した場合やフィードバックをご希望の場合は、下記までお知らせください。",
+      "desc-2": "v1ボールトからの移行のために（あるいは感傷的な気分に浸るために）、昔のv2 UIもまだ利用可能な状態を保っています。",
+      "header": "もうベータ版ではありません！"
+    },
+    "connect-button": {
+      "connect": "ウォレットに接続する"
+    },
+    "empty-list": {
+      "searching-text": "別の資産をお探しください",
+      "text": "表示する資産がありません"
+    },
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "入金可能額",
+      "available-stake": "ステーキング可能額",
+      "available-supply": "供給可能額",
+      "balance": "残高",
+      "borrow-apy": "借入APY",
+      "borrowing": "借入中",
+      "collateral": "証拠金",
+      "deposits": "入金",
+      "deprecated": "非推奨",
+      "earned": "獲得",
+      "lend-apy": "貸出APY",
+      "market-liquidity": "市場流動性",
+      "name": "名前",
+      "opportunities": "リスト",
+      "price": "値段",
+      "supplying": "供給中",
+      "tokens": "トークン",
+      "total-assets": "総資産",
+      "value": "バリュー"
+    },
+    "no-wallet": "ウォレットが接続されていません",
+    "recommendations": {
+      "header": "高APYボールト"
+    },
+    "transaction": {
+      "approve": "承認",
+      "available-borrow": "貸出可能額",
+      "borrow": "貸出",
+      "borrow-limit": {
+        "borrow-apy": "貸出APY",
+        "borrowing": "貸出中",
+        "supply-apy": "供給APY",
+        "total-borrow-limit": "総貸出上限",
+        "total-borrow-limit-used": "使用中の総貸出上限"
+      },
+      "claim": "請求",
+      "deposit": "入金",
+      "from-iron-bank": "アイロンバンクから",
+      "from-vault": "ボールトから",
+      "from-wallet": "ウォレットから",
+      "lock": "ロック",
+      "max": "最高",
+      "migrate": "移行",
+      "reinvest": "再投資",
+      "repay": "返済",
+      "reward": "報酬",
+      "stake": "ステーク",
+      "status": {
+        "calculating": "計算中…",
+        "exit": "出口",
+        "simulating": "シミュレーション中…",
+        "transaction-completed": "取引完了"
+      },
+      "supply": "供給",
+      "to-gauge": "ゲージへ",
+      "to-iron-bank": "アイロンバンクへ",
+      "to-vault": "ボールトへ",
+      "to-wallet": "ウォレットへ",
+      "token-input": {
+        "balance": "残高",
+        "search-select-token": "トークンを選択する",
+        "search-select-vault": "ボールトを選択する",
+        "yield": "利回り"
+      },
+      "wallet-balance": "ウォレット残高",
+      "withdraw": "出金"
+    }
+  },
+  "dashboard": {
+    "apy": "APY",
+    "available": "利用可能額",
+    "available-deposit": "入金可能額",
+    "borrow-limit-total": "総貸出上限",
+    "borrow-limit-used": "利用中の貸出上限",
+    "borrowed": "貸出済",
+    "earnings": "収益",
+    "est-yearly-yield": "推定年間利回り",
+    "header": "ダッシュボード",
+    "holdings": "保有中",
+    "supplied": "供給済",
+    "total-net-worth": "総純資産",
+    "vaults-earnings": "ボールト収益",
+    "vaults-est-yearly-yield": "ボールトの年間推定利回り"
+  },
+  "errors": {
+    "default": "予期しないエラーが発生しました",
+    "unknown": "未確認エラー"
+  },
+  "footer": {
+    "links": {
+      "disclaimer": "免責事項",
+      "docs": "資料",
+      "gov": "ガバナンス",
+      "security": "セキュリティ"
+    }
+  },
+  "languages": {
+    "de": "Deutsch",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "ja": "日本語",
+    "pt": "Português",
+    "tr": "Türk",
+    "vi": "Tiếng Việt",
+    "zh": "中文"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "免責事項",
+    "home": "ホーム",
+    "ironbank": "Iron Bank",
+    "labs": "研究所",
+    "settings": "設定",
+    "vault": "ボールト詳細",
+    "vaults": "ボールト",
+    "wallet": "ウォレット"
+  },
+  "themes": {
+    "classic": "Classic v2",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "explorer": "Explorer",
+    "light": "Mono Light"
+  }
+}
