@@ -122,7 +122,7 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
   {
     condition: (args, { getState }) => {
       const { app } = getState();
-      if (isEqual(app.statusMap.user.getUserAppData, args)) return false;
+      if (isEqual(app.statusMap.user.getUserAppData.callArgs, args)) return false;
     },
   }
 );
