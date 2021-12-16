@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { isEqual } from 'lodash';
 
 import { ThunkAPI } from '@frameworks/redux';
 import { inIframe } from '@utils';
-import { Route, Address, Vault } from '@types';
+import { Network, Route, Address, Vault } from '@types';
 
 import { WalletActions } from '../wallet/wallet.actions';
 import { TokensActions } from '../tokens/tokens.actions';
@@ -47,7 +48,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   // dispatch(initSubscriptions());
 });
 
-const getAppData = createAsyncThunk<void, { route: Route; addresses?: Address[] }, ThunkAPI>(
+const getAppData = createAsyncThunk<void, { network: Network; route: Route; addresses?: Address[] }, ThunkAPI>(
   'app/getAppData',
   async ({ route, addresses }, { dispatch }) => {
     switch (route) {
@@ -75,10 +76,16 @@ const getAppData = createAsyncThunk<void, { route: Route; addresses?: Address[] 
         await dispatch(IronBankActions.initiateIronBank());
         break;
     }
+  },
+  {
+    condition: (args, { getState }) => {
+      const { app } = getState();
+      if (isEqual(app.statusMap.getAppData.callArgs, args)) return false;
+    },
   }
 );
 
-const getUserAppData = createAsyncThunk<void, { route: Route; addresses?: Address[] }, ThunkAPI>(
+const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; addresses?: Address[] }, ThunkAPI>(
   'app/getUserAppData',
   async ({ route, addresses }, { dispatch }) => {
     dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
@@ -111,6 +118,12 @@ const getUserAppData = createAsyncThunk<void, { route: Route; addresses?: Addres
         dispatch(IronBankActions.getUserMarketsMetadata({}));
         break;
     }
+  },
+  {
+    condition: (args, { getState }) => {
+      const { app } = getState();
+      if (isEqual(app.statusMap.user.getUserAppData, args)) return false;
+    },
   }
 );
 
