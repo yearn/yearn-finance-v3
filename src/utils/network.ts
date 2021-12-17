@@ -15,6 +15,8 @@ export const getNetworkId = (network: Network): number => {
       return 42;
     case 'fantom':
       return 250;
+    default:
+      return 0;
   }
 };
 
@@ -33,7 +35,7 @@ export const getNetwork = (networkId: number): Network => {
     case 250:
       return 'fantom';
     default:
-      throw Error('Unknown Network');
+      return 'other';
   }
 };
 

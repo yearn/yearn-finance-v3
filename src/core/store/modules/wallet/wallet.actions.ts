@@ -5,6 +5,8 @@ import { getEthersProvider, ExternalProvider } from '@frameworks/ethers';
 import { Theme, RootState, DIContainer, Subscriptions, Network } from '@types';
 import { isValidAddress, getProviderType, getNetwork } from '@utils';
 
+import { NetworkActions } from '../network/network.actions';
+
 const walletChange = createAction<{ walletName: string }>('wallet/walletChange');
 const addressChange = createAction<{ address: string }>('wallet/addressChange');
 const networkChange = createAction<{ network: number }>('wallet/networkChange');
@@ -82,6 +84,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
               read: web3Provider.getInstanceOf(providerType),
               write: web3Provider.getInstanceOf('wallet'),
             });
+            dispatch(NetworkActions.changeNetwork({ network }));
           }
         },
       };

@@ -100,12 +100,7 @@ export class BlocknativeWalletImpl implements Wallet {
       { walletName: 'liquality' },
     ];
 
-    const walletCheck = [
-      { checkName: 'derivationPath' },
-      { checkName: 'connect' },
-      { checkName: 'accounts' },
-      { checkName: 'network' },
-    ];
+    const walletCheck = [{ checkName: 'derivationPath' }, { checkName: 'connect' }, { checkName: 'accounts' }];
 
     this.onboard = Onboard({
       networkId,
