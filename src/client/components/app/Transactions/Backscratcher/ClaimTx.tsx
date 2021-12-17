@@ -1,8 +1,16 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useAppTranslation } from '@hooks';
-import { TokensSelectors, LabsSelectors, LabsActions, VaultsActions, TokensActions } from '@store';
-import { normalizeAmount, USDC_DECIMALS } from '@utils';
+import {
+  TokensSelectors,
+  LabsSelectors,
+  LabsActions,
+  VaultsActions,
+  TokensActions,
+  NetworkSelectors,
+  WalletSelectors,
+} from '@store';
+import { normalizeAmount, USDC_DECIMALS, validateNetwork } from '@utils';
 import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
@@ -19,6 +27,8 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [txCompleted, setTxCompleted] = useState(false);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const selectedLab = useAppSelector(LabsSelectors.selectYveCrvLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const selectedTargetToken = tokenSelectorFilter(THREECRV);
@@ -40,6 +50,12 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
     return null;
   }
 
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
+  const sourceError = networkError;
   const targetError = actionsStatus.claimReward.error;
 
   const selectedLabOption = {
@@ -94,7 +110,7 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
       targetAmountValue={expectedAmountValue}
       targetStatus={{ error: targetError }}
       actions={txActions}
-      sourceStatus={{}}
+      sourceStatus={{ error: sourceError }}
       onClose={onClose}
     />
   );

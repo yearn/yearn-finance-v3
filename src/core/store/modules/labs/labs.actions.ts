@@ -8,6 +8,8 @@ import {
   handleTransaction,
   normalizeAmount,
   toBN,
+  getNetwork,
+  validateNetwork,
   validateVaultAllowance,
   validateVaultDeposit,
   validateVaultWithdraw,
@@ -167,6 +169,12 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const labData = labs.labsMap[labAddress];
     const tokenData = tokens.tokensMap[tokenAddress];
     const userTokenData = tokens.user.userTokensMap[tokenAddress];
@@ -237,6 +245,12 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
 
     const labData = labs.labsMap[labAddress];
     const tokenData = tokens.tokensMap[labData.tokenId];
@@ -440,6 +454,13 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const tokenData = getState().tokens.tokensMap[tokenAddress];
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
@@ -470,6 +491,12 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
     const { services } = extra;
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
 
     // TODO validations.
 
@@ -503,6 +530,12 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
     const { services } = extra;
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
 
     const tokenData = getState().tokens.tokensMap[THREECRV];
     const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[THREECRV];
@@ -627,6 +660,13 @@ const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const tokenAddress = PSLPYVBOOSTETH;
     const labData = getState().labs.labsMap[labAddress];
     const tokenData = getState().tokens.tokensMap[tokenAddress];
