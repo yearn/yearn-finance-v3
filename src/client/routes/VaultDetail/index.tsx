@@ -14,7 +14,7 @@ import {
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
 import { SpinnerLoading, Button, Text } from '@components/common';
-import { parseHistoricalEarnings, parseLastEarnings, isValidAddress } from '@utils';
+import { parseLastEarnings, isValidAddress, parseHistoricalEarnings } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
 
@@ -102,10 +102,10 @@ export const VaultDetail = () => {
     (!tokensInitialized || !vaultsInitialized);
 
   const chartData = currentNetworkSettings.earningsEnabled
-    ? parseHistoricalEarnings(selectedVault?.historicalEarnings)
+    ? parseHistoricalEarnings(selectedVault?.historicalEarnings, selectedVault?.token.decimals)
     : undefined;
   const chartValue = currentNetworkSettings.earningsEnabled
-    ? parseLastEarnings(selectedVault?.historicalEarnings)
+    ? parseLastEarnings(selectedVault?.historicalEarnings, selectedVault?.token.decimals)
     : undefined;
 
   const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';

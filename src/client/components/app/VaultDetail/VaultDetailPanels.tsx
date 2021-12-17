@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatApy, formatUsd, USDC_DECIMALS, humanize } from '@utils';
+import { formatApy, formatAmount, USDC_DECIMALS, humanize } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
 
@@ -317,18 +317,21 @@ export const VaultDetailPanels = ({
         </VaultActions>
       </Row>
 
-      {chartData && (
+      {chartData && chartValue && (
         <VaultChart>
           <StyledCardHeader header={t('vaultdetails:performance-panel.header')} />
 
           <ChartValueContainer>
             <ChartValueLabel>{t('vaultdetails:performance-panel.earnings-over-time')}</ChartValueLabel>
-            <ChartValue>{formatUsd(chartValue)}</ChartValue>
+            <ChartValue>
+              {formatAmount(chartValue, selectedVault?.token?.decimals)} {selectedVault?.token?.symbol}
+            </ChartValue>
           </ChartValueContainer>
 
           <StyledLineChart
             chartData={chartData}
             tooltipLabel={t('vaultdetails:performance-panel.earnings-over-time')}
+            customSymbol={selectedVault?.token?.symbol}
           />
         </VaultChart>
       )}
