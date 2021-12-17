@@ -1,8 +1,15 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useAppTranslation } from '@hooks';
-import { VaultsSelectors, VaultsActions, TokensActions } from '@store';
-import { toBN, normalizeAmount, USDC_DECIMALS, validateMigrateVaultAllowance, formatPercent } from '@utils';
+import { VaultsSelectors, VaultsActions, TokensActions, NetworkSelectors, WalletSelectors } from '@store';
+import {
+  toBN,
+  normalizeAmount,
+  USDC_DECIMALS,
+  validateMigrateVaultAllowance,
+  validateNetwork,
+  formatPercent,
+} from '@utils';
 
 import { Transaction } from './Transaction';
 
@@ -17,6 +24,8 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [txCompleted, setTxCompleted] = useState(false);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const vaults = useAppSelector(VaultsSelectors.selectLiveVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
@@ -60,7 +69,12 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     migrationContractAddress: selectedVault.migrationContract,
   });
 
-  const sourceError = allowanceError;
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
+  const sourceError = networkError || allowanceError;
   const targetError = actionsStatus.approveMigrate.error || actionsStatus.migrate.error;
 
   const sourceVault = {

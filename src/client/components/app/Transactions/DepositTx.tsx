@@ -9,6 +9,7 @@ import {
   TokensActions,
   SettingsSelectors,
   NetworkSelectors,
+  WalletSelectors,
 } from '@store';
 import {
   toBN,
@@ -18,6 +19,7 @@ import {
   validateVaultDeposit,
   validateVaultAllowance,
   validateSlippage,
+  validateNetwork,
   getZapInContractAddress,
   formatPercent,
 } from '@utils';
@@ -47,6 +49,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const vaults = useAppSelector(VaultsSelectors.selectLiveVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
@@ -156,6 +159,11 @@ export const DepositTx: FC<DepositTxProps> = ({
     expectedSlippage: expectedTxOutcome?.slippage,
   });
 
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
     .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData }) => ({
@@ -184,7 +192,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   const depositsDisabledError =
     selectedVault.depositsDisabled || selectedVault.hideIfNoDeposits ? 'Vault Deposits Disabled' : undefined;
 
-  const sourceError = allowanceError || inputError || depositsDisabledError;
+  const sourceError = networkError || allowanceError || inputError || depositsDisabledError;
 
   const targetStatus = {
     error: expectedTxOutcomeStatus.error || actionsStatus.approve.error || actionsStatus.deposit.error || slippageError,
