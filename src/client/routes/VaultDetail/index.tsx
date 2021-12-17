@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AppSelectors, TokensSelectors, VaultsSelectors, NetworkSelectors, WalletSelectors } from '@store';
-import { useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
+import {
+  VaultsActions,
+  AlertsActions,
+  AppSelectors,
+  TokensSelectors,
+  VaultsSelectors,
+  NetworkSelectors,
+  WalletSelectors,
+} from '@store';
+import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
 import { SpinnerLoading, Button, Text } from '@components/common';
-import { parseHistoricalEarnings, parseLastEarnings } from '@utils';
+import { parseHistoricalEarnings, parseLastEarnings, isValidAddress } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
 
@@ -40,8 +48,9 @@ export interface VaultDetailRouteParams {
 
 export const VaultDetail = () => {
   const { t } = useAppTranslation(['common', 'vaultdetails']);
-
+  const dispatch = useAppDispatch();
   const history = useHistory();
+  const location = useLocation();
   const isMounting = useIsMounting();
   const { NETWORK_SETTINGS } = getConfig();
 
@@ -58,6 +67,20 @@ export const VaultDetail = () => {
 
   const [firstTokensFetch, setFirstTokensFetch] = useState(false);
   const [tokensInitialized, setTokensInitialized] = useState(false);
+
+  useEffect(() => {
+    const assetAddress: string | undefined = location.pathname.split('/')[2];
+    if (!assetAddress || !isValidAddress(assetAddress)) {
+      dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
+      history.push('/home');
+      return;
+    }
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));
+
+    return () => {
+      dispatch(VaultsActions.clearSelectedVaultAndStatus());
+    };
+  }, []);
 
   useEffect(() => {
     const loading = tokensStatus.loading;
@@ -77,21 +100,6 @@ export const VaultDetail = () => {
   const generalLoading =
     (appStatus.loading || vaultsStatus.loading || tokensStatus.loading || isMounting) &&
     (!tokensInitialized || !vaultsInitialized);
-
-  // const chartData = [
-  //   {
-  //     id: 'japan',
-  //     // color: '#d9269a',
-  //     data: [
-  //       { x: '2019-05-01', y: 2 },
-  //       { x: '2019-06-01', y: 7 },
-  //       { x: '2019-06-15', y: 17 },
-  //       { x: '2019-06-23', y: 1 },
-  //       { x: '2019-08-01', y: 42 },
-  //       { x: '2019-09-01', y: 1 },
-  //     ],
-  //   },
-  // ];
 
   const chartData = currentNetworkSettings.earningsEnabled
     ? parseHistoricalEarnings(selectedVault?.historicalEarnings)

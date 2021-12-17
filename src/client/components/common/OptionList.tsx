@@ -24,7 +24,7 @@ const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; sele
   cursor: ${({ selectable }) => (selectable ? 'pointer' : null)};
   padding: 0 0.8rem;
   width: max-content;
-  min-width: 9rem;
+  min-width: 11rem;
 
   ${(props) =>
     props.disabled &&
@@ -58,22 +58,34 @@ const StyledIcon = styled(Icon)`
   flex-shrink: 0;
 `;
 
-const Options = styled.div<{ open?: boolean }>`
+const Options = styled.div<{ open?: boolean; listPosition: 'top' | 'bottom' }>`
   display: none;
   flex-direction: column;
   flex-grow: 1;
   position: absolute;
   background-color: var(--dropdown-background);
   width: 100%;
+  max-height: 20rem;
   left: 0;
-  bottom: -0.8rem;
-  transform: translateY(100%);
   border-radius: ${({ theme }) => theme.globalRadius};
   padding: 0.8rem;
   overflow: hidden;
+  overflow-y: auto;
   z-index: 1;
 
   ${(props) => props.open && `display: flex;`}
+  ${(props) =>
+    props.listPosition === 'top' &&
+    `
+    top: -0.8rem;
+    transform: translateY(-100%);
+  `}
+  ${(props) =>
+    props.listPosition === 'bottom' &&
+    `
+      bottom: -0.8rem;
+      transform: translateY(100%);
+  `}
 `;
 
 const OptionChild = styled.div<{ selected?: boolean }>`
@@ -87,6 +99,7 @@ const OptionChild = styled.div<{ selected?: boolean }>`
   transition: opacity 200ms ease-in-out;
   width: 100%;
   position: relative;
+  flex-shrink: 0;
 
   ${(props) =>
     props.selected &&
@@ -114,6 +127,7 @@ export interface OptionListProps {
   isLoading?: boolean;
   disabled?: boolean;
   hideIcons?: boolean;
+  listPosition?: 'top' | 'bottom' | undefined;
   onChange?: (selected: Option) => void;
 }
 
@@ -126,6 +140,7 @@ export const OptionList: FC<OptionListProps> = ({
   disabled,
   hideIcons,
   onChange,
+  listPosition,
   children,
   ...props
 }) => {
@@ -168,7 +183,7 @@ export const OptionList: FC<OptionListProps> = ({
         <ArrowIcon Component={ChevronDownIcon} open={open} />
       </OptionChild>
 
-      <Options open={open}>
+      <Options open={open} listPosition={listPosition ? listPosition : 'bottom'}>
         {options.map((option) => (
           <OptionChild
             key={option.value}

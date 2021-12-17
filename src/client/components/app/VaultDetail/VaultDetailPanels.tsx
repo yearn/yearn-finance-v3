@@ -73,7 +73,7 @@ const RelativeContainer = styled.span`
 `;
 
 const IconOverImage = styled(Icon)`
-  background: white;
+  background: ${({ theme }) => theme.colors.primary};
   border-radius: 100%;
   position: absolute;
   right: 0;

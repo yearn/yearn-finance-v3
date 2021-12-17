@@ -1,0 +1,149 @@
+{
+  "components": {
+    "back-button": {
+      "label": "Voltar à página anterior"
+    },
+    "beta-card": {
+      "desc-1": "O site Yearn beta v3 agora está no ar, e ele adiciona simulações de depósitos, acesso ao iron Bank, uma nova seção Labs, temas customizáveis e mais. Vamos continuar a adicionar recursos toda semana e, caso encontre algum erro, ou deseje fornecer feedback, fale conosco no",
+      "desc-2": "Para migração de vaults v1 (ou caso se sinta nostálgico), vamos manter a UI v2 legado, disponível em",
+      "header": "Não é mais beta!"
+    },
+    "connect-button": {
+      "connect": "Conectar Carteira"
+    },
+    "empty-list": {
+      "searching-text": "Favor buscar outro ativo",
+      "text": "Sem ativos para mostrar"
+    },
+    "list-card": {
+      "apy": "APY",
+      "available-deposit": "Disponível para depósito",
+      "available-stake": "Disponível para stake",
+      "available-supply": "Disponível para fornecer",
+      "balance": "Saldo",
+      "borrow-apy": "APY Empréstimo",
+      "borrowing": "Emprestando",
+      "collateral": "Garantia",
+      "deposits": "Depósito",
+      "deprecated": "Aposentado",
+      "earned": "Rendimento",
+      "lend-apy": "APY Fornecer",
+      "market-liquidity": "Liquidez do mercado",
+      "name": "Nome",
+      "opportunities": "Oportunidades",
+      "price": "Preço",
+      "supplying": "Fornecendo",
+      "tokens": "Tokens",
+      "total-assets": "Ativos totais",
+      "value": "Valor"
+    },
+    "no-wallet": "Carteira não conectada",
+    "recommendations": {
+      "header": "Maior APY"
+    },
+    "transaction": {
+      "approve": "Aprovar",
+      "available-borrow": "Disponível para empréstimo",
+      "borrow": "Emprestar",
+      "borrow-limit": {
+        "borrow-apy": "APY Empréstimo",
+        "borrowing": "Emprestando",
+        "supply-apy": "APY de Fornecimento",
+        "total-borrow-limit": "Limite total de empréstimo",
+        "total-borrow-limit-used": "Total de empréstimo utilizado"
+      },
+      "claim": "Reinvidicar",
+      "deposit": "Depósito",
+      "from-iron-bank": "Do Iron Bank",
+      "from-vault": "Do Vault",
+      "from-wallet": "Da carteira",
+      "lock": "Bloquear",
+      "max": "MAX",
+      "migrate": "Migrar",
+      "reinvest": "Reinvestir",
+      "repay": "Pagar",
+      "reward": "Recompensa",
+      "stake": "Stake",
+      "status": {
+        "calculating": "Calculando...",
+        "exit": "Sair",
+        "simulating": "Simulando...",
+        "transaction-completed": "Transação completa"
+      },
+      "supply": "Fornecer",
+      "to-gauge": "Para gauge",
+      "to-iron-bank": "Para Iron Bank",
+      "to-vault": "Para vault",
+      "to-wallet": "Para carteira",
+      "token-input": {
+        "balance": "Saldo",
+        "search-select-token": "Escolha um Token",
+        "search-select-vault": "Escolha um Vault",
+        "yield": "Rendimento"
+      },
+      "wallet-balance": "Saldo na Carteira",
+      "withdraw": "Retirar"
+    }
+  },
+  "dashboard": {
+    "apy": "APY",
+    "available": "Disponível",
+    "available-deposit": "Disponível para depósito",
+    "borrow-limit-total": "Limite de empréstimo",
+    "borrow-limit-used": "Total emprestado",
+    "borrowed": "Emprestado",
+    "earnings": "Rendimentos",
+    "est-yearly-yield": "Rend. anual est",
+    "header": "Painel de Controle",
+    "holdings": "Ativos",
+    "supplied": "Fornecido",
+    "total-net-worth": "Valor total",
+    "vaults-earnings": "Rend. dos vaults",
+    "vaults-est-yearly-yield": "Rend. anual est. dos vaults"
+  },
+  "errors": {
+    "default": "Houve um erro inesperado",
+    "unknown": "Erro desconhecido"
+  },
+  "footer": {
+    "links": {
+      "disclaimer": "Aviso",
+      "docs": "Docs",
+      "gov": "Gov",
+      "security": "Segurança"
+    }
+  },
+  "languages": {
+    "de": "Deutsch",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "ja": "日本語",
+    "pt": "Português",
+    "tr": "Türk",
+    "vi": "Tiếng Việt",
+    "zh": "中文"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Yearn 2021",
+      "small": "©"
+    },
+    "disclaimer": "Aviso",
+    "home": "Início",
+    "ironbank": "Iron Bank",
+    "labs": "Labs",
+    "settings": "Configuração",
+    "vault": "Detalhes Vaults",
+    "vaults": "Vaults",
+    "wallet": "Carteira"
+  },
+  "themes": {
+    "classic": "v2 Clássico",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "explorer": "Explorer",
+    "light": "Mono Light"
+  }
+}
