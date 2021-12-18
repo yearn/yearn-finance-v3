@@ -324,7 +324,7 @@ export const VaultDetailPanels = ({
           <ChartValueContainer>
             <ChartValueLabel>{t('vaultdetails:performance-panel.earnings-over-time')}</ChartValueLabel>
             <ChartValue>
-              {formatAmount(chartValue, selectedVault?.token?.decimals)} {selectedVault?.token?.symbol}
+              {formatAmount(chartValue, 2)} {selectedVault?.token?.symbol}
             </ChartValue>
           </ChartValueContainer>
 

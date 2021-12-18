@@ -4,7 +4,7 @@ import { Serie, ResponsiveLine } from '@nivo/line';
 
 import { useAppSelector, useWindowDimensions } from '@hooks';
 import { getTheme } from '@themes';
-import { formatUsd } from '@utils';
+import { formatAmount, formatUsd } from '@utils';
 import { Text } from '@components/common';
 
 export interface LineChartProps {
@@ -79,7 +79,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
       <ResponsiveLine
         data={chartData}
         theme={lineTheme}
-        curve="monotoneX"
+        curve="linear"
         colors={theme.colors.secondary}
         margin={{ top: 20, right: 10, bottom: 36, left: 15 }}
         // xScale={{ type: 'point' }}
@@ -121,7 +121,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
               <Text>
                 {customSymbol ? (
                   <>
-                    {point.data.yFormatted.toString()} {customSymbol}
+                    {formatAmount(point.data.yFormatted.toString(), 2)} {customSymbol}
                   </>
                 ) : (
                   formatUsd(point.data.yFormatted.toString())
