@@ -98,7 +98,7 @@ const StyledIcon = styled(Icon)`
   height: var(--icon-size);
 `;
 
-const LogoSection = styled.div`
+const LogoSection = styled.a`
   display: flex;
   justify-content: flex-end;
 `;
@@ -171,7 +171,10 @@ export const Footer = ({ className }: FooterProps) => {
         })}
       </LinkSection>
 
-      <LogoSection>
+      <LogoSection
+        href="https://dashboard.alchemyapi.io/signup?referral=c642981b-19e0-45e9-a169-0b80b633992b"
+        target="_blank"
+      >
         <AlchemyLogo />
       </LogoSection>
     </StyledFooter>

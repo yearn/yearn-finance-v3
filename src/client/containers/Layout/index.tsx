@@ -7,26 +7,13 @@ import {
   RouteActions,
   TokensActions,
   WalletActions,
-  VaultsSelectors,
-  LabsSelectors,
-  IronBankSelectors,
   WalletSelectors,
-  TokensSelectors,
   NetworkSelectors,
-  AppSelectors,
-  ModalSelectors,
   SettingsSelectors,
   NetworkActions,
   UserActions,
 } from '@store';
-import {
-  useAppTranslation,
-  useAppDispatch,
-  useAppSelector,
-  useWindowDimensions,
-  useIsMounting,
-  usePrevious,
-} from '@hooks';
+import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
@@ -81,7 +68,6 @@ const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean }>`
 export const Layout: FC = ({ children }) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  const isMounting = useIsMounting();
   const location = useLocation();
   const { SUPPORTED_NETWORKS } = getConfig();
   const { isMobile } = useWindowDimensions();
@@ -91,24 +77,6 @@ export const Layout: FC = ({ children }) => {
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const previousAddress = usePrevious(selectedAddress);
   const previousNetwork = usePrevious(currentNetwork);
-
-  let isFetchingAppData = false;
-  let isFetchingUserData = false;
-  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
-  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
-  const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
-  const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsStatus);
-  const labsStatus = useAppSelector(LabsSelectors.selectLabsStatus);
-  const ironBankStatus = useAppSelector(IronBankSelectors.selectIronBankStatus);
-  const generalLoading =
-    (appStatus.loading ||
-      tokensStatus.loading ||
-      vaultsStatus.loading ||
-      labsStatus.loading ||
-      ironBankStatus.loading ||
-      isMounting ||
-      isFetchingAppData) &&
-    !activeModal;
 
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1] as Route;
@@ -122,14 +90,14 @@ export const Layout: FC = ({ children }) => {
 
   useEffect(() => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
-    fetchAppData(path);
-    if (selectedAddress) fetchUserData(path);
+    fetchAppData(currentNetwork, path);
+    if (selectedAddress) fetchUserData(currentNetwork, path);
   }, [location]);
 
   useEffect(() => {
     if (previousAddress) dispatch(AppActions.clearUserAppData());
     if (previousAddress) dispatch(UserActions.clearNftBalance());
-    if (selectedAddress) fetchUserData(path);
+    if (selectedAddress) fetchUserData(currentNetwork, path);
     if (selectedAddress) dispatch(UserActions.getNftBalance());
   }, [selectedAddress]);
 
@@ -137,22 +105,28 @@ export const Layout: FC = ({ children }) => {
     if (previousNetwork) dispatch(AppActions.clearAppData());
     if (selectedAddress) dispatch(AppActions.clearUserAppData());
     dispatch(TokensActions.getTokens());
-    fetchAppData(path);
-    if (selectedAddress) fetchUserData(path);
+    fetchAppData(currentNetwork, path);
+    if (selectedAddress) fetchUserData(currentNetwork, path);
   }, [currentNetwork]);
 
-  async function fetchAppData(path: Route) {
-    if (isFetchingAppData) return;
-    isFetchingAppData = true;
-    await dispatch(AppActions.getAppData({ route: path, addresses: assetAddress ? [assetAddress] : undefined }));
-    isFetchingAppData = false;
+  function fetchAppData(network: Network, path: Route) {
+    dispatch(
+      AppActions.getAppData({
+        network,
+        route: path,
+        addresses: assetAddress ? [assetAddress] : undefined,
+      })
+    );
   }
 
-  async function fetchUserData(path: Route) {
-    if (isFetchingUserData) return;
-    isFetchingUserData = true;
-    await dispatch(AppActions.getUserAppData({ route: path, addresses: assetAddress ? [assetAddress] : undefined }));
-    isFetchingUserData = false;
+  function fetchUserData(network: Network, path: Route) {
+    dispatch(
+      AppActions.getUserAppData({
+        network,
+        route: path,
+        addresses: assetAddress ? [assetAddress] : undefined,
+      })
+    );
   }
 
   return (
@@ -170,7 +144,6 @@ export const Layout: FC = ({ children }) => {
           selectedNetwork={currentNetwork}
           networkOptions={SUPPORTED_NETWORKS}
           onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
-          disableNetworkChange={generalLoading}
         />
         {children}
         <Footer />
