@@ -1,8 +1,7 @@
-import { UserState } from '@types';
 import { createReducer } from '@reduxjs/toolkit';
 import { UserActions } from './user.actions';
 
-import { initialStatus } from '@types';
+import { initialStatus, UserState } from '@types';
 
 export const userInitialState: UserState = {
   nft: {
@@ -36,7 +35,7 @@ const userReducer = createReducer(userInitialState, (builder) => {
       state.statusMap.getNftBalance = { loading: true };
     })
     .addCase(getNftBalance.rejected, (state, { error }) => {
-      state.statusMap.getNftBalance = { error: error.message };
+      state.statusMap.getNftBalance = { loading: false, error: error.message };
     })
     .addCase(getNftBalance.fulfilled, (state, { payload: nftBalance }) => {
       state.nft = nftBalance;

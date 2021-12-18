@@ -1,10 +1,10 @@
+import BigNumber from 'bignumber.js';
+import { Contract } from 'ethers';
 import { GetAddressEnsNameProps, UserService, Web3Provider, NftBalances, Config } from '@types';
 import { getContract } from '@frameworks/ethers';
 
 import bluePillNFTAbi from './contracts/bluePillNFT.json';
 import woofyNFTAbi from './contracts/woofyNFT.json';
-import BigNumber from 'bignumber.js';
-import { Contract } from 'ethers';
 
 export class UserServiceImpl implements UserService {
   private web3Provider: Web3Provider;
@@ -72,7 +72,7 @@ export class UserServiceImpl implements UserService {
   private async getWoofyStarCount(woofNftContract: Contract): Promise<number> {
     // Call URI Method with increasing ID's until it fails to find starCount
     let moreIdsAvailable = true;
-    let knownMax = 2790;
+    let knownMax = 2800;
     while (moreIdsAvailable) {
       try {
         await woofNftContract.uri(knownMax);
@@ -85,11 +85,11 @@ export class UserServiceImpl implements UserService {
   }
 
   private generateNftIds(starCount: number): number[] {
-    return Array.from({ length: starCount }, (_, i) => i + 1);
+    return Array.from({ length: starCount + 1 }, (_, i) => i);
   }
 
   private generateRepeatedAddresses(starCount: number, address: string): string[] {
-    return Array(starCount).fill(address);
+    return Array(starCount + 1).fill(address);
   }
 
   private calculateNftBalanceFromBatch(batchBalance: BigNumber[]): number {
