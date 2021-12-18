@@ -11,6 +11,7 @@ import {
   NetworkSelectors,
   SettingsSelectors,
   NetworkActions,
+  UserActions,
 } from '@store';
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
@@ -95,7 +96,9 @@ export const Layout: FC = ({ children }) => {
 
   useEffect(() => {
     if (previousAddress) dispatch(AppActions.clearUserAppData());
+    if (previousAddress) dispatch(UserActions.clearNftBalance());
     if (selectedAddress) fetchUserData(currentNetwork, path);
+    if (selectedAddress) dispatch(UserActions.getNftBalance());
   }, [selectedAddress]);
 
   useEffect(() => {
