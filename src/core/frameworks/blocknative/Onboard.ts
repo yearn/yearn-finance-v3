@@ -52,8 +52,6 @@ export class BlocknativeWalletImpl implements Wallet {
     const appName = 'Yearn Finance';
 
     const wallets = [
-      { walletName: 'detectedwallet' },
-      { walletName: 'tally' },
       { walletName: 'metamask' },
       {
         walletName: 'walletConnect',
@@ -71,7 +69,9 @@ export class BlocknativeWalletImpl implements Wallet {
         walletName: 'ledger',
         rpcUrl,
       },
+      { walletName: 'frame' },
       { walletName: 'coinbase' },
+      { walletName: 'tally' },
       { walletName: 'status' },
       {
         walletName: 'lattice',
@@ -98,6 +98,7 @@ export class BlocknativeWalletImpl implements Wallet {
         appName,
       },
       { walletName: 'liquality' },
+      { walletName: 'detectedwallet' },
     ];
 
     const walletCheck = [
