@@ -361,7 +361,7 @@ export const VaultDetailPanels = ({
           </ChartValueContainer>
 
           <StyledLineChart
-            chartData={selectedUnderlyingData ? chartData?.underlying : chartData?.usd}
+            chartData={selectedUnderlyingData ? chartData?.underlying ?? [] : chartData?.usd ?? []}
             tooltipLabel={t('vaultdetails:performance-panel.earnings-over-time')}
             customSymbol={selectedUnderlyingData ? selectedVault?.token?.symbol : undefined}
           />
