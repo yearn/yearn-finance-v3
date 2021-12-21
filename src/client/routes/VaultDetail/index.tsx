@@ -116,7 +116,7 @@ export const VaultDetail = () => {
   const chartValue = currentNetworkSettings.earningsEnabled
     ? {
         usd: parseLastEarningsUsd(selectedVault?.historicalEarnings),
-        underyling: parseLastEarningsUnderlying(selectedVault?.historicalEarnings, selectedVault?.token.decimals),
+        underlying: parseLastEarningsUnderlying(selectedVault?.historicalEarnings, selectedVault?.token.decimals),
       }
     : {};
 

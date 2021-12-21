@@ -210,12 +210,12 @@ const StyledChartTab = styled.span<{ active?: boolean }>`
 export interface VaultDetailPanelsProps {
   selectedVault: GeneralVaultView;
   chartData?: {
-    usd?: any;
-    underlying?: any;
+    usd?: any[];
+    underlying?: any[];
   };
   chartValue?: {
-    usd?: any;
-    underyling?: any;
+    usd?: string;
+    underlying?: string;
   };
   displayAddToken?: boolean;
   currentNetwork?: Network;
@@ -335,7 +335,7 @@ export const VaultDetailPanels = ({
         </VaultActions>
       </Row>
 
-      {chartData && chartValue && (
+      {chartData?.underlying && chartValue?.underlying && (
         <VaultChart>
           <StyledCardHeaderContainer>
             <StyledCardHeader header={t('vaultdetails:performance-panel.header')} />
@@ -352,7 +352,7 @@ export const VaultDetailPanels = ({
             <ChartValue>
               {selectedUnderlyingData ? (
                 <>
-                  {formatAmount(chartValue?.underyling, 2)} {selectedVault?.token?.symbol}
+                  {formatAmount(chartValue?.underlying, 2)} {selectedVault?.token?.symbol}
                 </>
               ) : (
                 <>{formatUsd(chartValue?.usd)}</>
