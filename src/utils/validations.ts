@@ -353,6 +353,7 @@ export function validateNetwork(props: ValidateNetworkProps): ValidationResponse
   const { currentNetwork, walletNetwork } = props;
 
   if (!walletNetwork) return { error: 'Wallet Not Connected' };
+  if (walletNetwork === 'other') return { error: 'Wallet Not Connected' };
   if (currentNetwork !== walletNetwork)
     return { error: `Incorrect Network Selected. Change Your Wallet to ${currentNetwork} Network` };
 
