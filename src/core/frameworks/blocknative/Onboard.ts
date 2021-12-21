@@ -135,9 +135,37 @@ export class BlocknativeWalletImpl implements Wallet {
   }
 
   public async changeNetwork(network: Network) {
-    const networkId = getNetworkId(network);
+    const { NETWORK_SETTINGS } = getConfig();
+    const networkSettings = NETWORK_SETTINGS[network];
+    const networkId = networkSettings.networkId;
     if (this.onboard) {
       this.onboard.config({ networkId });
+      try {
+        await this.getState()?.wallet.provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: `0x${networkId.toString(16)}` }],
+        });
+      } catch (error: any) {
+        if (error.code === 4902) {
+          try {
+            await this.getState()?.wallet.provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {
+                  chainId: `0x${networkId.toString(16)}`,
+                  chainName: networkSettings.name,
+                  nativeCurrency: networkSettings.nativeCurrency,
+                  rpcUrls: [networkSettings.rpcUrl],
+                  blockExplorerUrls: [networkSettings.blockExplorerUrl],
+                },
+              ],
+            });
+          } catch (addError) {
+            console.error(addError);
+          }
+        }
+        console.error(error);
+      }
     }
   }
 
