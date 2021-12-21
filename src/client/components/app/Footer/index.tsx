@@ -1,7 +1,16 @@
 import styled from 'styled-components';
 
 import { ReactComponent as AlchemyCertified } from '@assets/images/alchemy-certified.svg';
-import { Icon, MediumIcon, Link, TwitterIcon, DiscordIcon, GithubIcon, TelegramIcon } from '@components/common';
+import {
+  Icon,
+  MediumIcon,
+  Link,
+  TwitterIcon,
+  DiscordIcon,
+  GithubIcon,
+  TelegramIcon,
+  RedditIcon,
+} from '@components/common';
 import { useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
 
@@ -57,6 +66,10 @@ const socialLinks = [
     link: 'https://t.me/yearnfinance',
     icon: TelegramIcon,
   },
+  {
+    link: 'https://reddit.com/yearn_finance',
+    icon: RedditIcon,
+  },
 ];
 
 const SocialSection = styled.div`
@@ -96,6 +109,7 @@ const StyledIconLink = styled(Link)`
 const StyledIcon = styled(Icon)`
   width: var(--icon-size);
   height: var(--icon-size);
+  fill: ${({ theme }) => theme.colors.secondary};
 `;
 
 const LogoSection = styled.a`
@@ -126,18 +140,21 @@ const StyledFooter = styled.footer`
     grid-template-columns: 1fr;
     padding: 2rem;
 
+    ${SocialSection},
     ${LinkSection},
     ${LogoSection} {
-      justify-content: flex-start;
+      justify-content: center;
     }
   }
 
   ${StyledLink},
-  ${StyledIconLink} {
+  ${StyledIconLink},
+  ${AlchemyLogo} {
     transition: filter 200ms ease-in-out;
+    filter: opacity(50%);
 
     &:hover {
-      filter: brightness(120%);
+      filter: opacity(100%);
     }
   }
 `;

@@ -30,6 +30,7 @@ export interface RootState {
   ironBank: IronBankState;
   labs: LabsState;
   settings: SettingsState;
+  user: UserState;
 }
 
 export interface AppState {
@@ -250,5 +251,15 @@ export interface LabsState {
       getUserLabsPositions: Status;
       userLabsActionsStatusMap: { [labAddress: string]: UserLabActionsStatusMap };
     };
+  };
+}
+
+export interface UserState {
+  nft: {
+    bluePillNftBalance: number;
+    woofyNftBalance: number;
+  };
+  statusMap: {
+    getNftBalance: Status;
   };
 }
