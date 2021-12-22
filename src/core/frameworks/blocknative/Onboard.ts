@@ -134,7 +134,7 @@ export class BlocknativeWalletImpl implements Wallet {
     }
   }
 
-  public async changeNetwork(network: Network) {
+  public async changeNetwork(network: Network): Promise<boolean> {
     const { NETWORK_SETTINGS } = getConfig();
     const networkSettings = NETWORK_SETTINGS[network];
     const networkId = networkSettings.networkId;
@@ -145,6 +145,7 @@ export class BlocknativeWalletImpl implements Wallet {
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: `0x${networkId.toString(16)}` }],
         });
+        return true;
       } catch (error: any) {
         if (error.code === 4902) {
           try {
@@ -160,6 +161,7 @@ export class BlocknativeWalletImpl implements Wallet {
                 },
               ],
             });
+            return true;
           } catch (addError) {
             console.error(addError);
           }
@@ -167,6 +169,8 @@ export class BlocknativeWalletImpl implements Wallet {
         console.error(error);
       }
     }
+
+    return false;
   }
 
   public async addToken(

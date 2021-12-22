@@ -104,13 +104,23 @@ const changeWalletTheme =
     }
   };
 
-const changeWalletNetwork =
-  (network: Network) => async (dispatch: AppDispatch, getState: () => RootState, container: DIContainer) => {
-    const { wallet } = container.context;
+export interface ChangeWalletNetworkResult {
+  networkChanged: boolean;
+}
+
+const changeWalletNetwork = createAsyncThunk<ChangeWalletNetworkResult, { network: Network }, ThunkAPI>(
+  'wallet/changeWalletNetwork',
+  async ({ network }, { extra }) => {
+    const { wallet } = extra.context;
+
+    let networkChanged = false;
     if (wallet.isCreated && wallet.changeNetwork) {
-      wallet.changeNetwork(network);
+      networkChanged = await wallet.changeNetwork(network);
     }
-  };
+
+    return { networkChanged };
+  }
+);
 
 export const WalletActions = {
   walletChange,
