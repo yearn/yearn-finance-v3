@@ -335,7 +335,7 @@ export const VaultDetailPanels = ({
         </VaultActions>
       </Row>
 
-      {chartData?.underlying && chartValue?.underlying && (
+      {chartData?.underlying && chartValue?.underlying && chartValue?.underlying !== '0' && (
         <VaultChart>
           <StyledCardHeaderContainer>
             <StyledCardHeader header={t('vaultdetails:performance-panel.header')} />
