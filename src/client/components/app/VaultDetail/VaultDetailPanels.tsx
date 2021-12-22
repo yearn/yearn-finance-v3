@@ -242,6 +242,15 @@ export const VaultDetailPanels = ({
     setSelectedTab(selectedTab);
   };
 
+  const chartDataVisible = chartData?.underlying && chartValue?.underlying && chartValue?.underlying !== '0';
+  const chartValueText = selectedUnderlyingData ? (
+    <>
+      {formatAmount(chartValue?.underlying ?? '0', 2)} {selectedVault?.token?.symbol}
+    </>
+  ) : (
+    <>{formatUsd(chartValue?.usd)}</>
+  );
+
   const handleAddToken = () => {
     const { address, symbol, decimals, icon } = selectedVault.token;
     context?.wallet.addToken(address, symbol, decimals, icon || '');
@@ -335,7 +344,7 @@ export const VaultDetailPanels = ({
         </VaultActions>
       </Row>
 
-      {chartData?.underlying && chartValue?.underlying && chartValue?.underlying !== '0' && (
+      {chartDataVisible && (
         <VaultChart>
           <StyledCardHeaderContainer>
             <StyledCardHeader header={t('vaultdetails:performance-panel.header')} />
@@ -349,15 +358,7 @@ export const VaultDetailPanels = ({
 
           <ChartValueContainer>
             <ChartValueLabel>{t('vaultdetails:performance-panel.earnings-over-time')}</ChartValueLabel>
-            <ChartValue>
-              {selectedUnderlyingData ? (
-                <>
-                  {formatAmount(chartValue?.underlying, 2)} {selectedVault?.token?.symbol}
-                </>
-              ) : (
-                <>{formatUsd(chartValue?.usd)}</>
-              )}
-            </ChartValue>
+            <ChartValue>{chartValueText}</ChartValue>
           </ChartValueContainer>
 
           <StyledLineChart

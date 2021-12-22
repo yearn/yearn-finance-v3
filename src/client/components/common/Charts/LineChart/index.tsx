@@ -55,6 +55,15 @@ const StyledLineChart = styled.div`
   position: relative;
 `;
 
+const SymbolText = ({ point, customSymbol }: { point: any; customSymbol?: string }) =>
+  customSymbol ? (
+    <>
+      {formatAmount(point.data.yFormatted.toString(), 2)} {customSymbol}
+    </>
+  ) : (
+    <>{formatUsd(point.data.yFormatted.toString())}</>
+  );
+
 export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customSymbol, className, ...props }) => {
   const { isTablet } = useWindowDimensions();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
@@ -119,13 +128,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
             <StyledTooltip align={isFirstHalf ? 'left' : 'right'}>
               <Text>{tooltipLabel || point.serieId}</Text>
               <Text>
-                {customSymbol ? (
-                  <>
-                    {formatAmount(point.data.yFormatted.toString(), 2)} {customSymbol}
-                  </>
-                ) : (
-                  formatUsd(point.data.yFormatted.toString())
-                )}
+                <SymbolText point={point} customSymbol={customSymbol} />
               </Text>
             </StyledTooltip>
           );
