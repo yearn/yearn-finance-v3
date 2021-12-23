@@ -5,6 +5,8 @@ import { getEthersProvider, ExternalProvider } from '@frameworks/ethers';
 import { Theme, RootState, DIContainer, Subscriptions, Network } from '@types';
 import { isValidAddress, getProviderType, getNetwork } from '@utils';
 
+import { NetworkActions } from '../network/network.actions';
+
 const walletChange = createAction<{ walletName: string }>('wallet/walletChange');
 const addressChange = createAction<{ address: string }>('wallet/addressChange');
 const networkChange = createAction<{ network: number }>('wallet/networkChange');
@@ -82,6 +84,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
               read: web3Provider.getInstanceOf(providerType),
               write: web3Provider.getInstanceOf('wallet'),
             });
+            dispatch(NetworkActions.changeNetwork({ network }));
           }
         },
       };
@@ -101,13 +104,23 @@ const changeWalletTheme =
     }
   };
 
-const changeWalletNetwork =
-  (network: Network) => async (dispatch: AppDispatch, getState: () => RootState, container: DIContainer) => {
-    const { wallet } = container.context;
+export interface ChangeWalletNetworkResult {
+  networkChanged: boolean;
+}
+
+const changeWalletNetwork = createAsyncThunk<ChangeWalletNetworkResult, { network: Network }, ThunkAPI>(
+  'wallet/changeWalletNetwork',
+  async ({ network }, { extra }) => {
+    const { wallet } = extra.context;
+
+    let networkChanged = false;
     if (wallet.isCreated && wallet.changeNetwork) {
-      wallet.changeNetwork(network);
+      networkChanged = await wallet.changeNetwork(network);
     }
-  };
+
+    return { networkChanged };
+  }
+);
 
 export const WalletActions = {
   walletChange,

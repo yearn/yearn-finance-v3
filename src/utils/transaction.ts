@@ -34,7 +34,7 @@ export const handleTransaction = async (
       });
     }
     return receipt;
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'TRANSACTION_REPLACED') {
       if (error.cancelled) {
         if (updateNotification) {

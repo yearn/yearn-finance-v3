@@ -9,6 +9,7 @@ import {
   TokensActions,
   SettingsSelectors,
   NetworkSelectors,
+  WalletSelectors,
 } from '@store';
 import {
   toBN,
@@ -17,6 +18,7 @@ import {
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
   validateSlippage,
+  validateNetwork,
   calculateSharesAmount,
 } from '@utils';
 import { getConfig } from '@config';
@@ -38,6 +40,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   let zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
@@ -131,6 +134,11 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     expectedSlippage: expectedTxOutcome?.slippage,
   });
 
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
   const selectedVaultOption = {
     address: selectedVault.address,
     symbol: selectedVault.displayName,
@@ -147,7 +155,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
 
-  const sourceError = allowanceError || inputError;
+  const sourceError = networkError || allowanceError || inputError;
   const targetStatus = {
     error:
       expectedTxOutcomeStatus.error ||

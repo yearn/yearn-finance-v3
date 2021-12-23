@@ -1,11 +1,20 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
-import { TokensSelectors, LabsSelectors, LabsActions, TokensActions, VaultsActions } from '@store';
+import {
+  TokensSelectors,
+  LabsSelectors,
+  LabsActions,
+  TokensActions,
+  VaultsActions,
+  NetworkSelectors,
+  WalletSelectors,
+} from '@store';
 import {
   toBN,
   normalizeAmount,
   USDC_DECIMALS,
+  validateNetwork,
   validateVaultDeposit,
   validateYvBoostEthActionsAllowance,
   getStakingContractAddress,
@@ -26,6 +35,8 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
   const [amount, setAmount] = useState('');
   const [txCompleted, setTxCompleted] = useState(false);
   const [debouncedAmount] = useDebounce(amount, 500);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const selectedSellToken = tokenSelectorFilter(selectedLab?.address ?? '');
@@ -87,7 +98,12 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
     targetUnderlyingTokenAmount: amount,
   });
 
-  const sourceError = allowanceError || inputError;
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
+  const sourceError = networkError || allowanceError || inputError;
   const targetError = actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
 
   const selectedLabOption = {

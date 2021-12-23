@@ -11,7 +11,7 @@ import {
   IronBankUserSummary,
   Position,
 } from '@types';
-import { handleTransaction, toBN, validateExitMarket } from '@utils';
+import { handleTransaction, toBN, getNetwork, validateExitMarket, validateNetwork } from '@utils';
 
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
 const clearIronBankData = createAction<void>('ironbank/clearIronBankData');
@@ -146,6 +146,12 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
       throw new Error('WALLET NOT CONNECTED');
     }
 
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
     const tokenDecimals = getState().tokens.tokensMap[underlyingTokenAddress].decimals;
     const ONE_UNIT = toBN('10').pow(tokenDecimals);
@@ -179,6 +185,13 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
     const tokenDecimals = getState().tokens.tokensMap[underlyingTokenAddress].decimals;
     const ONE_UNIT = toBN('10').pow(tokenDecimals);
@@ -211,6 +224,13 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
     const tokenDecimals = getState().tokens.tokensMap[underlyingTokenAddress].decimals;
     const ONE_UNIT = toBN('10').pow(tokenDecimals);
@@ -243,6 +263,13 @@ const withdrawAllMarket = createAsyncThunk<void, WithdrawAllMarketProps, ThunkAP
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
     // TODO Needed checks for amount
 
@@ -273,6 +300,13 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
     const tokenDecimals = getState().tokens.tokensMap[underlyingTokenAddress].decimals;
     const ONE_UNIT = toBN('10').pow(tokenDecimals);
@@ -305,6 +339,13 @@ const repayAllMarket = createAsyncThunk<void, RepayAllMarketProps, ThunkAPI>(
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
     // TODO validation
 
@@ -339,6 +380,12 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAP
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
 
     if (actionType === 'exitMarket') {
       const ironBankState = getState().ironBank;

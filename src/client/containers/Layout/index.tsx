@@ -10,6 +10,8 @@ import {
   WalletSelectors,
   NetworkSelectors,
   SettingsSelectors,
+  ModalsActions,
+  ModalSelectors,
   NetworkActions,
   UserActions,
 } from '@store';
@@ -74,6 +76,7 @@ export const Layout: FC = ({ children }) => {
   const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const addressEnsName = useAppSelector(WalletSelectors.selectAddressEnsName);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const previousAddress = usePrevious(selectedAddress);
   const previousNetwork = usePrevious(currentNetwork);
@@ -102,6 +105,7 @@ export const Layout: FC = ({ children }) => {
   }, [selectedAddress]);
 
   useEffect(() => {
+    if (activeModal) dispatch(ModalsActions.closeModal());
     if (previousNetwork) dispatch(AppActions.clearAppData());
     if (selectedAddress) dispatch(AppActions.clearUserAppData());
     dispatch(TokensActions.getTokens());
