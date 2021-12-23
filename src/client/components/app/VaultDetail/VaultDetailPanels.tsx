@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatApy, formatUsd, USDC_DECIMALS, humanize } from '@utils';
+import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
 
@@ -196,10 +196,27 @@ const VaultOverview = styled(Card)`
   }
 `;
 
+const StyledChartTab = styled.span<{ active?: boolean }>`
+  margin: 10px;
+  cursor: pointer;
+  color: ${(props) => (props.active ? props.theme.colors.secondary : props.theme.colors.primaryVariant)};
+  text-decoration: ${(props) => (props.active ? 'underline' : 'none')};
+  text-underline-offset: 4px;
+  &: {
+    color: ${(props) => props.theme.colors.secondary};
+  }
+`;
+
 export interface VaultDetailPanelsProps {
   selectedVault: GeneralVaultView;
-  chartData?: any;
-  chartValue?: string;
+  chartData?: {
+    usd?: any[];
+    underlying?: any[];
+  };
+  chartValue?: {
+    usd?: string;
+    underlying?: string;
+  };
   displayAddToken?: boolean;
   currentNetwork?: Network;
   blockExplorerUrl?: string;
@@ -218,11 +235,21 @@ export const VaultDetailPanels = ({
   const isVaultMigratable = selectedVault.migrationAvailable;
   const hideDeposit = selectedVault.hideIfNoDeposits || isVaultMigratable;
   const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : hideDeposit ? 'withdraw' : 'deposit');
+  const [selectedUnderlyingData, setSelectedUnderlyingData] = useState(true);
   const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
   const context = useContext(AppContext);
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
   };
+
+  const chartDataVisible = chartData?.underlying && chartValue?.underlying && chartValue?.underlying !== '0';
+  const chartValueText = selectedUnderlyingData ? (
+    <>
+      {formatAmount(chartValue?.underlying ?? '0', 2)} {selectedVault?.token?.symbol}
+    </>
+  ) : (
+    <>{formatUsd(chartValue?.usd)}</>
+  );
 
   const handleAddToken = () => {
     const { address, symbol, decimals, icon } = selectedVault.token;
@@ -317,18 +344,27 @@ export const VaultDetailPanels = ({
         </VaultActions>
       </Row>
 
-      {chartData && (
+      {chartDataVisible && (
         <VaultChart>
-          <StyledCardHeader header={t('vaultdetails:performance-panel.header')} />
+          <StyledCardHeaderContainer>
+            <StyledCardHeader header={t('vaultdetails:performance-panel.header')} />
+            <StyledChartTab active={selectedUnderlyingData === true} onClick={() => setSelectedUnderlyingData(true)}>
+              {selectedVault?.token?.symbol}
+            </StyledChartTab>
+            <StyledChartTab active={selectedUnderlyingData === false} onClick={() => setSelectedUnderlyingData(false)}>
+              USD
+            </StyledChartTab>
+          </StyledCardHeaderContainer>
 
           <ChartValueContainer>
             <ChartValueLabel>{t('vaultdetails:performance-panel.earnings-over-time')}</ChartValueLabel>
-            <ChartValue>{formatUsd(chartValue)}</ChartValue>
+            <ChartValue>{chartValueText}</ChartValue>
           </ChartValueContainer>
 
           <StyledLineChart
-            chartData={chartData}
+            chartData={selectedUnderlyingData ? chartData?.underlying ?? [] : chartData?.usd ?? []}
             tooltipLabel={t('vaultdetails:performance-panel.earnings-over-time')}
+            customSymbol={selectedUnderlyingData ? selectedVault?.token?.symbol : undefined}
           />
         </VaultChart>
       )}
