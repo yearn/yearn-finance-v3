@@ -86,7 +86,7 @@ export const VaultDetail = () => {
     return () => {
       dispatch(VaultsActions.clearSelectedVaultAndStatus());
     };
-  }, []);
+  }, [currentNetwork]);
 
   useEffect(() => {
     const loading = tokensStatus.loading;
