@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useAppTranslation } from '@hooks';
 import { Button, Text } from '@components/common';
 import { device } from '@themes/default';
+import Davatar from '@davatar/react';
 
 interface WalletAddressProps {
   address?: string;
@@ -34,6 +35,7 @@ export const ConnectWalletButton = ({ address, ensName, disabled, onClick }: Wal
 
   return (
     <StyledButton onClick={() => onClick && onClick()} disabled={disabled}>
+      {address && <Davatar size={18} address={address} style={{ marginRight: 6 }} generatedAvatarType="jazzicon" />}
       <Text ellipsis>{buttonMessage}</Text>
     </StyledButton>
   );
