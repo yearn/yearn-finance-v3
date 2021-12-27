@@ -18,6 +18,8 @@ import {
   calculateSharesAmount,
   normalizeAmount,
   toBN,
+  getNetwork,
+  validateNetwork,
   validateVaultAllowance,
   validateVaultDeposit,
   validateVaultWithdraw,
@@ -217,6 +219,13 @@ const depositVault = createAsyncThunk<
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const vaultData = vaults.vaultsMap[vaultAddress];
     const tokenData = tokens.tokensMap[tokenAddress];
     const userTokenData = tokens.user.userTokensMap[tokenAddress];
@@ -278,6 +287,13 @@ const withdrawVault = createAsyncThunk<
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
     }
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
     const vaultData = vaults.vaultsMap[vaultAddress];
     const tokenData = tokens.tokensMap[vaultData.tokenId];
     const vaultAllowancesMap = tokens.user.userTokensAllowancesMap[vaultAddress];
@@ -348,6 +364,12 @@ const migrateVault = createAsyncThunk<
     const userAddress = wallet.selectedAddress;
 
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
 
     const vaultData = vaults.vaultsMap[vaultFromAddress];
     const userDepositPositionData = vaults.user.userVaultsPositionsMap[vaultFromAddress].DEPOSIT;

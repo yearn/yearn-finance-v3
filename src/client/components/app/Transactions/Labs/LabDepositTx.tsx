@@ -11,6 +11,7 @@ import {
   VaultsSelectors,
   SettingsSelectors,
   NetworkSelectors,
+  WalletSelectors,
 } from '@store';
 import {
   toBN,
@@ -22,6 +23,7 @@ import {
   getZapInContractAddress,
   validateYvBoostEthActionsAllowance,
   validateSlippage,
+  validateNetwork,
   formatPercent,
 } from '@utils';
 import { getConfig } from '@config';
@@ -43,6 +45,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
@@ -158,7 +161,12 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     expectedSlippage: expectedTxOutcome?.slippage,
   });
 
-  const sourceError = allowanceError || inputError;
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
+  const sourceError = networkError || allowanceError || inputError;
 
   const targetStatus = {
     error:
@@ -181,7 +189,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(debouncedAmount).gt(0)
-    ? normalizeAmount(expectedTxOutcome?.targetUnderlyingTokenAmount, selectedLab?.token.decimals)
+    ? normalizeAmount(expectedTxOutcome?.targetTokenAmount, toBN(selectedLab?.decimals).toNumber())
     : '';
   const expectedAmountValue = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)

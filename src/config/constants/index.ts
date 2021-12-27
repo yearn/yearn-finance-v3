@@ -19,6 +19,8 @@ const ADDRESSES = {
   PSLPYVBOOSTETH: '0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378',
   PSLPYVBOOSTETH_GAUGE: '0xDA481b277dCe305B97F4091bD66595d57CF31634',
   YFI: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
+  BLUEPILLNFT: '0x35f5A420ef9BCc748329021FBD4ed0986AbdF201',
+  WOOFYNFT: '0x0966a53f2533EaF01D0bB2fa0E2274f3002287F1',
 };
 
 const NETWORK_SETTINGS: NetworkSettings = {
@@ -26,25 +28,37 @@ const NETWORK_SETTINGS: NetworkSettings = {
     id: 'mainnet',
     name: 'Ethereum',
     networkId: 1,
+    rpcUrl: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
     simulationsEnabled: true,
     zapsEnabled: true,
     labsEnabled: true,
     ironBankEnabled: true,
     earningsEnabled: true,
     notifyEnabled: true,
-    blockExplorerUrl: 'https://etherscan.io/address/',
+    blockExplorerUrl: 'https://etherscan.io',
   },
   fantom: {
     id: 'fantom',
     name: 'Fantom',
     networkId: 250,
+    rpcUrl: 'https://rpc.ftm.tools',
+    nativeCurrency: {
+      name: 'Fantom',
+      symbol: 'FTM',
+      decimals: 18,
+    },
     simulationsEnabled: false,
     zapsEnabled: false,
     labsEnabled: false,
     ironBankEnabled: true,
     earningsEnabled: false,
     notifyEnabled: false,
-    blockExplorerUrl: 'https://ftmscan.com/address/',
+    blockExplorerUrl: 'https://ftmscan.com',
   },
 };
 

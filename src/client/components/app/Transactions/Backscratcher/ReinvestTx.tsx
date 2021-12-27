@@ -1,8 +1,23 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useAppTranslation } from '@hooks';
-import { VaultsSelectors, LabsSelectors, LabsActions, VaultsActions, TokensActions } from '@store';
-import { formatPercent, normalizeAmount, toBN, USDC_DECIMALS, validateYveCrvActionsAllowance } from '@utils';
+import {
+  VaultsSelectors,
+  LabsSelectors,
+  LabsActions,
+  VaultsActions,
+  TokensActions,
+  NetworkSelectors,
+  WalletSelectors,
+} from '@store';
+import {
+  formatPercent,
+  normalizeAmount,
+  toBN,
+  USDC_DECIMALS,
+  validateYveCrvActionsAllowance,
+  validateNetwork,
+} from '@utils';
 import { getConfig } from '@config';
 
 import { Transaction } from '../Transaction';
@@ -19,6 +34,8 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [txCompleted, setTxCompleted] = useState(false);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const selectedLab = useAppSelector(LabsSelectors.selectYveCrvLab);
   const vaultSelectorFilter = useAppSelector(VaultsSelectors.selectVault);
   const selectedTargetVault = vaultSelectorFilter(YVTHREECRV);
@@ -84,7 +101,12 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
     sellTokenAllowancesMap: selectedTargetToken.allowancesMap,
   });
 
-  const sourceError = allowanceError;
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
+  const sourceError = networkError || allowanceError;
   const targetError = actionsStatus.approveReinvest.error || actionsStatus.reinvest.error;
 
   const onTransactionCompletedDismissed = () => {

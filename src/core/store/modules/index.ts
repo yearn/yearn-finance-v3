@@ -49,6 +49,10 @@ import settingsReducer, { settingsInitialState } from './settings/settings.reduc
 import { SettingsActions } from './settings/settings.actions';
 import { SettingsSelectors } from './settings/settings.selectors';
 
+import userReducer, { userInitialState } from './user/user.reducer';
+import { UserActions } from './user/user.actions';
+import { UserSelectors } from './user/user.selectors';
+
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
   alerts: alertsReducer,
@@ -62,6 +66,7 @@ const rootReducer: Reducer<RootState> = combineReducers({
   ironBank: ironBankReducer,
   labs: labsReducer,
   settings: settingsReducer,
+  user: userReducer,
 });
 
 export default rootReducer;
@@ -80,6 +85,7 @@ export {
   IronBankActions,
   LabsActions,
   SettingsActions,
+  UserActions,
 };
 
 // Selectors
@@ -95,6 +101,7 @@ export {
   TokensSelectors,
   SettingsSelectors,
   LabsSelectors,
+  UserSelectors,
 };
 
 // initialState
@@ -111,4 +118,5 @@ export {
   ironBankInitialState,
   labsInitialState,
   settingsInitialState,
+  userInitialState,
 };

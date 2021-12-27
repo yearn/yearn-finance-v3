@@ -52,7 +52,6 @@ export class BlocknativeWalletImpl implements Wallet {
     const appName = 'Yearn Finance';
 
     const wallets = [
-      { walletName: 'detectedwallet' },
       { walletName: 'metamask' },
       {
         walletName: 'walletConnect',
@@ -70,7 +69,9 @@ export class BlocknativeWalletImpl implements Wallet {
         walletName: 'ledger',
         rpcUrl,
       },
+      { walletName: 'frame' },
       { walletName: 'coinbase' },
+      { walletName: 'tally' },
       { walletName: 'status' },
       {
         walletName: 'lattice',
@@ -97,18 +98,10 @@ export class BlocknativeWalletImpl implements Wallet {
         appName,
       },
       { walletName: 'liquality' },
-      {
-        walletName: 'mewwallet',
-        rpcUrl,
-      },
+      { walletName: 'detectedwallet' },
     ];
 
-    const walletCheck = [
-      { checkName: 'derivationPath' },
-      { checkName: 'connect' },
-      { checkName: 'accounts' },
-      { checkName: 'network' },
-    ];
+    const walletCheck = [{ checkName: 'derivationPath' }, { checkName: 'connect' }, { checkName: 'accounts' }];
 
     this.onboard = Onboard({
       networkId,
@@ -141,11 +134,43 @@ export class BlocknativeWalletImpl implements Wallet {
     }
   }
 
-  public async changeNetwork(network: Network) {
-    const networkId = getNetworkId(network);
+  public async changeNetwork(network: Network): Promise<boolean> {
+    const { NETWORK_SETTINGS } = getConfig();
+    const networkSettings = NETWORK_SETTINGS[network];
+    const networkId = networkSettings.networkId;
     if (this.onboard) {
       this.onboard.config({ networkId });
+      try {
+        await this.getState()?.wallet.provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: `0x${networkId.toString(16)}` }],
+        });
+        return true;
+      } catch (error: any) {
+        if (error.code === 4902) {
+          try {
+            await this.getState()?.wallet.provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {
+                  chainId: `0x${networkId.toString(16)}`,
+                  chainName: networkSettings.name,
+                  nativeCurrency: networkSettings.nativeCurrency,
+                  rpcUrls: [networkSettings.rpcUrl],
+                  blockExplorerUrls: [networkSettings.blockExplorerUrl],
+                },
+              ],
+            });
+            return true;
+          } catch (addError) {
+            console.error(addError);
+          }
+        }
+        console.error(error);
+      }
     }
+
+    return false;
   }
 
   public async addToken(

@@ -80,9 +80,10 @@ const appReducer = createReducer(appInitialState, (builder) => {
     })
 
     /* ------------------------------- getAppData ------------------------------- */
-    .addCase(getAppData.pending, (state) => {
+    .addCase(getAppData.pending, (state, { meta }) => {
       state.statusMap.getAppData = {
         loading: true,
+        callArgs: meta.arg,
       };
     })
     .addCase(getAppData.fulfilled, (state) => {
@@ -96,9 +97,10 @@ const appReducer = createReducer(appInitialState, (builder) => {
     })
 
     /* ----------------------------- getUserAppData ----------------------------- */
-    .addCase(getUserAppData.pending, (state) => {
+    .addCase(getUserAppData.pending, (state, { meta }) => {
       state.statusMap.user.getUserAppData = {
         loading: true,
+        callArgs: meta.arg,
       };
     })
     .addCase(getUserAppData.fulfilled, (state) => {

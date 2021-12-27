@@ -4,13 +4,14 @@ import { Serie, ResponsiveLine } from '@nivo/line';
 
 import { useAppSelector, useWindowDimensions } from '@hooks';
 import { getTheme } from '@themes';
-import { formatUsd } from '@utils';
+import { formatAmount, formatUsd } from '@utils';
 import { Text } from '@components/common';
 
 export interface LineChartProps {
   className?: string;
   chartData: Serie[];
   tooltipLabel?: string;
+  customSymbol?: string;
 }
 
 const StyledTooltip = styled.div<{ align: 'left' | 'right' }>`
@@ -54,7 +55,16 @@ const StyledLineChart = styled.div`
   position: relative;
 `;
 
-export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, className, ...props }) => {
+const SymbolText = ({ point, customSymbol }: { point: any; customSymbol?: string }) =>
+  customSymbol ? (
+    <>
+      {formatAmount(point.data.yFormatted.toString(), 2)} {customSymbol}
+    </>
+  ) : (
+    <>{formatUsd(point.data.yFormatted.toString())}</>
+  );
+
+export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customSymbol, className, ...props }) => {
   const { isTablet } = useWindowDimensions();
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const theme = getTheme(currentTheme);
@@ -78,7 +88,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, classNa
       <ResponsiveLine
         data={chartData}
         theme={lineTheme}
-        curve="monotoneX"
+        curve="linear"
         colors={theme.colors.secondary}
         margin={{ top: 20, right: 10, bottom: 36, left: 15 }}
         // xScale={{ type: 'point' }}
@@ -117,7 +127,9 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, classNa
           return (
             <StyledTooltip align={isFirstHalf ? 'left' : 'right'}>
               <Text>{tooltipLabel || point.serieId}</Text>
-              <Text>{formatUsd(point.data.yFormatted.toString())}</Text>
+              <Text>
+                <SymbolText point={point} customSymbol={customSymbol} />
+              </Text>
             </StyledTooltip>
           );
         }}
