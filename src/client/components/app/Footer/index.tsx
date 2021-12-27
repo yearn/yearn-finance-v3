@@ -67,7 +67,7 @@ const socialLinks = [
     icon: TelegramIcon,
   },
   {
-    link: 'https://reddit.com/yearn_finance',
+    link: 'https://reddit.com/r/yearn_finance',
     icon: RedditIcon,
   },
 ];
