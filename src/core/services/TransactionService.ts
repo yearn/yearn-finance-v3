@@ -1,10 +1,22 @@
-import { TransactionService, ExecuteTransactionProps, TransactionResponse, GasService, GasFees } from '@types';
+import {
+  TransactionService,
+  ExecuteTransactionProps,
+  ValidateSuportedAssetsProsps,
+  TransactionResponse,
+  GasService,
+  GasFees,
+  YearnSdk,
+} from '@types';
+import { difference } from 'lodash';
+import supportedAssets from '../../utils/supported-assets.json';
 
 export class TransactionServiceImpl implements TransactionService {
+  private yearnSdk: YearnSdk;
   private gasService: GasService;
 
-  constructor({ gasService }: { gasService: GasService }) {
+  constructor({ gasService, yearnSdk }: { gasService: GasService; yearnSdk: YearnSdk }) {
     this.gasService = gasService;
+    this.yearnSdk = yearnSdk;
   }
 
   public async execute(props: ExecuteTransactionProps): Promise<TransactionResponse> {
@@ -43,6 +55,28 @@ export class TransactionServiceImpl implements TransactionService {
       }
 
       throw error;
+    }
+  }
+
+  public async validateSupportedAssets(props: ValidateSuportedAssetsProsps): Promise<void> {
+    const { assetsToValidate, network } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    // const supportedAssets = await yearn.assets.getSupportedAssets(network);
+    let diff: string[] = [];
+    if (network === 'mainnet') {
+      diff = difference(
+        assetsToValidate.map((address) => address.toLowerCase()),
+        supportedAssets['mainnet']
+      );
+    } else if (network === 'fantom') {
+      diff = difference(
+        assetsToValidate.map((address) => address.toLowerCase()),
+        supportedAssets['fantom']
+      );
+    }
+    if (diff.length) {
+      // TODO dispatch an alert or notification to yearn team.
+      throw new Error('INVALID ASSETS: ' + diff.join(', '));
     }
   }
 }

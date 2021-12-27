@@ -255,6 +255,11 @@ const depositVault = createAsyncThunk<
     const error = depositError || allowanceError;
     if (error) throw new Error(error);
 
+    await services.transactionService.validateSupportedAssets({
+      assetsToValidate: [vaultAddress],
+      network: network.current,
+    });
+
     const amountInWei = amount.multipliedBy(ONE_UNIT);
     const { vaultService } = services;
     const tx = await vaultService.deposit({
