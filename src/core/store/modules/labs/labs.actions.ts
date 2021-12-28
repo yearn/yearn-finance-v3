@@ -147,10 +147,17 @@ interface WithdrawProps {
 const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
   'labs/approveDeposit',
   async ({ labAddress, tokenAddress }, { dispatch, getState, extra }) => {
-    const { labs } = getState();
+    const { transactionService } = extra.services;
+    const { labs, network } = getState();
     const labData = labs.labsMap[labAddress];
     const isZapin = tokenAddress !== labData.token || labAddress === PSLPYVBOOSTETH;
     const spenderAddress = isZapin ? getZapInContractAddress(labAddress) : labAddress;
+
+    await transactionService.validateSupportedAssets({
+      assetsToValidate: [labAddress, spenderAddress],
+      network: network.current,
+    });
+
     const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
     unwrapResult(result);
   }
@@ -163,7 +170,7 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     { dispatch, getState, extra }
   ) => {
     const { services } = extra;
-    const { labService } = services;
+    const { labService, transactionService } = services;
     const { wallet, labs, tokens, network } = getState();
 
     const userAddress = wallet.selectedAddress;
@@ -205,6 +212,11 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const error = allowanceError || depositError;
     if (error) throw new Error(error);
 
+    await transactionService.validateSupportedAssets({
+      assetsToValidate: [labAddress],
+      network: network.current,
+    });
+
     const tx = await labService.deposit({
       network: network.current,
       accountAddress: userAddress,
@@ -226,6 +238,7 @@ const approveWithdraw = createAsyncThunk<void, ApproveWithdrawProps, ThunkAPI>(
   async ({ labAddress }, { dispatch }) => {
     try {
       const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
+      // NOTE supported assets validation is on TokensActions.approve.
       const result = await dispatch(
         TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
@@ -240,7 +253,7 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
   'labs/withdraw',
   async ({ labAddress, amount, tokenAddress, slippageTolerance }, { dispatch, extra, getState }) => {
     const { services } = extra;
-    const { labService } = services;
+    const { labService, transactionService } = services;
     const { wallet, labs, tokens, network } = getState();
 
     const userAddress = wallet.selectedAddress;
@@ -281,6 +294,11 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
     const error = withdrawError || allowanceError;
     if (error) throw new Error(error);
 
+    await transactionService.validateSupportedAssets({
+      assetsToValidate: [labAddress],
+      network: network.current,
+    });
+
     const tx = await labService.withdraw({
       network: network.current,
       accountAddress: userAddress,
@@ -306,6 +324,7 @@ const yvBoostApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkA
       const labData = getState().labs.labsMap[labAddress];
       const isZapin = labData.tokenId !== tokenAddress;
       const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : labAddress;
+      // NOTE supported assets validation is on TokensActions.approve.
       const result = await dispatch(TokensActions.approve({ tokenAddress: tokenAddress, spenderAddress }));
       unwrapResult(result);
     } catch (error: any) {
@@ -317,7 +336,8 @@ const yvBoostApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkA
 const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoost/yvBoostDeposit',
   async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, getState, extra }) => {
-    const { wallet } = getState();
+    const { wallet, network } = getState();
+    const { transactionService } = extra.services;
     const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
@@ -348,6 +368,11 @@ const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const error = allowanceError || depositError;
     if (error) throw new Error(error);
 
+    await transactionService.validateSupportedAssets({
+      assetsToValidate: [labAddress],
+      network: network.current,
+    });
+
     // const amountInWei = amount.multipliedBy(ONE_UNIT);
     // const { labService } = services;
     // const tx = await labService.yvBoostDeposit({
@@ -368,6 +393,7 @@ const yvBoostApproveZapOut = createAsyncThunk<void, { labAddress: string }, Thun
   async ({ labAddress }, { dispatch }) => {
     try {
       const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
+      // NOTE supported assets validation is on TokensActions.approve.
       const result = await dispatch(
         TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
@@ -383,7 +409,8 @@ const yvBoostWithdraw = createAsyncThunk<
   { labAddress: string; amount: BigNumber; targetTokenAddress: string },
   ThunkAPI
 >('labs/yvBoost/yvBoostWithdraw', async ({ labAddress, amount, targetTokenAddress }, { dispatch, extra, getState }) => {
-  const { wallet } = getState();
+  const { transactionService } = extra.services;
+  const { wallet, network } = getState();
   const userAddress = wallet.selectedAddress;
   if (!userAddress) {
     throw new Error('WALLET NOT CONNECTED');
@@ -417,6 +444,11 @@ const yvBoostWithdraw = createAsyncThunk<
   const error = withdrawError || allowanceError;
   if (error) throw new Error(error);
 
+  await transactionService.validateSupportedAssets({
+    assetsToValidate: [labAddress],
+    network: network.current,
+  });
+
   // const { labService } = services;
   // const tx = await labService.withdraw({
   //   accountAddress: userAddress,
@@ -437,6 +469,7 @@ const yveCrvApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAP
   'labs/yveCrv/yveCrvApproveDeposit',
   async ({ labAddress, tokenAddress }, { dispatch }) => {
     try {
+      // NOTE supported assets validation is on TokensActions.approve.
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: labAddress }));
       unwrapResult(result);
     } catch (error: any) {
@@ -467,8 +500,13 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const amountInWei = amount.multipliedBy(ONE_UNIT);
 
     // TODO: validations
+    const { labService, transactionService } = services;
 
-    const { labService } = services;
+    await transactionService.validateSupportedAssets({
+      assetsToValidate: [labAddress],
+      network: network.current,
+    });
+
     const tx = await labService.lock({
       network: network.current,
       accountAddress: userAddress,
@@ -500,6 +538,7 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
 
     // TODO validations.
 
+    // NOTE supported assets validation is on labService.claim().
     const { labService } = services;
     const tx = await labService.claim({
       network: network.current,

@@ -456,6 +456,7 @@ export class LabServiceImpl implements LabService {
 
     const provider = this.web3Provider.getSigner();
     const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
+    await this.transactionService.validateSupportedAssets({ assetsToValidate: [YVECRV], network });
     return await this.transactionService.execute({ network, fn: backscratcherContract.claim });
   }
 
