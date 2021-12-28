@@ -169,11 +169,19 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 
 const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveDeposit',
-  async ({ vaultAddress, tokenAddress }, { dispatch, getState }) => {
+  async ({ vaultAddress, tokenAddress }, { dispatch, getState, extra }) => {
     try {
-      const vaultData = getState().vaults.vaultsMap[vaultAddress];
+      const { services } = extra;
+      const { network, vaults } = getState();
+      const vaultData = vaults.vaultsMap[vaultAddress];
       const isZapin = vaultData.tokenId !== tokenAddress;
       const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress;
+
+      await services.transactionService.validateSupportedAssets({
+        assetsToValidate: [vaultAddress, spenderAddress],
+        network: network.current,
+      });
+
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
       unwrapResult(result);
     } catch (error: any) {
@@ -184,9 +192,17 @@ const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddre
 
 const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
   'vaults/approveZapOut',
-  async ({ vaultAddress }, { dispatch }) => {
+  async ({ vaultAddress }, { dispatch, getState, extra }) => {
     try {
       const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
+      const { services } = extra;
+      const { network } = getState();
+
+      await services.transactionService.validateSupportedAssets({
+        assetsToValidate: [vaultAddress, ZAP_OUT_CONTRACT_ADDRESS],
+        network: network.current,
+      });
+
       const result = await dispatch(
         TokensActions.approve({ tokenAddress: vaultAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
@@ -328,6 +344,11 @@ const withdrawVault = createAsyncThunk<
     const error = withdrawError || allowanceError;
     if (error) throw new Error(error);
 
+    await services.transactionService.validateSupportedAssets({
+      assetsToValidate: [vaultAddress],
+      network: network.current,
+    });
+
     const { vaultService } = services;
     const tx = await vaultService.withdraw({
       network: network.current,
@@ -350,8 +371,14 @@ const approveMigrate = createAsyncThunk<
   void,
   { vaultFromAddress: string; migrationContractAddress?: string },
   ThunkAPI
->('vaults/approveMigrate', async ({ vaultFromAddress, migrationContractAddress }, { dispatch }) => {
+>('vaults/approveMigrate', async ({ vaultFromAddress, migrationContractAddress }, { dispatch, extra, getState }) => {
   const spenderAddress = migrationContractAddress ?? getConfig().CONTRACT_ADDRESSES.trustedVaultMigrator;
+  const { services } = extra;
+  const { network } = getState();
+  await services.transactionService.validateSupportedAssets({
+    assetsToValidate: [vaultFromAddress, spenderAddress],
+    network: network.current,
+  });
   const result = await dispatch(TokensActions.approve({ tokenAddress: vaultFromAddress, spenderAddress }));
   unwrapResult(result);
 });
@@ -379,6 +406,7 @@ const migrateVault = createAsyncThunk<
     const vaultData = vaults.vaultsMap[vaultFromAddress];
     const userDepositPositionData = vaults.user.userVaultsPositionsMap[vaultFromAddress].DEPOSIT;
     const tokenAllowancesMap = tokens.user.userTokensAllowancesMap[vaultFromAddress] ?? {};
+    const migrationContractAddressToUse = migrationContractAddress ?? trustedVaultMigrator;
 
     // TODO: ADD VALIDATION FOR VALID MIGRATABLE VAULTS AND WITH BALANCE
 
@@ -387,11 +415,16 @@ const migrateVault = createAsyncThunk<
       vaultAddress: vaultFromAddress,
       vaultDecimals: vaultData.decimals,
       vaultAllowancesMap: tokenAllowancesMap,
-      migrationContractAddress: migrationContractAddress ?? trustedVaultMigrator,
+      migrationContractAddress: migrationContractAddressToUse,
     });
 
     const error = allowanceError;
     if (error) throw new Error(error);
+
+    await services.transactionService.validateSupportedAssets({
+      assetsToValidate: [vaultFromAddress, vaultToAddress, migrationContractAddressToUse],
+      network: network.current,
+    });
 
     const { vaultService } = services;
     const tx = await vaultService.migrate({
@@ -399,7 +432,7 @@ const migrateVault = createAsyncThunk<
       accountAddress: userAddress,
       vaultFromAddress,
       vaultToAddress,
-      migrationContractAddress: migrationContractAddress ?? trustedVaultMigrator,
+      migrationContractAddress: migrationContractAddressToUse,
     });
 
     await handleTransaction(tx, network.current);

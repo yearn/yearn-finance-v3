@@ -66,12 +66,12 @@ export class TransactionServiceImpl implements TransactionService {
     if (network === 'mainnet') {
       diff = difference(
         assetsToValidate.map((address) => address.toLowerCase()),
-        supportedAssets['mainnet']
+        supportedAssets['mainnet'].map((address) => address.toLowerCase())
       );
     } else if (network === 'fantom') {
       diff = difference(
         assetsToValidate.map((address) => address.toLowerCase()),
-        supportedAssets['fantom']
+        supportedAssets['fantom'].map((address) => address.toLowerCase())
       );
     }
     if (diff.length) {
