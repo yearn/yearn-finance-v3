@@ -276,9 +276,12 @@ export interface TransactionService {
 
 export interface ExecuteTransactionProps {
   network: Network;
-  fn: ContractFunction;
   args?: Array<any>;
   overrides?: Overrides;
+  methodName: string;
+  abi: any;
+  contractAddress: Address;
+  paramsToValidate?: Array<string>;
 }
 
 type ContractFunction = (...args: Array<any>) => Promise<TransactionResponse>;

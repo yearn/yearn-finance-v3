@@ -1,3 +1,5 @@
+import { Web3Provider } from '@ethersproject/providers';
+import { Interface } from '@ethersproject/abi';
 import {
   TransactionService,
   ExecuteTransactionProps,
@@ -9,18 +11,29 @@ import {
 } from '@types';
 import { difference } from 'lodash';
 import supportedAssets from '../../utils/supported-assets.json';
+import { getContract } from '../frameworks/ethers';
 
 export class TransactionServiceImpl implements TransactionService {
   private yearnSdk: YearnSdk;
   private gasService: GasService;
+  private web3Provider: Web3Provider;
 
-  constructor({ gasService, yearnSdk }: { gasService: GasService; yearnSdk: YearnSdk }) {
+  constructor({
+    gasService,
+    yearnSdk,
+    web3Provider,
+  }: {
+    gasService: GasService;
+    yearnSdk: YearnSdk;
+    web3Provider: Web3Provider;
+  }) {
     this.gasService = gasService;
     this.yearnSdk = yearnSdk;
+    this.web3Provider = web3Provider;
   }
 
   public async execute(props: ExecuteTransactionProps): Promise<TransactionResponse> {
-    const { network, fn, args, overrides } = props;
+    const { network, methodName, abi, contractAddress, args, overrides, paramsToValidate } = props;
 
     let gasFees: GasFees = {};
     try {
@@ -39,7 +52,21 @@ export class TransactionServiceImpl implements TransactionService {
         ...overrides,
       };
       const txArgs = args ? [...args, txOverrides] : [txOverrides];
-      const tx = await fn(...txArgs);
+
+      const signer = this.web3Provider.getSigner();
+      const contract = getContract(contractAddress, abi, signer);
+
+      const unsignedTx = await contract.populateTransaction[methodName](...txArgs);
+
+      // if (unsigedTx.data) {
+      //   const contractIface = new Interface(erc20Abi);
+      //   const decodedData = contractIface.decodeFunctionData('approve', unsigedTx.data.toString());
+      //   console.log({ decodedData });
+      //   console.log({ decodedData });
+      //   console.log({ decodedData });
+      // }
+
+      const tx = await signer.sendTransaction(unsignedTx);
       return tx;
     } catch (error: any) {
       // Retry as a legacy tx, for specific error in metamask v10 + ledger transactions
@@ -50,7 +77,11 @@ export class TransactionServiceImpl implements TransactionService {
           ...overrides,
         };
         const txArgs = args ? [...args, txOverrides] : [txOverrides];
-        const tx = await fn(...txArgs);
+        const signer = this.web3Provider.getSigner();
+        const contract = getContract(contractAddress, abi, signer);
+
+        const unsignedTx = await contract.populateTransaction[methodName](...txArgs);
+        const tx = await signer.sendTransaction(unsignedTx);
         return tx;
       }
 
