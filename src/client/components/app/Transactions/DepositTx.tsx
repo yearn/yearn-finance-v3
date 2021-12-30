@@ -128,6 +128,7 @@ export const DepositTx: FC<DepositTxProps> = ({
           targetTokenAddress: selectedVault.address,
         })
       );
+      dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedSellTokenAddress] }));
     }
   }, [debouncedAmount]);
 
