@@ -73,7 +73,7 @@ export class TokenServiceImpl implements TokenService {
 
   public async getTokensDynamicData({ network, addresses }: GetTokensDynamicDataProps): Promise<TokenDynamicData[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
-    const pricesUsdcMap: any = yearn.tokens.priceUsdc(addresses);
+    const pricesUsdcMap: any = await yearn.tokens.priceUsdc(addresses);
     return addresses.map((address: string) => ({ address, priceUsdc: pricesUsdcMap[address] }));
   }
 
