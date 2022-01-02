@@ -1,0 +1,23 @@
+[
+    {
+        "id": 0, 
+        "type": "info",
+        "active": true,
+        "message": "Welcome to <b> Yearn Finance 0 <b>" 
+    },
+
+    {
+        "id": 1, 
+        "type": "info", 
+        "active": false, 
+        "message": "Welcome to <b> Yearn Finance 1 <b>"
+    },
+
+    {
+        "id": 2, 
+        "type": "info", 
+        "active": true, 
+        "message": "Welcome to <b> Yearn Finance 2 <b>"
+    }
+
+]

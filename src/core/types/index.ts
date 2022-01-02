@@ -16,3 +16,4 @@ export * from './Vault';
 export * from './Wallet';
 export * from './Web3Provider';
 export * from './Yearn-Sdk';
+export * from './Notifications';

@@ -10,6 +10,7 @@ import { TokensActions } from '../tokens/tokens.actions';
 import { VaultsActions } from '../vaults/vaults.actions';
 import { LabsActions } from '../labs/labs.actions';
 import { IronBankActions } from '../ironBank/ironBank.actions';
+import { NotificationsActions } from '../notifications/notifications.actions';
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
@@ -44,6 +45,9 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   } else if (wallet.name) {
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
+
+  dispatch(NotificationsActions.getNotificationMessages());
+
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
 });

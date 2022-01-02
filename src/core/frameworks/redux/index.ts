@@ -3,7 +3,12 @@ import { createLogger } from 'redux-logger';
 import { save, load, clear } from 'redux-localstorage-simple';
 import { merge, cloneDeep, get } from 'lodash';
 
-import rootReducer, { themeInitialState, walletInitialState, settingsInitialState } from '@store/modules';
+import rootReducer, {
+  themeInitialState,
+  walletInitialState,
+  settingsInitialState,
+  notificationsInitialState,
+} from '@store/modules';
 import { enableDevTools } from '@utils';
 import { DIContainer } from '@types';
 
@@ -12,10 +17,11 @@ export const getStore = (extraArgument?: any) => {
     theme: cloneDeep(themeInitialState),
     wallet: cloneDeep(walletInitialState),
     settings: cloneDeep(settingsInitialState),
+    notifications: cloneDeep(notificationsInitialState),
   };
   const persistConfig = {
     namespace: 'yearn',
-    states: ['theme', 'wallet.name', 'settings', 'network'],
+    states: ['theme', 'wallet.name', 'settings', 'network', 'notifications.dismissedMessages'],
   };
   const logger = createLogger({ collapsed: true });
   const middlewareOptions = {

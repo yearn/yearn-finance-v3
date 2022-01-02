@@ -53,6 +53,10 @@ import userReducer, { userInitialState } from './user/user.reducer';
 import { UserActions } from './user/user.actions';
 import { UserSelectors } from './user/user.selectors';
 
+import notificationsReducer, { notificationsInitialState } from './notifications/notifications.reducer';
+import { NotificationsActions } from './notifications/notifications.actions';
+import { NotificationsSelectors } from './notifications/notifications.selectors';
+
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
   alerts: alertsReducer,
@@ -67,6 +71,7 @@ const rootReducer: Reducer<RootState> = combineReducers({
   labs: labsReducer,
   settings: settingsReducer,
   user: userReducer,
+  notifications: notificationsReducer,
 });
 
 export default rootReducer;
@@ -86,6 +91,7 @@ export {
   LabsActions,
   SettingsActions,
   UserActions,
+  NotificationsActions,
 };
 
 // Selectors
@@ -102,6 +108,7 @@ export {
   SettingsSelectors,
   LabsSelectors,
   UserSelectors,
+  NotificationsSelectors,
 };
 
 // initialState
@@ -119,4 +126,5 @@ export {
   labsInitialState,
   settingsInitialState,
   userInitialState,
+  notificationsInitialState,
 };
