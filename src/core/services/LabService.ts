@@ -458,7 +458,6 @@ export class LabServiceImpl implements LabService {
     const { CONTRACT_ADDRESSES } = this.config;
     const { YVECRV } = CONTRACT_ADDRESSES;
 
-    await this.transactionService.validateSupportedAssets({ assetsToValidate: [YVECRV], network });
     return await this.transactionService.execute({
       network,
       methodName: 'claim',

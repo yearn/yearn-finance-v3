@@ -91,8 +91,6 @@ export class IronBankServiceImpl implements IronBankService {
     amount,
     action,
   }: IronBankTransactionProps): Promise<TransactionResponse> {
-    await this.transactionService.validateSupportedAssets({ assetsToValidate: [marketAddress], network });
-
     const { MAX_UINT256 } = this.config;
     const provider = this.web3Provider.getSigner();
     const ironBankMarketContract = getContract(marketAddress, ironBankMarketAbi, provider);

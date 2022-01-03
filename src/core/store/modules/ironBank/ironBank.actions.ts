@@ -129,13 +129,7 @@ const getUserMarketsMetadata = createAsyncThunk<
 
 const approveMarket = createAsyncThunk<void, { marketAddress: string; tokenAddress: string }, ThunkAPI>(
   'ironBank/approve',
-  async ({ marketAddress, tokenAddress }, { extra, getState, dispatch }) => {
-    const { services } = extra;
-    const { network } = getState();
-    await services.transactionService.validateSupportedAssets({
-      assetsToValidate: [marketAddress],
-      network: network.current,
-    });
+  async ({ marketAddress, tokenAddress }, { dispatch }) => {
     const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: marketAddress }));
     unwrapResult(result);
   }
@@ -387,7 +381,7 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAP
   'ironBank/enterOrExitMarket',
   async ({ marketAddress, actionType }, { extra, getState, dispatch }) => {
     const { network, wallet } = getState();
-    const { ironBankService, transactionService } = extra.services;
+    const { ironBankService } = extra.services;
     const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
@@ -398,11 +392,6 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAP
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
     if (networkError) throw networkError;
-
-    await transactionService.validateSupportedAssets({
-      assetsToValidate: [marketAddress],
-      network: network.current,
-    });
 
     if (actionType === 'exitMarket') {
       const ironBankState = getState().ironBank;

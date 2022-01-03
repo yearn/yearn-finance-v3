@@ -146,17 +146,11 @@ interface WithdrawProps {
 
 const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
   'labs/approveDeposit',
-  async ({ labAddress, tokenAddress }, { dispatch, getState, extra }) => {
-    const { transactionService } = extra.services;
-    const { labs, network } = getState();
+  async ({ labAddress, tokenAddress }, { dispatch, getState }) => {
+    const { labs } = getState();
     const labData = labs.labsMap[labAddress];
     const isZapin = tokenAddress !== labData.token || labAddress === PSLPYVBOOSTETH;
     const spenderAddress = isZapin ? getZapInContractAddress(labAddress) : labAddress;
-
-    await transactionService.validateSupportedAssets({
-      assetsToValidate: [labAddress, spenderAddress],
-      network: network.current,
-    });
 
     const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
     unwrapResult(result);
@@ -170,7 +164,7 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     { dispatch, getState, extra }
   ) => {
     const { services } = extra;
-    const { labService, transactionService } = services;
+    const { labService } = services;
     const { wallet, labs, tokens, network } = getState();
 
     const userAddress = wallet.selectedAddress;
@@ -212,11 +206,6 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const error = allowanceError || depositError;
     if (error) throw new Error(error);
 
-    await transactionService.validateSupportedAssets({
-      assetsToValidate: [labAddress],
-      network: network.current,
-    });
-
     const tx = await labService.deposit({
       network: network.current,
       accountAddress: userAddress,
@@ -253,7 +242,7 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
   'labs/withdraw',
   async ({ labAddress, amount, tokenAddress, slippageTolerance }, { dispatch, extra, getState }) => {
     const { services } = extra;
-    const { labService, transactionService } = services;
+    const { labService } = services;
     const { wallet, labs, tokens, network } = getState();
 
     const userAddress = wallet.selectedAddress;
@@ -294,11 +283,6 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
     const error = withdrawError || allowanceError;
     if (error) throw new Error(error);
 
-    await transactionService.validateSupportedAssets({
-      assetsToValidate: [labAddress],
-      network: network.current,
-    });
-
     const tx = await labService.withdraw({
       network: network.current,
       accountAddress: userAddress,
@@ -335,9 +319,8 @@ const yvBoostApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkA
 
 const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoost/yvBoostDeposit',
-  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, getState, extra }) => {
-    const { wallet, network } = getState();
-    const { transactionService } = extra.services;
+  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, getState }) => {
+    const { wallet } = getState();
     const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
@@ -367,11 +350,6 @@ const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     });
     const error = allowanceError || depositError;
     if (error) throw new Error(error);
-
-    await transactionService.validateSupportedAssets({
-      assetsToValidate: [labAddress],
-      network: network.current,
-    });
 
     // const amountInWei = amount.multipliedBy(ONE_UNIT);
     // const { labService } = services;
@@ -408,9 +386,8 @@ const yvBoostWithdraw = createAsyncThunk<
   void,
   { labAddress: string; amount: BigNumber; targetTokenAddress: string },
   ThunkAPI
->('labs/yvBoost/yvBoostWithdraw', async ({ labAddress, amount, targetTokenAddress }, { dispatch, extra, getState }) => {
-  const { transactionService } = extra.services;
-  const { wallet, network } = getState();
+>('labs/yvBoost/yvBoostWithdraw', async ({ labAddress, amount, targetTokenAddress }, { dispatch, getState }) => {
+  const { wallet } = getState();
   const userAddress = wallet.selectedAddress;
   if (!userAddress) {
     throw new Error('WALLET NOT CONNECTED');
@@ -443,11 +420,6 @@ const yvBoostWithdraw = createAsyncThunk<
 
   const error = withdrawError || allowanceError;
   if (error) throw new Error(error);
-
-  await transactionService.validateSupportedAssets({
-    assetsToValidate: [labAddress],
-    network: network.current,
-  });
 
   // const { labService } = services;
   // const tx = await labService.withdraw({
@@ -500,12 +472,7 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const amountInWei = amount.multipliedBy(ONE_UNIT);
 
     // TODO: validations
-    const { labService, transactionService } = services;
-
-    await transactionService.validateSupportedAssets({
-      assetsToValidate: [labAddress],
-      network: network.current,
-    });
+    const { labService } = services;
 
     const tx = await labService.lock({
       network: network.current,
@@ -628,7 +595,7 @@ const yvBoostEthApproveInvest = createAsyncThunk<void, ApproveDepositProps, Thun
 
 const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthInvest',
-  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, extra, getState }) => {
+  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, getState }) => {
     // labAddress is PSLPYVBOOSTETH
     const { wallet } = getState();
     const userAddress = wallet.selectedAddress;

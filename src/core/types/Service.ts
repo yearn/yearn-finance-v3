@@ -264,14 +264,8 @@ export interface EnterOrExitMarketProps {
 
 // *************** TRANSACTION ***************
 
-export interface ValidateSuportedAssetsProsps {
-  assetsToValidate: Address[];
-  network: Network;
-}
-
 export interface TransactionService {
   execute: (props: ExecuteTransactionProps) => Promise<TransactionResponse>;
-  validateSupportedAssets: (props: ValidateSuportedAssetsProsps) => Promise<void>;
 }
 
 export interface ExecuteTransactionProps {
