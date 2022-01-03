@@ -158,7 +158,6 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
 
     // TODO Needed checks for amount
 
-    // NOTE supported assets validation is on ironBankService.executeTransaction()
     const tx = await ironBankService.executeTransaction({
       network: network.current,
       userAddress,
@@ -198,7 +197,6 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     const ONE_UNIT = toBN('10').pow(tokenDecimals);
     // TODO Needed checks for amount
 
-    // NOTE supported assets validation is on ironBankService.executeTransaction()
     const tx = await ironBankService.executeTransaction({
       network: network.current,
       userAddress,
@@ -238,7 +236,6 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     const ONE_UNIT = toBN('10').pow(tokenDecimals);
     // TODO Needed checks for amount
 
-    // NOTE supported assets validation is on ironBankService.executeTransaction()
     const tx = await ironBankService.executeTransaction({
       network: network.current,
       userAddress,
@@ -276,7 +273,6 @@ const withdrawAllMarket = createAsyncThunk<void, WithdrawAllMarketProps, ThunkAP
     const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
     // TODO Needed checks for amount
 
-    // NOTE supported assets validation is on ironBankService.executeTransaction()
     const tx = await ironBankService.executeTransaction({
       network: network.current,
       userAddress,
@@ -316,7 +312,6 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
     const ONE_UNIT = toBN('10').pow(tokenDecimals);
     // TODO Needed checks for amount
 
-    // NOTE supported assets validation is on ironBankService.executeTransaction()
     const tx = await ironBankService.executeTransaction({
       network: network.current,
       userAddress,
@@ -354,7 +349,6 @@ const repayAllMarket = createAsyncThunk<void, RepayAllMarketProps, ThunkAPI>(
     const underlyingTokenAddress = getState().ironBank.marketsMap[marketAddress].tokenId;
     // TODO validation
 
-    // NOTE supported assets validation is on ironBankService.executeTransaction()
     const tx = await ironBankService.executeTransaction({
       network: network.current,
       userAddress,

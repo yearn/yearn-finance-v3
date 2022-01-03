@@ -227,7 +227,6 @@ const approveWithdraw = createAsyncThunk<void, ApproveWithdrawProps, ThunkAPI>(
   async ({ labAddress }, { dispatch }) => {
     try {
       const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
-      // NOTE supported assets validation is on TokensActions.approve.
       const result = await dispatch(
         TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
@@ -308,7 +307,6 @@ const yvBoostApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkA
       const labData = getState().labs.labsMap[labAddress];
       const isZapin = labData.tokenId !== tokenAddress;
       const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : labAddress;
-      // NOTE supported assets validation is on TokensActions.approve.
       const result = await dispatch(TokensActions.approve({ tokenAddress: tokenAddress, spenderAddress }));
       unwrapResult(result);
     } catch (error: any) {
@@ -371,7 +369,6 @@ const yvBoostApproveZapOut = createAsyncThunk<void, { labAddress: string }, Thun
   async ({ labAddress }, { dispatch }) => {
     try {
       const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
-      // NOTE supported assets validation is on TokensActions.approve.
       const result = await dispatch(
         TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
       );
@@ -441,7 +438,6 @@ const yveCrvApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAP
   'labs/yveCrv/yveCrvApproveDeposit',
   async ({ labAddress, tokenAddress }, { dispatch }) => {
     try {
-      // NOTE supported assets validation is on TokensActions.approve.
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: labAddress }));
       unwrapResult(result);
     } catch (error: any) {
@@ -505,7 +501,6 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
 
     // TODO validations.
 
-    // NOTE supported assets validation is on labService.claim().
     const { labService } = services;
     const tx = await labService.claim({
       network: network.current,
