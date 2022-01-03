@@ -59,6 +59,8 @@ export class TransactionServiceImpl implements TransactionService {
       // const decodedData = contractIface.decodeFunctionData(methodName, unsignedTx.data!.toString());
       // console.log({ decodedData });
 
+      // TODO call contract verification here.
+
       const tx = await signer.sendTransaction(unsignedTx);
       return tx;
     } catch (error: any) {
