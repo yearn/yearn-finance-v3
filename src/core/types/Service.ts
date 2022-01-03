@@ -275,7 +275,6 @@ export interface ExecuteTransactionProps {
   methodName: string;
   abi: any;
   contractAddress: Address;
-  paramsToValidate?: Array<string>;
 }
 
 type ContractFunction = (...args: Array<any>) => Promise<TransactionResponse>;

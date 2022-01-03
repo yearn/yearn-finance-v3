@@ -30,7 +30,7 @@ export class TransactionServiceImpl implements TransactionService {
   }
 
   public async execute(props: ExecuteTransactionProps): Promise<TransactionResponse> {
-    const { network, methodName, abi, contractAddress, args, overrides, paramsToValidate } = props;
+    const { network, methodName, abi, contractAddress, args, overrides } = props;
 
     let gasFees: GasFees = {};
     try {
@@ -55,13 +55,6 @@ export class TransactionServiceImpl implements TransactionService {
 
       const unsignedTx = await contract.populateTransaction[methodName](...txArgs);
 
-      if (methodName === 'approve') {
-        // verify decoded spender param
-        // dont verify .to
-      } else {
-        // verify address
-        // verify params
-      }
       // const contractIface = new Interface(abi);
       // const decodedData = contractIface.decodeFunctionData(methodName, unsignedTx.data!.toString());
       // console.log({ decodedData });
