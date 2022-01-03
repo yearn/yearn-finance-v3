@@ -1,5 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { Interface } from '@ethersproject/abi';
+
 import {
   TransactionService,
   ExecuteTransactionProps,
@@ -8,7 +9,7 @@ import {
   GasFees,
   YearnSdk,
 } from '@types';
-import { getContract } from '../frameworks/ethers';
+import { getContract } from '@frameworks/ethers';
 
 export class TransactionServiceImpl implements TransactionService {
   private yearnSdk: YearnSdk;
