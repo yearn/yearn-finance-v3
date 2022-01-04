@@ -10,8 +10,9 @@ import {
   WalletSelectors,
   NetworkSelectors,
   SettingsSelectors,
+  ModalsActions,
+  ModalSelectors,
   NetworkActions,
-  UserActions,
 } from '@store';
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
@@ -74,6 +75,7 @@ export const Layout: FC = ({ children }) => {
   const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const addressEnsName = useAppSelector(WalletSelectors.selectAddressEnsName);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const previousAddress = usePrevious(selectedAddress);
   const previousNetwork = usePrevious(currentNetwork);
@@ -96,12 +98,13 @@ export const Layout: FC = ({ children }) => {
 
   useEffect(() => {
     if (previousAddress) dispatch(AppActions.clearUserAppData());
-    if (previousAddress) dispatch(UserActions.clearNftBalance());
+    // if (previousAddress) dispatch(UserActions.clearNftBalance());
     if (selectedAddress) fetchUserData(currentNetwork, path);
-    if (selectedAddress) dispatch(UserActions.getNftBalance());
+    // if (selectedAddress) dispatch(UserActions.getNftBalance());
   }, [selectedAddress]);
 
   useEffect(() => {
+    if (activeModal) dispatch(ModalsActions.closeModal());
     if (previousNetwork) dispatch(AppActions.clearAppData());
     if (selectedAddress) dispatch(AppActions.clearUserAppData());
     dispatch(TokensActions.getTokens());

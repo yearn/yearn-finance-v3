@@ -1,13 +1,21 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
-import { IronBankSelectors, TokensActions, IronBankActions, TokensSelectors } from '@store';
+import {
+  IronBankSelectors,
+  TokensActions,
+  IronBankActions,
+  TokensSelectors,
+  NetworkSelectors,
+  WalletSelectors,
+} from '@store';
 import {
   toBN,
   normalizeAmount,
   USDC_DECIMALS,
   validateAllowance,
   basicValidateAmount,
+  validateNetwork,
   COLLATERAL_FACTOR_DECIMALS,
   humanize,
 } from '@utils';
@@ -26,6 +34,8 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const [amount, setAmount] = useState('');
   const [debouncedAmount] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const markets = useAppSelector(IronBankSelectors.selectMarkets);
   const selectedMarket = useAppSelector(IronBankSelectors.selectSelectedMarket);
   const selectedToken = selectedMarket?.token;
@@ -98,7 +108,12 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
     totalAmountAvailable: selectedToken.balance,
   });
 
-  const sourceError = allowanceError || inputError;
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
+  const sourceError = networkError || allowanceError || inputError;
   const targetError = actionsStatus.approve.error || actionsStatus.supply.error;
   const generalError = sourceError || targetError;
 

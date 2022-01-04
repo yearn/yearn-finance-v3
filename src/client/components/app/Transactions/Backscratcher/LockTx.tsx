@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
-import { TokensActions, LabsSelectors, LabsActions, VaultsActions } from '@store';
+import { TokensActions, LabsSelectors, LabsActions, VaultsActions, NetworkSelectors, WalletSelectors } from '@store';
 import {
   toBN,
   normalizeAmount,
@@ -9,6 +9,7 @@ import {
   validateVaultDeposit,
   formatPercent,
   validateYveCrvActionsAllowance,
+  validateNetwork,
 } from '@utils';
 
 import { Transaction } from '../Transaction';
@@ -25,6 +26,8 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   const [amount, setAmount] = useState('');
   const [debouncedAmount] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const selectedLab = useAppSelector(LabsSelectors.selectYveCrvLab);
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
   const selectedSellTokenAddress = selectedLab?.token.address;
@@ -82,7 +85,12 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     targetUnderlyingTokenAmount: amount,
   });
 
-  const sourceError = allowanceError || inputError;
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
+  const sourceError = networkError || allowanceError || inputError;
   const targetError = actionsStatus.approveDeposit.error || actionsStatus.deposit.error;
 
   const selectedLabOption = {

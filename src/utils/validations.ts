@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { AllowancesMap, IronBankUserSummary } from '@types';
+import { AllowancesMap, IronBankUserSummary, Network } from '@types';
 import { getConfig } from '@config';
 
 import { COLLATERAL_FACTOR_DECIMALS, normalizeAmount, toBN, formatPercent } from './format';
@@ -340,6 +340,21 @@ export function validateSlippage(props: ValidateSlippageProps): ValidationRespon
       )} is over your slippage tolerance of ${formatPercent(slippageTolerance.toString(), 1)}`,
     };
   }
+
+  return {};
+}
+
+export interface ValidateNetworkProps {
+  currentNetwork: Network;
+  walletNetwork?: Network;
+}
+
+export function validateNetwork(props: ValidateNetworkProps): ValidationResponse {
+  const { currentNetwork, walletNetwork } = props;
+
+  if (!walletNetwork) return { error: 'Wallet Not Connected' };
+  if (currentNetwork !== walletNetwork)
+    return { error: `Incorrect Network Selected. Change Your Wallet to ${currentNetwork} Network` };
 
   return {};
 }
