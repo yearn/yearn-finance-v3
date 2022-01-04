@@ -358,7 +358,7 @@ export const Labs = () => {
                 {
                   key: 'balance',
                   header: t('components.list-card.balance'),
-                  format: (lab) => humanize('amount', lab[lab.mainPositionKey].userDeposited, lab.token.decimals, 4),
+                  format: (lab) => humanize('amount', lab[lab.mainPositionKey].userBalance, lab.token.decimals, 4),
                   sortable: true,
                   width: '13rem',
                   className: 'col-balance',

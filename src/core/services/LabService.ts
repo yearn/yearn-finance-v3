@@ -383,7 +383,7 @@ export class LabServiceImpl implements LabService {
         typeId: 'STAKE',
         balance: pGaugeBalanceOf.toString(),
         underlyingTokenBalance: {
-          amount: pGaugeBalanceOf.toString(),
+          amount: pGaugeBalanceOf.toString(), // TODO user true uderlying balance
           amountUsdc: toBN(normalizeAmount(pGaugeBalanceOf.toString(), pJarData.decimals))
             .times(pJarPricePerToken)
             .times(10 ** USDC_DECIMALS)
