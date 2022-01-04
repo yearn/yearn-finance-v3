@@ -9,6 +9,12 @@ export interface NetworkSettings {
     id: Network;
     name: string;
     networkId: number;
+    rpcUrl: string;
+    nativeCurrency: {
+      name: string;
+      symbol: string;
+      decimals: number;
+    };
     simulationsEnabled?: boolean;
     zapsEnabled?: boolean;
     labsEnabled?: boolean;

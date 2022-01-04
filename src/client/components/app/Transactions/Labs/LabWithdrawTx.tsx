@@ -11,6 +11,7 @@ import {
   TokensActions,
   SettingsSelectors,
   NetworkSelectors,
+  WalletSelectors,
 } from '@store';
 import {
   toBN,
@@ -19,6 +20,7 @@ import {
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
   validateSlippage,
+  validateNetwork,
   calculateSharesAmount,
 } from '@utils';
 import { getConfig } from '@config';
@@ -39,6 +41,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
@@ -131,6 +134,11 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     expectedSlippage: expectedTxOutcome?.slippage,
   });
 
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
   const selectedLabOption = {
     address: selectedLab.address,
     symbol: selectedLab.displayName,
@@ -148,7 +156,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
 
-  const sourceError = allowanceError || inputError;
+  const sourceError = networkError || allowanceError || inputError;
   const targetStatus = {
     error:
       expectedTxOutcomeStatus.error ||

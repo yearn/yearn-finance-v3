@@ -21,6 +21,7 @@ import { ReactComponent as HomeIcon } from '@assets/icons/home.svg';
 import { ReactComponent as IronBankIcon } from '@assets/icons/iron-bank.svg';
 import { ReactComponent as LabsIcon } from '@assets/icons/labs.svg';
 import { ReactComponent as MediumIcon } from '@assets/icons/medium.svg';
+import { ReactComponent as RedditIcon } from '@assets/icons/reddit.svg';
 import { ReactComponent as SearchIcon } from '@assets/icons/search.svg';
 import { ReactComponent as SettingsIcon } from '@assets/icons/settings.svg';
 import { ReactComponent as StatusArrowIcon } from '@assets/icons/status-arrow.svg';
@@ -70,6 +71,7 @@ export {
   HamburguerIcon,
   HomeIcon,
   MediumIcon,
+  RedditIcon,
   TelegramIcon,
   TwitterIcon,
   VaultIcon,

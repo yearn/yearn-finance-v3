@@ -19,7 +19,7 @@ const IconScan = styled(Icon)`
 
 export const ScanNetworkIcon = ({ currentNetwork, blockExplorerUrl, address }: ScanNetworkIconProps) => {
   const handleScanSiteExplorer = () => {
-    return window.open(`${blockExplorerUrl}${address}`);
+    return window.open(`${blockExplorerUrl}/address/${address}`);
   };
 
   const selectScanIcon = () => {

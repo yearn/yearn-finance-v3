@@ -1,8 +1,8 @@
 import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
-import { IronBankSelectors, IronBankActions } from '@store';
-import { toBN, normalizeAmount, USDC_DECIMALS, basicValidateAmount, toWei, humanize } from '@utils';
+import { IronBankSelectors, IronBankActions, NetworkSelectors, WalletSelectors } from '@store';
+import { toBN, normalizeAmount, USDC_DECIMALS, basicValidateAmount, validateNetwork, toWei, humanize } from '@utils';
 import { getConfig } from '@config';
 
 import { IronBankTransaction } from '../IronBankTransaction';
@@ -20,6 +20,8 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
   const [amount, setAmount] = useState('');
   const [debouncedAmount] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const selectedMarket = useAppSelector(IronBankSelectors.selectSelectedMarket);
   const selectedToken = selectedMarket?.token;
   const userIronBankSummary = useAppSelector(IronBankSelectors.selectSummaryData);
@@ -73,7 +75,12 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
     totalAmountAvailable: toWei(borrowableTokens, selectedToken.decimals),
   });
 
-  const sourceError = inputError;
+  const { error: networkError } = validateNetwork({
+    currentNetwork,
+    walletNetwork,
+  });
+
+  const sourceError = networkError || inputError;
   const targetError = actionsStatus.borrow.error;
   const generalError = sourceError || targetError;
 
