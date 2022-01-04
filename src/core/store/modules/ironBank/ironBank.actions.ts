@@ -129,7 +129,7 @@ const getUserMarketsMetadata = createAsyncThunk<
 
 const approveMarket = createAsyncThunk<void, { marketAddress: string; tokenAddress: string }, ThunkAPI>(
   'ironBank/approve',
-  async ({ marketAddress, tokenAddress }, { extra, getState, dispatch }) => {
+  async ({ marketAddress, tokenAddress }, { dispatch }) => {
     const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress: marketAddress }));
     unwrapResult(result);
   }
