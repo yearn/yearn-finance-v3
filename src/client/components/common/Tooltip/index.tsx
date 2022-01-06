@@ -3,6 +3,7 @@ import { usePopper } from 'react-popper';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import flip from '@popperjs/core/lib/modifiers/flip.js';
 import styled from 'styled-components';
+import { Placement } from '@popperjs/core';
 
 const StyledTooltipArrow = styled.div`
   position: absolute;
@@ -66,16 +67,18 @@ function composeEventHandler(handler: (event: string) => void, eventHandler: (ev
   };
 }
 
-const Tooltip: FC<{
+export interface TooltipProps {
   children: React.ReactElement;
   tooltipComponent: React.ReactNode;
-}> = ({ children, tooltipComponent }) => {
+  placement: Placement;
+}
+const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placement }) => {
   const referenceElement = useRef<any>(null);
   const popperElement = useRef<any>(null);
   const arrowElement = useRef<any>(null);
   const [open, setOpen] = useState(false);
   const { styles, attributes, update } = usePopper(referenceElement.current, popperElement.current, {
-    placement: 'bottom',
+    placement,
     modifiers: [
       preventOverflow,
       flip,
@@ -93,6 +96,7 @@ const Tooltip: FC<{
       },
     ],
   });
+
   const childrenProps = {
     ref: referenceElement,
     ...(children ? children.props && children.props : {}),
