@@ -2,6 +2,7 @@ import { Address } from './Blockchain';
 import { TokenView } from './Token';
 import { PositionView } from './Position';
 import { EarningsDayData, Usdc, StrategyMetadata } from './Yearn-Sdk';
+import { Apy } from '@yfi/sdk';
 
 export type VaultType = 'VAULT_V1' | 'VAULT_V2';
 
@@ -23,6 +24,7 @@ export interface GeneralVaultView {
   hideIfNoDeposits: boolean;
   apyData: string;
   apyType: string;
+  apyMetadata?: Apy;
   strategies: StrategyMetadata[];
   historicalEarnings: EarningsDayData[];
   earned: Usdc;

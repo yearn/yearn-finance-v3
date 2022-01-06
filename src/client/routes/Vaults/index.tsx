@@ -28,6 +28,8 @@ import {
 import { SpinnerLoading, SearchInput, Text } from '@components/common';
 import { humanize, USDC_DECIMALS, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@utils';
 import { getConfig } from '@config';
+import Tooltip from '@src/client/components/common/Tooltip';
+import ApyTooltipData from '@src/client/components/app/ApyTooltipData';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -40,6 +42,10 @@ const Row = styled.div`
   grid-gap: ${({ theme }) => theme.layoutPadding};
   flex-wrap: wrap;
   width: 100%;
+`;
+
+const StyledHelperCursor = styled.span`
+  cursor: help;
 `;
 
 const StyledRecommendationsCard = styled(RecommendationsCard)`
@@ -242,7 +248,17 @@ export const Vaults = () => {
               {
                 key: 'apy',
                 header: 'APY',
-                format: ({ apyData, apyType }) => formatApy(apyData, apyType),
+                transform: ({ apyData, apyType, apyMetadata, address }) =>
+                  (apyType === 'new' || apyType === 'n/a' || !apyMetadata) ? (
+                    <span>{formatApy(apyData, apyType)}</span>
+                  ) : (
+                  <Tooltip
+                    placement='bottom'
+                    tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
+                  >
+                    <StyledHelperCursor>{formatApy(apyData, apyType)}</StyledHelperCursor>
+                  </Tooltip>
+                ),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
@@ -318,7 +334,17 @@ export const Vaults = () => {
                 {
                   key: 'apy',
                   header: t('components.list-card.apy'),
-                  format: ({ apyData, apyType }) => formatApy(apyData, apyType),
+                  transform: ({ apyData, apyType, apyMetadata, address }) =>
+                    (apyType === 'new' || apyType === 'n/a' || !apyMetadata) ? (
+                      <span>{formatApy(apyData, apyType)}</span>
+                    ) : (
+                    <Tooltip
+                      placement='bottom'
+                      tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
+                    >
+                      <StyledHelperCursor>{formatApy(apyData, apyType)}</StyledHelperCursor>
+                    </Tooltip>
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',
@@ -395,7 +421,17 @@ export const Vaults = () => {
                 {
                   key: 'apy',
                   header: t('components.list-card.apy'),
-                  format: ({ apyData, apyType }) => formatApy(apyData, apyType),
+                  transform: ({ apyData, apyType, apyMetadata, address }) =>
+                    (apyType === 'new' || apyType === 'n/a' || !apyMetadata) ? (
+                      <span>{formatApy(apyData, apyType)}</span>
+                    ) : (
+                    <Tooltip
+                      placement='bottom'
+                      tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
+                    >
+                      <StyledHelperCursor>{formatApy(apyData, apyType)}</StyledHelperCursor>
+                    </Tooltip>
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',

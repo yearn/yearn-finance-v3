@@ -15,6 +15,16 @@
       "searching-text": "Please search for another asset",
       "text": "No assets to display"
     },
+    "tooltips": {
+      "gross-apr": "Gross APR",
+      "net-apy": "Net APY",
+      "vecrv-apy": "veCRV APY",
+      "boost": "Boost",
+      "pool-apy": "Pool APY",
+      "rewards-apr": "Bonus Rewards APR",
+      "base-apr": "Base CRV APR",
+      "convex-apr": "Convex APR"
+    },
     "list-card": {
       "apy": "APY",
       "available-deposit": "Available to deposit",

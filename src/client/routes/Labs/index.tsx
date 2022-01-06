@@ -28,6 +28,8 @@ import { formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECI
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
+import ApyTooltipData from '@src/client/components/app/ApyTooltipData';
+import Tooltip from '@src/client/components/common/Tooltip';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -39,6 +41,10 @@ const Row = styled.div`
   justify-content: flex-start;
   grid-gap: ${({ theme }) => theme.layoutPadding};
   flex-wrap: wrap;
+`;
+
+const StyledHelperCursor = styled.span`
+  cursor: help;
 `;
 
 const StyledRecommendationsCard = styled(RecommendationsCard)`
@@ -350,7 +356,17 @@ export const Labs = () => {
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
-                  format: ({ apyData }) => formatPercent(apyData, 2),
+                  transform: ({ apyData,  apyMetadata, address }) =>
+                    (!apyMetadata) ? (
+                      <span>{formatPercent(apyData, 2)}</span>
+                    ) : (
+                    <Tooltip
+                      placement='bottom'
+                      tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
+                    >
+                      <StyledHelperCursor>{formatPercent(apyData, 2)}</StyledHelperCursor>
+                    </Tooltip>
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',
@@ -414,7 +430,17 @@ export const Labs = () => {
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
-                  format: ({ apyData }) => formatPercent(apyData, 2),
+                  transform: ({ apyData,  apyMetadata, address }) =>
+                    (!apyMetadata) ? (
+                      <span>{formatPercent(apyData, 2)}</span>
+                    ) : (
+                    <Tooltip
+                      placement='bottom'
+                      tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
+                    >
+                      <StyledHelperCursor>{formatPercent(apyData, 2)}</StyledHelperCursor>
+                    </Tooltip>
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',

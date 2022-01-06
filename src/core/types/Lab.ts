@@ -1,3 +1,4 @@
+import { Apy } from '@yfi/sdk';
 import { AllowancesMap, LabsPositionsTypes } from './State';
 import { TokenView } from './Token';
 
@@ -12,6 +13,7 @@ export interface GeneralLabView {
   labBalance: string;
   labBalanceUsdc: string;
   apyData: string;
+  apyMetadata?: Apy
   allowancesMap: AllowancesMap;
   pricePerShare: string;
   allowZapIn: boolean;
