@@ -92,24 +92,28 @@ export class LabServiceImpl implements LabService {
           pricePerShare: toBN('1')
             .times(10 ** backscratcherData.decimals)
             .toFixed(0),
-          apy: backscratcherData.apy ? {
-            ...backscratcherData.apy,
-            composite: backscratcherData.apy.composite ? {
-              ...backscratcherData.apy.composite,
-              boost: backscratcherData.apy.composite.boost
-                ? backscratcherData.apy.composite.boost
-                : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
-              pool_apy: backscratcherData.apy.composite.pool_apy
-                ? backscratcherData.apy.composite.pool_apy
-                : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).poolApy,
-              boosted_apr: backscratcherData.apy.composite.boosted_apr
-                ? backscratcherData.apy.composite.boosted_apr
-                : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
-              base_apr: backscratcherData.apy.composite.base_apr
-                ? backscratcherData.apy.composite.base_apr
-                : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).baseApy,
-            }: null,
-          } : undefined,
+          apy: backscratcherData.apy
+            ? {
+                ...backscratcherData.apy,
+                composite: backscratcherData.apy.composite
+                  ? {
+                      ...backscratcherData.apy.composite,
+                      boost: backscratcherData.apy.composite.boost
+                        ? backscratcherData.apy.composite.boost
+                        : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
+                      pool_apy: backscratcherData.apy.composite.pool_apy
+                        ? backscratcherData.apy.composite.pool_apy
+                        : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).poolApy,
+                      boosted_apr: backscratcherData.apy.composite.boosted_apr
+                        ? backscratcherData.apy.composite.boosted_apr
+                        : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
+                      base_apr: backscratcherData.apy.composite.base_apr
+                        ? backscratcherData.apy.composite.base_apr
+                        : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).baseApy,
+                    }
+                  : null,
+              }
+            : undefined,
           displayName: backscratcherData.name,
           displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVECRV}/logo-128.png`,
           defaultDisplayToken: CRV,
@@ -153,24 +157,28 @@ export class LabServiceImpl implements LabService {
           depositLimit: depositLimit.toString(),
           emergencyShutdown: emergencyShutdown,
           pricePerShare: pricePerShare.toString(),
-          apy: yvBoostData.apy ? {
-            ...yvBoostData.apy,
-            composite: yvBoostData.apy.composite ? {
-              ...yvBoostData.apy.composite,
-              boost: yvBoostData.apy.composite.boost
-                ? yvBoostData.apy.composite.boost
-                : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
-              pool_apy: yvBoostData.apy.composite.pool_apy
-                ? yvBoostData.apy.composite.pool_apy
-                : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).poolApy,
-              boosted_apr: yvBoostData.apy.composite.boosted_apr
-                ? yvBoostData.apy.composite.boosted_apr
-                : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
-              base_apr: yvBoostData.apy.composite.base_apr
-                ? yvBoostData.apy.composite.base_apr
-                : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).baseApy,
-            }: null,
-          } : undefined,
+          apy: yvBoostData.apy
+            ? {
+                ...yvBoostData.apy,
+                composite: yvBoostData.apy.composite
+                  ? {
+                      ...yvBoostData.apy.composite,
+                      boost: yvBoostData.apy.composite.boost
+                        ? yvBoostData.apy.composite.boost
+                        : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
+                      pool_apy: yvBoostData.apy.composite.pool_apy
+                        ? yvBoostData.apy.composite.pool_apy
+                        : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).poolApy,
+                      boosted_apr: yvBoostData.apy.composite.boosted_apr
+                        ? yvBoostData.apy.composite.boosted_apr
+                        : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
+                      base_apr: yvBoostData.apy.composite.base_apr
+                        ? yvBoostData.apy.composite.base_apr
+                        : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).baseApy,
+                    }
+                  : null,
+              }
+            : undefined,
           displayName: yvBoostData.symbol,
           displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVBOOST}/logo-128.png`,
           defaultDisplayToken: YVECRV,
@@ -229,25 +237,29 @@ export class LabServiceImpl implements LabService {
           depositLimit: '0', // yvboost-eth doestn have
           emergencyShutdown: false, // yvboost-eth doestn have
           pricePerShare: pJarRatio.toString(),
-          apy: pJarData.apy ? {
-            ...pJarData.apy,
-            net_apy: toBN(performance.toString()).dividedBy(100).toNumber(),
-            composite: pJarData.apy.composite ? {
-              ...pJarData.apy.composite,
-              boost: pJarData.apy.composite.boost
-                ? pJarData.apy.composite.boost
-                : (pJarData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
-              pool_apy: pJarData.apy.composite.pool_apy
-                ? pJarData.apy.composite.pool_apy
-                : (pJarData.apy.composite as unknown as BackscracherApyComposite).poolApy,
-              boosted_apr: pJarData.apy.composite.boosted_apr
-                ? pJarData.apy.composite.boosted_apr
-                : (pJarData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
-              base_apr: pJarData.apy.composite.base_apr
-                ? pJarData.apy.composite.base_apr
-                : (pJarData.apy.composite as unknown as BackscracherApyComposite).baseApy,
-            }: null,
-          } : undefined,
+          apy: pJarData.apy
+            ? {
+                ...pJarData.apy,
+                net_apy: toBN(performance.toString()).dividedBy(100).toNumber(),
+                composite: pJarData.apy.composite
+                  ? {
+                      ...pJarData.apy.composite,
+                      boost: pJarData.apy.composite.boost
+                        ? pJarData.apy.composite.boost
+                        : (pJarData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
+                      pool_apy: pJarData.apy.composite.pool_apy
+                        ? pJarData.apy.composite.pool_apy
+                        : (pJarData.apy.composite as unknown as BackscracherApyComposite).poolApy,
+                      boosted_apr: pJarData.apy.composite.boosted_apr
+                        ? pJarData.apy.composite.boosted_apr
+                        : (pJarData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
+                      base_apr: pJarData.apy.composite.base_apr
+                        ? pJarData.apy.composite.base_apr
+                        : (pJarData.apy.composite as unknown as BackscracherApyComposite).baseApy,
+                    }
+                  : null,
+              }
+            : undefined,
           displayName: 'pSLPyvBOOST-ETH',
           displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,

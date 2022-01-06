@@ -356,17 +356,17 @@ export const Labs = () => {
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
-                  transform: ({ apyData,  apyMetadata, address }) =>
-                    (!apyMetadata) ? (
+                  transform: ({ apyData, apyMetadata, address }) =>
+                    !apyMetadata ? (
                       <span>{formatPercent(apyData, 2)}</span>
                     ) : (
-                    <Tooltip
-                      placement='bottom'
-                      tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
-                    >
-                      <StyledHelperCursor>{formatPercent(apyData, 2)}</StyledHelperCursor>
-                    </Tooltip>
-                  ),
+                      <Tooltip
+                        placement="bottom"
+                        tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
+                      >
+                        <StyledHelperCursor>{formatPercent(apyData, 2)}</StyledHelperCursor>
+                      </Tooltip>
+                    ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',
@@ -430,17 +430,17 @@ export const Labs = () => {
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
-                  transform: ({ apyData,  apyMetadata, address }) =>
-                    (!apyMetadata) ? (
+                  transform: ({ apyData, apyMetadata, address }) =>
+                    !apyMetadata ? (
                       <span>{formatPercent(apyData, 2)}</span>
                     ) : (
-                    <Tooltip
-                      placement='bottom'
-                      tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
-                    >
-                      <StyledHelperCursor>{formatPercent(apyData, 2)}</StyledHelperCursor>
-                    </Tooltip>
-                  ),
+                      <Tooltip
+                        placement="bottom"
+                        tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
+                      >
+                        <StyledHelperCursor>{formatPercent(apyData, 2)}</StyledHelperCursor>
+                      </Tooltip>
+                    ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',

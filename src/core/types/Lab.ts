@@ -13,7 +13,7 @@ export interface GeneralLabView {
   labBalance: string;
   labBalanceUsdc: string;
   apyData: string;
-  apyMetadata?: Apy
+  apyMetadata?: Apy;
   allowancesMap: AllowancesMap;
   pricePerShare: string;
   allowZapIn: boolean;
