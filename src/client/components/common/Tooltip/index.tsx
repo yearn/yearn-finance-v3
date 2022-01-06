@@ -112,8 +112,6 @@ const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placement }) =>
     update && update();
   };
 
-  console.log(children, referenceElement, popperElement);
-
   childrenProps.onMouseOver = composeEventHandler(handleOpen, childrenProps.onMouseOver);
   childrenProps.onMouseLeave = composeEventHandler(handleClose, childrenProps.onMouseLeave);
   childrenProps.onFocus = composeEventHandler(handleOpen, childrenProps.onFocus);
