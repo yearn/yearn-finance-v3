@@ -302,10 +302,12 @@ export const VaultDetailPanels = ({
                   <StyledText fontWeight="bold">
                     <span>{formatApy(selectedVault.apyData, selectedVault.apyType)}</span>
                   </StyledText>
-                  { (!isNewOrNA(selectedVault.apyType) && selectedVault.apyMetadata) && (
+                  {!isNewOrNA(selectedVault.apyType) && selectedVault.apyMetadata && (
                     <Tooltip
                       placement="bottom"
-                      tooltipComponent={<ApyTooltipData apy={selectedVault.apyMetadata} address={selectedVault.address} />}
+                      tooltipComponent={
+                        <ApyTooltipData apy={selectedVault.apyMetadata} address={selectedVault.address} />
+                      }
                     >
                       <StyledIcon Component={HelpIcon} />
                     </Tooltip>

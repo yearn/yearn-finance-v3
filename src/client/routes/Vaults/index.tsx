@@ -334,7 +334,7 @@ export const Vaults = () => {
                   key: 'apy',
                   header: t('components.list-card.apy'),
                   transform: ({ apyData, apyType, apyMetadata, address }) =>
-                  isNewOrNA(apyType) || !apyMetadata ? (
+                    isNewOrNA(apyType) || !apyMetadata ? (
                       <span>{formatApy(apyData, apyType)}</span>
                     ) : (
                       <Tooltip
@@ -421,7 +421,7 @@ export const Vaults = () => {
                   key: 'apy',
                   header: t('components.list-card.apy'),
                   transform: ({ apyData, apyType, apyMetadata, address }) =>
-                  isNewOrNA(apyType) || !apyMetadata ? (
+                    isNewOrNA(apyType) || !apyMetadata ? (
                       <span>{formatApy(apyData, apyType)}</span>
                     ) : (
                       <Tooltip
