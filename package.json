@@ -7,7 +7,7 @@
     "dev": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "prettier": "prettier --write --ignore-unknown './src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
+    "prettier": "prettier --write --ignore-unknown './src/**/*.{js,jsx,ts,tsx,css,scss,md}'",
     "eject": "react-scripts eject",
     "upgrade-sdk": "yarn add yearn/yearn-sdk",
     "syncDevLocales": "locize sync --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=dev --api-key=xxxx --path=./public/locales --format json --reference-language-only false",
