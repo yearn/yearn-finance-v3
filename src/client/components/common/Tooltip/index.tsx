@@ -7,8 +7,8 @@ import { Placement } from '@popperjs/core';
 
 const StyledTooltipArrow = styled.div`
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 1rem;
+  height: 1rem;
   background: inherit;
   visibility: hidden;
   &:before {
@@ -23,11 +23,11 @@ const StyledTooltipArrow = styled.div`
 `;
 
 const StyledTooltip = styled.div`
-  --dropdown-background: ${({ theme }) => theme.colors.background};
-  --dropdown-color: ${({ theme }) => theme.colors.onSurfaceH2};
+  --tooltip-background: ${({ theme }) => theme.colors.background};
+  --tooltip-color: ${({ theme }) => theme.colors.onSurfaceH2};
 
-  background: var(--dropdown-background);
-  color: var(--dropdown-color);
+  background: var(--tooltip-background);
+  color: var(--tooltip-color);
   fill: currentColor;
   stroke: currentColor;
   user-select: none;
