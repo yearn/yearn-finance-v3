@@ -22,14 +22,13 @@ import {
   ViewContainer,
   NoWalletCard,
   Amount,
+  ApyTooltipData,
 } from '@components/app';
-import { SpinnerLoading, SearchInput, Text } from '@components/common';
+import { SpinnerLoading, SearchInput, Text, Tooltip } from '@components/common';
 import { formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECIMALS } from '@utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
-import ApyTooltipData from '@components/app/ApyTooltipData';
-import Tooltip from '@components/common/Tooltip';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;

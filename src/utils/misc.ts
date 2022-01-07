@@ -63,3 +63,5 @@ export const inLedgerIframe = () => {
     return true;
   }
 };
+
+export const isNewOrNA = (apyType: string) => apyType === 'new' || apyType === 'n/a';

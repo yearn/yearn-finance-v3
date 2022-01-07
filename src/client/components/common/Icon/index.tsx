@@ -1,4 +1,4 @@
-import { ElementType, SVGProps } from 'react';
+import { ElementType, SVGProps, forwardRef } from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as AddCircleIcon } from '@assets/icons/add-circle.svg';
@@ -53,7 +53,7 @@ export interface IconProps
   onClick?: () => void;
 }
 
-export const Icon = styled(({ Component, ...props }: IconProps) => <Component {...props} />)`
+export const Icon = styled(forwardRef(({ Component, ...props }: IconProps, ref) => <Component {...props} ref={ref} />))`
   display: flex;
   align-items: center;
   justify-content: center;

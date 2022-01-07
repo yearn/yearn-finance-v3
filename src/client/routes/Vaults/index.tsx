@@ -24,12 +24,11 @@ import {
   ViewContainer,
   NoWalletCard,
   Amount,
+  ApyTooltipData,
 } from '@components/app';
-import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { humanize, USDC_DECIMALS, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@utils';
+import { SpinnerLoading, SearchInput, Text, Tooltip } from '@components/common';
+import { humanize, USDC_DECIMALS, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN, isNewOrNA } from '@utils';
 import { getConfig } from '@config';
-import Tooltip from '@src/client/components/common/Tooltip';
-import ApyTooltipData from '@src/client/components/app/ApyTooltipData';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -249,7 +248,7 @@ export const Vaults = () => {
                 key: 'apy',
                 header: 'APY',
                 transform: ({ apyData, apyType, apyMetadata, address }) =>
-                  apyType === 'new' || apyType === 'n/a' || !apyMetadata ? (
+                  isNewOrNA(apyType) || !apyMetadata ? (
                     <span>{formatApy(apyData, apyType)}</span>
                   ) : (
                     <Tooltip
@@ -335,7 +334,7 @@ export const Vaults = () => {
                   key: 'apy',
                   header: t('components.list-card.apy'),
                   transform: ({ apyData, apyType, apyMetadata, address }) =>
-                    apyType === 'new' || apyType === 'n/a' || !apyMetadata ? (
+                  isNewOrNA(apyType) || !apyMetadata ? (
                       <span>{formatApy(apyData, apyType)}</span>
                     ) : (
                       <Tooltip
@@ -422,7 +421,7 @@ export const Vaults = () => {
                   key: 'apy',
                   header: t('components.list-card.apy'),
                   transform: ({ apyData, apyType, apyMetadata, address }) =>
-                    apyType === 'new' || apyType === 'n/a' || !apyMetadata ? (
+                  isNewOrNA(apyType) || !apyMetadata ? (
                       <span>{formatApy(apyData, apyType)}</span>
                     ) : (
                       <Tooltip

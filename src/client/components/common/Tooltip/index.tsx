@@ -69,7 +69,8 @@ export interface TooltipProps {
   tooltipComponent: React.ReactNode;
   placement: Placement;
 }
-const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placement }) => {
+
+export const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placement }) => {
   const referenceElement = useRef<any>(null);
   const popperElement = useRef<any>(null);
   const arrowElement = useRef<any>(null);
@@ -116,6 +117,7 @@ const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placement }) =>
   childrenProps.onTouchStart = handleOpen;
   childrenProps.onTouchEnd = handleClose;
 
+  console.log(referenceElement)
   return (
     <>
       {React.cloneElement(children, childrenProps)}
@@ -133,5 +135,3 @@ const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placement }) =>
     </>
   );
 };
-
-export default Tooltip;

@@ -1,12 +1,12 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd } from '@utils';
+import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isNewOrNA } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
 
 import { device } from '@themes/default';
-import { DepositTx, WithdrawTx, MigrateTx, TokenIcon, ScanNetworkIcon } from '@components/app';
+import { DepositTx, WithdrawTx, MigrateTx, TokenIcon, ScanNetworkIcon, ApyTooltipData } from '@components/app';
 import {
   Card,
   CardContent,
@@ -17,8 +17,10 @@ import {
   Text,
   Markdown,
   Icon,
+  HelpIcon,
   AddCircleIcon,
   LineChart,
+  Tooltip,
 } from '@components/common';
 import { MetamaskLogo } from '@assets/images';
 import { GeneralVaultView, StrategyMetadata, Network } from '@types';
@@ -132,6 +134,16 @@ const InfoValueRow = styled.div`
   white-space: nowrap;
   color: ${({ theme }) => theme.colors.onSurfaceSH1};
   font-size: 1.4rem;
+  align-items: center;
+`;
+
+const TextWithIcon = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const StyledIcon = styled(Icon)`
+  margin-left: 1rem;
 `;
 
 const InfoValueTitle = styled(Text)`
@@ -286,7 +298,19 @@ export const VaultDetailPanels = ({
 
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.apy')}</span>
-                <StyledText fontWeight="bold">{formatApy(selectedVault.apyData, selectedVault.apyType)}</StyledText>
+                <TextWithIcon>
+                  <StyledText fontWeight="bold">
+                    <span>{formatApy(selectedVault.apyData, selectedVault.apyType)}</span>
+                  </StyledText>
+                  { (!isNewOrNA(selectedVault.apyType) && selectedVault.apyMetadata) && (
+                    <Tooltip
+                      placement="bottom"
+                      tooltipComponent={<ApyTooltipData apy={selectedVault.apyMetadata} address={selectedVault.address} />}
+                    >
+                      <StyledIcon Component={HelpIcon} />
+                    </Tooltip>
+                  )}
+                </TextWithIcon>
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.total-assets')}</span>
