@@ -1,8 +1,8 @@
 import React, { FC, useRef, useState } from 'react';
 import { usePopper } from 'react-popper';
+import styled from 'styled-components';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import flip from '@popperjs/core/lib/modifiers/flip.js';
-import styled from 'styled-components';
 import { Placement } from '@popperjs/core';
 
 const StyledTooltipArrow = styled.div`
@@ -13,8 +13,8 @@ const StyledTooltipArrow = styled.div`
   visibility: hidden;
   &:before {
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: 1rem;
+    height: 1rem;
     background: inherit;
     visibility: visible;
     content: '';
@@ -25,9 +25,6 @@ const StyledTooltipArrow = styled.div`
 const StyledTooltip = styled.div`
   --dropdown-background: ${({ theme }) => theme.colors.background};
   --dropdown-color: ${({ theme }) => theme.colors.onSurfaceH2};
-  --dropdown-hover-color: ${({ theme }) => theme.colors.secondary};
-  --dropdown-selected-color: ${({ theme }) => theme.colors.surface};
-  --dropdown-selected-background: ${({ theme }) => theme.colors.onSurfaceH2};
 
   background: var(--dropdown-background);
   color: var(--dropdown-color);
@@ -42,19 +39,19 @@ const StyledTooltip = styled.div`
   min-width: 11rem;
 
   &[data-popper-placement^='top'] > ${StyledTooltipArrow} {
-    bottom: -7px;
+    bottom: -0.5rem;
   }
 
   &[data-popper-placement^='bottom'] > ${StyledTooltipArrow} {
-    top: -7px;
+    top: -0.5rem;
   }
 
   &[data-popper-placement^='left'] > ${StyledTooltipArrow} {
-    right: -7px;
+    right: -0.5rem;
   }
 
   &[data-popper-placement^='right'] > ${StyledTooltipArrow} {
-    left: -7px;
+    left: -0.5rem;
   }
 `;
 

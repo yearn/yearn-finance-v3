@@ -28,8 +28,8 @@ import { formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECI
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
-import ApyTooltipData from '@src/client/components/app/ApyTooltipData';
-import Tooltip from '@src/client/components/common/Tooltip';
+import ApyTooltipData from '@components/app/ApyTooltipData';
+import Tooltip from '@components/common/Tooltip';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;

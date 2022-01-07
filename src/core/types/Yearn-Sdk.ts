@@ -98,4 +98,5 @@ export type {
   VaultUserMetadata,
   EarningsDayData,
   StrategyMetadata,
+  Apy,
 };

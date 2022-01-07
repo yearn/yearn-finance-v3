@@ -1,7 +1,7 @@
 import { useAppTranslation } from '@src/client/hooks';
 import { getConstants } from '@src/config/constants';
 import { formatApy } from '@src/utils';
-import { Apy } from '@yfi/sdk';
+import { Apy } from '@types';
 import { FC } from 'react';
 import styled from 'styled-components';
 
@@ -9,7 +9,7 @@ const StyledTooltipTable = styled.table`
   & > tr > td {
     font-size: 1.2rem;
     &:first-of-type {
-      padding-right: 10px;
+      padding-right: 0.5rem;
     }
   }
 `;
@@ -20,7 +20,7 @@ export interface ApyTooltipDataProps {
 }
 
 const ApyTooltipData: FC<ApyTooltipDataProps> = ({ apy, address }) => {
-  const { t } = useAppTranslation(['common', 'vaults']);
+  const { t } = useAppTranslation(['common']);
   const { CONTRACT_ADDRESSES } = getConstants();
   const { YVECRV } = CONTRACT_ADDRESSES;
   const isBackScratcher = address === YVECRV;

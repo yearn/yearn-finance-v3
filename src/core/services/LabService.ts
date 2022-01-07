@@ -25,7 +25,18 @@ import y3CrvBackZapperAbi from './contracts/y3CrvBackZapper.json';
 import yvBoostAbi from './contracts/yvBoost.json';
 import pickleJarAbi from './contracts/pickleJar.json';
 import pickleGaugeAbi from './contracts/pickleGauge.json';
-import { BackscracherApyComposite } from '@src/../../yearn-sdk/dist';
+
+/**
+ * Annual Percentage Yield composite of a particular backscratcher vault coming from api.yearn.finance.
+ */
+interface BackscracherApyComposite {
+  currentBoost: number;
+  boostedApy: number;
+  totalApy: number;
+  poolApy: number;
+  baseApy: number;
+}
+
 export class LabServiceImpl implements LabService {
   private transactionService: TransactionService;
   private yearnSdk: YearnSdk;
@@ -157,28 +168,7 @@ export class LabServiceImpl implements LabService {
           depositLimit: depositLimit.toString(),
           emergencyShutdown: emergencyShutdown,
           pricePerShare: pricePerShare.toString(),
-          apy: yvBoostData.apy
-            ? {
-                ...yvBoostData.apy,
-                composite: yvBoostData.apy.composite
-                  ? {
-                      ...yvBoostData.apy.composite,
-                      boost: yvBoostData.apy.composite.boost
-                        ? yvBoostData.apy.composite.boost
-                        : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
-                      pool_apy: yvBoostData.apy.composite.pool_apy
-                        ? yvBoostData.apy.composite.pool_apy
-                        : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).poolApy,
-                      boosted_apr: yvBoostData.apy.composite.boosted_apr
-                        ? yvBoostData.apy.composite.boosted_apr
-                        : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
-                      base_apr: yvBoostData.apy.composite.base_apr
-                        ? yvBoostData.apy.composite.base_apr
-                        : (yvBoostData.apy.composite as unknown as BackscracherApyComposite).baseApy,
-                    }
-                  : null,
-              }
-            : undefined,
+          apy: yvBoostData.apy,
           displayName: yvBoostData.symbol,
           displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVBOOST}/logo-128.png`,
           defaultDisplayToken: YVECRV,
@@ -237,29 +227,7 @@ export class LabServiceImpl implements LabService {
           depositLimit: '0', // yvboost-eth doestn have
           emergencyShutdown: false, // yvboost-eth doestn have
           pricePerShare: pJarRatio.toString(),
-          apy: pJarData.apy
-            ? {
-                ...pJarData.apy,
-                net_apy: toBN(performance.toString()).dividedBy(100).toNumber(),
-                composite: pJarData.apy.composite
-                  ? {
-                      ...pJarData.apy.composite,
-                      boost: pJarData.apy.composite.boost
-                        ? pJarData.apy.composite.boost
-                        : (pJarData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
-                      pool_apy: pJarData.apy.composite.pool_apy
-                        ? pJarData.apy.composite.pool_apy
-                        : (pJarData.apy.composite as unknown as BackscracherApyComposite).poolApy,
-                      boosted_apr: pJarData.apy.composite.boosted_apr
-                        ? pJarData.apy.composite.boosted_apr
-                        : (pJarData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
-                      base_apr: pJarData.apy.composite.base_apr
-                        ? pJarData.apy.composite.base_apr
-                        : (pJarData.apy.composite as unknown as BackscracherApyComposite).baseApy,
-                    }
-                  : null,
-              }
-            : undefined,
+          apy: { ...pJarData.apy, net_apy: toBN(performance.toString()).dividedBy(100).toNumber() },
           displayName: 'pSLPyvBOOST-ETH',
           displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
