@@ -146,11 +146,12 @@ interface WithdrawProps {
 
 const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
   'labs/approveDeposit',
-  async ({ labAddress, tokenAddress }, { dispatch, getState, extra }) => {
+  async ({ labAddress, tokenAddress }, { dispatch, getState }) => {
     const { labs } = getState();
     const labData = labs.labsMap[labAddress];
     const isZapin = tokenAddress !== labData.token || labAddress === PSLPYVBOOSTETH;
     const spenderAddress = isZapin ? getZapInContractAddress(labAddress) : labAddress;
+
     const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
     unwrapResult(result);
   }
@@ -316,7 +317,7 @@ const yvBoostApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkA
 
 const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoost/yvBoostDeposit',
-  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, getState, extra }) => {
+  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, getState }) => {
     const { wallet } = getState();
     const userAddress = wallet.selectedAddress;
     if (!userAddress) {
@@ -382,7 +383,7 @@ const yvBoostWithdraw = createAsyncThunk<
   void,
   { labAddress: string; amount: BigNumber; targetTokenAddress: string },
   ThunkAPI
->('labs/yvBoost/yvBoostWithdraw', async ({ labAddress, amount, targetTokenAddress }, { dispatch, extra, getState }) => {
+>('labs/yvBoost/yvBoostWithdraw', async ({ labAddress, amount, targetTokenAddress }, { dispatch, getState }) => {
   const { wallet } = getState();
   const userAddress = wallet.selectedAddress;
   if (!userAddress) {
@@ -467,8 +468,8 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const amountInWei = amount.multipliedBy(ONE_UNIT);
 
     // TODO: validations
-
     const { labService } = services;
+
     const tx = await labService.lock({
       network: network.current,
       accountAddress: userAddress,
@@ -589,7 +590,7 @@ const yvBoostEthApproveInvest = createAsyncThunk<void, ApproveDepositProps, Thun
 
 const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthInvest',
-  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, extra, getState }) => {
+  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, getState }) => {
     // labAddress is PSLPYVBOOSTETH
     const { wallet } = getState();
     const userAddress = wallet.selectedAddress;

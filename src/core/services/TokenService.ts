@@ -73,7 +73,7 @@ export class TokenServiceImpl implements TokenService {
 
   public async getTokensDynamicData({ network, addresses }: GetTokensDynamicDataProps): Promise<TokenDynamicData[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
-    const pricesUsdcMap: any = yearn.tokens.priceUsdc(addresses);
+    const pricesUsdcMap: any = await yearn.tokens.priceUsdc(addresses);
     return addresses.map((address: string) => ({ address, priceUsdc: pricesUsdcMap[address] }));
   }
 
@@ -220,11 +220,11 @@ export class TokenServiceImpl implements TokenService {
   /* -------------------------------------------------------------------------- */
   public async approve(props: ApproveProps): Promise<TransactionResponse> {
     const { network, tokenAddress, spenderAddress, amount } = props;
-    const signer = this.web3Provider.getSigner();
-    const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
     return await this.transactionService.execute({
       network,
-      fn: erc20Contract.approve,
+      methodName: 'approve',
+      contractAddress: tokenAddress,
+      abi: erc20Abi,
       args: [spenderAddress, amount],
     });
   }

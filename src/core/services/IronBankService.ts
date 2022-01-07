@@ -94,31 +94,48 @@ export class IronBankServiceImpl implements IronBankService {
     const { MAX_UINT256 } = this.config;
     const provider = this.web3Provider.getSigner();
     const ironBankMarketContract = getContract(marketAddress, ironBankMarketAbi, provider);
-
     switch (action) {
       case 'supply':
-        return await this.transactionService.execute({ network, fn: ironBankMarketContract.mint, args: [amount] });
+        return await this.transactionService.execute({
+          network,
+          methodName: 'mint',
+          abi: ironBankMarketAbi,
+          contractAddress: marketAddress,
+          args: [amount],
+        });
       case 'withdraw':
         if (amount === MAX_UINT256) {
           const balanceOf = await ironBankMarketContract.balanceOf(userAddress);
           return await this.transactionService.execute({
             network,
-            fn: ironBankMarketContract.redeem,
+            methodName: 'redeem',
+            abi: ironBankMarketAbi,
+            contractAddress: marketAddress,
             args: [balanceOf.toString()],
           });
         } else {
           return await this.transactionService.execute({
             network,
-            fn: ironBankMarketContract.redeemUnderlying,
+            methodName: 'redeemUnderlying',
+            abi: ironBankMarketAbi,
+            contractAddress: marketAddress,
             args: [amount],
           });
         }
       case 'borrow':
-        return await this.transactionService.execute({ network, fn: ironBankMarketContract.borrow, args: [amount] });
+        return await this.transactionService.execute({
+          network,
+          methodName: 'borrow',
+          abi: ironBankMarketAbi,
+          contractAddress: marketAddress,
+          args: [amount],
+        });
       case 'repay':
         return await this.transactionService.execute({
           network,
-          fn: ironBankMarketContract.repayBorrow,
+          methodName: 'repayBorrow',
+          abi: ironBankMarketAbi,
+          contractAddress: marketAddress,
           args: [amount],
         });
     }
@@ -132,20 +149,22 @@ export class IronBankServiceImpl implements IronBankService {
     const { CONTRACT_ADDRESSES } = this.config;
     const { ironBankComptroller, ironBankComptrollerFantom } = CONTRACT_ADDRESSES;
     const comptrollerAddress = network === 'fantom' ? ironBankComptrollerFantom : ironBankComptroller;
-    const provider = this.web3Provider.getSigner();
-    const ironBankComptrollerContract = getContract(comptrollerAddress, ironBankComptrollerAbi, provider);
     switch (actionType) {
       case 'enterMarket':
         return await this.transactionService.execute({
           network,
-          fn: ironBankComptrollerContract.enterMarkets,
+          methodName: 'enterMarkets',
+          abi: ironBankComptrollerAbi,
+          contractAddress: comptrollerAddress,
           args: [[marketAddress]],
         });
 
       case 'exitMarket':
         return await this.transactionService.execute({
           network,
-          fn: ironBankComptrollerContract.exitMarket,
+          methodName: 'exitMarket',
+          abi: ironBankComptrollerAbi,
+          contractAddress: comptrollerAddress,
           args: [marketAddress],
         });
     }
