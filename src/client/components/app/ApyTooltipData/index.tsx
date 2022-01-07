@@ -22,8 +22,8 @@ export interface ApyTooltipDataProps {
 const ApyTooltipData: FC<ApyTooltipDataProps> = ({ apy, address }) => {
   const { t } = useAppTranslation(['common', 'vaults']);
   const { CONTRACT_ADDRESSES } = getConstants();
-  const { YVECRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
-  const isBackScratcher = address === YVBOOST || address === YVECRV || address === PSLPYVBOOSTETH;
+  const { YVECRV } = CONTRACT_ADDRESSES;
+  const isBackScratcher = address === YVECRV;
   const apyType = apy.type;
   const { gross_apr, net_apy, composite } = apy;
 
