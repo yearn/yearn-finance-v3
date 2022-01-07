@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@craco/craco": "6.2.0",
+    "@davatar/react": "^1.8.1",
     "@ethersproject/abi": "5.4.0",
     "@ethersproject/address": "5.4.0",
     "@ethersproject/contracts": "5.4.1",
