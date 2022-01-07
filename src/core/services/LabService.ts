@@ -234,7 +234,6 @@ export class LabServiceImpl implements LabService {
         },
       };
     } catch (error) {
-      debugger;
       errors.push('YvBoost-Eth Lab Error');
     }
 
