@@ -6,8 +6,3 @@ export interface Message {
   active: boolean;
   message: string;
 }
-
-export interface NotificationsStatus {
-  active: Message[];
-  dismissed: Message[];
-}

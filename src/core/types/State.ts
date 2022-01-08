@@ -267,8 +267,8 @@ export interface UserState {
 }
 
 export interface NotificationsState {
-  activeMessages: Message[];
-  dismissedMessages: Message[];
+  messages: Message[];
+  dismissedMessageIds: number[];
   statusMap: {
     getNotificationMessages: Status;
   };

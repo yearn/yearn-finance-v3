@@ -4,14 +4,14 @@ import { NotificationsActions } from './notifications.actions';
 import { initialStatus, NotificationsState } from '@types';
 
 export const notificationsInitialState: NotificationsState = {
-  activeMessages: [],
-  dismissedMessages: [],
+  messages: [],
+  dismissedMessageIds: [],
   statusMap: {
     getNotificationMessages: { ...initialStatus },
   },
 };
 
-const { clearActiveMessages, clearDismissedMessages, getNotificationMessages } = NotificationsActions;
+const { clearMessages, clearDismissedMessageIds, getNotificationMessages } = NotificationsActions;
 
 const notificationsReducer = createReducer(notificationsInitialState, (builder) => {
   builder
@@ -19,12 +19,12 @@ const notificationsReducer = createReducer(notificationsInitialState, (builder) 
     /* -------------------------------------------------------------------------- */
     /*                                 Clear State                                */
     /* -------------------------------------------------------------------------- */
-    .addCase(clearActiveMessages, (state) => {
-      state.activeMessages = [];
+    .addCase(clearMessages, (state) => {
+      state.messages = [];
     })
 
-    .addCase(clearDismissedMessages, (state) => {
-      state.dismissedMessages = [];
+    .addCase(clearDismissedMessageIds, (state) => {
+      state.dismissedMessageIds = [];
     })
 
     /* -------------------------------------------------------------------------- */
@@ -38,9 +38,8 @@ const notificationsReducer = createReducer(notificationsInitialState, (builder) 
       state.statusMap.getNotificationMessages = { loading: false, error: error.message };
     })
 
-    .addCase(getNotificationMessages.fulfilled, (state, { payload: notifications }) => {
-      state.activeMessages = notifications.active;
-      state.dismissedMessages = notifications.dismissed;
+    .addCase(getNotificationMessages.fulfilled, (state, { payload: messages }) => {
+      state.messages = messages;
       state.statusMap.getNotificationMessages = {};
     });
 });

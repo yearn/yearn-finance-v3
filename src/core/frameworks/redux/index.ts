@@ -21,7 +21,7 @@ export const getStore = (extraArgument?: any) => {
   };
   const persistConfig = {
     namespace: 'yearn',
-    states: ['theme', 'wallet.name', 'settings', 'network', 'notifications.dismissedMessages'],
+    states: ['theme', 'wallet.name', 'settings', 'network', 'notifications.dismissedMessageIds'],
   };
   const logger = createLogger({ collapsed: true });
   const middlewareOptions = {
