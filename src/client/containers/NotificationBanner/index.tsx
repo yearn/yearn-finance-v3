@@ -1,16 +1,21 @@
 import { FC } from 'react';
 
-import { useAppSelector } from '@hooks';
-import { NotificationsSelectors } from '@store';
-import { Banner, Markdown } from '@src/client/components/common';
+import { useAppSelector, useAppDispatch } from '@hooks';
+import { NotificationsActions, NotificationsSelectors } from '@store';
+import { Banner, Markdown, Button } from '@src/client/components/common';
+import { first } from 'lodash';
 
 export const NotificationBanner: FC = () => {
-  //   const latestMessage = useAppSelector(NotificationsSelectors.selectActiveMessages)[0];
-  //   const { message, id, type } = latestMessage;
-  const firstMessage = useAppSelector(NotificationsSelectors.selectMessages)[0];
+  const latestMessage = first(useAppSelector(NotificationsSelectors.selectActiveMessages));
+  const dispatch = useAppDispatch();
   return (
-    <Banner>
-      <Markdown>{firstMessage.message}</Markdown>
-    </Banner>
+    <>
+      {latestMessage && (
+        <Banner>
+          <Markdown>{latestMessage.message}</Markdown>
+          <Button onClick={() => dispatch(NotificationsActions.dismissMessage(latestMessage.id))}>Dismiss</Button>
+        </Banner>
+      )}
+    </>
   );
 };

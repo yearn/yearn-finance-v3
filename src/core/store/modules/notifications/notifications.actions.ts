@@ -4,6 +4,8 @@ import { ThunkAPI } from '@frameworks/redux';
 import { Message } from '@types';
 import notificationMessages from '../../../../client/data/notificationMessages.json';
 
+const dismissMessage = createAction<number>('notifications/dismissMessage');
+
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
 /* -------------------------------------------------------------------------- */
@@ -31,4 +33,5 @@ export const NotificationsActions = {
   getNotificationMessages,
   clearMessages,
   clearDismissedMessageIds,
+  dismissMessage,
 };

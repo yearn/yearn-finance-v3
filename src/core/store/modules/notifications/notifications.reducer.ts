@@ -11,10 +11,13 @@ export const notificationsInitialState: NotificationsState = {
   },
 };
 
-const { clearMessages, clearDismissedMessageIds, getNotificationMessages } = NotificationsActions;
+const { clearMessages, clearDismissedMessageIds, getNotificationMessages, dismissMessage } = NotificationsActions;
 
 const notificationsReducer = createReducer(notificationsInitialState, (builder) => {
   builder
+    .addCase(dismissMessage, (state, actions) => {
+      state.dismissedMessageIds = [...state.dismissedMessageIds, actions.payload];
+    })
 
     /* -------------------------------------------------------------------------- */
     /*                                 Clear State                                */
