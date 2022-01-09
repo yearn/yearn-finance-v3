@@ -3,7 +3,7 @@
         "id": 0, 
         "type": "info",
         "active": true,
-        "message": "Welcome to <b> Yearn Finance 0 <b>" 
+        "message": "# Welcome to Yearn Finance fdsads" 
     },
 
     {
@@ -18,6 +18,13 @@
         "type": "info", 
         "active": true, 
         "message": "Welcome to <b> Yearn Finance 2 <b>"
-    }
+    },
+
+    {
+        "id": 3, 
+        "type": "info", 
+        "active": true, 
+        "message": "Welcome to <b> Yearn Finance 3 <b>"
+    }    
 
 ]
