@@ -17,7 +17,7 @@ import {
   Text,
   Markdown,
   Icon,
-  HelpIcon,
+  InfoIcon,
   AddCircleIcon,
   LineChart,
   Tooltip,
@@ -309,7 +309,7 @@ export const VaultDetailPanels = ({
                         <ApyTooltipData apy={selectedVault.apyMetadata} address={selectedVault.address} />
                       }
                     >
-                      <StyledIcon Component={HelpIcon} />
+                      <StyledIcon Component={InfoIcon} size="1.5rem" />
                     </Tooltip>
                   )}
                 </TextWithIcon>
