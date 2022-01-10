@@ -109,18 +109,18 @@ export class LabServiceImpl implements LabService {
                 composite: backscratcherData.apy.composite
                   ? {
                       ...backscratcherData.apy.composite,
-                      boost: backscratcherData.apy.composite.boost
-                        ? backscratcherData.apy.composite.boost
-                        : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
-                      pool_apy: backscratcherData.apy.composite.pool_apy
-                        ? backscratcherData.apy.composite.pool_apy
-                        : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).poolApy,
-                      boosted_apr: backscratcherData.apy.composite.boosted_apr
-                        ? backscratcherData.apy.composite.boosted_apr
-                        : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
-                      base_apr: backscratcherData.apy.composite.base_apr
-                        ? backscratcherData.apy.composite.base_apr
-                        : (backscratcherData.apy.composite as unknown as BackscracherApyComposite).baseApy,
+                      boost:
+                        backscratcherData.apy.composite.boost ||
+                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
+                      pool_apy:
+                        backscratcherData.apy.composite.pool_apy ||
+                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).poolApy,
+                      boosted_apr:
+                        backscratcherData.apy.composite.boosted_apr ||
+                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
+                      base_apr:
+                        backscratcherData.apy.composite.base_apr ||
+                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).baseApy,
                     }
                   : null,
               }

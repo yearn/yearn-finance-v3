@@ -117,7 +117,6 @@ export const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placemen
   childrenProps.onTouchStart = handleOpen;
   childrenProps.onTouchEnd = handleClose;
 
-  console.log(referenceElement);
   return (
     <>
       {React.cloneElement(children, childrenProps)}
