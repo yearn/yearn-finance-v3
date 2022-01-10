@@ -171,9 +171,11 @@ const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddre
   'vaults/approveDeposit',
   async ({ vaultAddress, tokenAddress }, { dispatch, getState }) => {
     try {
-      const vaultData = getState().vaults.vaultsMap[vaultAddress];
+      const { vaults } = getState();
+      const vaultData = vaults.vaultsMap[vaultAddress];
       const isZapin = vaultData.tokenId !== tokenAddress;
       const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress;
+
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
       unwrapResult(result);
     } catch (error: any) {
@@ -374,6 +376,7 @@ const migrateVault = createAsyncThunk<
     const vaultData = vaults.vaultsMap[vaultFromAddress];
     const userDepositPositionData = vaults.user.userVaultsPositionsMap[vaultFromAddress].DEPOSIT;
     const tokenAllowancesMap = tokens.user.userTokensAllowancesMap[vaultFromAddress] ?? {};
+    const migrationContractAddressToUse = migrationContractAddress ?? trustedVaultMigrator;
 
     // TODO: ADD VALIDATION FOR VALID MIGRATABLE VAULTS AND WITH BALANCE
 
@@ -382,7 +385,7 @@ const migrateVault = createAsyncThunk<
       vaultAddress: vaultFromAddress,
       vaultDecimals: vaultData.decimals,
       vaultAllowancesMap: tokenAllowancesMap,
-      migrationContractAddress: migrationContractAddress ?? trustedVaultMigrator,
+      migrationContractAddress: migrationContractAddressToUse,
     });
 
     const error = allowanceError;
@@ -394,7 +397,7 @@ const migrateVault = createAsyncThunk<
       accountAddress: userAddress,
       vaultFromAddress,
       vaultToAddress,
-      migrationContractAddress: migrationContractAddress ?? trustedVaultMigrator,
+      migrationContractAddress: migrationContractAddressToUse,
     });
 
     await handleTransaction(tx, network.current);

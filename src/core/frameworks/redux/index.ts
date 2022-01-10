@@ -22,6 +22,8 @@ export const getStore = (extraArgument?: any) => {
     thunk: {
       extraArgument,
     },
+    immutableCheck: { warnAfter: 300 },
+    serializableCheck: { warnAfter: 200 },
   };
   let persistedState = load(persistConfig);
   const currentStateVersion = initialState.settings.stateVersion;
