@@ -72,7 +72,7 @@ export const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placemen
   const popperElement = useRef<any>(null);
   const arrowElement = useRef<any>(null);
   const [open, setOpen] = useState(false);
-  const { styles, attributes, forceUpdate } = usePopper(referenceElement.current, popperElement.current, {
+  const { styles, attributes, update } = usePopper(referenceElement.current, popperElement.current, {
     placement,
     modifiers: [
       preventOverflow,
@@ -97,16 +97,14 @@ export const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placemen
     ...(children ? children.props && children.props : {}),
   };
 
-  React.useEffect(() => {
-    forceUpdate && forceUpdate();
-  }, [popperElement.current]);
-
   const handleOpen = () => {
     setOpen(true);
+    update && update();
   };
 
   const handleClose = () => {
     setOpen(false);
+    update && update();
   };
 
   childrenProps.onMouseOver = composeEventHandler(handleOpen, childrenProps.onMouseOver);
@@ -119,12 +117,14 @@ export const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placemen
   return (
     <>
       {React.cloneElement(children, childrenProps)}
-      {open && (
-        <StyledTooltip ref={popperElement} style={styles.popper} {...attributes.popper}>
-          {tooltipComponent}
-          <StyledTooltipArrow ref={arrowElement} style={styles.arrow} data-popper-arrow />
-        </StyledTooltip>
-      )}
+      <StyledTooltip
+        ref={popperElement}
+        style={{ display: !open ? 'none' : undefined, ...styles.popper }}
+        {...attributes.popper}
+      >
+        {tooltipComponent}
+        <StyledTooltipArrow ref={arrowElement} style={styles.arrow} data-popper-arrow />
+      </StyledTooltip>
     </>
   );
 };
