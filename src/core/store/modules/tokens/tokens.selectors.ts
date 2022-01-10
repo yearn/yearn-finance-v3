@@ -19,14 +19,12 @@ const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMa
 /* ----------------------------- Main Selectors ----------------------------- */
 const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user): TokenView[] => {
   const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
-  const tokens = userTokensAddresses
-    .filter((address) => !!tokensMap[address])
-    .map((address) => {
-      const tokenData = tokensMap[address];
-      const userTokenData = userTokensMap[address];
-      const allowancesMap = userTokensAllowancesMap[address] ?? {};
-      return createToken({ tokenData, userTokenData, allowancesMap });
-    });
+  const tokens = userTokensAddresses.map((address) => {
+    const tokenData = tokensMap[address];
+    const userTokenData = userTokensMap[address];
+    const allowancesMap = userTokensAllowancesMap[address] ?? {};
+    return createToken({ tokenData, userTokenData, allowancesMap });
+  });
   return tokens.filter((token) => toBN(token.balance).gt(0));
 });
 
