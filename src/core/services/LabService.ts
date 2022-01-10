@@ -383,7 +383,7 @@ export class LabServiceImpl implements LabService {
         typeId: 'STAKE',
         balance: pGaugeBalanceOf.toString(),
         underlyingTokenBalance: {
-          amount: pGaugeBalanceOf.toString(), // TODO user true uderlying balance
+          amount: pGaugeBalanceOf.toString(),
           amountUsdc: toBN(normalizeAmount(pGaugeBalanceOf.toString(), pJarData.decimals))
             .times(pJarPricePerToken)
             .times(10 ** USDC_DECIMALS)
@@ -432,25 +432,21 @@ export class LabServiceImpl implements LabService {
   public async stake(props: StakeProps): Promise<TransactionResponse> {
     const { network, vaultAddress, amount } = props;
 
-    return await this.transactionService.execute({
-      network,
-      methodName: 'deposit',
-      contractAddress: getStakingContractAddress(vaultAddress),
-      abi: this.getStakingContractAbi(vaultAddress),
-      args: [amount],
-    });
+    const provider = this.web3Provider.getSigner();
+    const stakeContract = getContract(
+      getStakingContractAddress(vaultAddress),
+      this.getStakingContractAbi(vaultAddress),
+      provider
+    );
+    return await this.transactionService.execute({ network, fn: stakeContract.deposit, args: [amount] });
   }
 
   public async lock(props: StakeProps): Promise<TransactionResponse> {
     const { network, vaultAddress, amount } = props;
 
-    return await this.transactionService.execute({
-      network,
-      methodName: 'deposit',
-      contractAddress: vaultAddress,
-      abi: backscratcherAbi,
-      args: [amount],
-    });
+    const provider = this.web3Provider.getSigner();
+    const lockContract = getContract(vaultAddress, backscratcherAbi, provider);
+    return await this.transactionService.execute({ network, fn: lockContract.deposit, args: [amount] });
   }
 
   public async claim(props: ClaimProps): Promise<TransactionResponse> {
@@ -458,12 +454,9 @@ export class LabServiceImpl implements LabService {
     const { CONTRACT_ADDRESSES } = this.config;
     const { YVECRV } = CONTRACT_ADDRESSES;
 
-    return await this.transactionService.execute({
-      network,
-      methodName: 'claim',
-      contractAddress: YVECRV,
-      abi: backscratcherAbi,
-    });
+    const provider = this.web3Provider.getSigner();
+    const backscratcherContract = getContract(YVECRV, backscratcherAbi, provider);
+    return await this.transactionService.execute({ network, fn: backscratcherContract.claim });
   }
 
   public async reinvest(props: ClaimProps): Promise<TransactionResponse> {
@@ -471,12 +464,9 @@ export class LabServiceImpl implements LabService {
     const { CONTRACT_ADDRESSES } = this.config;
     const { y3CrvBackZapper } = CONTRACT_ADDRESSES;
 
-    return await this.transactionService.execute({
-      network,
-      methodName: 'zap',
-      contractAddress: y3CrvBackZapper,
-      abi: y3CrvBackZapperAbi,
-    });
+    const provider = this.web3Provider.getSigner();
+    const y3CrvBackZapperContract = getContract(y3CrvBackZapper, y3CrvBackZapperAbi, provider);
+    return await this.transactionService.execute({ network, fn: y3CrvBackZapperContract.zap });
   }
 
   private getStakingContractAbi(address: string) {
