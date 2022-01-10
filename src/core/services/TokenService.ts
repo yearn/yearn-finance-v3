@@ -66,9 +66,10 @@ export class TokenServiceImpl implements TokenService {
       console.log({ error });
     }
 
+    const supportedZapperTokens = zapperTokens.filter((token) => token.supported.zapper);
     const tokens = unionBy(vaultsTokens, ironBankTokens, 'address');
     tokens.push(...labsTokens);
-    return getUniqueAndCombine(zapperTokens, tokens, 'address');
+    return getUniqueAndCombine(supportedZapperTokens, tokens, 'address');
   }
 
   public async getTokensDynamicData({ network, addresses }: GetTokensDynamicDataProps): Promise<TokenDynamicData[]> {
@@ -220,11 +221,11 @@ export class TokenServiceImpl implements TokenService {
   /* -------------------------------------------------------------------------- */
   public async approve(props: ApproveProps): Promise<TransactionResponse> {
     const { network, tokenAddress, spenderAddress, amount } = props;
-    const signer = this.web3Provider.getSigner();
-    const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
     return await this.transactionService.execute({
       network,
-      fn: erc20Contract.approve,
+      methodName: 'approve',
+      contractAddress: tokenAddress,
+      abi: erc20Abi,
       args: [spenderAddress, amount],
     });
   }

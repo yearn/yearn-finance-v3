@@ -28,7 +28,7 @@ const footerLinks = [
     name: 'docs',
   },
   {
-    link: 'https://github.com/yearn/yearn-protocol/blob/develop/SECURITY.md',
+    link: 'https://github.com/yearn/yearn-security/blob/master/SECURITY.md',
     name: 'security',
   },
   // {
