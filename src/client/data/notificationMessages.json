@@ -3,28 +3,28 @@
         "id": 0, 
         "type": "info",
         "active": true,
-        "message": "# Welcome to Yearn Finance" 
+        "message": "Welcome to Yearn Finance" 
     },
 
     {
         "id": 1, 
         "type": "info", 
         "active": false, 
-        "message": "Welcome to <b> Yearn Finance 1 <b>"
+        "message": "Notification 1"
     },
 
     {
         "id": 2, 
-        "type": "info", 
+        "type": "warning", 
         "active": true, 
-        "message": "Welcome to <b> Yearn Finance 2 <b>"
+        "message": "Notification with [link](https://github.com/yearn/yearn-finance-v3)"
     },
 
     {
         "id": 3, 
-        "type": "info", 
+        "type": "critical", 
         "active": true, 
-        "message": "Welcome to <b> Yearn Finance 3 <b>"
+        "message": "**Bold Notification**"
     }    
 
 ]
