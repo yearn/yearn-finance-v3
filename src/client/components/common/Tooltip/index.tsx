@@ -23,11 +23,8 @@ const StyledTooltipArrow = styled.div`
 `;
 
 const StyledTooltip = styled.div`
-  --tooltip-background: ${({ theme }) => theme.colors.background};
-  --tooltip-color: ${({ theme }) => theme.colors.onSurfaceH2};
-
-  background: var(--tooltip-background);
-  color: var(--tooltip-color);
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.onSurfaceH2};
   fill: currentColor;
   stroke: currentColor;
   user-select: none;
@@ -75,7 +72,7 @@ export const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placemen
   const popperElement = useRef<any>(null);
   const arrowElement = useRef<any>(null);
   const [open, setOpen] = useState(false);
-  const { styles, attributes, update } = usePopper(referenceElement.current, popperElement.current, {
+  const { styles, attributes, forceUpdate } = usePopper(referenceElement.current, popperElement.current, {
     placement,
     modifiers: [
       preventOverflow,
@@ -100,14 +97,16 @@ export const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placemen
     ...(children ? children.props && children.props : {}),
   };
 
+  React.useEffect(() => {
+    forceUpdate && forceUpdate();
+  }, [popperElement.current]);
+
   const handleOpen = () => {
     setOpen(true);
-    update && update();
   };
 
   const handleClose = () => {
     setOpen(false);
-    update && update();
   };
 
   childrenProps.onMouseOver = composeEventHandler(handleOpen, childrenProps.onMouseOver);
@@ -120,17 +119,12 @@ export const Tooltip: FC<TooltipProps> = ({ children, tooltipComponent, placemen
   return (
     <>
       {React.cloneElement(children, childrenProps)}
-      <StyledTooltip
-        ref={popperElement}
-        style={{
-          ...styles.popper,
-          display: !open ? 'none' : undefined,
-        }}
-        {...attributes.popper}
-      >
-        {tooltipComponent}
-        <StyledTooltipArrow ref={arrowElement} style={styles.arrow} data-popper-arrow />
-      </StyledTooltip>
+      {open && (
+        <StyledTooltip ref={popperElement} style={styles.popper} {...attributes.popper}>
+          {tooltipComponent}
+          <StyledTooltipArrow ref={arrowElement} style={styles.arrow} data-popper-arrow />
+        </StyledTooltip>
+      )}
     </>
   );
 };
