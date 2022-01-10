@@ -66,9 +66,10 @@ export class TokenServiceImpl implements TokenService {
       console.log({ error });
     }
 
+    const supportedZapperTokens = zapperTokens.filter((token) => token.supported.zapper);
     const tokens = unionBy(vaultsTokens, ironBankTokens, 'address');
     tokens.push(...labsTokens);
-    return getUniqueAndCombine(zapperTokens, tokens, 'address');
+    return getUniqueAndCombine(supportedZapperTokens, tokens, 'address');
   }
 
   public async getTokensDynamicData({ network, addresses }: GetTokensDynamicDataProps): Promise<TokenDynamicData[]> {
