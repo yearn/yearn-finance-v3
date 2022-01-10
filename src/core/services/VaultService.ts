@@ -179,21 +179,22 @@ export class VaultServiceImpl implements VaultService {
     const { network, vaultFromAddress, vaultToAddress, migrationContractAddress } = props;
     const { triCryptoVaultMigrator } = this.config.CONTRACT_ADDRESSES;
 
-    const signer = this.web3Provider.getSigner();
     switch (migrationContractAddress) {
       case triCryptoVaultMigrator:
-        const triCryptoVaultMigratorContract = getContract(migrationContractAddress, triCryptoVaultMigratorAbi, signer);
         return await this.transactionService.execute({
           network,
-          fn: triCryptoVaultMigratorContract.migrate_to_new_vault,
+          methodName: 'migrate_to_new_vault',
+          contractAddress: migrationContractAddress,
+          abi: triCryptoVaultMigratorAbi,
         });
 
       default:
-        const trustedVaultMigratorContract = getContract(migrationContractAddress, trustedVaultMigratorAbi, signer);
         return await this.transactionService.execute({
           network,
-          fn: trustedVaultMigratorContract.migrateAll,
+          methodName: 'migrateAll',
           args: [vaultFromAddress, vaultToAddress],
+          contractAddress: migrationContractAddress,
+          abi: trustedVaultMigratorAbi,
         });
     }
   }
