@@ -4184,10 +4184,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@yfi/sdk@1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-1.0.11.tgz#1b5256384f81d80521a786c5826519f1283b901a"
-  integrity sha512-48rm5IWCT1EGwCrpgfMagkh0PFCFlvkbVwtf5eZ4roecocqn2Le+i9rCyPKVXx7B8+LyD3xg/czo0F6XtIj/yA==
+"@yfi/sdk@1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-1.0.14.tgz#8749b3ff4b6cae69791ea6ebf0e7793d78a674c2"
+  integrity sha512-HG4fUA0UlgLv1iDYnehKXeFMA7MSXt8+2WjmultLfjNxaPM7DLYYfvW689ao/7IqBKVwIMN8tcUBeGQs3JT7/A==
   dependencies:
     bignumber.js "^9.0.1"
     cross-fetch "^3.1.3-alpha.6"
