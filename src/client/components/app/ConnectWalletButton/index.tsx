@@ -33,7 +33,12 @@ export const ConnectWalletButton = ({ address, ensName, disabled, onClick }: Wal
   }
 
   return (
-    <StyledButton onClick={() => onClick && onClick()} disabled={disabled}>
+    <StyledButton
+      onClick={() => onClick && onClick()}
+      disabled={disabled}
+      data-testid="connect-wallet-button"
+      data-connected={!!address}
+    >
       <Text ellipsis>{buttonMessage}</Text>
     </StyledButton>
   );
