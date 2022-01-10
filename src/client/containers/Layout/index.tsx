@@ -50,7 +50,6 @@ const StyledLayout = styled.div`
         position: fixed;
         top: 0;
         width: 100%;
-        will-change: transform;
         z-index: -1;
       }
   `}
