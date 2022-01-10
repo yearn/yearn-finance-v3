@@ -46,7 +46,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
 
-  dispatch(NotificationsActions.getNotificationMessages());
+  await dispatch(NotificationsActions.getNotificationMessages());
 
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
