@@ -1333,7 +1333,7 @@
     react-qr-reader "^2.2.1"
     rxjs "^6.6.3"
 
-"@davatar/react@^1.8.1":
+"@davatar/react@1.8.1":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@davatar/react/-/react-1.8.1.tgz#2fe3e619422a46092c57025328be56b1e911550e"
   integrity sha512-vq9zNwAfnZCoY8W2eAbjWP1GPQutUfdxG+lKG2fAPqNFP2qrzDhIziKyCKtt7jwaXp79P1Cy1Gjzlvs1XkzwOQ==

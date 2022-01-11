@@ -12,6 +12,10 @@ interface WalletAddressProps {
   onClick: () => void;
 }
 
+const StyledDavatar = styled(Davatar)`
+  margin-right: 0.6rem;
+`;
+
 const StyledButton = styled(Button)`
   overflow: hidden;
   background-color: ${({ theme }) => theme.colors.walletButton.background};
