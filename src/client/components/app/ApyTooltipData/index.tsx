@@ -1,9 +1,9 @@
-import { useAppTranslation } from '@src/client/hooks';
-import { getConstants } from '@src/config/constants';
-import { formatApy } from '@src/utils';
 import { Apy } from '@types';
 import { FC } from 'react';
 import styled from 'styled-components';
+import { useAppTranslation } from '@hooks';
+import { getConstants } from '@config/constants';
+import { formatApy } from '@utils';
 
 const StyledTooltipTable = styled.table`
   & > tbody > tr > td {

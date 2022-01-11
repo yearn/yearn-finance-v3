@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isNewOrNA } from '@utils';
+import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isApyNewOrNA } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
 
@@ -302,7 +302,7 @@ export const VaultDetailPanels = ({
                   <StyledText fontWeight="bold">
                     <span>{formatApy(selectedVault.apyData, selectedVault.apyType)}</span>
                   </StyledText>
-                  {!isNewOrNA(selectedVault.apyType) && selectedVault.apyMetadata && (
+                  {!isApyNewOrNA(selectedVault.apyType) && selectedVault.apyMetadata && (
                     <Tooltip
                       placement="bottom"
                       tooltipComponent={

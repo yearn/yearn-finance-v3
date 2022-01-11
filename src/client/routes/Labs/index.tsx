@@ -110,6 +110,15 @@ const StyledNoWalletCard = styled(NoWalletCard)`
   ${halfWidthCss}
 `;
 
+const ApyTooltip = ({ apyData, apyMetadata, address }: Pick<GeneralLabView, 'apyData' | 'apyMetadata' | 'address'>) =>
+  !apyMetadata ? (
+    <span>{formatPercent(apyData, 2)}</span>
+  ) : (
+    <Tooltip placement="bottom" tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}>
+      <StyledHelperCursor>{formatPercent(apyData, 2)}</StyledHelperCursor>
+    </Tooltip>
+  );
+
 export const Labs = () => {
   const { t } = useAppTranslation(['common', 'labs']);
 
@@ -355,17 +364,9 @@ export const Labs = () => {
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
-                  transform: ({ apyData, apyMetadata, address }) =>
-                    !apyMetadata ? (
-                      <span>{formatPercent(apyData, 2)}</span>
-                    ) : (
-                      <Tooltip
-                        placement="bottom"
-                        tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
-                      >
-                        <StyledHelperCursor>{formatPercent(apyData, 2)}</StyledHelperCursor>
-                      </Tooltip>
-                    ),
+                  transform: ({ apyData, apyMetadata, address }) => (
+                    <ApyTooltip apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',
@@ -429,17 +430,9 @@ export const Labs = () => {
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
-                  transform: ({ apyData, apyMetadata, address }) =>
-                    !apyMetadata ? (
-                      <span>{formatPercent(apyData, 2)}</span>
-                    ) : (
-                      <Tooltip
-                        placement="bottom"
-                        tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
-                      >
-                        <StyledHelperCursor>{formatPercent(apyData, 2)}</StyledHelperCursor>
-                      </Tooltip>
-                    ),
+                  transform: ({ apyData, apyMetadata, address }) => (
+                    <ApyTooltip apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',

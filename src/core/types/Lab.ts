@@ -1,4 +1,4 @@
-import { Apy } from '@yfi/sdk';
+import { Apy } from '@types';
 import { AllowancesMap, LabsPositionsTypes } from './State';
 import { TokenView } from './Token';
 

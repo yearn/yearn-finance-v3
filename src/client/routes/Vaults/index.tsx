@@ -27,8 +27,18 @@ import {
   ApyTooltipData,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text, Tooltip } from '@components/common';
-import { humanize, USDC_DECIMALS, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN, isNewOrNA } from '@utils';
+import {
+  humanize,
+  USDC_DECIMALS,
+  halfWidthCss,
+  normalizeAmount,
+  formatApy,
+  orderApy,
+  toBN,
+  isApyNewOrNA,
+} from '@utils';
 import { getConfig } from '@config';
+import { VaultView } from '@src/core/types';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -136,6 +146,20 @@ const DeprecatedCard = styled(DetailCard)`
     }
   }
 ` as typeof DetailCard;
+
+const ApyTooltip = ({
+  apyData,
+  apyType,
+  apyMetadata,
+  address,
+}: Pick<VaultView, 'apyData' | 'apyMetadata' | 'address' | 'apyType'>) =>
+  isApyNewOrNA(apyType) || !apyMetadata ? (
+    <span>{formatApy(apyData, apyType)}</span>
+  ) : (
+    <Tooltip placement="bottom" tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}>
+      <StyledHelperCursor>{formatApy(apyData, apyType)}</StyledHelperCursor>
+    </Tooltip>
+  );
 
 export const Vaults = () => {
   const { t } = useAppTranslation(['common', 'vaults']);
@@ -247,17 +271,9 @@ export const Vaults = () => {
               {
                 key: 'apy',
                 header: 'APY',
-                transform: ({ apyData, apyType, apyMetadata, address }) =>
-                  isNewOrNA(apyType) || !apyMetadata ? (
-                    <span>{formatApy(apyData, apyType)}</span>
-                  ) : (
-                    <Tooltip
-                      placement="bottom"
-                      tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
-                    >
-                      <StyledHelperCursor>{formatApy(apyData, apyType)}</StyledHelperCursor>
-                    </Tooltip>
-                  ),
+                transform: ({ apyData, apyMetadata, apyType, address }) => (
+                  <ApyTooltip apyType={apyType} apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                ),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
@@ -333,17 +349,9 @@ export const Vaults = () => {
                 {
                   key: 'apy',
                   header: t('components.list-card.apy'),
-                  transform: ({ apyData, apyType, apyMetadata, address }) =>
-                    isNewOrNA(apyType) || !apyMetadata ? (
-                      <span>{formatApy(apyData, apyType)}</span>
-                    ) : (
-                      <Tooltip
-                        placement="bottom"
-                        tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
-                      >
-                        <StyledHelperCursor>{formatApy(apyData, apyType)}</StyledHelperCursor>
-                      </Tooltip>
-                    ),
+                  transform: ({ apyData, apyMetadata, apyType, address }) => (
+                    <ApyTooltip apyType={apyType} apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',
@@ -420,17 +428,9 @@ export const Vaults = () => {
                 {
                   key: 'apy',
                   header: t('components.list-card.apy'),
-                  transform: ({ apyData, apyType, apyMetadata, address }) =>
-                    isNewOrNA(apyType) || !apyMetadata ? (
-                      <span>{formatApy(apyData, apyType)}</span>
-                    ) : (
-                      <Tooltip
-                        placement="bottom"
-                        tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}
-                      >
-                        <StyledHelperCursor>{formatApy(apyData, apyType)}</StyledHelperCursor>
-                      </Tooltip>
-                    ),
+                  transform: ({ apyData, apyMetadata, apyType, address }) => (
+                    <ApyTooltip apyType={apyType} apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',
