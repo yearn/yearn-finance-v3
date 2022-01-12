@@ -15,10 +15,10 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
   $ git clone https://github.com/<your-gh>/yearn-finance-v3.git
   ```
 
-- Set origin to your fork. This is where you push your changes to
+- Set origin to your fork. This is where you push your changes to. This is done automatically by the step above.
 
   ```
-  $ git remote add origin https://github.com/<your-gh>>/yearn-finance-v3
+  $ git remote add origin https://github.com/<your-gh>/yearn-finance-v3
   ```
 
 - Set upstream to original repo.
@@ -27,7 +27,7 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
   $ git remote add upstream https://github.com/yearn/yearn-finance-v3.git
   ```
 
-- Create .env file in root directory of repo then copy contents of .env.example to .env
+- Create `.env` file in root directory of repo then copy contents of `.env.example` to `.env`
   ```
   $ cp .env.example .env
   ```
@@ -61,6 +61,7 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 
 - Go to your GitHub and navigate to your forked repo
 - Click on `Pull requests` and then click on `New pull request`
+- Click on `compare across forks`
 - Click on `compare:` and select branch that you want to create a pull request for then click on `create pull request`
 
 ## Development
@@ -69,8 +70,8 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 $ yarn dev
 ```
 
-- To enable Dev Mode set `REACT_APP_ALLOW_DEV_MODE=true` in your .env
-- Wallet Address Override can be acivated by navigating to Settings in the app and clicking `Enable Dev Mode`
+- To enable Dev Mode set `REACT_APP_ALLOW_DEV_MODE=true` in your `.env`
+- Wallet Address Override can be activated by navigating to Settings in the app and clicking `Enable Dev Mode`
 
 ## Production
 
