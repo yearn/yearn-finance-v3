@@ -244,16 +244,11 @@ const getTooltip = ({
   }
 
   return (
-    <Tooltip
-      placement="bottom"
-      tooltipComponent={
-        <ApyTooltipData apy={apyMetadata} address={address} />
-      }
-    >
+    <Tooltip placement="bottom" tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}>
       <StyledIcon Component={InfoIcon} size="1.5rem" />
     </Tooltip>
-  )
-}
+  );
+};
 
 export const VaultDetailPanels = ({
   selectedVault,
@@ -324,7 +319,11 @@ export const VaultDetailPanels = ({
                   <StyledText fontWeight="bold">
                     <span>{formatApy(selectedVault.apyData, selectedVault.apyType)}</span>
                   </StyledText>
-                  {getTooltip({ apyType: selectedVault.apyType, apyMetadata: selectedVault.apyMetadata, address: selectedVault.address })}
+                  {getTooltip({
+                    apyType: selectedVault.apyType,
+                    apyMetadata: selectedVault.apyMetadata,
+                    address: selectedVault.address,
+                  })}
                 </TextWithIcon>
               </InfoValueRow>
               <InfoValueRow>
