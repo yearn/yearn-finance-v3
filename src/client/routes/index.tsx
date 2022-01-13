@@ -9,6 +9,7 @@ import { Labs } from './Labs';
 import { IronBank } from './IronBank';
 import { Settings } from './Settings';
 import { Disclaimer } from './Disclaimer';
+import { Health } from './Health';
 
 const routesMap = [
   {
@@ -49,16 +50,22 @@ const routesMap = [
 export const Routes = () => {
   return (
     <Router basename="/#">
-      <Layout>
-        <Switch>
-          {routesMap.map((route, index) => (
-            <Route key={index} exact path={route.path} component={route.component} />
-          ))}
-          <Route path="*">
-            <Redirect to="/home" />
-          </Route>
-        </Switch>
-      </Layout>
+      <Switch>
+        <Route exact path="/health" component={Health} />
+
+        <Route>
+          <Layout>
+            <Switch>
+              {routesMap.map((route, index) => (
+                <Route key={index} exact path={route.path} component={route.component} />
+              ))}
+              <Route path="*">
+                <Redirect to="/home" />
+              </Route>
+            </Switch>
+          </Layout>
+        </Route>
+      </Switch>
     </Router>
   );
 };
