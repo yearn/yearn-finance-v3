@@ -5,7 +5,7 @@
   "scripts": {
     "start": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco start",
     "dev": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco start",
-    "build": "craco build",
+    "build": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "upgrade-sdk": "yarn add yearn/yearn-sdk",
