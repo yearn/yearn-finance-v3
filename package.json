@@ -3,7 +3,7 @@
   "version": "1.0.7",
   "private": true,
   "scripts": {
-    "start": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco start",
+    "start": "craco start",
     "dev": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco start",
     "build": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco build",
     "test": "craco test",
