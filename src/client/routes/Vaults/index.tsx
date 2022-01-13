@@ -152,14 +152,17 @@ const ApyTooltip = ({
   apyType,
   apyMetadata,
   address,
-}: Pick<VaultView, 'apyData' | 'apyMetadata' | 'address' | 'apyType'>) =>
-  isApyNewOrNA(apyType) || !apyMetadata ? (
-    <span>{formatApy(apyData, apyType)}</span>
-  ) : (
+}: Pick<VaultView, 'apyData' | 'apyMetadata' | 'address' | 'apyType'>) => {
+  if (isApyNewOrNA(apyType) || !apyMetadata ) {
+    return (<span>{formatApy(apyData, apyType)}</span>)
+  }
+
+  return (
     <Tooltip placement="bottom" tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}>
       <StyledHelperCursor>{formatApy(apyData, apyType)}</StyledHelperCursor>
     </Tooltip>
-  );
+  )
+}
 
 export const Vaults = () => {
   const { t } = useAppTranslation(['common', 'vaults']);

@@ -234,6 +234,27 @@ export interface VaultDetailPanelsProps {
   blockExplorerUrl?: string;
 }
 
+const getTooltip = ({
+  apyType,
+  apyMetadata,
+  address,
+}: Pick<GeneralVaultView, 'apyMetadata' | 'address' | 'apyType'>) => {
+  if (isApyNewOrNA(apyType) || !apyMetadata) {
+    return null;
+  }
+
+  return (
+    <Tooltip
+      placement="bottom"
+      tooltipComponent={
+        <ApyTooltipData apy={apyMetadata} address={address} />
+      }
+    >
+      <StyledIcon Component={InfoIcon} size="1.5rem" />
+    </Tooltip>
+  )
+}
+
 export const VaultDetailPanels = ({
   selectedVault,
   chartData,
@@ -269,6 +290,7 @@ export const VaultDetailPanels = ({
       context?.wallet.addToken(address, symbol, decimals, icon || '');
     }
   };
+
   return (
     <>
       <Row>
@@ -302,16 +324,7 @@ export const VaultDetailPanels = ({
                   <StyledText fontWeight="bold">
                     <span>{formatApy(selectedVault.apyData, selectedVault.apyType)}</span>
                   </StyledText>
-                  {!isApyNewOrNA(selectedVault.apyType) && selectedVault.apyMetadata && (
-                    <Tooltip
-                      placement="bottom"
-                      tooltipComponent={
-                        <ApyTooltipData apy={selectedVault.apyMetadata} address={selectedVault.address} />
-                      }
-                    >
-                      <StyledIcon Component={InfoIcon} size="1.5rem" />
-                    </Tooltip>
-                  )}
+                  {getTooltip({ apyType: selectedVault.apyType, apyMetadata: selectedVault.apyMetadata, address: selectedVault.address })}
                 </TextWithIcon>
               </InfoValueRow>
               <InfoValueRow>
