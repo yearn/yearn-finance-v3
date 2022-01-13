@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { Contract } from 'ethers';
+
 import { GetAddressEnsNameProps, UserService, Web3Provider, NftBalances, Config } from '@types';
 import { getContract } from '@frameworks/ethers';
 

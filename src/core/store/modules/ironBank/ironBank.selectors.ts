@@ -17,8 +17,9 @@ import {
 } from '@types';
 import { toBN } from '@utils';
 
-import { initialMarketsActionsMap } from './ironBank.reducer';
 import { createToken } from '../tokens/tokens.selectors';
+
+import { initialMarketsActionsMap } from './ironBank.reducer';
 
 const selectMarketsMap = (state: RootState) => state.ironBank.marketsMap;
 const selectMarketsAddresses = (state: RootState) => state.ironBank.marketAddresses;
