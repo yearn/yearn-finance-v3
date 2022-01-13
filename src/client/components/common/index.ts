@@ -17,6 +17,7 @@ export * from './SimpleDropdown';
 export * from './SpinnerLoading';
 export * from './Text';
 export * from './Toggle';
+export * from './Tooltip';
 
 export * from './OptionList';
 export * from './ProgressBar';

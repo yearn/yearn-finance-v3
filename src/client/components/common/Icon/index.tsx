@@ -1,4 +1,4 @@
-import { ElementType, SVGProps } from 'react';
+import { ElementType, SVGProps, forwardRef } from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as AddCircleIcon } from '@assets/icons/add-circle.svg';
@@ -19,6 +19,7 @@ import { ReactComponent as HamburguerIcon } from '@assets/icons/hamburguer.svg';
 import { ReactComponent as HelpIcon } from '@assets/icons/help.svg';
 import { ReactComponent as HomeIcon } from '@assets/icons/home.svg';
 import { ReactComponent as IronBankIcon } from '@assets/icons/iron-bank.svg';
+import { ReactComponent as InfoIcon } from '@assets/icons/info.svg';
 import { ReactComponent as LabsIcon } from '@assets/icons/labs.svg';
 import { ReactComponent as MediumIcon } from '@assets/icons/medium.svg';
 import { ReactComponent as RedditIcon } from '@assets/icons/reddit.svg';
@@ -53,7 +54,7 @@ export interface IconProps
   onClick?: () => void;
 }
 
-export const Icon = styled(({ Component, ...props }: IconProps) => <Component {...props} />)`
+export const Icon = styled(forwardRef(({ Component, ...props }: IconProps, ref) => <Component {...props} ref={ref} />))`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,6 +80,7 @@ export {
   WalletIcon,
   HelpIcon,
   CloseIcon,
+  InfoIcon,
   ArrowDownIcon,
   CollapseIcon,
   SettingsIcon,

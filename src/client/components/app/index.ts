@@ -1,5 +1,6 @@
 export * from './ActionButtons';
 export * from './Amount';
+export * from './ApyTooltipData';
 export * from './ConnectWalletButton';
 export * from './DetailCard';
 export * from './Footer';
