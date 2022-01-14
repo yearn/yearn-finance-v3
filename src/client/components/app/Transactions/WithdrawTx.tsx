@@ -154,6 +154,11 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     decimals: selectedVault.token.decimals.toString(),
     pricePerShare: selectedVault.pricePerShare,
   });
+  const percentageToWithdraw = toBN(amount)
+    .div(toUnit(underlyingTokenBalance, selectedVault.token.decimals))
+    .times(100)
+    .toString();
+  const willWithdrawAll = toBN(percentageToWithdraw).gte(99);
 
   const selectedVaultOption = {
     address: selectedVault.address,
@@ -193,14 +198,24 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const withdraw = async () => {
     try {
-      await dispatchAndUnwrap(
-        VaultsActions.withdrawVault({
-          vaultAddress: selectedVault.address,
-          amount: toBN(amount),
-          targetTokenAddress: selectedTargetTokenAddress,
-          slippageTolerance: selectedSlippage,
-        })
-      );
+      if (willWithdrawAll) {
+        await dispatchAndUnwrap(
+          VaultsActions.withdrawAllVault({
+            vaultAddress: selectedVault.address,
+            targetTokenAddress: selectedTargetTokenAddress,
+            slippageTolerance: selectedSlippage,
+          })
+        );
+      } else {
+        await dispatchAndUnwrap(
+          VaultsActions.withdrawVault({
+            vaultAddress: selectedVault.address,
+            amount: toBN(amount),
+            targetTokenAddress: selectedTargetTokenAddress,
+            slippageTolerance: selectedSlippage,
+          })
+        );
+      }
       setTxCompleted(true);
     } catch (error) {}
   };
