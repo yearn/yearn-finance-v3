@@ -27,6 +27,7 @@ import {
 import v2VaultAbi from './contracts/v2Vault.json';
 import trustedVaultMigratorAbi from './contracts/trustedVaultMigrator.json';
 import triCryptoVaultMigratorAbi from './contracts/triCryptoVaultMigrator.json';
+import ftmSimpleMigratorTest from './contracts/ftmSimpleMigratorTest.json';
 
 export class VaultServiceImpl implements VaultService {
   private yearnSdk: YearnSdk;
@@ -178,6 +179,20 @@ export class VaultServiceImpl implements VaultService {
   public async migrate(props: MigrateProps): Promise<TransactionResponse> {
     const { network, vaultFromAddress, vaultToAddress, migrationContractAddress } = props;
     const { triCryptoVaultMigrator } = this.config.CONTRACT_ADDRESSES;
+
+    const avaxVaultAddress = '0x03B82e4070cA32FF63A03F2EcfC16c0165689a9d';
+
+    if (network === 'fantom' && vaultFromAddress.toLocaleLowerCase() === avaxVaultAddress.toLocaleLowerCase()) {
+      const customFtmMigrator = '0x17DF9F80Dc8E43a7Ab1f47F2E1ec9D7CfceC5D19';
+
+      return await this.transactionService.execute({
+        network,
+        methodName: 'migrateToUsdtVault',
+        contractAddress: customFtmMigrator,
+        abi: ftmSimpleMigratorTest,
+        args: ['1000000000000000'], // 0.001
+      });
+    }
 
     switch (migrationContractAddress) {
       case triCryptoVaultMigrator:

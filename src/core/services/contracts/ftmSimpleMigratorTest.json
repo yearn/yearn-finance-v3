@@ -1,0 +1,37 @@
+[
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_vaultFrom",
+          "type": "address"
+        }
+      ],
+      "name": "migrateAllToUsdtVault",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "vaultFrom",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "shares",
+          "type": "uint256"
+        }
+      ],
+      "name": "migrateToUsdtVault",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ]
