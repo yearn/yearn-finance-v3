@@ -183,7 +183,7 @@ export class VaultServiceImpl implements VaultService {
     const avaxVaultAddress = '0x03B82e4070cA32FF63A03F2EcfC16c0165689a9d';
 
     if (network === 'fantom' && vaultFromAddress.toLocaleLowerCase() === avaxVaultAddress.toLocaleLowerCase()) {
-      const customFtmMigrator = '0x17DF9F80Dc8E43a7Ab1f47F2E1ec9D7CfceC5D19';
+      const customFtmMigrator = '0x09480e53fb713F7C26412436b84e379C0d73F61c';
 
       return await this.transactionService.execute({
         network,
