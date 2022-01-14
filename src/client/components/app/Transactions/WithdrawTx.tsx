@@ -12,6 +12,7 @@ import {
   WalletSelectors,
 } from '@store';
 import {
+  toUnit,
   toBN,
   normalizeAmount,
   USDC_DECIMALS,
@@ -20,6 +21,7 @@ import {
   validateSlippage,
   validateNetwork,
   calculateSharesAmount,
+  calculateUnderlyingAmount,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -140,14 +142,6 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     walletNetwork,
   });
 
-  const selectedVaultOption = {
-    address: selectedVault.address,
-    symbol: selectedVault.displayName,
-    icon: selectedVault.displayIcon,
-    balance: selectedVault.DEPOSIT.userDeposited,
-    balanceUsdc: selectedVault.DEPOSIT.userDepositedUsdc,
-    decimals: selectedVault.token.decimals,
-  };
   const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmount, selectedTargetToken?.decimals)
@@ -155,6 +149,20 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const expectedAmountValue = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
+  const underlyingTokenBalance = calculateUnderlyingAmount({
+    amount: toUnit(selectedVault.DEPOSIT.userBalance, parseInt(selectedVault.decimals)),
+    decimals: selectedVault.token.decimals.toString(),
+    pricePerShare: selectedVault.pricePerShare,
+  });
+
+  const selectedVaultOption = {
+    address: selectedVault.address,
+    symbol: selectedVault.displayName,
+    icon: selectedVault.displayIcon,
+    balance: underlyingTokenBalance,
+    balanceUsdc: selectedVault.DEPOSIT.userDepositedUsdc,
+    decimals: selectedVault.token.decimals,
+  };
 
   const sourceError = networkError || allowanceError || inputError;
   const targetStatus = {
