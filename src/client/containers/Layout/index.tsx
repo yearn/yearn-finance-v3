@@ -22,6 +22,14 @@ import { Network, Route } from '@types';
 
 const contentSeparation = '1.6rem';
 
+/*
+  Some css magic to make a performance upgrade when the background is an image:
+  background-attachment: fixed causes a paint operation every time the user scrolls.
+  This is because the page must reposition the content as well as the background image so it looks like its holding still
+  This causes a re-render of all child components since they have to be moved.
+  Setting the background on a before element enables us to give all the styles into its own element so it moves independent from all the other elements.
+  This basically wraps all gpu-heavy operations behind just one element instead of being applied to a pseudo-class
+*/
 const StyledLayout = styled.div`
   display: flex;
   justify-content: center;
@@ -31,15 +39,19 @@ const StyledLayout = styled.div`
   ${({ theme }) =>
     theme.background &&
     `
-      background-size: cover;
-      background-image: url(${theme.background.image});
-      background-position: ${theme.background.position ?? 'center'};
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      &::before {
+        background-image: url(${theme.background.image});
+        background-repeat: no-repeat;
+        background-position: ${theme.background.position ?? 'center'};
+        background-size: cover;
+        content: '';
+        height: 100%;
+        left: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: -1;
+      }
   `}
 `;
 

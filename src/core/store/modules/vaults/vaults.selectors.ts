@@ -264,6 +264,7 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     hideIfNoDeposits: vaultData.metadata.hideIfNoDeposits ?? false,
     apyData: vaultData.metadata.apy?.net_apy.toString() ?? '0',
     apyType: vaultData.metadata.apy?.type ?? '',
+    apyMetadata: vaultData.metadata.apy,
     allowancesMap: vaultAllowancesMap ?? {},
     approved: toBN(currentAllowance).gt(0),
     pricePerShare: vaultData?.metadata.pricePerShare,
