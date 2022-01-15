@@ -8,7 +8,7 @@ const selectActiveMessages = createSelector<RootState, Message[], Number[], Mess
   [selectMessages, selectDismissedMessageIds],
   (messages, dismissedMessageIds) => {
     const activeMessages = messages.filter((message) => {
-      return message.active === true && !dismissedMessageIds.includes(message.id);
+      return !dismissedMessageIds.includes(message.id);
     });
     return activeMessages;
   }

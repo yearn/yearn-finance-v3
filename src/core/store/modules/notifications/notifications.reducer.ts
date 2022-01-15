@@ -11,23 +11,12 @@ export const notificationsInitialState: NotificationsState = {
   },
 };
 
-const { clearMessages, clearDismissedMessageIds, getNotificationMessages, dismissMessage } = NotificationsActions;
+const { getNotificationMessages, dismissMessage } = NotificationsActions;
 
 const notificationsReducer = createReducer(notificationsInitialState, (builder) => {
   builder
     .addCase(dismissMessage, (state, actions) => {
       state.dismissedMessageIds = [...state.dismissedMessageIds, actions.payload];
-    })
-
-    /* -------------------------------------------------------------------------- */
-    /*                                 Clear State                                */
-    /* -------------------------------------------------------------------------- */
-    .addCase(clearMessages, (state) => {
-      state.messages = [];
-    })
-
-    .addCase(clearDismissedMessageIds, (state) => {
-      state.dismissedMessageIds = [];
     })
 
     /* -------------------------------------------------------------------------- */
@@ -42,7 +31,9 @@ const notificationsReducer = createReducer(notificationsInitialState, (builder) 
     })
 
     .addCase(getNotificationMessages.fulfilled, (state, { payload: messages }) => {
-      state.messages = messages;
+      state.messages = messages.filter((message) => {
+        return message.active === true;
+      });
       state.statusMap.getNotificationMessages = {};
     });
 });

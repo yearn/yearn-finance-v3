@@ -2,9 +2,10 @@ import { FC } from 'react';
 import { first } from 'lodash';
 import styled from 'styled-components';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
 import { useAppSelector, useAppDispatch } from '@hooks';
 import { NotificationsActions, NotificationsSelectors } from '@store';
-import { Banner, Markdown, Icon, CloseIcon } from '@src/client/components/common';
+import { Banner, Markdown, Icon, CloseIcon } from '@components/common';
 
 const StyledIcon = styled(Icon)`
   width: 1.5rem;
@@ -54,38 +55,38 @@ export const NotificationBanner: FC = () => {
   const latestMessage = first(useAppSelector(NotificationsSelectors.selectActiveMessages));
   const dispatch = useAppDispatch();
 
+  if (!latestMessage) {
+    return null;
+  }
+
   let messageSymbol = '';
-  if (latestMessage) {
-    switch (latestMessage.type) {
-      case 'info':
-        messageSymbol = 'ⓘ';
-        break;
-      case 'warning':
-        messageSymbol = '⚠';
-        break;
-      case 'critical':
-        messageSymbol = '⚠⚠⚠';
-        break;
-      default:
-        messageSymbol = '';
-    }
+  switch (latestMessage.type) {
+    case 'info':
+      messageSymbol = 'ⓘ';
+      break;
+    case 'warning':
+      messageSymbol = '⚠';
+      break;
+    case 'critical':
+      messageSymbol = '⚠⚠⚠';
+      break;
+    default:
+      messageSymbol = '';
   }
 
   return (
     <StyledNotificationBanner>
-      {latestMessage && (
-        <CSSTransition key={latestMessage.id} timeout={600} classNames="transition">
-          <Banner>
-            <StyledNotification>
-              {messageSymbol}
-              <StyledMarkdown>{latestMessage.message}</StyledMarkdown>
-              <StyledClose onClick={() => dispatch(NotificationsActions.dismissMessage(latestMessage.id))}>
-                <StyledIcon Component={CloseIcon} />
-              </StyledClose>
-            </StyledNotification>
-          </Banner>
-        </CSSTransition>
-      )}
+      <CSSTransition key={latestMessage.id} timeout={600} classNames="transition">
+        <Banner>
+          <StyledNotification>
+            {messageSymbol}
+            <StyledMarkdown>{latestMessage.message}</StyledMarkdown>
+            <StyledClose onClick={() => dispatch(NotificationsActions.dismissMessage(latestMessage.id))}>
+              <StyledIcon Component={CloseIcon} />
+            </StyledClose>
+          </StyledNotification>
+        </Banner>
+      </CSSTransition>
     </StyledNotificationBanner>
   );
 };

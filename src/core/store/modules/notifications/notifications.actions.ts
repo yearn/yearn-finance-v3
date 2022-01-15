@@ -2,16 +2,9 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 
 import { Message } from '@types';
-import notificationMessages from '../../../../client/data/notificationMessages.json';
+import notificationMessages from '@client/data/notificationMessages.json';
 
 const dismissMessage = createAction<number>('notifications/dismissMessage');
-
-/* -------------------------------------------------------------------------- */
-/*                                 Clear State                                */
-/* -------------------------------------------------------------------------- */
-
-const clearMessages = createAction<void>('notifications/clearMessages');
-const clearDismissedMessageIds = createAction<void>('notifications/clearDismissedMessageIds');
 
 /* -------------------------------------------------------------------------- */
 /*                                 Fetch Data                                 */
@@ -31,7 +24,5 @@ const getNotificationMessages = createAsyncThunk<Message[], void, ThunkAPI>(
 
 export const NotificationsActions = {
   getNotificationMessages,
-  clearMessages,
-  clearDismissedMessageIds,
   dismissMessage,
 };
