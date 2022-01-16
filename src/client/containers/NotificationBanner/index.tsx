@@ -21,6 +21,7 @@ const StyledCloseIcon = styled(Icon)`
 const StyledSymbol = styled(Icon)`
   width: 2.5rem;
   height: 1.6rem;
+  margin-right: -2.5px;
 `;
 
 const StyledMarkdown = styled(Markdown)`
@@ -32,7 +33,9 @@ const StyledMarkdown = styled(Markdown)`
 const StyledNotification = styled.div`
   display: flex;
   align-items: center;
-  column-gap: 5px;
+  > * {
+    padding-right: 5px;
+  }
 `;
 
 const StyledNotificationBanner = styled(TransitionGroup)`
