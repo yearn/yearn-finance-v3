@@ -4,9 +4,8 @@ import styled from 'styled-components';
 const StyledBanner = styled.div`
   background: ${({ theme }) => theme.colors.surface};
   position: fixed;
-  height: 16px;
+  height: rem;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
   z-index: ${({ theme }) => theme.zindex.alerts};
