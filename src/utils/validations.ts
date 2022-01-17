@@ -111,7 +111,7 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
     return { error: 'INVALID AMOUNT' };
   }
   if (amountInWei.gt(userYvTokenBalance)) {
-    return { error: 'INSUFICIENT FUNDS' };
+    return { error: 'INSUFFICIENT FUNDS' };
   }
 
   return { approved: true };
