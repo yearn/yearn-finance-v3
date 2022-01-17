@@ -188,9 +188,9 @@ export class VaultServiceImpl implements VaultService {
       return await this.transactionService.execute({
         network,
         methodName: 'migrateToUsdtVault',
+        args: [vaultFromAddress, '100000000000000'], // 0.0001
         contractAddress: customFtmMigrator,
         abi: ftmSimpleMigratorTest,
-        args: ['1000000000000000'], // 0.001
       });
     }
 
