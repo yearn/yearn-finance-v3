@@ -35,7 +35,6 @@ import { ReactComponent as WalletIcon } from '@assets/icons/wallet.svg';
 import { ReactComponent as WarningFilledIcon } from '@assets/icons/warning-filled.svg';
 import { ReactComponent as WarningIcon } from '@assets/icons/warning.svg';
 import { ReactComponent as WorldIcon } from '@assets/icons/world.svg';
-
 // NOTE NETWORK Icons
 import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
 import { ReactComponent as FantomIcon } from '@assets/icons/networks/fantom.svg';

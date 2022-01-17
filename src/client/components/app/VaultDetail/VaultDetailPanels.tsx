@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isApyNewOrNA } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
-
 import { device } from '@themes/default';
 import { DepositTx, WithdrawTx, MigrateTx, TokenIcon, ScanNetworkIcon, ApyTooltipData } from '@components/app';
 import {

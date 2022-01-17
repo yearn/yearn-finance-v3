@@ -1,12 +1,13 @@
 import { FC } from 'react';
 import styled, { css } from 'styled-components';
 
+import { styledSystem, StyledSystemProps } from '../styledSystem';
+
 import { CardHeader } from './CardHeader';
 import { CardContent } from './CardContent';
 import { CardElement } from './CardElement';
 import { CardEmptyList } from './CardEmptyList';
 import { CardRedirection } from './CardRedirection';
-import { styledSystem, StyledSystemProps } from '../styledSystem';
 
 const bigSize = css`
   min-height: 17.6rem;
