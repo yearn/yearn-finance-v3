@@ -19,16 +19,16 @@ export function calculateSharesAmount(props: CalculateSharesAmountProps): Wei {
 }
 
 interface CalculateUnderlyingAmountProps {
-  decimals: string;
+  tokenDecimals: string;
   pricePerShare: string;
-  amount: Unit;
+  shareAmount: Unit;
 }
 
 export function calculateUnderlyingAmount(props: CalculateUnderlyingAmountProps): Wei {
-  const { decimals, pricePerShare } = props;
-  const amount = toBN(props.amount);
+  const { tokenDecimals, pricePerShare } = props;
+  const amount = toBN(props.shareAmount);
   if (amount.isNaN()) return '0';
-  const sharePrice = toUnit(pricePerShare, parseInt(decimals));
-  const ONE_UNIT = toBN('10').pow(decimals);
+  const sharePrice = toUnit(pricePerShare, parseInt(tokenDecimals));
+  const ONE_UNIT = toBN('10').pow(tokenDecimals);
   return amount.times(sharePrice).times(ONE_UNIT).toFixed(0);
 }

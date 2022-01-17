@@ -150,8 +150,8 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
   const underlyingTokenBalance = calculateUnderlyingAmount({
-    amount: toUnit(selectedVault.DEPOSIT.userBalance, parseInt(selectedVault.decimals)),
-    decimals: selectedVault.token.decimals.toString(),
+    shareAmount: toUnit(selectedVault.DEPOSIT.userBalance, parseInt(selectedVault.decimals)),
+    tokenDecimals: selectedVault.token.decimals.toString(),
     pricePerShare: selectedVault.pricePerShare,
   });
   const percentageToWithdraw = toBN(amount)
