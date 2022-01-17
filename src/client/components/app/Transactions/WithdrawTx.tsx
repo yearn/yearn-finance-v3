@@ -151,7 +151,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     : '0';
   const underlyingTokenBalance = calculateUnderlyingAmount({
     shareAmount: toUnit(selectedVault.DEPOSIT.userBalance, parseInt(selectedVault.decimals)),
-    tokenDecimals: selectedVault.token.decimals.toString(),
+    underlyingTokenDecimals: selectedVault.token.decimals.toString(),
     pricePerShare: selectedVault.pricePerShare,
   });
   const percentageToWithdraw = toBN(amount)
