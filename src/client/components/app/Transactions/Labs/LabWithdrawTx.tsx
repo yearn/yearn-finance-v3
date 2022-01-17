@@ -63,7 +63,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   // NOTE: We contemplate that in labs withdraw user always will be using yvToken instead of
   // underlyingToken like in vaults. Thats why amount is in yvToken already and we dont need
   // to calculate shares amount.
-  const yvTokenAmount = toWei(amount.toString(), parseInt(selectedLab!.decimals));
+  const yvTokenAmountInWei = toWei(amount.toString(), parseInt(selectedLab!.decimals));
 
   const onExit = () => {
     dispatch(LabsActions.clearSelectedLabAndStatus());
@@ -100,7 +100,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
         VaultsActions.getExpectedTransactionOutcome({
           transactionType: 'WITHDRAW',
           sourceTokenAddress: selectedLab.address,
-          sourceTokenAmount: yvTokenAmount,
+          sourceTokenAmount: yvTokenAmountInWei,
           targetTokenAddress: selectedTargetTokenAddress,
         })
       );
@@ -114,7 +114,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   // TODO: FIX WITH CORRECT LAB VALIDATIONS
   const { approved: isApproved, error: allowanceError } = validateVaultWithdrawAllowance({
     yvTokenAddress: selectedLab.address,
-    yvTokenAmount: toBN(amount),
+    yvTokenAmount: toBN(amount), // normalized
     yvTokenDecimals: selectedLab.decimals,
     underlyingTokenAddress: selectedLab.token.address,
     targetTokenAddress: selectedTargetTokenAddress,
@@ -122,7 +122,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
-    yvTokenAmount: toBN(amount),
+    yvTokenAmount: toBN(amount), // normalized
     yvTokenDecimals: selectedLab.decimals,
     userYvTokenBalance: selectedLab.DEPOSIT.userBalance,
   });
