@@ -21,7 +21,7 @@ import {
   validateVaultWithdrawAllowance,
   validateSlippage,
   validateNetwork,
-  calculateSharesAmount,
+  toWei,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -60,11 +60,11 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
 
-  const yvTokenAmount = calculateSharesAmount({
-    amount: toBN(debouncedAmount),
-    decimals: selectedLab!.decimals,
-    pricePerShare: selectedLab!.pricePerShare,
-  });
+  // NOTE: We contemplate that in labs withdraw user always will be using yvToken instead of
+  // underlyingToken like in vaults. Thats why amount is in yvToken already and we dont need
+  // to calculate shares amount.
+  const yvTokenAmount = toWei(amount.toString(), parseInt(selectedLab!.decimals));
+
   const yvTokenAmountNormalized = normalizeAmount(yvTokenAmount, toBN(selectedLab?.decimals).toNumber());
 
   const onExit = () => {
