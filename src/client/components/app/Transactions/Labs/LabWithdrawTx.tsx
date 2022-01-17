@@ -65,8 +65,6 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   // to calculate shares amount.
   const yvTokenAmount = toWei(amount.toString(), parseInt(selectedLab!.decimals));
 
-  const yvTokenAmountNormalized = normalizeAmount(yvTokenAmount, toBN(selectedLab?.decimals).toNumber());
-
   const onExit = () => {
     dispatch(LabsActions.clearSelectedLabAndStatus());
     dispatch(VaultsActions.clearTransactionData());
@@ -116,7 +114,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   // TODO: FIX WITH CORRECT LAB VALIDATIONS
   const { approved: isApproved, error: allowanceError } = validateVaultWithdrawAllowance({
     yvTokenAddress: selectedLab.address,
-    yvTokenAmount: toBN(yvTokenAmountNormalized),
+    yvTokenAmount: toBN(amount),
     yvTokenDecimals: selectedLab.decimals,
     underlyingTokenAddress: selectedLab.token.address,
     targetTokenAddress: selectedTargetTokenAddress,
@@ -124,7 +122,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
-    yvTokenAmount: toBN(yvTokenAmountNormalized),
+    yvTokenAmount: toBN(amount),
     yvTokenDecimals: selectedLab.decimals,
     userYvTokenBalance: selectedLab.DEPOSIT.userBalance,
   });
