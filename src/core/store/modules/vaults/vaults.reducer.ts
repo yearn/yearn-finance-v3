@@ -62,7 +62,6 @@ const {
   depositVault,
   approveZapOut,
   withdrawVault,
-  withdrawAllVault,
   approveMigrate,
   migrateVault,
   getVaults,
@@ -339,20 +338,6 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = {};
     })
     .addCase(withdrawVault.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { error: error.message };
-    })
-
-    /* ------------------------------ withdrawAllVault ----------------------------- */
-    .addCase(withdrawAllVault.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { loading: true };
-    })
-    .addCase(withdrawAllVault.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = {};
-    })
-    .addCase(withdrawAllVault.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { error: error.message };
     })

@@ -284,74 +284,7 @@ const withdrawVault = createAsyncThunk<
   'vaults/withdrawVault',
   async ({ vaultAddress, amount, targetTokenAddress, slippageTolerance }, { extra, getState, dispatch }) => {
     const { network, wallet, vaults, tokens } = getState();
-    const { services } = extra;
-    const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
-
-    const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
-      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
-    });
-    if (networkError) throw networkError;
-
-    const vaultData = vaults.vaultsMap[vaultAddress];
-    const tokenData = tokens.tokensMap[vaultData.tokenId];
-    const vaultAllowancesMap = tokens.user.userTokensAllowancesMap[vaultAddress];
-    const userVaultData = vaults.user.userVaultsPositionsMap[vaultAddress]?.DEPOSIT;
-
-    const amountOfShares = calculateSharesAmount({
-      amount,
-      decimals: tokenData.decimals,
-      pricePerShare: vaultData.metadata.pricePerShare,
-    });
-
-    const { error: allowanceError } = validateVaultWithdrawAllowance({
-      yvTokenAddress: vaultAddress,
-      yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
-      targetTokenAddress: targetTokenAddress,
-      underlyingTokenAddress: tokenData.address ?? '',
-      yvTokenDecimals: tokenData.decimals.toString() ?? '0',
-      yvTokenAllowancesMap: vaultAllowancesMap ?? {},
-    });
-
-    const { error: withdrawError } = validateVaultWithdraw({
-      yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
-      userYvTokenBalance: userVaultData.balance ?? '0',
-      yvTokenDecimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
-    });
-
-    const error = withdrawError || allowanceError;
-    if (error) throw new Error(error);
-
-    const { vaultService } = services;
-    const tx = await vaultService.withdraw({
-      network: network.current,
-      accountAddress: userAddress,
-      tokenAddress: targetTokenAddress,
-      vaultAddress,
-      amountOfShares,
-      slippageTolerance,
-    });
-    await handleTransaction(tx, network.current);
-    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-    dispatch(getUserVaultsSummary());
-    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
-    dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, vaultAddress] }));
-  }
-);
-
-const withdrawAllVault = createAsyncThunk<
-  void,
-  { vaultAddress: string; targetTokenAddress: string; slippageTolerance?: number },
-  ThunkAPI
->(
-  'vaults/withdrawAllVault',
-  async ({ vaultAddress, targetTokenAddress, slippageTolerance }, { extra, getState, dispatch }) => {
-    const { network, wallet, vaults, tokens } = getState();
-    const { services } = extra;
+    const { services, config } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
@@ -366,7 +299,15 @@ const withdrawAllVault = createAsyncThunk<
     const tokenData = tokens.tokensMap[vaultData.tokenId];
     const vaultAllowancesMap = tokens.user.userTokensAllowancesMap[vaultAddress];
     const userVaultData = vaults.user.userVaultsPositionsMap[vaultAddress]?.DEPOSIT;
-    const amountOfShares = userVaultData.balance;
+
+    const withdrawAll = amount.eq(config.MAX_UINT256);
+    const amountOfShares = withdrawAll
+      ? userVaultData.balance
+      : calculateSharesAmount({
+          amount,
+          decimals: tokenData.decimals,
+          pricePerShare: vaultData.metadata.pricePerShare,
+        });
 
     const { error: allowanceError } = validateVaultWithdrawAllowance({
       yvTokenAddress: vaultAddress,
@@ -392,7 +333,7 @@ const withdrawAllVault = createAsyncThunk<
       accountAddress: userAddress,
       tokenAddress: targetTokenAddress,
       vaultAddress,
-      amountOfShares,
+      amountOfShares: withdrawAll ? config.MAX_UINT256 : amountOfShares,
       slippageTolerance,
     });
     await handleTransaction(tx, network.current);
@@ -509,7 +450,6 @@ export const VaultsActions = {
   depositVault,
   approveZapOut,
   withdrawVault,
-  withdrawAllVault,
   approveMigrate,
   migrateVault,
   getVaultsDynamic,

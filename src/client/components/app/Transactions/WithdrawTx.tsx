@@ -37,7 +37,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
+  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS, MAX_UINT256 } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
@@ -198,24 +198,14 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const withdraw = async () => {
     try {
-      if (willWithdrawAll) {
-        await dispatchAndUnwrap(
-          VaultsActions.withdrawAllVault({
-            vaultAddress: selectedVault.address,
-            targetTokenAddress: selectedTargetTokenAddress,
-            slippageTolerance: selectedSlippage,
-          })
-        );
-      } else {
-        await dispatchAndUnwrap(
-          VaultsActions.withdrawVault({
-            vaultAddress: selectedVault.address,
-            amount: toBN(amount),
-            targetTokenAddress: selectedTargetTokenAddress,
-            slippageTolerance: selectedSlippage,
-          })
-        );
-      }
+      await dispatchAndUnwrap(
+        VaultsActions.withdrawVault({
+          vaultAddress: selectedVault.address,
+          amount: willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount),
+          targetTokenAddress: selectedTargetTokenAddress,
+          slippageTolerance: selectedSlippage,
+        })
+      );
       setTxCompleted(true);
     } catch (error) {}
   };
