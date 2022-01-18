@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { UserActions } from './user.actions';
 
 import { initialStatus, UserState } from '@types';
+
+import { UserActions } from './user.actions';
 
 export const userInitialState: UserState = {
   nft: {

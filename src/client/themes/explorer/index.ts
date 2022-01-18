@@ -1,8 +1,8 @@
 import { DefaultTheme } from 'styled-components';
 
-import ExplorerBackground from './background.jpg';
-
 import { sharedTheme } from '../default';
+
+import ExplorerBackground from './background.jpg';
 
 const explorerTheme: DefaultTheme = {
   ...sharedTheme,
