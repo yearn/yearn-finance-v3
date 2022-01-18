@@ -12,7 +12,7 @@ const StyledCloseIcon = styled(Icon)`
   height: 1rem;
   margin-top: 2.5px;
   cursor: pointer;
-  &: hover {
+  &:hover {
     opacity: 0.7;
     fill: ${({ theme }) => theme.colors.primaryVariant};
   }
@@ -38,26 +38,41 @@ const StyledNotification = styled.div`
   }
 `;
 
-const StyledNotificationBanner = styled(TransitionGroup)`
+const StyledNotificationBanner = styled.div`
+  background: ${({ theme }) => theme.colors.surface};
+  height: rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StyledTransitionGroup = styled(TransitionGroup)`
+  .transition-appear {
+    opacity: 0;
+  }
+  .transition-appear-active {
+    opacity: 1;
+    transition: opacity 800ms;
+  }
   .transition-enter {
     opacity: 0;
   }
   .transition-enter-active {
     opacity: 1;
-    transition: opacity 600ms;
+    transition: opacity 800ms;
   }
   .transition-exit {
     opacity: 1;
   }
   .transition-exit-active {
     opacity: 0;
-    transition: opacity 600ms;
+    transition: opacity 800ms;
+  }
 `;
 
 export const NotificationBanner: FC = () => {
   const latestMessage = first(useAppSelector(NotificationsSelectors.selectActiveMessages));
   const dispatch = useAppDispatch();
-
   if (!latestMessage) {
     return null;
   }
@@ -78,19 +93,21 @@ export const NotificationBanner: FC = () => {
   }
 
   return (
-    <StyledNotificationBanner>
-      <CSSTransition key={latestMessage.id} timeout={600} classNames="transition">
-        <Banner>
-          <StyledNotification>
-            <StyledSymbol Component={messageSymbol} />
-            <StyledMarkdown>{latestMessage.message}</StyledMarkdown>
-            <StyledCloseIcon
-              Component={CloseIcon}
-              onClick={() => dispatch(NotificationsActions.dismissMessage(latestMessage.id))}
-            />
-          </StyledNotification>
-        </Banner>
+    <StyledTransitionGroup>
+      <CSSTransition appear={true} key={latestMessage.id} timeout={800} classNames={'transition'}>
+        <StyledNotificationBanner>
+          <Banner>
+            <StyledNotification>
+              <StyledSymbol Component={messageSymbol} />
+              <StyledMarkdown>{latestMessage.message}</StyledMarkdown>
+              <StyledCloseIcon
+                Component={CloseIcon}
+                onClick={() => dispatch(NotificationsActions.dismissMessage(latestMessage.id))}
+              />
+            </StyledNotification>
+          </Banner>
+        </StyledNotificationBanner>
       </CSSTransition>
-    </StyledNotificationBanner>
+    </StyledTransitionGroup>
   );
 };

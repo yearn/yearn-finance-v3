@@ -145,25 +145,27 @@ export const Layout: FC = ({ children }) => {
   }
 
   return (
-    <StyledLayout>
+    <>
       <NotificationBanner />
-      <Alerts />
-      <Modals />
-      <Navigation />
+      <StyledLayout>
+        <Alerts />
+        <Modals />
+        <Navigation />
 
-      <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
-        <Navbar
-          title={t(`navigation.${path}`)}
-          walletAddress={selectedAddress}
-          addressEnsName={addressEnsName}
-          onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}
-          selectedNetwork={currentNetwork}
-          networkOptions={SUPPORTED_NETWORKS}
-          onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
-        />
-        {children}
-        <Footer />
-      </Content>
-    </StyledLayout>
+        <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
+          <Navbar
+            title={t(`navigation.${path}`)}
+            walletAddress={selectedAddress}
+            addressEnsName={addressEnsName}
+            onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}
+            selectedNetwork={currentNetwork}
+            networkOptions={SUPPORTED_NETWORKS}
+            onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
+          />
+          {children}
+          <Footer />
+        </Content>
+      </StyledLayout>
+    </>
   );
 };
