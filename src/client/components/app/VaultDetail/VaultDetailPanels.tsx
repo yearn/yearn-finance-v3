@@ -1,12 +1,11 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd } from '@utils';
+import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isApyNewOrNA } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
-
 import { device } from '@themes/default';
-import { DepositTx, WithdrawTx, MigrateTx, TokenIcon, ScanNetworkIcon } from '@components/app';
+import { DepositTx, WithdrawTx, MigrateTx, TokenIcon, ScanNetworkIcon, ApyTooltipData } from '@components/app';
 import {
   Card,
   CardContent,
@@ -17,8 +16,10 @@ import {
   Text,
   Markdown,
   Icon,
+  InfoIcon,
   AddCircleIcon,
   LineChart,
+  Tooltip,
 } from '@components/common';
 import { MetamaskLogo } from '@assets/images';
 import { GeneralVaultView, StrategyMetadata, Network } from '@types';
@@ -132,6 +133,16 @@ const InfoValueRow = styled.div`
   white-space: nowrap;
   color: ${({ theme }) => theme.colors.onSurfaceSH1};
   font-size: 1.4rem;
+  align-items: center;
+`;
+
+const TextWithIcon = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const StyledIcon = styled(Icon)`
+  margin-left: 1rem;
 `;
 
 const InfoValueTitle = styled(Text)`
@@ -222,6 +233,22 @@ export interface VaultDetailPanelsProps {
   blockExplorerUrl?: string;
 }
 
+const getTooltip = ({
+  apyType,
+  apyMetadata,
+  address,
+}: Pick<GeneralVaultView, 'apyMetadata' | 'address' | 'apyType'>) => {
+  if (isApyNewOrNA(apyType) || !apyMetadata) {
+    return null;
+  }
+
+  return (
+    <Tooltip placement="bottom" tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}>
+      <StyledIcon Component={InfoIcon} size="1.5rem" />
+    </Tooltip>
+  );
+};
+
 export const VaultDetailPanels = ({
   selectedVault,
   chartData,
@@ -257,6 +284,7 @@ export const VaultDetailPanels = ({
       context?.wallet.addToken(address, symbol, decimals, icon || '');
     }
   };
+
   return (
     <>
       <Row>
@@ -286,7 +314,16 @@ export const VaultDetailPanels = ({
 
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.apy')}</span>
-                <StyledText fontWeight="bold">{formatApy(selectedVault.apyData, selectedVault.apyType)}</StyledText>
+                <TextWithIcon>
+                  <StyledText fontWeight="bold">
+                    <span>{formatApy(selectedVault.apyData, selectedVault.apyType)}</span>
+                  </StyledText>
+                  {getTooltip({
+                    apyType: selectedVault.apyType,
+                    apyMetadata: selectedVault.apyMetadata,
+                    address: selectedVault.address,
+                  })}
+                </TextWithIcon>
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.total-assets')}</span>

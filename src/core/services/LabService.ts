@@ -26,6 +26,17 @@ import yvBoostAbi from './contracts/yvBoost.json';
 import pickleJarAbi from './contracts/pickleJar.json';
 import pickleGaugeAbi from './contracts/pickleGauge.json';
 
+/**
+ * Annual Percentage Yield composite of a particular backscratcher vault coming from api.yearn.finance.
+ */
+interface BackscracherApyComposite {
+  currentBoost: number;
+  boostedApy: number;
+  totalApy: number;
+  poolApy: number;
+  baseApy: number;
+}
+
 export class LabServiceImpl implements LabService {
   private transactionService: TransactionService;
   private yearnSdk: YearnSdk;
@@ -92,7 +103,28 @@ export class LabServiceImpl implements LabService {
           pricePerShare: toBN('1')
             .times(10 ** backscratcherData.decimals)
             .toFixed(0),
-          apy: backscratcherData.apy,
+          apy: backscratcherData.apy
+            ? {
+                ...backscratcherData.apy,
+                composite: backscratcherData.apy.composite
+                  ? {
+                      ...backscratcherData.apy.composite,
+                      boost:
+                        backscratcherData.apy.composite.boost ||
+                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
+                      pool_apy:
+                        backscratcherData.apy.composite.pool_apy ||
+                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).poolApy,
+                      boosted_apr:
+                        backscratcherData.apy.composite.boosted_apr ||
+                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
+                      base_apr:
+                        backscratcherData.apy.composite.base_apr ||
+                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).baseApy,
+                    }
+                  : null,
+              }
+            : undefined,
           displayName: backscratcherData.name,
           displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVECRV}/logo-128.png`,
           defaultDisplayToken: CRV,
