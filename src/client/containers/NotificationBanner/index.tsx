@@ -44,6 +44,7 @@ const StyledNotificationBanner = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 `;
 
 const StyledTransitionGroup = styled(TransitionGroup)`
@@ -66,7 +67,14 @@ const StyledTransitionGroup = styled(TransitionGroup)`
   }
   .transition-exit-active {
     opacity: 0;
+    position: absolute;
     transition: opacity 800ms;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -93,9 +101,14 @@ export const NotificationBanner: FC = () => {
   }
 
   return (
-    <StyledTransitionGroup>
-      <CSSTransition appear={true} key={latestMessage.id} timeout={800} classNames={'transition'}>
-        <StyledNotificationBanner>
+    <StyledNotificationBanner>
+      <StyledTransitionGroup>
+        <CSSTransition
+          appear={true}
+          key={latestMessage.id}
+          timeout={800}
+          classNames={'transition'}
+        >
           <Banner>
             <StyledNotification>
               <StyledSymbol Component={messageSymbol} />
@@ -106,8 +119,8 @@ export const NotificationBanner: FC = () => {
               />
             </StyledNotification>
           </Banner>
-        </StyledNotificationBanner>
-      </CSSTransition>
-    </StyledTransitionGroup>
+        </CSSTransition>
+      </StyledTransitionGroup>
+    </StyledNotificationBanner>
   );
 };
