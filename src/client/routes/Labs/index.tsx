@@ -22,8 +22,9 @@ import {
   ViewContainer,
   NoWalletCard,
   Amount,
+  ApyTooltipData,
 } from '@components/app';
-import { SpinnerLoading, SearchInput, Text } from '@components/common';
+import { SpinnerLoading, SearchInput, Text, Tooltip } from '@components/common';
 import { formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECIMALS } from '@utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
@@ -39,6 +40,10 @@ const Row = styled.div`
   justify-content: flex-start;
   grid-gap: ${({ theme }) => theme.layoutPadding};
   flex-wrap: wrap;
+`;
+
+const StyledHelperCursor = styled.span`
+  cursor: help;
 `;
 
 const StyledRecommendationsCard = styled(RecommendationsCard)`
@@ -104,6 +109,18 @@ const StyledNoWalletCard = styled(NoWalletCard)`
   width: 100%;
   ${halfWidthCss}
 `;
+
+const ApyTooltip = ({ apyData, apyMetadata, address }: Pick<GeneralLabView, 'apyData' | 'apyMetadata' | 'address'>) => {
+  if (!apyMetadata) {
+    return <span>{formatPercent(apyData, 2)}</span>;
+  }
+
+  return (
+    <Tooltip placement="bottom" tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}>
+      <StyledHelperCursor>{formatPercent(apyData, 2)}</StyledHelperCursor>
+    </Tooltip>
+  );
+};
 
 export const Labs = () => {
   const { t } = useAppTranslation(['common', 'labs']);
@@ -350,7 +367,9 @@ export const Labs = () => {
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
-                  format: ({ apyData }) => formatPercent(apyData, 2),
+                  transform: ({ apyData, apyMetadata, address }) => (
+                    <ApyTooltip apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',
@@ -414,7 +433,9 @@ export const Labs = () => {
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
-                  format: ({ apyData }) => formatPercent(apyData, 2),
+                  transform: ({ apyData, apyMetadata, address }) => (
+                    <ApyTooltip apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',

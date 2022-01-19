@@ -4,9 +4,7 @@ import BigNumber from 'bignumber.js';
 import { ThunkAPI } from '@frameworks/redux';
 import { Lab, LabDynamic, Position } from '@types';
 import {
-  calculateSharesAmount,
   handleTransaction,
-  normalizeAmount,
   toBN,
   getNetwork,
   validateNetwork,
@@ -17,6 +15,7 @@ import {
   validateYvBoostEthActionsAllowance,
   getZapInContractAddress,
   validateYveCrvActionsAllowance,
+  toWei,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -254,29 +253,27 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
     if (networkError) throw networkError;
 
     const labData = labs.labsMap[labAddress];
-    const tokenData = tokens.tokensMap[labData.tokenId];
     const labAllowancesMap = tokens.user.userTokensAllowancesMap[labAddress];
     const userLabData = labs.user.userLabsPositionsMap[labAddress]?.DEPOSIT;
 
-    const amountOfShares = calculateSharesAmount({
-      amount,
-      decimals: tokenData.decimals,
-      pricePerShare: labData.metadata.pricePerShare,
-    });
+    // NOTE: We contemplate that in labs withdraw user always will be using yvToken instead of
+    // underlyingToken like in vaults. Thats why amount is in yvToken already and we dont need
+    // to calculate shares amount.
+    const amountOfShares = toWei(amount.toString(), parseInt(labData.decimals));
 
     const { error: allowanceError } = validateVaultWithdrawAllowance({
       yvTokenAddress: labAddress,
-      yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+      yvTokenAmount: amount, // normalized
       targetTokenAddress: tokenAddress,
-      underlyingTokenAddress: tokenData.address ?? '',
-      yvTokenDecimals: tokenData.decimals.toString() ?? '0',
+      underlyingTokenAddress: labData.tokenId ?? '',
+      yvTokenDecimals: labData.decimals ?? '0',
       yvTokenAllowancesMap: labAllowancesMap ?? {},
     });
 
     const { error: withdrawError } = validateVaultWithdraw({
-      yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+      yvTokenAmount: amount, // normalized
       userYvTokenBalance: userLabData.balance ?? '0',
-      yvTokenDecimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
+      yvTokenDecimals: labData.decimals ?? '0',
     });
 
     const error = withdrawError || allowanceError;
@@ -390,29 +387,27 @@ const yvBoostWithdraw = createAsyncThunk<
     throw new Error('WALLET NOT CONNECTED');
   }
   const labData = getState().labs.labsMap[labAddress];
-  const tokenData = getState().tokens.tokensMap[labData.tokenId];
   const labAllowancesMap = getState().tokens.user.userTokensAllowancesMap[labAddress];
   const userLabData = getState().labs.user.userLabsPositionsMap[labAddress]?.DEPOSIT;
 
-  const amountOfShares = calculateSharesAmount({
-    amount,
-    decimals: tokenData.decimals,
-    pricePerShare: labData.metadata.pricePerShare,
-  });
+  // NOTE: We contemplate that in yvBoost withdraw user always will be using yvToken instead of
+  // underlyingToken like in vaults. Thats why amount is in yvToken already and we dont need
+  // to calculate shares amount.
+  const amountOfShares = toWei(amount.toString(), parseInt(labData.decimals));
 
   const { error: allowanceError } = validateVaultWithdrawAllowance({
     yvTokenAddress: labAddress,
-    yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    yvTokenAmount: amount, // normalized
     targetTokenAddress: targetTokenAddress,
-    underlyingTokenAddress: tokenData.address ?? '',
-    yvTokenDecimals: tokenData.decimals.toString() ?? '0',
+    underlyingTokenAddress: labData.tokenId ?? '',
+    yvTokenDecimals: labData.decimals ?? '0',
     yvTokenAllowancesMap: labAllowancesMap ?? {},
   });
 
   const { error: withdrawError } = validateVaultWithdraw({
-    yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
+    yvTokenAmount: amount, // normalized
     userYvTokenBalance: userLabData.balance ?? '0',
-    yvTokenDecimals: tokenData.decimals.toString() ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
+    yvTokenDecimals: labData.decimals ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
   });
 
   const error = withdrawError || allowanceError;

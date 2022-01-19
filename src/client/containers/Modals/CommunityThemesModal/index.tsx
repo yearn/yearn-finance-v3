@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from '@hooks';
 import { ThemeActions } from '@store';
 import { getTheme } from '@themes';
 import { Theme } from '@types';
-
 import { ThemeBox } from '@components/app';
 import { Card, Modal, Tabs, Tab, TabPanel } from '@components/common';
 

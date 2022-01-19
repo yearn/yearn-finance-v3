@@ -5,6 +5,7 @@ import { Env, Network } from '@types';
 export const getEnv = memoize(
   (): Env => ({
     ENV: process.env.NODE_ENV,
+    VERSION: process.env.REACT_APP_VERSION ?? 'unknown',
     NETWORK: (process.env.REACT_APP_NETWORK ?? 'mainnet') as Network,
     CUSTOM_PROVIDER_HTTPS: process.env.REACT_APP_CUSTOM_PROVIDER_HTTPS ?? 'http://127.0.0.1:8545/',
     USE_MAINNET_FORK: process.env.REACT_APP_USE_MAINNET_FORK === 'true',

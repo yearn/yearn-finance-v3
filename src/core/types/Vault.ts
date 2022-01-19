@@ -1,3 +1,5 @@
+import { Apy } from '@types';
+
 import { Address } from './Blockchain';
 import { TokenView } from './Token';
 import { PositionView } from './Position';
@@ -23,6 +25,7 @@ export interface GeneralVaultView {
   hideIfNoDeposits: boolean;
   apyData: string;
   apyType: string;
+  apyMetadata?: Apy;
   strategies: StrategyMetadata[];
   historicalEarnings: EarningsDayData[];
   earned: Usdc;
