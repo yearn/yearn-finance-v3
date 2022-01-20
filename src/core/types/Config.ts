@@ -30,6 +30,7 @@ export interface Constants {
   WEB3_PROVIDER_HTTPS: string;
   WEB3_PROVIDER_WSS: string;
   FANTOM_PROVIDER_HTTPS: string;
+  ARBITRUM_PROVIDER_HTTPS: string;
   CONTRACT_ADDRESSES: {
     [KEY: string]: string;
   };
