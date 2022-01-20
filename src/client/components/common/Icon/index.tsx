@@ -38,8 +38,10 @@ import { ReactComponent as WorldIcon } from '@assets/icons/world.svg';
 // NOTE NETWORK Icons
 import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
 import { ReactComponent as FantomIcon } from '@assets/icons/networks/fantom.svg';
+import { ReactComponent as ArbitrumIcon } from '@assets/icons/networks/arbitrum.svg';
 import { ReactComponent as EtherscanIcon } from '@assets/icons/etherscan.svg';
 import { ReactComponent as FtmscanIcon } from '@assets/icons/ftmscan.svg';
+import { ReactComponent as ArbiscanIcon } from '@assets/icons/arbiscan.svg';
 import { ReactComponent as DefaultscanIcon } from '@assets/icons/defaultscan.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
@@ -99,9 +101,11 @@ export {
   ConstructionIcon,
   EthereumIcon,
   FantomIcon,
+  ArbitrumIcon,
   AddCircleIcon,
   AddIcon,
   EtherscanIcon,
   FtmscanIcon,
+  ArbiscanIcon,
   DefaultscanIcon,
 };
