@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
 
-import { NotificationsActions } from './notifications.actions';
 import { initialStatus, NotificationsState } from '@types';
+
+import { NotificationsActions } from './notifications.actions';
 
 export const notificationsInitialState: NotificationsState = {
   messages: [],

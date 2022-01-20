@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkAPI } from '@frameworks/redux';
 
+import { ThunkAPI } from '@frameworks/redux';
 import { Message } from '@types';
 import notificationMessages from '@client/data/notificationMessages.json';
 
