@@ -103,12 +103,7 @@ export const NotificationBanner: FC = () => {
   return (
     <StyledNotificationBanner>
       <StyledTransitionGroup>
-        <CSSTransition
-          appear={true}
-          key={latestMessage.id}
-          timeout={800}
-          classNames={'transition'}
-        >
+        <CSSTransition appear={true} key={latestMessage.id} timeout={800} classNames={'transition'}>
           <Banner>
             <StyledNotification>
               <StyledSymbol Component={messageSymbol} />
