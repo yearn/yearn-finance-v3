@@ -179,6 +179,7 @@ export const DetailCard = <T,>({
           key={`content-${i}`}
           wrap={wrap}
           pointer={!!onAction}
+          data-testid="list-item"
           onClick={() => {
             if (onAction) onAction(item);
           }}
