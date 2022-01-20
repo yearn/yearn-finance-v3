@@ -12,6 +12,7 @@ import {
   WalletSelectors,
 } from '@store';
 import {
+  toUnit,
   toBN,
   normalizeAmount,
   USDC_DECIMALS,
@@ -20,6 +21,7 @@ import {
   validateSlippage,
   validateNetwork,
   calculateSharesAmount,
+  calculateUnderlyingAmount,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -35,7 +37,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
+  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS, MAX_UINT256 } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
@@ -140,14 +142,6 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     walletNetwork,
   });
 
-  const selectedVaultOption = {
-    address: selectedVault.address,
-    symbol: selectedVault.displayName,
-    icon: selectedVault.displayIcon,
-    balance: selectedVault.DEPOSIT.userDeposited,
-    balanceUsdc: selectedVault.DEPOSIT.userDepositedUsdc,
-    decimals: selectedVault.token.decimals,
-  };
   const amountValue = toBN(amount).times(normalizeAmount(selectedVault.token.priceUsdc, USDC_DECIMALS)).toString();
   const expectedAmount = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmount, selectedTargetToken?.decimals)
@@ -155,6 +149,25 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const expectedAmountValue = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
+  const underlyingTokenBalance = calculateUnderlyingAmount({
+    shareAmount: toUnit(selectedVault.DEPOSIT.userBalance, parseInt(selectedVault.decimals)),
+    underlyingTokenDecimals: selectedVault.token.decimals.toString(),
+    pricePerShare: selectedVault.pricePerShare,
+  });
+  const percentageToWithdraw = toBN(amount)
+    .div(toUnit(underlyingTokenBalance, selectedVault.token.decimals))
+    .times(100)
+    .toString();
+  const willWithdrawAll = toBN(percentageToWithdraw).gte(99);
+
+  const selectedVaultOption = {
+    address: selectedVault.address,
+    symbol: selectedVault.displayName,
+    icon: selectedVault.displayIcon,
+    balance: underlyingTokenBalance,
+    balanceUsdc: selectedVault.DEPOSIT.userDepositedUsdc,
+    decimals: selectedVault.token.decimals,
+  };
 
   const sourceError = networkError || allowanceError || inputError;
   const targetStatus = {
@@ -188,7 +201,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       await dispatchAndUnwrap(
         VaultsActions.withdrawVault({
           vaultAddress: selectedVault.address,
-          amount: toBN(amount),
+          amount: willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount),
           targetTokenAddress: selectedTargetTokenAddress,
           slippageTolerance: selectedSlippage,
         })

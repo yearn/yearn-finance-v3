@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { useAppTranslation } from '@hooks';
 
+import { useAppTranslation } from '@hooks';
 import { Card, Icon, Text, WalletMissingIcon } from '@components/common';
 
 const StyledIcon = styled(Icon)`

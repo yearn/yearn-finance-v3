@@ -1,4 +1,5 @@
 import { Apy } from '@types';
+
 import { Address } from './Blockchain';
 import { TokenView } from './Token';
 import { PositionView } from './Position';

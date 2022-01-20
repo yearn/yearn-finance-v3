@@ -1,6 +1,7 @@
-import { Apy } from '@types';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import { Apy } from '@types';
 import { useAppTranslation } from '@hooks';
 import { getConstants } from '@config/constants';
 import { formatApy } from '@utils';

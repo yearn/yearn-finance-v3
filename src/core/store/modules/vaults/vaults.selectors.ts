@@ -17,8 +17,9 @@ import {
 } from '@types';
 import { toBN } from '@utils';
 
-import { initialVaultActionsStatusMap } from './vaults.reducer';
 import { createToken } from '../tokens/tokens.selectors';
+
+import { initialVaultActionsStatusMap } from './vaults.reducer';
 
 /* ---------------------------------- State --------------------------------- */
 const selectVaultsState = (state: RootState) => state.vaults;

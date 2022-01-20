@@ -15,8 +15,9 @@ import {
 import { getConstants } from '@config/constants';
 import { toBN } from '@utils';
 
-import { initialLabActionsStatusMap } from './labs.reducer';
 import { createToken } from '../tokens/tokens.selectors';
+
+import { initialLabActionsStatusMap } from './labs.reducer';
 
 const { YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
 

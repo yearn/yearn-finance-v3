@@ -10,7 +10,6 @@ import { device } from '@themes/default';
 import { getConfig } from '@config';
 import { AlertTypes, ModalName, Theme, Language } from '@types';
 import { formatPercent, getCurrentLanguage } from '@utils';
-
 import { ViewContainer, ThemeBox, CustomThemeButton } from '@components/app';
 import {
   ThemesIcon,
