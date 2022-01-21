@@ -40,7 +40,7 @@
     "@types/redux-logger": "3.0.9",
     "@types/styled-components": "5.1.12",
     "@types/styled-system": "5.1.13",
-    "@yfi/sdk": "1.0.18",
+    "@yfi/sdk": "1.0.19",
     "awilix": "4.3.4",
     "axios": "0.21.1",
     "bignumber.js": "9.0.1",
