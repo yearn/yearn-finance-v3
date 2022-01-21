@@ -413,6 +413,7 @@ export const Vaults = () => {
           {!opportunitiesLoading && (
             <OpportunitiesCard
               header={t('components.list-card.opportunities')}
+              data-testid="vaults-opportunities-list"
               metadata={[
                 {
                   key: 'displayIcon',
