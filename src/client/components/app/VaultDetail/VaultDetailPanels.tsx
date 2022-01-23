@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isApyNewOrNA } from '@utils';
+import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isCustomApyType } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
@@ -238,7 +238,7 @@ const getTooltip = ({
   apyMetadata,
   address,
 }: Pick<GeneralVaultView, 'apyMetadata' | 'address' | 'apyType'>) => {
-  if (isApyNewOrNA(apyType) || !apyMetadata) {
+  if (isCustomApyType(apyType) || !apyMetadata) {
     return null;
   }
 
