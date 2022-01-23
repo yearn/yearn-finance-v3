@@ -1,5 +1,6 @@
-import { Theme } from '@types';
 import { DefaultTheme } from 'styled-components';
+
+import { Theme } from '@types';
 
 import { cyberpunkTheme } from './cyberpunk';
 import { darkTheme } from './dark';

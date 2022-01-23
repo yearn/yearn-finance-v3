@@ -2,7 +2,6 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { useAppTranslation } from '@hooks';
-
 import { Text } from '@components/common';
 
 const StyledCardEmptyList = styled.div<{ wrap?: string }>`

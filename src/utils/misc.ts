@@ -63,3 +63,5 @@ export const inLedgerIframe = () => {
     return true;
   }
 };
+
+export const isCustomApyType = (apyType: string) => apyType === 'new' || apyType === 'n/a' || apyType === 'override';

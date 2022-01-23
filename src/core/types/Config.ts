@@ -5,6 +5,7 @@ export interface Config extends Env, Constants {}
 
 export interface Env {
   ENV: string;
+  VERSION: string;
   NETWORK: Network;
   CUSTOM_PROVIDER_HTTPS: string;
   USE_MAINNET_FORK: boolean;
@@ -29,6 +30,7 @@ export interface Constants {
   WEB3_PROVIDER_HTTPS: string;
   WEB3_PROVIDER_WSS: string;
   FANTOM_PROVIDER_HTTPS: string;
+  ARBITRUM_PROVIDER_HTTPS: string;
   CONTRACT_ADDRESSES: {
     [KEY: string]: string;
   };

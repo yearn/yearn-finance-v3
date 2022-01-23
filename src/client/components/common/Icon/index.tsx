@@ -1,4 +1,4 @@
-import { ElementType, SVGProps } from 'react';
+import { ElementType, SVGProps, forwardRef } from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as AddCircleIcon } from '@assets/icons/add-circle.svg';
@@ -19,6 +19,7 @@ import { ReactComponent as HamburguerIcon } from '@assets/icons/hamburguer.svg';
 import { ReactComponent as HelpIcon } from '@assets/icons/help.svg';
 import { ReactComponent as HomeIcon } from '@assets/icons/home.svg';
 import { ReactComponent as IronBankIcon } from '@assets/icons/iron-bank.svg';
+import { ReactComponent as InfoIcon } from '@assets/icons/info.svg';
 import { ReactComponent as LabsIcon } from '@assets/icons/labs.svg';
 import { ReactComponent as MediumIcon } from '@assets/icons/medium.svg';
 import { ReactComponent as RedditIcon } from '@assets/icons/reddit.svg';
@@ -34,12 +35,13 @@ import { ReactComponent as WalletIcon } from '@assets/icons/wallet.svg';
 import { ReactComponent as WarningFilledIcon } from '@assets/icons/warning-filled.svg';
 import { ReactComponent as WarningIcon } from '@assets/icons/warning.svg';
 import { ReactComponent as WorldIcon } from '@assets/icons/world.svg';
-
 // NOTE NETWORK Icons
 import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
 import { ReactComponent as FantomIcon } from '@assets/icons/networks/fantom.svg';
+import { ReactComponent as ArbitrumIcon } from '@assets/icons/networks/arbitrum.svg';
 import { ReactComponent as EtherscanIcon } from '@assets/icons/etherscan.svg';
 import { ReactComponent as FtmscanIcon } from '@assets/icons/ftmscan.svg';
+import { ReactComponent as ArbiscanIcon } from '@assets/icons/arbiscan.svg';
 import { ReactComponent as DefaultscanIcon } from '@assets/icons/defaultscan.svg';
 
 import { styledSystem, StyledSystemProps, TypographyProps } from '../styledSystem';
@@ -53,7 +55,7 @@ export interface IconProps
   onClick?: () => void;
 }
 
-export const Icon = styled(({ Component, ...props }: IconProps) => <Component {...props} />)`
+export const Icon = styled(forwardRef(({ Component, ...props }: IconProps, ref) => <Component {...props} ref={ref} />))`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,6 +81,7 @@ export {
   WalletIcon,
   HelpIcon,
   CloseIcon,
+  InfoIcon,
   ArrowDownIcon,
   CollapseIcon,
   SettingsIcon,
@@ -98,9 +101,11 @@ export {
   ConstructionIcon,
   EthereumIcon,
   FantomIcon,
+  ArbitrumIcon,
   AddCircleIcon,
   AddIcon,
   EtherscanIcon,
   FtmscanIcon,
+  ArbiscanIcon,
   DefaultscanIcon,
 };

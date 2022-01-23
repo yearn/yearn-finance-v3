@@ -72,7 +72,7 @@ export const TxContainer: FC<TxContainerProps> = ({ header, onClose, children, .
 
   if (onClose) {
     closeButton = (
-      <HeaderAction onClick={onClose}>
+      <HeaderAction onClick={onClose} data-testid="close-transaction-modal">
         <StyledIcon Component={CloseIcon} />
       </HeaderAction>
     );

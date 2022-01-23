@@ -1,4 +1,5 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+
 import { ThunkAPI } from '@frameworks/redux';
 import { Alert, AlertTypes } from '@types';
 import { getConfig } from '@config';

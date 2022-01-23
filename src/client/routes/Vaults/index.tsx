@@ -24,10 +24,21 @@ import {
   ViewContainer,
   NoWalletCard,
   Amount,
+  ApyTooltipData,
 } from '@components/app';
-import { SpinnerLoading, SearchInput, Text } from '@components/common';
-import { humanize, USDC_DECIMALS, halfWidthCss, normalizeAmount, formatApy, orderApy, toBN } from '@utils';
+import { SpinnerLoading, SearchInput, Text, Tooltip } from '@components/common';
+import {
+  humanize,
+  USDC_DECIMALS,
+  halfWidthCss,
+  normalizeAmount,
+  formatApy,
+  orderApy,
+  toBN,
+  isCustomApyType,
+} from '@utils';
 import { getConfig } from '@config';
+import { VaultView } from '@src/core/types';
 
 const SearchBarContainer = styled.div`
   margin: 1.2rem;
@@ -40,6 +51,10 @@ const Row = styled.div`
   grid-gap: ${({ theme }) => theme.layoutPadding};
   flex-wrap: wrap;
   width: 100%;
+`;
+
+const StyledHelperCursor = styled.span`
+  cursor: help;
 `;
 
 const StyledRecommendationsCard = styled(RecommendationsCard)`
@@ -131,6 +146,23 @@ const DeprecatedCard = styled(DetailCard)`
     }
   }
 ` as typeof DetailCard;
+
+const ApyTooltip = ({
+  apyData,
+  apyType,
+  apyMetadata,
+  address,
+}: Pick<VaultView, 'apyData' | 'apyMetadata' | 'address' | 'apyType'>) => {
+  if (isCustomApyType(apyType) || !apyMetadata) {
+    return <span>{formatApy(apyData, apyType)}</span>;
+  }
+
+  return (
+    <Tooltip placement="bottom" tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}>
+      <StyledHelperCursor>{formatApy(apyData, apyType)}</StyledHelperCursor>
+    </Tooltip>
+  );
+};
 
 export const Vaults = () => {
   const { t } = useAppTranslation(['common', 'vaults']);
@@ -242,7 +274,9 @@ export const Vaults = () => {
               {
                 key: 'apy',
                 header: 'APY',
-                format: ({ apyData, apyType }) => formatApy(apyData, apyType),
+                transform: ({ apyData, apyMetadata, apyType, address }) => (
+                  <ApyTooltip apyType={apyType} apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                ),
                 sortable: true,
                 width: '8rem',
                 className: 'col-apy',
@@ -318,7 +352,9 @@ export const Vaults = () => {
                 {
                   key: 'apy',
                   header: t('components.list-card.apy'),
-                  format: ({ apyData, apyType }) => formatApy(apyData, apyType),
+                  transform: ({ apyData, apyMetadata, apyType, address }) => (
+                    <ApyTooltip apyType={apyType} apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',
@@ -377,6 +413,7 @@ export const Vaults = () => {
           {!opportunitiesLoading && (
             <OpportunitiesCard
               header={t('components.list-card.opportunities')}
+              data-testid="vaults-opportunities-list"
               metadata={[
                 {
                   key: 'displayIcon',
@@ -395,7 +432,9 @@ export const Vaults = () => {
                 {
                   key: 'apy',
                   header: t('components.list-card.apy'),
-                  format: ({ apyData, apyType }) => formatApy(apyData, apyType),
+                  transform: ({ apyData, apyMetadata, apyType, address }) => (
+                    <ApyTooltip apyType={apyType} apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                  ),
                   sortable: true,
                   width: '8rem',
                   className: 'col-apy',
