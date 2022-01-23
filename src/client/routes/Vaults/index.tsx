@@ -35,7 +35,7 @@ import {
   formatApy,
   orderApy,
   toBN,
-  isApyNewOrNA,
+  isCustomApyType,
 } from '@utils';
 import { getConfig } from '@config';
 import { VaultView } from '@src/core/types';
@@ -153,7 +153,7 @@ const ApyTooltip = ({
   apyMetadata,
   address,
 }: Pick<VaultView, 'apyData' | 'apyMetadata' | 'address' | 'apyType'>) => {
-  if (isApyNewOrNA(apyType) || !apyMetadata) {
+  if (isCustomApyType(apyType) || !apyMetadata) {
     return <span>{formatApy(apyData, apyType)}</span>;
   }
 
