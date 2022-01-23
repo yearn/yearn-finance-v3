@@ -25,7 +25,7 @@ export const handleTransaction = async (
         dismissNotification = dismiss;
       }
     }
-    const receipt = await tx.wait();
+    const receipt = await tx.wait(2);
     if (updateNotification) {
       updateNotification({
         eventCode: 'txConfirmedCustom',
