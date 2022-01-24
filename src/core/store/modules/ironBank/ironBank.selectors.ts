@@ -115,31 +115,15 @@ const selectSelectedMarketActionsStatusMap = createSelector(
   }
 );
 
-const selectSummaryData = createSelector(
-  [selectUserIronBankSummary, selectUserMarketsMetadataMap],
-  (userIronBankSummary, marketsMetdataMap) => {
-    let borrowLimitUsdc = toBN('0');
-    Object.values(marketsMetdataMap).forEach((marketMetadata) => {
-      if (!marketMetadata.enteredMarket) return;
-      borrowLimitUsdc = borrowLimitUsdc.plus(marketMetadata.borrowLimitUsdc);
-    });
-
-    const borrowBalanceUsdc = userIronBankSummary?.borrowBalanceUsdc ?? '0';
-    let borrowUtilizationRatio = toBN('0');
-    if (borrowLimitUsdc.gt(0)) {
-      borrowUtilizationRatio = toBN(borrowBalanceUsdc).times(10000).div(borrowLimitUsdc);
-    }
-
-    return {
-      supplyBalanceUsdc: userIronBankSummary?.supplyBalanceUsdc ?? '0',
-      borrowBalanceUsdc: userIronBankSummary?.borrowBalanceUsdc ?? '0',
-      borrowUtilizationRatio: borrowUtilizationRatio.toString(),
-      borrowLimitUsdc: borrowLimitUsdc.toString(),
-      // TODO: Calc for NET APY
-      netAPY: '0',
-    };
-  }
-);
+const selectSummaryData = createSelector([selectUserIronBankSummary], (userIronBankSummary) => {
+  return {
+    supplyBalanceUsdc: userIronBankSummary?.supplyBalanceUsdc ?? '0',
+    borrowBalanceUsdc: userIronBankSummary?.borrowBalanceUsdc ?? '0',
+    borrowUtilizationRatio: userIronBankSummary?.utilizationRatioBips ?? '0',
+    // TODO: Calc for NET APY
+    borrowLimitUsdc: userIronBankSummary?.borrowLimitUsdc ?? '0',
+  };
+});
 
 const selectRecommendations = createSelector([selectMarkets], (markets) => {
   const sortedMarkets = [...markets].sort((a, b) => {
