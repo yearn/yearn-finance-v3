@@ -351,7 +351,7 @@ export const VaultDetailPanels = ({
 
           {strategy && (
             <OverviewInfo variant="surface" cardSize="small">
-              <StyledCardHeader subHeader={t('vaultdetails:overview-panel.strategies')} />
+              <StyledCardHeader subHeader={t('vaultdetails:overview-panel.highest-tvl-strategy')} />
               <StyledCardContent>
                 <Markdown>{strategy.description}</Markdown>
               </StyledCardContent>
