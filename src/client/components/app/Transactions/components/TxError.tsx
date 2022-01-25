@@ -40,7 +40,6 @@ const StyledTxError = styled.div<{ errorType?: ErrorType }>`
     errorType === 'warning' &&
     `
     background-color: ${theme.colors.txModalColors.warning};
-    color: ${theme.colors.txModalColors.textContrast};
   `}
 `;
 
