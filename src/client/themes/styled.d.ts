@@ -133,6 +133,7 @@ declare module 'styled-components' {
         primary: string;
         loading: string;
         error: string;
+        warning: string;
         success: string;
         text: string;
         textContrast: string;

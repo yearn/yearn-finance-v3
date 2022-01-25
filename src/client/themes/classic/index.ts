@@ -67,6 +67,7 @@ const classicTheme: DefaultTheme = {
       primary: '#006AE3',
       loading: '#FFA800',
       error: '#EF1E02',
+      warning: '#FFA800',
       success: '#01E2A0',
       text: '#fff',
       textContrast: '#fff',
