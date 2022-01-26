@@ -15,6 +15,7 @@ export class YearnSdkImpl implements YearnSdk {
       const networkId = getNetworkId(network) as SdkNetwork;
       const sdkInstance = new Yearn(networkId, {
         provider,
+        disableAllowlist: true,
       });
       this.register(network, sdkInstance);
     });
