@@ -62,6 +62,7 @@ const lightTheme: DefaultTheme = {
       primary: '#00A3FF',
       loading: '#FFA800',
       error: '#FF005E',
+      warning: '#FFA800',
       success: '#A8C300',
       text: '#000000',
       textContrast: '#000000',

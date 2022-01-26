@@ -129,7 +129,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         tokenSymbol={asset.symbol}
       />
 
-      {generalStatus.error && <TxError errorText={generalStatus.error} />}
+      {generalStatus.error && <TxError errorType="warning" errorText={generalStatus.error} />}
 
       <TxActions>
         {actions.map(({ label, onAction, status, disabled, contrast }) => (
