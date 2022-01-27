@@ -60,6 +60,24 @@ const NETWORK_SETTINGS: NetworkSettings = {
     notifyEnabled: false,
     blockExplorerUrl: 'https://ftmscan.com',
   },
+  arbitrum: {
+    id: 'arbitrum',
+    name: 'Arbitrum',
+    networkId: 42161,
+    rpcUrl: 'https://arb1.arbitrum.io/rpc',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    simulationsEnabled: false,
+    zapsEnabled: false,
+    labsEnabled: false,
+    ironBankEnabled: true,
+    earningsEnabled: false,
+    notifyEnabled: false,
+    blockExplorerUrl: 'https://arbiscan.io',
+  },
 };
 
 export const getConstants = memoize((): Constants => {
@@ -74,6 +92,7 @@ export const getConstants = memoize((): Constants => {
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
+    ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
     CONTRACT_ADDRESSES: {
       zapIn: '0x92Be6ADB6a12Da0CA607F9d87DB2F9978cD6ec3E',
       zapOut: '0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c',
@@ -81,6 +100,7 @@ export const getConstants = memoize((): Constants => {
       y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
       ironBankComptroller: '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB',
       ironBankComptrollerFantom: '0x4250A6D3BD57455d7C6821eECb6206F507576cD2',
+      ironBankComptrollerArbitrum: '0xbadaC56c9aca307079e8B8FC699987AAc89813ee',
       trustedVaultMigrator: '0x1824df8D751704FA10FA371d62A37f9B8772ab90',
       triCryptoVaultMigrator: '0xC306a5ef4B990A7F2b3bC2680E022E6a84D75fC1',
       ...ADDRESSES,

@@ -70,6 +70,7 @@ const explorerTheme: DefaultTheme = {
       primary: '#212121',
       loading: '#9f1431',
       error: '#EF1E02',
+      warning: '#FFA800',
       success: '#01E2A0',
       text: '#eeeeee',
       textContrast: '#212121',

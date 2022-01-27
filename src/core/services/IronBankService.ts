@@ -147,8 +147,15 @@ export class IronBankServiceImpl implements IronBankService {
     actionType,
   }: EnterOrExitMarketProps): Promise<TransactionResponse> {
     const { CONTRACT_ADDRESSES } = this.config;
-    const { ironBankComptroller, ironBankComptrollerFantom } = CONTRACT_ADDRESSES;
-    const comptrollerAddress = network === 'fantom' ? ironBankComptrollerFantom : ironBankComptroller;
+    const { ironBankComptroller, ironBankComptrollerFantom, ironBankComptrollerArbitrum } = CONTRACT_ADDRESSES;
+    let comptrollerAddress: string;
+    if (network === 'fantom') {
+      comptrollerAddress = ironBankComptrollerFantom;
+    } else if (network === 'arbitrum') {
+      comptrollerAddress = ironBankComptrollerArbitrum;
+    } else {
+      comptrollerAddress = ironBankComptroller;
+    }
     switch (actionType) {
       case 'enterMarket':
         return await this.transactionService.execute({

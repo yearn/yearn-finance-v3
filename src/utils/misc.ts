@@ -64,4 +64,4 @@ export const inLedgerIframe = () => {
   }
 };
 
-export const isApyNewOrNA = (apyType: string) => apyType === 'new' || apyType === 'n/a';
+export const isCustomApyType = (apyType: string) => apyType === 'new' || apyType === 'n/a' || apyType === 'override';

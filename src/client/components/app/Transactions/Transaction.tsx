@@ -145,7 +145,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
       />
 
       {!generalStatus.error && <TxArrowStatus status={txArrowStatus} />}
-      {generalStatus.error && <TxError errorText={generalStatus.error} />}
+      {generalStatus.error && <TxError errorType="warning" errorText={generalStatus.error} />}
 
       <TxTokenInput
         headerText={targetHeader}
@@ -166,6 +166,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         {actions.map(({ label, onAction, status, disabled, contrast }) => (
           <TxActionButton
             key={label}
+            data-testid={`modal-action-${label.toLowerCase()}`}
             onClick={!status.loading ? onAction : undefined}
             disabled={disabled}
             contrast={contrast}
