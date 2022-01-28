@@ -85,6 +85,14 @@ jobs:
           aws route53 change-resource-record-sets --cli-input-json "$CHANGE_SET_CNAME"
           aws route53 change-resource-record-sets --cli-input-json "$CHANGE_SET_DNSLINK"
 
+      - name: Get Cloudflare SSL
+        run: |
+          while [ CERT_OUTPUT -ne "" ]
+          do
+            sleep 5s
+            CERT_OUTPUT=$(curl 'https://cloudflare-ipfs.com/add_host' -H 'content-type: application/x-www-form-urlencoded' --data "hostname=${{ env.DOMAIN_NAME }}" -sS | jq .err)
+          done
+
       - name: Post details to PR
         uses: actions/github-script@v5
         if: github.event_name == 'pull_request'
