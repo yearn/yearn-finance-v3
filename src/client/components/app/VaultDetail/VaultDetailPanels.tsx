@@ -103,11 +103,25 @@ const VaultActions = styled(Card)`
 
 const OverviewInfo = styled(Card)`
   padding: ${({ theme }) => theme.card.padding};
+  flex-shrink: 0;
 
   a {
     text-decoration: underline;
     color: inherit;
     color: ${({ theme }) => theme.colors.onSurfaceSH1};
+  }
+`;
+
+const OverviewStrategies = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: 23rem;
+
+  > div:not(:first-child) {
+    margin-top: ${({ theme }) => theme.card.padding};
   }
 `;
 
@@ -263,7 +277,7 @@ export const VaultDetailPanels = ({
   const hideDeposit = selectedVault.hideIfNoDeposits || isVaultMigratable;
   const [selectedTab, setSelectedTab] = useState(isVaultMigratable ? 'migrate' : hideDeposit ? 'withdraw' : 'deposit');
   const [selectedUnderlyingData, setSelectedUnderlyingData] = useState(true);
-  const strategy: StrategyMetadata | null = selectedVault?.strategies[0] ?? null;
+  const strategies: StrategyMetadata[] | null = selectedVault?.strategies ?? null;
   const context = useContext(AppContext);
   const handleTabChange = (selectedTab: string) => {
     setSelectedTab(selectedTab);
@@ -340,22 +354,31 @@ export const VaultDetailPanels = ({
             </TokenInfo>
           </OverviewTokenInfo>
 
+          <StyledCardHeader header={t('vaultdetails:overview-panel.about')} />
+
           {selectedVault.token.description && (
-            <OverviewInfo variant="surface" cardSize="small">
-              <StyledCardHeader subHeader={t('vaultdetails:overview-panel.about')} />
+            <OverviewInfo variant="surface" cardSize="micro">
               <StyledCardContent>
                 <Markdown>{selectedVault.token.description}</Markdown>
               </StyledCardContent>
             </OverviewInfo>
           )}
 
-          {strategy && (
-            <OverviewInfo variant="surface" cardSize="small">
-              <StyledCardHeader subHeader={t('vaultdetails:overview-panel.strategies')} />
-              <StyledCardContent>
-                <Markdown>{strategy.description}</Markdown>
-              </StyledCardContent>
-            </OverviewInfo>
+          {strategies?.length && (
+            <>
+              <StyledCardHeader header={t('vaultdetails:overview-panel.strategies')} />
+
+              <OverviewStrategies>
+                {strategies.map((strategy) => (
+                  <OverviewInfo variant="surface" cardSize="micro">
+                    <StyledCardHeader subHeader={strategy.name} />
+                    <StyledCardContent>
+                      <Markdown>{strategy.description}</Markdown>
+                    </StyledCardContent>
+                  </OverviewInfo>
+                ))}
+              </OverviewStrategies>
+            </>
           )}
         </VaultOverview>
 
