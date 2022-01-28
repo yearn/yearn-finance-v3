@@ -12,24 +12,24 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 - Clone the forked repo from your GitHub account to your local machine
 
   ```
-  $ git clone https://github.com/<your-gh>/yearn-finance-v3.git
+  git clone https://github.com/<your-gh>/yearn-finance-v3.git
   ```
 
 - Set origin to your fork. This is where you push your changes to. This is done automatically by the step above.
 
   ```
-  $ git remote add origin https://github.com/<your-gh>/yearn-finance-v3
+  git remote add origin https://github.com/<your-gh>/yearn-finance-v3
   ```
 
 - Set upstream to original repo.
 
   ```
-  $ git remote add upstream https://github.com/yearn/yearn-finance-v3.git
+  git remote add upstream https://github.com/yearn/yearn-finance-v3.git
   ```
 
 - Create `.env` file in root directory of repo then copy contents of `.env.example` to `.env`
   ```
-  $ cp .env.example .env
+  cp .env.example .env
   ```
   - `REACT_APP_INFURA_PROJECT_ID` should remain blank because we are currently using Alchemy as our provider
 
@@ -37,13 +37,13 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 
 - Create a new local branch from upstream/develop for each PR that you will submit
   ```
-  $ git fetch
-  $ git checkout -b <your branch name> upstream/develop
+  git fetch
+  git checkout -b <your branch name> upstream/develop
   ```
 - Commit your changes as you work
   ```
-  $ git add .
-  $ git commit -S -m "message"
+  git add .
+  git commit -S -m "message"
   ```
   - [info about verified commits](https://docs.github.com/en/github/authenticating-to-github/managing-commit-signature-verification)
 
@@ -52,9 +52,9 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 - Commits are squashed when PR is merged so rebasing is optional
 - When ready to push
   ```
-  $ git fetch
-  $ git merge upstream/develop
-  $ git push origin <branch-name>
+  git fetch
+  git merge upstream/develop
+  git push origin <branch-name>
   ```
 
 ### Submitting Pull Request
@@ -67,7 +67,7 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 ## Development
 
 ```
-$ yarn dev
+yarn dev
 ```
 
 - To enable Dev Mode set `REACT_APP_ALLOW_DEV_MODE=true` in your `.env`
@@ -76,8 +76,8 @@ $ yarn dev
 ## Production
 
 ```
-$ yarn build
-$ yarn start
+yarn build
+yarn start
 ```
 
 ## Translations
