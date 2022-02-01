@@ -110,9 +110,9 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
   if (amountInWei.lt(0)) {
     return { error: 'INVALID AMOUNT' };
   }
-  if (amountInWei.gt(userYvTokenBalance)) {
-    return { error: 'INSUFFICIENT FUNDS' };
-  }
+  // if (amountInWei.gt(userYvTokenBalance)) {
+  //   return { error: 'INSUFFICIENT FUNDS' };
+  // }
 
   return { approved: true };
 }
@@ -314,9 +314,9 @@ export function basicValidateAmount(props: BasicValidateAmountProps): Validation
     return { error: 'EXCEEDED ACCEPTED AMOUNT' };
   }
 
-  if (amountInWei.gt(totalAmountAvailable)) {
-    return { error: 'INSUFFICIENT FUNDS' };
-  }
+  // if (amountInWei.gt(totalAmountAvailable)) {
+  //   return { error: 'INSUFFICIENT FUNDS' };
+  // }
 
   return { approved: true };
 }

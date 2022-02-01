@@ -24,6 +24,7 @@ import {
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
   validateMigrateVaultAllowance,
+  parseError,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -151,15 +152,19 @@ const getExpectedTransactionOutcome = createAsyncThunk<
     throw new Error('WALLET NOT CONNECTED');
   }
 
-  const txOutcome = await vaultService.getExpectedTransactionOutcome({
-    network: network.current,
-    transactionType,
-    accountAddress,
-    sourceTokenAddress,
-    sourceTokenAmount,
-    targetTokenAddress,
-  });
-  return { txOutcome };
+  try {
+    const txOutcome = await vaultService.getExpectedTransactionOutcome({
+      network: network.current,
+      transactionType,
+      accountAddress,
+      sourceTokenAddress,
+      sourceTokenAmount,
+      targetTokenAddress,
+    });
+    return { txOutcome };
+  } catch (e) {
+    throw new Error(parseError(e));
+  }
 });
 
 /* -------------------------------------------------------------------------- */
@@ -178,7 +183,7 @@ const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddre
       const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
       unwrapResult(result);
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new Error(parseError(error));
     }
   }
 );
@@ -193,7 +198,7 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>
       );
       unwrapResult(result);
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new Error(parseError(error));
     }
   }
 );
@@ -258,20 +263,24 @@ const depositVault = createAsyncThunk<
 
     const amountInWei = amount.multipliedBy(ONE_UNIT);
     const { vaultService, transactionService } = services;
-    const tx = await vaultService.deposit({
-      network: network.current,
-      accountAddress: userAddress,
-      tokenAddress: tokenData.address,
-      vaultAddress,
-      amount: amountInWei.toString(),
-      slippageTolerance,
-    });
-    await transactionService.handleTransaction({ tx, network: network.current });
-    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-    dispatch(getUserVaultsSummary());
-    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
-    dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
+    try {
+      const tx = await vaultService.deposit({
+        network: network.current,
+        accountAddress: userAddress,
+        tokenAddress: tokenData.address,
+        vaultAddress,
+        amount: amountInWei.toString(),
+        slippageTolerance,
+      });
+      await transactionService.handleTransaction({ tx, network: network.current });
+      dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+      dispatch(getUserVaultsSummary());
+      dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+      dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
+      dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
+    } catch (e) {
+      throw new Error(parseError(e));
+    }
   }
 );
 
@@ -327,20 +336,24 @@ const withdrawVault = createAsyncThunk<
     if (error) throw new Error(error);
 
     const { vaultService, transactionService } = services;
-    const tx = await vaultService.withdraw({
-      network: network.current,
-      accountAddress: userAddress,
-      tokenAddress: targetTokenAddress,
-      vaultAddress,
-      amountOfShares: withdrawAll ? config.MAX_UINT256 : amountOfShares,
-      slippageTolerance,
-    });
-    await transactionService.handleTransaction({ tx, network: network.current });
-    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-    dispatch(getUserVaultsSummary());
-    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
-    dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, vaultAddress] }));
+    try {
+      const tx = await vaultService.withdraw({
+        network: network.current,
+        accountAddress: userAddress,
+        tokenAddress: targetTokenAddress,
+        vaultAddress,
+        amountOfShares: withdrawAll ? config.MAX_UINT256 : amountOfShares,
+        slippageTolerance,
+      });
+      await transactionService.handleTransaction({ tx, network: network.current });
+      dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+      dispatch(getUserVaultsSummary());
+      dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+      dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
+      dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, vaultAddress] }));
+    } catch (e) {
+      throw new Error(parseError(e));
+    }
   }
 );
 
@@ -393,20 +406,24 @@ const migrateVault = createAsyncThunk<
     if (error) throw new Error(error);
 
     const { vaultService, transactionService } = services;
-    const tx = await vaultService.migrate({
-      network: network.current,
-      accountAddress: userAddress,
-      vaultFromAddress,
-      vaultToAddress,
-      migrationContractAddress: migrationContractAddressToUse,
-    });
+    try {
+      const tx = await vaultService.migrate({
+        network: network.current,
+        accountAddress: userAddress,
+        vaultFromAddress,
+        vaultToAddress,
+        migrationContractAddress: migrationContractAddressToUse,
+      });
 
-    await transactionService.handleTransaction({ tx, network: network.current });
-    dispatch(getVaultsDynamic({ addresses: [vaultFromAddress, vaultToAddress] }));
-    dispatch(getUserVaultsSummary());
-    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultFromAddress, vaultToAddress] }));
-    dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultFromAddress, vaultToAddress] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [vaultFromAddress, vaultToAddress] }));
+      await transactionService.handleTransaction({ tx, network: network.current });
+      dispatch(getVaultsDynamic({ addresses: [vaultFromAddress, vaultToAddress] }));
+      dispatch(getUserVaultsSummary());
+      dispatch(getUserVaultsPositions({ vaultAddresses: [vaultFromAddress, vaultToAddress] }));
+      dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultFromAddress, vaultToAddress] }));
+      dispatch(TokensActions.getUserTokens({ addresses: [vaultFromAddress, vaultToAddress] }));
+    } catch (e) {
+      throw new Error(parseError(e));
+    }
   }
 );
 
