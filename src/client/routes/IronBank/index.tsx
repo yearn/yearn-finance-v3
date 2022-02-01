@@ -6,31 +6,13 @@ import {
   ModalsActions,
   IronBankActions,
   IronBankSelectors,
-  WalletSelectors,
   TokensSelectors,
   ModalSelectors,
   AppSelectors,
-  NetworkSelectors,
 } from '@store';
-import { SpinnerLoading, ToggleButton, SearchInput, Text } from '@components/common';
-import {
-  SummaryCard,
-  DetailCard,
-  ViewContainer,
-  ActionButtons,
-  TokenIcon,
-  NoWalletCard,
-  RecommendationsCard,
-  InfoCard,
-  Amount,
-} from '@components/app';
-import { humanize, halfWidthCss, normalizeAmount, USDC_DECIMALS } from '@utils';
-import { device } from '@themes/default';
-import { getConfig } from '@config';
-
-const SearchBarContainer = styled.div`
-  margin: 1.2rem;
-`;
+import { ToggleButton, Text } from '@components/common';
+import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, InfoCard, Amount } from '@components/app';
+import { humanize, halfWidthCss, normalizeAmount } from '@utils';
 
 const Row = styled.div`
   display: flex;
@@ -41,18 +23,9 @@ const Row = styled.div`
   width: 100%;
 `;
 
-const StyledRecommendationsCard = styled(RecommendationsCard)`
-  ${halfWidthCss}
-`;
-
 const StyledInfoCard = styled(InfoCard)`
   max-width: 100%;
   flex: 1;
-  ${halfWidthCss}
-`;
-
-const StyledNoWalletCard = styled(NoWalletCard)`
-  width: 100%;
   ${halfWidthCss}
 `;
 
@@ -107,42 +80,14 @@ const BorrowingCard = styled(DetailCard)`
   }
 ` as typeof DetailCard;
 
-const OpportunitiesCard = styled(DetailCard)`
-  @media ${device.tablet} {
-    .col-market {
-      display: none;
-    }
-  }
-  @media (max-width: 700px) {
-    .col-name {
-      width: 9rem;
-    }
-  }
-  @media ${device.mobile} {
-    .col-lend-apy,
-    .col-borrow-apy {
-      display: none;
-    }
-
-    .col-available {
-      width: 10rem;
-    }
-  }
-` as typeof DetailCard;
-
 export const IronBank = () => {
   const { t } = useAppTranslation(['common', 'ironbank']);
 
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
-  const { NETWORK_SETTINGS } = getConfig();
-  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
-  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
-  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const { supplyBalanceUsdc, borrowBalanceUsdc, borrowUtilizationRatio, borrowLimitUsdc } = useAppSelector(
     IronBankSelectors.selectSummaryData
   );
-  const recommendations = useAppSelector(IronBankSelectors.selectRecommendations);
   const markets = useAppSelector(IronBankSelectors.selectMarkets);
   const supplied = useAppSelector(IronBankSelectors.selectLendMarkets);
   const borrowed = useAppSelector(IronBankSelectors.selectBorrowMarkets);
@@ -155,6 +100,8 @@ export const IronBank = () => {
   const generalLoading =
     (appStatus.loading || ironBankStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
   const marketsLoading = generalLoading && !filteredMarkets.length;
+
+  const userHasPosition = !!supplied.length || !!borrowed.length;
 
   useEffect(() => {
     setFilteredMarkets(markets);
@@ -189,60 +136,34 @@ export const IronBank = () => {
 
   return (
     <ViewContainer>
-      <SummaryCard
-        header={t('dashboard.header')}
-        items={[
-          { header: t('dashboard.supplied'), Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
-          { header: t('dashboard.borrowed'), Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },
-          {
-            header: t('dashboard.borrow-limit-used'),
-            Component: <Amount value={borrowUtilizationRatio} input="weipercent" />,
-          },
-          { header: t('dashboard.borrow-limit-total'), Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
-        ]}
-        variant="secondary"
-        cardSize="small"
-      />
+      <Row>
+        <StyledInfoCard
+          header={t('ironbank:ironbank-announcement-card.header')}
+          Component={
+            <Text>
+              <p>{t('ironbank:ironbank-announcement-card.desc-1')}</p>
+              <p>{t('ironbank:ironbank-announcement-card.desc-2')}</p>
+            </Text>
+          }
+        />
+      </Row>
 
-      {marketsLoading && <SpinnerLoading flex="1" width="100%" />}
-
-      {!marketsLoading && (
+      {userHasPosition && !marketsLoading && (
         <>
-          {currentNetworkSettings.ironBankEnabled ? (
-            <Row>
-              <StyledRecommendationsCard
-                header={t('components.recommendations.header')}
-                items={recommendations.map(({ token, lendApy, address }) => ({
-                  icon: token.icon ?? '',
-                  name: token.symbol,
-                  info: humanize('percent', lendApy),
-                  infoDetail: 'EYY',
-                  onAction: () => actionHandler('supply', address),
-                }))}
-              />
-
-              <StyledInfoCard
-                header={t('ironbank:ironbank-card.header')}
-                Component={
-                  <Text>
-                    <p>{t('ironbank:ironbank-card.desc-1')}</p>
-                    <p>{t('ironbank:ironbank-card.desc-2')}</p>
-                  </Text>
-                }
-              />
-            </Row>
-          ) : (
-            <StyledInfoCard
-              header={t('ironbank:no-ironbank-card.header', { network: currentNetworkSettings.name })}
-              Component={
-                <Text>
-                  <p>{t('ironbank:no-ironbank-card.text')}</p>
-                </Text>
-              }
-            />
-          )}
-
-          {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
+          <SummaryCard
+            header={t('dashboard.header')}
+            items={[
+              { header: t('dashboard.supplied'), Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
+              { header: t('dashboard.borrowed'), Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },
+              {
+                header: t('dashboard.borrow-limit-used'),
+                Component: <Amount value={borrowUtilizationRatio} input="weipercent" />,
+              },
+              { header: t('dashboard.borrow-limit-total'), Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
+            ]}
+            variant="secondary"
+            cardSize="small"
+          />
 
           <SupplyingCard
             header={t('components.list-card.supplying')}
@@ -392,103 +313,6 @@ export const IronBank = () => {
             initialSortBy="userDepositedUsdc"
             wrap
           />
-
-          {!marketsLoading && (
-            <OpportunitiesCard
-              header={t('components.list-card.opportunities')}
-              metadata={[
-                {
-                  key: 'displayIcon',
-                  transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                  width: '6rem',
-                  className: 'col-icon',
-                },
-                {
-                  key: 'displayName',
-                  header: t('components.list-card.name'),
-                  sortable: true,
-                  fontWeight: 600,
-                  width: '17rem',
-                  className: 'col-name',
-                },
-                {
-                  key: 'lendApy',
-                  header: t('components.list-card.lend-apy'),
-                  format: ({ lendApy }) => humanize('percent', lendApy),
-                  sortable: true,
-                  width: '8rem',
-                  className: 'col-lend-apy',
-                },
-                {
-                  key: 'borrowApy',
-                  header: t('components.list-card.borrow-apy'),
-                  format: ({ borrowApy }) => humanize('percent', borrowApy),
-                  sortable: true,
-                  width: '8rem',
-                  className: 'col-borrow-apy',
-                },
-                {
-                  key: 'liquidity',
-                  header: t('components.list-card.market-liquidity'),
-                  format: ({ liquidity }) => humanize('usd', liquidity, USDC_DECIMALS, 0),
-                  sortable: true,
-                  width: '15rem',
-                  className: 'col-market',
-                },
-                {
-                  key: 'userTokenBalance',
-                  header: t('components.list-card.available-supply'),
-                  format: ({ token }) =>
-                    token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
-                  sortable: true,
-                  width: '15rem',
-                  className: 'col-available',
-                },
-                {
-                  key: 'actions',
-                  transform: ({ address }) => (
-                    <ActionButtons
-                      actions={[
-                        {
-                          name: t('components.transaction.supply'),
-                          handler: () => actionHandler('supply', address),
-                          disabled: !walletIsConnected,
-                        },
-                        {
-                          name: t('components.transaction.borrow'),
-                          handler: () => actionHandler('borrow', address),
-                          disabled: !walletIsConnected,
-                        },
-                      ]}
-                    />
-                  ),
-                  align: 'flex-end',
-                  width: 'auto',
-                  grow: '1',
-                },
-              ]}
-              data={filteredMarkets.map((market) => ({
-                ...market,
-                displayIcon: market.token.icon ?? '',
-                displayName: market.token.symbol,
-                userTokenBalance: normalizeAmount(market.token.balance, market.token.decimals),
-                actions: null,
-              }))}
-              SearchBar={
-                <SearchBarContainer>
-                  <SearchInput
-                    searchableData={markets}
-                    searchableKeys={['name', 'token.symbol', 'token.name']}
-                    placeholder=""
-                    onSearch={(data) => setFilteredMarkets(data)}
-                  />
-                </SearchBarContainer>
-              }
-              searching={markets.length > filteredMarkets.length}
-              initialSortBy="lendApy"
-              wrap
-            />
-          )}
         </>
       )}
     </ViewContainer>
