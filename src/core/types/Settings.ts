@@ -22,5 +22,6 @@ export interface NetworkSettings {
     earningsEnabled?: boolean;
     notifyEnabled?: boolean;
     blockExplorerUrl?: string;
+    txConfirmations?: number;
   };
 }
