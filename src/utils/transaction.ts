@@ -1,10 +1,13 @@
 import { notify, UpdateNotification } from '@frameworks/blocknative';
 import { getConfig } from '@config';
-import { TransactionResponse, TransactionReceipt, Network } from '@types';
+import { TransactionResponse, TransactionReceipt, Network, Web3Provider } from '@types';
+
+import { getProviderType } from '.';
 
 export const handleTransaction = async (
   tx: TransactionResponse,
   network: Network,
+  web3Provider: Web3Provider,
   renderNotification = true
 ): Promise<TransactionReceipt> => {
   const { NETWORK_SETTINGS } = getConfig();
@@ -25,7 +28,16 @@ export const handleTransaction = async (
         dismissNotification = dismiss;
       }
     }
-    const receipt = await tx.wait(2);
+
+    const providerType = getProviderType(network);
+    const provider = web3Provider.getInstanceOf(providerType);
+    const { txConfirmations } = currentNetworkSettings;
+
+    const [receipt] = await Promise.all([
+      tx.wait(txConfirmations),
+      provider.waitForTransaction(tx.hash, txConfirmations),
+    ]);
+
     if (updateNotification) {
       updateNotification({
         eventCode: 'txConfirmedCustom',
@@ -47,7 +59,7 @@ export const handleTransaction = async (
         throw new Error('Transaction Cancelled');
       } else {
         dismissNotification();
-        return await handleTransaction(error.replacement, network, !currentNetworkSettings.notifyEnabled);
+        return await handleTransaction(error.replacement, network, web3Provider, !currentNetworkSettings.notifyEnabled);
       }
     }
 

@@ -93,7 +93,8 @@ const approve = createAsyncThunk<
   ThunkAPI
 >('tokens/approve', async ({ tokenAddress, spenderAddress, amountToApprove }, { extra, getState, rejectWithValue }) => {
   const { network, wallet } = getState();
-  const { tokenService } = extra.services;
+  const { services, context } = extra;
+  const { tokenService } = services;
   const amount = amountToApprove ?? extra.config.MAX_UINT256;
   const accountAddress = wallet.selectedAddress;
   if (!accountAddress) {
@@ -106,7 +107,7 @@ const approve = createAsyncThunk<
     spenderAddress,
     amount,
   });
-  await handleTransaction(tx, network.current);
+  await handleTransaction(tx, network.current, context.web3Provider);
 
   return { amount };
 });

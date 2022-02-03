@@ -216,7 +216,7 @@ const depositVault = createAsyncThunk<
     { extra, getState, dispatch }
   ) => {
     const { network, wallet, vaults, tokens } = getState();
-    const { services } = extra;
+    const { services, context } = extra;
     const userAddress = wallet.selectedAddress;
     if (!userAddress) {
       throw new Error('WALLET NOT CONNECTED');
@@ -267,7 +267,7 @@ const depositVault = createAsyncThunk<
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    await handleTransaction(tx, network.current);
+    await handleTransaction(tx, network.current, context.web3Provider);
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
@@ -284,7 +284,7 @@ const withdrawVault = createAsyncThunk<
   'vaults/withdrawVault',
   async ({ vaultAddress, amount, targetTokenAddress, slippageTolerance }, { extra, getState, dispatch }) => {
     const { network, wallet, vaults, tokens } = getState();
-    const { services, config } = extra;
+    const { services, config, context } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
@@ -336,7 +336,7 @@ const withdrawVault = createAsyncThunk<
       amountOfShares: withdrawAll ? config.MAX_UINT256 : amountOfShares,
       slippageTolerance,
     });
-    await handleTransaction(tx, network.current);
+    await handleTransaction(tx, network.current, context.web3Provider);
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
@@ -363,7 +363,7 @@ const migrateVault = createAsyncThunk<
   'vaults/migrateVault',
   async ({ vaultFromAddress, vaultToAddress, migrationContractAddress }, { extra, getState, dispatch }) => {
     const { network, wallet, vaults, tokens } = getState();
-    const { services, config } = extra;
+    const { services, config, context } = extra;
     const { trustedVaultMigrator } = config.CONTRACT_ADDRESSES;
     const userAddress = wallet.selectedAddress;
 
@@ -402,7 +402,7 @@ const migrateVault = createAsyncThunk<
       migrationContractAddress: migrationContractAddressToUse,
     });
 
-    await handleTransaction(tx, network.current);
+    await handleTransaction(tx, network.current, context.web3Provider);
     dispatch(getVaultsDynamic({ addresses: [vaultFromAddress, vaultToAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultFromAddress, vaultToAddress] }));
