@@ -364,7 +364,7 @@ export const VaultDetailPanels = ({
             </OverviewInfo>
           )}
 
-          {strategies?.length && (
+          {!!strategies?.length && (
             <>
               <StyledCardHeader header={t('vaultdetails:overview-panel.strategies')} />
 
