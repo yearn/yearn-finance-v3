@@ -1,3 +1,4 @@
+import { SerializedError } from '@reduxjs/toolkit';
 import { EthersError, PriceFetchingError, SdkError, SimulationError, TenderlyError, ZapperError } from '@yfi/sdk';
 
 const ETHERS_ERRORS = {
@@ -15,7 +16,7 @@ const SDK_ERRORS = {
 };
 const SIMULATION_ERRORS = {
   [SimulationError.NO_LOG]: 'No log of transfering token',
-  [SimulationError.PARTIAL_REVERT]: 'Partial rever simulating call',
+  [SimulationError.PARTIAL_REVERT]: 'Partial revert simulating call',
   [SimulationError.TENDERLY_RESPONSE_ERROR]: 'Error on Tenderly response',
 };
 const TENDERLY_ERRORS = {
@@ -30,34 +31,63 @@ const ZAPPER_ERRORS = {
   [ZapperError.ZAP_OUT_APPROVAL_STATE]: 'Error approving Zap out of token fetching token',
 };
 
-export const parseError = (e: any) => {
+export const parseError = (e: any): SerializedError => {
   if (e instanceof EthersError) {
-    return ETHERS_ERRORS[e.error_code] || e.message;
+    return {
+      message: ETHERS_ERRORS[e.error_code] || e.message,
+      name: e.error_type,
+      code: e.error_code,
+    }
   }
 
   if (e instanceof PriceFetchingError) {
-    return PRICE_FETCHING_ERRORS[e.error_code] || e.message;
+    return {
+      message: PRICE_FETCHING_ERRORS[e.error_code] || e.message,
+      name: e.error_type,
+      code: e.error_code,
+    }
   }
 
   if (e instanceof TenderlyError) {
-    return TENDERLY_ERRORS[e.error_code] || e.message;
+    return {
+      message: TENDERLY_ERRORS[e.error_code] || e.message,
+      name: e.error_type,
+      code: e.error_code,
+    }
   }
 
   if (e instanceof ZapperError) {
-    return ZAPPER_ERRORS[e.error_code] || e.message;
+    return {
+      message: ZAPPER_ERRORS[e.error_code] || e.message,
+      name: e.error_type,
+      code: e.error_code,
+    }
   }
 
   if (e instanceof SimulationError) {
-    return SIMULATION_ERRORS[e.error_code] || e.message;
+    return {
+      message: SIMULATION_ERRORS[e.error_code] || e.message,
+      name: e.error_type,
+      code: e.error_code,
+    }
   }
 
   if (e instanceof SdkError) {
-    return (e.error_code && SDK_ERRORS[e.error_code]) || e.message;
+    return {
+      message: (e.error_code && SDK_ERRORS[e.error_code]) || e.message,
+      name: e.error_type,
+      code: e.error_code,
+    }
   }
 
   if (e instanceof Error) {
-    return e.message;
+    return {
+      message: e.message,
+    }
   }
 
-  return 'There was an error';
+  return {
+    message: 'An unknown error ocurred',
+    name: 'Unknown',
+  }
 };
