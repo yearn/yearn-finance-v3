@@ -18,6 +18,9 @@
     "tooltips": {
       "gross-apr": "Gross APR",
       "net-apy": "Net APY",
+      "weekly-apy": "Weekly APY",
+      "monthly-apy": "Monthly APY",
+      "inception-apy": "Inception APY",
       "vecrv-apy": "veCRV APY",
       "boost": "Boost",
       "pool-apy": "Pool APY",
