@@ -57,6 +57,8 @@ export class IronBankServiceImpl implements IronBankService {
   public async getSupportedMarkets({ network }: GetSupportedMarketsProps): Promise<IronBankMarket[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
     let markets = await yearn.ironBank.get();
+    /* -------------------------------------------------------------------------- */
+    // TODO: Remove this workaraund once SDK is updated to a new redeployed Lens contract that fixes APY calcs
     if (network === 'mainnet') {
       const marketsPromise = markets.map(async (market) => {
         const provider = this.web3Provider.getInstanceOf('ethereum');
@@ -77,6 +79,7 @@ export class IronBankServiceImpl implements IronBankService {
       });
       markets = await Promise.all(marketsPromise);
     }
+    /* -------------------------------------------------------------------------- */
     return markets;
   }
 
