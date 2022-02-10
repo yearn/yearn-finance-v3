@@ -18,6 +18,7 @@ import {
   GetSupportedMarketsProps,
   GetMarketDynamicDataProps,
 } from '@types';
+import { toBN } from '@utils';
 
 import ironBankMarketAbi from './contracts/ironBankMarket.json';
 import ironBankComptrollerAbi from './contracts/ironBankComptroller.json';
@@ -55,7 +56,28 @@ export class IronBankServiceImpl implements IronBankService {
 
   public async getSupportedMarkets({ network }: GetSupportedMarketsProps): Promise<IronBankMarket[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
-    return await yearn.ironBank.get();
+    let markets = await yearn.ironBank.get();
+    if (network === 'mainnet') {
+      const marketsPromise = markets.map(async (market) => {
+        const provider = this.web3Provider.getInstanceOf('ethereum');
+        const ironBankMarketContract = getContract(market.address, ironBankMarketAbi, provider);
+        const blocksPerYear = 2300000;
+        const supplyRatePerBlock = await ironBankMarketContract.supplyRatePerBlock();
+        const borrowRatePerBlock = await ironBankMarketContract.borrowRatePerBlock();
+        const lendApyBips = toBN(supplyRatePerBlock.toString()).times(blocksPerYear).div(toBN(10).pow(14)).toString();
+        const borrowApyBips = toBN(borrowRatePerBlock.toString()).times(blocksPerYear).div(toBN(10).pow(14)).toString();
+        return {
+          ...market,
+          metadata: {
+            ...market.metadata,
+            lendApyBips,
+            borrowApyBips,
+          },
+        };
+      });
+      markets = await Promise.all(marketsPromise);
+    }
+    return markets;
   }
 
   public async getMarketsDynamicData({
