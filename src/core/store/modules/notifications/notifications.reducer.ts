@@ -8,7 +8,7 @@ export const notificationsInitialState: NotificationsState = {
   messages: [],
   dismissedMessageIds: [],
   statusMap: {
-    getNotificationMessages: { ...initialStatus },
+    getNotificationMessages: initialStatus,
   },
 };
 
@@ -35,7 +35,7 @@ const notificationsReducer = createReducer(notificationsInitialState, (builder) 
       state.messages = messages.filter((message) => {
         return message.active === true;
       });
-      state.statusMap.getNotificationMessages = {};
+      state.statusMap.getNotificationMessages = initialStatus;
     });
 });
 
