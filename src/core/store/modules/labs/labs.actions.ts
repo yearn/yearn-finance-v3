@@ -4,7 +4,6 @@ import BigNumber from 'bignumber.js';
 import { ThunkAPI } from '@frameworks/redux';
 import { Lab, LabDynamic, Position } from '@types';
 import {
-  handleTransaction,
   toBN,
   getNetwork,
   validateNetwork,
@@ -163,7 +162,7 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     { dispatch, getState, extra }
   ) => {
     const { services } = extra;
-    const { labService } = services;
+    const { labService, transactionService } = services;
     const { wallet, labs, tokens, network } = getState();
 
     const userAddress = wallet.selectedAddress;
@@ -213,7 +212,7 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -240,7 +239,7 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
   'labs/withdraw',
   async ({ labAddress, amount, tokenAddress, slippageTolerance }, { dispatch, extra, getState }) => {
     const { services } = extra;
-    const { labService } = services;
+    const { labService, transactionService } = services;
     const { wallet, labs, tokens, network } = getState();
 
     const userAddress = wallet.selectedAddress;
@@ -287,7 +286,7 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
       amountOfShares,
       slippageTolerance,
     });
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -354,7 +353,7 @@ const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     //   labAddress,
     //   amount: amountInWei.toString(),
     // });
-    // await handleTransaction(tx, network.current);
+    // await transactionService.handleTransaction(tx, network.current);
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, labAddress] }));
@@ -420,7 +419,7 @@ const yvBoostWithdraw = createAsyncThunk<
   //   labAddress,
   //   amountOfShares,
   // });
-  // await handleTransaction(tx, network.current);
+  // await transactionService.handleTransaction(tx, network.current);
 
   dispatch(getLabsDynamic({ addresses: [labAddress] }));
   dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -463,7 +462,7 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const amountInWei = amount.multipliedBy(ONE_UNIT);
 
     // TODO: validations
-    const { labService } = services;
+    const { labService, transactionService } = services;
 
     const tx = await labService.lock({
       network: network.current,
@@ -472,7 +471,7 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultAddress: labAddress,
       amount: amountInWei.toString(),
     });
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -496,12 +495,12 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
 
     // TODO validations.
 
-    const { labService } = services;
+    const { labService, transactionService } = services;
     const tx = await labService.claim({
       network: network.current,
       accountAddress: userAddress,
     });
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
@@ -551,12 +550,12 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
     const error = allowanceError;
     if (error) throw new Error(error);
 
-    const { labService } = services;
+    const { labService, transactionService } = services;
     const tx = await labService.reinvest({
       network: network.current,
       accountAddress: userAddress,
     });
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
@@ -625,7 +624,7 @@ const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
     //   tokenAddress: tokenData.address,
     //   amount: amountInWei.toString(),
     // });
-    // await handleTransaction(tx, network.current);
+    // await transactionService.handleTransaction(tx, network.current);
 
     dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
     dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));
@@ -693,7 +692,7 @@ const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const error = allowanceError || depositError;
     if (error) throw new Error(error);
 
-    const { labService } = services;
+    const { labService, transactionService } = services;
     const tx = await labService.stake({
       network: network.current,
       accountAddress: userAddress,
@@ -701,7 +700,7 @@ const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultAddress: labAddress,
       amount: amountInWei.toString(),
     });
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
 
     dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
     dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));

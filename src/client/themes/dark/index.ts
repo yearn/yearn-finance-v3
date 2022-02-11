@@ -62,6 +62,7 @@ const darkTheme: DefaultTheme = {
       primary: '#00A3FF',
       loading: '#FFA800',
       error: '#FF005E',
+      warning: '#FFA800',
       success: '#C6E11E',
       text: '#888888',
       textContrast: '#FFFFFF',

@@ -94,7 +94,7 @@ interface BackdropProps {
 }
 
 export const Backdrop = ({ onClick }: BackdropProps) => {
-  return <StyledBackdrop onClick={onClick} />;
+  return <StyledBackdrop data-testid="active-modal-backdrop" onClick={onClick} />;
 };
 
 export const Modals = () => {
@@ -111,7 +111,7 @@ export const Modals = () => {
   }
 
   return (
-    <StyledModals>
+    <StyledModals data-testid="modals-container">
       {/* //////////////////////////// MODALS ///////////////////////////// */}
 
       {activeModal === 'test' && (

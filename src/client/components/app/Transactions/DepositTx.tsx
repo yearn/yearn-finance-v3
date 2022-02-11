@@ -85,7 +85,9 @@ export const DepositTx: FC<DepositTxProps> = ({
         (vault) =>
           vault.token.address === selectedSellTokenAddress || vault.defaultDisplayToken === selectedSellTokenAddress
       );
-      const highestYieldingVault = vaults.reduce((prev, current) => (prev.apyData > current.apyData ? prev : current));
+      const highestYieldingVault = vaults
+        .filter((vaults) => vaults.allowZapIn)
+        .reduce((prev, current) => (prev.apyData > current.apyData ? prev : current));
       dispatch(
         VaultsActions.setSelectedVaultAddress({
           vaultAddress: matchingVault?.address ?? highestYieldingVault.address,

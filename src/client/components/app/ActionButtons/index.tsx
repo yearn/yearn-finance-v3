@@ -63,9 +63,10 @@ export const ActionButtons = ({ actions, alert }: ActionButtonsProps) => (
       </AlertButton>
     )}
 
-    {actions.map(({ name, handler, disabled, hide }) => (
+    {actions.map(({ name, handler, disabled, hide, ...props }) => (
       <ActionButton
         className="action-button"
+        data-testid={`action-${name.toLowerCase()}`}
         key={`action-${name}`}
         onClick={(e: Event) => {
           e.stopPropagation();
@@ -73,6 +74,7 @@ export const ActionButtons = ({ actions, alert }: ActionButtonsProps) => (
         }}
         disabled={disabled}
         hide={hide}
+        {...props}
       >
         {name}
       </ActionButton>

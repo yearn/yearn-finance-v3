@@ -26,7 +26,7 @@ export const ApyTooltipData: FC<ApyTooltipDataProps> = ({ apy, address }) => {
   const { YVECRV } = CONTRACT_ADDRESSES;
   const isBackScratcher = address === YVECRV;
   const apyType = apy.type;
-  const { gross_apr, net_apy, composite } = apy;
+  const { gross_apr, net_apy, composite, points } = apy;
 
   let apyTooltip = (
     <StyledTooltipTable>
@@ -97,6 +97,33 @@ export const ApyTooltipData: FC<ApyTooltipDataProps> = ({ apy, address }) => {
           <tr>
             <td>{t('components.tooltips.net-apy')}:</td>
             <td>{formatApy(net_apy.toString(), apyType)}</td>
+          </tr>
+        </tbody>
+      </StyledTooltipTable>
+    );
+  } else if (points) {
+    apyTooltip = (
+      <StyledTooltipTable>
+        <tbody>
+          <tr>
+            <td>{t('components.tooltips.gross-apr')}:</td>
+            <td>{formatApy(gross_apr.toString(), apyType)}</td>
+          </tr>
+          <tr>
+            <td>{t('components.tooltips.net-apy')}:</td>
+            <td>{formatApy(net_apy.toString(), apyType)}</td>
+          </tr>
+          <tr>
+            <td>{t('components.tooltips.weekly-apy')}:</td>
+            <td>{formatApy(points.week_ago.toString(), apyType)}</td>
+          </tr>
+          <tr>
+            <td>{t('components.tooltips.monthly-apy')}:</td>
+            <td>{formatApy(points.month_ago.toString(), apyType)}</td>
+          </tr>
+          <tr>
+            <td>{t('components.tooltips.inception-apy')}:</td>
+            <td>{formatApy(points.inception.toString(), apyType)}</td>
           </tr>
         </tbody>
       </StyledTooltipTable>

@@ -14,7 +14,6 @@ import {
   Wei,
 } from '@types';
 import {
-  handleTransaction,
   calculateSharesAmount,
   normalizeAmount,
   toBN,
@@ -258,7 +257,7 @@ const depositVault = createAsyncThunk<
     if (error) throw new Error(error);
 
     const amountInWei = amount.multipliedBy(ONE_UNIT);
-    const { vaultService } = services;
+    const { vaultService, transactionService } = services;
     const tx = await vaultService.deposit({
       network: network.current,
       accountAddress: userAddress,
@@ -267,7 +266,7 @@ const depositVault = createAsyncThunk<
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
@@ -327,7 +326,7 @@ const withdrawVault = createAsyncThunk<
     const error = withdrawError || allowanceError;
     if (error) throw new Error(error);
 
-    const { vaultService } = services;
+    const { vaultService, transactionService } = services;
     const tx = await vaultService.withdraw({
       network: network.current,
       accountAddress: userAddress,
@@ -336,7 +335,7 @@ const withdrawVault = createAsyncThunk<
       amountOfShares: withdrawAll ? config.MAX_UINT256 : amountOfShares,
       slippageTolerance,
     });
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
@@ -393,7 +392,7 @@ const migrateVault = createAsyncThunk<
     const error = allowanceError;
     if (error) throw new Error(error);
 
-    const { vaultService } = services;
+    const { vaultService, transactionService } = services;
     const tx = await vaultService.migrate({
       network: network.current,
       accountAddress: userAddress,
@@ -402,7 +401,7 @@ const migrateVault = createAsyncThunk<
       migrationContractAddress: migrationContractAddressToUse,
     });
 
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
     dispatch(getVaultsDynamic({ addresses: [vaultFromAddress, vaultToAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultFromAddress, vaultToAddress] }));

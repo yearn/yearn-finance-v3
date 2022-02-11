@@ -1,4 +1,4 @@
-export type Network = 'mainnet' | 'morden' | 'ropsten' | 'rinkeby' | 'kovan' | 'fantom' | 'other';
+export type Network = 'mainnet' | 'morden' | 'ropsten' | 'rinkeby' | 'kovan' | 'fantom' | 'arbitrum' | 'other';
 
 export type Symbol = string;
 

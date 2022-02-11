@@ -17,6 +17,10 @@ const smallSize = css`
   min-height: 12.8rem;
 `;
 
+const microSize = css`
+  min-height: 8rem;
+`;
+
 const defaultVariant = css`
   background-color: ${({ theme }) => theme.colors.surface};
   color: ${({ theme }) => theme.colors.onSurfaceH2};
@@ -44,6 +48,8 @@ const surfaceVariant = css`
 
 const sizeStyle = ({ cardSize }: CardProps) => {
   switch (cardSize) {
+    case 'micro':
+      return microSize;
     case 'small':
       return smallSize;
     case 'big':
@@ -69,7 +75,7 @@ const variantStyle = ({ variant }: CardProps) => {
 };
 
 type CardVariant = 'primary' | 'secondary' | 'background' | 'surface';
-export type CardSizeType = 'small' | 'big';
+export type CardSizeType = 'micro' | 'small' | 'big';
 
 export interface CardProps extends StyledSystemProps {
   onClick?: () => void;
