@@ -26,6 +26,7 @@ import {
 import { getConfig } from '@config';
 
 import { Transaction } from './Transaction';
+import BigNumber from 'bignumber.js';
 
 export interface WithdrawTxProps {
   header?: string;
@@ -198,10 +199,18 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const withdraw = async () => {
     try {
+      let amountToWithdraw;
+
+      if (selectedTargetTokenAddress === CONTRACT_ADDRESSES.ETH) {
+        amountToWithdraw = willWithdrawAll ? toBN(toUnit(underlyingTokenBalance, selectedVault.token.decimals)) : toBN(amount)
+      } else {
+        amountToWithdraw = willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount);
+      }
+
       await dispatchAndUnwrap(
         VaultsActions.withdrawVault({
           vaultAddress: selectedVault.address,
-          amount: willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount),
+          amount: amountToWithdraw,
           targetTokenAddress: selectedTargetTokenAddress,
           slippageTolerance: selectedSlippage,
         })
