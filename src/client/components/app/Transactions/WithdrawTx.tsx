@@ -202,7 +202,9 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       let amountToWithdraw;
 
       if (selectedTargetTokenAddress === CONTRACT_ADDRESSES.ETH) {
-        amountToWithdraw = willWithdrawAll ? toBN(toUnit(underlyingTokenBalance, selectedVault.token.decimals)) : toBN(amount)
+        amountToWithdraw = willWithdrawAll
+          ? toBN(toUnit(underlyingTokenBalance, selectedVault.token.decimals))
+          : toBN(amount);
       } else {
         amountToWithdraw = willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount);
       }
