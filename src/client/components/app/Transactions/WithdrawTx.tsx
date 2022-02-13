@@ -26,7 +26,6 @@ import {
 import { getConfig } from '@config';
 
 import { Transaction } from './Transaction';
-import BigNumber from 'bignumber.js';
 
 export interface WithdrawTxProps {
   header?: string;
