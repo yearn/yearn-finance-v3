@@ -341,7 +341,7 @@ const withdrawVault = createAsyncThunk<
       accountAddress: userAddress,
       tokenAddress: targetTokenAddress,
       vaultAddress,
-      amountOfShares: withdrawAll ? config.MAX_UINT256 : amountOfShares,
+      amountOfShares,
       slippageTolerance,
     });
     await transactionService.handleTransaction({ tx, network: network.current });
