@@ -37,7 +37,7 @@ export const parseError = (e: any): SerializedError => {
       message: ETHERS_ERRORS[e.error_code] || e.message,
       name: e.error_type,
       code: e.error_code,
-    }
+    };
   }
 
   if (e instanceof PriceFetchingError) {
@@ -45,7 +45,7 @@ export const parseError = (e: any): SerializedError => {
       message: PRICE_FETCHING_ERRORS[e.error_code] || e.message,
       name: e.error_type,
       code: e.error_code,
-    }
+    };
   }
 
   if (e instanceof TenderlyError) {
@@ -53,7 +53,7 @@ export const parseError = (e: any): SerializedError => {
       message: TENDERLY_ERRORS[e.error_code] || e.message,
       name: e.error_type,
       code: e.error_code,
-    }
+    };
   }
 
   if (e instanceof ZapperError) {
@@ -61,7 +61,7 @@ export const parseError = (e: any): SerializedError => {
       message: ZAPPER_ERRORS[e.error_code] || e.message,
       name: e.error_type,
       code: e.error_code,
-    }
+    };
   }
 
   if (e instanceof SimulationError) {
@@ -69,7 +69,7 @@ export const parseError = (e: any): SerializedError => {
       message: SIMULATION_ERRORS[e.error_code] || e.message,
       name: e.error_type,
       code: e.error_code,
-    }
+    };
   }
 
   if (e instanceof SdkError) {
@@ -77,17 +77,17 @@ export const parseError = (e: any): SerializedError => {
       message: (e.error_code && SDK_ERRORS[e.error_code]) || e.message,
       name: e.error_type,
       code: e.error_code,
-    }
+    };
   }
 
   if (e instanceof Error) {
     return {
       message: e.message,
-    }
+    };
   }
 
   return {
     message: 'An unknown error ocurred',
     name: 'Unknown',
-  }
+  };
 };
