@@ -308,7 +308,6 @@ const withdrawVault = createAsyncThunk<
           pricePerShare: vaultData.metadata.pricePerShare,
         });
 
-    console.log(amountOfShares);
     const { error: allowanceError } = validateVaultWithdrawAllowance({
       yvTokenAddress: vaultAddress,
       yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
