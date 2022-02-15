@@ -126,7 +126,7 @@ export class LabServiceImpl implements LabService {
               }
             : undefined,
           displayName: backscratcherData.name,
-          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVECRV}/logo-128.png`,
+          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/${YVECRV}/logo-128.png`,
           defaultDisplayToken: CRV,
         },
       };
@@ -170,7 +170,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: pricePerShare.toString(),
           apy: yvBoostData.apy,
           displayName: yvBoostData.symbol,
-          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVBOOST}/logo-128.png`,
+          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/${YVBOOST}/logo-128.png`,
           defaultDisplayToken: YVECRV,
         },
       };
@@ -229,7 +229,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: pJarRatio.toString(),
           apy: { ...pJarData.apy, net_apy: toBN(performance.toString()).dividedBy(100).toNumber() },
           displayName: 'pSLPyvBOOST-ETH',
-          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
+          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
         },
       };
