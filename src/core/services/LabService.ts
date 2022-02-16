@@ -72,6 +72,8 @@ export class LabServiceImpl implements LabService {
     );
     const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
 
+    const ASSET_URL = 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/';
+
     // **************** BACKSCRATCHER ****************
     let backscratcherLab: Lab | undefined;
     try {
@@ -126,7 +128,7 @@ export class LabServiceImpl implements LabService {
               }
             : undefined,
           displayName: backscratcherData.name,
-          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVECRV}/logo-128.png`,
+          displayIcon: `${ASSET_URL}${YVECRV}/logo-128.png`,
           defaultDisplayToken: CRV,
         },
       };
@@ -170,7 +172,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: pricePerShare.toString(),
           apy: yvBoostData.apy,
           displayName: yvBoostData.symbol,
-          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVBOOST}/logo-128.png`,
+          displayIcon: `${ASSET_URL}${YVBOOST}/logo-128.png`,
           defaultDisplayToken: YVECRV,
         },
       };
@@ -229,7 +231,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: pJarRatio.toString(),
           apy: { ...pJarData.apy, net_apy: toBN(performance.toString()).dividedBy(100).toNumber() },
           displayName: 'pSLPyvBOOST-ETH',
-          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
+          displayIcon: `${ASSET_URL}${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
         },
       };
