@@ -25,7 +25,7 @@ const sharedTheme: SharedTheme = {
     desktop: 1920,
     desktopL: 2560,
   },
-  globalFont: 'Oxygen, sans-serif',
+  globalFont: '"Roboto", sans-serif',
   globalMaxWidth: '112rem',
   globalRadius: '0.8rem',
 

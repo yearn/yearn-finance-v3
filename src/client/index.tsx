@@ -1,14 +1,15 @@
 import { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
+import '@i18n';
 
 import { Container } from '@container';
 import { getStore } from '@frameworks/redux';
 import { AppContextProvider, NavSideMenuContextProvider } from '@context';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
-import '@i18n';
-import '@assets/fonts/OxygenFont.css';
+
+import '@assets/fonts/RobotoFont.css';
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -48,12 +49,12 @@ const GlobalStyle = createGlobalStyle`
       color: inherit;
     }
   }
-  
+
   p {
     letter-spacing: .015rem;
     margin: 0;
   }
-  
+
   p + p {
     margin-top: 1rem;
   }
