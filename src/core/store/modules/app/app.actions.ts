@@ -55,9 +55,9 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
       case 'portfolio':
         await dispatch(LabsActions.initiateLabs());
         break;
-      case 'wallet':
-        await Promise.all([dispatch(VaultsActions.initiateSaveVaults()), dispatch(IronBankActions.initiateIronBank())]);
-        break;
+      // case 'wallet':
+      //   await Promise.all([dispatch(VaultsActions.initiateSaveVaults()), dispatch(IronBankActions.initiateIronBank())]);
+      //   break;
       case 'vaults':
         await dispatch(VaultsActions.initiateSaveVaults());
         break;
@@ -98,8 +98,8 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
         dispatch(IronBankActions.getUserMarketsPositions({})); // remove this when lens summary calculation fixed
         dispatch(IronBankActions.getUserMarketsMetadata({})); // remove this when lens summary calculation fixed
         break;
-      case 'wallet':
-        break;
+      // case 'wallet':
+      //   break;
       case 'vaults':
         dispatch(VaultsActions.getUserVaultsSummary());
         dispatch(VaultsActions.getUserVaultsPositions({}));

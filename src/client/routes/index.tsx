@@ -4,7 +4,7 @@ import { Layout } from '@containers';
 
 import { Portfolio } from './Portfolio';
 import { VaultDetail } from './VaultDetail';
-import { Wallet } from './Wallet';
+// import { Wallet } from './Wallet.old';
 import { Vaults } from './Vaults';
 import { Labs } from './Labs';
 import { IronBank } from './IronBank';
@@ -17,10 +17,10 @@ const routesMap = [
     path: '/portfolio',
     component: Portfolio,
   },
-  {
-    path: '/wallet',
-    component: Wallet,
-  },
+  // {
+  //   path: '/wallet',
+  //   component: Wallet,
+  // },
   {
     path: '/vaults',
     component: Vaults,

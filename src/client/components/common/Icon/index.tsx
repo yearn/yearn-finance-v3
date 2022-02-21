@@ -17,7 +17,6 @@ import { ReactComponent as DiscordIcon } from '@assets/icons/discord.svg';
 import { ReactComponent as GithubIcon } from '@assets/icons/github.svg';
 import { ReactComponent as HamburguerIcon } from '@assets/icons/hamburguer.svg';
 import { ReactComponent as HelpIcon } from '@assets/icons/help.svg';
-import { ReactComponent as HomeIcon } from '@assets/icons/home.svg';
 import { ReactComponent as IronBankIcon } from '@assets/icons/iron-bank.svg';
 import { ReactComponent as InfoIcon } from '@assets/icons/info.svg';
 import { ReactComponent as LabsIcon } from '@assets/icons/labs.svg';
@@ -71,7 +70,6 @@ export {
   DiscordIcon,
   GithubIcon,
   HamburguerIcon,
-  HomeIcon,
   MediumIcon,
   RedditIcon,
   TelegramIcon,
