@@ -146,7 +146,7 @@ export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
   return (
     <StyledSidebar collapsed={collapsedSidebar}>
       <SidebarHeader>
-        <StyledLogo full={!collapsedSidebar} onClick={() => history.push('/home')} />
+        <StyledLogo full={!collapsedSidebar} onClick={() => history.push('/portfolio')} />
         {/* {!isMobile && <ToggleSidebarButton Component={CollapseIcon} onClick={toggleSidebar} />} */}
       </SidebarHeader>
 
