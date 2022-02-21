@@ -65,10 +65,10 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
     props.selected &&
     `
     ${LinkIcon} {
-      fill: ${props.theme.colors.secondary};
+      fill: ${props.theme.colors.primary};
     }
     ${LinkText} {
-      color: ${props.theme.colors.secondary};
+      color: ${props.theme.colors.primary};
     }
   `}
 `;
@@ -86,18 +86,19 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.colors.primaryVariant};
-  background-color: ${({ theme }) => theme.colors.primary};
+  background-color: transparent;
   border-radius: ${({ theme }) => theme.globalRadius};
   width: ${({ theme }) => theme.sideBar.width};
   height: 100%;
   max-width: 100%;
+  max-height: calc(100% - ${({ theme }) => theme.card.padding} * 2);
+  top: ${({ theme }) => theme.card.padding};
   padding: 1rem 1.2rem;
-  position: fixed;
-  top: ${({ theme }) => theme.layoutPadding};
-  max-height: calc(100% - ${({ theme }) => theme.layoutPadding} * 2);
+  padding-top: ${({ theme }) => theme.card.padding};
   transition: width ${({ theme }) => theme.sideBar.animation};
   overflow: hidden;
   overflow-y: auto;
+  position: fixed;
   z-index: ${({ theme }) => theme.zindex.navSidemenu};
 
   ${(props) =>

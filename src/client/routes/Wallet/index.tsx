@@ -131,9 +131,7 @@ export const Wallet = () => {
   return (
     <ViewContainer>
       <SummaryCard
-        header={t('dashboard.header')}
         items={[{ header: t('dashboard.available'), Component: <Amount value={totalBalance} input="usdc" /> }]}
-        variant="secondary"
         cardSize="small"
       />
 

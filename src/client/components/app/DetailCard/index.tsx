@@ -8,9 +8,16 @@ const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
   display: flex;
   justify-content: center;
   margin: 0;
-  padding: 0.6rem ${({ theme }) => theme.card.padding};
+  padding: 0.6rem calc(${({ theme }) => theme.layoutPadding} / 2);
   font-size: 1.4rem;
   flex-shrink: 0;
+
+  &:first-child {
+    padding-left: ${({ theme }) => theme.layoutPadding};
+  }
+  &:last-child {
+    padding-right: ${({ theme }) => theme.layoutPadding};
+  }
 
   > * {
     margin-top: 0;
@@ -29,18 +36,27 @@ const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
 
 const TitleCardElement = styled(CardElement)`
   margin: 0;
-  padding: 0.6rem ${({ theme }) => theme.card.padding};
+  padding: 0.6rem calc(${({ theme }) => theme.layoutPadding} / 2);
   flex-shrink: 0;
   user-select: none;
+
+  &:first-child {
+    padding-left: ${({ theme }) => theme.layoutPadding};
+  }
+  &:last-child {
+    padding-right: ${({ theme }) => theme.layoutPadding};
+  }
 `;
 
 const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolean }>`
-  // display: grid;
-  // grid-template-columns: 6rem 16.8rem 16.8rem 16.8rem 16.8rem 1fr; */
   align-items: stretch;
   justify-content: stretch;
   ${({ pointer }) => pointer && `cursor: pointer;`};
   ${({ wrap }) => wrap && `flex-wrap: wrap;`};
+
+  ${TitleCardElement} {
+    background: red;
+  }
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.selectionBar};

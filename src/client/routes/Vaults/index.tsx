@@ -223,7 +223,7 @@ export const Vaults = () => {
 
   return (
     <ViewContainer>
-      <SummaryCard header={t('dashboard.header')} items={summaryCardItems} variant="secondary" cardSize="small" />
+      <SummaryCard items={summaryCardItems} cardSize="small" />
       {opportunitiesLoading && <SpinnerLoading flex="1" width="100%" />}
       {!opportunitiesLoading && (
         <>

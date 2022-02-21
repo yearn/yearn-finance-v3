@@ -41,12 +41,14 @@ const StyledNavbar = styled.header`
   width: 100%;
   display: flex;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.background};
-  z-index: ${(props) => props.theme.zindex.navbar};
+  background-color: ${({ theme }) => theme.colors.surface};
+  z-index: ${({ theme }) => theme.zindex.navbar};
   max-width: ${({ theme }) => theme.globalMaxWidth};
-  margin-top: -${({ theme }) => theme.layoutPadding};
-  padding-top: calc(0.4rem + ${({ theme }) => theme.layoutPadding});
-  padding-bottom: 1.6rem;
+  // margin-top: -${({ theme }) => theme.layoutPadding};
+  // padding-top: calc(0.4rem + ${({ theme }) => theme.layoutPadding});
+  // padding-bottom: 1.6rem;
+  padding: 2.4rem;
+  border-radius: ${({ theme }) => theme.globalRadius};
 
   @media ${device.mobile} {
     ${StyledText} {

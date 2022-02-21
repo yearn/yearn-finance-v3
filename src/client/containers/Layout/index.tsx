@@ -34,30 +34,31 @@ const StyledLayout = styled.div`
   display: flex;
   justify-content: center;
   flex: 1;
-  padding: ${({ theme }) => theme.layoutPadding};
+  padding: ${({ theme }) => theme.card.padding};
 
   ${({ theme }) =>
     theme.background &&
     `
       &::before {
+        content: '';
         background-image: url(${theme.background.image});
         background-repeat: no-repeat;
         background-position: ${theme.background.position ?? 'center'};
         background-size: cover;
-        content: '';
-        height: 100%;
-        left: 0;
         position: fixed;
         top: 0;
+        left: 0;
         width: 100%;
+        height: 100%;
         z-index: -1;
       }
   `}
 `;
 
 const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean }>`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
+  grid-template-rows: auto 1fr auto;
   width: 100%;
   max-width: ${({ theme }) => theme.globalMaxWidth};
   min-height: 100%;
@@ -160,7 +161,9 @@ export const Layout: FC = ({ children }) => {
           networkOptions={SUPPORTED_NETWORKS}
           onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
         />
+
         {children}
+
         <Footer />
       </Content>
     </StyledLayout>

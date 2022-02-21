@@ -107,7 +107,6 @@
     "borrowed": "Borrowed",
     "earnings": "Earnings",
     "est-yearly-yield": "Est. yearly yield",
-    "header": "Dashboard",
     "holdings": "Holdings",
     "supplied": "Supplied",
     "total-net-worth": "Total net worth",
@@ -121,8 +120,8 @@
   "footer": {
     "links": {
       "disclaimer": "Disclaimer",
-      "docs": "Docs",
-      "gov": "Gov",
+      "docs": "Documentation",
+      "gov": "Governance forum",
       "security": "Security"
     }
   },

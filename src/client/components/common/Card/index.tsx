@@ -14,7 +14,7 @@ const bigSize = css`
 `;
 
 const smallSize = css`
-  min-height: 12.8rem;
+  min-height: 11.2rem;
 `;
 
 const microSize = css`

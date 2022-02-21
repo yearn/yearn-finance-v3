@@ -33,7 +33,7 @@ export const TokenIcon = ({ icon, symbol, size, ...props }: TokenIconProps) => {
       height = 55;
       break;
     default:
-      height = 36;
+      height = 32;
       break;
   }
   const width = height;

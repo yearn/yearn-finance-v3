@@ -91,7 +91,7 @@ export const Home = () => {
 
   return (
     <StyledViewContainer>
-      <HeaderCard header={t('dashboard.header')} items={summaryCardItems} variant="secondary" cardSize="small" />
+      <HeaderCard items={summaryCardItems} cardSize="small" />
 
       <Row>
         <StyledInfoCard

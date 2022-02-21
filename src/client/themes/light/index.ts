@@ -5,11 +5,11 @@ import { sharedTheme } from '../default';
 const lightTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
-    logo: '#006AE3',
+    logo: '#0657F9',
 
-    primary: '#F0F0F0',
-    background: '#FFFFFF',
-    surface: '#F0F0F0',
+    primary: '#0657F9',
+    background: '#EFEFEF',
+    surface: '#FFFFFF',
 
     primaryVariant: '#929292',
 

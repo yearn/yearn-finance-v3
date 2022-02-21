@@ -190,7 +190,6 @@ export const IronBank = () => {
   return (
     <ViewContainer>
       <SummaryCard
-        header={t('dashboard.header')}
         items={[
           { header: t('dashboard.supplied'), Component: <Amount value={supplyBalanceUsdc} input="usdc" /> },
           { header: t('dashboard.borrowed'), Component: <Amount value={borrowBalanceUsdc} input="usdc" /> },
@@ -200,7 +199,6 @@ export const IronBank = () => {
           },
           { header: t('dashboard.borrow-limit-total'), Component: <Amount value={borrowLimitUsdc} input="usdc" /> },
         ]}
-        variant="secondary"
         cardSize="small"
       />
 
