@@ -2,7 +2,6 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
 import { TokenDynamicData, Token, Balance, Integer } from '@types';
-import { handleTransaction } from '@utils';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Setters                                  */
@@ -93,7 +92,7 @@ const approve = createAsyncThunk<
   ThunkAPI
 >('tokens/approve', async ({ tokenAddress, spenderAddress, amountToApprove }, { extra, getState, rejectWithValue }) => {
   const { network, wallet } = getState();
-  const { tokenService } = extra.services;
+  const { tokenService, transactionService } = extra.services;
   const amount = amountToApprove ?? extra.config.MAX_UINT256;
   const accountAddress = wallet.selectedAddress;
   if (!accountAddress) {
@@ -106,7 +105,7 @@ const approve = createAsyncThunk<
     spenderAddress,
     amount,
   });
-  await handleTransaction(tx, network.current);
+  await transactionService.handleTransaction({ tx, network: network.current });
 
   return { amount };
 });

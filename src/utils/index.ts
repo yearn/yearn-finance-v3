@@ -8,5 +8,5 @@ export * from './http';
 export * from './language';
 export * from './misc';
 export * from './network';
-export * from './transaction';
 export * from './validations';
+export * from './errors';

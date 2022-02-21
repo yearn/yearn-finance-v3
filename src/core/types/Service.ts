@@ -17,6 +17,7 @@ import {
   Wei,
   Balance,
   TransactionOutcome,
+  TransactionReceipt,
   VaultsUserSummary,
   VaultUserMetadata,
   GasFees,
@@ -266,6 +267,7 @@ export interface EnterOrExitMarketProps {
 
 export interface TransactionService {
   execute: (props: ExecuteTransactionProps) => Promise<TransactionResponse>;
+  handleTransaction: (props: HandleTransactionProps) => Promise<TransactionReceipt>;
 }
 
 export interface ExecuteTransactionProps {
@@ -275,6 +277,11 @@ export interface ExecuteTransactionProps {
   methodName: string;
   abi: any;
   contractAddress: Address;
+}
+export interface HandleTransactionProps {
+  tx: TransactionResponse;
+  network: Network;
+  renderNotification?: boolean;
 }
 
 type ContractFunction = (...args: Array<any>) => Promise<TransactionResponse>;

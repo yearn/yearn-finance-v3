@@ -14,7 +14,6 @@ import {
   Wei,
 } from '@types';
 import {
-  handleTransaction,
   calculateSharesAmount,
   normalizeAmount,
   toBN,
@@ -25,6 +24,7 @@ import {
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
   validateMigrateVaultAllowance,
+  parseError,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -142,26 +142,33 @@ const getExpectedTransactionOutcome = createAsyncThunk<
   { txOutcome: TransactionOutcome },
   GetExpectedTransactionOutcomeProps,
   ThunkAPI
->('vaults/getExpectedTransactionOutcome', async (getExpectedTxOutcomeProps, { getState, extra }) => {
-  const { network } = getState();
-  const { services } = extra;
-  const { vaultService } = services;
-  const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
-  const accountAddress = getState().wallet.selectedAddress;
-  if (!accountAddress) {
-    throw new Error('WALLET NOT CONNECTED');
-  }
+>(
+  'vaults/getExpectedTransactionOutcome',
+  async (getExpectedTxOutcomeProps, { getState, extra }) => {
+    const { network } = getState();
+    const { services } = extra;
+    const { vaultService } = services;
+    const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
+    const accountAddress = getState().wallet.selectedAddress;
+    if (!accountAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
 
-  const txOutcome = await vaultService.getExpectedTransactionOutcome({
-    network: network.current,
-    transactionType,
-    accountAddress,
-    sourceTokenAddress,
-    sourceTokenAmount,
-    targetTokenAddress,
-  });
-  return { txOutcome };
-});
+    const txOutcome = await vaultService.getExpectedTransactionOutcome({
+      network: network.current,
+      transactionType,
+      accountAddress,
+      sourceTokenAddress,
+      sourceTokenAmount,
+      targetTokenAddress,
+    });
+
+    return { txOutcome };
+  },
+  {
+    serializeError: parseError,
+  }
+);
 
 /* -------------------------------------------------------------------------- */
 /*                             Transaction Methods                            */
@@ -170,32 +177,30 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveDeposit',
   async ({ vaultAddress, tokenAddress }, { dispatch, getState }) => {
-    try {
-      const { vaults } = getState();
-      const vaultData = vaults.vaultsMap[vaultAddress];
-      const isZapin = vaultData.tokenId !== tokenAddress;
-      const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress;
+    const { vaults } = getState();
+    const vaultData = vaults.vaultsMap[vaultAddress];
+    const isZapin = vaultData.tokenId !== tokenAddress;
+    const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress;
 
-      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
-      unwrapResult(result);
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+    const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
+    unwrapResult(result);
+  },
+  {
+    serializeError: parseError,
   }
 );
 
 const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
   'vaults/approveZapOut',
   async ({ vaultAddress }, { dispatch }) => {
-    try {
-      const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
-      const result = await dispatch(
-        TokensActions.approve({ tokenAddress: vaultAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
-      );
-      unwrapResult(result);
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+    const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
+    const result = await dispatch(
+      TokensActions.approve({ tokenAddress: vaultAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
+    );
+    unwrapResult(result);
+  },
+  {
+    serializeError: parseError,
   }
 );
 
@@ -258,7 +263,7 @@ const depositVault = createAsyncThunk<
     if (error) throw new Error(error);
 
     const amountInWei = amount.multipliedBy(ONE_UNIT);
-    const { vaultService } = services;
+    const { vaultService, transactionService } = services;
     const tx = await vaultService.deposit({
       network: network.current,
       accountAddress: userAddress,
@@ -267,12 +272,15 @@ const depositVault = createAsyncThunk<
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
     dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
+  },
+  {
+    serializeError: parseError,
   }
 );
 
@@ -327,21 +335,24 @@ const withdrawVault = createAsyncThunk<
     const error = withdrawError || allowanceError;
     if (error) throw new Error(error);
 
-    const { vaultService } = services;
+    const { vaultService, transactionService } = services;
     const tx = await vaultService.withdraw({
       network: network.current,
       accountAddress: userAddress,
       tokenAddress: targetTokenAddress,
       vaultAddress,
-      amountOfShares: withdrawAll ? config.MAX_UINT256 : amountOfShares,
+      amountOfShares,
       slippageTolerance,
     });
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
     dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, vaultAddress] }));
+  },
+  {
+    serializeError: parseError,
   }
 );
 
@@ -393,7 +404,7 @@ const migrateVault = createAsyncThunk<
     const error = allowanceError;
     if (error) throw new Error(error);
 
-    const { vaultService } = services;
+    const { vaultService, transactionService } = services;
     const tx = await vaultService.migrate({
       network: network.current,
       accountAddress: userAddress,
@@ -402,12 +413,15 @@ const migrateVault = createAsyncThunk<
       migrationContractAddress: migrationContractAddressToUse,
     });
 
-    await handleTransaction(tx, network.current);
+    await transactionService.handleTransaction({ tx, network: network.current });
     dispatch(getVaultsDynamic({ addresses: [vaultFromAddress, vaultToAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultFromAddress, vaultToAddress] }));
     dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultFromAddress, vaultToAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [vaultFromAddress, vaultToAddress] }));
+  },
+  {
+    serializeError: parseError,
   }
 );
 

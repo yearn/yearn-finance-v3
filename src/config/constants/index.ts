@@ -41,6 +41,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     earningsEnabled: true,
     notifyEnabled: true,
     blockExplorerUrl: 'https://etherscan.io',
+    txConfirmations: 2,
   },
   fantom: {
     id: 'fantom',
@@ -59,6 +60,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     earningsEnabled: false,
     notifyEnabled: false,
     blockExplorerUrl: 'https://ftmscan.com',
+    txConfirmations: 10,
   },
   arbitrum: {
     id: 'arbitrum',
@@ -77,6 +79,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     earningsEnabled: false,
     notifyEnabled: false,
     blockExplorerUrl: 'https://arbiscan.io',
+    txConfirmations: 2,
   },
 };
 
