@@ -19,15 +19,15 @@ const StyledNavigation = styled.div``;
 
 const navLinks = [
   {
-    to: '/home',
-    text: 'navigation.home',
+    to: '/portfolio',
+    text: 'navigation.portfolio',
     icon: HomeIcon,
   },
-  {
-    to: '/wallet',
-    text: 'navigation.wallet',
-    icon: WalletIcon,
-  },
+  // {
+  //   to: '/wallet',
+  //   text: 'navigation.wallet',
+  //   icon: WalletIcon,
+  // },
   {
     to: '/vaults',
     text: 'navigation.vaults',

@@ -52,7 +52,7 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
   'app/getAppData',
   async ({ route, addresses }, { dispatch }) => {
     switch (route) {
-      case 'home':
+      case 'portfolio':
         await dispatch(LabsActions.initiateLabs());
         break;
       case 'wallet':
@@ -90,7 +90,7 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
   async ({ route, addresses }, { dispatch }) => {
     dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
     switch (route) {
-      case 'home':
+      case 'portfolio':
         dispatch(VaultsActions.getUserVaultsSummary());
         dispatch(LabsActions.getUserLabsPositions({}));
 

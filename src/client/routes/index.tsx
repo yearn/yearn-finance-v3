@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 
 import { Layout } from '@containers';
 
-import { Home } from './Home';
+import { Portfolio } from './Portfolio';
 import { VaultDetail } from './VaultDetail';
 import { Wallet } from './Wallet';
 import { Vaults } from './Vaults';
@@ -14,8 +14,8 @@ import { Health } from './Health';
 
 const routesMap = [
   {
-    path: '/home',
-    component: Home,
+    path: '/portfolio',
+    component: Portfolio,
   },
   {
     path: '/wallet',
@@ -61,7 +61,7 @@ export const Routes = () => {
                 <Route key={index} exact path={route.path} component={route.component} />
               ))}
               <Route path="*">
-                <Redirect to="/home" />
+                <Redirect to="/portfolio" />
               </Route>
             </Switch>
           </Layout>

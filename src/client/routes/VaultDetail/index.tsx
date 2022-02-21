@@ -78,7 +78,7 @@ export const VaultDetail = () => {
     const assetAddress: string | undefined = location.pathname.split('/')[2];
     if (!assetAddress || !isValidAddress(assetAddress)) {
       dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
-      history.push('/home');
+      history.push('/portfolio');
       return;
     }
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));

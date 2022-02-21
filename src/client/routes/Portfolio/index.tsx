@@ -55,7 +55,7 @@ const StyledLink = styled.a`
   color: inherit;
 `;
 
-export const Home = () => {
+export const Portfolio = () => {
   // TODO: Add translation
   const { t } = useAppTranslation(['common', 'home']);
   const { NETWORK_SETTINGS } = getConfig();
