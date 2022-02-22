@@ -72,7 +72,7 @@ export class TransactionServiceImpl implements TransactionService {
           unsignedTx.data
         );
         if (!isValid) {
-          if (!error) throw new Error('something went wrong but no error was provided');
+          if (!error) throw new Error('Unexpected Error on Allow List');
           throw new Error(error);
         }
       }
