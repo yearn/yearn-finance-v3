@@ -90,14 +90,14 @@ const approve = createAsyncThunk<
   { amount: string },
   { tokenAddress: string; spenderAddress: string; amountToApprove?: string },
   ThunkAPI
->('tokens/approve', async ({ tokenAddress, spenderAddress, amountToApprove }, { extra, getState, rejectWithValue }) => {
+>('tokens/approve', async ({ tokenAddress, spenderAddress, amountToApprove }, { extra, getState }) => {
   const { network, wallet } = getState();
   const { tokenService, transactionService } = extra.services;
   const amount = amountToApprove ?? extra.config.MAX_UINT256;
+
   const accountAddress = wallet.selectedAddress;
-  if (!accountAddress) {
-    throw new Error('WALLET NOT CONNECTED');
-  }
+  if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
   const tx = await tokenService.approve({
     network: network.current,
     accountAddress,

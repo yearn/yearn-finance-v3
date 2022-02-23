@@ -38,6 +38,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS, MAX_UINT256 } = getConfig();
+  const [signature, setSignature] = useState<string | undefined>();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
@@ -124,6 +125,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     underlyingTokenAddress: selectedVault.token.address,
     targetTokenAddress: selectedTargetTokenAddress,
     yvTokenAllowancesMap: selectedVault.allowancesMap,
+    signature,
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
@@ -193,7 +195,10 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   };
 
   const approve = async () => {
-    await dispatch(VaultsActions.approveZapOut({ vaultAddress: selectedVault.address }));
+    try {
+      const signResult = await dispatchAndUnwrap(VaultsActions.signZapOut({ vaultAddress: selectedVault.address }));
+      setSignature(signResult.signature);
+    } catch (error) {}
   };
 
   const withdraw = async () => {
@@ -204,6 +209,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
           amount: willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount),
           targetTokenAddress: selectedTargetTokenAddress,
           slippageTolerance: selectedSlippage,
+          signature,
         })
       );
       setTxCompleted(true);

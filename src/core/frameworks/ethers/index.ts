@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer';
 
 import { Network, RpcUrl } from '@types';
 
@@ -28,6 +29,56 @@ export const getEthersProvider = (provider: ethers.providers.ExternalProvider) =
 
 export const signMessage = (provider: ethers.providers.ExternalProvider, message: string) => {
   return getEthersProvider(provider).getSigner().signMessage(message);
+};
+
+const _signTypedData = async (
+  signer: ethers.providers.JsonRpcSigner,
+  domain: TypedDataDomain,
+  types: Record<string, TypedDataField[]>,
+  value: Record<string, any>
+) => {
+  const typedData = JSON.stringify({
+    types: {
+      EIP712Domain: [
+        {
+          name: 'name',
+          type: 'string',
+        },
+        {
+          name: 'version',
+          type: 'string',
+        },
+        {
+          name: 'chainId',
+          type: 'uint256',
+        },
+        {
+          name: 'verifyingContract',
+          type: 'address',
+        },
+      ],
+      ...types,
+    },
+    primaryType: 'Permit',
+    domain,
+    message: value,
+  });
+
+  const address = await signer.getAddress();
+  const signature = await signer.provider.send('eth_signTypedData_v4', [address, typedData]);
+  return signature;
+};
+
+export const signTypedData = async (
+  signer: ethers.providers.JsonRpcSigner,
+  domain: TypedDataDomain,
+  types: Record<string, TypedDataField[]>,
+  value: Record<string, any>
+) => {
+  // NOTE: Use Ethers signTypedData once it gets a stable release
+  // const signature = await signer._signTypedData(domain, types, value);
+  const signature = await _signTypedData(signer, domain, types, value);
+  return signature;
 };
 
 export const getContract = (
