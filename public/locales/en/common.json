@@ -3,11 +3,6 @@
     "back-button": {
       "label": "Back to previous page"
     },
-    "beta-card": {
-      "desc-1": "Yearn’s v3 beta site has now moved into production, and adds deposit simulations, Iron Bank functionality, a new Labs section, customizable themes, and more. We will continue to add features and fixes every week, and if you encounter any bugs or would like to provide feedback, please let us know on",
-      "desc-2": "For migration of v1 vaults (or if you’re feeling sentimental), we are maintaining a legacy v2 UI, still available at",
-      "header": "Beta no longer!"
-    },
     "connect-button": {
       "connect": "Connect Wallet"
     },
@@ -147,7 +142,7 @@
     "ironbank": "Iron Bank",
     "labs": "Labs",
     "settings": "Settings",
-    "vault": "Vault details",
+    "vault": "Vaults/",
     "vaults": "Vaults",
     "wallet": "Wallet"
   },

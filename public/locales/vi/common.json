@@ -3,11 +3,6 @@
     "back-button": {
       "label": "Trở lại trang trước"
     },
-    "beta-card": {
-      "desc-1": "Trang web Yearn v3 đã chính thức ra mắt với tính năng mô phỏng ký gửi, Iron Bank, mục Thí điểm (`Lab`) mới, giao diện tùy chỉnh, v.v... Chúng tôi sẽ tiếp tục tối ưu hóa và bổ sung thêm tiện ích hàng tuần. Nếu tìm thấy lỗi hoặc muốn góp ý, xin vui lòng liên hệ với chúng tôi qua",
-      "desc-2": "Để tiện di chuyển khỏi kho bạc v1 (hoặc nếu bạn còn nhớ nhung), chúng tôi vẫn giữ lại di sản UI v2 tại",
-      "header": "Hết Beta rồi!"
-    },
     "connect-button": {
       "connect": "Kết nối Ví"
     },

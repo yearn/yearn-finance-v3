@@ -37,13 +37,13 @@ const SortIcon = styled(({ activeSort, sortType, ...props }: SortIconProps) => <
 const Header = styled.div<{ onClick?: () => void }>`
   display: flex;
   align-items: center;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: ${({ theme }) => theme.colors.onSurfaceSH1};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
 `;
 
 const Content = styled.div`
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
   font-size: 2.4rem;
   white-space: nowrap;
   text-overflow: ellipsis;

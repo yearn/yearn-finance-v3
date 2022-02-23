@@ -18,7 +18,6 @@ import {
   ActionButtons,
   TokenIcon,
   NoWalletCard,
-  InfoCard,
   Amount,
 } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
@@ -47,29 +46,9 @@ const TokensCard = styled(DetailCard)`
   }
 ` as typeof DetailCard;
 
-const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  grid-gap: ${({ theme }) => theme.layoutPadding};
-  flex-wrap: wrap;
-  width: 100%;
-`;
-
-const StyledInfoCard = styled(InfoCard)`
-  flex: 1;
-  ${halfWidthCss}
-`;
-
 const StyledNoWalletCard = styled(NoWalletCard)`
   ${halfWidthCss}
   width: 100%;
-`;
-
-const StyledLink = styled.a`
-  white-space: initial;
-  text-decoration: underline;
-  color: inherit;
 `;
 
 export const Wallet = () => {
@@ -134,36 +113,6 @@ export const Wallet = () => {
         items={[{ header: t('dashboard.available'), Component: <Amount value={totalBalance} input="usdc" /> }]}
         cardSize="small"
       />
-
-      <Row>
-        <StyledInfoCard
-          header={t('wallet:your-wallet-card.header')}
-          Component={
-            <Text>
-              <p>{t('wallet:your-wallet-card.desc-1')}</p>
-              <p>{t('wallet:your-wallet-card.desc-2')}</p>
-            </Text>
-          }
-          cardSize="big"
-        />
-
-        <StyledInfoCard
-          header={t('components.beta-card.header')}
-          Component={
-            <Text>
-              <p>
-                {t('components.beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>
-                .
-              </p>
-              <p>
-                {t('components.beta-card.desc-2')}{' '}
-                <StyledLink href="https://v2.yearn.finance">v2.yearn.finance</StyledLink>.
-              </p>
-            </Text>
-          }
-          cardSize="big"
-        />
-      </Row>
 
       {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 

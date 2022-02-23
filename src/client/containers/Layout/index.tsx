@@ -95,6 +95,11 @@ export const Layout: FC = ({ children }) => {
 
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1] as Route;
+  let vaultAddress;
+  // TODO Get vault name and display it on navbar
+  // if (path === 'vault') {
+  //   vaultAddress = location.pathname.toLowerCase().split('/')[2];
+  // }
 
   // TODO This is only assetAddress on the vault page
   const assetAddress: string | undefined = location.pathname.split('/')[2];

@@ -57,14 +57,11 @@ const StyledHelperCursor = styled.span`
   cursor: help;
 `;
 
-const StyledRecommendationsCard = styled(RecommendationsCard)`
-  ${halfWidthCss}
-`;
+const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
 const StyledInfoCard = styled(InfoCard)`
   max-width: 100%;
   flex: 1;
-  ${halfWidthCss}
 `;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
@@ -223,34 +220,33 @@ export const Vaults = () => {
 
   return (
     <ViewContainer>
+      <StyledInfoCard
+        header={t('vaults:your-time-card.header')}
+        Component={
+          <Text>
+            <p>{t('vaults:your-time-card.desc-1')}</p>
+            <p>{t('vaults:your-time-card.desc-2')}</p>
+            <p>{t('vaults:your-time-card.desc-3')}</p>
+          </Text>
+        }
+      />
+
       <SummaryCard items={summaryCardItems} cardSize="small" />
       {opportunitiesLoading && <SpinnerLoading flex="1" width="100%" />}
+
       {!opportunitiesLoading && (
         <>
-          <Row>
-            <StyledRecommendationsCard
-              header={t('components.recommendations.header')}
-              items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
-                // header: 'Vault',
-                icon: displayIcon,
-                name: displayName,
-                info: formatApy(apyData, apyType),
-                infoDetail: 'EYY',
-                onAction: () => history.push(`/vault/${address}`),
-              }))}
-            />
-
-            <StyledInfoCard
-              header={t('vaults:your-time-card.header')}
-              Component={
-                <Text>
-                  <p>{t('vaults:your-time-card.desc-1')}</p>
-                  <p>{t('vaults:your-time-card.desc-2')}</p>
-                  <p>{t('vaults:your-time-card.desc-3')}</p>
-                </Text>
-              }
-            />
-          </Row>
+          <StyledRecommendationsCard
+            header={t('components.recommendations.header')}
+            items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
+              // header: 'Vault',
+              icon: displayIcon,
+              name: displayName,
+              info: formatApy(apyData, apyType),
+              infoDetail: 'EYY',
+              onAction: () => history.push(`/vault/${address}`),
+            }))}
+          />
 
           {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 

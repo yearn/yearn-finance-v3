@@ -9,8 +9,7 @@ import {
   WalletSelectors,
   NetworkSelectors,
 } from '@store';
-import { SummaryCard, InfoCard, ViewContainer, NoWalletCard, Amount } from '@components/app';
-import { Text } from '@components/common';
+import { SummaryCard, ViewContainer, NoWalletCard, Amount } from '@components/app';
 import { toBN, halfWidthCss } from '@utils';
 import { getConfig } from '@config';
 
@@ -33,11 +32,6 @@ const Row = styled.div`
   grid-column: 1 / 3;
 `;
 
-const StyledInfoCard = styled(InfoCard)`
-  max-width: 100%;
-  flex: 1;
-`;
-
 const StyledNoWalletCard = styled(NoWalletCard)`
   grid-column: 1 / 3;
   ${halfWidthCss}
@@ -47,12 +41,6 @@ const StyledSummaryCard = styled(SummaryCard)`
   width: 100%;
   grid-column: 1 / 3;
   ${halfWidthCss};
-`;
-
-const StyledLink = styled.a`
-  white-space: initial;
-  text-decoration: underline;
-  color: inherit;
 `;
 
 export const Portfolio = () => {
@@ -92,36 +80,6 @@ export const Portfolio = () => {
   return (
     <StyledViewContainer>
       <HeaderCard items={summaryCardItems} cardSize="small" />
-
-      <Row>
-        <StyledInfoCard
-          header={t('home:welcome-card.header')}
-          Component={
-            <Text>
-              <p>{t('home:welcome-card.desc-1')}</p>
-              <p>{t('home:welcome-card.desc-2')}</p>
-            </Text>
-          }
-          cardSize="big"
-        />
-
-        <StyledInfoCard
-          header={t('components.beta-card.header')}
-          Component={
-            <Text>
-              <p>
-                {t('components.beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>
-                .
-              </p>
-              <p>
-                {t('components.beta-card.desc-2')}{' '}
-                <StyledLink href="https://v2.yearn.finance">v2.yearn.finance</StyledLink>.
-              </p>
-            </Text>
-          }
-          cardSize="big"
-        />
-      </Row>
 
       {walletIsConnected && (
         <>
