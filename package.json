@@ -1,6 +1,6 @@
 {
   "name": "yearn-finance-v3",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "private": true,
   "scripts": {
     "start": "craco start",
