@@ -1,6 +1,5 @@
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
-import { ethers } from 'ethers';
 
 import { ThunkAPI } from '@frameworks/redux';
 import { TokensActions } from '@store';
