@@ -210,6 +210,7 @@ export interface SettingsState {
   stateVersion: number;
   sidebarCollapsed: boolean;
   defaultSlippage: number;
+  signedApprovalsEnabled: boolean;
   devMode: {
     enabled: boolean;
     walletAddressOverride: Address;

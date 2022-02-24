@@ -52,6 +52,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     selectedVault?.defaultDisplayToken ?? ''
   );
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
+  const signedApprovalsEnabled = useAppSelector(SettingsSelectors.selectSignedApprovalsEnabled);
   const targetTokensOptions = selectedVault
     ? [selectedVault.token, ...zapOutTokens.filter(({ address }) => address !== selectedVault.token.address)]
     : zapOutTokens;
@@ -196,8 +197,12 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const approve = async () => {
     try {
-      const signResult = await dispatchAndUnwrap(VaultsActions.signZapOut({ vaultAddress: selectedVault.address }));
-      setSignature(signResult.signature);
+      if (signedApprovalsEnabled) {
+        const signResult = await dispatchAndUnwrap(VaultsActions.signZapOut({ vaultAddress: selectedVault.address }));
+        setSignature(signResult.signature);
+      } else {
+        await dispatch(VaultsActions.approveZapOut({ vaultAddress: selectedVault.address }));
+      }
     } catch (error) {}
   };
 
@@ -218,7 +223,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const txActions = [
     {
-      label: t('components.transaction.approve'),
+      label: signedApprovalsEnabled ? t('components.transaction.sign') : t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveZapOut,
       disabled: isApproved,
