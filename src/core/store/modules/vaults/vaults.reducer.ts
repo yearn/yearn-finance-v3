@@ -279,7 +279,7 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.statusMap.getExpectedTransactionOutcome = {};
     })
     .addCase(getExpectedTransactionOutcome.rejected, (state, { error }) => {
-      state.statusMap.getExpectedTransactionOutcome = { error: 'Simulation Failed' };
+      state.statusMap.getExpectedTransactionOutcome = { error: error.message };
     })
 
     /* -------------------------------------------------------------------------- */
