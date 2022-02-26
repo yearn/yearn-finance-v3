@@ -305,7 +305,8 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
             )}
             {yieldPercent && (
               <StyledText>
-                {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
+                {t('components.transaction.token-input.yield')}{' '}
+                <ContrastText>{yieldPercent === '0.00%' ? 'NEW ✨' : yieldPercent}</ContrastText>
               </StyledText>
             )}
           </TokenExtras>
