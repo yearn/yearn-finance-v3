@@ -10,7 +10,7 @@ import {
   ModalSelectors,
   AppSelectors,
 } from '@store';
-import { ToggleButton, Text } from '@components/common';
+import { ToggleButton, Text, Markdown } from '@components/common';
 import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, InfoCard, Amount } from '@components/app';
 import { humanize, halfWidthCss, normalizeAmount } from '@utils';
 
@@ -27,6 +27,11 @@ const StyledInfoCard = styled(InfoCard)`
   max-width: 100%;
   flex: 1;
   ${halfWidthCss}
+
+  a {
+    text-decoration: underline;
+    color: inherit;
+  }
 `;
 
 const SupplyingCard = styled(DetailCard)`
@@ -141,8 +146,9 @@ export const IronBank = () => {
           header={t('ironbank:ironbank-announcement-card.header')}
           Component={
             <Text>
-              <p>{t('ironbank:ironbank-announcement-card.desc-1')}</p>
-              <p>{t('ironbank:ironbank-announcement-card.desc-2')}</p>
+              <Markdown>{t('ironbank:ironbank-announcement-card.desc-1')}</Markdown>
+              <Markdown>{t('ironbank:ironbank-announcement-card.desc-2')}</Markdown>
+              <Markdown>{t('ironbank:ironbank-announcement-card.desc-3')}</Markdown>
             </Text>
           }
         />
