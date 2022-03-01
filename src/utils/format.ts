@@ -96,6 +96,7 @@ export const formatUsd = (amount?: Amount, decimals = 2): FormattedAmount =>
   toBN(amount).toFormat(decimals, { ...FORMAT, prefix: '$ ' });
 
 export const formatApy = (apyData: Fraction, apyType: string): FormattedAmount => {
+  if (apyType === 'error') return '-';
   if (apyType === 'new') return 'NEW ✨';
   if (apyType === 'n/a') return 'N/A';
 
