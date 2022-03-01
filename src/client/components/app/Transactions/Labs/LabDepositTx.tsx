@@ -184,7 +184,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     balance: selectedLab.DEPOSIT.userBalance,
     balanceUsdc: selectedLab.DEPOSIT.userDepositedUsdc,
     decimals: toBN(selectedLab.decimals).toNumber(),
-    yield: formatApy(selectedLab.apyData, selectedLab.apyMetadata?.type || ''),
+    yield: formatApy(selectedLab.apyData, selectedLab.apyMetadata?.type),
   };
 
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
