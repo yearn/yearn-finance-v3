@@ -85,6 +85,9 @@ declare module 'styled-components' {
       primaryVariant: string;
 
       secondary: string;
+
+      iconsVariant?: string;
+
       secondaryVariantA: string;
       secondaryVariantB: string;
 

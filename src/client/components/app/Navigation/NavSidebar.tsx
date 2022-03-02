@@ -38,7 +38,7 @@ const LinkList = styled.div`
 
 const LinkIcon = styled(Icon)`
   margin-right: 1.2rem;
-  fill: ${({ theme }) => theme.colors.primaryVariant};
+  fill: ${({ theme }) => theme.colors.iconsVariant || 'black'};
   cursor: pointer;
   width: 2.4rem;
   height: 2.4rem;

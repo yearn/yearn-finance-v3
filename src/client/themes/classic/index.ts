@@ -4,6 +4,25 @@ import { sharedTheme } from '../default';
 
 import ClassicBackground from './background.jpg';
 
+// TODO Dehardcode this
+const classic = {
+  name: 'classic',
+  colors: {
+    background: '#012A7C',
+    backgroundVariant: '#001E59',
+    surface: '#001746',
+    surfaceVariant: '#012A7C',
+    primary: '#0657F9',
+    primaryVariant: '#004ADF',
+    secondary: '#0657F9',
+    titles: '#FFFFFF',
+    titlesVariant: '#FFFFFF',
+    texts: '#7F8DA9',
+    icons: '#7F8DA9',
+    iconsVariant: '#FFFFFF',
+  },
+};
+
 const classicTheme: DefaultTheme = {
   ...sharedTheme,
   background: {
@@ -12,13 +31,14 @@ const classicTheme: DefaultTheme = {
   colors: {
     logo: '#006AE3',
 
-    primary: '#0A1D3F',
-    background: '#1F255F',
-    surface: '#0A1D3F',
+    primary: classic.colors.primary,
+    background: classic.colors.background,
+    surface: classic.colors.surface,
 
-    primaryVariant: '#b5b5b5',
+    primaryVariant: classic.colors.primaryVariant,
 
-    secondary: '#fff',
+    secondary: classic.colors.secondary,
+
     secondaryVariantA: '#006AE3',
     secondaryVariantB: '#006AE3',
 

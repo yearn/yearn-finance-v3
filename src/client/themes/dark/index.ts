@@ -2,18 +2,38 @@ import { DefaultTheme } from 'styled-components';
 
 import { sharedTheme } from '../default';
 
+// TODO Dehardcode this
+const dark = {
+  name: 'light',
+  colors: {
+    background: '#141414',
+    backgroundVariant: '#272727',
+    surface: '#000000',
+    surfaceVariant: '#191919',
+    primary: '#FFFFFF',
+    primaryVariant: '#FFFFFF',
+    secondary: '#272727',
+    titles: '#FFFFFF',
+    titlesVariant: '#FFFFFF',
+    texts: '#A8A8A8',
+    icons: '#A8A8A8',
+    iconsVariant: '#FFFFF0',
+  },
+};
+
 const darkTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
     logo: '#006AE3',
 
-    primary: '#202020',
-    background: '#191919',
-    surface: '#202020',
+    primary: dark.colors.primary,
+    background: dark.colors.background,
+    surface: dark.colors.surface,
 
-    primaryVariant: '#777777',
+    primaryVariant: dark.colors.primaryVariant,
 
-    secondary: '#FFFFFF',
+    secondary: dark.colors.secondary,
+
     secondaryVariantA: '#000000',
     secondaryVariantB: '#585858',
 
