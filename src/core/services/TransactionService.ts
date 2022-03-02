@@ -1,5 +1,3 @@
-import { Interface } from '@ethersproject/abi';
-
 import { notify, UpdateNotification } from '@frameworks/blocknative';
 import { getConfig } from '@config';
 import {

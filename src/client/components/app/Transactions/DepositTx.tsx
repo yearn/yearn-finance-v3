@@ -21,7 +21,7 @@ import {
   validateSlippage,
   validateNetwork,
   getZapInContractAddress,
-  formatPercent,
+  formatApy,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -171,14 +171,14 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
-    .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData }) => ({
+    .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData, apyMetadata }) => ({
       address,
       symbol: displayName,
       icon: displayIcon,
       balance: DEPOSIT.userDeposited,
       balanceUsdc: DEPOSIT.userDepositedUsdc,
       decimals: token.decimals,
-      yield: formatPercent(apyData, 2),
+      yield: formatApy(apyData, apyMetadata?.type),
     }));
   const selectedVaultOption = vaultsOptions.find(({ address }) => address === selectedVault.address)!;
 

@@ -392,7 +392,7 @@ const yvBoostWithdraw = createAsyncThunk<
   // NOTE: We contemplate that in yvBoost withdraw user always will be using yvToken instead of
   // underlyingToken like in vaults. Thats why amount is in yvToken already and we dont need
   // to calculate shares amount.
-  const amountOfShares = toWei(amount.toString(), parseInt(labData.decimals));
+  // const amountOfShares = toWei(amount.toString(), parseInt(labData.decimals));
 
   const { error: allowanceError } = validateVaultWithdrawAllowance({
     yvTokenAddress: labAddress,
