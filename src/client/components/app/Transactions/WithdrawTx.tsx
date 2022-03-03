@@ -26,13 +26,21 @@ import {
 import { getConfig } from '@config';
 
 import { Transaction } from './Transaction';
+import { TxStatusActionType } from './components/TxStatus';
 
 export interface WithdrawTxProps {
   header?: string;
+  transactionCompletedActionType?: TxStatusActionType;
   onClose?: () => void;
 }
 
-export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...props }) => {
+export const WithdrawTx: FC<WithdrawTxProps> = ({
+  header,
+  transactionCompletedActionType,
+  onClose,
+  children,
+  ...props
+}) => {
   const { t } = useAppTranslation('common');
 
   const dispatch = useAppDispatch();
@@ -230,7 +238,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedActionType={transactionCompletedActionType}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[selectedVaultOption]}

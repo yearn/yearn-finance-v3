@@ -254,11 +254,9 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   ];
 
   return (
-    // TODO Check transactionCompletedLabel (I think it's not used)
     <Transaction
       transactionLabel={t('components.transaction.deposit')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={sellTokensOptions}

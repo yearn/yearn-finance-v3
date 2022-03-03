@@ -392,16 +392,16 @@ export const VaultDetailPanels = ({
 
           {isVaultMigratable && (
             <StyledTabPanel value="migrate" tabValue={selectedTab}>
-              <MigrateTx />
+              <MigrateTx transactionCompletedActionType="back" />
             </StyledTabPanel>
           )}
           {!hideDeposit && (
             <StyledTabPanel value="deposit" tabValue={selectedTab}>
-              <DepositTx />
+              <DepositTx transactionCompletedActionType="back" />
             </StyledTabPanel>
           )}
           <StyledTabPanel value="withdraw" tabValue={selectedTab}>
-            <WithdrawTx />
+            <WithdrawTx transactionCompletedActionType="back" />
           </StyledTabPanel>
         </VaultActions>
       </Row>

@@ -12,13 +12,15 @@ import {
 } from '@utils';
 
 import { Transaction } from './Transaction';
+import { TxStatusActionType } from './components/TxStatus';
 
 export interface MigrateTxProps {
   header?: string;
+  transactionCompletedActionType?: TxStatusActionType;
   onClose?: () => void;
 }
 
-export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
+export const MigrateTx: FC<MigrateTxProps> = ({ header, transactionCompletedActionType, onClose }) => {
   const { t } = useAppTranslation('common');
 
   const dispatch = useAppDispatch();
@@ -144,7 +146,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedActionType={transactionCompletedActionType}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[sourceVault]}

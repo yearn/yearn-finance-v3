@@ -96,7 +96,6 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
     <Transaction
       transactionLabel={t('components.transaction.claim')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.reward')}
       sourceAssetOptions={[selectedLabOption]}

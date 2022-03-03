@@ -80,6 +80,7 @@
       "status": {
         "calculating": "Calculating...",
         "exit": "Exit",
+        "done": "Done",
         "simulating": "Simulating...",
         "transaction-completed": "Transaction completed"
       },

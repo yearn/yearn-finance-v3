@@ -26,16 +26,19 @@ import {
 import { getConfig } from '@config';
 
 import { Transaction } from './Transaction';
+import { TxStatusActionType } from './components/TxStatus';
 
 export interface DepositTxProps {
   header?: string;
   allowTokenSelect?: boolean;
   allowVaultSelect?: boolean;
+  transactionCompletedActionType?: TxStatusActionType;
   onClose?: () => void;
 }
 
 export const DepositTx: FC<DepositTxProps> = ({
   header,
+  transactionCompletedActionType,
   onClose,
   allowTokenSelect = true,
   allowVaultSelect = false,
@@ -268,7 +271,7 @@ export const DepositTx: FC<DepositTxProps> = ({
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedActionType={transactionCompletedActionType}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={allowTokenSelect ? sellTokensOptions : [selectedSellToken]}

@@ -8,7 +8,7 @@ import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
-import { TxStatus } from './components/TxStatus';
+import { TxStatus, TxStatusActionType } from './components/TxStatus';
 import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
 
 interface Status {
@@ -37,7 +37,7 @@ interface Asset {
 interface TransactionProps {
   transactionLabel?: string;
   transactionCompleted: boolean;
-  transactionCompletedLabel: string;
+  transactionCompletedActionType?: TxStatusActionType;
   onTransactionCompletedDismissed: () => void;
   sourceHeader: string;
   sourceAssetOptions: Asset[];
@@ -68,6 +68,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
     transactionLabel,
     transactionCompleted,
     onTransactionCompletedDismissed,
+    transactionCompletedActionType,
     sourceHeader,
     sourceAssetOptions,
     selectedSourceAsset,
@@ -106,10 +107,20 @@ export const Transaction: FC<TransactionProps> = (props) => {
     }
   }
 
-  if (transactionCompleted) {
+  const transactionCompletedAction = () => {
+    if (transactionCompletedActionType === 'back') {
+      console.log('Back');
+
+      // TODO Actual back action
+    } else {
+      onTransactionCompletedDismissed();
+    }
+  };
+
+  if (!transactionCompleted) {
     return (
       <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
-        <TxStatus exit={onTransactionCompletedDismissed} />
+        <TxStatus actionType={transactionCompletedActionType} exit={transactionCompletedAction} />
       </StyledTransaction>
     );
   }
