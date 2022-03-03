@@ -5,4 +5,4 @@ export interface Alert {
   persistent: boolean;
 }
 
-export type AlertTypes = 'default' | 'success' | 'error' | 'info';
+export type AlertTypes = 'default' | 'success' | 'error' | 'info' | 'warning';
