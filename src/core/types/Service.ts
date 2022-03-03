@@ -284,8 +284,6 @@ export interface HandleTransactionProps {
   renderNotification?: boolean;
 }
 
-type ContractFunction = (...args: Array<any>) => Promise<TransactionResponse>;
-
 // *************** GAS ***************
 
 export interface GasService {

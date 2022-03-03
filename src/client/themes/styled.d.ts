@@ -53,6 +53,10 @@ declare module 'styled-components' {
         background: string;
         color: string;
       };
+      warning: {
+        background: string;
+        color: string;
+      };
     };
 
     txModal: {

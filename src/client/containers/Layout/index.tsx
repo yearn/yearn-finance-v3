@@ -13,12 +13,14 @@ import {
   ModalsActions,
   ModalSelectors,
   NetworkActions,
+  AlertsActions,
 } from '@store';
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
 import { Network, Route } from '@types';
+import { get } from '@utils';
 
 const contentSeparation = '1.6rem';
 
@@ -92,7 +94,6 @@ export const Layout: FC = ({ children }) => {
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const previousAddress = usePrevious(selectedAddress);
   const previousNetwork = usePrevious(currentNetwork);
-
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1] as Route;
   let vaultAddress;
@@ -104,8 +105,26 @@ export const Layout: FC = ({ children }) => {
   // TODO This is only assetAddress on the vault page
   const assetAddress: string | undefined = location.pathname.split('/')[2];
 
+  // Used to check zapper api
+  const { ZAPPER_API_KEY } = getConfig();
+
   useEffect(() => {
     dispatch(AppActions.initApp());
+
+    // NOTE Test zapper API
+    const url = 'https://api.zapper.fi/v1/prices';
+    const params = new URLSearchParams({ api_key: ZAPPER_API_KEY ?? '' });
+
+    fetch(`${url}?${params}`).catch((error) => {
+      dispatch(
+        AlertsActions.openAlert({
+          message:
+            'Zapper is currently experiencing technical issues and this might impact your experience at Yearn. We are sorry for the inconveniences and the problems should be resolved soon.',
+          type: 'warning',
+          persistent: true,
+        })
+      );
+    });
   }, []);
 
   useEffect(() => {

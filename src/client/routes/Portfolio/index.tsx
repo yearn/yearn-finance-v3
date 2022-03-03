@@ -1,14 +1,7 @@
 import styled from 'styled-components';
 
 import { useAppSelector, useAppTranslation } from '@hooks';
-import {
-  IronBankSelectors,
-  LabsSelectors,
-  TokensSelectors,
-  VaultsSelectors,
-  WalletSelectors,
-  NetworkSelectors,
-} from '@store';
+import { LabsSelectors, TokensSelectors, VaultsSelectors, WalletSelectors, NetworkSelectors } from '@store';
 import { SummaryCard, ViewContainer, NoWalletCard, Amount } from '@components/app';
 import { toBN, halfWidthCss } from '@utils';
 import { getConfig } from '@config';
@@ -52,13 +45,11 @@ export const Portfolio = () => {
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const vaultsSummary = useAppSelector(VaultsSelectors.selectSummaryData);
   const labsSummary = useAppSelector(LabsSelectors.selectSummaryData);
-  const ibSummary = useAppSelector(IronBankSelectors.selectSummaryData);
   const walletSummary = useAppSelector(TokensSelectors.selectSummaryData);
 
   const netWorth = toBN(vaultsSummary.totalDeposits)
     .plus(walletSummary.totalBalance)
     .plus(labsSummary.totalDeposits)
-    .plus(ibSummary.supplyBalanceUsdc)
     .toString();
 
   const summaryCardItems = [
@@ -96,40 +87,22 @@ export const Portfolio = () => {
               cardSize="small"
             />
 
-            {currentNetworkSettings.ironBankEnabled && (
-              <StyledSummaryCard
-                header={t('navigation.ironbank')}
-                items={[
-                  {
-                    header: t('dashboard.supplied'),
-                    Component: <Amount value={ibSummary.supplyBalanceUsdc} input="usdc" />,
-                  },
-                  {
-                    header: t('dashboard.borrow-limit-used'),
-                    Component: <Amount value={ibSummary.borrowUtilizationRatio} input="weipercent" />,
-                  },
-                ]}
-                redirectTo="ironbank"
-                cardSize="small"
-              />
-            )}
+            <StyledSummaryCard
+              header={t('navigation.vaults')}
+              items={[
+                {
+                  header: t('dashboard.holdings'),
+                  Component: <Amount value={vaultsSummary.totalDeposits} input="usdc" />,
+                },
+                {
+                  header: t('dashboard.apy'),
+                  Component: <Amount value={vaultsSummary.apy} input="percent" />,
+                },
+              ]}
+              redirectTo="vaults"
+              cardSize="small"
+            />
           </Row>
-
-          <StyledSummaryCard
-            header={t('navigation.vaults')}
-            items={[
-              {
-                header: t('dashboard.holdings'),
-                Component: <Amount value={vaultsSummary.totalDeposits} input="usdc" />,
-              },
-              {
-                header: t('dashboard.apy'),
-                Component: <Amount value={vaultsSummary.apy} input="percent" />,
-              },
-            ]}
-            redirectTo="vaults"
-            cardSize="small"
-          />
 
           {currentNetworkSettings.labsEnabled && (
             <StyledSummaryCard

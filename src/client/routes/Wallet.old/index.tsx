@@ -8,7 +8,6 @@ import {
   ModalsActions,
   ModalSelectors,
   VaultsSelectors,
-  IronBankSelectors,
   AppSelectors,
 } from '@store';
 import {
@@ -60,7 +59,6 @@ export const Wallet = () => {
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
   const vaultsUnderlyingTokens = useAppSelector(VaultsSelectors.selectUnderlyingTokensAddresses);
-  const ironBankUnderlyingTokens = useAppSelector(IronBankSelectors.selectUnderlyingTokensAddresses);
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
@@ -74,10 +72,6 @@ export const Wallet = () => {
         dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
         dispatch(ModalsActions.openModal({ modalName: 'depositTx' }));
         break;
-      case 'supply':
-        dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
-        dispatch(ModalsActions.openModal({ modalName: 'IronBankSupplyTx' }));
-        break;
       default:
         break;
     }
@@ -89,16 +83,6 @@ export const Wallet = () => {
         name: t('components.transaction.deposit'),
         handler: () => actionHandler('invest', tokenAddress),
         disabled: !walletIsConnected || !(isZapable || vaultsUnderlyingTokens.includes(tokenAddress)),
-      },
-    ];
-  };
-
-  const supplyButton = (tokenAddress: string) => {
-    return [
-      {
-        name: t('components.transaction.supply'),
-        handler: () => actionHandler('supply', tokenAddress),
-        disabled: !walletIsConnected || !ironBankUnderlyingTokens.includes(tokenAddress),
       },
     ];
   };
@@ -160,9 +144,7 @@ export const Wallet = () => {
             },
             {
               key: 'invest',
-              transform: ({ address, isZapable }) => (
-                <ActionButtons actions={[...supplyButton(address), ...investButton(address, isZapable)]} />
-              ),
+              transform: ({ address, isZapable }) => <ActionButtons actions={[...investButton(address, isZapable)]} />,
               align: 'flex-end',
               width: 'auto',
               grow: '1',
@@ -173,7 +155,6 @@ export const Wallet = () => {
             displayName: token.symbol,
             displayIcon: token.icon ?? '',
             tokenBalance: normalizeAmount(token.balance, token.decimals),
-            supply: null,
             invest: null,
           }))}
           initialSortBy="balanceUsdc"
