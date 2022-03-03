@@ -5,6 +5,7 @@
   "scripts": {
     "start": "craco start",
     "dev": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco start",
+    "dev-win": "cross-env REACT_APP_VERSION=x && craco start",
     "build": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco build",
     "lint": "eslint  --ignore-path .gitignore --ext .js,.ts .",
     "test": "craco test",

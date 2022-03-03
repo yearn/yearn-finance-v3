@@ -13,6 +13,7 @@ import {
   ModalsActions,
   ModalSelectors,
   NetworkActions,
+  AlertsActions,
 } from '@store';
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
@@ -100,6 +101,14 @@ export const Layout: FC = ({ children }) => {
 
   useEffect(() => {
     dispatch(AppActions.initApp());
+    dispatch(
+      AlertsActions.openAlert({
+        message:
+          'Zapper is currently experiencing technical issues and this might impact your experience at Yearn. We are sorry for the inconveniences and the problems should be resolved soon.',
+        type: 'warning',
+        persistent: true,
+      })
+    );
   }, []);
 
   useEffect(() => {
