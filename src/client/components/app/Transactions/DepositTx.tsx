@@ -271,6 +271,7 @@ export const DepositTx: FC<DepositTxProps> = ({
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
+      setTxCompleted={setTxCompleted}
       transactionCompletedActionType={transactionCompletedActionType}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 import styled from 'styled-components';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
@@ -37,6 +37,7 @@ interface Asset {
 interface TransactionProps {
   transactionLabel?: string;
   transactionCompleted: boolean;
+  setTxCompleted?: Dispatch<SetStateAction<boolean>>;
   transactionCompletedActionType?: TxStatusActionType;
   onTransactionCompletedDismissed: () => void;
   sourceHeader: string;
@@ -67,6 +68,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const {
     transactionLabel,
     transactionCompleted,
+    setTxCompleted,
     onTransactionCompletedDismissed,
     transactionCompletedActionType,
     sourceHeader,
@@ -110,14 +112,14 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const transactionCompletedAction = () => {
     if (transactionCompletedActionType === 'back') {
       console.log('Back');
-
+      if (setTxCompleted) setTxCompleted(true);
       // TODO Actual back action
     } else {
       onTransactionCompletedDismissed();
     }
   };
 
-  if (!transactionCompleted) {
+  if (transactionCompleted) {
     return (
       <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
         <TxStatus actionType={transactionCompletedActionType} exit={transactionCompletedAction} />
