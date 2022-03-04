@@ -111,7 +111,6 @@ export const Transaction: FC<TransactionProps> = (props) => {
 
   const transactionCompletedAction = () => {
     if (transactionCompletedActionType === 'back') {
-      console.log('Back');
       if (setTxCompleted) setTxCompleted(false);
     } else {
       onTransactionCompletedDismissed();
