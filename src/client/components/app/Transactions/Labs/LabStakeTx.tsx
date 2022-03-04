@@ -176,6 +176,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
     <Transaction
       transactionLabel={t('components.transaction.stake')}
       transactionCompleted={txCompleted}
+      setTxCompleted={setTxCompleted}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={sellTokensOptions}

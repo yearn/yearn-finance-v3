@@ -238,6 +238,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
+      setTxCompleted={setTxCompleted}
       transactionCompletedActionType={transactionCompletedActionType}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}

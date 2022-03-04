@@ -215,6 +215,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     <Transaction
       transactionLabel={t('components.transaction.withdraw')}
       transactionCompleted={txCompleted}
+      setTxCompleted={setTxCompleted}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[selectedLabOption]}

@@ -257,6 +257,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     <Transaction
       transactionLabel={t('components.transaction.deposit')}
       transactionCompleted={txCompleted}
+      setTxCompleted={setTxCompleted}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={sellTokensOptions}
