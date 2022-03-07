@@ -36,7 +36,6 @@ interface Asset {
 interface IronBankTransactionProps {
   transactionLabel: string;
   transactionCompleted: boolean;
-  transactionCompletedLabel: string;
   onTransactionCompletedDismissed: () => void;
   assetHeader: string;
   assetLabel: string;

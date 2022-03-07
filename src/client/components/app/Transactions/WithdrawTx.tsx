@@ -191,8 +191,19 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     setSelectedTargetTokenAddress(tokenAddress);
   };
 
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
+
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -241,7 +252,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[selectedVaultOption]}

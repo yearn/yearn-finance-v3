@@ -48,6 +48,7 @@
       "status": {
         "calculating": "Calculando...",
         "exit": "Cerrar",
+        "done": "OK",
         "simulating": "Simulando...",
         "transaction-completed": "Transacción completada"
       },
