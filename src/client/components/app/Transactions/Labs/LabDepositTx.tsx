@@ -209,8 +209,20 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
   };
 
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
+
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    // NOTE if there is no onClose then we are on vault details
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -257,7 +269,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     <Transaction
       transactionLabel={t('components.transaction.deposit')}
       transactionCompleted={txCompleted}
-      setTxCompleted={setTxCompleted}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={sellTokensOptions}

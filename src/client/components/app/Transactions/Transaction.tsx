@@ -37,7 +37,7 @@ interface Asset {
 interface TransactionProps {
   transactionLabel?: string;
   transactionCompleted: boolean;
-  setTxCompleted?: Dispatch<SetStateAction<boolean>>;
+  transactionCompletedLabel?: string;
   transactionCompletedActionType?: TxStatusActionType;
   onTransactionCompletedDismissed: () => void;
   sourceHeader: string;
@@ -68,9 +68,8 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const {
     transactionLabel,
     transactionCompleted,
-    setTxCompleted,
+    transactionCompletedLabel,
     onTransactionCompletedDismissed,
-    transactionCompletedActionType,
     sourceHeader,
     sourceAssetOptions,
     selectedSourceAsset,
@@ -109,18 +108,10 @@ export const Transaction: FC<TransactionProps> = (props) => {
     }
   }
 
-  const transactionCompletedAction = () => {
-    if (transactionCompletedActionType === 'back') {
-      if (setTxCompleted) setTxCompleted(false);
-    } else {
-      onTransactionCompletedDismissed();
-    }
-  };
-
   if (transactionCompleted) {
     return (
       <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
-        <TxStatus actionType={transactionCompletedActionType} exit={transactionCompletedAction} />
+        <TxStatus transactionCompletedLabel={transactionCompletedLabel} exit={onTransactionCompletedDismissed} />
       </StyledTransaction>
     );
   }

@@ -173,8 +173,20 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     setSelectedTargetTokenAddress(tokenAddress);
   };
 
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
+
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    // NOTE if there is no onClose then we are on vault details
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -215,7 +227,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     <Transaction
       transactionLabel={t('components.transaction.withdraw')}
       transactionCompleted={txCompleted}
-      setTxCompleted={setTxCompleted}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[selectedLabOption]}

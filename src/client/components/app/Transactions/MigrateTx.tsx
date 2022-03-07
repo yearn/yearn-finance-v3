@@ -16,11 +16,10 @@ import { TxStatusActionType } from './components/TxStatus';
 
 export interface MigrateTxProps {
   header?: string;
-  transactionCompletedActionType?: TxStatusActionType;
   onClose?: () => void;
 }
 
-export const MigrateTx: FC<MigrateTxProps> = ({ header, transactionCompletedActionType, onClose }) => {
+export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
   const { t } = useAppTranslation('common');
 
   const dispatch = useAppDispatch();
@@ -99,9 +98,19 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, transactionCompletedActi
   };
 
   const loadingText = t('components.transaction.status.calculating');
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
 
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -146,8 +155,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, transactionCompletedActi
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      setTxCompleted={setTxCompleted}
-      transactionCompletedActionType={transactionCompletedActionType}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[sourceVault]}

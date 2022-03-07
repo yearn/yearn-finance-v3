@@ -40,19 +40,14 @@ const StyledTxStatus = styled.div`
 export type TxStatusActionType = 'exit' | 'back';
 
 export interface TxStatusProps {
-  actionType?: TxStatusActionType;
+  transactionCompletedLabel?: string;
   exit: () => void;
 }
 
-export const TxStatus: FC<TxStatusProps> = ({ actionType = 'exit', exit, children, ...props }) => {
+export const TxStatus: FC<TxStatusProps> = ({ transactionCompletedLabel, exit, children, ...props }) => {
   const { t } = useAppTranslation('common');
 
-  let actionButtonLabel;
-  if (actionType === 'exit') {
-    actionButtonLabel = t('components.transaction.status.exit');
-  } else {
-    actionButtonLabel = t('components.transaction.status.done');
-  }
+  const actionButtonLabel = transactionCompletedLabel ?? t('components.transaction.status.exit');
 
   return (
     <StyledTxStatus {...props}>

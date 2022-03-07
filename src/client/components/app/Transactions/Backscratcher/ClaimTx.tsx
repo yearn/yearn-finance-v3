@@ -72,6 +72,7 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
   const expectedAmount = amount;
   const expectedAmountValue = amountValue;
 
+  // NOTE If component is added to vault details, update this function to reflect logic from depositTx
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
   };
