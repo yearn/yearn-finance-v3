@@ -38,7 +38,6 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
 
   useEffect(() => {
     return () => {
-      // TODO Fix clear on vault details
       onExit();
     };
   }, []);
