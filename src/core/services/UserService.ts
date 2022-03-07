@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
-import { Contract } from 'ethers';
+import { Contract, ethers } from 'ethers';
+import { fns } from 'fns-helper';
 
 import { GetAddressEnsNameProps, UserService, Web3Provider, NftBalances, Config } from '@types';
 import { getContract } from '@frameworks/ethers';
@@ -16,11 +17,25 @@ export class UserServiceImpl implements UserService {
     this.config = config;
   }
 
+  public async isFnsName(address) {
+    var name = await fns.functions.getNameFromOwner(address);
+    console.log('Coolnesssssss  ' + name);
+    return [name.toString().split('').length > 0];
+  }
+
   public async getAddressEnsName(props: GetAddressEnsNameProps) {
+    console.log('ysjsjsjsjsjsjjse');
     const { address } = props;
+    const res = await this.isFnsName(address);
+    console.log(res);
     const provider = this.web3Provider.getInstanceOf('ethereum');
-    const addressEnsName = await provider.lookupAddress(address);
-    return addressEnsName;
+    var addressEnsName;
+    if (res[0]) {
+      addressEnsName = await fns.functions.getNameFromOwner(address);
+    } else {
+      addressEnsName = await provider.lookupAddress(address);
+    }
+    return addressEnsName.toString().toLowerCase();
   }
 
   /* -------------------------------------------------------------------------- */
