@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
-import { Contract } from 'ethers';
-import { fns } from 'fns-helper';
+import { Contract, ethers } from 'ethers';
+import { ADDRESS, ABI } from './contracts/fns.js':
 
 import { GetAddressEnsNameProps, UserService, Web3Provider, NftBalances, Config } from '@types';
 import { getContract } from '@frameworks/ethers';
@@ -18,6 +18,8 @@ export class UserServiceImpl implements UserService {
   }
 
   public async isFnsName(address) {
+    const ethersProvider = new ethers.providers.JsonRpcProvider('https://rpc.ftm.tools');
+    const fns = new Contract(ADDRESS, ABI, ethersProvider);
     var name = await fns.functions.getNameFromOwner(address);
     return [name.toString().split('').length > 0];
   }
@@ -26,6 +28,8 @@ export class UserServiceImpl implements UserService {
     const { address } = props;
     const res = await this.isFnsName(address);
     console.log(res);
+    const ethersProvider = new ethers.providers.JsonRpcProvider('https://rpc.ftm.tools');
+    const fns = new Contract(ADDRESS, ABI, ethersProvider);
     const provider = this.web3Provider.getInstanceOf('ethereum');
     var addressEnsName;
     if (res[0]) {
