@@ -204,6 +204,36 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>
   }
 );
 
+const signZapOut = createAsyncThunk<{ signature: string }, { vaultAddress: string }, ThunkAPI>(
+  'vaults/signZapOut',
+  async ({ vaultAddress }, { getState, extra }) => {
+    const { network, wallet } = getState();
+    const { vaultService } = extra.services;
+    const { CONTRACT_ADDRESSES } = extra.config;
+
+    // NOTE: this values are hardcoded on zappers zapOut contract
+    const amount = '79228162514260000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L83
+    const deadline = '0xf000000000000000000000000000000000000000000000000000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L80
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const signature = await vaultService.signPermit({
+      network: network.current,
+      accountAddress,
+      vaultAddress,
+      spenderAddress: CONTRACT_ADDRESSES.zapOut,
+      amount,
+      deadline,
+    });
+
+    return { signature };
+  },
+  {
+    serializeError: parseError,
+  }
+);
+
 const depositVault = createAsyncThunk<
   void,
   {
@@ -286,11 +316,17 @@ const depositVault = createAsyncThunk<
 
 const withdrawVault = createAsyncThunk<
   void,
-  { vaultAddress: string; amount: BigNumber; targetTokenAddress: string; slippageTolerance?: number },
+  {
+    vaultAddress: string;
+    amount: BigNumber;
+    targetTokenAddress: string;
+    slippageTolerance?: number;
+    signature?: string;
+  },
   ThunkAPI
 >(
   'vaults/withdrawVault',
-  async ({ vaultAddress, amount, targetTokenAddress, slippageTolerance }, { extra, getState, dispatch }) => {
+  async ({ vaultAddress, amount, targetTokenAddress, slippageTolerance, signature }, { extra, getState, dispatch }) => {
     const { network, wallet, vaults, tokens } = getState();
     const { services, config } = extra;
 
@@ -324,6 +360,7 @@ const withdrawVault = createAsyncThunk<
       underlyingTokenAddress: tokenData.address ?? '',
       yvTokenDecimals: tokenData.decimals.toString() ?? '0',
       yvTokenAllowancesMap: vaultAllowancesMap ?? {},
+      signature,
     });
 
     const { error: withdrawError } = validateVaultWithdraw({
@@ -343,6 +380,7 @@ const withdrawVault = createAsyncThunk<
       vaultAddress,
       amountOfShares,
       slippageTolerance,
+      signature,
     });
     await transactionService.handleTransaction({ tx, network: network.current });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
@@ -463,6 +501,7 @@ export const VaultsActions = {
   approveDeposit,
   depositVault,
   approveZapOut,
+  signZapOut,
   withdrawVault,
   approveMigrate,
   migrateVault,

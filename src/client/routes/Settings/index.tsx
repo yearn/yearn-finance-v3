@@ -15,6 +15,7 @@ import {
   ThemesIcon,
   WorldIcon,
   ClockIcon,
+  SettingsIcon,
   Icon,
   Button,
   ToggleButton,
@@ -153,6 +154,7 @@ export const Settings = () => {
   const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
   const defaultSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
+  const signedApprovalsEnabled = useAppSelector(SettingsSelectors.selectSignedApprovalsEnabled);
 
   const availableSlippages = getConfig().SLIPPAGE_OPTIONS;
   const { ALLOW_DEV_MODE, AVAILABLE_THEMES, AVAILABLE_CUSTOM_THEMES, SUPPORTED_LANGS } = getConfig();
@@ -175,6 +177,10 @@ export const Settings = () => {
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
   const isCustomThemeSelected = AVAILABLE_CUSTOM_THEMES.includes(currentTheme);
+
+  const toggleSignedApprovals = () => {
+    dispatch(SettingsActions.toggleSignedApprovals());
+  };
 
   const changeSlippage = (slippage: number) => {
     dispatch(SettingsActions.setDefaultSlippage({ slippage }));
@@ -206,6 +212,19 @@ export const Settings = () => {
         <SettingsCardHeader header={t('settings:preferences')} />
 
         <SettingsCardContent>
+          <SettingsSection>
+            <SectionTitle>
+              <SectionHeading>
+                <SectionIcon Component={SettingsIcon} />
+                {t('settings:signed-approvals')}
+              </SectionHeading>
+            </SectionTitle>
+
+            <SectionContent>
+              <ToggleButton selected={signedApprovalsEnabled} setSelected={toggleSignedApprovals} />
+            </SectionContent>
+          </SettingsSection>
+
           <SettingsSection>
             <SectionTitle>
               <SectionHeading>

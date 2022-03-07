@@ -1,6 +1,7 @@
 {
   "language": "Lenguaje",
   "preferences": "Preferencias",
+  "signed-approvals": "Habilitar aprobaciones firmadas",
   "slippage-tolerance": "Slippage tolerance",
   "themes": "Temas"
 }
