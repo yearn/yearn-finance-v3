@@ -1,6 +1,6 @@
 import { Yearn } from '@yfi/sdk';
 
-import { getNetworkId, getProviderType, inIframe, inLedgerIframe } from '@utils';
+import { getNetworkId, getProviderType, inLedgerIframe } from '@utils';
 import { YearnSdk, SdkNetwork, Web3Provider, Network, Config } from '@types';
 
 export class YearnSdkImpl implements YearnSdk {
