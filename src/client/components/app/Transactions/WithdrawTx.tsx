@@ -26,7 +26,6 @@ import {
 import { getConfig } from '@config';
 
 import { Transaction } from './Transaction';
-import { TxStatusActionType } from './components/TxStatus';
 
 export interface WithdrawTxProps {
   header?: string;

@@ -8,7 +8,7 @@ import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
-import { TxStatus, TxStatusActionType } from './components/TxStatus';
+import { TxStatus } from './components/TxStatus';
 import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
 
 interface Status {
@@ -38,7 +38,6 @@ interface TransactionProps {
   transactionLabel?: string;
   transactionCompleted: boolean;
   transactionCompletedLabel?: string;
-  transactionCompletedActionType?: TxStatusActionType;
   onTransactionCompletedDismissed: () => void;
   sourceHeader: string;
   sourceAssetOptions: Asset[];

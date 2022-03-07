@@ -12,7 +12,6 @@ import {
 } from '@utils';
 
 import { Transaction } from './Transaction';
-import { TxStatusActionType } from './components/TxStatus';
 
 export interface MigrateTxProps {
   header?: string;

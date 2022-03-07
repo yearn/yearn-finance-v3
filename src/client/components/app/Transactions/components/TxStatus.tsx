@@ -37,8 +37,6 @@ const StyledTxStatus = styled.div`
   gap: 1.2rem;
 `;
 
-export type TxStatusActionType = 'exit' | 'back';
-
 export interface TxStatusProps {
   transactionCompletedLabel?: string;
   exit: () => void;
