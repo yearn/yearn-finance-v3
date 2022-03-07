@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
