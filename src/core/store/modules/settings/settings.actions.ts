@@ -9,6 +9,8 @@ const toggleSidebar = createAction('settings/toggleSidebar');
 const closeSidebar = createAction('settings/closeSidebar');
 const openSidebar = createAction('settings/openSidebar');
 
+const toggleSignedApprovals = createAction('settings/toggleSignedApprovals');
+
 const setDefaultSlippage = createAsyncThunk<{ slippage: number }, { slippage: number }, ThunkAPI>(
   'settings/setDefaultSlippage',
   async ({ slippage }) => {
@@ -56,6 +58,7 @@ export const SettingsActions = {
   toggleSidebar,
   closeSidebar,
   openSidebar,
+  toggleSignedApprovals,
   setDefaultSlippage,
   toggleDevMode,
   changeWalletAddressOverride,
