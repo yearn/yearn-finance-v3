@@ -293,9 +293,10 @@ export const VaultDetailPanels = ({
   );
 
   const handleAddToken = () => {
-    const { address, symbol, decimals, icon } = selectedVault.token;
+    const { address, displayName, decimals, displayIcon } = selectedVault;
+
     if (context?.wallet.addToken) {
-      context?.wallet.addToken(address, symbol.substr(0, 11), decimals, icon || '');
+      context?.wallet.addToken(address, `y${displayName.substring(0, 10)}`, Number(decimals), displayIcon || '');
     }
   };
 
