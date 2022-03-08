@@ -109,6 +109,7 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
   const sourceError = networkError || allowanceError;
   const targetError = actionsStatus.approveReinvest.error || actionsStatus.reinvest.error;
 
+  // NOTE If component is added to vault details, update this function to reflect logic from depositTx
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
   };
@@ -148,7 +149,6 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
     <Transaction
       transactionLabel={t('components.transaction.reinvest')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.reward')}
       sourceAssetOptions={[selectedLabOption]}

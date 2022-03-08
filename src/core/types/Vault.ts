@@ -16,6 +16,7 @@ export interface GeneralVaultView {
   displayIcon: string;
   defaultDisplayToken: string;
   decimals: string;
+  symbol: string;
   vaultBalance: string;
   vaultBalanceUsdc: string;
   depositLimit: string;
