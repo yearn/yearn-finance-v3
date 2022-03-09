@@ -303,8 +303,8 @@ export const VaultDetailPanels = ({
   // TODO: REMOVE THIS QUICKFIX
   let selectedData = selectedUnderlyingData ? chartData?.underlying ?? [] : chartData?.usd ?? [];
   let dataToShow = selectedData;
-  const dateRegex = new RegExp(/^\d\d\d\d-\d\d-\d\d$/)
-  selectedData.forEach(dataPoint => {
+  const dateRegex = new RegExp(/^\d\d\d\d-\d\d-\d\d$/);
+  selectedData.forEach((dataPoint) => {
     if (!dataToShow.length) {
       return;
     }
