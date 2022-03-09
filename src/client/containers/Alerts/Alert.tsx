@@ -13,7 +13,7 @@ const StyledAlert = styled.div<{ type: AlertTypes }>`
   position: relative;
   pointer-events: all;
   z-index: 1;
-  width: 23rem;
+  width: 27rem;
   max-width: 100%;
   max-height: 100%;
   position: relative;
@@ -33,6 +33,9 @@ const StyledAlert = styled.div<{ type: AlertTypes }>`
     } else if (type === 'info') {
       background = theme.alerts.info.background;
       color = theme.alerts.info.color;
+    } else if (type === 'warning') {
+      background = theme.alerts.warning.background;
+      color = theme.alerts.warning.color;
     }
     return `background: ${background}; color: ${color}; fill: ${color}`;
   }}

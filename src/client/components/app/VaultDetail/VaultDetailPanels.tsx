@@ -293,9 +293,10 @@ export const VaultDetailPanels = ({
   );
 
   const handleAddToken = () => {
-    const { address, symbol, decimals, icon } = selectedVault.token;
+    const { address, symbol, decimals, displayIcon } = selectedVault;
+
     if (context?.wallet.addToken) {
-      context?.wallet.addToken(address, symbol, decimals, icon || '');
+      context?.wallet.addToken(address, symbol.substring(0, 11), Number(decimals), displayIcon || '');
     }
   };
 
@@ -364,7 +365,7 @@ export const VaultDetailPanels = ({
             </OverviewInfo>
           )}
 
-          {strategies?.length && (
+          {!!strategies?.length && (
             <>
               <StyledCardHeader header={t('vaultdetails:overview-panel.strategies')} />
 

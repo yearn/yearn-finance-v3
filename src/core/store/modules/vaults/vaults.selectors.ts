@@ -257,6 +257,7 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     defaultDisplayToken: vaultData.metadata.defaultDisplayToken,
     vaultBalance: vaultData.underlyingTokenBalance.amount,
     decimals: vaultData.decimals,
+    symbol: vaultData.symbol,
     vaultBalanceUsdc: vaultData.underlyingTokenBalance.amountUsdc,
     depositLimit: vaultData.metadata.depositLimit ?? '0',
     emergencyShutdown: vaultData.metadata.emergencyShutdown,

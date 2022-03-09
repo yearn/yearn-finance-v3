@@ -51,6 +51,7 @@ export interface VaultService {
   getUserVaultsSummary: (props: GetUserVaultsSummaryProps) => Promise<VaultsUserSummary>;
   getUserVaultsMetadata: (props: GetUserVaultsMetadataProps) => Promise<VaultUserMetadata[]>;
   getExpectedTransactionOutcome: (props: GetExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
+  signPermit: (props: SignPermitProps) => Promise<string>;
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
   migrate: (props: MigrateProps) => Promise<TransactionResponse>;
@@ -93,6 +94,15 @@ export interface GetExpectedTransactionOutcomeProps {
   slippageTolerance?: number;
 }
 
+export interface SignPermitProps {
+  network: Network;
+  accountAddress: Address;
+  vaultAddress: Address;
+  spenderAddress: Address;
+  amount: Wei;
+  deadline: string;
+}
+
 export interface DepositProps {
   network: Network;
   accountAddress: Address;
@@ -109,6 +119,7 @@ export interface WithdrawProps {
   vaultAddress: Address;
   amountOfShares: Wei;
   slippageTolerance?: number;
+  signature?: string;
 }
 
 export interface MigrateProps {
@@ -126,7 +137,6 @@ export interface TokenService {
   getUserTokensData: (props: GetUserTokensDataProps) => Promise<Balance[]>;
   getTokenAllowance: (props: GetTokenAllowanceProps) => Promise<Integer>;
   approve: (props: ApproveProps) => Promise<TransactionResponse>;
-  // getTokenRates:
 }
 
 export interface GetSupportedTokensProps {
@@ -283,8 +293,6 @@ export interface HandleTransactionProps {
   network: Network;
   renderNotification?: boolean;
 }
-
-type ContractFunction = (...args: Array<any>) => Promise<TransactionResponse>;
 
 // *************** GAS ***************
 

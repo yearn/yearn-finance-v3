@@ -56,6 +56,10 @@ const sharedTheme: SharedTheme = {
       background: '#FF005E',
       color: 'white',
     },
+    warning: {
+      background: '#FFA800',
+      color: 'white',
+    },
   },
 
   txModal: {

@@ -114,7 +114,6 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
     <IronBankTransaction
       transactionLabel={t('components.transaction.borrow')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       assetHeader={t('components.transaction.from-iron-bank')}
       assetLabel={t('components.transaction.available-borrow')}

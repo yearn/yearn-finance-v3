@@ -163,7 +163,6 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
     <IronBankTransaction
       transactionLabel={t('components.transaction.repay')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       assetHeader={t('components.transaction.to-iron-bank')}
       assetLabel={t('components.transaction.wallet-balance')}

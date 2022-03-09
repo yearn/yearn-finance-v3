@@ -38,11 +38,14 @@ const StyledTxStatus = styled.div`
 `;
 
 export interface TxStatusProps {
+  transactionCompletedLabel?: string;
   exit: () => void;
 }
 
-export const TxStatus: FC<TxStatusProps> = ({ exit, children, ...props }) => {
+export const TxStatus: FC<TxStatusProps> = ({ transactionCompletedLabel, exit, children, ...props }) => {
   const { t } = useAppTranslation('common');
+
+  const actionButtonLabel = transactionCompletedLabel ?? t('components.transaction.status.exit');
 
   return (
     <StyledTxStatus {...props}>
@@ -54,7 +57,7 @@ export const TxStatus: FC<TxStatusProps> = ({ exit, children, ...props }) => {
 
       <TxActions>
         <TxActionButton onClick={exit} success>
-          {t('components.transaction.status.exit')}
+          {actionButtonLabel}
         </TxActionButton>
       </TxActions>
 

@@ -37,7 +37,6 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
 
   useEffect(() => {
     return () => {
-      // TODO Fix clear on vault details
       onExit();
     };
   }, []);
@@ -97,9 +96,19 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
   };
 
   const loadingText = t('components.transaction.status.calculating');
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
 
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -144,7 +153,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[sourceVault]}

@@ -21,7 +21,7 @@ import {
   validateSlippage,
   validateNetwork,
   getZapInContractAddress,
-  formatPercent,
+  formatApy,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -98,7 +98,6 @@ export const DepositTx: FC<DepositTxProps> = ({
     }
 
     return () => {
-      // TODO Fix clear on vault details
       onExit();
     };
   }, []);
@@ -171,14 +170,14 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
-    .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData }) => ({
+    .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData, apyMetadata }) => ({
       address,
       symbol: displayName,
       icon: displayIcon,
       balance: DEPOSIT.userDeposited,
       balanceUsdc: DEPOSIT.userDepositedUsdc,
       decimals: token.decimals,
-      yield: formatPercent(apyData, 2),
+      yield: formatApy(apyData, apyMetadata?.type),
     }));
   const selectedVaultOption = vaultsOptions.find(({ address }) => address === selectedVault.address)!;
 
@@ -218,8 +217,20 @@ export const DepositTx: FC<DepositTxProps> = ({
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
   };
 
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
+
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    // NOTE if there is no onClose then we are on vault details
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -268,7 +279,7 @@ export const DepositTx: FC<DepositTxProps> = ({
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={allowTokenSelect ? sellTokensOptions : [selectedSellToken]}
