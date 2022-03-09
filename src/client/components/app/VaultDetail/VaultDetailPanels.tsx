@@ -300,6 +300,22 @@ export const VaultDetailPanels = ({
     }
   };
 
+  // TODO: REMOVE THIS QUICKFIX
+  let selectedData = selectedUnderlyingData ? chartData?.underlying ?? [] : chartData?.usd ?? [];
+  let dataToShow = selectedData;
+  const dateRegex = new RegExp(/^\d\d\d\d-\d\d-\d\d$/)
+  selectedData.forEach(dataPoint => {
+    if (!dataToShow.length) {
+      return;
+    }
+
+    dataPoint.data.forEach((point: { x: string }) => {
+      if (!dateRegex.test(point.x)) {
+        dataToShow = [];
+      }
+    });
+  });
+
   return (
     <>
       <Row>
@@ -425,7 +441,7 @@ export const VaultDetailPanels = ({
           </ChartValueContainer>
 
           <StyledLineChart
-            chartData={selectedUnderlyingData ? chartData?.underlying ?? [] : chartData?.usd ?? []}
+            chartData={dataToShow}
             tooltipLabel={t('vaultdetails:performance-panel.earnings-over-time')}
             customSymbol={selectedUnderlyingData ? selectedVault?.token?.symbol : undefined}
           />
