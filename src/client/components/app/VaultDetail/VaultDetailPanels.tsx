@@ -300,7 +300,6 @@ export const VaultDetailPanels = ({
     }
   };
 
-  console.log('chart shit', chartData, chartValue, selectedUnderlyingData)
   // TODO: REMOVE THIS QUICKFIX
   let selectedData = selectedUnderlyingData ? chartData?.underlying ?? [] : chartData?.usd ?? [];
   let dataToShow = selectedData;
