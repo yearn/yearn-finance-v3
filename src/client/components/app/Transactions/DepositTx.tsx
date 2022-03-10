@@ -104,8 +104,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!selectedVault || !selectedSellTokenAddress) return;
-
+    if (!selectedVault || !selectedSellTokenAddress || !walletNetwork) return;
     const isZap = selectedSellTokenAddress !== selectedVault.token.address;
     const spenderAddress = isZap ? getZapInContractAddress(selectedVault.address) : selectedVault.address;
     dispatch(
@@ -245,7 +244,7 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const txActions = [
     {
-      label: t('components.transaction.approve'),
+      label: 'LABEL',
       onAction: approve,
       status: actionsStatus.approve,
       disabled: isApproved || selectedVault.depositsDisabled,

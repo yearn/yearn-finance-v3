@@ -83,7 +83,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   }, []);
 
   useEffect(() => {
-    if (!selectedVault) return;
+    if (!selectedVault || !walletNetwork) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
