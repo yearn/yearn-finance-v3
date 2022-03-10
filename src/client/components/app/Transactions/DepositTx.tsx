@@ -244,7 +244,7 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const txActions = [
     {
-      label: 'LABEL',
+      label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approve,
       disabled: isApproved || selectedVault.depositsDisabled,
