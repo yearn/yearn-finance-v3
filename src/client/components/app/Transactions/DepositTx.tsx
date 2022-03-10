@@ -113,7 +113,7 @@ export const DepositTx: FC<DepositTxProps> = ({
         spenderAddress,
       })
     );
-  }, [selectedSellTokenAddress, selectedVault?.address]);
+  }, [selectedSellTokenAddress, selectedVault?.address, walletNetwork]);
 
   useEffect(() => {
     if (!selectedVault) return;

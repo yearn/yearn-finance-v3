@@ -91,7 +91,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
         spenderAddress: CONTRACT_ADDRESSES.zapOut,
       })
     );
-  }, [selectedVault?.address, CONTRACT_ADDRESSES?.zapOut]);
+  }, [selectedVault?.address, CONTRACT_ADDRESSES?.zapOut, walletNetwork]);
 
   useEffect(() => {
     if (!selectedVault) return;
