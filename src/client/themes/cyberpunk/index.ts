@@ -13,7 +13,7 @@ const cyberpunkTheme: DefaultTheme = {
 
     primaryVariant: '#7AF6FF',
 
-    secondary: '#FBD282',
+    secondary: '#3D305F',
 
     backgroundVariant: '#3D305F',
     icons: {
@@ -22,8 +22,8 @@ const cyberpunkTheme: DefaultTheme = {
     },
     titles: '#0CA7C9',
     titlesVariant: '#0CA7C9',
-    texts: '#0CA7C9',
-    surfaceVariant: '594177',
+    texts: '#9dd9e6',
+    surfaceVariant: '#FFF',
 
     secondaryVariantA: '#392850',
     secondaryVariantB: '#BB6FA1',

@@ -11,18 +11,21 @@ const linkTransition = 'filter 200ms ease-in-out';
 const LinkList = styled.div`
   display: flex;
   flex: 1;
+  color: inherit;
 `;
 
 const LinkIcon = styled(Icon)`
-  fill: ${({ theme }) => theme.colors.primaryVariant};
+  fill: currentColor;
   cursor: pointer;
   width: 2.4rem;
   height: 2.4rem;
+  color: inherit;
 `;
 
 const LinkText = styled.span`
   white-space: nowrap;
   margin-top: 0.4rem;
+  color: inherit;
 `;
 
 const RouterLink = styled(Link)<{ selected: boolean }>`
@@ -45,12 +48,7 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
   ${(props) =>
     props.selected &&
     `
-    ${LinkIcon} {
-      fill: ${props.theme.colors.secondary};
-    }
-    ${LinkText} {
-      color: ${props.theme.colors.secondary};
-    }
+    color: ${props.theme.colors.titlesVariant};
   `}
 `;
 
@@ -58,9 +56,10 @@ const StyledTabbar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.colors.primaryVariant};
-  background-color: ${({ theme }) => theme.colors.primary};
-  border: 1px solid ${({ theme }) => theme.colors.primaryVariant};
+  color: inherit;
+  background-color: ${({ theme }) => theme.colors.background};
+  border: 2px solid ${({ theme }) => theme.colors.titlesVariant};
+  color: ${({ theme }) => theme.colors.texts};
   border-radius: ${({ theme }) => theme.globalRadius};
   width: 100%;
   height: ${({ theme }) => theme.tabbar.height};
