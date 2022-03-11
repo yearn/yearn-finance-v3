@@ -13,7 +13,7 @@ import {
 } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
-import { SpinnerLoading, Button, Text } from '@components/common';
+import { SpinnerLoading, Text } from '@components/common';
 import {
   parseHistoricalEarningsUnderlying,
   parseHistoricalEarningsUsd,
@@ -24,17 +24,17 @@ import {
 import { getConfig } from '@config';
 import { device } from '@themes/default';
 
-const BackButton = styled(Button)`
-  background-color: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
-`;
+// const BackButton = styled(Button)`
+//   background-color: ${({ theme }) => theme.colors.surface};
+//   color: ${({ theme }) => theme.colors.titles};
+// `;
 
 const StyledInfoCard = styled(InfoCard)`
   padding: 3rem;
   margin: auto;
 `;
 
-const ViewHeader = styled.div``;
+// const ViewHeader = styled.div``;
 
 const VaultDetailView = styled(ViewContainer)`
   display: flex;
@@ -124,9 +124,9 @@ export const VaultDetail = () => {
 
   return (
     <VaultDetailView>
-      <ViewHeader>
+      {/* <ViewHeader>
         <BackButton onClick={() => history.push(`/vaults`)}>{t('components.back-button.label')}</BackButton>
-      </ViewHeader>
+      </ViewHeader> */}
 
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
 

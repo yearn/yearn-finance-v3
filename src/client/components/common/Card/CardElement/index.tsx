@@ -29,7 +29,7 @@ const SortIcon = styled(({ activeSort, sortType, ...props }: SortIconProps) => <
   ${({ activeSort, sortType, theme }) =>
     activeSort &&
     `
-    color: ${theme.colors.onSurfaceH2};
+    color: ${theme.colors.titles};
     transform: ${sortType === 'asc' ? 'rotateZ(180deg)' : 'rotateZ(0deg)'};
   `}
 `;
@@ -38,7 +38,7 @@ const Header = styled.div<{ onClick?: () => void }>`
   display: flex;
   align-items: center;
   font-size: 1.6rem;
-  color: ${({ theme }) => theme.colors.onSurfaceSH1};
+  color: ${({ theme }) => theme.colors.texts};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
 `;
 
@@ -49,7 +49,7 @@ const Content = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 100%;
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.texts};
 `;
 
 type SortType = 'asc' | 'desc';

@@ -10,7 +10,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const StyledInputContainer = styled.div`
-  --input-placeholder: ${(props) => props.theme.colors.onSurfaceH2};
+  --input-placeholder: ${(props) => props.theme.colors.titles};
 
   display: flex;
   height: 2.8rem;
@@ -20,10 +20,10 @@ const StyledInputContainer = styled.div`
   border-radius: ${({ theme }) => theme.globalRadius};
   padding: 0 1rem;
   transition: border 200ms ease-in-out;
-  border: 2px solid ${(props) => props.theme.colors.onSurfaceSH1};
+  border: 2px solid ${(props) => props.theme.colors.titles};
 
   &:focus-within {
-    border-color: ${(props) => props.theme.colors.onSurfaceH2};
+    border-color: ${(props) => props.theme.colors.titles};
   }
 `;
 

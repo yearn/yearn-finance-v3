@@ -59,10 +59,7 @@ const StyledHelperCursor = styled.span`
 
 const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
-const StyledInfoCard = styled(InfoCard)`
-  max-width: 100%;
-  flex: 1;
-`;
+const StyledInfoCard = styled(InfoCard)``;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
   width: 100%;

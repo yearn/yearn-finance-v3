@@ -25,7 +25,7 @@ import { MetamaskLogo } from '@assets/images';
 import { GeneralVaultView, StrategyMetadata, Network } from '@types';
 
 const StyledLineChart = styled(LineChart)`
-  margin-top: 2.4rem;
+  margin-top: ${({ theme }) => theme.card.padding};
 `;
 
 const ChartValue = styled(Text)`
@@ -37,7 +37,7 @@ const ChartValue = styled(Text)`
 const ChartValueLabel = styled(Text)`
   font-size: 1.4rem;
   font-weight: 400;
-  color: ${({ theme }) => theme.colors.onSurfaceSH1};
+  color: ${({ theme }) => theme.colors.titles};
 `;
 
 const ChartValueContainer = styled.div`
@@ -102,13 +102,13 @@ const VaultActions = styled(Card)`
 `;
 
 const OverviewInfo = styled(Card)`
-  padding: ${({ theme }) => theme.card.padding};
+  padding: ${({ theme }) => theme.layoutPadding};
   flex-shrink: 0;
 
   a {
     text-decoration: underline;
     color: inherit;
-    color: ${({ theme }) => theme.colors.onSurfaceSH1};
+    color: ${({ theme }) => theme.colors.titles};
   }
 `;
 
@@ -125,10 +125,17 @@ const OverviewStrategies = styled.div`
   }
 `;
 
-const StyledText = styled(Text)`
+const StyledText = styled(Text)<{ accent?: boolean }>`
   display: block;
-  color: ${(props) => props.theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.titles};
   white-space: initial;
+
+  ${({ theme, accent }) =>
+    accent &&
+    `
+    color: ${theme.colors.primary};
+    font-weight: bold;
+  `};
 `;
 
 const StyledLink = styled.a`
@@ -145,8 +152,8 @@ const InfoValueRow = styled.div`
   grid-template-columns: 9.6rem 1fr;
   grid-gap: 0.6rem;
   white-space: nowrap;
-  color: ${({ theme }) => theme.colors.onSurfaceSH1};
-  font-size: 1.4rem;
+  color: ${({ theme }) => theme.colors.titles};
+  font-size: 1.6rem;
   align-items: center;
 `;
 
@@ -159,17 +166,21 @@ const StyledIcon = styled(Icon)`
   margin-left: 1rem;
 `;
 
-const InfoValueTitle = styled(Text)`
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: 0.3rem;
-  color: ${(props) => props.theme.colors.secondary};
-`;
+// const InfoValueTitle = styled(Text)`
+//   font-size: 1.8rem;
+//   font-weight: bold;
+//   margin-bottom: 0.3rem;
+//   color: ${(props) => props.theme.colors.secondary};
+// `;
 
 const TokenInfo = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+
+  ${InfoValueRow}:not(:first-child) {
+    margin-top: 0.8rem;
+  }
 `;
 
 const TokenLogo = styled(Card)`
@@ -180,7 +191,7 @@ const TokenLogo = styled(Card)`
 const OverviewTokenInfo = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
-  grid-gap: 4.7rem;
+  grid-gap: ${({ theme }) => theme.card.padding};
 `;
 
 const Row = styled.div`
@@ -299,12 +310,15 @@ export const VaultDetailPanels = ({
     }
   };
 
+  const vaultNameTitle = `${selectedVault.name} (${selectedVault.displayName})`;
+
   return (
     <>
       <Row>
         <VaultOverview>
           <StyledCardHeaderContainer>
-            <StyledCardHeader header={t('vaultdetails:overview-panel.header')} />
+            {/* <StyledCardHeader header={t('vaultdetails:overview-panel.header')} /> */}
+            <StyledCardHeader header={vaultNameTitle} />
             {displayAddToken ? (
               <RelativeContainer onClick={handleAddToken}>
                 <StyledImg src={MetamaskLogo} />
@@ -320,16 +334,15 @@ export const VaultDetailPanels = ({
 
           <OverviewTokenInfo>
             <TokenLogo variant="background">
-              <TokenIcon icon={selectedVault.displayIcon} symbol={selectedVault.displayName} size="xBig" />
+              <TokenIcon icon={selectedVault.displayIcon} symbol={selectedVault.displayName} size="xxBig" />
             </TokenLogo>
 
             <TokenInfo>
-              <InfoValueTitle>{selectedVault?.displayName}</InfoValueTitle>
-
+              {/* <InfoValueTitle>{selectedVault?.displayName}</InfoValueTitle> */}
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.apy')}</span>
                 <TextWithIcon>
-                  <StyledText fontWeight="bold">
+                  <StyledText accent>
                     <span>{formatApy(selectedVault.apyData, selectedVault.apyType)}</span>
                   </StyledText>
                   {getTooltip({
@@ -349,7 +362,9 @@ export const VaultDetailPanels = ({
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.web')}</span>
-                <StyledLink href={selectedVault.token.website}>{selectedVault.token.website}</StyledLink>
+                <StyledLink href={selectedVault.token.website} target="_blank">
+                  {selectedVault.token.website}
+                </StyledLink>
               </InfoValueRow>
             </TokenInfo>
           </OverviewTokenInfo>

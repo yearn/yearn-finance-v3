@@ -26,12 +26,19 @@ const StyledNavbarActions = styled.div`
   }
 `;
 
-const StyledText = styled.h1`
+const StyledText = styled.h1<{ toneDown?: boolean }>`
+  display: inline-flex;
   font-size: 2.4rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.titles};
   margin: 0;
   padding: 0;
+
+  ${({ toneDown, theme }) =>
+    toneDown &&
+    `
+    color: ${theme.colors.texts};
+  `}
 `;
 
 const StyledNavbar = styled.header`
@@ -47,7 +54,7 @@ const StyledNavbar = styled.header`
   // margin-top: -${({ theme }) => theme.layoutPadding};
   // padding-top: calc(0.4rem + ${({ theme }) => theme.layoutPadding});
   // padding-bottom: 1.6rem;
-  padding: 2.4rem;
+  padding: ${({ theme }) => theme.card.padding};
   border-radius: ${({ theme }) => theme.globalRadius};
 
   @media ${device.mobile} {
@@ -76,6 +83,7 @@ const getNetworkIcon = (network: Network) => {
 interface NavbarProps {
   className?: string;
   title?: string;
+  vaultName?: string;
   walletAddress?: string;
   addressEnsName?: string;
   onWalletClick?: () => void;
@@ -88,6 +96,7 @@ interface NavbarProps {
 export const Navbar = ({
   className,
   title,
+  vaultName,
   walletAddress,
   addressEnsName,
   onWalletClick,
@@ -111,9 +120,22 @@ export const Navbar = ({
     Icon: getNetworkIcon(network),
   }));
 
+  const secondTitleEnabled = !!vaultName?.length;
+
+  const vaultText = (
+    <>
+      &nbsp;/&nbsp;<StyledText>{vaultName}</StyledText>
+    </>
+  );
+
   return (
     <StyledNavbar className={className}>
-      {title && <StyledText>{title}</StyledText>}
+      {title && (
+        <StyledText toneDown={secondTitleEnabled}>
+          {title}
+          {secondTitleEnabled && vaultText}
+        </StyledText>
+      )}
 
       <StyledNavbarActions>
         <StyledOptionList

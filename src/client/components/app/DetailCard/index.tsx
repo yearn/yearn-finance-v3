@@ -59,16 +59,16 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolea
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.selectionBar};
+    background-color: ${({ theme }) => theme.colors.surfaceVariant};
 
-    ${StyledCardElement} {
-      color: ${({ theme }) => theme.colors.onSurfaceH2Hover};
-    }
-    .action-button {
-      background: ${({ theme }) => theme.colors.vaultActionButton.selected.background};
-      color: ${({ theme }) => theme.colors.vaultActionButton.selected.color};
-      border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
-    }
+    // ${StyledCardElement} {
+    //   color: ${({ theme }) => theme.colors.titles};
+    // }
+    // .action-button {
+    //   background: ${({ theme }) => theme.colors.vaultActionButton.selected.background};
+    //   color: ${({ theme }) => theme.colors.vaultActionButton.selected.color};
+    //   border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
+    // }
   }
 `;
 

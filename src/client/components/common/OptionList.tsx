@@ -6,11 +6,11 @@ import { Text } from './Text';
 import { SpinnerLoading } from './SpinnerLoading';
 
 const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
-  --dropdown-background: ${({ theme }) => theme.colors.surface};
-  --dropdown-color: ${({ theme }) => theme.colors.onSurfaceH2};
+  --dropdown-background: ${({ theme }) => theme.colors.secondary};
+  --dropdown-color: ${({ theme }) => theme.colors.titlesVariant};
   --dropdown-hover-color: ${({ theme }) => theme.colors.secondary};
   --dropdown-selected-color: ${({ theme }) => theme.colors.surface};
-  --dropdown-selected-background: ${({ theme }) => theme.colors.onSurfaceH2};
+  --dropdown-selected-background: ${({ theme }) => theme.colors.titles};
 
   display: flex;
   background: var(--dropdown-background);

@@ -45,7 +45,7 @@ const ItemHeader = styled(Text)`
 `;
 
 const ItemInfo = styled(Text)`
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
   font-size: 1.6rem;
   font-weight: 600;
   padding-bottom: 0.4rem;
@@ -63,7 +63,7 @@ const ItemInfoLabel = styled(Text)`
 `;
 
 const ItemName = styled(Text)`
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
   font-size: 1.4rem;
   font-weight: 600;
   width: 100%;
@@ -102,18 +102,19 @@ interface Item {
 }
 
 interface RecommendationsProps {
-  header: string;
+  header?: string;
+  subHeader?: string;
   items: Item[];
 }
 
-export const RecommendationsCard = ({ header, items, ...props }: RecommendationsProps) => {
+export const RecommendationsCard = ({ header, subHeader, items, ...props }: RecommendationsProps) => {
   if (items.length === 0) {
     return null;
   }
 
   return (
     <ContainerCard {...props}>
-      <CardHeader header={header} />
+      <CardHeader header={header} subHeader={subHeader} />
 
       <StyledCardContent>
         {items.map((item, i) => (
@@ -121,7 +122,7 @@ export const RecommendationsCard = ({ header, items, ...props }: Recommendations
             {item.header && <ItemHeader>{item.header}</ItemHeader>}
 
             <CenterIcon>
-              <TokenIcon symbol={item.name} icon={item.icon} size="xxBig" />
+              <TokenIcon symbol={item.name} icon={item.icon} size="xBig" />
               {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}
             </CenterIcon>
 

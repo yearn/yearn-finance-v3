@@ -5,7 +5,7 @@ import { sharedTheme } from '../default';
 const cyberpunkTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
-    logo: '#392850',
+    logo: '#0CA7C9',
 
     primary: '#0CA7C9',
     background: '#3D305F',
@@ -14,6 +14,17 @@ const cyberpunkTheme: DefaultTheme = {
     primaryVariant: '#7AF6FF',
 
     secondary: '#FBD282',
+
+    backgroundVariant: '#3D305F',
+    icons: {
+      primary: '#0CA7C9',
+      variant: '#0CA7C9',
+    },
+    titles: '#0CA7C9',
+    titlesVariant: '#0CA7C9',
+    texts: '#0CA7C9',
+    surfaceVariant: '594177',
+
     secondaryVariantA: '#392850',
     secondaryVariantB: '#BB6FA1',
 
@@ -25,12 +36,12 @@ const cyberpunkTheme: DefaultTheme = {
     onPrimaryVariant: '#FBD282',
     onBackground: '#FBD282',
 
-    onSurfaceH1: '#D35290',
-    onSurfaceH1Contrast: '#0CA7C9',
-    onSurfaceH2: '#0CA7C9',
-    onSurfaceH2Hover: '#FBD282',
-    onSurfaceSH1: '#BB6FA1',
-    onSurfaceSH1Hover: '#523C6E',
+    // onSurfaceH1: '#D35290',
+    // onSurfaceH1Contrast: '#0CA7C9',
+    // onSurfaceH2: '#0CA7C9',
+    // onSurfaceH2Hover: '#FBD282',
+    // onSurfaceSH1: '#BB6FA1',
+    // onSurfaceSH1Hover: '#523C6E',
 
     upTrend: '#ADFF00',
     downTrend: '#DE0B3B',
@@ -48,10 +59,10 @@ const cyberpunkTheme: DefaultTheme = {
       },
     },
 
-    walletButton: {
-      background: '#0CA7C9',
-      color: '#FBD282',
-    },
+    // walletButton: {
+    //   background: '#0CA7C9',
+    //   color: '#FBD282',
+    // },
 
     txModalColors: {
       background: '#3D305F',

@@ -24,7 +24,7 @@ const StyledTooltipArrow = styled.div`
 
 const StyledTooltip = styled.div`
   background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
   fill: currentColor;
   stroke: currentColor;
   user-select: none;

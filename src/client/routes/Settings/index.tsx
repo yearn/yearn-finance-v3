@@ -12,25 +12,22 @@ import { AlertTypes, ModalName, Theme, Language } from '@types';
 import { formatPercent, getCurrentLanguage } from '@utils';
 import { ViewContainer, ThemeBox, CustomThemeButton } from '@components/app';
 import {
-  ThemesIcon,
-  WorldIcon,
-  ClockIcon,
-  Icon,
+  // ThemesIcon,
+  // WorldIcon,
+  // ClockIcon,
+  // Icon,
   Button,
   ToggleButton,
   Input,
   Card,
-  CardHeader,
+  // CardHeader,
   CardContent,
   OptionList,
 } from '@components/common';
 
-const sectionsGap = '2.2rem';
-const sectionsBorderRadius = '0.8rem';
-
-const SettingsCardHeader = styled(CardHeader)`
-  margin-bottom: 1.2rem;
-`;
+// const SettingsCardHeader = styled(CardHeader)`
+//   margin-bottom: 1.2rem;
+// `;
 
 const SettingsCardContent = styled(CardContent)`
   flex-direction: column;
@@ -39,57 +36,57 @@ const SettingsCardContent = styled(CardContent)`
 
 const SettingsCard = styled(Card)`
   display: grid;
-  padding-left: 0;
-  padding-right: 0;
+  padding: ${({ theme }) => theme.card.padding} 0;
   width: 100%;
 `;
 
 const SettingsSection = styled.div`
   display: grid;
-  grid-template-columns: 18rem 1fr;
+  grid-template-columns: 15rem 1fr;
   padding: 0 ${({ theme }) => theme.card.padding};
-  grid-gap: 1.5rem;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
 `;
 
 const SectionContent = styled.div`
   display: flex;
   flex-wrap: wrap;
-  grid-gap: 1.2rem;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
   align-items: center;
 
   ${SettingsSection}:not(:first-child) & {
-    padding-top: ${sectionsGap};
+    padding-top: ${({ theme }) => theme.card.padding};
   }
 `;
 
-const SectionTitle = styled.div`
+const SectionTitle = styled.div<{ centerText?: boolean }>`
   display: flex;
-  align-items: flex-start;
-  fill: ${({ theme }) => theme.colors.secondary};
-  background: ${({ theme }) => theme.colors.surfaceVariantA};
-  padding: ${({ theme }) => theme.card.padding};
+  align-items: ${({ centerText }) => (centerText ? 'center' : 'flex-start')};
+  fill: currentColor;
+
+  // background: ${({ theme }) => theme.colors.background};
+  // padding: ${({ theme }) => theme.card.padding};
 
   ${SettingsSection}:not(:first-child) & {
-    padding-top: ${sectionsGap};
+    padding-top: ${({ theme }) => theme.card.padding};
   }
-  ${SettingsSection}:first-child & {
-    border-top-left-radius: ${sectionsBorderRadius};
-    border-top-right-radius: ${sectionsBorderRadius};
-  }
-  ${SettingsSection}:last-child & {
-    border-bottom-left-radius: ${sectionsBorderRadius};
-    border-bottom-right-radius: ${sectionsBorderRadius};
-  }
+  // ${SettingsSection}:first-child & {
+  //   border-top-left-radius: ${({ theme }) => theme.globalRadius};
+  //   border-top-right-radius: ${({ theme }) => theme.globalRadius};
+  // }
+  // ${SettingsSection}:last-child & {
+  //   border-bottom-left-radius: ${({ theme }) => theme.globalRadius};
+  //   border-bottom-right-radius: ${({ theme }) => theme.globalRadius};
+  // }
 `;
 
-const SectionIcon = styled(Icon)`
-  display: inline-block;
-  fill: inherit;
-  margin-right: 0.7rem;
-`;
+// const SectionIcon = styled(Icon)`
+//   display: inline-block;
+//   fill: inherit;
+//   margin-right: 0.7rem;
+// `;
 
 const SectionHeading = styled.h3`
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.titles};
   display: inline-block;
   font-size: 1.6rem;
   font-weight: 500;
@@ -101,18 +98,21 @@ const SlippageOption = styled.div<{ active?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 6.4rem;
-  height: 6.4rem;
-  border: 2px solid ${({ theme }) => theme.colors.secondary};
-  color: ${({ theme }) => theme.colors.secondary};
+  width: 8rem;
+  height: 8rem;
+  border: 2px solid transparent;
+  color: ${({ theme }) => theme.colors.titles};
+  background-color: ${({ theme }) => theme.colors.background};
   border-radius: ${({ theme }) => theme.globalRadius};
+  font-weight: 700;
   cursor: pointer;
 
   ${({ active, theme }) =>
     active &&
     `
-    background-color: ${theme.colors.secondary};
-    color: ${theme.colors.surface};
+    background-color: ${theme.colors.backgroundVariant};
+    color: ${theme.colors.titlesVariant};
+    border-color: ${theme.colors.primary};
   `}
 `;
 
@@ -203,13 +203,13 @@ export const Settings = () => {
   return (
     <SettingsView>
       <SettingsCard>
-        <SettingsCardHeader header={t('settings:preferences')} />
+        {/* <SettingsCardHeader header={t('settings:preferences')} /> */}
 
         <SettingsCardContent>
           <SettingsSection>
             <SectionTitle>
               <SectionHeading>
-                <SectionIcon Component={ClockIcon} />
+                {/* <SectionIcon Component={ClockIcon} /> */}
                 {t('settings:slippage-tolerance')}
               </SectionHeading>
             </SectionTitle>
@@ -229,7 +229,7 @@ export const Settings = () => {
           <SettingsSection>
             <SectionTitle>
               <SectionHeading>
-                <SectionIcon Component={ThemesIcon} />
+                {/* <SectionIcon Component={ThemesIcon} /> */}
                 {t('settings:themes')}
               </SectionHeading>
             </SectionTitle>
@@ -252,9 +252,9 @@ export const Settings = () => {
           </SettingsSection>
 
           <SettingsSection>
-            <SectionTitle>
+            <SectionTitle centerText>
               <SectionHeading>
-                <SectionIcon Component={WorldIcon} />
+                {/* <SectionIcon Component={WorldIcon} /> */}
                 {t('settings:language')}
               </SectionHeading>
             </SectionTitle>
@@ -272,7 +272,7 @@ export const Settings = () => {
           {ALLOW_DEV_MODE && (
             <SettingsSection>
               <SectionTitle>
-                <SectionIcon Component={ThemesIcon} />
+                {/* <SectionIcon Component={ThemesIcon} /> */}
                 Dev Mode
               </SectionTitle>
               <SectionContent>
@@ -301,7 +301,7 @@ export const Settings = () => {
 
               <SettingsSection>
                 <SectionTitle>
-                  <SectionIcon Component={ThemesIcon} />
+                  {/* <SectionIcon Component={ThemesIcon} /> */}
                   Additional settings
                 </SectionTitle>
                 <SectionContent>
@@ -312,7 +312,7 @@ export const Settings = () => {
 
               <SettingsSection>
                 <SectionTitle>
-                  <SectionIcon Component={ThemesIcon} />
+                  {/* <SectionIcon Component={ThemesIcon} /> */}
                   Modals testing
                 </SectionTitle>
                 <SectionContent>
@@ -327,7 +327,7 @@ export const Settings = () => {
 
               <SettingsSection>
                 <SectionTitle>
-                  <SectionIcon Component={ThemesIcon} />
+                  {/* <SectionIcon Component={ThemesIcon} /> */}
                   Alerts testing
                 </SectionTitle>
                 <SectionContent>

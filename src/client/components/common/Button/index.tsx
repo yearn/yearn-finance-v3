@@ -19,7 +19,7 @@ const StyledButton = styled.button<{ outline?: boolean }>`
   border: 2px solid transparent;
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${(props) => props.theme.colors.secondary};
-  color: ${(props) => props.theme.colors.background};
+  color: ${(props) => props.theme.colors.titlesVariant};
   font-family: inherit;
   cursor: pointer;
   user-select: none;

@@ -55,6 +55,12 @@ export const Portfolio = () => {
   const summaryCardItems = [
     { header: t('dashboard.total-net-worth'), Component: <Amount value={netWorth} input="usdc" /> },
   ];
+  if (walletIsConnected) {
+    summaryCardItems.push({
+      header: t('dashboard.available-deposit'),
+      Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
+    });
+  }
   if (currentNetworkSettings.earningsEnabled) {
     summaryCardItems.push(
       {
@@ -76,18 +82,6 @@ export const Portfolio = () => {
         <>
           <Row>
             <StyledSummaryCard
-              header={t('navigation.wallet')}
-              items={[
-                {
-                  header: t('dashboard.available-deposit'),
-                  Component: <Amount value={walletSummary.totalBalance} input="usdc" />,
-                },
-              ]}
-              redirectTo="wallet"
-              cardSize="small"
-            />
-
-            <StyledSummaryCard
               header={t('navigation.vaults')}
               items={[
                 {
@@ -102,21 +96,21 @@ export const Portfolio = () => {
               redirectTo="vaults"
               cardSize="small"
             />
-          </Row>
 
-          {currentNetworkSettings.labsEnabled && (
-            <StyledSummaryCard
-              header={t('navigation.labs')}
-              items={[
-                {
-                  header: t('dashboard.holdings'),
-                  Component: <Amount value={labsSummary.totalDeposits} input="usdc" />,
-                },
-              ]}
-              redirectTo="labs"
-              cardSize="small"
-            />
-          )}
+            {currentNetworkSettings.labsEnabled && (
+              <StyledSummaryCard
+                header={t('navigation.labs')}
+                items={[
+                  {
+                    header: t('dashboard.holdings'),
+                    Component: <Amount value={labsSummary.totalDeposits} input="usdc" />,
+                  },
+                ]}
+                redirectTo="labs"
+                cardSize="small"
+              />
+            )}
+          </Row>
         </>
       )}
 

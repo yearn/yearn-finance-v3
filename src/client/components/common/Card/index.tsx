@@ -23,17 +23,17 @@ const microSize = css`
 
 const defaultVariant = css`
   background-color: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
 `;
 
 const primaryVariant = css`
   background-color: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
 `;
 
-const secondaryVariant = css`
-  background-color: ${({ theme }) => theme.colors.secondaryVariantA};
-  color: ${({ theme }) => theme.colors.onSurfaceH1};
+const secondary = css`
+  background-color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.titles};
 `;
 
 const backgroundVariant = css`
@@ -43,7 +43,7 @@ const backgroundVariant = css`
 
 const surfaceVariant = css`
   background-color: ${({ theme }) => theme.colors.surfaceVariantA};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
 `;
 
 const sizeStyle = ({ cardSize }: CardProps) => {
@@ -64,7 +64,7 @@ const variantStyle = ({ variant }: CardProps) => {
     case 'primary':
       return primaryVariant;
     case 'secondary':
-      return secondaryVariant;
+      return secondary;
     case 'background':
       return backgroundVariant;
     case 'surface':

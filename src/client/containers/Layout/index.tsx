@@ -96,10 +96,11 @@ export const Layout: FC = ({ children }) => {
   const previousNetwork = usePrevious(currentNetwork);
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1] as Route;
-  let vaultAddress;
+  let vaultName = '';
   // TODO Get vault name and display it on navbar
   // if (path === 'vault') {
   //   vaultAddress = location.pathname.toLowerCase().split('/')[2];
+  //   vaultName = xxxx
   // }
 
   // TODO This is only assetAddress on the vault page
@@ -178,6 +179,7 @@ export const Layout: FC = ({ children }) => {
       <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
         <Navbar
           title={t(`navigation.${path}`)}
+          vaultName={vaultName}
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}
           onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}

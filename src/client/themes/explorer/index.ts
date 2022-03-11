@@ -13,7 +13,7 @@ const explorerTheme: DefaultTheme = {
   },
 
   colors: {
-    logo: '#ffb74d',
+    logo: '#AD3235',
 
     primary: '#AD3235',
     background: '#cfa368',
@@ -21,7 +21,18 @@ const explorerTheme: DefaultTheme = {
 
     primaryVariant: '#9e9e9e',
 
-    secondary: '#fff',
+    secondary: '#FFF',
+
+    backgroundVariant: '#cfa368',
+    icons: {
+      primary: '#AD3235',
+      variant: '#FFF',
+    },
+    titles: '#FFF',
+    titlesVariant: '#000',
+    texts: '#FFF',
+    surfaceVariant: '#FFF',
+
     secondaryVariantA: 'rgba(173, 50, 53, 0.5)',
     secondaryVariantB: '#006AE3',
 
@@ -33,12 +44,12 @@ const explorerTheme: DefaultTheme = {
     onPrimaryVariant: '#fff',
     onBackground: '#E5E5E5',
 
-    onSurfaceH1: '#fff',
-    onSurfaceH1Contrast: '#eeeeee',
-    onSurfaceH2: '#f5f5f5',
-    onSurfaceH2Hover: '#f5f5f5',
-    onSurfaceSH1: '#eeeeee',
-    onSurfaceSH1Hover: '#eeeeee',
+    // onSurfaceH1: '#fff',
+    // onSurfaceH1Contrast: '#eeeeee',
+    // onSurfaceH2: '#f5f5f5',
+    // onSurfaceH2Hover: '#f5f5f5',
+    // onSurfaceSH1: '#eeeeee',
+    // onSurfaceSH1Hover: '#eeeeee',
 
     upTrend: '#01E2A0',
     downTrend: '#EF1E02',
@@ -56,10 +67,10 @@ const explorerTheme: DefaultTheme = {
       },
     },
 
-    walletButton: {
-      background: '#212121',
-      color: '#eeeeee',
-    },
+    // walletButton: {
+    //   background: '#212121',
+    //   color: '#eeeeee',
+    // },
 
     txModalColors: {
       background: '#AD3235',

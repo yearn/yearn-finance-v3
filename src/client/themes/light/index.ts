@@ -16,15 +16,34 @@ const light = {
     titles: '#001746',
     titlesVariant: '#0657F9',
     texts: '#7F8DA9',
-    icons: '#CED5E3',
-    iconsVariant: '#475570',
+    disabled: '#CED5E3',
+    icons: {
+      primary: '#CED5E3',
+      variant: '#475570',
+    },
+    button: {
+      filled: {
+        primary: '#0657F9',
+        variant: '#004ADF',
+        text: '#FFFFFF',
+      },
+      outlined: {
+        primary: '#FFFFFF',
+        variant: '#E0EAFF',
+        text: '#0657F9',
+      },
+      disabled: {
+        primary: '#F4F7FB',
+        text: '#CED5E3',
+      },
+    },
   },
 };
 
 const lightTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
-    logo: '#0657F9',
+    logo: light.colors.primary,
 
     primary: light.colors.primary,
     background: light.colors.background,
@@ -34,7 +53,15 @@ const lightTheme: DefaultTheme = {
 
     secondary: light.colors.secondary,
 
-    iconsVariant: light.colors.iconsVariant,
+    backgroundVariant: light.colors.backgroundVariant,
+    icons: {
+      primary: light.colors.icons.primary,
+      variant: light.colors.icons.variant,
+    },
+    titles: light.colors.titles,
+    titlesVariant: light.colors.titlesVariant,
+    texts: light.colors.texts,
+    surfaceVariant: light.colors.surfaceVariant,
 
     secondaryVariantA: '#000000',
     secondaryVariantB: '#000000',
@@ -47,20 +74,20 @@ const lightTheme: DefaultTheme = {
     onPrimaryVariant: '#000000',
     onBackground: '#000000',
 
-    onSurfaceH1: '#FFFFFF',
-    onSurfaceH1Contrast: '#FFFFFF',
-    onSurfaceH2: '#000000',
-    onSurfaceH2Hover: '#FFFFFF',
-    onSurfaceSH1: '#888888',
-    onSurfaceSH1Hover: '#000000',
+    // onSurfaceH1: '#FFFFFF',
+    // onSurfaceH1Contrast: '#FFFFFF',
+    // onSurfaceH2: '#000000',
+    // onSurfaceH2Hover: '#FFFFFF',
+    // onSurfaceSH1: '#888888',
+    // onSurfaceSH1Hover: '#000000',
 
     upTrend: '#A8C300',
     downTrend: '#FF005E',
 
     vaultActionButton: {
-      background: 'transparent',
-      borderColor: '#000000',
-      color: '#000000',
+      background: light.colors.secondary,
+      borderColor: light.colors.secondary,
+      color: light.colors.titlesVariant,
       disabledContrast: '0',
 
       selected: {
@@ -70,10 +97,10 @@ const lightTheme: DefaultTheme = {
       },
     },
 
-    walletButton: {
-      background: '#000000',
-      color: '#FFFFFF',
-    },
+    // walletButton: {
+    //   background: '#000000',
+    //   color: '#FFFFFF',
+    // },
 
     txModalColors: {
       background: '#FFFFFF',

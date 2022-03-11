@@ -46,14 +46,9 @@ const StyledHelperCursor = styled.span`
   cursor: help;
 `;
 
-const StyledRecommendationsCard = styled(RecommendationsCard)`
-  ${halfWidthCss}
-`;
+const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
-const StyledInfoCard = styled(InfoCard)`
-  flex: 1;
-  ${halfWidthCss}
-`;
+const StyledInfoCard = styled(InfoCard)``;
 
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
@@ -294,6 +289,19 @@ export const Labs = () => {
 
   return (
     <ViewContainer>
+      {!opportunitiesLoading && currentNetworkSettings.labsEnabled && (
+        <StyledInfoCard
+          header={t('labs:risks-card.header')}
+          Component={
+            <Text>
+              <p>{t('labs:risks-card.desc-1')}</p>
+              <p>{t('labs:risks-card.desc-2')}</p>
+              <p>{t('labs:risks-card.desc-3')}</p>
+            </Text>
+          }
+        />
+      )}
+
       <SummaryCard
         items={[
           { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
@@ -307,31 +315,21 @@ export const Labs = () => {
 
       {!opportunitiesLoading && (
         <>
-          {currentNetworkSettings.labsEnabled ? (
-            <Row>
-              <StyledRecommendationsCard
-                header={t('components.recommendations.header')}
-                items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
-                  // header: 'Special Token',
-                  icon: displayIcon,
-                  name: displayName,
-                  info: formatPercent(apyData, 2),
-                  infoDetail: 'EYY',
-                  // onAction: () => history.push(`/vault/${address}`),
-                }))}
-              />
-              <StyledInfoCard
-                header={t('labs:risks-card.header')}
-                Component={
-                  <Text>
-                    <p>{t('labs:risks-card.desc-1')}</p>
-                    <p>{t('labs:risks-card.desc-2')}</p>
-                    <p>{t('labs:risks-card.desc-3')}</p>
-                  </Text>
-                }
-              />
-            </Row>
-          ) : (
+          {currentNetworkSettings.labsEnabled && (
+            <StyledRecommendationsCard
+              header={t('components.recommendations.header')}
+              items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
+                // header: 'Special Token',
+                icon: displayIcon,
+                name: displayName,
+                info: formatPercent(apyData, 2),
+                infoDetail: 'EYY',
+                // onAction: () => history.push(`/vault/${address}`),
+              }))}
+            />
+          )}
+
+          {!currentNetworkSettings.labsEnabled && (
             <StyledInfoCard
               header={t('labs:no-labs-card.header', { network: currentNetworkSettings.name })}
               Component={

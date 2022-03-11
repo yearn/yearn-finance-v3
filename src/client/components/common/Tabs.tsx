@@ -10,7 +10,7 @@ export interface TabsProps extends StyledSystemProps {
 
 const StyledTabs = styled.div`
   --tabs-selected-bg: ${({ theme }) => theme.colors.secondary};
-  --tabs-selected-color: ${({ theme }) => theme.colors.background};
+  --tabs-selected-color: ${({ theme }) => theme.colors.titlesVariant};
 
   display: flex;
   height: 3.2rem;
@@ -20,7 +20,7 @@ const StyledTabs = styled.div`
   text-transform: uppercase;
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
   overflow: hidden;
   user-select: none;
 

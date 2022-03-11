@@ -4,7 +4,7 @@ import { sharedTheme } from '../default';
 
 // TODO Dehardcode this
 const dark = {
-  name: 'light',
+  name: 'dark',
   colors: {
     background: '#141414',
     backgroundVariant: '#272727',
@@ -16,8 +16,27 @@ const dark = {
     titles: '#FFFFFF',
     titlesVariant: '#FFFFFF',
     texts: '#A8A8A8',
-    icons: '#A8A8A8',
-    iconsVariant: '#FFFFF0',
+    disabled: '#A8A8A8',
+    icons: {
+      primary: '#A8A8A8',
+      variant: '#FFFFFF',
+    },
+    button: {
+      filled: {
+        primary: '#0657F9',
+        variant: '#004ADF',
+        text: '#FFFFFF',
+      },
+      outlined: {
+        primary: '#FFFFFF',
+        variant: '#272727',
+        text: '#FFFFFF',
+      },
+      disabled: {
+        primary: '#141414',
+        text: '#A8A8A8',
+      },
+    },
   },
 };
 
@@ -34,6 +53,16 @@ const darkTheme: DefaultTheme = {
 
     secondary: dark.colors.secondary,
 
+    backgroundVariant: dark.colors.backgroundVariant,
+    icons: {
+      primary: dark.colors.icons.primary,
+      variant: dark.colors.icons.variant,
+    },
+    titles: dark.colors.titles,
+    titlesVariant: dark.colors.titlesVariant,
+    texts: dark.colors.texts,
+    surfaceVariant: dark.colors.surfaceVariant,
+
     secondaryVariantA: '#000000',
     secondaryVariantB: '#585858',
 
@@ -45,12 +74,12 @@ const darkTheme: DefaultTheme = {
     onPrimaryVariant: '#FFFFFF',
     onBackground: '#000000',
 
-    onSurfaceH1: '#888888',
-    onSurfaceH1Contrast: '#FFFFFF',
-    onSurfaceH2: '#FFFFFF',
-    onSurfaceH2Hover: '#FFFFFF',
-    onSurfaceSH1: '#6E6E6E',
-    onSurfaceSH1Hover: '#FFFFFF',
+    // onSurfaceH1: '#888888',
+    // onSurfaceH1Contrast: '#FFFFFF',
+    // onSurfaceH2: '#FFFFFF',
+    // onSurfaceH2Hover: '#FFFFFF',
+    // onSurfaceSH1: '#6E6E6E',
+    // onSurfaceSH1Hover: '#FFFFFF',
 
     upTrend: '#C6E11E',
     downTrend: '#FF005E',
@@ -68,10 +97,10 @@ const darkTheme: DefaultTheme = {
       },
     },
 
-    walletButton: {
-      background: '#006AE3',
-      color: '#202020',
-    },
+    // walletButton: {
+    //   background: '#006AE3',
+    //   color: '#202020',
+    // },
 
     txModalColors: {
       background: '#191919',

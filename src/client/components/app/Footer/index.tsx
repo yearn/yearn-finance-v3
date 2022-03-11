@@ -79,7 +79,7 @@ const SocialSection = styled.div`
   justify-content: flex-end;
   grid-gap: ${({ theme }) => theme.layoutPadding};
   width: 100%;
-  min-width: calc(var(--icon-size) * ${socialLinks.length} / 2 + 3rem);
+  min-width: calc(${SocialSectionIconSize} * ${socialLinks.length} / 2 + 3rem);
 `;
 
 const LinkSection = styled.div`
@@ -89,13 +89,13 @@ const LinkSection = styled.div`
   column-gap: ${({ theme }) => theme.card.padding};
   row-gap: 1rem;
   flex: 1;
-  font-size: 1.6rem;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.icons.variant};
 `;
 
 const StyledLink = styled(Link)`
   padding: 1rem;
   margin: -1rem;
+  font-size: 1.6rem;
 `;
 
 const StyledIconLink = styled(Link)`
@@ -106,9 +106,9 @@ const StyledIconLink = styled(Link)`
 `;
 
 const StyledIcon = styled(Icon)`
-  width: var(--icon-size);
-  height: var(--icon-size);
-  fill: ${({ theme }) => theme.colors.secondary};
+  width: ${SocialSectionIconSize};
+  height: ${SocialSectionIconSize};
+  fill: ${({ theme }) => theme.colors.icons.variant};
 `;
 
 const StyledFooter = styled.footer`

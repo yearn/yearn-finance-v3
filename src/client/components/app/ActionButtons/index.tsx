@@ -11,7 +11,7 @@ const ActionButtonsContainer = styled.div<{ actions: number }>`
 
 const AlertIcon = styled(Icon)`
   width: 1.6rem;
-  fill: ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
+  fill: ${({ theme }) => theme.colors.titles};
 `;
 
 const AlertButton = styled.div`

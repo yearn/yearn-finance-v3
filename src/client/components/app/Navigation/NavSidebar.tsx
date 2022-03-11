@@ -38,7 +38,7 @@ const LinkList = styled.div`
 
 const LinkIcon = styled(Icon)`
   margin-right: 1.2rem;
-  fill: ${({ theme }) => theme.colors.iconsVariant || 'black'};
+  fill: ${({ theme }) => theme.colors.icons.variant};
   cursor: pointer;
   width: 2.4rem;
   height: 2.4rem;
@@ -53,6 +53,7 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
   align-items: center;
   color: inherit;
   font-size: 1.8rem;
+  font-weight: 400;
 
   &:hover span {
     filter: ${linkHoverFilter};
@@ -69,6 +70,7 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
     }
     ${LinkText} {
       color: ${props.theme.colors.primary};
+      font-weight: 700;
     }
   `}
 `;
@@ -85,7 +87,7 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
 const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.colors.primaryVariant};
+  color: ${({ theme }) => theme.colors.icons.variant};
   background-color: transparent;
   border-radius: ${({ theme }) => theme.globalRadius};
   width: ${({ theme }) => theme.sideBar.width};

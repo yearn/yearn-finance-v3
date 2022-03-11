@@ -84,13 +84,21 @@ declare module 'styled-components' {
 
       primary: string;
       background: string;
+      backgroundVariant: string;
       surface: string;
 
       primaryVariant: string;
 
       secondary: string;
 
-      iconsVariant?: string;
+      icons: {
+        primary: string;
+        variant: string;
+      };
+      titles: string;
+      titlesVariant: string;
+      texts: string;
+      surfaceVariant: string;
 
       secondaryVariantA: string;
       secondaryVariantB: string;
@@ -103,12 +111,12 @@ declare module 'styled-components' {
       onPrimaryVariant: string;
       onBackground: string;
 
-      onSurfaceH1: string;
-      onSurfaceH1Contrast: string;
-      onSurfaceH2: string;
-      onSurfaceH2Hover: string;
-      onSurfaceSH1: string;
-      onSurfaceSH1Hover: string;
+      // onSurfaceH1: string;
+      // onSurfaceH1Contrast: string;
+      // onSurfaceH2: string;
+      // onSurfaceH2Hover: string;
+      // onSurfaceSH1: string;
+      // onSurfaceSH1Hover: string;
 
       upTrend: string;
       downTrend: string;
@@ -126,10 +134,10 @@ declare module 'styled-components' {
         };
       };
 
-      walletButton: {
-        background: string;
-        color: string;
-      };
+      // walletButton: {
+      //   background: string;
+      //   color: string;
+      // };
 
       txModalColors: {
         background: string;

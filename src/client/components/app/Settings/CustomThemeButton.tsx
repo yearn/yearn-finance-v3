@@ -11,14 +11,15 @@ const ButtonText = styled.span`
 
 const StyledIcon = styled(Icon)`
   width: 1.6rem;
+  fill: currentColor;
 `;
 
 const AddButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px dashed ${({ theme }) => theme.colors.secondary};
-  color: ${({ theme }) => theme.colors.secondary};
+  border: 2px dashed ${({ theme }) => theme.colors.titlesVariant};
+  color: ${({ theme }) => theme.colors.titlesVariant};
   border-radius: ${({ theme }) => theme.globalRadius};
   min-width: 10rem;
   width: 12.8rem;

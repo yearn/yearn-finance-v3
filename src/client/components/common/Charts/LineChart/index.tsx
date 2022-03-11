@@ -78,7 +78,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
         strokeOpacity: 0.35,
       },
     },
-    textColor: theme.colors.onSurfaceSH1,
+    textColor: theme.colors.titles,
   };
 
   return (
