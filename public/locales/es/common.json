@@ -39,9 +39,11 @@
       "migrate": "Migrar",
       "reinvest": "Reinvertir",
       "reward": "Recompensa",
+      "sign": "Firmar",
       "status": {
         "calculating": "Calculando...",
         "exit": "Cerrar",
+        "done": "OK",
         "simulating": "Simulando...",
         "transaction-completed": "Transacción completada"
       },

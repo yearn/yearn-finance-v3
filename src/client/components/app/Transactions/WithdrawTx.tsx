@@ -38,6 +38,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS, MAX_UINT256 } = getConfig();
+  const [signature, setSignature] = useState<string | undefined>();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
@@ -51,6 +52,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     selectedVault?.defaultDisplayToken ?? ''
   );
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
+  const signedApprovalsEnabled = useAppSelector(SettingsSelectors.selectSignedApprovalsEnabled);
   const targetTokensOptions = selectedVault
     ? [selectedVault.token, ...zapOutTokens.filter(({ address }) => address !== selectedVault.token.address)]
     : zapOutTokens;
@@ -124,6 +126,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     underlyingTokenAddress: selectedVault.token.address,
     targetTokenAddress: selectedTargetTokenAddress,
     yvTokenAllowancesMap: selectedVault.allowancesMap,
+    signature,
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
@@ -188,12 +191,30 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     setSelectedTargetTokenAddress(tokenAddress);
   };
 
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
+
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
-    await dispatch(VaultsActions.approveZapOut({ vaultAddress: selectedVault.address }));
+    try {
+      if (signedApprovalsEnabled) {
+        const signResult = await dispatchAndUnwrap(VaultsActions.signZapOut({ vaultAddress: selectedVault.address }));
+        setSignature(signResult.signature);
+      } else {
+        await dispatch(VaultsActions.approveZapOut({ vaultAddress: selectedVault.address }));
+      }
+    } catch (error) {}
   };
 
   const withdraw = async () => {
@@ -204,6 +225,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
           amount: willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount),
           targetTokenAddress: selectedTargetTokenAddress,
           slippageTolerance: selectedSlippage,
+          signature,
         })
       );
       setTxCompleted(true);
@@ -212,7 +234,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const txActions = [
     {
-      label: t('components.transaction.approve'),
+      label: signedApprovalsEnabled ? t('components.transaction.sign') : t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveZapOut,
       disabled: isApproved,
@@ -230,7 +252,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[selectedVaultOption]}

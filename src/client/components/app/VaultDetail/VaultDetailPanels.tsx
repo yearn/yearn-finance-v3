@@ -304,13 +304,30 @@ export const VaultDetailPanels = ({
   );
 
   const handleAddToken = () => {
-    const { address, symbol, decimals, icon } = selectedVault.token;
+    const { address, symbol, decimals, displayIcon } = selectedVault;
+
     if (context?.wallet.addToken) {
-      context?.wallet.addToken(address, symbol.substr(0, 11), decimals, icon || '');
+      context?.wallet.addToken(address, symbol.substring(0, 11), Number(decimals), displayIcon || '');
     }
   };
 
   const vaultNameTitle = `${selectedVault.name} (${selectedVault.displayName})`;
+
+  // TODO: REMOVE THIS QUICKFIX
+  let selectedData = selectedUnderlyingData ? chartData?.underlying ?? [] : chartData?.usd ?? [];
+  let dataToShow = selectedData;
+  const dateRegex = new RegExp(/^\d\d\d\d-\d\d-\d\d$/);
+  selectedData.forEach((dataPoint) => {
+    if (!dataToShow.length) {
+      return;
+    }
+
+    dataPoint.data.forEach((point: { x: string }) => {
+      if (!dateRegex.test(point.x)) {
+        dataToShow = [];
+      }
+    });
+  });
 
   return (
     <>
@@ -439,7 +456,7 @@ export const VaultDetailPanels = ({
           </ChartValueContainer>
 
           <StyledLineChart
-            chartData={selectedUnderlyingData ? chartData?.underlying ?? [] : chartData?.usd ?? []}
+            chartData={dataToShow}
             tooltipLabel={t('vaultdetails:performance-panel.earnings-over-time')}
             customSymbol={selectedUnderlyingData ? selectedVault?.token?.symbol : undefined}
           />

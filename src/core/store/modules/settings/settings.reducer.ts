@@ -9,14 +9,22 @@ export const settingsInitialState: SettingsState = {
   stateVersion: getConfig().STATE_VERSION,
   sidebarCollapsed: false,
   defaultSlippage: getConfig().DEFAULT_SLIPPAGE,
+  signedApprovalsEnabled: true,
   devMode: {
     enabled: false,
     walletAddressOverride: '',
   },
 };
 
-const { toggleSidebar, closeSidebar, openSidebar, setDefaultSlippage, toggleDevMode, changeWalletAddressOverride } =
-  SettingsActions;
+const {
+  toggleSidebar,
+  closeSidebar,
+  openSidebar,
+  toggleSignedApprovals,
+  setDefaultSlippage,
+  toggleDevMode,
+  changeWalletAddressOverride,
+} = SettingsActions;
 
 const settingsReducer = createReducer(settingsInitialState, (builder) => {
   builder
@@ -28,6 +36,9 @@ const settingsReducer = createReducer(settingsInitialState, (builder) => {
     })
     .addCase(toggleSidebar, (state) => {
       state.sidebarCollapsed = !state.sidebarCollapsed;
+    })
+    .addCase(toggleSignedApprovals, (state) => {
+      state.signedApprovalsEnabled = !state.signedApprovalsEnabled;
     })
     .addCase(setDefaultSlippage.fulfilled, (state, { payload: { slippage } }) => {
       state.defaultSlippage = slippage;

@@ -37,7 +37,7 @@ interface Asset {
 interface TransactionProps {
   transactionLabel?: string;
   transactionCompleted: boolean;
-  transactionCompletedLabel: string;
+  transactionCompletedLabel?: string;
   onTransactionCompletedDismissed: () => void;
   sourceHeader: string;
   sourceAssetOptions: Asset[];
@@ -67,6 +67,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const {
     transactionLabel,
     transactionCompleted,
+    transactionCompletedLabel,
     onTransactionCompletedDismissed,
     sourceHeader,
     sourceAssetOptions,
@@ -109,7 +110,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
   if (transactionCompleted) {
     return (
       <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
-        <TxStatus exit={onTransactionCompletedDismissed} />
+        <TxStatus transactionCompletedLabel={transactionCompletedLabel} exit={onTransactionCompletedDismissed} />
       </StyledTransaction>
     );
   }

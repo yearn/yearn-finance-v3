@@ -14,11 +14,13 @@ interface ValidateVaultDepositProps {
   vaultUnderlyingBalance: string;
   targetUnderlyingTokenAmount: string | undefined;
 }
+
 interface ValidateVaultWithdrawProps {
   yvTokenAmount: BigNumber;
   yvTokenDecimals: string;
   userYvTokenBalance: string;
 }
+
 interface ValidateVaultWithdrawAllowanceProps {
   yvTokenAddress: string;
   yvTokenAmount: BigNumber;
@@ -26,6 +28,7 @@ interface ValidateVaultWithdrawAllowanceProps {
   underlyingTokenAddress: string;
   targetTokenAddress: string;
   yvTokenAllowancesMap: AllowancesMap;
+  signature?: string;
 }
 
 export interface ValidateVaultAllowanceProps {
@@ -127,10 +130,11 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
     underlyingTokenAddress,
     targetTokenAddress,
     yvTokenAllowancesMap,
+    signature,
   } = props;
   const isZapOut = targetTokenAddress !== underlyingTokenAddress;
 
-  if (!isZapOut) return { approved: true };
+  if (!isZapOut || signature) return { approved: true };
 
   return validateAllowance({
     tokenAddress: yvTokenAddress,

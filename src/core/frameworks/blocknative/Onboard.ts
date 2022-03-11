@@ -97,6 +97,7 @@ export class BlocknativeWalletImpl implements Wallet {
         rpcUrl,
         appName,
       },
+      { walletName: 'huobiwallet' },
       { walletName: 'liquality' },
       { walletName: 'detectedwallet' },
     ];
