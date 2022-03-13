@@ -28,6 +28,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const selectedLab = useAppSelector(LabsSelectors.selectYveCrvLab);
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
   const selectedSellTokenAddress = selectedLab?.token.address;
@@ -46,7 +47,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   }, []);
 
   useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress) return;
+    if (!selectedLab || !selectedSellTokenAddress || !isWalletConnected) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
@@ -54,7 +55,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
         spenderAddress: selectedLab.address,
       })
     );
-  }, [selectedSellTokenAddress, selectedLab?.address]);
+  }, [selectedSellTokenAddress, selectedLab?.address, isWalletConnected]);
 
   useEffect(() => {
     if (!selectedLab) return;

@@ -37,6 +37,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
   const [debouncedAmount] = useDebounce(amount, 500);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const selectedSellToken = tokenSelectorFilter(selectedLab?.address ?? '');
@@ -59,7 +60,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
   }, []);
 
   useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress) return;
+    if (!selectedLab || !selectedSellTokenAddress || !walletIsConnected) return;
 
     const spenderAddress = getStakingContractAddress(selectedLab.address);
     dispatch(
@@ -68,7 +69,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
         spenderAddress,
       })
     );
-  }, [selectedSellTokenAddress, selectedLab?.address]);
+  }, [selectedSellTokenAddress, selectedLab?.address, walletIsConnected]);
 
   useEffect(() => {
     if (!selectedLab) return;

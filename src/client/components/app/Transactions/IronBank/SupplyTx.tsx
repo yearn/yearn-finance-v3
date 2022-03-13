@@ -36,6 +36,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const markets = useAppSelector(IronBankSelectors.selectMarkets);
   const selectedMarket = useAppSelector(IronBankSelectors.selectSelectedMarket);
   const selectedToken = selectedMarket?.token;
@@ -65,7 +66,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   }, []);
 
   useEffect(() => {
-    if (!selectedMarket) return;
+    if (!selectedMarket || !isWalletConnected) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
@@ -73,7 +74,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
         spenderAddress: selectedMarket.address,
       })
     );
-  }, [selectedMarket?.address]);
+  }, [selectedMarket?.address, isWalletConnected]);
 
   useEffect(() => {
     if (!selectedMarket || !generalError) return;

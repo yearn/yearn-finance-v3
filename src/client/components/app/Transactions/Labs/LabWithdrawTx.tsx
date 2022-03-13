@@ -42,6 +42,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
@@ -78,7 +79,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   }, []);
 
   useEffect(() => {
-    if (!selectedLab) return;
+    if (!selectedLab || !walletIsConnected) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
@@ -86,7 +87,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
         spenderAddress: CONTRACT_ADDRESSES.zapOut,
       })
     );
-  }, [selectedTargetTokenAddress, selectedLab?.address]);
+  }, [selectedTargetTokenAddress, selectedLab?.address, walletIsConnected]);
 
   useEffect(() => {
     if (!selectedLab) return;
