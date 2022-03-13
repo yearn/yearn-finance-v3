@@ -41,7 +41,7 @@ const cyberpunkTheme: DefaultTheme = {
 
       selected: {
         background: '#C6E11E',
-        color: 'white',
+        color: '#fff',
       },
     },
 

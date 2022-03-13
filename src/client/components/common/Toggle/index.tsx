@@ -5,7 +5,6 @@ export interface ToggleButtonProps {
   selected: boolean;
   setSelected: (selected: boolean) => void;
   className?: string;
-  role?: string;
   disabled?: boolean;
   color?: string;
   onClick?: () => void;
@@ -60,7 +59,6 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
 export const ToggleButton: FC<ToggleButtonProps> = ({
   selected,
   setSelected,
-  role,
   className,
   disabled,
   color,
@@ -70,7 +68,6 @@ export const ToggleButton: FC<ToggleButtonProps> = ({
   <StyledToggleButton
     className={className}
     selected={selected}
-    role={role}
     disabled={disabled}
     color={color}
     onClick={() => setSelected(!selected)}
