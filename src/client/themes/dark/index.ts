@@ -35,6 +35,16 @@ const darkTheme: DefaultTheme = {
     upTrend: '#C6E11E',
     downTrend: '#FF005E',
 
+    toggleSwitch: {
+      background: '#b5b5b5',
+      color: '#E5E5E5',
+
+      selected: {
+        background: '#C6E11E',
+        color: 'white',
+      },
+    },
+
     vaultActionButton: {
       background: 'transparent',
       borderColor: '#6E6E6E',

@@ -5,6 +5,7 @@ export interface ToggleButtonProps {
   selected: boolean;
   setSelected: (selected: boolean) => void;
   className?: string;
+  role?: string;
   disabled?: boolean;
   color?: string;
   onClick?: () => void;
@@ -18,15 +19,14 @@ const ToggleCircle = styled.div`
   position: absolute;
   transition: transform 200ms ease-in-out;
   left: 50%;
-
   transform: translateX(calc(-100% - var(--toggle-offset) / 2));
 `;
 
 const StyledToggleButton = styled.button<{ selected?: boolean }>`
   --toggle-size: 2.6rem;
   --toggle-offset: 0.2rem;
-  --toggle-color: ${({ theme }) => theme.colors.secondary};
-  --toggle-background: ${({ theme }) => theme.colors.primaryVariant};
+  --toggle-color: ${({ theme }) => theme.colors.toggleSwitch.color};
+  --toggle-background: ${({ theme }) => theme.colors.toggleSwitch.background};
 
   display: flex;
   align-items: center;
@@ -45,7 +45,8 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   ${({ selected, theme }) =>
     selected &&
     `
-      --toggle-background: ${theme.colors.primaryVariant};
+      --toggle-color: ${theme.colors.toggleSwitch.selected.color};
+      --toggle-background: ${theme.colors.toggleSwitch.selected.background};
       ${ToggleCircle} {
         transform: translateX(calc(0% + var(--toggle-offset) / 2));
       }
@@ -59,6 +60,7 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
 export const ToggleButton: FC<ToggleButtonProps> = ({
   selected,
   setSelected,
+  role,
   className,
   disabled,
   color,
@@ -68,6 +70,7 @@ export const ToggleButton: FC<ToggleButtonProps> = ({
   <StyledToggleButton
     className={className}
     selected={selected}
+    role={role}
     disabled={disabled}
     color={color}
     onClick={() => setSelected(!selected)}

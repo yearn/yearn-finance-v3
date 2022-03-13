@@ -37,6 +37,16 @@ const classicTheme: DefaultTheme = {
     onSurfaceSH1: '#fff',
     onSurfaceSH1Hover: '#fff',
 
+    toggleSwitch: {
+      background: '#b5b5b5',
+      color: '#E5E5E5',
+
+      selected: {
+        background: '#01E2A0',
+        color: 'white',
+      },
+    },
+
     upTrend: '#01E2A0',
     downTrend: '#EF1E02',
 

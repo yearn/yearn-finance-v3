@@ -110,6 +110,16 @@ declare module 'styled-components' {
       upTrend: string;
       downTrend: string;
 
+      toggleSwitch: {
+        background: string,
+        color: string,
+
+        selected: {
+          background: string,
+          color: string,
+        },
+      },
+
       vaultActionButton: {
         background: string;
         borderColor: string;

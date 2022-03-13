@@ -35,6 +35,16 @@ const cyberpunkTheme: DefaultTheme = {
     upTrend: '#ADFF00',
     downTrend: '#DE0B3B',
 
+    toggleSwitch: {
+      background: '#b5b5b5',
+      color: '#E5E5E5',
+
+      selected: {
+        background: '#C6E11E',
+        color: 'white',
+      },
+    },
+
     vaultActionButton: {
       background: 'transparent',
       borderColor: '#BB6FA1',
