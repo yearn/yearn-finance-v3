@@ -40,6 +40,16 @@ const explorerTheme: DefaultTheme = {
     onSurfaceSH1: '#eeeeee',
     onSurfaceSH1Hover: '#eeeeee',
 
+    toggleSwitch: {
+      background: '#b5b5b5',
+      color: '#E5E5E5',
+
+      selected: {
+        background: '#C6E11E',
+        color: 'white',
+      },
+    },
+
     upTrend: '#01E2A0',
     downTrend: '#EF1E02',
 
