@@ -303,7 +303,7 @@ export const VaultDetailPanels = ({
 
   const shouldShowChart = (data: Serie[]): boolean => {
     // Only show earnings chart if more than one data point
-    return data.length > 0 && data[0].data.length > 1;
+    return data.length > 0 && data[0].data?.length > 1;
   };
 
   // TODO: REMOVE THIS QUICKFIX
