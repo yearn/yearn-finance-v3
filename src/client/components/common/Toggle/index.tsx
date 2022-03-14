@@ -18,7 +18,6 @@ const ToggleCircle = styled.div`
   position: absolute;
   transition: transform 200ms ease-in-out;
   left: 50%;
-
   transform: translateX(calc(-100% - var(--toggle-offset) / 2 - var(--toggle-x-offset)));
 `;
 
@@ -28,9 +27,10 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   --toggle-offset: 0rem;
   /* NOTE This defines separation between toggle circle and borders. */
   --toggle-x-offset: 0.3rem;
-  --toggle-color: ${({ theme }) => theme.colors.primary};
-  --toggle-background: ${({ theme }) => theme.colors.background};
-  --toggle-background-selected: ${({ theme }) => theme.colors.background};
+  --toggle-color: ${({ theme }) => theme.colors.toggleSwitch.color};
+  --toggle-color-selected: ${({ theme }) => theme.colors.toggleSwitch.selected.color};
+  --toggle-background: ${({ theme }) => theme.colors.toggleSwitch.background};
+  --toggle-background-selected: ${({ theme }) => theme.colors.toggleSwitch.selected.background};
 
   display: flex;
   align-items: center;
@@ -43,7 +43,6 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   cursor: pointer;
   height: var(--toggle-size);
   width: calc(var(--toggle-size) * 2 + var(--toggle-offset));
-  opacity: 0.8;
   transition: all 200ms ease-in-out;
   position: relative;
 
@@ -51,7 +50,7 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
     selected &&
     `
       background: var(--toggle-background-selected);
-      opacity: 1;
+      color: var(--toggle-color-selected);
       ${ToggleCircle} {
         transform: translateX(calc(0% + var(--toggle-offset) / 2 + var(--toggle-x-offset)));
       }
