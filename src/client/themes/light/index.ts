@@ -85,11 +85,11 @@ const lightTheme: DefaultTheme = {
     downTrend: '#FF005E',
 
     toggleSwitch: {
-      background: '#b5b5b5',
-      color: '#E5E5E5',
+      background: 'white',
+      color: light.colors.primary,
 
       selected: {
-        background: '#A8C300',
+        background: light.colors.primary,
         color: 'white',
       },
     },

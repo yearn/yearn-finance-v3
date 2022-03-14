@@ -27,6 +27,7 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   --toggle-offset: 0rem;
   /* NOTE This defines separation between toggle circle and borders. */
   --toggle-x-offset: 0.3rem;
+
   --toggle-color: ${({ theme }) => theme.colors.toggleSwitch.color};
   --toggle-color-selected: ${({ theme }) => theme.colors.toggleSwitch.selected.color};
   --toggle-background: ${({ theme }) => theme.colors.toggleSwitch.background};
@@ -52,6 +53,7 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
       background: var(--toggle-background-selected);
       color: var(--toggle-color-selected);
       ${ToggleCircle} {
+        background: var(--toggle-color-selected);
         transform: translateX(calc(0% + var(--toggle-offset) / 2 + var(--toggle-x-offset)));
       }
   `};

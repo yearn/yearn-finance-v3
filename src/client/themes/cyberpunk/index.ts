@@ -47,7 +47,7 @@ const cyberpunkTheme: DefaultTheme = {
     downTrend: '#DE0B3B',
 
     toggleSwitch: {
-      background: '#b5b5b5',
+      background: 'transparent',
       color: '#E5E5E5',
 
       selected: {

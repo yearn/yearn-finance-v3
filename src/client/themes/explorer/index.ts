@@ -52,7 +52,7 @@ const explorerTheme: DefaultTheme = {
     // onSurfaceSH1Hover: '#eeeeee',
 
     toggleSwitch: {
-      background: '#b5b5b5',
+      background: 'transparent',
       color: '#E5E5E5',
 
       selected: {

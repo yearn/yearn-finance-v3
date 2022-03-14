@@ -85,7 +85,7 @@ const darkTheme: DefaultTheme = {
     downTrend: '#FF005E',
 
     toggleSwitch: {
-      background: '#b5b5b5',
+      background: 'transparent',
       color: '#E5E5E5',
 
       selected: {
