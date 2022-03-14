@@ -48,11 +48,11 @@ const cyberpunkTheme: DefaultTheme = {
 
     toggleSwitch: {
       background: 'transparent',
-      color: '#E5E5E5',
+      color: '#0CA7C9',
 
       selected: {
-        background: '#C6E11E',
-        color: '#fff',
+        background: '#D35290',
+        color: '#0CA7C9',
       },
     },
 
@@ -60,7 +60,7 @@ const cyberpunkTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#BB6FA1',
       color: '#BB6FA1',
-      disabledContrast: '0.6',
+      // disabledContrast: '0.6',
 
       selected: {
         background: 'transparent',

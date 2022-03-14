@@ -69,7 +69,7 @@ const lightTheme: DefaultTheme = {
     surfaceVariantA: '#E8E8EA',
     surfaceVariantB: '#000000',
 
-    selectionBar: '#000000',
+    selectionBar: light.colors.surfaceVariant,
 
     onPrimaryVariant: '#000000',
     onBackground: '#000000',
@@ -98,7 +98,7 @@ const lightTheme: DefaultTheme = {
       background: light.colors.secondary,
       borderColor: light.colors.secondary,
       color: light.colors.titlesVariant,
-      disabledContrast: '0',
+      // disabledContrast: '1',
 
       selected: {
         background: 'transparent',

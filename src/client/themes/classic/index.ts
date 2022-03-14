@@ -88,11 +88,11 @@ const classicTheme: DefaultTheme = {
 
     toggleSwitch: {
       background: 'transparent',
-      color: '#E5E5E5',
+      color: classic.colors.primary,
 
       selected: {
         background: '#01E2A0',
-        color: 'white',
+        color: classic.colors.primary,
       },
     },
 
@@ -103,7 +103,7 @@ const classicTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#fff',
       color: '#fff',
-      disabledContrast: '0.1',
+      // disabledContrast: '0.1',
 
       selected: {
         background: 'transparent',

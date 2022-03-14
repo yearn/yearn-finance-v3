@@ -59,7 +59,7 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolea
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.surfaceVariant};
+    background-color: ${({ theme }) => theme.colors.selectionBar};
 
     // ${StyledCardElement} {
     //   color: ${({ theme }) => theme.colors.titles};

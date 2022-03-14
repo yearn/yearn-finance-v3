@@ -69,7 +69,7 @@ const darkTheme: DefaultTheme = {
     surfaceVariantA: '#1C1C1C',
     surfaceVariantB: '#000000',
 
-    selectionBar: '#000000',
+    selectionBar: dark.colors.surfaceVariant,
 
     onPrimaryVariant: '#FFFFFF',
     onBackground: '#000000',
@@ -98,7 +98,7 @@ const darkTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#6E6E6E',
       color: '#6E6E6E',
-      disabledContrast: '1.5',
+      // disabledContrast: '1.5',
 
       selected: {
         background: 'transparent',

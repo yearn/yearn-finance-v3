@@ -36,7 +36,7 @@ const ActionButton = styled(Button)<{ hide?: boolean }>`
 
   &[disabled],
   &.disabled {
-    filter: contrast(${({ theme }) => theme.colors.vaultActionButton.disabledContrast});
+    opacity: 0.6;
   }
 `;
 
