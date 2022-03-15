@@ -25,6 +25,7 @@ import {
   validateVaultWithdrawAllowance,
   validateMigrateVaultAllowance,
   parseError,
+  isAmbireWCFromContext,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -280,7 +281,7 @@ const depositVault = createAsyncThunk<
       targetUnderlyingTokenAmount,
     });
 
-    const { error: allowanceError } = validateVaultAllowance({
+    const { error: allowanceError, approved } = validateVaultAllowance({
       amount,
       vaultAddress: vaultAddress,
       vaultUnderlyingTokenAddress: vaultData.tokenId,
@@ -293,15 +294,36 @@ const depositVault = createAsyncThunk<
     if (error) throw new Error(error);
 
     const amountInWei = amount.multipliedBy(ONE_UNIT);
+
+    let tx;
     const { vaultService, transactionService } = services;
-    const tx = await vaultService.deposit({
+
+    const isAmbireWC = isAmbireWCFromContext(extra.context.yearnSdk, network.current);
+
+    const depositProps = {
       network: network.current,
       accountAddress: userAddress,
       tokenAddress: tokenData.address,
       vaultAddress,
       amount: amountInWei.toString(),
       slippageTolerance,
-    });
+    };
+
+    if (!approved && isAmbireWC) {
+      tx = await vaultService.approveAndDeposit(
+        {
+          network: network.current,
+          amount: extra.config.MAX_UINT256.toString(),
+          accountAddress: userAddress!,
+          tokenAddress: tokenData.address,
+          spenderAddress: vaultAddress,
+        },
+        depositProps
+      );
+    } else {
+      tx = await vaultService.deposit(depositProps);
+    }
+
     await transactionService.handleTransaction({ tx, network: network.current });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
@@ -353,7 +375,7 @@ const withdrawVault = createAsyncThunk<
           pricePerShare: vaultData.metadata.pricePerShare,
         });
 
-    const { error: allowanceError } = validateVaultWithdrawAllowance({
+    const { approved: isApproved, error: allowanceError } = validateVaultWithdrawAllowance({
       yvTokenAddress: vaultAddress,
       yvTokenAmount: toBN(normalizeAmount(amountOfShares, parseInt(tokenData.decimals))),
       targetTokenAddress: targetTokenAddress,
@@ -373,7 +395,12 @@ const withdrawVault = createAsyncThunk<
     if (error) throw new Error(error);
 
     const { vaultService, transactionService } = services;
-    const tx = await vaultService.withdraw({
+
+    let tx;
+
+    const isAmbireWC = isAmbireWCFromContext(extra.context.yearnSdk, network.current);
+
+    const withdrawProps = {
       network: network.current,
       accountAddress: userAddress,
       tokenAddress: targetTokenAddress,
@@ -381,7 +408,23 @@ const withdrawVault = createAsyncThunk<
       amountOfShares,
       slippageTolerance,
       signature,
-    });
+    };
+
+    if (!isApproved && isAmbireWC) {
+      tx = await vaultService.approveAndWithdraw(
+        {
+          network: network.current,
+          amount: extra.config.MAX_UINT256.toString(),
+          accountAddress: userAddress!,
+          tokenAddress: tokenData.address,
+          spenderAddress: vaultAddress,
+        },
+        withdrawProps
+      );
+    } else {
+      tx = await vaultService.withdraw(withdrawProps);
+    }
+
     await transactionService.handleTransaction({ tx, network: network.current });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());

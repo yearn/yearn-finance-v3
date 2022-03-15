@@ -53,7 +53,9 @@ export interface VaultService {
   getExpectedTransactionOutcome: (props: GetExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
   signPermit: (props: SignPermitProps) => Promise<string>;
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
+  approveAndDeposit: (approveProps: ApproveProps, depositProps: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
+  approveAndWithdraw: (approveProps: ApproveProps, withdrawProps: WithdrawProps) => Promise<TransactionResponse>;
   migrate: (props: MigrateProps) => Promise<TransactionResponse>;
 }
 
