@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
+import { Serie } from '@nivo/line';
 
 import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isCustomApyType } from '@utils';
 import { AppContext } from '@context';
@@ -300,6 +301,11 @@ export const VaultDetailPanels = ({
     }
   };
 
+  const shouldShowChart = (data: Serie[]): boolean => {
+    // Only show earnings chart if more than one data point
+    return data.length > 0 && data[0].data?.length > 1;
+  };
+
   // TODO: REMOVE THIS QUICKFIX
   let selectedData = selectedUnderlyingData ? chartData?.underlying ?? [] : chartData?.usd ?? [];
   let dataToShow = selectedData;
@@ -440,11 +446,13 @@ export const VaultDetailPanels = ({
             <ChartValue>{chartValueText}</ChartValue>
           </ChartValueContainer>
 
-          <StyledLineChart
-            chartData={dataToShow}
-            tooltipLabel={t('vaultdetails:performance-panel.earnings-over-time')}
-            customSymbol={selectedUnderlyingData ? selectedVault?.token?.symbol : undefined}
-          />
+          {shouldShowChart(dataToShow) && (
+            <StyledLineChart
+              chartData={dataToShow}
+              tooltipLabel={t('vaultdetails:performance-panel.earnings-over-time')}
+              customSymbol={selectedUnderlyingData ? selectedVault?.token?.symbol : undefined}
+            />
+          )}
         </VaultChart>
       )}
     </>
