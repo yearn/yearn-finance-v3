@@ -71,7 +71,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedMarket.token.address,
-        spenderAddress: selectedMarket.address,
+        vault: { address: selectedMarket.address, token: selectedMarket.token.address },
       })
     );
   }, [selectedMarket?.address, isWalletConnected]);

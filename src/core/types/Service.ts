@@ -137,6 +137,7 @@ export interface TokenService {
   getUserTokensData: (props: GetUserTokensDataProps) => Promise<Balance[]>;
   getTokenAllowance: (props: GetTokenAllowanceProps) => Promise<Integer>;
   approve: (props: ApproveProps) => Promise<TransactionResponse>;
+  approveDeposit: (props: ApproveDepositProps) => Promise<TransactionResponse | Boolean>;
 }
 
 export interface GetSupportedTokensProps {
@@ -158,7 +159,15 @@ export interface GetTokenAllowanceProps {
   network: Network;
   accountAddress: string;
   tokenAddress: string;
-  spenderAddress: string;
+  vault: { address: string; token: string };
+}
+
+export interface ApproveDepositProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  amount: Wei;
+  vault: Vault;
 }
 
 export interface ApproveProps {

@@ -66,7 +66,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedSellTokenAddress,
-        spenderAddress,
+        vault: { address: spenderAddress, token: selectedLab.token.address },
       })
     );
   }, [selectedSellTokenAddress, selectedLab?.address, walletIsConnected]);

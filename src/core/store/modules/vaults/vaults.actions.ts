@@ -179,10 +179,8 @@ const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddre
   async ({ vaultAddress, tokenAddress }, { dispatch, getState }) => {
     const { vaults } = getState();
     const vaultData = vaults.vaultsMap[vaultAddress];
-    const isZapin = vaultData.tokenId !== tokenAddress;
-    const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress;
 
-    const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
+    const result = await dispatch(TokensActions.approveDeposit({ tokenAddress, vault: vaultData }));
     unwrapResult(result);
   },
   {

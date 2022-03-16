@@ -91,7 +91,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedVault.address,
-        spenderAddress: CONTRACT_ADDRESSES.zapOut,
+        vault: { address: CONTRACT_ADDRESSES.zapOut, token: selectedVault.address },
       })
     );
   }, [selectedVault?.address, CONTRACT_ADDRESSES?.zapOut, walletIsConnected]);

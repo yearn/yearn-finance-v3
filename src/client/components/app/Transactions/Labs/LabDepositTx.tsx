@@ -90,7 +90,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedSellTokenAddress,
-        spenderAddress,
+        vault: { address: selectedLab.address, token: selectedLab.token.address },
       })
     );
   }, [selectedSellTokenAddress, selectedLab?.address, isWalletConnected]);

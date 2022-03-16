@@ -110,7 +110,7 @@ export const DepositTx: FC<DepositTxProps> = ({
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedSellTokenAddress,
-        spenderAddress,
+        vault: { address: selectedVault.address, token: selectedVault.token.address },
       })
     );
   }, [selectedSellTokenAddress, selectedVault?.address, walletIsConnected]);
