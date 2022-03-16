@@ -2,12 +2,29 @@ import { createMockToken } from '@src/test';
 
 import { TokenServiceImpl } from './TokenService';
 
+const supportedTokensMock = jest.fn();
+const getLabsTokensMock = jest.fn();
+
 describe('TokenService', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   describe('getSupportedTokens', () => {
+    let tokenService: TokenServiceImpl;
+
+    beforeEach(() => {
+      tokenService = new TokenServiceImpl({} as any);
+      (tokenService as any).yearnSdk = {
+        getInstanceOf: () => ({
+          tokens: {
+            supported: supportedTokensMock,
+          },
+        }),
+      };
+      tokenService.getLabsTokens = getLabsTokensMock;
+    });
+
     it('should merge labs with zapper tokens', async () => {
       const zapperToken = createMockToken({
         address: '0x001',
@@ -26,17 +43,8 @@ describe('TokenService', () => {
         supported: { zapper: true },
       });
 
-      const tokenService = new TokenServiceImpl({
-        yearnSdk: {
-          getInstanceOf: () => ({
-            tokens: {
-              supported: jest.fn().mockResolvedValueOnce([zapperToken, zapperTokenInLabs]),
-            },
-          }),
-        },
-      } as any);
-
-      tokenService.getLabsTokens = jest.fn().mockResolvedValueOnce([labsToken]);
+      supportedTokensMock.mockReturnValue([zapperToken, zapperTokenInLabs]);
+      getLabsTokensMock.mockResolvedValueOnce([labsToken]);
 
       const actualGetSupportedTokens = await tokenService.getSupportedTokens({ network: 'mainnet' });
 
@@ -52,6 +60,7 @@ describe('TokenService', () => {
           { ...labsToken, address: '0x002', name: 'Labs Token', icon: 'labs.icon', supported: { zapper: true } },
         ])
       );
+      expect(getLabsTokensMock).toHaveBeenCalledWith({ network: 'mainnet' });
     });
   });
 });
