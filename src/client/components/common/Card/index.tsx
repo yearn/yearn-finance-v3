@@ -31,7 +31,7 @@ const primaryVariant = css`
   color: ${({ theme }) => theme.colors.titles};
 `;
 
-const secondary = css`
+const secondaryVariant = css`
   background-color: ${({ theme }) => theme.colors.secondary};
   color: ${({ theme }) => theme.colors.titles};
 `;
@@ -64,7 +64,7 @@ const variantStyle = ({ variant }: CardProps) => {
     case 'primary':
       return primaryVariant;
     case 'secondary':
-      return secondary;
+      return secondaryVariant;
     case 'background':
       return backgroundVariant;
     case 'surface':
