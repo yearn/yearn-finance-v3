@@ -20,12 +20,10 @@ const StyledCardContent = styled(CardContent)`
 
 const ItemCard = styled(Card)<{ onClick: any }>`
   display: flex;
-  flex-direction: column;
   align-items: center;
-  max-width: 18rem;
   min-width: 15rem;
   flex: 1;
-  padding: 0.8rem;
+  padding: ${({ theme }) => theme.layoutPadding};
   background-color: ${({ theme }) => theme.colors.background};
   transition: filter 200ms ease-in-out;
 
@@ -45,22 +43,12 @@ const ItemHeader = styled(Text)`
 `;
 
 const ItemInfo = styled(Text)`
-  color: ${({ theme }) => theme.colors.titles};
-  font-size: 1.6rem;
-  font-weight: 600;
-  padding-bottom: 0.4rem;
-  margin-top: 2.3rem;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
-const ItemInfoLabel = styled(Text)`
-  font-size: 0.8rem;
-  font-weight: 400;
-  position: absolute;
-  top: 0;
-  right: -0.5rem;
-  transform: translateX(100%);
-`;
+const ItemInfoLabel = styled(Text)``;
 
 const ItemName = styled(Text)`
   color: ${({ theme }) => theme.colors.titles};
@@ -74,21 +62,15 @@ const ItemName = styled(Text)`
   flex: 1;
 `;
 
-const TokenListIcon = styled(Icon)`
-  position: absolute;
-  right: 0;
-  fill: currentColor;
-`;
+// const TokenListIcon = styled(Icon)`
+//   position: absolute;
+//   right: 0;
+//   fill: currentColor;
+// `;
 
 const CenterIcon = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 3.4rem;
-  width: 100%;
-  text-align: center;
-  position: relative;
+  margin-right: ${({ theme }) => theme.layoutPadding};
 `;
 
 interface Item {
@@ -123,14 +105,12 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
 
             <CenterIcon>
               <TokenIcon symbol={item.name} icon={item.icon} size="xBig" />
-              {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}
+              {/* {item.onAction && <TokenListIcon Component={ChevronRightIcon} />} */}
             </CenterIcon>
 
-            <ItemName>{item.name}</ItemName>
-
             <ItemInfo>
-              {item.info}
-              <ItemInfoLabel>APY</ItemInfoLabel>
+              <ItemName>{item.name}</ItemName>
+              <ItemInfoLabel>{item.info}</ItemInfoLabel>
             </ItemInfo>
           </ItemCard>
         ))}
