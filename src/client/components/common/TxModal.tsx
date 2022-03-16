@@ -10,8 +10,14 @@ const StyledModalTx = styled(Modal)`
   height: initial;
 `;
 
-export interface StyledModalTxProps {}
+export interface StyledModalTxProps {
+  onClose?: () => void;
+}
 
-export const ModalTx: FC<StyledModalTxProps> = ({ children, ...props }) => {
-  return <StyledModalTx {...props}>{children}</StyledModalTx>;
+export const ModalTx: FC<StyledModalTxProps> = ({ onClose, children, ...props }) => {
+  return (
+    <StyledModalTx onClose={onClose} {...props}>
+      {children}
+    </StyledModalTx>
+  );
 };

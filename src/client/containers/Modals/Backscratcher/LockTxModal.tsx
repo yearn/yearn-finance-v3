@@ -11,7 +11,7 @@ export interface BackscratcherLockTxModalProps {
 
 export const BackscratcherLockTxModal: FC<BackscratcherLockTxModalProps> = ({ onClose, ...props }) => {
   return (
-    <StyledBackscratcherLockTxModal {...props}>
+    <StyledBackscratcherLockTxModal onClose={onClose} {...props}>
       <BackscratcherLockTx onClose={onClose} />
     </StyledBackscratcherLockTxModal>
   );
