@@ -55,7 +55,7 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedTargetToken.address,
-        spenderAddress: y3CrvBackZapper,
+        vault: { address: selectedLab.address, token: selectedLab.token.address },
       })
     );
 

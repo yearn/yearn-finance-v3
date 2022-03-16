@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { TokenDynamicData, Token, Balance, Integer } from '@types';
+import { TokenDynamicData, Token, Balance, Integer, TransactionResponse, Vault } from '@types';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Setters                                  */
@@ -60,9 +60,9 @@ const getUserTokens = createAsyncThunk<{ userTokens: Balance[] }, { addresses?: 
 
 const getTokenAllowance = createAsyncThunk<
   { allowance: Integer },
-  { tokenAddress: string; spenderAddress: string },
+  { tokenAddress: string; vault: { address: string; token: string } },
   ThunkAPI
->('tokens/getTokenAllowance', async ({ tokenAddress, spenderAddress }, { extra, getState }) => {
+>('tokens/getTokenAllowance', async ({ tokenAddress, vault }, { extra, getState }) => {
   const { network, wallet } = getState();
   const accountAddress = wallet.selectedAddress;
   if (!accountAddress) {
@@ -77,8 +77,9 @@ const getTokenAllowance = createAsyncThunk<
     network: network.current,
     accountAddress,
     tokenAddress,
-    spenderAddress,
+    vault,
   });
+
   return { allowance };
 });
 
@@ -110,6 +111,33 @@ const approve = createAsyncThunk<
   return { amount };
 });
 
+const approveDeposit = createAsyncThunk<
+  { amount: string },
+  { tokenAddress: string; amountToApprove?: string; vault: Vault },
+  ThunkAPI
+>('tokens/approve', async ({ tokenAddress, amountToApprove, vault }, { extra, getState }) => {
+  const { network, wallet } = getState();
+  const { tokenService, transactionService } = extra.services;
+  const amount = amountToApprove ?? extra.config.MAX_UINT256;
+
+  const accountAddress = wallet.selectedAddress;
+  if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+  const tx = await tokenService.approveDeposit({
+    network: network.current,
+    accountAddress,
+    tokenAddress,
+    amount,
+    vault,
+  });
+
+  if (typeof tx !== 'boolean') {
+    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
+  }
+
+  return { amount };
+});
+
 /* -------------------------------------------------------------------------- */
 /*                                Subscriptions                               */
 /* -------------------------------------------------------------------------- */
@@ -135,8 +163,8 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
     subscriptionService.subscribe({
       module: 'tokens',
       event: 'getAllowance',
-      action: (tokenAddress: string, spenderAddress: string) => {
-        dispatch(getTokenAllowance({ tokenAddress, spenderAddress }));
+      action: (tokenAddress: string, vault: { address: string; token: string }) => {
+        dispatch(getTokenAllowance({ tokenAddress, vault }));
       },
     });
   }
@@ -156,4 +184,5 @@ export const TokensActions = {
   initSubscriptions,
   clearTokensData,
   clearUserTokenState,
+  approveDeposit,
 };

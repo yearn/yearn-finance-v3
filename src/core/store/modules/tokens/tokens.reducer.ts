@@ -134,10 +134,10 @@ const tokensReducer = createReducer(tokensInitialState, (builder) => {
       state.statusMap.user.getUserTokensAllowances = { loading: true };
     })
     .addCase(getTokenAllowance.fulfilled, (state, { meta, payload: { allowance } }) => {
-      const { tokenAddress, spenderAddress } = meta.arg;
+      const { tokenAddress, vault } = meta.arg;
       state.user.userTokensAllowancesMap[tokenAddress] = {
         ...state.user.userTokensAllowancesMap[tokenAddress],
-        [spenderAddress]: allowance,
+        [vault.address]: allowance,
       };
       state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = {};
       state.statusMap.user.getUserTokensAllowances = {};

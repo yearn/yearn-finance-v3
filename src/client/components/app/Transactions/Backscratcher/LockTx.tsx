@@ -52,7 +52,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedSellTokenAddress,
-        spenderAddress: selectedLab.address,
+        vault: { address: selectedLab.address, token: selectedLab.token.address },
       })
     );
   }, [selectedSellTokenAddress, selectedLab?.address, isWalletConnected]);
