@@ -125,8 +125,9 @@ const TokenSelector = styled.div<{ onClick?: () => void }>`
   ${({ onClick }) => onClick && 'cursor: pointer;'}
 `;
 
-const TokenInfo = styled.div`
+const TokenInfo = styled.div<{ center?: boolean }>`
   display: flex;
+  justify-content: ${({ center }) => (center ? 'center' : 'flex-start')};
   gap: ${({ theme }) => theme.txModal.gap};
 `;
 
@@ -206,6 +207,7 @@ export interface TxTokenInputProps {
   yieldPercent?: string;
   tokenOptions?: Token[];
   readOnly?: boolean;
+  hideAmount?: boolean;
   loading?: boolean;
   loadingText?: string;
 }
@@ -224,6 +226,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   yieldPercent,
   tokenOptions,
   readOnly,
+  hideAmount,
   loading,
   loadingText,
   children,
@@ -277,7 +280,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         </CSSTransition>
       )}
 
-      <TokenInfo>
+      <TokenInfo center={hideAmount}>
         <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
           <TokenIconContainer>
             <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
@@ -286,30 +289,32 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <TokenName>{selectedItem.label}</TokenName>
         </TokenSelector>
 
-        <TokenData>
-          <AmountTitle>{inputText || t('components.transaction.token-input.balance')}</AmountTitle>
-          <StyledAmountInput
-            value={amount}
-            onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-            placeholder={loading ? loadingText : '00000000.00'}
-            readOnly={readOnly}
-            error={inputError}
-            type="number"
-          />
-          <TokenExtras>
-            {amountValue && <StyledText>≈ {formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
-            {maxAmount && (
-              <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
-                {maxLabel}
-              </StyledButton>
-            )}
-            {yieldPercent && (
-              <StyledText>
-                {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
-              </StyledText>
-            )}
-          </TokenExtras>
-        </TokenData>
+        {!hideAmount && (
+          <TokenData>
+            <AmountTitle>{inputText || t('components.transaction.token-input.balance')}</AmountTitle>
+            <StyledAmountInput
+              value={amount}
+              onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
+              placeholder={loading ? loadingText : '00000000.00'}
+              readOnly={readOnly}
+              error={inputError}
+              type="number"
+            />
+            <TokenExtras>
+              {amountValue && <StyledText>≈ {formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
+              {maxAmount && (
+                <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+                  {maxLabel}
+                </StyledButton>
+              )}
+              {yieldPercent && (
+                <StyledText>
+                  {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
+                </StyledText>
+              )}
+            </TokenExtras>
+          </TokenData>
+        )}
       </TokenInfo>
     </StyledTxTokenInput>
   );

@@ -10,6 +10,7 @@ import {
   SettingsSelectors,
   NetworkSelectors,
   WalletSelectors,
+  AppSelectors,
 } from '@store';
 import {
   toBN,
@@ -48,6 +49,8 @@ export const DepositTx: FC<DepositTxProps> = ({
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
+  const simulationsEnabled = servicesEnabled['tenderly'];
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
@@ -122,7 +125,7 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   useEffect(() => {
     if (!selectedVault || !selectedSellTokenAddress) return;
-    if (toBN(debouncedAmount).gt(0) && !inputError) {
+    if (simulationsEnabled && toBN(debouncedAmount).gt(0) && !inputError) {
       dispatch(
         VaultsActions.getExpectedTransactionOutcome({
           transactionType: 'DEPOSIT',
@@ -292,6 +295,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       targetAssetOptions={vaultsOptions}
       selectedTargetAsset={selectedVaultOption}
       onSelectedTargetAssetChange={onSelectedVaultChange}
+      targetAmountDisabled={!simulationsEnabled}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}

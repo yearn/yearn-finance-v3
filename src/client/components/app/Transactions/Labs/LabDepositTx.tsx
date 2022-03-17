@@ -12,6 +12,7 @@ import {
   SettingsSelectors,
   NetworkSelectors,
   WalletSelectors,
+  AppSelectors,
 } from '@store';
 import {
   toBN,
@@ -44,6 +45,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
+  const simulationsEnabled = servicesEnabled['tenderly'];
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
@@ -102,7 +105,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   // TODO: SET LABS SIMULATION
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
-    if (toBN(debouncedAmount).gt(0) && !inputError) {
+    if (simulationsEnabled && toBN(debouncedAmount).gt(0) && !inputError) {
       dispatch(
         VaultsActions.getExpectedTransactionOutcome({
           transactionType: 'DEPOSIT',
@@ -282,6 +285,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       targetAssetOptions={[selectedLabOption]}
       selectedTargetAsset={selectedLabOption}
       onSelectedTargetAssetChange={onSelectedLabChange}
+      targetAmountDisabled={!simulationsEnabled}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}

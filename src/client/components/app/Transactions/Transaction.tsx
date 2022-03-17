@@ -50,6 +50,7 @@ interface TransactionProps {
   targetAssetOptions: Asset[];
   selectedTargetAsset: Asset;
   onSelectedTargetAssetChange?: (assetAddress: string) => void;
+  targetAmountDisabled?: boolean;
   targetAmount: string;
   targetAmountValue?: string;
   targetStatus: Status;
@@ -80,6 +81,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
     targetAssetOptions,
     selectedTargetAsset,
     onSelectedTargetAssetChange,
+    targetAmountDisabled,
     targetAmount,
     targetAmountValue,
     targetStatus,
@@ -159,6 +161,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         yieldPercent={selectedTargetAsset.yield}
         inputError={!!targetStatus.error}
         readOnly
+        hideAmount={targetAmountDisabled}
         loading={outputLoading}
         loadingText={loadingText ?? t('components.transaction.status.simulating')}
       />
