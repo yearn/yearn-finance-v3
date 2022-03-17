@@ -7,6 +7,7 @@ const ContainerCard = styled(Card)`
   padding: ${({ theme }) => theme.card.padding} 0;
   width: 100%;
   min-width: 56%;
+  border-radius: 0.2rem;
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -21,18 +22,22 @@ const StyledCardContent = styled(CardContent)`
 const ItemCard = styled(Card)<{ onClick: any }>`
   display: flex;
   align-items: center;
-  min-width: 15rem;
+  min-width: 21rem;
   flex: 1;
   padding: ${({ theme }) => theme.layoutPadding};
   background-color: ${({ theme }) => theme.colors.background};
+  position: relative;
   transition: filter 200ms ease-in-out;
 
-  ${({ onClick }) =>
+  ${({ onClick, theme }) =>
     onClick &&
     `
     cursor: pointer;
     &:hover {
       filter: brightness(85%);
+      ${TokenListIcon} {
+        color: ${theme.colors.primary};
+      }
     }
   `};
 `;
@@ -45,28 +50,33 @@ const ItemHeader = styled(Text)`
 const ItemInfo = styled(Text)`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  overflow: hidden;
 `;
 
-const ItemInfoLabel = styled(Text)``;
+const ItemInfoLabel = styled(Text)`
+  color: ${({ theme }) => theme.colors.titles};
+  margin-top: 0.8rem;
+  font-weight: 700;
+  font-size: 2.4rem;
+`;
 
 const ItemName = styled(Text)`
-  color: ${({ theme }) => theme.colors.titles};
-  font-size: 1.4rem;
-  font-weight: 600;
+  color: ${({ theme }) => theme.colors.icons.variant};
+  font-size: 1.6rem;
   width: 100%;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: 0.7rem;
-  text-align: center;
   flex: 1;
 `;
 
-// const TokenListIcon = styled(Icon)`
-//   position: absolute;
-//   right: 0;
-//   fill: currentColor;
-// `;
+const TokenListIcon = styled(Icon)`
+  position: absolute;
+  right: 3rem;
+  fill: currentColor;
+  width: 1rem;
+  transition: color 200ms ease-in-out;
+`;
 
 const CenterIcon = styled.div`
   display: flex;
@@ -105,13 +115,14 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
 
             <CenterIcon>
               <TokenIcon symbol={item.name} icon={item.icon} size="xBig" />
-              {/* {item.onAction && <TokenListIcon Component={ChevronRightIcon} />} */}
             </CenterIcon>
 
             <ItemInfo>
               <ItemName>{item.name}</ItemName>
               <ItemInfoLabel>{item.info}</ItemInfoLabel>
             </ItemInfo>
+
+            {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}
           </ItemCard>
         ))}
       </StyledCardContent>
