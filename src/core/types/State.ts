@@ -35,6 +35,9 @@ export interface RootState {
 
 export interface AppState {
   isInitialized: boolean;
+  servicesEnabed: {
+    [service: string]: boolean;
+  };
   statusMap: {
     initApp: Status;
     getAppData: Status;

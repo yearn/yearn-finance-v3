@@ -1,15 +1,21 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { isEqual } from 'lodash';
 
 import { ThunkAPI } from '@frameworks/redux';
 import { inIframe } from '@utils';
-import { Network, Route, Address, Vault } from '@types';
+import { Network, Route, Address, Vault, Service } from '@types';
 
 import { WalletActions } from '../wallet/wallet.actions';
 import { TokensActions } from '../tokens/tokens.actions';
 import { VaultsActions } from '../vaults/vaults.actions';
 import { LabsActions } from '../labs/labs.actions';
 import { IronBankActions } from '../ironBank/ironBank.actions';
+
+/* -------------------------------------------------------------------------- */
+/*                                   Setters                                  */
+/* -------------------------------------------------------------------------- */
+
+const disableService = createAction<{ service: Service }>('app/disableService');
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
@@ -144,6 +150,7 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
 /* -------------------------------------------------------------------------- */
 
 export const AppActions = {
+  disableService,
   clearAppData,
   clearUserAppData,
   initApp,

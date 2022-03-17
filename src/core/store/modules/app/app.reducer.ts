@@ -6,6 +6,11 @@ import { AppActions } from './app.actions';
 
 export const appInitialState: AppState = {
   isInitialized: false,
+  servicesEnabed: {
+    zapper: true,
+    tenderly: true,
+    notify: true,
+  },
   statusMap: {
     initApp: initialStatus,
     getAppData: initialStatus,
@@ -17,10 +22,19 @@ export const appInitialState: AppState = {
   },
 };
 
-const { initApp, getAppData, getUserAppData, clearAppData, clearUserAppData } = AppActions;
+const { initApp, getAppData, getUserAppData, clearAppData, clearUserAppData, disableService } = AppActions;
 
 const appReducer = createReducer(appInitialState, (builder) => {
   builder
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   Setters                                  */
+    /* -------------------------------------------------------------------------- */
+
+    /* ----------------------------- disableService ----------------------------- */
+    .addCase(disableService, (state, { payload: { service } }) => {
+      state.servicesEnabed[service] = false;
+    })
 
     /* -------------------------------------------------------------------------- */
     /*                                 Clear State                                */

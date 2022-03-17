@@ -4,6 +4,7 @@ import { RootState, Status } from '@types';
 
 const selectAppState = (state: RootState) => state.app;
 const selectIsAppInitialized = (state: RootState) => state.app.isInitialized;
+const selectServicesEnabled = (state: RootState) => state.app.servicesEnabed;
 const selectAppStatusMap = (state: RootState) => state.app.statusMap;
 
 const selectAppStatus = createSelector([selectAppState], (appState): Status => {
@@ -29,6 +30,7 @@ const selectAppStatus = createSelector([selectAppState], (appState): Status => {
 export const AppSelectors = {
   selectAppState,
   selectIsAppInitialized,
+  selectServicesEnabled,
   selectAppStatusMap,
   selectAppStatus,
 };
