@@ -92,7 +92,7 @@ export class TokenServiceImpl implements TokenService {
     accountAddress,
   }: GetTokenAllowanceProps): Promise<Integer> {
     const yearn = this.yearnSdk.getInstanceOf(network);
-    const allowance = await yearn.tokens.allowance(vault, tokenAddress, accountAddress);
+    const allowance = await yearn.tokens.allowance(vault.address, vault.token, tokenAddress, accountAddress);
 
     return allowance.amount;
   }
@@ -226,6 +226,6 @@ export class TokenServiceImpl implements TokenService {
     const { network, tokenAddress, amount, accountAddress, vault } = props;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
-    return yearn.tokens.approveDeposit(vault, tokenAddress, amount, accountAddress);
+    return yearn.tokens.approveDeposit(vault.address, vault.token, tokenAddress, amount, accountAddress);
   }
 }
