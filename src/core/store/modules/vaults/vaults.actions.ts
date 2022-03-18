@@ -145,14 +145,16 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 >(
   'vaults/getExpectedTransactionOutcome',
   async (getExpectedTxOutcomeProps, { getState, extra }) => {
-    const { network } = getState();
+    const { network, app } = getState();
     const { services } = extra;
     const { vaultService } = services;
     const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
+
     const accountAddress = getState().wallet.selectedAddress;
-    if (!accountAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const simulationsEnabled = app.servicesEnabed['tenderly'];
+    if (!simulationsEnabled) throw new Error('SIMULATIONS DISABLED');
 
     const txOutcome = await vaultService.getExpectedTransactionOutcome({
       network: network.current,
