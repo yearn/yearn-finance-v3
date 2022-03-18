@@ -250,12 +250,11 @@ const depositVault = createAsyncThunk<
     { vaultAddress, tokenAddress, amount, targetUnderlyingTokenAmount, slippageTolerance },
     { extra, getState, dispatch }
   ) => {
-    const { network, wallet, vaults, tokens } = getState();
+    const { network, wallet, vaults, tokens, app } = getState();
     const { services } = extra;
+
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
       currentNetwork: network.current,
@@ -302,7 +301,8 @@ const depositVault = createAsyncThunk<
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabed['notify'];
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
@@ -327,7 +327,7 @@ const withdrawVault = createAsyncThunk<
 >(
   'vaults/withdrawVault',
   async ({ vaultAddress, amount, targetTokenAddress, slippageTolerance, signature }, { extra, getState, dispatch }) => {
-    const { network, wallet, vaults, tokens } = getState();
+    const { network, wallet, vaults, tokens, app } = getState();
     const { services, config } = extra;
 
     const userAddress = wallet.selectedAddress;
@@ -382,7 +382,8 @@ const withdrawVault = createAsyncThunk<
       slippageTolerance,
       signature,
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabed['notify'];
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
@@ -411,11 +412,11 @@ const migrateVault = createAsyncThunk<
 >(
   'vaults/migrateVault',
   async ({ vaultFromAddress, vaultToAddress, migrationContractAddress }, { extra, getState, dispatch }) => {
-    const { network, wallet, vaults, tokens } = getState();
+    const { network, wallet, vaults, tokens, app } = getState();
     const { services, config } = extra;
     const { trustedVaultMigrator } = config.CONTRACT_ADDRESSES;
-    const userAddress = wallet.selectedAddress;
 
+    const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
@@ -451,7 +452,8 @@ const migrateVault = createAsyncThunk<
       migrationContractAddress: migrationContractAddressToUse,
     });
 
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabed['notify'];
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getVaultsDynamic({ addresses: [vaultFromAddress, vaultToAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultFromAddress, vaultToAddress] }));

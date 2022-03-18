@@ -139,12 +139,11 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/supply',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { ironBankService, transactionService } = extra.services;
+
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
       currentNetwork: network.current,
@@ -165,7 +164,9 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
       amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'supply',
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabed['notify'];
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
     dispatch(getIronBankSummary());
     // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
@@ -179,12 +180,11 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/borrow',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { ironBankService, transactionService } = extra.services;
+
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
       currentNetwork: network.current,
@@ -204,7 +204,9 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
       amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'borrow',
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabed['notify'];
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
     dispatch(getIronBankSummary());
     // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
@@ -218,12 +220,11 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/withdraw',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { ironBankService, transactionService } = extra.services;
+
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
       currentNetwork: network.current,
@@ -243,7 +244,9 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
       amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'withdraw',
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabed['notify'];
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
     dispatch(getIronBankSummary());
     // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
@@ -257,12 +260,11 @@ const withdrawAllMarket = createAsyncThunk<void, WithdrawAllMarketProps, ThunkAP
   'ironBank/withdraw',
   async ({ marketAddress }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { ironBankService, transactionService } = extra.services;
+
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
       currentNetwork: network.current,
@@ -280,7 +282,9 @@ const withdrawAllMarket = createAsyncThunk<void, WithdrawAllMarketProps, ThunkAP
       amount: extra.config.MAX_UINT256,
       action: 'withdraw',
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabed['notify'];
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
     dispatch(getIronBankSummary());
     // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
@@ -294,12 +298,11 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
   'ironBank/repay',
   async ({ marketAddress, amount }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { ironBankService, transactionService } = extra.services;
+
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
       currentNetwork: network.current,
@@ -319,7 +322,9 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
       amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'repay',
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabed['notify'];
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
     dispatch(getIronBankSummary());
     // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
@@ -333,12 +338,11 @@ const repayAllMarket = createAsyncThunk<void, RepayAllMarketProps, ThunkAPI>(
   'ironBank/repay',
   async ({ marketAddress }, { extra, getState, dispatch }) => {
     // NOTE: We will merge every the four main IB actions into one later on an already planned refactor
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { ironBankService, transactionService } = extra.services;
+
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
       currentNetwork: network.current,
@@ -356,7 +360,9 @@ const repayAllMarket = createAsyncThunk<void, RepayAllMarketProps, ThunkAPI>(
       amount: extra.config.MAX_UINT256,
       action: 'repay',
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabed['notify'];
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
     dispatch(getIronBankSummary());
     // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
@@ -374,12 +380,11 @@ export interface EnterOrExitMarketProps {
 const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAPI>(
   'ironBank/enterOrExitMarket',
   async ({ marketAddress, actionType }, { extra, getState, dispatch }) => {
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { ironBankService, transactionService } = extra.services;
+
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
       currentNetwork: network.current,
@@ -411,7 +416,9 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAP
       userAddress,
       actionType,
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabed['notify'];
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+
     dispatch(getIronBankSummary());
     dispatch(getUserMarketsPositions({ marketAddresses: [marketAddress] }));
     // dispatch(getUserMarketsMetadata({ marketAddresses: [marketAddress] })); TODO use this when lens fixes are deployed
