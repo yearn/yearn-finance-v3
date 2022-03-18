@@ -153,7 +153,7 @@ const getExpectedTransactionOutcome = createAsyncThunk<
     const accountAddress = getState().wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const simulationsEnabled = app.servicesEnabed['tenderly'];
+    const simulationsEnabled = app.servicesEnabled['tenderly'];
     if (!simulationsEnabled) throw new Error('SIMULATIONS DISABLED');
 
     const txOutcome = await vaultService.getExpectedTransactionOutcome({
@@ -303,7 +303,7 @@ const depositVault = createAsyncThunk<
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
@@ -384,7 +384,7 @@ const withdrawVault = createAsyncThunk<
       slippageTolerance,
       signature,
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
@@ -454,7 +454,7 @@ const migrateVault = createAsyncThunk<
       migrationContractAddress: migrationContractAddressToUse,
     });
 
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getVaultsDynamic({ addresses: [vaultFromAddress, vaultToAddress] }));
     dispatch(getUserVaultsSummary());

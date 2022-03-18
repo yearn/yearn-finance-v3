@@ -6,7 +6,7 @@ import { AppActions } from './app.actions';
 
 export const appInitialState: AppState = {
   isInitialized: false,
-  servicesEnabed: {
+  servicesEnabled: {
     zapper: true,
     tenderly: true,
     notify: true,
@@ -33,7 +33,7 @@ const appReducer = createReducer(appInitialState, (builder) => {
 
     /* ----------------------------- disableService ----------------------------- */
     .addCase(disableService, (state, { payload: { service } }) => {
-      state.servicesEnabed[service] = false;
+      state.servicesEnabled[service] = false;
     })
 
     /* -------------------------------------------------------------------------- */

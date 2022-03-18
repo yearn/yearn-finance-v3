@@ -35,7 +35,7 @@ export interface RootState {
 
 export interface AppState {
   isInitialized: boolean;
-  servicesEnabed: {
+  servicesEnabled: {
     [service: string]: boolean;
   };
   statusMap: {

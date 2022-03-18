@@ -212,7 +212,7 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
@@ -287,7 +287,7 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
       amountOfShares,
       slippageTolerance,
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
@@ -472,7 +472,7 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultAddress: labAddress,
       amount: amountInWei.toString(),
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
@@ -502,7 +502,7 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
       network: network.current,
       accountAddress: userAddress,
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
@@ -559,7 +559,7 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
       network: network.current,
       accountAddress: userAddress,
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
@@ -704,7 +704,7 @@ const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultAddress: labAddress,
       amount: amountInWei.toString(),
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));

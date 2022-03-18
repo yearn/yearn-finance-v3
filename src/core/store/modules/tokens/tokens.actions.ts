@@ -105,7 +105,7 @@ const approve = createAsyncThunk<
     spenderAddress,
     amount,
   });
-  const notifyEnabled = app.servicesEnabed['notify'];
+  const notifyEnabled = app.servicesEnabled['notify'];
   await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
   return { amount };

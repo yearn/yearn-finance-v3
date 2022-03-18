@@ -164,7 +164,7 @@ const supplyMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
       amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'supply',
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
@@ -204,7 +204,7 @@ const borrowMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
       amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'borrow',
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
@@ -244,7 +244,7 @@ const withdrawMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
       amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'withdraw',
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
@@ -282,7 +282,7 @@ const withdrawAllMarket = createAsyncThunk<void, WithdrawAllMarketProps, ThunkAP
       amount: extra.config.MAX_UINT256,
       action: 'withdraw',
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
@@ -322,7 +322,7 @@ const repayMarket = createAsyncThunk<void, MarketsActionsProps, ThunkAPI>(
       amount: amount.times(ONE_UNIT).toFixed(0),
       action: 'repay',
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
@@ -360,7 +360,7 @@ const repayAllMarket = createAsyncThunk<void, RepayAllMarketProps, ThunkAPI>(
       amount: extra.config.MAX_UINT256,
       action: 'repay',
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getMarketsDynamic({ addresses: [marketAddress] }));
@@ -416,7 +416,7 @@ const enterOrExitMarket = createAsyncThunk<void, EnterOrExitMarketProps, ThunkAP
       userAddress,
       actionType,
     });
-    const notifyEnabled = app.servicesEnabed['notify'];
+    const notifyEnabled = app.servicesEnabled['notify'];
     await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getIronBankSummary());
