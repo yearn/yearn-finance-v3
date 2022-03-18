@@ -51,7 +51,6 @@ const GlobalStyle = createGlobalStyle`
   }
 
   p {
-    letter-spacing: .015rem;
     margin: 0;
   }
 

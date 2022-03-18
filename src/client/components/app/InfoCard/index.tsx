@@ -7,6 +7,7 @@ const StyledCardContent = styled(CardContent)`
   margin: ${({ theme }) => theme.card.padding};
   margin-bottom: 0;
   font-size: 1.6rem;
+  line-height: 2.4rem;
   color: inherit;
 `;
 
