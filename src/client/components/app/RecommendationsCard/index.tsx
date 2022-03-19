@@ -81,6 +81,7 @@ const TokenListIcon = styled(Icon)`
 const CenterIcon = styled.div`
   display: flex;
   margin-right: ${({ theme }) => theme.layoutPadding};
+  user-select: none;
 `;
 
 interface Item {

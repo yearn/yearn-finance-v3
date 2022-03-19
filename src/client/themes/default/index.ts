@@ -64,7 +64,7 @@ const sharedTheme: SharedTheme = {
 
   txModal: {
     width: '38.4rem',
-    gap: '1.2rem',
+    gap: '.8rem',
   },
 
   searchList: {

@@ -52,7 +52,7 @@
       "to-vault": "A vault",
       "to-wallet": "A billetera",
       "token-input": {
-        "balance": "Balance",
+        "you-have": "Tú tienes",
         "search-select-token": "Selecciona un Token",
         "search-select-vault": "Selecciona una Vault"
       },

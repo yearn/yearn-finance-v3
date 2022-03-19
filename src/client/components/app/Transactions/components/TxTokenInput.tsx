@@ -18,7 +18,6 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   font-size: 3.6rem;
   font-weight: 600;
   width: 100%;
-  text-align: right;
   background: transparent;
   outline: none;
   border: none;
@@ -71,14 +70,16 @@ const TokenExtras = styled.div`
 `;
 
 const AmountTitle = styled(Text)`
-  color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
+  color: ${({ theme }) => theme.colors.txModalColors.text};
 `;
 
 const TokenData = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   overflow: hidden;
+  border-radius: ${({ theme }) => theme.globalRadius};
+  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
+  border-radius:
   font-size: 1.4rem;
   flex: 1;
 `;
@@ -114,7 +115,7 @@ const TokenSelector = styled.div<{ onClick?: () => void }>`
   width: 8.4rem;
   height: 9.2rem;
   border-radius: ${({ theme }) => theme.globalRadius};
-  background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
+  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   fill: ${({ theme }) => theme.colors.txModalColors.text};
   flex-shrink: 0;
@@ -140,8 +141,7 @@ const StyledSearchList = styled(SearchList)`
 `;
 
 const Header = styled.div`
-  font-weight: 600;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-transform: capitalize;
   color: ${({ theme }) => theme.colors.txModalColors.text};
 `;
@@ -150,11 +150,9 @@ const scaleTransitionTime = 300;
 
 const StyledTxTokenInput = styled(TransitionGroup)`
   display: grid;
-  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
-  min-height: 15.6rem;
+  // min-height: 15.6rem;
   width: 100%;
   border-radius: ${({ theme }) => theme.globalRadius};
-  padding: ${({ theme }) => theme.txModal.gap};
   grid-gap: 0.8rem;
 
   .scale-enter {
@@ -287,17 +285,17 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         </TokenSelector>
 
         <TokenData>
-          <AmountTitle>{inputText || t('components.transaction.token-input.balance')}</AmountTitle>
+          <AmountTitle>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
           <StyledAmountInput
             value={amount}
             onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-            placeholder={loading ? loadingText : '00000000.00'}
+            placeholder={loading ? loadingText : '0.00000000'}
             readOnly={readOnly}
             error={inputError}
             type="number"
           />
           <TokenExtras>
-            {amountValue && <StyledText>≈ {formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
+            {amountValue && <StyledText>{formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
             {maxAmount && (
               <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
                 {maxLabel}

@@ -71,7 +71,6 @@
       "to-vault": "Para vault",
       "to-wallet": "Para carteira",
       "token-input": {
-        "balance": "Saldo",
         "search-select-token": "Escolha um Token",
         "search-select-vault": "Escolha um Vault",
         "yield": "Rendimento"

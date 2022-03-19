@@ -74,13 +74,6 @@ const lightTheme: DefaultTheme = {
     onPrimaryVariant: '#000000',
     onBackground: '#000000',
 
-    // onSurfaceH1: '#FFFFFF',
-    // onSurfaceH1Contrast: '#FFFFFF',
-    // onSurfaceH2: '#000000',
-    // onSurfaceH2Hover: '#FFFFFF',
-    // onSurfaceSH1: '#888888',
-    // onSurfaceSH1Hover: '#000000',
-
     upTrend: '#A8C300',
     downTrend: '#FF005E',
 
@@ -123,7 +116,7 @@ const lightTheme: DefaultTheme = {
       error: '#FF005E',
       warning: '#FFA800',
       success: '#A8C300',
-      text: '#000000',
+      text: '#475570',
       textContrast: '#000000',
     },
   },

@@ -79,13 +79,6 @@ const classicTheme: DefaultTheme = {
     onPrimaryVariant: '#E5E5E5',
     onBackground: '#E5E5E5',
 
-    // onSurfaceH1: '#fff',
-    // onSurfaceH1Contrast: '#fff',
-    // onSurfaceH2: '#fff',
-    // onSurfaceH2Hover: '#fff',
-    // onSurfaceSH1: '#fff',
-    // onSurfaceSH1Hover: '#fff',
-
     toggleSwitch: {
       background: 'transparent',
       color: classic.colors.primary,

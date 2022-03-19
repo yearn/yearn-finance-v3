@@ -71,7 +71,6 @@
       "to-vault": "Vault'a",
       "to-wallet": "Cüzdana",
       "token-input": {
-        "balance": "Bakiye",
         "search-select-token": "Bir Token Seç",
         "search-select-vault": "Bir Vault seç",
         "yield": "Verim"

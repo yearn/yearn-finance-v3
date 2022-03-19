@@ -44,13 +44,6 @@ const explorerTheme: DefaultTheme = {
     onPrimaryVariant: '#fff',
     onBackground: '#E5E5E5',
 
-    // onSurfaceH1: '#fff',
-    // onSurfaceH1Contrast: '#eeeeee',
-    // onSurfaceH2: '#f5f5f5',
-    // onSurfaceH2Hover: '#f5f5f5',
-    // onSurfaceSH1: '#eeeeee',
-    // onSurfaceSH1Hover: '#eeeeee',
-
     toggleSwitch: {
       background: 'transparent',
       color: '#E5E5E5',

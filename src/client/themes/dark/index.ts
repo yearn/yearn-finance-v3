@@ -74,13 +74,6 @@ const darkTheme: DefaultTheme = {
     onPrimaryVariant: '#FFFFFF',
     onBackground: '#000000',
 
-    // onSurfaceH1: '#888888',
-    // onSurfaceH1Contrast: '#FFFFFF',
-    // onSurfaceH2: '#FFFFFF',
-    // onSurfaceH2Hover: '#FFFFFF',
-    // onSurfaceSH1: '#6E6E6E',
-    // onSurfaceSH1Hover: '#FFFFFF',
-
     upTrend: '#C6E11E',
     downTrend: '#FF005E',
 

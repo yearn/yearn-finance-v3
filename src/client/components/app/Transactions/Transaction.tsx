@@ -9,7 +9,7 @@ import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
 import { TxStatus } from './components/TxStatus';
-import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
+// import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
 
 interface Status {
   loading?: boolean;
@@ -92,20 +92,20 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const sourceBalance = normalizeAmount(selectedSourceAsset.balance, selectedSourceAsset.decimals);
   const targetBalance = normalizeAmount(selectedTargetAsset.balance, selectedTargetAsset.decimals);
 
-  let txArrowStatus: TxArrowStatusTypes = 'preparing';
+  // let txArrowStatus: TxArrowStatusTypes = 'preparing';
 
-  if (actions.length && actions.length > 1) {
-    if (!actions[0].disabled && !actions[0].status.loading) {
-      txArrowStatus = 'preparing';
-      if (targetStatus.loading) txArrowStatus = 'firstPending';
-    } else if (actions[0].status.loading || targetStatus.loading) {
-      txArrowStatus = 'firstPending';
-    } else if (!actions[1].status.loading) {
-      txArrowStatus = 'secondPreparing';
-    } else if (actions[1].status.loading) {
-      txArrowStatus = 'secondPending';
-    }
-  }
+  // if (actions.length && actions.length > 1) {
+  //   if (!actions[0].disabled && !actions[0].status.loading) {
+  //     txArrowStatus = 'preparing';
+  //     if (targetStatus.loading) txArrowStatus = 'firstPending';
+  //   } else if (actions[0].status.loading || targetStatus.loading) {
+  //     txArrowStatus = 'firstPending';
+  //   } else if (!actions[1].status.loading) {
+  //     txArrowStatus = 'secondPreparing';
+  //   } else if (actions[1].status.loading) {
+  //     txArrowStatus = 'secondPending';
+  //   }
+  // }
 
   if (transactionCompleted) {
     return (
@@ -122,10 +122,10 @@ export const Transaction: FC<TransactionProps> = (props) => {
     error: sourceStatus.error || targetStatus.error,
   };
 
-  const sourceInputText = `${t('components.transaction.token-input.balance')} ${formatAmount(sourceBalance, 4)} ${
+  const sourceInputText = `${t('components.transaction.token-input.you-have')} ${formatAmount(sourceBalance, 4)} ${
     selectedSourceAsset.symbol
   }`;
-  const targetInputText = `${t('components.transaction.token-input.balance')} ${formatAmount(targetBalance, 4)} ${
+  const targetInputText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
     selectedTargetAsset.symbol
   }`;
 
@@ -145,7 +145,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         readOnly={!onSourceAmountChange}
       />
 
-      {!generalStatus.error && <TxArrowStatus status={txArrowStatus} />}
+      {/* {!generalStatus.error && <TxArrowStatus status={txArrowStatus} />} */}
       {generalStatus.error && <TxError errorType="warning" errorText={generalStatus.error} />}
 
       <TxTokenInput

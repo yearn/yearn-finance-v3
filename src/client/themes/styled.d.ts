@@ -91,6 +91,7 @@ declare module 'styled-components' {
 
       secondary: string;
 
+      // START REWORK
       icons: {
         primary: string;
         variant: string;
@@ -99,6 +100,7 @@ declare module 'styled-components' {
       titlesVariant: string;
       texts: string;
       surfaceVariant: string;
+      // END REWORK
 
       secondaryVariantA: string;
       secondaryVariantB: string;

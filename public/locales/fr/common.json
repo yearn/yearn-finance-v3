@@ -71,7 +71,6 @@
       "to-vault": "Vers le coffre",
       "to-wallet": "Vers le portefeuille",
       "token-input": {
-        "balance": "Balance",
         "search-select-token": "Selectionner un jeton",
         "search-select-vault": "Selectionner un coffre",
         "yield": "Rendement"

@@ -86,7 +86,7 @@
       "to-vault": "To vault",
       "to-wallet": "To wallet",
       "token-input": {
-        "balance": "Balance",
+        "you-have": "You have",
         "search-select-token": "Select a Token",
         "search-select-vault": "Select a Vault",
         "yield": "Yield"

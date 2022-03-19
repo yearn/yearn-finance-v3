@@ -71,7 +71,6 @@
       "to-vault": "到机枪池",
       "to-wallet": "到钱包",
       "token-input": {
-        "balance": "结余",
         "search-select-token": "选择代币",
         "search-select-vault": "选择机枪池",
         "yield": "收益"

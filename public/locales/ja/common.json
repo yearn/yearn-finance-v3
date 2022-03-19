@@ -71,7 +71,6 @@
       "to-vault": "ボールトへ",
       "to-wallet": "ウォレットへ",
       "token-input": {
-        "balance": "残高",
         "search-select-token": "トークンを選択する",
         "search-select-vault": "ボールトを選択する",
         "yield": "利回り"
