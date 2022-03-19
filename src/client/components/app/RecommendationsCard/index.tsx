@@ -25,6 +25,7 @@ const ItemCard = styled(Card)<{ onClick: any }>`
   min-width: 21rem;
   flex: 1;
   padding: ${({ theme }) => theme.layoutPadding};
+  padding-right: 5.5rem;
   background-color: ${({ theme }) => theme.colors.background};
   position: relative;
   transition: filter 200ms ease-in-out;
@@ -58,6 +59,8 @@ const ItemInfoLabel = styled(Text)`
   margin-top: 0.8rem;
   font-weight: 700;
   font-size: 2.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const ItemName = styled(Text)`

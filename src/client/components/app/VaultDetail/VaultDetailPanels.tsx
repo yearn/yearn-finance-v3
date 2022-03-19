@@ -156,15 +156,29 @@ const InfoValueRow = styled.div`
   color: ${({ theme }) => theme.colors.titles};
   font-size: 1.6rem;
   align-items: center;
+
+  > * {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 `;
 
 const TextWithIcon = styled.div`
   display: flex;
   align-items: center;
+
+  ${StyledText} {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 10rem;
+  }
 `;
 
 const StyledIcon = styled(Icon)`
   margin-left: 1rem;
+  flex-shrink: 0;
 `;
 
 // const InfoValueTitle = styled(Text)`

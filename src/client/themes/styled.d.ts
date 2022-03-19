@@ -17,6 +17,7 @@ declare module 'styled-components' {
     zindex: {
       navbar: number;
       sidemenu: number;
+      tooltips: number;
       navSidemenu: number;
       modals: number;
       onboardModal: number;
