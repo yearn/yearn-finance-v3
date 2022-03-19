@@ -26,6 +26,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const vaults = useAppSelector(VaultsSelectors.selectLiveVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
@@ -42,7 +43,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
   }, []);
 
   useEffect(() => {
-    if (!selectedVault || !selectedVault.migrationContract) return;
+    if (!selectedVault || !selectedVault.migrationContract || !isWalletConnected) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
@@ -50,7 +51,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
         spenderAddress: selectedVault.migrationContract,
       })
     );
-  }, [selectedVault?.address]);
+  }, [selectedVault?.address, isWalletConnected]);
 
   if (!selectedVault || !selectedVault.migrationContract || !selectedVault.migrationTargetVault || !migrateToVault)
     return null;

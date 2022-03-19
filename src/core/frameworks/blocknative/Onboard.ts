@@ -71,7 +71,7 @@ export class BlocknativeWalletImpl implements Wallet {
       },
       { walletName: 'frame' },
       { walletName: 'coinbase' },
-      // { walletName: 'tally' },
+      { walletName: 'tally' },
       { walletName: 'status' },
       {
         walletName: 'lattice',
