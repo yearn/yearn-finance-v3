@@ -149,15 +149,28 @@ const InfoValueRow = styled.div`
   color: ${({ theme }) => theme.colors.onSurfaceSH1};
   font-size: 1.4rem;
   align-items: center;
+
+  > * {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 `;
 
 const TextWithIcon = styled.div`
   display: flex;
   align-items: center;
+
+  ${StyledText} {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 `;
 
 const StyledIcon = styled(Icon)`
   margin-left: 1rem;
+  flex-shrink: 0;
 `;
 
 const InfoValueTitle = styled(Text)`

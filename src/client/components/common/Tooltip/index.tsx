@@ -34,6 +34,7 @@ const StyledTooltip = styled.div`
   padding: 0.8rem;
   width: max-content;
   min-width: 11rem;
+  z-index: ${({ theme }) => theme.zindex.tooltips};
 
   &[data-popper-placement^='top'] > ${StyledTooltipArrow} {
     bottom: -0.5rem;
