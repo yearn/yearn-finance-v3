@@ -55,6 +55,7 @@ const ContrastText = styled.span`
 
 const StyledText = styled(Text)`
   color: ${({ theme }) => theme.colors.txModalColors.text};
+  max-width: 11rem;
 `;
 
 const TokenExtras = styled.div`

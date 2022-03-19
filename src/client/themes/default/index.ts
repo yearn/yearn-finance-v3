@@ -12,6 +12,7 @@ const sharedTheme: SharedTheme = {
   zindex: {
     navbar: 400,
     sidemenu: 500,
+    tooltips: 600,
     navSidemenu: 1000,
     modals: 1099,
     onboardModal: 1100,
