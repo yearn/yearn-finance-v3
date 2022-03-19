@@ -7,10 +7,18 @@ import { getConstants } from '@config/constants';
 import { formatApy } from '@utils';
 
 const StyledTooltipTable = styled.table`
-  & > tbody > tr > td {
-    font-size: 1.2rem;
-    &:first-of-type {
-      padding-right: 0.5rem;
+  & > tbody > tr {
+    > td {
+      font-size: 1.2rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:first-of-type {
+        padding-right: 0.5rem;
+      }
+    }
+    > td + td {
+      max-width: 7rem;
     }
   }
 `;
