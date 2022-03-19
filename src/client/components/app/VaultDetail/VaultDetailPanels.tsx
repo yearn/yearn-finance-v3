@@ -165,6 +165,7 @@ const TextWithIcon = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    width: 10rem;
   }
 `;
 
