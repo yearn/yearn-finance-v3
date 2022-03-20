@@ -124,6 +124,7 @@ export class TokenServiceImpl implements TokenService {
       priceUsdc: toBN(yvBoostPrice)
         .multipliedBy(10 ** USDC_DECIMALS)
         .toString(),
+      dataSource: 'labs',
       supported: {
         zapper: false,
       },
@@ -148,6 +149,7 @@ export class TokenServiceImpl implements TokenService {
       priceUsdc: toBN(pJarPricePerToken)
         .multipliedBy(10 ** USDC_DECIMALS)
         .toString(),
+      dataSource: 'labs',
       supported: {
         zapper: false,
       },
