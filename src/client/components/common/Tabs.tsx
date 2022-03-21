@@ -14,7 +14,7 @@ const StyledTabs = styled.div`
   --tabs-color: ${({ theme }) => theme.colors.texts};
 
   display: flex;
-  height: 7.6rem;
+  height: 8rem;
   font-size: 2rem;
   font-weight: 400;
   text-align: center;
