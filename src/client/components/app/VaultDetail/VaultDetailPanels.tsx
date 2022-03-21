@@ -83,19 +83,16 @@ const IconOverImage = styled(Icon)`
   width: 50%;
 `;
 
-const StyledTabPanel = styled(TabPanel)`
-  margin-top: 1.5rem;
-`;
+const StyledTabPanel = styled(TabPanel)``;
 
-const ActionsTabs = styled(Tabs)`
-  margin-top: 1.2rem;
-`;
+const ActionsTabs = styled(Tabs)``;
 
 const VaultActions = styled(Card)`
   display: flex;
   flex-direction: column;
   width: 41.6rem;
   align-self: stretch;
+  padding: 0;
 
   @media ${device.tabletL} {
     width: 100%;
@@ -434,7 +431,7 @@ export const VaultDetailPanels = ({
         </VaultOverview>
 
         <VaultActions>
-          <StyledCardHeader header={t('vaultdetails:vault-actions-panel.header')} />
+          {/* <StyledCardHeader header={t('vaultdetails:vault-actions-panel.header')} /> */}
           <ActionsTabs value={selectedTab} onChange={handleTabChange}>
             {isVaultMigratable && <Tab value="migrate">{t('vaultdetails:vault-actions-panel.migrate')}</Tab>}
             {!hideDeposit && <Tab value="deposit">{t('vaultdetails:vault-actions-panel.deposit')}</Tab>}

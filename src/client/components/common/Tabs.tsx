@@ -9,18 +9,17 @@ export interface TabsProps extends StyledSystemProps {
 }
 
 const StyledTabs = styled.div`
-  --tabs-selected-bg: ${({ theme }) => theme.colors.secondary};
+  --tabs-selected-bg: transparent;
   --tabs-selected-color: ${({ theme }) => theme.colors.titlesVariant};
+  --tabs-color: ${({ theme }) => theme.colors.texts};
 
   display: flex;
-  height: 3.2rem;
-  font-size: 1.4rem;
-  font-weight: 500;
+  height: 7.6rem;
+  font-size: 2rem;
+  font-weight: 400;
   text-align: center;
-  text-transform: uppercase;
-  border-radius: ${({ theme }) => theme.globalRadius};
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.titles};
+  background: transparent;
+  color: var(--tabs-color);
   overflow: hidden;
   user-select: none;
 
@@ -67,6 +66,7 @@ const StyledTab = styled.div<{ selected?: boolean }>`
   text-align: inherit;
   text-transform: inherit;
   border-radius: inherit;
+  border-bottom: 2px solid var(--tabs-color);
   background: inherit;
   cursor: pointer;
 
@@ -75,6 +75,8 @@ const StyledTab = styled.div<{ selected?: boolean }>`
     `
     background: var(--tabs-selected-bg);
     color: var(--tabs-selected-color);
+    border-color: var(--tabs-selected-color);
+    font-weight: 700;
     cursor: default;
   `};
 
