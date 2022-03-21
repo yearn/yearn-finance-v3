@@ -1,17 +1,19 @@
 import { createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { getProviderType } from '@utils';
+import { notify } from '@frameworks/blocknative';
+import { getProviderType, getNetworkId } from '@utils';
 import { Network } from '@types';
 
 import { WalletActions, ChangeWalletNetworkResult } from '../wallet/wallet.actions';
 
 const changeNetwork = createAsyncThunk<{ network: Network }, { network: Network }, ThunkAPI>(
   'network/changeNetwork',
-  async ({ network }, { dispatch, extra }) => {
-    const { wallet, web3Provider, yearnSdk } = extra.context;
+  async ({ network }, { dispatch, extra, getState }) => {
+    const { context, config } = extra;
+    const { wallet, web3Provider, yearnSdk } = context;
 
-    if (!extra.config.SUPPORTED_NETWORKS.includes(network)) throw Error('Network Not Supported');
+    if (!config.SUPPORTED_NETWORKS.includes(network)) throw Error('Network Not Supported');
 
     if (wallet.isCreated) {
       const action = (await dispatch(
@@ -29,6 +31,8 @@ const changeNetwork = createAsyncThunk<{ network: Network }, { network: Network 
         write: web3Provider.getInstanceOf('wallet'),
       });
     }
+
+    notify.config({ networkId: getNetworkId(network) });
 
     return { network };
   }

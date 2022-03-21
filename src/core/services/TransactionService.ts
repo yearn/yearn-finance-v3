@@ -107,23 +107,30 @@ export class TransactionServiceImpl implements TransactionService {
     const { NETWORK_SETTINGS } = getConfig();
     const currentNetworkSettings = NETWORK_SETTINGS[network];
     const useNotifyService = useExternalService && currentNetworkSettings.notifyEnabled;
+
     let updateNotification: UpdateNotification | undefined;
     let dismissNotification: () => void = () => undefined;
-    try {
-      if (renderNotification) {
-        if (useNotifyService) {
-          notify.hash(tx.hash);
-        } else {
-          const { update, dismiss } = notify.notification({
-            eventCode: 'txSentCustom',
-            type: 'pending',
-            message: 'Your transaction has been sent to the network',
-          });
-          updateNotification = update;
-          dismissNotification = dismiss;
-        }
+    let notifyServiceFailed = false;
+    if (renderNotification && useNotifyService) {
+      try {
+        notify.hash(tx.hash);
+      } catch (error: any) {
+        notifyServiceFailed = true;
+        console.error(error);
       }
+    }
 
+    if (renderNotification && (!useNotifyService || notifyServiceFailed)) {
+      const { update, dismiss } = notify.notification({
+        eventCode: 'txSentCustom',
+        type: 'pending',
+        message: 'Your transaction has been sent to the network',
+      });
+      updateNotification = update;
+      dismissNotification = dismiss;
+    }
+
+    try {
       const providerType = getProviderType(network);
       const provider = this.web3Provider.getInstanceOf(providerType);
       const { txConfirmations } = currentNetworkSettings;
@@ -158,7 +165,7 @@ export class TransactionServiceImpl implements TransactionService {
             tx: error.replacement,
             network,
             useExternalService,
-            renderNotification: !useNotifyService,
+            renderNotification: !useNotifyService || notifyServiceFailed,
           });
         }
       }
