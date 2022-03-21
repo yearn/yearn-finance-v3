@@ -12,7 +12,7 @@ import {
   WalletSelectors,
 } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
-import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
+import { VaultDetailPanels, ViewContainer, SliderCard } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
 import {
   parseHistoricalEarningsUnderlying,
@@ -29,7 +29,7 @@ import { device } from '@themes/default';
 //   color: ${({ theme }) => theme.colors.titles};
 // `;
 
-const StyledInfoCard = styled(InfoCard)`
+const StyledSliderCard = styled(SliderCard)`
   padding: 3rem;
   margin: auto;
 `;
@@ -42,7 +42,7 @@ const VaultDetailView = styled(ViewContainer)`
   align-items: flex-start;
 
   @media ${device.mobile} {
-    ${StyledInfoCard} {
+    ${StyledSliderCard} {
       padding: 1rem;
     }
   }
@@ -131,7 +131,7 @@ export const VaultDetail = () => {
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
 
       {!generalLoading && !selectedVault && (
-        <StyledInfoCard
+        <StyledSliderCard
           header={t('vaultdetails:no-vault-supported-card.header', { network: currentNetworkSettings.name })}
           Component={
             <Text>

@@ -20,7 +20,7 @@ import {
   RecommendationsCard,
   ActionButtons,
   TokenIcon,
-  InfoCard,
+  SliderCard,
   ViewContainer,
   NoWalletCard,
   Amount,
@@ -44,14 +44,14 @@ const SearchBarContainer = styled.div`
   margin: 1.2rem;
 `;
 
-const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  grid-gap: ${({ theme }) => theme.layoutPadding};
-  flex-wrap: wrap;
-  width: 100%;
-`;
+// const Row = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   justify-content: flex-start;
+//   grid-gap: ${({ theme }) => theme.layoutPadding};
+//   flex-wrap: wrap;
+//   width: 100%;
+// `;
 
 const StyledHelperCursor = styled.span`
   cursor: help;
@@ -59,7 +59,9 @@ const StyledHelperCursor = styled.span`
 
 const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
-const StyledInfoCard = styled(InfoCard)``;
+const StyledSliderCard = styled(SliderCard)`
+  width: 100%;
+`;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
   width: 100%;
@@ -217,15 +219,19 @@ export const Vaults = () => {
 
   return (
     <ViewContainer>
-      <StyledInfoCard
-        header={t('vaults:your-time-card.header')}
-        Component={
-          <Text>
-            <p>{t('vaults:your-time-card.desc-1')}</p>
-            <p>{t('vaults:your-time-card.desc-2')}</p>
-            <p>{t('vaults:your-time-card.desc-3')}</p>
-          </Text>
-        }
+      <StyledSliderCard
+        slidesContent={[
+          {
+            header: t('vaults:your-time-card.header'),
+            content: (
+              <Text>
+                <p>{t('vaults:your-time-card.desc-1')}</p>
+                <p>{t('vaults:your-time-card.desc-2')}</p>
+                <p>{t('vaults:your-time-card.desc-3')}</p>
+              </Text>
+            ),
+          },
+        ]}
       />
 
       <SummaryCard items={summaryCardItems} cardSize="small" />

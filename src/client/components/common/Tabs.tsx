@@ -48,13 +48,6 @@ export const Tabs: FC<TabsProps> = ({ value, onChange, children, ...props }) => 
   return <StyledTabs {...props}>{childrenElements}</StyledTabs>;
 };
 
-export interface TabProps extends StyledSystemProps {
-  value?: number | string;
-  selected?: boolean;
-  disabled?: boolean;
-  onChange?: (value: any) => void;
-}
-
 const StyledTab = styled.div<{ selected?: boolean }>`
   display: flex;
   align-items: center;
@@ -82,6 +75,13 @@ const StyledTab = styled.div<{ selected?: boolean }>`
 
   ${styledSystem}
 `;
+
+export interface TabProps extends StyledSystemProps {
+  value?: number | string;
+  selected?: boolean;
+  disabled?: boolean;
+  onChange?: (value: any) => void;
+}
 
 export const Tab: FC<TabProps> = ({ value, selected, onChange, children, ...props }) => {
   const handleClick = () => {

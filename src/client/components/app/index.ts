@@ -4,7 +4,7 @@ export * from './ApyTooltipData';
 export * from './ConnectWalletButton';
 export * from './DetailCard';
 export * from './Footer';
-export * from './InfoCard';
+export * from './SliderCard';
 export * from './Navbar';
 export * from './Navigation';
 export * from './NoWalletCard';

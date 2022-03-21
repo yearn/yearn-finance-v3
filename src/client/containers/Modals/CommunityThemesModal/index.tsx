@@ -32,6 +32,7 @@ const StyledTabPanel = styled(TabPanel)`
 
 const StyledTabs = styled(Tabs)`
   margin-top: 1.3rem;
+  height: 3.2rem;
 `;
 
 const StyledCommunityThemesModal = styled(Modal)`

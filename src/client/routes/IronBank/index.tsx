@@ -11,7 +11,7 @@ import {
   AppSelectors,
 } from '@store';
 import { ToggleButton, Text, Markdown } from '@components/common';
-import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, InfoCard, Amount } from '@components/app';
+import { SummaryCard, DetailCard, ViewContainer, ActionButtons, TokenIcon, SliderCard, Amount } from '@components/app';
 import { humanize, halfWidthCss, normalizeAmount } from '@utils';
 
 const Row = styled.div`
@@ -23,7 +23,7 @@ const Row = styled.div`
   width: 100%;
 `;
 
-const StyledInfoCard = styled(InfoCard)`
+const StyledSliderCard = styled(SliderCard)`
   max-width: 100%;
   flex: 1;
   ${halfWidthCss}
@@ -142,7 +142,7 @@ export const IronBank = () => {
   return (
     <ViewContainer>
       <Row>
-        <StyledInfoCard
+        <StyledSliderCard
           header={t('ironbank:ironbank-announcement-card.header')}
           Component={
             <Text>

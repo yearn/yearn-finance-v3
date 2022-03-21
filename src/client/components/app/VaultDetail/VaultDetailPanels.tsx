@@ -90,11 +90,11 @@ const ActionsTabs = styled(Tabs)``;
 const VaultActions = styled(Card)`
   display: flex;
   flex-direction: column;
-  width: 41.6rem;
+  width: 42rem;
   align-self: stretch;
   padding: 0;
 
-  @media ${device.tabletL} {
+  @media (max-width: 1180px) {
     width: 100%;
   } ;
 `;

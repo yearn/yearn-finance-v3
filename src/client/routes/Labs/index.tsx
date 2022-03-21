@@ -18,7 +18,7 @@ import {
   RecommendationsCard,
   ActionButtons,
   TokenIcon,
-  InfoCard,
+  SliderCard,
   ViewContainer,
   NoWalletCard,
   Amount,
@@ -48,7 +48,7 @@ const StyledHelperCursor = styled.span`
 
 const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
-const StyledInfoCard = styled(InfoCard)``;
+const StyledSliderCard = styled(SliderCard)``;
 
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
@@ -290,7 +290,7 @@ export const Labs = () => {
   return (
     <ViewContainer>
       {!opportunitiesLoading && currentNetworkSettings.labsEnabled && (
-        <StyledInfoCard
+        <StyledSliderCard
           header={t('labs:risks-card.header')}
           Component={
             <Text>
@@ -330,7 +330,7 @@ export const Labs = () => {
           )}
 
           {!currentNetworkSettings.labsEnabled && (
-            <StyledInfoCard
+            <StyledSliderCard
               header={t('labs:no-labs-card.header', { network: currentNetworkSettings.name })}
               Component={
                 <Text>
