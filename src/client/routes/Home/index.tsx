@@ -101,12 +101,18 @@ export const Home = () => {
           Component={
             <Text>
               <p>
-                {t('components.beta-card.desc-1')} <StyledLink href="https://discord.gg/Rw9zA3GbyE">Discord</StyledLink>
+                {t('components.beta-card.desc-1')}{' '}
+                <StyledLink href="https://discord.gg/Rw9zA3GbyE" target="_blank">
+                  Discord
+                </StyledLink>
                 .
               </p>
               <p>
                 {t('components.beta-card.desc-2')}{' '}
-                <StyledLink href="https://v2.yearn.finance">v2.yearn.finance</StyledLink>.
+                <StyledLink href="https://v2.yearn.finance" target="_blank">
+                  v2.yearn.finance
+                </StyledLink>
+                .
               </p>
             </Text>
           }
