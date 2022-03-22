@@ -23,6 +23,10 @@ import {
   Web3Provider,
   TransactionService,
   Config,
+  ApproveDepositProps,
+  ApproveZapOutProps,
+  GetVaultAllowanceProps,
+  Integer,
 } from '@types';
 
 import v2VaultAbi from './contracts/v2Vault.json';
@@ -257,5 +261,31 @@ export class VaultServiceImpl implements VaultService {
           abi: trustedVaultMigratorAbi,
         });
     }
+  }
+
+  public async approveDeposit(props: ApproveDepositProps): Promise<Boolean | TransactionResponse> {
+    const { network, tokenAddress, amount, accountAddress, vault } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
+
+    return yearn.tokens.approveDeposit(vault.address, vault.token, tokenAddress, amount, accountAddress);
+  }
+
+  public async approveZapOut(props: ApproveZapOutProps): Promise<Boolean | TransactionResponse> {
+    const { network, vault, accountAddress } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
+
+    return yearn.tokens.approveZapOut(vault, vault.token, accountAddress);
+  }
+
+  public async getVaultAllowance({
+    network,
+    vault,
+    tokenAddress,
+    accountAddress,
+  }: GetVaultAllowanceProps): Promise<Integer> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    const allowance = await yearn.tokens.allowance(vault.address, vault.token, tokenAddress, accountAddress);
+
+    return allowance.amount;
   }
 }

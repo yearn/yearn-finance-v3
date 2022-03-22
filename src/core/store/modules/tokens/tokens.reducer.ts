@@ -5,6 +5,7 @@ import { TokensState, UserTokenActionsMap } from '@types';
 import { initialStatus } from '@types';
 
 import { TokensActions } from './tokens.actions';
+import { VaultsActions } from '../..';
 
 export const initialUserTokenActionsMap: UserTokenActionsMap = {
   get: { ...initialStatus },
@@ -40,6 +41,10 @@ const {
   clearTokensData,
   clearUserTokenState,
 } = TokensActions;
+
+const {
+  approveDeposit
+} = VaultsActions;
 
 const tokensReducer = createReducer(tokensInitialState, (builder) => {
   builder
@@ -134,10 +139,10 @@ const tokensReducer = createReducer(tokensInitialState, (builder) => {
       state.statusMap.user.getUserTokensAllowances = { loading: true };
     })
     .addCase(getTokenAllowance.fulfilled, (state, { meta, payload: { allowance } }) => {
-      const { tokenAddress, vault } = meta.arg;
+      const { tokenAddress, spenderAddress } = meta.arg;
       state.user.userTokensAllowancesMap[tokenAddress] = {
         ...state.user.userTokensAllowancesMap[tokenAddress],
-        [vault.address]: allowance,
+        [spenderAddress]: allowance,
       };
       state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = {};
       state.statusMap.user.getUserTokensAllowances = {};
@@ -156,6 +161,13 @@ const tokensReducer = createReducer(tokensInitialState, (builder) => {
     // Note: approve pending/rejected statuses are handled on each asset (vault/ironbank/...) approve action.
     .addCase(approve.fulfilled, (state, { meta, payload: { amount } }) => {
       const { tokenAddress, spenderAddress } = meta.arg;
+      state.user.userTokensAllowancesMap[tokenAddress] = {
+        ...state.user.userTokensAllowancesMap[tokenAddress],
+        [spenderAddress]: amount,
+      };
+    })
+    .addCase(approveDeposit.fulfilled, (state, { meta, payload: { amount, spenderAddress } }) => {
+      const { tokenAddress } = meta.arg;
       state.user.userTokensAllowancesMap[tokenAddress] = {
         ...state.user.userTokensAllowancesMap[tokenAddress],
         [spenderAddress]: amount,

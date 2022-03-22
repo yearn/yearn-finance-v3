@@ -87,14 +87,14 @@ export class TokenServiceImpl implements TokenService {
 
   public async getTokenAllowance({
     network,
-    vault,
-    tokenAddress,
     accountAddress,
+    tokenAddress,
+    spenderAddress,
   }: GetTokenAllowanceProps): Promise<Integer> {
-    const yearn = this.yearnSdk.getInstanceOf(network);
-    const allowance = await yearn.tokens.allowance(vault.address, vault.token, tokenAddress, accountAddress);
-
-    return allowance.amount;
+    const signer = this.web3Provider.getSigner();
+    const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
+    const allowance = await erc20Contract.allowance(accountAddress, spenderAddress);
+    return allowance.toString();
   }
 
   public async getLabsTokens({ network }: { network: Network }): Promise<Token[]> {
@@ -220,12 +220,5 @@ export class TokenServiceImpl implements TokenService {
       abi: erc20Abi,
       args: [spenderAddress, amount],
     });
-  }
-
-  public async approveDeposit(props: ApproveDepositProps): Promise<Boolean | TransactionResponse> {
-    const { network, tokenAddress, amount, accountAddress, vault } = props;
-    const yearn = this.yearnSdk.getInstanceOf(network);
-
-    return yearn.tokens.approveDeposit(vault.address, vault.token, tokenAddress, amount, accountAddress);
   }
 }
