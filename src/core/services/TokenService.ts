@@ -15,7 +15,6 @@ import {
   GetTokensDynamicDataProps,
   GetUserTokensDataProps,
   GetTokenAllowanceProps,
-  ApproveDepositProps,
 } from '@types';
 import { getContract } from '@frameworks/ethers';
 import { get, getUniqueAndCombine, toBN, USDC_DECIMALS } from '@utils';
@@ -91,6 +90,9 @@ export class TokenServiceImpl implements TokenService {
     tokenAddress,
     spenderAddress,
   }: GetTokenAllowanceProps): Promise<Integer> {
+    // TODO use sdk when new method added.
+    // const yearn = this.yearnSdk.getInstanceOf(network);
+    // return await yearn.tokens.allowance(address);
     const signer = this.web3Provider.getSigner();
     const erc20Contract = getContract(tokenAddress, erc20Abi, signer);
     const allowance = await erc20Contract.allowance(accountAddress, spenderAddress);

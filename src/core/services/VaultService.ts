@@ -26,7 +26,7 @@ import {
   ApproveDepositProps,
   ApproveZapOutProps,
   GetVaultAllowanceProps,
-  Integer,
+  TokenAllowance,
 } from '@types';
 
 import v2VaultAbi from './contracts/v2Vault.json';
@@ -282,10 +282,10 @@ export class VaultServiceImpl implements VaultService {
     vault,
     tokenAddress,
     accountAddress,
-  }: GetVaultAllowanceProps): Promise<Integer> {
+  }: GetVaultAllowanceProps): Promise<TokenAllowance> {
     const yearn = this.yearnSdk.getInstanceOf(network);
     const allowance = await yearn.tokens.allowance(vault.address, vault.token, tokenAddress, accountAddress);
 
-    return allowance.amount;
+    return allowance;
   }
 }

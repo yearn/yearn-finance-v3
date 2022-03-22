@@ -84,13 +84,10 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress || !isWalletConnected) return;
 
-    const isZap = selectedSellTokenAddress !== selectedLab.token.address || selectedLab.address === PSLPYVBOOSTETH;
-    const spenderAddress = isZap ? getZapInContractAddress(selectedLab.address) : selectedLab.address;
-
     dispatch(
-      TokensActions.getTokenAllowance({
+      VaultsActions.getVaultAllowance({
         tokenAddress: selectedSellTokenAddress,
-        spenderAddress,
+        vaultAddress: selectedLab.address,
       })
     );
   }, [selectedSellTokenAddress, selectedLab?.address, isWalletConnected]);
