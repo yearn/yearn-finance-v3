@@ -60,9 +60,9 @@ const getUserTokens = createAsyncThunk<{ userTokens: Balance[] }, { addresses?: 
 
 const getTokenAllowance = createAsyncThunk<
   { allowance: Integer },
-  { tokenAddress: string; vault: { address: string; token: string } },
+  { tokenAddress: string; spenderAddress: string },
   ThunkAPI
->('tokens/getTokenAllowance', async ({ tokenAddress, vault }, { extra, getState }) => {
+>('tokens/getTokenAllowance', async ({ tokenAddress, spenderAddress }, { extra, getState }) => {
   const { network, wallet } = getState();
   const accountAddress = wallet.selectedAddress;
   if (!accountAddress) {
@@ -77,7 +77,7 @@ const getTokenAllowance = createAsyncThunk<
     network: network.current,
     accountAddress,
     tokenAddress,
-    vault,
+    spenderAddress,
   });
 
   return { allowance };
@@ -111,33 +111,6 @@ const approve = createAsyncThunk<
   return { amount };
 });
 
-const approveDeposit = createAsyncThunk<
-  { amount: string },
-  { tokenAddress: string; amountToApprove?: string; vault: Vault },
-  ThunkAPI
->('tokens/approve', async ({ tokenAddress, amountToApprove, vault }, { extra, getState }) => {
-  const { network, wallet } = getState();
-  const { tokenService, transactionService } = extra.services;
-  const amount = amountToApprove ?? extra.config.MAX_UINT256;
-
-  const accountAddress = wallet.selectedAddress;
-  if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
-
-  const tx = await tokenService.approveDeposit({
-    network: network.current,
-    accountAddress,
-    tokenAddress,
-    amount,
-    vault,
-  });
-
-  if (typeof tx !== 'boolean') {
-    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
-  }
-
-  return { amount };
-});
-
 /* -------------------------------------------------------------------------- */
 /*                                Subscriptions                               */
 /* -------------------------------------------------------------------------- */
@@ -163,8 +136,8 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
     subscriptionService.subscribe({
       module: 'tokens',
       event: 'getAllowance',
-      action: (tokenAddress: string, vault: { address: string; token: string }) => {
-        dispatch(getTokenAllowance({ tokenAddress, vault }));
+      action: (tokenAddress: string, spenderAddress: string) => {
+        dispatch(getTokenAllowance({ tokenAddress, spenderAddress }));
       },
     });
   }
@@ -184,5 +157,4 @@ export const TokensActions = {
   initSubscriptions,
   clearTokensData,
   clearUserTokenState,
-  approveDeposit,
 };

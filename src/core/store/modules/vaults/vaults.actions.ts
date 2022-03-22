@@ -12,6 +12,7 @@ import {
   VaultUserMetadata,
   Address,
   Wei,
+  TransactionResponse,
 } from '@types';
 import {
   calculateSharesAmount,
@@ -174,14 +175,31 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 /*                             Transaction Methods                            */
 /* -------------------------------------------------------------------------- */
 
-const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
+const approveDeposit = createAsyncThunk<{ amount: string, spenderAddress: string }, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveDeposit',
-  async ({ vaultAddress, tokenAddress }, { dispatch, getState }) => {
-    const { vaults } = getState();
+  async ({ vaultAddress, tokenAddress }, { dispatch, getState, extra }) => {
+    const { vaults, wallet, network } = getState();
     const vaultData = vaults.vaultsMap[vaultAddress];
+    const { vaultService, transactionService } = extra.services;
+    const amount = extra.config.MAX_UINT256;
 
-    const result = await dispatch(TokensActions.approveDeposit({ tokenAddress, vault: vaultData }));
-    unwrapResult(result);
+    const accountAddress = wallet.selectedAddress;
+    const isZapin = vaultData.token === tokenAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const tx = await vaultService.approveDeposit({
+      network: network.current,
+      accountAddress,
+      tokenAddress,
+      amount,
+      vault: vaultData,
+    });
+
+    if (typeof tx !== 'boolean') {
+      await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
+    }
+
+    return { amount, spenderAddress: isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress }
   },
   {
     serializeError: parseError,
@@ -190,12 +208,25 @@ const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddre
 
 const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
   'vaults/approveZapOut',
-  async ({ vaultAddress }, { dispatch }) => {
-    const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
-    const result = await dispatch(
-      TokensActions.approve({ tokenAddress: vaultAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
-    );
-    unwrapResult(result);
+  async ({ vaultAddress }, { getState, extra }) => {
+    const { vaults, wallet, network } = getState();
+    const vaultData = vaults.vaultsMap[vaultAddress];
+    const { vaultService, transactionService } = extra.services;
+    const amount = extra.config.MAX_UINT256;
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const tx = await vaultService.approveZapOut({
+      network: network.current,
+      accountAddress,
+      amount,
+      vault: vaultData,
+    });
+
+    if (typeof tx !== 'boolean') {
+      await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
+    }
   },
   {
     serializeError: parseError,

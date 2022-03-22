@@ -48,7 +48,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     dispatch(
       TokensActions.getTokenAllowance({
         tokenAddress: selectedVault.address,
-        vault: { address: selectedVault.migrationContract, token: selectedVault.token.address },
+        spenderAddress: selectedVault.migrationContract,
       })
     );
   }, [selectedVault?.address, isWalletConnected]);
