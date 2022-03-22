@@ -13,6 +13,7 @@ import {
   Address,
   Wei,
   TransactionResponse,
+  Integer,
 } from '@types';
 import {
   calculateSharesAmount,
@@ -175,7 +176,11 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 /*                             Transaction Methods                            */
 /* -------------------------------------------------------------------------- */
 
-const approveDeposit = createAsyncThunk<{ amount: string, spenderAddress: string }, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
+const approveDeposit = createAsyncThunk<
+  { amount: string; spenderAddress: string },
+  { vaultAddress: string; tokenAddress: string },
+  ThunkAPI
+>(
   'vaults/approveDeposit',
   async ({ vaultAddress, tokenAddress }, { dispatch, getState, extra }) => {
     const { vaults, wallet, network } = getState();
@@ -199,12 +204,35 @@ const approveDeposit = createAsyncThunk<{ amount: string, spenderAddress: string
       await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
     }
 
-    return { amount, spenderAddress: isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress }
+    return { amount, spenderAddress: isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress };
   },
   {
     serializeError: parseError,
   }
 );
+
+const getVaultAllowance = createAsyncThunk<
+  { allowance: Integer; spenderAddress: string },
+  { tokenAddress: string; vaultAddress: string },
+  ThunkAPI
+>('vaults/getVaultAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState }) => {
+  const { network, wallet, vaults } = getState();
+  const accountAddress = wallet.selectedAddress;
+  if (!accountAddress) {
+    throw new Error('WALLET NOT CONNECTED');
+  }
+  const vaultData = vaults.vaultsMap[vaultAddress];
+
+  const { vaultService } = extra.services;
+  const allowance = await vaultService.getVaultAllowance({
+    network: network.current,
+    vault: vaultData,
+    tokenAddress,
+    accountAddress,
+  });
+
+  return { allowance: allowance.amount, spenderAddress: allowance.spender };
+});
 
 const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
   'vaults/approveZapOut',
@@ -545,4 +573,5 @@ export const VaultsActions = {
   getUserVaultsMetadata,
   clearSelectedVaultAndStatus,
   clearVaultStatus,
+  getVaultAllowance,
 };

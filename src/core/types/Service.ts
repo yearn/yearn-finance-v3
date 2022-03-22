@@ -23,6 +23,7 @@ import {
   GasFees,
   Overrides,
   Network,
+  TokenAllowance,
 } from '@types';
 
 // *************** USER ***************
@@ -57,7 +58,7 @@ export interface VaultService {
   migrate: (props: MigrateProps) => Promise<TransactionResponse>;
   approveDeposit: (props: ApproveDepositProps) => Promise<TransactionResponse | Boolean>;
   approveZapOut: (props: ApproveZapOutProps) => Promise<TransactionResponse | Boolean>;
-  getVaultAllowance: (props: GetVaultAllowanceProps) => Promise<Integer>;
+  getVaultAllowance: (props: GetVaultAllowanceProps) => Promise<TokenAllowance>;
 }
 
 export interface GetSupportedVaultsProps {

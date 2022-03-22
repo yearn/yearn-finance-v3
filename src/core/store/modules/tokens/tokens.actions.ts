@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { TokenDynamicData, Token, Balance, Integer, TransactionResponse, Vault } from '@types';
+import { TokenDynamicData, Token, Balance, Integer } from '@types';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Setters                                  */

@@ -4,8 +4,9 @@ import { union } from 'lodash';
 import { TokensState, UserTokenActionsMap } from '@types';
 import { initialStatus } from '@types';
 
-import { TokensActions } from './tokens.actions';
 import { VaultsActions } from '../..';
+
+import { TokensActions } from './tokens.actions';
 
 export const initialUserTokenActionsMap: UserTokenActionsMap = {
   get: { ...initialStatus },
@@ -42,9 +43,7 @@ const {
   clearUserTokenState,
 } = TokensActions;
 
-const {
-  approveDeposit
-} = VaultsActions;
+const { approveDeposit, getVaultAllowance } = VaultsActions;
 
 const tokensReducer = createReducer(tokensInitialState, (builder) => {
   builder
@@ -148,6 +147,27 @@ const tokensReducer = createReducer(tokensInitialState, (builder) => {
       state.statusMap.user.getUserTokensAllowances = {};
     })
     .addCase(getTokenAllowance.rejected, (state, { meta, error }) => {
+      const { tokenAddress } = meta.arg;
+      state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = { error: error.message };
+      state.statusMap.user.getUserTokensAllowances = { error: error.message };
+    })
+    /* ---------------------------- getVaultAllowance --------------------------- */
+    .addCase(getVaultAllowance.pending, (state, { meta }) => {
+      const { tokenAddress } = meta.arg;
+      checkAndInitUserTokenStatus(state, tokenAddress);
+      state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = { loading: true };
+      state.statusMap.user.getUserTokensAllowances = { loading: true };
+    })
+    .addCase(getVaultAllowance.fulfilled, (state, { meta, payload: { allowance, spenderAddress } }) => {
+      const { tokenAddress } = meta.arg;
+      state.user.userTokensAllowancesMap[tokenAddress] = {
+        ...state.user.userTokensAllowancesMap[tokenAddress],
+        [spenderAddress]: allowance,
+      };
+      state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = {};
+      state.statusMap.user.getUserTokensAllowances = {};
+    })
+    .addCase(getVaultAllowance.rejected, (state, { meta, error }) => {
       const { tokenAddress } = meta.arg;
       state.statusMap.user.userTokensActionsMap[tokenAddress].getAllowances = { error: error.message };
       state.statusMap.user.getUserTokensAllowances = { error: error.message };
