@@ -1,5 +1,3 @@
-import { unionBy } from 'lodash';
-
 import {
   TokenService,
   YearnSdk,
@@ -51,11 +49,8 @@ export class TokenServiceImpl implements TokenService {
   /* -------------------------------------------------------------------------- */
   public async getSupportedTokens({ network }: GetSupportedTokensProps): Promise<Token[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
-    const [zapperTokens, vaultsTokens, ironBankTokens]: [Token[], Token[], Token[]] = await Promise.all([
-      yearn.tokens.supported(),
-      yearn.vaults.tokens(),
-      yearn.ironBank.tokens(),
-    ]);
+
+    const supportedTokens = await yearn.tokens.supported();
 
     // We separated this because request is broken outside of this repo so we need to handle it separated
     // so we get the rest of the tokens.
@@ -66,10 +61,7 @@ export class TokenServiceImpl implements TokenService {
       console.log({ error });
     }
 
-    const supportedZapperTokens = zapperTokens.filter((token) => token.supported.zapper);
-    const tokens = unionBy(vaultsTokens, ironBankTokens, 'address');
-    tokens.push(...labsTokens);
-    return getUniqueAndCombine(supportedZapperTokens, tokens, 'address');
+    return getUniqueAndCombine(supportedTokens, labsTokens, 'address');
   }
 
   public async getTokensDynamicData({ network, addresses }: GetTokensDynamicDataProps): Promise<TokenDynamicData[]> {
