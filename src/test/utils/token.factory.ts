@@ -6,6 +6,7 @@ const DEFAULT_TOKEN: Token = {
   symbol: 'DEAD',
   name: 'Dead Token',
   priceUsdc: '0',
+  dataSource: 'vaults',
   supported: {},
   icon: 'icon.svg',
   metadata: {
