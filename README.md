@@ -32,6 +32,7 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
   cp .env.example .env
   ```
   - `REACT_APP_INFURA_PROJECT_ID` should remain blank because we are currently using Alchemy as our provider
+  - `REACT_APP_ALCHEMY_API_KEY` alchemy api key should be provided by the contributor if he hits api limits
 
 ### Making Changes
 
@@ -87,8 +88,8 @@ We use i18n react with locize cli to update/download translations.
 Refer to main repo for documentation:
 https://github.com/locize/locize-cli
 
-Sync with: `npm run syncLocales` **must provide api key**
+Sync with: `yarn syncDevLocales` **must provide api key**
 
-Check sync changes with: `npm run checkLocales`
+Check sync changes with: `yarn checkDevLocales`
 
-Download locales with: `npm run downloadLocales`
+Download prod locales with: `yarn downloadProdLocales`
