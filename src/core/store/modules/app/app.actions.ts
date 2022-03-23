@@ -55,6 +55,7 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
       case 'portfolio':
         await dispatch(LabsActions.initiateLabs());
         break;
+      // TODO Remove wallet component, route and check if we should dispatch vaults in portfolio
       // case 'wallet':
       //   await Promise.all([dispatch(VaultsActions.initiateSaveVaults()), dispatch(IronBankActions.initiateIronBank())]);
       //   break;

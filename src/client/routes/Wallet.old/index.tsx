@@ -19,7 +19,7 @@ import {
   NoWalletCard,
   Amount,
 } from '@components/app';
-import { SpinnerLoading, Text } from '@components/common';
+import { SpinnerLoading } from '@components/common';
 import { getConstants } from '@config/constants';
 import { halfWidthCss, humanize, normalizeAmount } from '@utils';
 import { device } from '@themes/default';

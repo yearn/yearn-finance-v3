@@ -22,7 +22,8 @@
       "supplying": "Suministrando",
       "tokens": "Tokens",
       "total-assets": "Activos totales",
-      "value": "Valor"
+      "value": "Valor",
+      "wallet": "Billetera"
     },
     "no-wallet": "Billetera no conectada",
     "recommendations": {

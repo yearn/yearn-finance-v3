@@ -43,7 +43,8 @@
       "supplying": "Supplying",
       "tokens": "Tokens",
       "total-assets": "Total assets",
-      "value": "Value"
+      "value": "Value",
+      "wallet": "Wallet"
     },
     "no-wallet": "Wallet not connected",
     "recommendations": {
