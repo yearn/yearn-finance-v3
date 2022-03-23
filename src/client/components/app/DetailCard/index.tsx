@@ -13,10 +13,10 @@ const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
   flex-shrink: 0;
 
   &:first-child {
-    padding-left: ${({ theme }) => theme.layoutPadding};
+    padding-left: ${({ theme }) => theme.card.padding};
   }
   &:last-child {
-    padding-right: ${({ theme }) => theme.layoutPadding};
+    padding-right: ${({ theme }) => theme.card.padding};
   }
 
   > * {
