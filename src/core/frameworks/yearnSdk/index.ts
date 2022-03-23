@@ -15,9 +15,6 @@ export class YearnSdkImpl implements YearnSdk {
       const networkId = getNetworkId(network) as SdkNetwork;
       const sdkInstance = new Yearn(networkId, {
         provider,
-        cache: {
-          useCache: false,
-        },
         ...(YEARN_SUBGRAPH_KEY && {
           subgraph: {
             subgraphKey: YEARN_SUBGRAPH_KEY,
