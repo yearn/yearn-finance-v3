@@ -72,23 +72,23 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
           }
         },
         network: (networkId) => {
+          if (!wallet.isConnected) return;
+
           const supportedNetworkSettings = SUPPORTED_NETWORKS.find(
             (network) => NETWORK_SETTINGS[network].networkId === networkId
           );
-          if (wallet.isConnected) {
-            if (supportedNetworkSettings) {
-              web3Provider.register('wallet', getEthersProvider(wallet.provider as ExternalProvider));
-              const network = getNetwork(networkId);
-              const providerType = getProviderType(network);
-              const sdkInstance = yearnSdk.getInstanceOf(network);
-              sdkInstance.context.setProvider({
-                read: web3Provider.getInstanceOf(providerType),
-                write: web3Provider.getInstanceOf('wallet'),
-              });
-              dispatch(NetworkActions.changeNetwork({ network }));
-            } else {
-              dispatch(NetworkActions.changeNetwork({ network: 'mainnet' }));
-            }
+          if (supportedNetworkSettings) {
+            web3Provider.register('wallet', getEthersProvider(wallet.provider as ExternalProvider));
+            const network = getNetwork(networkId);
+            const providerType = getProviderType(network);
+            const sdkInstance = yearnSdk.getInstanceOf(network);
+            sdkInstance.context.setProvider({
+              read: web3Provider.getInstanceOf(providerType),
+              write: web3Provider.getInstanceOf('wallet'),
+            });
+            dispatch(NetworkActions.changeNetwork({ network }));
+          } else {
+            dispatch(NetworkActions.changeNetwork({ network: 'mainnet' }));
           }
         },
       };
