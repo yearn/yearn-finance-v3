@@ -20,7 +20,7 @@ import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
 import { Network, Route } from '@types';
-import { get } from '@utils';
+// import { get } from '@utils';
 
 const contentSeparation = '1.6rem';
 
