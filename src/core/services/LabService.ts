@@ -64,6 +64,7 @@ export class LabServiceImpl implements LabService {
     const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { ETH, YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+    const yearn = this.yearnSdk.getInstanceOf(network);
     const providerType = getProviderType(network);
     const provider = this.web3Provider.getInstanceOf(providerType);
     const vaultsPromise = get(YEARN_API);
@@ -148,6 +149,7 @@ export class LabServiceImpl implements LabService {
         yvBoostContract.emergencyShutdown(),
       ]);
       const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
+      const { apyOverride } = await yearn.tokens.findMetadataOverrides(CONTRACT_ADDRESSES.YVBOOST);
       if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
       const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
       yvBoostLab = {
@@ -170,7 +172,7 @@ export class LabServiceImpl implements LabService {
           depositLimit: depositLimit.toString(),
           emergencyShutdown: emergencyShutdown,
           pricePerShare: pricePerShare.toString(),
-          apy: yvBoostData.apy,
+          apy: { ...yvBoostData.apy, ...(apyOverride && { net_apy: apyOverride }) },
           displayName: yvBoostData.symbol,
           displayIcon: `${ASSET_URL}${YVBOOST}/logo-128.png`,
           defaultDisplayToken: YVECRV,
