@@ -39,7 +39,7 @@ export const getNetwork = (networkId: number | string): Network => {
     case '42161':
       return 'arbitrum';
     default:
-      return 'other';
+      throw Error(`Unknown networkId: ${networkId} (as ${typeof networkId})`);
   }
 };
 
