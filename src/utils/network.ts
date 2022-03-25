@@ -22,7 +22,7 @@ export const getNetworkId = (network: Network): number => {
   }
 };
 
-export const getNetwork = (networkId: number): Network => {
+export const getNetwork = (networkId: number | string): Network => {
   switch (networkId.toString()) {
     case '1':
       return 'mainnet';
