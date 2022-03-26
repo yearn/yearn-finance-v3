@@ -21,7 +21,7 @@ import {
   TokenIcon,
   ActionButtons,
 } from '@components/app';
-import { SpinnerLoading } from '@components/common';
+import { SpinnerLoading, Text } from '@components/common';
 import { toBN, halfWidthCss, humanize, normalizeAmount } from '@utils';
 import { getConfig } from '@config';
 import { getConstants } from '@config/constants';
@@ -86,6 +86,11 @@ const TokensCard = styled(DetailCard)`
     }
   }
 ` as typeof DetailCard;
+
+const StyledText = styled(Text)`
+  display: inline-flex;
+  align-items: center;
+`;
 
 export const Portfolio = () => {
   const { t } = useAppTranslation(['common', 'home']);
@@ -211,16 +216,17 @@ export const Portfolio = () => {
           header={t('components.list-card.wallet')}
           metadata={[
             {
-              key: 'displayIcon',
-              transform: ({ displayIcon, symbol }) => <TokenIcon icon={displayIcon} symbol={symbol} />,
-              width: '6rem',
-              className: 'col-icon',
-            },
-            {
               key: 'displayName',
-              header: t('components.list-card.name'),
+              header: t('components.list-card.asset'),
+              token: { displayIcon, symbol },
+              // transform: ({ displayIcon, displayName, symbol }) => (
+              //   <StyledText>
+              //     <TokenIcon icon={displayIcon} symbol={symbol} />
+              //     <Text>{displayName}</Text>
+              //   </StyledText>
+              // ),
+              width: '23rem',
               sortable: true,
-              width: '17rem',
               className: 'col-name',
             },
             {

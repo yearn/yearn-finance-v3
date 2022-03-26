@@ -24,6 +24,7 @@
       "convex-apr": "Convex APR"
     },
     "list-card": {
+      "asset": "Asset",
       "apy": "APY",
       "available-deposit": "Available to deposit",
       "available-stake": "Available to stake",

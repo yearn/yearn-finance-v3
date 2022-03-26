@@ -7,6 +7,7 @@
       "connect": "Conectar Billetera"
     },
     "list-card": {
+      "asset": "Activos",
       "apy": "APY",
       "available-deposit": "Disp. para depositar",
       "available-stake": "Disponible para stake",
