@@ -1,0 +1,25 @@
+{
+  "no-lab-supported-card": {
+    "content": "Try changing to the correct network.",
+    "header": "Lab not supported on {{network}}"
+  },
+  "overview-panel": {
+    "about": "About",
+    "apy": "APY",
+    "header": "Overview",
+    "strategies": "Strategies",
+    "total-assets": "Total assets",
+    "type": "Type",
+    "web": "Website"
+  },
+  "performance-panel": {
+    "earnings-over-time": "Earnings over time",
+    "header": "Performance"
+  },
+  "lab-actions-panel": {
+    "deposit": "Deposit",
+    "header": "Transactions",
+    "migrate": "Migrate",
+    "withdraw": "Withdraw"
+  }
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
@@ -29,6 +30,14 @@ import { formatApy, formatPercent, halfWidthCss, humanize, normalizeAmount, toBN
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
+
+const Row = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
+  flex-wrap: wrap;
+`;
 
 const StyledHelperCursor = styled.span`
   cursor: help;
@@ -108,6 +117,7 @@ const ApyTooltip = ({ apyData, apyMetadata, address }: Pick<GeneralLabView, 'apy
 export const Labs = () => {
   const { t } = useAppTranslation(['common', 'labs']);
 
+  const history = useHistory();
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConstants();
   const { YVECRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
   const dispatch = useAppDispatch();
@@ -304,17 +314,29 @@ export const Labs = () => {
       {!opportunitiesLoading && (
         <>
           {currentNetworkSettings.labsEnabled && (
-            <StyledRecommendationsCard
-              header={t('components.recommendations.header')}
-              items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
-                // header: 'Special Token',
-                icon: displayIcon,
-                name: displayName,
-                info: formatPercent(apyData, 2),
-                infoDetail: 'EYY',
-                // onAction: () => history.push(`/vault/${address}`),
-              }))}
-            />
+            <Row>
+              <StyledRecommendationsCard
+                header={t('components.recommendations.header')}
+                items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
+                  // header: 'Special Token',
+                  icon: displayIcon,
+                  name: displayName,
+                  info: formatPercent(apyData, 2),
+                  infoDetail: 'EYY',
+                  onAction: () => history.push(`/lab/${address}`),
+                }))}
+              />
+              <StyledSliderCard
+                header={t('labs:risks-card.header')}
+                Component={
+                  <Text>
+                    <p>{t('labs:risks-card.desc-1')}</p>
+                    <p>{t('labs:risks-card.desc-2')}</p>
+                    <p>{t('labs:risks-card.desc-3')}</p>
+                  </Text>
+                }
+              />
+            </Row>
           )}
 
           {!currentNetworkSettings.labsEnabled && (
@@ -463,8 +485,7 @@ export const Labs = () => {
                 />
               }
               searching={opportunities.length > filteredOpportunities.length}
-              // TODO Redirect address is wrong
-              // onAction={({ address }) => history.push(`/vault/${address}`)}
+              onAction={({ address }) => history.push(`/lab/${address}`)}
               initialSortBy="apyData"
               wrap
             />
