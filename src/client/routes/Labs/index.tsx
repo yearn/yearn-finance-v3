@@ -298,7 +298,7 @@ export const Labs = () => {
         header={t('dashboard.header')}
         items={[
           { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
-          { header: 'Apy', content: apy.length ? JSON.stringify(apy) : '0%' },
+          { header: 'APY', content: apy.length ? JSON.stringify(apy) : '0%' },
           // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
           // { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
         ]}
