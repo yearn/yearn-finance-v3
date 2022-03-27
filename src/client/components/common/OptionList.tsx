@@ -36,7 +36,6 @@ const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; sele
 
 const StyledText = styled(Text)`
   flex: 1;
-  text-align: center;
 `;
 
 const StyledSpinnerLoading = styled(SpinnerLoading)`
