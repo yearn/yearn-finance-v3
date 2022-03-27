@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@components/common';
 import { TokenIcon } from '@components/app';
 
+const TokenListIconSize = '1rem';
+
 const ContainerCard = styled(Card)`
   padding: ${({ theme }) => theme.card.padding} 0;
   width: 100%;
@@ -22,10 +24,10 @@ const StyledCardContent = styled(CardContent)`
 const ItemCard = styled(Card)<{ onClick: any }>`
   display: flex;
   align-items: center;
-  min-width: 21rem;
+  min-width: 24rem;
   flex: 1;
   padding: ${({ theme }) => theme.layoutPadding};
-  padding-right: 5.5rem;
+  padding-right: calc(${({ theme }) => theme.card.padding} + ${TokenListIconSize} * 2.5);
   background-color: ${({ theme }) => theme.colors.background};
   position: relative;
   transition: filter 200ms ease-in-out;
@@ -77,7 +79,7 @@ const TokenListIcon = styled(Icon)`
   position: absolute;
   right: 3rem;
   fill: currentColor;
-  width: 1rem;
+  width: ${TokenListIconSize};
   transition: color 200ms ease-in-out;
 `;
 

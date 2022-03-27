@@ -218,13 +218,13 @@ export const Portfolio = () => {
             {
               key: 'displayName',
               header: t('components.list-card.asset'),
-              token: { displayIcon, symbol },
-              // transform: ({ displayIcon, displayName, symbol }) => (
-              //   <StyledText>
-              //     <TokenIcon icon={displayIcon} symbol={symbol} />
-              //     <Text>{displayName}</Text>
-              //   </StyledText>
-              // ),
+              // token: { displayIcon, symbol },
+              transform: ({ displayIcon, displayName, symbol }) => (
+                <StyledText>
+                  <TokenIcon icon={displayIcon} symbol={symbol} />
+                  <Text>{displayName}</Text>
+                </StyledText>
+              ),
               width: '23rem',
               sortable: true,
               className: 'col-name',
