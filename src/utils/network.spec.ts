@@ -2,21 +2,27 @@ import { getNetwork } from './network';
 
 describe('Network', () => {
   describe('getNetwork', () => {
+    beforeEach(() => {
+      jest.spyOn(console, 'warn').mockImplementation();
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     describe('when the `networkId` is not supported', () => {
-      it('should throw when given an unknown networkId string', () => {
-        try {
-          getNetwork('0');
-        } catch (error) {
-          expect(error).toStrictEqual(new Error('Unknown networkId: 0 (as string)'));
-        }
+      it('should log a warn when given an unknown networkId string', () => {
+        const actual = getNetwork('0');
+
+        expect(console.warn).toHaveBeenCalledWith('Unknown networkId: 0 (as string)');
+        expect(actual).toBe('other');
       });
 
-      it('should throw when given an unknown networkId number', () => {
-        try {
-          getNetwork(0);
-        } catch (error) {
-          expect(error).toStrictEqual(new Error('Unknown networkId: 0 (as number)'));
-        }
+      it('should log a warn when given an unknown networkId number', () => {
+        const actual = getNetwork(0);
+
+        expect(console.warn).toHaveBeenCalledWith('Unknown networkId: 0 (as number)');
+        expect(actual).toBe('other');
       });
     });
 

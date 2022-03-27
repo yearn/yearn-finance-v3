@@ -39,7 +39,8 @@ export const getNetwork = (networkId: number | string): Network => {
     case '42161':
       return 'arbitrum';
     default:
-      throw Error(`Unknown networkId: ${networkId} (as ${typeof networkId})`);
+      console.warn(`Unknown networkId: ${networkId} (as ${typeof networkId})`);
+      return 'other';
   }
 };
 
