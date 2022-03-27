@@ -4,5 +4,5 @@ import ReactMarkdown, { Options } from 'react-markdown';
 interface MarkdownProps extends Options {}
 
 export const Markdown: FC<MarkdownProps> = (props) => {
-  return <ReactMarkdown {...props} />;
+  return <ReactMarkdown linkTarget="_blank" {...props} />;
 };

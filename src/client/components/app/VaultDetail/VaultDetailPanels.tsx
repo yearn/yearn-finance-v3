@@ -395,7 +395,7 @@ export const VaultDetailPanels = ({
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.web')}</span>
-                <StyledLink href={selectedVault.token.website} target="_blank">
+                <StyledLink target="_blank" href={selectedVault.token.website}>
                   {selectedVault.token.website}
                 </StyledLink>
               </InfoValueRow>
