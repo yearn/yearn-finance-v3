@@ -146,7 +146,6 @@ export const Transaction: FC<TransactionProps> = (props) => {
       />
 
       {/* {!generalStatus.error && <TxArrowStatus status={txArrowStatus} />} */}
-      {generalStatus.error && <TxError errorType="warning" errorText={generalStatus.error} />}
 
       <TxTokenInput
         headerText={targetHeader}
@@ -162,6 +161,8 @@ export const Transaction: FC<TransactionProps> = (props) => {
         loading={outputLoading}
         loadingText={loadingText ?? t('components.transaction.status.simulating')}
       />
+
+      {generalStatus.error && <TxError errorType="warning" errorText={generalStatus.error} />}
 
       <TxActions>
         {actions.map(({ label, onAction, status, disabled, contrast }) => (

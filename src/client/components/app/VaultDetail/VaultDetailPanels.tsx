@@ -169,7 +169,7 @@ const TextWithIcon = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 10rem;
+    max-width: 10rem;
   }
 `;
 
@@ -236,7 +236,7 @@ const VaultOverview = styled(Card)`
     }
   }
 
-  @media (max-width: 360px) {
+  @media (max-width: 460px) {
     ${OverviewTokenInfo} {
       display: flex;
       flex-direction: column;
