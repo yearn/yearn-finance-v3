@@ -4,6 +4,7 @@ import styled from 'styled-components/macro';
 const Container = styled.div`
   width: 100%;
   padding: 0 ${({ theme }) => theme.card.padding};
+  margin-bottom: 1.2rem;
 `;
 
 const BigHeader = styled.h1`

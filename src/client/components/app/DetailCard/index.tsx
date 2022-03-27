@@ -74,9 +74,9 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolea
 
 const StyledCardHeader = styled(CardHeader)`
   display: flex;
-  flex-wrap: center;
+  flex-wrap: wrap;
   justify-content: space-between;
-  margin-bottom: 0.6rem;
+  margin-bottom: 2rem;
 `;
 
 const StyledCard = styled(Card)`
