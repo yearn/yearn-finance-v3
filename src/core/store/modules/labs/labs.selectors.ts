@@ -165,6 +165,7 @@ const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) 
   depositedLabs.forEach((lab) => (totalDeposited = totalDeposited.plus(lab[lab.mainPositionKey].userDepositedUsdc)));
 
   return {
+    apy: depositedLabs.map((lab) => lab.apyMetadata?.net_apy),
     totalDeposits: totalDeposited.toString(),
     totalEarnings: '0',
     estYearlyYeild: '0',
