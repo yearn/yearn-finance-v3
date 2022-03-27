@@ -7,17 +7,16 @@ import { useAppTranslation } from '@hooks';
 import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from '@components/common';
 import { formatUsd, humanize } from '@utils';
 
-const StyledButton = styled(Button)`
-  background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
-  color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
-  text-transform: uppercase;
+const MaxButton = styled(Button)`
+  // background: transparent;
+  // color: ${({ theme }) => theme.colors.txModalColors.primary};
   border-radius: 1em;
+  width: min-content;
 `;
 
 const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
-  font-size: 3.6rem;
-  font-weight: 600;
-  width: 100%;
+  font-size: 2.4rem;
+  font-weight: 700;
   background: transparent;
   outline: none;
   border: none;
@@ -25,6 +24,7 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   padding: 0;
   font-family: inherit;
   appearance: textfield;
+  width: 100%;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
@@ -62,6 +62,7 @@ const TokenExtras = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin-top: 0.8rem;
 
   ${StyledText} {
     text-overflow: ellipsis;
@@ -70,8 +71,16 @@ const TokenExtras = styled.div`
   }
 `;
 
+const AmountInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 0.8rem;
+`;
+
 const AmountTitle = styled(Text)`
   color: ${({ theme }) => theme.colors.txModalColors.text};
+  text-overflow: ellipsis;
 `;
 
 const TokenData = styled.div`
@@ -80,7 +89,7 @@ const TokenData = styled.div`
   overflow: hidden;
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
-  border-radius:
+  padding: ${({ theme }) => theme.layoutPadding};
   font-size: 1.4rem;
   flex: 1;
 `;
@@ -91,12 +100,12 @@ const TokenName = styled.div`
   text-overflow: ellipsis;
   text-align: center;
   font-size: 1.3rem;
+  max-height: 3rem;
 `;
 
 const TokenListIcon = styled(Icon)`
   position: absolute;
   right: 0.7rem;
-  top: 3.4rem;
   fill: inherit;
   color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
 `;
@@ -114,7 +123,6 @@ const TokenSelector = styled.div<{ onClick?: () => void }>`
   align-items: center;
   justify-content: center;
   width: 8.4rem;
-  height: 9.2rem;
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
@@ -130,6 +138,7 @@ const TokenSelector = styled.div<{ onClick?: () => void }>`
 const TokenInfo = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.txModal.gap};
+  overflow: hidden;
 `;
 
 const StyledSearchList = styled(SearchList)`
@@ -286,22 +295,26 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         </TokenSelector>
 
         <TokenData>
-          <AmountTitle>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
-          <StyledAmountInput
-            value={amount}
-            onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-            placeholder={loading ? loadingText : '0.00000000'}
-            readOnly={readOnly}
-            error={inputError}
-            type="number"
-          />
+          <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
+
+          <AmountInputContainer>
+            <StyledAmountInput
+              value={amount}
+              onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
+              placeholder={loading ? loadingText : '0.00000000'}
+              readOnly={readOnly}
+              error={inputError}
+              type="number"
+            />
+            {maxAmount && (
+              <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+                {maxLabel}
+              </MaxButton>
+            )}
+          </AmountInputContainer>
+
           <TokenExtras>
             {amountValue && <StyledText>{formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
-            {maxAmount && (
-              <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
-                {maxLabel}
-              </StyledButton>
-            )}
             {yieldPercent && (
               <StyledText>
                 {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
