@@ -1,4 +1,4 @@
-import { Apy } from '@types';
+import { Apy, PositionView } from '@types';
 
 import { AllowancesMap, LabsPositionsTypes } from './State';
 import { TokenView } from './Token';
@@ -20,20 +20,8 @@ export interface GeneralLabView {
   allowZapIn: boolean;
   allowZapOut: boolean;
   mainPositionKey: LabsPositionsTypes;
-  DEPOSIT: {
-    userBalance: string;
-    userDeposited: string;
-    userDepositedUsdc: string;
-  };
-  YIELD: {
-    userBalance: string;
-    userDeposited: string;
-    userDepositedUsdc: string;
-  };
-  STAKE: {
-    userBalance: string;
-    userDeposited: string;
-    userDepositedUsdc: string;
-  };
+  DEPOSIT: PositionView;
+  YIELD: PositionView;
+  STAKE: PositionView;
   token: TokenView;
 }

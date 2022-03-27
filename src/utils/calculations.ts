@@ -32,3 +32,12 @@ export function calculateUnderlyingAmount(props: CalculateUnderlyingAmountProps)
   const ONE_UNIT = toBN('10').pow(underlyingTokenDecimals);
   return amount.times(sharePrice).times(ONE_UNIT).toFixed(0);
 }
+
+export function calculateCombinedApy(apyData: [apy?: number, deposit?: string][]): number {
+  const totalDeposited = apyData.reduce((acc, [apy, deposit]) => (apy ? acc + Number(deposit) : acc), 0);
+  return apyData.reduce((total, [apy, deposit]) => {
+    if (!apy || !deposit) return total;
+
+    return total + (apy * Number(deposit)) / totalDeposited;
+  }, 0);
+}

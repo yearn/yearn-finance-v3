@@ -13,7 +13,7 @@ import {
   LabsPositionsTypes,
 } from '@types';
 import { getConstants } from '@config/constants';
-import { toBN } from '@utils';
+import { calculateCombinedApy, toBN } from '@utils';
 
 import { createToken } from '../tokens/tokens.selectors';
 
@@ -165,7 +165,9 @@ const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) 
   depositedLabs.forEach((lab) => (totalDeposited = totalDeposited.plus(lab[lab.mainPositionKey].userDepositedUsdc)));
 
   return {
-    apy: depositedLabs.map((lab) => lab.apyMetadata?.net_apy),
+    apy: calculateCombinedApy(
+      depositedLabs.map(({ apyMetadata, DEPOSIT: { userDepositedUsdc } }) => [apyMetadata?.net_apy, userDepositedUsdc])
+    ),
     totalDeposits: totalDeposited.toString(),
     totalEarnings: '0',
     estYearlyYeild: '0',

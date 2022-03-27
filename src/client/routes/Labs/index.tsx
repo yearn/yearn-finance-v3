@@ -25,7 +25,7 @@ import {
   ApyTooltipData,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text, Tooltip } from '@components/common';
-import { formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECIMALS } from '@utils';
+import { formatApy, formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECIMALS } from '@utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
@@ -298,7 +298,7 @@ export const Labs = () => {
         header={t('dashboard.header')}
         items={[
           { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
-          { header: 'APY', content: apy.length ? JSON.stringify(apy) : '0%' },
+          { header: 'APY', content: formatApy(String(apy)) },
           // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
           // { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
         ]}
