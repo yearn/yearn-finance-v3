@@ -8,7 +8,6 @@ const sharedTheme: SharedTheme = {
   navbar: {
     height: '6.6rem',
   },
-
   zindex: {
     navbar: 400,
     sidemenu: 500,

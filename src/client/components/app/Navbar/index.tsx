@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { ConnectWalletButton } from '@components/app';
 import { OptionList, EthereumIcon, FantomIcon, ArbitrumIcon } from '@components/common';
@@ -29,7 +29,7 @@ const StyledNavbarActions = styled.div`
 const StyledText = styled.h1<{ toneDown?: boolean }>`
   display: inline-flex;
   font-size: 2.4rem;
-  font-weight: bold;
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.titles};
   margin: 0;
   padding: 0;

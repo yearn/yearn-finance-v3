@@ -1,5 +1,5 @@
 import { ElementType, FC, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { ChevronDownIcon, Icon } from './Icon';
 import { Text } from './Text';

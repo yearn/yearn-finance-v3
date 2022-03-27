@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
@@ -160,7 +160,7 @@ export const Wallet = () => {
           initialSortBy="balanceUsdc"
           wrap
           filterBy={filterDustTokens}
-          filterLabel="Show Dust"
+          filterLabel="Show dust"
         />
       )}
     </ViewContainer>

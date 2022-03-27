@@ -1,5 +1,5 @@
 import { ElementType, useEffect } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';

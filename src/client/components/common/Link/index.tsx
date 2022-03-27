@@ -1,5 +1,5 @@
 import { AnchorHTMLAttributes, FC } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   className?: string;

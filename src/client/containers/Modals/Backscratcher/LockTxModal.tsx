@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { ModalTx } from '@components/common';
 import { BackscratcherLockTx } from '@components/app';

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { get } from 'lodash';
 
 import { SearchIcon } from '../Icon';

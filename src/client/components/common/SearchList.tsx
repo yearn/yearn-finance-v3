@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { TokenIcon } from '@components/app';
 

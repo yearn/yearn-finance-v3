@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@components/common';
 import { TokenIcon } from '@components/app';

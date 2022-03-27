@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { useLocation, Link } from 'react-router-dom';
 
 import { useAppTranslation } from '@hooks';

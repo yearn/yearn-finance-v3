@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Card, CardHeader, CardContent, CardElement, Text, CardRedirection } from '@components/common';
 

@@ -1,9 +1,9 @@
 import { FC, ReactNode } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Icon, ArrowDownIcon, IconProps } from '@components/common';
 
-const Container = styled.div<{ width?: string; align?: string; grow?: string; fontWeight?: number }>`
+const Container = styled.article<{ width?: string; align?: string; grow?: string; fontWeight?: number }>`
   display: flex;
   flex-direction: column;
   width: ${({ width }) => width ?? '17rem'};
@@ -34,10 +34,13 @@ const SortIcon = styled(({ activeSort, sortType, ...props }: SortIconProps) => <
   `}
 `;
 
-const Header = styled.div<{ onClick?: () => void }>`
+const Header = styled.h3<{ onClick?: () => void }>`
   display: flex;
   align-items: center;
   font-size: 1.6rem;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
   color: ${({ theme }) => theme.colors.texts};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
 `;

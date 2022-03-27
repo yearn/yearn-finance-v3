@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { ReactComponent as LogoSimple } from '@assets/images/yearn-logo.svg';
 import { ReactComponent as LogoFull } from '@assets/images/yearn-logo-full.svg';

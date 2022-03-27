@@ -83,7 +83,7 @@ export interface CardProps extends StyledSystemProps {
   cardSize?: CardSizeType;
 }
 
-const StyledDiv = styled.div<CardProps>`
+const StyledDiv = styled.article<CardProps>`
   border-radius: ${({ theme }) => theme.globalRadius};
   padding: 1.7rem ${({ theme }) => theme.card.padding};
 

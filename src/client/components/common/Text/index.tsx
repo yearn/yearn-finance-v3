@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { styledSystem, StyledSystemProps } from '../styledSystem';
 
@@ -8,7 +8,7 @@ export interface TextProps extends StyledSystemProps {
   ellipsis?: boolean;
 }
 
-const StyledDiv = styled.div<StyledSystemProps & { ellipsis?: boolean }>`
+const StyledDiv = styled.span<StyledSystemProps & { ellipsis?: boolean }>`
   ${({ ellipsis }) =>
     ellipsis &&
     `

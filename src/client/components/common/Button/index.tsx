@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 export interface ButtonProps {
   className?: string;
@@ -14,7 +14,7 @@ const StyledButton = styled.button<{ outline?: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 0 1rem;
+  padding: 0 1.6rem;
   height: 2.8rem;
   border: 2px solid transparent;
   border-radius: ${({ theme }) => theme.globalRadius};
@@ -23,7 +23,7 @@ const StyledButton = styled.button<{ outline?: boolean }>`
   font-family: inherit;
   cursor: pointer;
   user-select: none;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   transition: filter 200ms ease-in-out;
 
   a,
