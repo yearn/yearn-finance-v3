@@ -90,17 +90,6 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   }, []);
 
   useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress || !isWalletConnected) return;
-
-    dispatch(
-      VaultsActions.getVaultAllowance({
-        tokenAddress: selectedSellTokenAddress,
-        vaultAddress: selectedLab.address,
-      })
-    );
-  }, [selectedSellTokenAddress, selectedLab?.address, isWalletConnected]);
-
-  useEffect(() => {
     if (!selectedLab) return;
     dispatch(LabsActions.clearLabStatus({ labAddress: selectedLab.address }));
   }, [debouncedAmount, selectedSellTokenAddress, selectedLab]);
