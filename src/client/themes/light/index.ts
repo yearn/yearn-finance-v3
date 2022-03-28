@@ -116,8 +116,8 @@ const lightTheme: DefaultTheme = {
       error: '#FF005E',
       warning: '#FFA800',
       success: '#A8C300',
-      text: '#475570',
-      textContrast: '#000000',
+      text: light.colors.icons.variant,
+      textContrast: light.colors.titles,
     },
   },
 };

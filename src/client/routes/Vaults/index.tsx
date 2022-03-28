@@ -231,10 +231,10 @@ export const Vaults = () => {
               </Text>
             ),
           },
-          {
-            header: 'Test header',
-            content: 'test content',
-          },
+          // {
+          //   header: 'Test header',
+          //   content: 'test content',
+          // },
         ]}
       />
 
