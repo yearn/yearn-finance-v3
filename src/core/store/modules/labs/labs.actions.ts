@@ -144,13 +144,8 @@ interface WithdrawProps {
 
 const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
   'labs/approveDeposit',
-  async ({ labAddress, tokenAddress }, { dispatch, getState }) => {
-    const { labs } = getState();
-    const labData = labs.labsMap[labAddress];
-    const isZapin = tokenAddress !== labData.token || labAddress === PSLPYVBOOSTETH;
-    const spenderAddress = isZapin ? getZapInContractAddress(labAddress) : labAddress;
-
-    const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
+  async ({ labAddress, tokenAddress }, { dispatch }) => {
+    const result = await dispatch(VaultsActions.approveDeposit({ tokenAddress, vaultAddress: labAddress }));
     unwrapResult(result);
   }
 );

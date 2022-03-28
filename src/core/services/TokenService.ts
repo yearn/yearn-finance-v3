@@ -111,6 +111,7 @@ export class TokenServiceImpl implements TokenService {
     const yvBoostPrice = pricesResponse.data['yvboost']['usd'];
     return {
       address: YVBOOST,
+      dataSource: 'labs',
       decimals: '18',
       name: 'yvBOOST',
       priceUsdc: toBN(yvBoostPrice)
@@ -138,6 +139,7 @@ export class TokenServiceImpl implements TokenService {
       address: PSLPYVBOOSTETH,
       decimals: '18',
       name: 'pSLPyvBOOST-ETH',
+      dataSource: 'labs',
       priceUsdc: toBN(pJarPricePerToken)
         .multipliedBy(10 ** USDC_DECIMALS)
         .toString(),
