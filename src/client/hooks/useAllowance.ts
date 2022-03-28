@@ -3,14 +3,14 @@ import isEqual from 'lodash/isEqual';
 
 import { AppServiceContext } from '@context';
 import { NetworkSelectors, WalletSelectors } from '@store';
-import { TokenAllowance, GeneralVaultView } from '@types';
+import { TokenAllowance } from '@types';
 import { useAppSelector } from '@hooks';
 
 import { usePrevious } from './usePrevious';
 
 export function useAllowance(
   tokenAddress: string | undefined,
-  vault: GeneralVaultView | undefined
+  vault: { address: string; token: { address: string } } | undefined
 ): [TokenAllowance | undefined, boolean, string?] {
   const services = useContext(AppServiceContext);
   const [isLoading, setIsLoading] = useState(false);
