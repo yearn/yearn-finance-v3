@@ -68,10 +68,8 @@ const cyberpunkTheme: DefaultTheme = {
     // },
 
     txModalColors: {
-      background: '#3D305F',
+      background: '#523C6E',
       backgroundVariant: '#392850',
-      onBackgroundVariant: '#523C6E',
-      onBackgroundVariantB: '#523C6E',
       onBackgroundVariantColor: '#BB6FA1',
       primary: '#00A3FF',
       loading: '#FFA800',

@@ -106,12 +106,11 @@ const darkTheme: DefaultTheme = {
     // },
 
     txModalColors: {
-      background: '#191919',
-      backgroundVariant: '#000000',
-      onBackgroundVariant: '#202020',
-      onBackgroundVariantB: '#202020',
+      background: dark.colors.surface,
+      backgroundVariant: '#1C1C1C',
       onBackgroundVariantColor: '#555555',
       primary: '#00A3FF',
+      onPrimary: '#FFFFFF',
       loading: '#FFA800',
       error: '#FF005E',
       warning: '#FFA800',

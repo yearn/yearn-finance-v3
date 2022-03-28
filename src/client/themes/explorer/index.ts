@@ -78,8 +78,6 @@ const explorerTheme: DefaultTheme = {
     txModalColors: {
       background: '#AD3235',
       backgroundVariant: '#cfa368',
-      onBackgroundVariant: '#eeeeee',
-      onBackgroundVariantB: '#cfa368',
       onBackgroundVariantColor: '#212121',
       primary: '#212121',
       loading: '#9f1431',

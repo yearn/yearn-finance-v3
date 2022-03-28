@@ -106,12 +106,11 @@ const lightTheme: DefaultTheme = {
     // },
 
     txModalColors: {
-      background: '#FFFFFF',
+      background: light.colors.surface,
       backgroundVariant: '#E8E8EA',
-      onBackgroundVariant: '#FFFFFF',
-      onBackgroundVariantB: '#F0F0F0',
       onBackgroundVariantColor: '#6e6e6e',
       primary: '#00A3FF',
+      onPrimary: '#FFFFFF',
       loading: '#FFA800',
       error: '#FF005E',
       warning: '#FFA800',
