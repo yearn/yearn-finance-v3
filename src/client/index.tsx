@@ -4,7 +4,7 @@ import { createGlobalStyle } from 'styled-components';
 
 import { Container } from '@container';
 import { getStore } from '@frameworks/redux';
-import { AppContextProvider, NavSideMenuContextProvider } from '@context';
+import { AppContextProvider, NavSideMenuContextProvider, AppServiceContextProvider } from '@context';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
 import '@i18n';
@@ -48,12 +48,12 @@ const GlobalStyle = createGlobalStyle`
       color: inherit;
     }
   }
-  
+
   p {
     letter-spacing: .015rem;
     margin: 0;
   }
-  
+
   p + p {
     margin-top: 1rem;
   }
@@ -77,14 +77,16 @@ export const App = () => {
   return (
     <Provider store={store}>
       <AppContextProvider context={container.context}>
-        <NavSideMenuContextProvider>
-          <Themable>
-            <GlobalStyle />
-            <Suspense fallback={null}>
-              <Routes />
-            </Suspense>
-          </Themable>
-        </NavSideMenuContextProvider>
+        <AppServiceContextProvider services={container.services}>
+          <NavSideMenuContextProvider>
+            <Themable>
+              <GlobalStyle />
+              <Suspense fallback={null}>
+                <Routes />
+              </Suspense>
+            </Themable>
+          </NavSideMenuContextProvider>
+        </AppServiceContextProvider>
       </AppContextProvider>
     </Provider>
   );
