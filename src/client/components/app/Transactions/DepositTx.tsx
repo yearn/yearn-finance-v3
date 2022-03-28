@@ -24,10 +24,8 @@ import {
   toWei,
   USDC_DECIMALS,
   validateVaultDeposit,
-  validateVaultAllowance,
   validateSlippage,
   validateNetwork,
-  getZapInContractAddress,
   formatApy,
   basicValidateAllowance,
 } from '@utils';
@@ -196,8 +194,13 @@ export const DepositTx: FC<DepositTxProps> = ({
   const sourceError = networkError || allowanceError || inputError || depositsDisabledError;
 
   const targetStatus = {
-    error: expectedTxOutcomeStatus.error || actionsStatus.approve.error || actionsStatus.deposit.error || slippageError,
-    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+    error:
+      expectedTxOutcomeStatus.error ||
+      actionsStatus.approve.error ||
+      actionsStatus.deposit.error ||
+      slippageError ||
+      getTokenAllowanceErrors,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending || isLoadingTokenAllowance,
   };
 
   const loadingText = currentNetworkSettings.simulationsEnabled
