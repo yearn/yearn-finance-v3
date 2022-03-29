@@ -13,7 +13,6 @@ import {
   Address,
   Wei,
   TransactionResponse,
-  Integer,
 } from '@types';
 import {
   calculateSharesAmount,
@@ -210,29 +209,6 @@ const approveDeposit = createAsyncThunk<
     serializeError: parseError,
   }
 );
-
-const getVaultAllowance = createAsyncThunk<
-  { allowance: Integer; spenderAddress: string },
-  { tokenAddress: string; vaultAddress: string },
-  ThunkAPI
->('vaults/getVaultAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState }) => {
-  const { network, wallet, vaults } = getState();
-  const accountAddress = wallet.selectedAddress;
-  if (!accountAddress) {
-    throw new Error('WALLET NOT CONNECTED');
-  }
-  const vaultData = vaults.vaultsMap[vaultAddress];
-
-  const { vaultService } = extra.services;
-  const allowance = await vaultService.getVaultAllowance({
-    network: network.current,
-    vault: vaultData,
-    tokenAddress,
-    accountAddress,
-  });
-
-  return { allowance: allowance.amount, spenderAddress: allowance.spender };
-});
 
 const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
   'vaults/approveZapOut',
@@ -573,5 +549,4 @@ export const VaultsActions = {
   getUserVaultsMetadata,
   clearSelectedVaultAndStatus,
   clearVaultStatus,
-  getVaultAllowance,
 };
