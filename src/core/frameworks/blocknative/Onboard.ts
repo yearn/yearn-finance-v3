@@ -139,8 +139,12 @@ export class BlocknativeWalletImpl implements Wallet {
     const { NETWORK_SETTINGS } = getConfig();
     const networkSettings = NETWORK_SETTINGS[network];
     const networkId = networkSettings.networkId;
+
     if (this.onboard) {
       this.onboard.config({ networkId });
+    }
+
+    if (this.onboard && this.isMetaMask()) {
       try {
         await this.getState()?.wallet.provider.request({
           method: 'wallet_switchEthereumChain',
@@ -168,10 +172,11 @@ export class BlocknativeWalletImpl implements Wallet {
           }
         }
         console.error(error);
+        return false;
       }
     }
 
-    return false;
+    return true;
   }
 
   public async addToken(
@@ -197,5 +202,9 @@ export class BlocknativeWalletImpl implements Wallet {
     } catch (error) {
       return false;
     }
+  }
+
+  private isMetaMask(): boolean {
+    return this.name?.toUpperCase() === 'MetaMask'.toUpperCase();
   }
 }
