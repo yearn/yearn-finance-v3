@@ -10,7 +10,8 @@ import { usePrevious } from './usePrevious';
 
 export function useAllowance(
   tokenAddress: string | undefined,
-  vault: { address: string; token: { address: string } } | undefined
+  vaultAddress?: string,
+  vaultTokenAddress?: string
 ): [TokenAllowance | undefined, boolean, string?] {
   const services = useContext(AppServiceContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,17 +19,18 @@ export function useAllowance(
   const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const [result, setResult] = useState<TokenAllowance | undefined>(undefined);
   const [error, setError] = useState<any | undefined>(undefined);
-  const prevVault = usePrevious(vault);
+  const prevVault = usePrevious(vaultAddress);
   const prevTokenAddress = usePrevious(tokenAddress);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
 
   useEffect(() => {
     async function callPromise() {
-      if (selectedAddress && vault && tokenAddress && walletIsConnected) {
+      if (selectedAddress && vaultAddress && vaultTokenAddress && tokenAddress && walletIsConnected) {
         try {
           const promiseResult = await services?.vaultService.getVaultAllowance({
             network: currentNetwork,
-            vault: { address: vault.address, token: vault.token.address },
+            vaultAddress,
+            vaultTokenAddress,
             tokenAddress,
             accountAddress: selectedAddress,
           });
@@ -42,7 +44,11 @@ export function useAllowance(
       setIsLoading(false);
     }
 
-    if ((!isLoading && !result && !error) || !isEqual(prevVault, vault) || !isEqual(prevTokenAddress, tokenAddress)) {
+    if (
+      (!isLoading && !result && !error) ||
+      !isEqual(prevVault, vaultAddress) ||
+      !isEqual(prevTokenAddress, tokenAddress)
+    ) {
       console.log('fetching allowance');
       setIsLoading(true);
       setResult(undefined);
@@ -50,7 +56,7 @@ export function useAllowance(
 
       callPromise();
     }
-  }, [vault, prevVault, prevTokenAddress, tokenAddress, isLoading, result, error]);
+  }, [vaultAddress, prevVault, prevTokenAddress, tokenAddress, isLoading, result, error]);
 
   return [result, isLoading, error];
 }
