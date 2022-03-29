@@ -68,7 +68,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
-  const [tokenAllowance, isLoadingTokenAllowance, getTokenAllowanceErrors] = useAllowance(
+  const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceErrors] = useAllowance(
     selectedSellTokenAddress,
     selectedLab
   );
@@ -153,7 +153,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       actionsStatus.approveDeposit.error ||
       actionsStatus.deposit.error ||
       slippageError ||
-      getTokenAllowanceErrors,
+      tokenAllowanceErrors,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending || isLoadingTokenAllowance,
   };
 
