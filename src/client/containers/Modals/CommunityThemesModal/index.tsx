@@ -48,7 +48,7 @@ export interface CommunityThemesModalProps {
 
 export const CommunityThemesModal: FC<CommunityThemesModalProps> = ({ onClose, ...props }) => {
   const dispatch = useAppDispatch();
-  const { AVAILABLE_CUSTOM_THEMES, SUPPORTED_LANGS } = getConfig();
+  const { AVAILABLE_CUSTOM_THEMES } = getConfig();
 
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
