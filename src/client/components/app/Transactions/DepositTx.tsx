@@ -74,7 +74,8 @@ export const DepositTx: FC<DepositTxProps> = ({
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
   const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceErrors] = useAllowance(
     selectedSellTokenAddress,
-    selectedVault
+    selectedVault?.address,
+    selectedVault?.token.address
   );
 
   const onExit = () => {

@@ -279,12 +279,13 @@ export class VaultServiceImpl implements VaultService {
 
   public async getVaultAllowance({
     network,
-    vault,
+    vaultAddress,
+    vaultTokenAddress,
     tokenAddress,
     accountAddress,
   }: GetVaultAllowanceProps): Promise<TokenAllowance> {
     const yearn = this.yearnSdk.getInstanceOf(network);
-    const allowance = await yearn.tokens.allowance(vault.address, vault.token, tokenAddress, accountAddress);
+    const allowance = await yearn.tokens.allowance(vaultAddress, vaultTokenAddress, tokenAddress, accountAddress);
 
     return allowance;
   }

@@ -70,7 +70,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
   const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceErrors] = useAllowance(
     selectedSellTokenAddress,
-    selectedLab
+    selectedLab?.address,
+    selectedLab?.token.address
   );
 
   const onExit = () => {

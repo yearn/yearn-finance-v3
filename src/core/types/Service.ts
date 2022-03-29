@@ -184,7 +184,8 @@ export interface GetVaultAllowanceProps {
   network: Network;
   accountAddress: string;
   tokenAddress: string;
-  vault: { address: string; token: string };
+  vaultAddress: string;
+  vaultTokenAddress: string;
 }
 
 export interface ApproveProps {
