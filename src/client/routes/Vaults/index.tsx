@@ -71,7 +71,7 @@ const StyledNoWalletCard = styled(NoWalletCard)`
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
   }
   @media (max-width: 750px) {
@@ -94,7 +94,7 @@ const OpportunitiesCard = styled(DetailCard)`
 const DepositsCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
     .col-balance {
       width: 10rem;
@@ -120,7 +120,7 @@ const DepositsCard = styled(DetailCard)`
 const DeprecatedCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
     .col-balance {
       width: 10rem;
@@ -261,19 +261,20 @@ export const Vaults = () => {
             header={t('components.list-card.deprecated')}
             metadata={[
               {
-                key: 'displayIcon',
-                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                width: '6rem',
-                className: 'col-icon',
-              },
-              {
                 key: 'displayName',
-                header: 'Name',
+                header: t('components.list-card.asset'),
+                // token: { displayIcon, symbol },
+                transform: ({ displayIcon, displayName, token }) => (
+                  <>
+                    <TokenIcon icon={displayIcon} symbol={token.symbol} />
+                    <Text ellipsis>{displayName}</Text>
+                  </>
+                ),
+                width: '23rem',
                 sortable: true,
-                fontWeight: 600,
-                width: '17rem',
                 className: 'col-name',
               },
+
               {
                 key: 'apy',
                 header: 'APY',
@@ -339,19 +340,20 @@ export const Vaults = () => {
               header={t('components.list-card.deposits')}
               metadata={[
                 {
-                  key: 'displayIcon',
-                  transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                  width: '6rem',
-                  className: 'col-icon',
-                },
-                {
                   key: 'displayName',
-                  header: t('components.list-card.name'),
+                  header: t('components.list-card.asset'),
+                  // token: { displayIcon, symbol },
+                  transform: ({ displayIcon, displayName, token }) => (
+                    <>
+                      <TokenIcon icon={displayIcon} symbol={token.symbol} />
+                      <Text ellipsis>{displayName}</Text>
+                    </>
+                  ),
+                  width: '23rem',
                   sortable: true,
-                  fontWeight: 600,
-                  width: '17rem',
                   className: 'col-name',
                 },
+
                 {
                   key: 'apy',
                   header: t('components.list-card.apy'),
@@ -419,19 +421,20 @@ export const Vaults = () => {
               data-testid="vaults-opportunities-list"
               metadata={[
                 {
-                  key: 'displayIcon',
-                  transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                  width: '6rem',
-                  className: 'col-icon',
-                },
-                {
                   key: 'displayName',
-                  header: t('components.list-card.name'),
+                  header: t('components.list-card.asset'),
+                  // token: { displayIcon, symbol },
+                  transform: ({ displayIcon, displayName, token }) => (
+                    <>
+                      <TokenIcon icon={displayIcon} symbol={token.symbol} />
+                      <Text ellipsis>{displayName}</Text>
+                    </>
+                  ),
+                  width: '23rem',
                   sortable: true,
-                  fontWeight: 600,
-                  width: '17rem',
                   className: 'col-name',
                 },
+
                 {
                   key: 'apy',
                   header: t('components.list-card.apy'),

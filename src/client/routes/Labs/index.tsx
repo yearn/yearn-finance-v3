@@ -53,7 +53,7 @@ const StyledSliderCard = styled(SliderCard)``;
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 15rem;
+      width: 21rem;
     }
   }
   @media (max-width: 820px) {
@@ -63,7 +63,7 @@ const OpportunitiesCard = styled(DetailCard)`
   }
   @media ${device.mobile} {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
     .col-available {
       width: 10rem;
@@ -79,7 +79,7 @@ const OpportunitiesCard = styled(DetailCard)`
 const HoldingsCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 15rem;
+      width: 21rem;
     }
     .col-balance {
       width: 10rem;
@@ -92,7 +92,7 @@ const HoldingsCard = styled(DetailCard)`
   }
   @media ${device.mobile} {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
     .col-apy {
       display: none;
@@ -347,19 +347,20 @@ export const Labs = () => {
               header="Holdings"
               metadata={[
                 {
-                  key: 'displayIcon',
-                  transform: ({ displayIcon, displayName }) => <TokenIcon icon={displayIcon} symbol={displayName} />,
-                  width: '6rem',
-                  className: 'col-icon',
-                },
-                {
                   key: 'displayName',
-                  header: t('components.list-card.name'),
+                  header: t('components.list-card.asset'),
+                  // token: { displayIcon, symbol },
+                  transform: ({ displayIcon, displayName }) => (
+                    <>
+                      <TokenIcon icon={displayIcon} symbol={displayName} />
+                      <Text ellipsis>{displayName}</Text>
+                    </>
+                  ),
+                  width: '23rem',
                   sortable: true,
-                  fontWeight: 600,
-                  width: '17rem',
                   className: 'col-name',
                 },
+
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
@@ -413,19 +414,20 @@ export const Labs = () => {
               header={t('components.list-card.opportunities')}
               metadata={[
                 {
-                  key: 'displayIcon',
-                  transform: ({ displayIcon, displayName }) => <TokenIcon icon={displayIcon} symbol={displayName} />,
-                  width: '6rem',
-                  className: 'col-icon',
-                },
-                {
                   key: 'displayName',
-                  header: t('components.list-card.name'),
+                  header: t('components.list-card.asset'),
+                  // token: { displayIcon, symbol },
+                  transform: ({ displayIcon, displayName }) => (
+                    <>
+                      <TokenIcon icon={displayIcon} symbol={displayName} />
+                      <Text ellipsis>{displayName}</Text>
+                    </>
+                  ),
+                  width: '23rem',
                   sortable: true,
-                  fontWeight: 600,
-                  width: '17rem',
                   className: 'col-name',
                 },
+
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),

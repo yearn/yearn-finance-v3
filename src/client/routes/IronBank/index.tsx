@@ -37,7 +37,7 @@ const StyledSliderCard = styled(SliderCard)`
 const SupplyingCard = styled(DetailCard)`
   @media (max-width: 860px) {
     .col-name {
-      width: 9rem;
+      width: 15rem;
     }
   }
   @media (max-width: 760px) {
@@ -70,7 +70,7 @@ const SupplyingCard = styled(DetailCard)`
 const BorrowingCard = styled(DetailCard)`
   @media (max-width: 800px) {
     .col-name {
-      width: 9rem;
+      width: 15rem;
     }
   }
   @media (max-width: 700px) {
@@ -175,19 +175,20 @@ export const IronBank = () => {
             header={t('components.list-card.supplying')}
             metadata={[
               {
-                key: 'displayIcon',
-                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                width: '6rem',
-                className: 'col-icon',
-              },
-              {
                 key: 'displayName',
-                header: t('components.list-card.name'),
+                header: t('components.list-card.asset'),
+                // token: { displayIcon, symbol },
+                transform: ({ displayIcon, displayName, token }) => (
+                  <>
+                    <TokenIcon icon={displayIcon} symbol={token.symbol} />
+                    <Text ellipsis>{displayName}</Text>
+                  </>
+                ),
+                width: '23rem',
                 sortable: true,
-                fontWeight: 600,
-                width: '17rem',
                 className: 'col-name',
               },
+
               {
                 key: 'lendApy',
                 header: t('components.list-card.apy'),
@@ -257,19 +258,20 @@ export const IronBank = () => {
             header={t('components.list-card.borrowing')}
             metadata={[
               {
-                key: 'displayIcon',
-                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                width: '6rem',
-                className: 'col-icon',
-              },
-              {
                 key: 'displayName',
-                header: t('components.list-card.name'),
+                header: t('components.list-card.asset'),
+                // token: { displayIcon, symbol },
+                transform: ({ displayIcon, displayName, token }) => (
+                  <>
+                    <TokenIcon icon={displayIcon} symbol={token.symbol} />
+                    <Text ellipsis>{displayName}</Text>
+                  </>
+                ),
+                width: '23rem',
                 sortable: true,
-                fontWeight: 600,
-                width: '17rem',
                 className: 'col-name',
               },
+
               {
                 key: 'borrowApy',
                 header: t('components.list-card.apy'),
