@@ -34,7 +34,7 @@ const TxHeaderActions = styled.div`
 `;
 
 const TxHeaderTitle = styled.h1`
-  color: ${({ theme }) => theme.colors.txModalColors.textContrast};
+  color: ${({ theme }) => theme.colors.titles};
   font-size: 2.4rem;
   margin: 0;
 `;
