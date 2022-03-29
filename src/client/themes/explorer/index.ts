@@ -29,7 +29,7 @@ const explorerTheme: DefaultTheme = {
       variant: '#FFF',
     },
     titles: '#FFF',
-    titlesVariant: '#000',
+    titlesVariant: '#AD3235',
     texts: '#FFF',
     surfaceVariant: '#FFF',
 
@@ -76,10 +76,11 @@ const explorerTheme: DefaultTheme = {
     // },
 
     txModalColors: {
-      background: '#AD3235',
+      background: 'rgba(173, 50, 53, 0.5)',
       backgroundVariant: '#cfa368',
       onBackgroundVariantColor: '#212121',
-      primary: '#212121',
+      primary: '#FFA800',
+      onPrimary: '#FFFFFF',
       loading: '#9f1431',
       error: '#EF1E02',
       warning: '#FFA800',

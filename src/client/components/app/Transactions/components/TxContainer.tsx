@@ -33,8 +33,10 @@ const TxHeaderActions = styled.div`
   margin: -${actionsPadding};
 `;
 
-const TxHeaderTitle = styled.div`
+const TxHeaderTitle = styled.h1`
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
+  font-size: 2.4rem;
+  margin: 0;
 `;
 
 const TxContainerContent = styled.div`

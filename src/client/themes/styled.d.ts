@@ -157,7 +157,7 @@ declare module 'styled-components' {
         backgroundVariant: string;
         onBackgroundVariantColor: string;
         primary: string;
-        onPrimary?: string;
+        onPrimary: string;
         loading: string;
         error: string;
         warning: string;
