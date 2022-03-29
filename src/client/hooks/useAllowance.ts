@@ -34,7 +34,6 @@ export function useAllowance(
             tokenAddress,
             accountAddress: selectedAddress,
           });
-          console.log('fetched allowance', promiseResult);
           setResult(promiseResult);
           setError(undefined);
         } catch (e) {
@@ -49,7 +48,6 @@ export function useAllowance(
       !isEqual(prevVault, vaultAddress) ||
       !isEqual(prevTokenAddress, tokenAddress)
     ) {
-      console.log('fetching allowance');
       setIsLoading(true);
       setResult(undefined);
       setError(undefined);
