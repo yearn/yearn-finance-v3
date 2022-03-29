@@ -144,7 +144,7 @@ export class BlocknativeWalletImpl implements Wallet {
       this.onboard.config({ networkId });
     }
 
-    if (this.onboard && this.name === 'MetaMask') {
+    if (this.onboard && this.isMetaMask()) {
       try {
         await this.getState()?.wallet.provider.request({
           method: 'wallet_switchEthereumChain',
@@ -202,5 +202,9 @@ export class BlocknativeWalletImpl implements Wallet {
     } catch (error) {
       return false;
     }
+  }
+
+  private isMetaMask(): boolean {
+    return this.name?.toUpperCase() === 'MetaMask'.toUpperCase();
   }
 }
