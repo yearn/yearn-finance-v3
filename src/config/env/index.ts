@@ -18,5 +18,6 @@ export const getEnv = memoize(
     FORTMATIC_KEY: process.env.REACT_APP_FORTMATIC_KEY,
     PORTIS_KEY: process.env.REACT_APP_PORTIS_KEY,
     ZAPPER_API_KEY: process.env.REACT_APP_ZAPPER_API_KEY,
+    YEARN_SUBGRAPH_KEY: process.env.REACT_APP_YEARN_SUBGRAPH_KEY,
   })
 );
