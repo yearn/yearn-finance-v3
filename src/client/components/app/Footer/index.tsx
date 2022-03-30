@@ -31,6 +31,10 @@ const footerLinks = [
     link: 'https://github.com/yearn/yearn-security/blob/master/SECURITY.md',
     name: 'security',
   },
+  {
+    link: 'https://blog.yearn.finance/',
+    name: 'blog',
+  },
   // {
   //   link: 'https://v1.yearn.finance',
   //   name: 'v1',
