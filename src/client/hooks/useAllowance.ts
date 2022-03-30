@@ -1,40 +1,52 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import isEqual from 'lodash/isEqual';
+import { unwrapResult } from '@reduxjs/toolkit';
 
-import { AppServiceContext } from '@context';
-import { NetworkSelectors, WalletSelectors } from '@store';
+import { VaultsActions, LabsActions } from '@store';
 import { TokenAllowance } from '@types';
-import { useAppSelector } from '@hooks';
+import { useAppDispatch } from '@hooks';
 
 import { usePrevious } from './usePrevious';
 
-export function useAllowance(
-  tokenAddress: string | undefined,
-  vaultAddress?: string,
-  vaultTokenAddress?: string
-): [TokenAllowance | undefined, boolean, string?] {
-  const services = useContext(AppServiceContext);
+interface useAllowanceProps {
+  tokenAddress: string | undefined;
+  vaultAddress?: string;
+  isLab?: boolean;
+}
+export function useAllowance({
+  tokenAddress,
+  vaultAddress,
+  isLab,
+}: useAllowanceProps): [TokenAllowance | undefined, boolean, string?] {
   const [isLoading, setIsLoading] = useState(false);
-  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
-  const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const [result, setResult] = useState<TokenAllowance | undefined>(undefined);
   const [error, setError] = useState<any | undefined>(undefined);
   const prevVault = usePrevious(vaultAddress);
   const prevTokenAddress = usePrevious(tokenAddress);
-  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     async function callPromise() {
-      if (selectedAddress && vaultAddress && vaultTokenAddress && tokenAddress && walletIsConnected) {
+      if (vaultAddress && tokenAddress) {
         try {
-          const promiseResult = await services?.vaultService.getVaultAllowance({
-            network: currentNetwork,
-            vaultAddress,
-            vaultTokenAddress,
-            tokenAddress,
-            accountAddress: selectedAddress,
-          });
-          setResult(promiseResult);
+          let promiseResult;
+          if (isLab) {
+            promiseResult = await dispatch(
+              LabsActions.getLabAllowance({
+                vaultAddress,
+                tokenAddress,
+              })
+            );
+          } else {
+            promiseResult = await dispatch(
+              VaultsActions.getVaultAllowance({
+                vaultAddress,
+                tokenAddress,
+              })
+            );
+          }
+          const result = unwrapResult(promiseResult);
+          setResult(result);
           setError(undefined);
         } catch (e) {
           setError(e);

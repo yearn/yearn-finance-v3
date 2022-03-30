@@ -13,6 +13,7 @@ import {
   Address,
   Wei,
   TransactionResponse,
+  TokenAllowance,
 } from '@types';
 import {
   calculateSharesAmount,
@@ -437,6 +438,33 @@ const approveMigrate = createAsyncThunk<
   unwrapResult(result);
 });
 
+const getVaultAllowance = createAsyncThunk<
+  TokenAllowance,
+  {
+    tokenAddress: string;
+    vaultAddress: string;
+  },
+  ThunkAPI
+>('vaults/getVaultAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState }) => {
+  const {
+    services: { vaultService },
+  } = extra;
+  const { network, wallet, vaults } = getState();
+  const userAddress = wallet.selectedAddress;
+
+  const vaultData = vaults.vaultsMap[vaultAddress];
+
+  if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+  return vaultService.getVaultAllowance({
+    network: network.current,
+    vaultAddress: vaultData.address,
+    vaultTokenAddress: vaultData.token,
+    tokenAddress,
+    accountAddress: userAddress,
+  });
+});
+
 const migrateVault = createAsyncThunk<
   void,
   { vaultFromAddress: string; vaultToAddress: string; migrationContractAddress: string },
@@ -549,4 +577,5 @@ export const VaultsActions = {
   getUserVaultsMetadata,
   clearSelectedVaultAndStatus,
   clearVaultStatus,
+  getVaultAllowance,
 };

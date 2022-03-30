@@ -44,13 +44,12 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
+  const { NETWORK_SETTINGS } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
-  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
@@ -68,11 +67,11 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
-  const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceErrors] = useAllowance(
-    selectedSellTokenAddress,
-    selectedLab?.address,
-    selectedLab?.token.address
-  );
+  const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceErrors] = useAllowance({
+    tokenAddress: selectedSellTokenAddress,
+    vaultAddress: selectedLab?.address,
+    isLab: true,
+  });
 
   const onExit = () => {
     dispatch(LabsActions.clearSelectedLabAndStatus());
