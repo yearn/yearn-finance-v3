@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { Lab, LabDynamic, Position } from '@types';
+import { Lab, LabDynamic, Position, TokenAllowance } from '@types';
 import {
   toBN,
   getNetwork,
@@ -149,6 +149,33 @@ const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
     unwrapResult(result);
   }
 );
+
+const getLabAllowance = createAsyncThunk<
+  TokenAllowance,
+  {
+    tokenAddress: string;
+    vaultAddress: string;
+  },
+  ThunkAPI
+>('labs/getLabAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState }) => {
+  const {
+    services: { vaultService },
+  } = extra;
+  const { network, wallet, labs } = getState();
+  const userAddress = wallet.selectedAddress;
+
+  const labtData = labs.labsMap[vaultAddress];
+
+  if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+  return vaultService.getVaultAllowance({
+    network: network.current,
+    vaultAddress: labtData.address,
+    vaultTokenAddress: labtData.token,
+    tokenAddress,
+    accountAddress: userAddress,
+  });
+});
 
 const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/deposit',
@@ -721,6 +748,7 @@ export const LabsActions = {
   clearSelectedLabAndStatus,
   clearLabStatus,
   clearUserData,
+  getLabAllowance,
   yvBoost: {
     yvBoostApproveDeposit,
     yvBoostDeposit,
