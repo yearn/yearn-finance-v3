@@ -1,12 +1,10 @@
-import { PartialDeep } from 'type-fest';
-
-import { GeneralLabView, GeneralVaultView } from '@src/core/types';
+import { GeneralLabView, GeneralVaultView, YDeepPartial } from '@src/core/types';
 
 import { calculateCombinedApy } from './calculations';
 
 describe('Calculations', () => {
   describe('calculateCombinedApy', () => {
-    const lab: PartialDeep<GeneralLabView> = {
+    const lab: YDeepPartial<GeneralLabView> = {
       DEPOSIT: {
         userDepositedUsdc: '1000',
       },
@@ -15,7 +13,7 @@ describe('Calculations', () => {
       },
     };
 
-    const vault: PartialDeep<GeneralVaultView> = {
+    const vault: YDeepPartial<GeneralVaultView> = {
       DEPOSIT: {
         userDepositedUsdc: '3000',
       },
@@ -24,7 +22,7 @@ describe('Calculations', () => {
       },
     };
 
-    const vaultWithoutApyMetadata: PartialDeep<GeneralVaultView> = {
+    const vaultWithoutApyMetadata: YDeepPartial<GeneralVaultView> = {
       DEPOSIT: {
         userDepositedUsdc: '1000',
       },
