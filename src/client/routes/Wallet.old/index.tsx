@@ -19,7 +19,7 @@ import {
   NoWalletCard,
   Amount,
 } from '@components/app';
-import { SpinnerLoading } from '@components/common';
+import { SpinnerLoading, Text } from '@components/common';
 import { getConstants } from '@config/constants';
 import { halfWidthCss, humanize, normalizeAmount } from '@utils';
 import { device } from '@themes/default';
@@ -106,18 +106,20 @@ export const Wallet = () => {
           header={t('components.list-card.tokens')}
           metadata={[
             {
-              key: 'displayIcon',
-              transform: ({ displayIcon, symbol }) => <TokenIcon icon={displayIcon} symbol={symbol} />,
-              width: '6rem',
-              className: 'col-icon',
-            },
-            {
               key: 'displayName',
-              header: t('components.list-card.name'),
+              header: t('components.list-card.asset'),
+              // token: { displayIcon, symbol },
+              transform: ({ displayIcon, displayName, symbol }) => (
+                <>
+                  <TokenIcon icon={displayIcon} symbol={symbol} />
+                  <Text ellipsis>{displayName}</Text>
+                </>
+              ),
+              width: '23rem',
               sortable: true,
-              width: '17rem',
               className: 'col-name',
             },
+
             {
               key: 'tokenBalance',
               header: t('components.list-card.balance'),

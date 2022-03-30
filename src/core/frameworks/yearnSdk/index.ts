@@ -7,7 +7,7 @@ export class YearnSdkImpl implements YearnSdk {
   private instances: Map<Network, Yearn<SdkNetwork>> = new Map<Network, Yearn<SdkNetwork>>();
 
   constructor({ web3Provider, config }: { web3Provider: Web3Provider; config: Config }) {
-    const { SUPPORTED_NETWORKS } = config;
+    const { SUPPORTED_NETWORKS, YEARN_SUBGRAPH_ID, YEARN_SUBGRAPH_KEY } = config;
 
     SUPPORTED_NETWORKS.forEach((network) => {
       const providerType = getProviderType(network);
@@ -15,6 +15,12 @@ export class YearnSdkImpl implements YearnSdk {
       const networkId = getNetworkId(network) as SdkNetwork;
       const sdkInstance = new Yearn(networkId, {
         provider,
+        ...(YEARN_SUBGRAPH_KEY && {
+          subgraph: {
+            subgraphKey: YEARN_SUBGRAPH_KEY,
+            mainnetSubgraphId: YEARN_SUBGRAPH_ID,
+          },
+        }),
       });
       this.register(network, sdkInstance);
     });

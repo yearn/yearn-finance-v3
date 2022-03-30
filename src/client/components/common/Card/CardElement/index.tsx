@@ -46,12 +46,19 @@ const Header = styled.h3<{ onClick?: () => void }>`
 `;
 
 const Content = styled.div`
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.8rem;
   font-size: 2.4rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 100%;
   color: ${({ theme }) => theme.colors.texts};
+
+  :first-child img {
+    margin-right: ${({ theme }) => theme.layoutPadding};
+  }
 `;
 
 type SortType = 'asc' | 'desc';

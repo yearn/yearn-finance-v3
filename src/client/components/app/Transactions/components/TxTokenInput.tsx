@@ -12,6 +12,7 @@ const MaxButton = styled(Button)`
   // color: ${({ theme }) => theme.colors.txModalColors.primary};
   border-radius: 1em;
   width: min-content;
+  margin-left: 0.5rem;
 `;
 
 const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
@@ -27,14 +28,18 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   width: 100%;
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
+    color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   }
 
   ${({ readOnly, theme }) =>
     readOnly &&
     `
-    color: ${theme.colors.txModalColors.onBackgroundVariantColor};
+    color: ${theme.colors.txModalColors.text};
     cursor: default;
+
+    &::placeholder {
+      color: ${theme.colors.txModalColors.text};
+    }
   `}
 
   ${({ error, theme }) => error && `color: ${theme.colors.txModalColors.error};`}

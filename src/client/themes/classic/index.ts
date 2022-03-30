@@ -111,12 +111,11 @@ const classicTheme: DefaultTheme = {
     // },
 
     txModalColors: {
-      background: '#0A1D3F',
+      background: classic.colors.surface,
       backgroundVariant: '#1F255F',
-      onBackgroundVariant: '#0A1D3F',
-      onBackgroundVariantB: '#1F255F',
       onBackgroundVariantColor: '#fff',
       primary: '#006AE3',
+      onPrimary: '#FFFFFF',
       loading: '#FFA800',
       error: '#EF1E02',
       warning: '#FFA800',

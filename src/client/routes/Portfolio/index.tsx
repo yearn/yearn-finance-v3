@@ -74,12 +74,12 @@ const TokensCard = styled(DetailCard)`
   }
   @media (max-width: 700px) {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
   }
   @media ${device.mobile} {
     .col-name {
-      width: 11rem;
+      width: 17rem;
     }
     .col-balance {
       display: none;
@@ -87,10 +87,10 @@ const TokensCard = styled(DetailCard)`
   }
 ` as typeof DetailCard;
 
-const StyledText = styled(Text)`
-  display: inline-flex;
-  align-items: center;
-`;
+// const StyledText = styled(Text)`
+//   display: inline-flex;
+//   align-items: center;
+// `;
 
 export const Portfolio = () => {
   const { t } = useAppTranslation(['common', 'home']);
@@ -220,10 +220,10 @@ export const Portfolio = () => {
               header: t('components.list-card.asset'),
               // token: { displayIcon, symbol },
               transform: ({ displayIcon, displayName, symbol }) => (
-                <StyledText>
+                <>
                   <TokenIcon icon={displayIcon} symbol={symbol} />
-                  <Text>{displayName}</Text>
-                </StyledText>
+                  <Text ellipsis>{displayName}</Text>
+                </>
               ),
               width: '23rem',
               sortable: true,

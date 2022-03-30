@@ -10,17 +10,16 @@ export const TxSpinnerLoading = styled(SpinnerLoading)`
 export const StyledTxActionButton = styled(Button)<{ contrast?: boolean; success?: boolean; disabled?: boolean }>`
   height: 4rem;
   flex: 1;
-  font-size: 1.4rem;
-  font-weight: 500;
-  text-transform: uppercase;
+  font-size: 1.6rem;
+  font-weight: 700;
   gap: 0.5rem;
   background-color: ${({ theme }) => theme.colors.txModalColors.primary};
-  color: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
+  color: ${({ theme }) => theme.colors.txModalColors.onPrimary};
 
   ${(props) =>
     props.disabled &&
     `
-    background-color: ${props.theme.colors.txModalColors.onBackgroundVariantB};
+    background-color: ${props.theme.colors.txModalColors.backgroundVariant};
     color: ${props.theme.colors.txModalColors.onBackgroundVariantColor};
   `}
 
@@ -29,6 +28,7 @@ export const StyledTxActionButton = styled(Button)<{ contrast?: boolean; success
     !props.disabled &&
     `
     background-color: ${props.theme.colors.txModalColors.loading};
+    color: ${props.theme.colors.txModalColors.onBackgroundVariantColor};
   `}
 
   ${(props) =>

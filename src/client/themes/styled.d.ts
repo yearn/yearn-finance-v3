@@ -155,10 +155,9 @@ declare module 'styled-components' {
       txModalColors: {
         background: string;
         backgroundVariant: string;
-        onBackgroundVariant: string;
-        onBackgroundVariantB: string;
         onBackgroundVariantColor: string;
         primary: string;
+        onPrimary: string;
         loading: string;
         error: string;
         warning: string;

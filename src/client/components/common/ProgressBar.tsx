@@ -10,7 +10,7 @@ export interface ProgressBarProps extends StyledSystemProps {
 }
 
 const StyledProgressBar = styled.div`
-  --progress-bar-background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
+  --progress-bar-background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
   --progress-bar-value-bg: ${({ theme }) => theme.colors.txModalColors.primary};
   --progress-bar-positive-bg: ${({ theme }) => theme.colors.txModalColors.success};
   --progress-bar-negative-bg: ${({ theme }) => theme.colors.txModalColors.loading};
