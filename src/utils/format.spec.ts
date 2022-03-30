@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import { toBN, toUnit, toWei } from './format';
 
-describe('Fromatters', () => {
+describe('Formatters', () => {
   describe('toBN', () => {
     it('should convert `string` to `BigNumber`', () => {
       const actual = toBN('123');
