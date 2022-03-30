@@ -25,3 +25,9 @@ export interface GeneralLabView {
   STAKE: PositionView;
   token: TokenView;
 }
+
+export interface SummaryData {
+  totalDeposits: string;
+  totalEarnings: string;
+  estYearlyYield: string;
+}

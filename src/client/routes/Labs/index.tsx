@@ -132,7 +132,7 @@ export const Labs = () => {
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const { totalDeposits, apy } = useAppSelector(LabsSelectors.selectSummaryData);
+  const { totalDeposits, totalEarnings, estYearlyYield } = useAppSelector(LabsSelectors.selectSummaryData);
   const recommendations = useAppSelector(LabsSelectors.selectRecommendations);
   const holdings = useAppSelector(LabsSelectors.selectDepositedLabs);
   const opportunities = useAppSelector(LabsSelectors.selectLabsOpportunities);
@@ -298,9 +298,8 @@ export const Labs = () => {
         header={t('dashboard.header')}
         items={[
           { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
-          { header: 'APY', content: formatApy(String(apy)) },
-          // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
-          // { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
+          { header: 'Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
+          { header: 'Est. Yearly Yield', content: `${formatApy(estYearlyYield)}` },
         ]}
         variant="secondary"
         cardSize="small"

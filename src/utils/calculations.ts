@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { Unit, Wei } from '@types';
+import { GeneralLabView, SummaryData, Unit, Wei } from '@types';
 
 import { toBN, toUnit } from './format';
 
@@ -33,11 +33,21 @@ export function calculateUnderlyingAmount(props: CalculateUnderlyingAmountProps)
   return amount.times(sharePrice).times(ONE_UNIT).toFixed(0);
 }
 
-export function calculateCombinedApy(apyData: [apy?: number, deposit?: string][]): number {
-  const totalDeposited = apyData.reduce((acc, [apy, deposit]) => (apy ? acc + Number(deposit) : acc), 0);
-  return apyData.reduce((total, [apy, deposit]) => {
-    if (!apy || !deposit) return total;
+export function computeSummaryData(labs: Pick<GeneralLabView, 'apyData' | 'DEPOSIT'>[]): SummaryData {
+  const { totalDeposits, totalEarnings } = labs.reduce(
+    ({ totalDeposits, totalEarnings }, { DEPOSIT: { userDepositedUsdc }, apyData }) => ({
+      totalDeposits: totalDeposits.plus(userDepositedUsdc),
+      totalEarnings: totalEarnings.plus(toBN(userDepositedUsdc).times(apyData)),
+    }),
+    {
+      totalDeposits: new BigNumber(0),
+      totalEarnings: new BigNumber(0),
+    }
+  );
 
-    return total + (apy * Number(deposit)) / totalDeposited;
-  }, 0);
+  return {
+    totalDeposits: totalDeposits.toString(),
+    totalEarnings: totalEarnings.toString(),
+    estYearlyYield: totalDeposits.isZero() ? '0' : totalEarnings.div(totalDeposits).toString(),
+  };
 }
