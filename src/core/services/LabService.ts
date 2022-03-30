@@ -142,16 +142,18 @@ export class LabServiceImpl implements LabService {
     let yvBoostLab: Lab | undefined;
     try {
       const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
-      const [totalAssets, pricePerShare, depositLimit, emergencyShutdown] = await Promise.all([
-        yvBoostContract.totalAssets(),
-        yvBoostContract.pricePerShare(),
-        yvBoostContract.depositLimit(),
-        yvBoostContract.emergencyShutdown(),
-      ]);
+      const totalAssets = await yvBoostContract.totalAssets();
+
+      const yvBoostVaultDynamic = (await yearn.vaults.getDynamic([YVBOOST]))[0];
       const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-      const { apyOverride } = await yearn.tokens.findMetadataOverrides(CONTRACT_ADDRESSES.YVBOOST);
-      if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+
+      // TODO We could use the data from `yvBoostVaultDynamic`
+      if (!yvBoostData) {
+        throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      }
+
       const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
+
       yvBoostLab = {
         address: YVBOOST,
         typeId: 'LAB',
@@ -169,17 +171,12 @@ export class LabServiceImpl implements LabService {
             .toFixed(0),
         },
         metadata: {
-          depositLimit: depositLimit.toString(),
-          emergencyShutdown: emergencyShutdown,
-          pricePerShare: pricePerShare.toString(),
-          apy: { ...yvBoostData.apy, ...(apyOverride && { net_apy: apyOverride }) },
-          displayName: yvBoostData.symbol,
+          ...yvBoostVaultDynamic.metadata,
           displayIcon: `${ASSET_URL}${YVBOOST}/logo-128.png`,
-          defaultDisplayToken: YVECRV,
         },
       };
     } catch (error) {
-      errors.push('YvBoost Lab Error');
+      errors.push(`YvBoost Lab Error ${JSON.stringify(error)}`);
     }
 
     // **************** YVBOOST-ETH ****************
