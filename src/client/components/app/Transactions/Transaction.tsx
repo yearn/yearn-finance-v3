@@ -109,7 +109,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
 
   if (transactionCompleted) {
     return (
-      <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
+      <StyledTransaction onClose={onClose} header={transactionLabel}>
         <TxStatus transactionCompletedLabel={transactionCompletedLabel} exit={onTransactionCompletedDismissed} />
       </StyledTransaction>
     );
@@ -130,7 +130,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
   }`;
 
   return (
-    <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
+    <StyledTransaction onClose={onClose} header={transactionLabel}>
       <TxTokenInput
         headerText={sourceHeader}
         inputText={sourceInputText}
