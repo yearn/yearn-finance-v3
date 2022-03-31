@@ -14,8 +14,8 @@ const StyledButton = styled.button<{ outline?: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 0 1.6rem;
-  height: 2.8rem;
+  padding: 0 1rem;
+  height: 3.2rem;
   border: 2px solid transparent;
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${(props) => props.theme.colors.secondary};

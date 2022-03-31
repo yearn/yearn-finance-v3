@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 
 import { Icon, ArrowDownIcon, IconProps } from '@components/common';
 
-const Container = styled.article<{ width?: string; align?: string; grow?: string; fontWeight?: number }>`
+const Container = styled.div<{ width?: string; align?: string; grow?: string; fontWeight?: number }>`
   display: flex;
   flex-direction: column;
   width: ${({ width }) => width ?? '17rem'};
@@ -39,7 +39,7 @@ const Header = styled.h3<{ onClick?: () => void }>`
   align-items: center;
   font-size: 1.6rem;
   font-weight: 400;
-  margin: 0 0 0.8rem 0;
+  margin: 0;
   padding: 0;
   color: ${({ theme }) => theme.colors.texts};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
@@ -54,6 +54,7 @@ const Content = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 100%;
+  margin-top: 0.8rem;
   color: ${({ theme }) => theme.colors.texts};
 
   :first-child img {

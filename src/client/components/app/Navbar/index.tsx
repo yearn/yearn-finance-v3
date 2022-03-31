@@ -15,14 +15,14 @@ const StyledOptionList = styled(OptionList)`
 const StyledNavbarActions = styled.div`
   display: grid;
   grid-auto-flow: column;
-  grid-gap: 0.8rem;
+  grid-gap: 1.6rem;
   padding-left: 0.8rem;
   align-items: center;
   justify-content: flex-end;
   flex: 1;
 
   > * {
-    height: 2.8rem;
+    height: 3.2rem;
   }
 `;
 
