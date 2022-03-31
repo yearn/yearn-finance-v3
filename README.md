@@ -70,6 +70,10 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 ```
 yarn dev
 ```
+or for Windows:
+```
+yarn dev-win
+```
 
 - To enable Dev Mode set `REACT_APP_ALLOW_DEV_MODE=true` in your `.env`
 - Wallet Address Override can be activated by navigating to Settings in the app and clicking `Enable Dev Mode`

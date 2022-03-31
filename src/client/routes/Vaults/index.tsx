@@ -220,22 +220,20 @@ export const Vaults = () => {
   return (
     <ViewContainer>
       <StyledSliderCard
-        slidesContent={[
-          {
-            header: t('vaults:your-time-card.header'),
-            content: (
-              <Text>
-                <p>{t('vaults:your-time-card.desc-1')}</p>
-                <p>{t('vaults:your-time-card.desc-2')}</p>
-                <p>{t('vaults:your-time-card.desc-3')}</p>
-              </Text>
-            ),
-          },
-          // {
-          //   header: 'Test header',
-          //   content: 'test content',
-          // },
-        ]}
+        header={t('vaults:your-time-card.header')}
+        Component={
+          <Text>
+            <p>{t('vaults:your-time-card.desc-1')}</p>
+            <p>{t('vaults:your-time-card.desc-2')}</p>
+            <p>{t('vaults:your-time-card.desc-3')}</p>
+          </Text>
+        }
+        // slidesContent={[
+        // {
+        //   header: 'Test header',
+        //   content: 'test content',
+        // },
+        // ]}
       />
 
       <SummaryCard items={summaryCardItems} cardSize="small" />

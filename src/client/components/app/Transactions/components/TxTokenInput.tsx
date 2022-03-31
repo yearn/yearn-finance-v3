@@ -277,7 +277,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
 
   return (
     <StyledTxTokenInput {...props}>
-      {headerText && <Header>{headerText}</Header>}
+      <>{headerText && <Header>{headerText}</Header>}</>
       {openedSearch && (
         <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
           <StyledSearchList
@@ -290,44 +290,47 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         </CSSTransition>
       )}
 
-      <TokenInfo>
-        <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
-          <TokenIconContainer>
-            <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
-            {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
-          </TokenIconContainer>
-          <TokenName>{selectedItem.label}</TokenName>
-        </TokenSelector>
+      {/* NOTE Using fragments here because: https://github.com/yearn/yearn-finance-v3/pull/565 */}
+      <>
+        <TokenInfo>
+          <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
+            <TokenIconContainer>
+              <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
+              {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
+            </TokenIconContainer>
+            <TokenName>{selectedItem.label}</TokenName>
+          </TokenSelector>
 
-        <TokenData>
-          <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
+          <TokenData>
+            <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
 
-          <AmountInputContainer>
-            <StyledAmountInput
-              value={amount}
-              onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-              placeholder={loading ? loadingText : '0.00000000'}
-              readOnly={readOnly}
-              error={inputError}
-              type="number"
-            />
-            {maxAmount && (
-              <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
-                {maxLabel}
-              </MaxButton>
-            )}
-          </AmountInputContainer>
+            <AmountInputContainer>
+              <StyledAmountInput
+                value={amount}
+                onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
+                placeholder={loading ? loadingText : '0.00000000'}
+                readOnly={readOnly}
+                error={inputError}
+                type="number"
+              />
+              {maxAmount && (
+                <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+                  {maxLabel}
+                </MaxButton>
+              )}
+            </AmountInputContainer>
 
-          <TokenExtras>
-            {amountValue && <StyledText>{formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
-            {yieldPercent && (
-              <StyledText>
-                {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
-              </StyledText>
-            )}
-          </TokenExtras>
-        </TokenData>
-      </TokenInfo>
+            <TokenExtras>
+              {amountValue && <StyledText>{formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
+              {yieldPercent && (
+                <StyledText>
+                  {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
+                </StyledText>
+              )}
+            </TokenExtras>
+          </TokenData>
+        </TokenInfo>
+      </>
     </StyledTxTokenInput>
   );
 };

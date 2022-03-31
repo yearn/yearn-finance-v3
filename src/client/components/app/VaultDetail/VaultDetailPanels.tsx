@@ -418,7 +418,7 @@ export const VaultDetailPanels = ({
 
               <OverviewStrategies>
                 {strategies.map((strategy) => (
-                  <OverviewInfo variant="surface" cardSize="micro">
+                  <OverviewInfo variant="surface" cardSize="micro" key={strategy.address}>
                     <StyledCardHeader subHeader={strategy.name} />
                     <StyledCardContent>
                       <Markdown>{strategy.description}</Markdown>
