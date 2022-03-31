@@ -298,7 +298,7 @@ export const Labs = () => {
         header={t('dashboard.header')}
         items={[
           { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
-          { header: 'Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
+          { header: 'Est. Yearly Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
           { header: 'Est. Yearly Yield', content: `${formatApy(estYearlyYield)}` },
         ]}
         variant="secondary"
