@@ -145,7 +145,7 @@ export class LabServiceImpl implements LabService {
       const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
 
       // TODO We could use the data from `yvBoostVaultDynamic`
-      if (!yvBoostData || !yvBoostVaultDynamic) {
+      if (!yvBoostData) {
         throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
       }
 
@@ -154,17 +154,8 @@ export class LabServiceImpl implements LabService {
       }
 
       const { address, decimals, name, symbol, token, version } = yvBoostData;
+
       const { underlyingTokenBalance } = yvBoostVaultDynamic;
-
-      const amount = underlyingTokenBalance.amount.toString();
-
-      const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
-
-      // This amount usdc is slightly different from the one that comes from `underlyingTokenBalance`
-      const amountUsdc = toBN(normalizeAmount(amount, decimals))
-        .times(yveCrvPrice)
-        .times(10 ** USDC_DECIMALS)
-        .toFixed(0);
 
       yvBoostLab = {
         address,
@@ -175,10 +166,7 @@ export class LabServiceImpl implements LabService {
         symbol,
         decimals: decimals.toString(),
         tokenId: token.address,
-        underlyingTokenBalance: {
-          amount,
-          amountUsdc,
-        },
+        underlyingTokenBalance,
         metadata: {
           ...yvBoostVaultDynamic.metadata,
           displayIcon: `${ASSET_URL}${address}/logo-128.png`,
