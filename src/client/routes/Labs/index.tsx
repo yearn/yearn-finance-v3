@@ -411,8 +411,7 @@ export const Labs = () => {
                 alert: labsHoldingsAlerts(lab) ?? '',
                 actions: null,
               }))}
-              // TODO Redirect address is wrong
-              // onAction={({ address }) => history.push(`/vault/${address}`)}
+              onAction={({ address }) => history.push(`/lab/${address}`)}
               initialSortBy="value"
               wrap
             />
