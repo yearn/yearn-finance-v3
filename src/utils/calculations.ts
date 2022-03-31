@@ -40,8 +40,8 @@ export function computeSummaryData(labs: Pick<GeneralLabView, 'apyData' | 'DEPOS
       totalEarnings: totalEarnings.plus(toBN(userDepositedUsdc).times(apyData)),
     }),
     {
-      totalDeposits: new BigNumber(0),
-      totalEarnings: new BigNumber(0),
+      totalDeposits: toBN(0),
+      totalEarnings: toBN(0),
     }
   );
 
