@@ -141,38 +141,47 @@ export class LabServiceImpl implements LabService {
     // **************** YVBOOST ****************
     let yvBoostLab: Lab | undefined;
     try {
-      const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
-      const totalAssets = await yvBoostContract.totalAssets();
-
-      const yvBoostVaultDynamic = (await yearn.vaults.getDynamic([YVBOOST]))[0];
+      const [yvBoostVaultDynamic] = await yearn.vaults.getDynamic([YVBOOST]);
       const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
 
       // TODO We could use the data from `yvBoostVaultDynamic`
-      if (!yvBoostData) {
+      if (!yvBoostData || !yvBoostVaultDynamic) {
         throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
       }
 
+      if (!yvBoostVaultDynamic) {
+        throw new Error(`yvBoost vault not found on yearn dynamic vaults response`);
+      }
+
+      const { address, decimals, name, symbol, token, version } = yvBoostData;
+      const { underlyingTokenBalance } = yvBoostVaultDynamic;
+
+      const amount = underlyingTokenBalance.amount.toString();
+
       const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
 
+      // This amount usdc is slightly different from the one that comes from `underlyingTokenBalance`
+      const amountUsdc = toBN(normalizeAmount(amount, decimals))
+        .times(yveCrvPrice)
+        .times(10 ** USDC_DECIMALS)
+        .toFixed(0);
+
       yvBoostLab = {
-        address: YVBOOST,
+        address,
         typeId: 'LAB',
-        token: YVECRV,
-        name: yvBoostData.name,
-        version: yvBoostData.version,
-        symbol: yvBoostData.symbol,
-        decimals: yvBoostData.decimals.toString(),
-        tokenId: YVECRV,
+        token: token.address,
+        name,
+        version,
+        symbol,
+        decimals: decimals.toString(),
+        tokenId: token.address,
         underlyingTokenBalance: {
-          amount: totalAssets.toString(),
-          amountUsdc: toBN(normalizeAmount(totalAssets.toString(), yvBoostData.decimals))
-            .times(yveCrvPrice)
-            .times(10 ** USDC_DECIMALS)
-            .toFixed(0),
+          amount,
+          amountUsdc,
         },
         metadata: {
           ...yvBoostVaultDynamic.metadata,
-          displayIcon: `${ASSET_URL}${YVBOOST}/logo-128.png`,
+          displayIcon: `${ASSET_URL}${address}/logo-128.png`,
         },
       };
     } catch (error) {
