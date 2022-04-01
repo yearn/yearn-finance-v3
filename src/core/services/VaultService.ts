@@ -264,28 +264,27 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async approveDeposit(props: ApproveDepositProps): Promise<Boolean | TransactionResponse> {
-    const { network, tokenAddress, amount, accountAddress, vault } = props;
+    const { network, tokenAddress, amount, accountAddress, vaultAddress } = props;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
-    return yearn.tokens.approveDeposit(vault.address, vault.token, tokenAddress, amount, accountAddress);
+    return yearn.vaults.approveDeposit(accountAddress, vaultAddress, tokenAddress, amount);
   }
 
   public async approveZapOut(props: ApproveZapOutProps): Promise<Boolean | TransactionResponse> {
     const { network, vault, accountAddress } = props;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
-    return yearn.tokens.approveZapOut(vault, vault.token, accountAddress);
+    return yearn.vaults.approveWithdraw(vault.address, vault.token, accountAddress);
   }
 
   public async getVaultAllowance({
     network,
     vaultAddress,
-    vaultTokenAddress,
     tokenAddress,
     accountAddress,
   }: GetVaultAllowanceProps): Promise<TokenAllowance> {
     const yearn = this.yearnSdk.getInstanceOf(network);
-    const allowance = await yearn.tokens.allowance(vaultAddress, vaultTokenAddress, tokenAddress, accountAddress);
+    const allowance = await yearn.vaults.getDepositAllowance(accountAddress, vaultAddress, tokenAddress);
 
     return allowance;
   }

@@ -170,7 +170,7 @@ export interface ApproveDepositProps {
   accountAddress: Address;
   tokenAddress: Address;
   amount: Wei;
-  vault: Vault;
+  vaultAddress: string;
 }
 
 export interface ApproveZapOutProps {
@@ -185,7 +185,6 @@ export interface GetVaultAllowanceProps {
   accountAddress: string;
   tokenAddress: string;
   vaultAddress: string;
-  vaultTokenAddress: string;
 }
 
 export interface ApproveProps {

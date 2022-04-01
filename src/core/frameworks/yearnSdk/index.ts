@@ -19,8 +19,7 @@ export class YearnSdkImpl implements YearnSdk {
         partnerId: isLedger ? CONTRACT_ADDRESSES.LEDGER_PARTNER_ID : undefined,
         ...(YEARN_SUBGRAPH_KEY && {
           subgraph: {
-            subgraphKey: YEARN_SUBGRAPH_KEY,
-            mainnetSubgraphId: YEARN_SUBGRAPH_ID,
+            mainnetSubgraphEndpoint: `https://gateway.thegraph.com/api/${YEARN_SUBGRAPH_KEY}/subgraphs/id/${YEARN_SUBGRAPH_ID}`,
           },
         }),
       });
