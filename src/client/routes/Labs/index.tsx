@@ -301,8 +301,8 @@ export const Labs = () => {
       <SummaryCard
         items={[
           { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
-          { header: 'Est. Yearly Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
-          { header: 'Est. Yearly Yield', content: `${formatApy(estYearlyYield)}` },
+          { header: t('dashboard.est-yearly-earnings'), Component: <Amount value={totalEarnings} input="usdc" /> },
+          { header: t('dashboard.est-yearly-yield'), content: `${formatApy(estYearlyYield)}` },
         ]}
         cardSize="small"
       />
