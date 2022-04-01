@@ -161,17 +161,14 @@ const getLabAllowance = createAsyncThunk<
   const {
     services: { vaultService },
   } = extra;
-  const { network, wallet, labs } = getState();
+  const { network, wallet } = getState();
   const userAddress = wallet.selectedAddress;
-
-  const labtData = labs.labsMap[vaultAddress];
 
   if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
   return vaultService.getVaultAllowance({
     network: network.current,
-    vaultAddress: labtData.address,
-    vaultTokenAddress: labtData.token,
+    vaultAddress: vaultAddress,
     tokenAddress,
     accountAddress: userAddress,
   });

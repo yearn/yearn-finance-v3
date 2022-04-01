@@ -189,7 +189,7 @@ const approveDeposit = createAsyncThunk<
     const amount = extra.config.MAX_UINT256;
 
     const accountAddress = wallet.selectedAddress;
-    const isZapin = vaultData.token === tokenAddress;
+    const isZapin = vaultData.token !== tokenAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const tx = await vaultService.approveDeposit({
@@ -197,7 +197,7 @@ const approveDeposit = createAsyncThunk<
       accountAddress,
       tokenAddress,
       amount,
-      vault: vaultData,
+      vaultAddress: vaultData.address,
     });
 
     if (typeof tx !== 'boolean') {
@@ -449,17 +449,14 @@ const getVaultAllowance = createAsyncThunk<
   const {
     services: { vaultService },
   } = extra;
-  const { network, wallet, vaults } = getState();
+  const { network, wallet } = getState();
   const userAddress = wallet.selectedAddress;
-
-  const vaultData = vaults.vaultsMap[vaultAddress];
 
   if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
   return vaultService.getVaultAllowance({
     network: network.current,
-    vaultAddress: vaultData.address,
-    vaultTokenAddress: vaultData.token,
+    vaultAddress: vaultAddress,
     tokenAddress,
     accountAddress: userAddress,
   });
