@@ -1,5 +1,8 @@
 {
   "components": {
+    "search-input": {
+      "search": "Buscar"
+    },
     "back-button": {
       "label": "Volver a la última página"
     },

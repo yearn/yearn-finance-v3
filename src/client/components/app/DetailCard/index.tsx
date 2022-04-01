@@ -75,6 +75,7 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolea
 const StyledCardHeader = styled(CardHeader)`
   display: flex;
   flex-wrap: center;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: 0.6rem;
 `;
@@ -162,14 +163,16 @@ export const DetailCard = <T,>({
   return (
     <StyledCard {...props}>
       <StyledCardHeader header={header}>
-        {!!filterBy && (
-          <SectionContent>
-            {filterLabel}
-            <ToggleButton selected={filterToggle} setSelected={setFilterToggle} />
-          </SectionContent>
-        )}
+        <SectionContent>
+          {!!filterBy && (
+            <>
+              {filterLabel}
+              <ToggleButton selected={filterToggle} setSelected={setFilterToggle} />
+            </>
+          )}
+          {SearchBar}
+        </SectionContent>
       </StyledCardHeader>
-      {SearchBar}
 
       {!!displayData.length && (
         <CardContent>

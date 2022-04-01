@@ -1,5 +1,8 @@
 {
   "components": {
+    "search-input": {
+      "search": "Search"
+    },
     "back-button": {
       "label": "Back to previous page"
     },

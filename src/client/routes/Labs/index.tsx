@@ -30,17 +30,13 @@ import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
 
-const SearchBarContainer = styled.div`
-  margin: 1.2rem;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  grid-gap: ${({ theme }) => theme.layoutPadding};
-  flex-wrap: wrap;
-`;
+// const Row = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   justify-content: flex-start;
+//   grid-gap: ${({ theme }) => theme.layoutPadding};
+//   flex-wrap: wrap;
+// `;
 
 const StyledHelperCursor = styled.span`
   cursor: help;
@@ -469,14 +465,12 @@ export const Labs = () => {
                 actions: null,
               }))}
               SearchBar={
-                <SearchBarContainer>
-                  <SearchInput
-                    searchableData={opportunities}
-                    searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
-                    placeholder=""
-                    onSearch={(data) => setFilteredOpportunities(data)}
-                  />
-                </SearchBarContainer>
+                <SearchInput
+                  searchableData={opportunities}
+                  searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
+                  placeholder={t('components.search-input.search')}
+                  onSearch={(data) => setFilteredOpportunities(data)}
+                />
               }
               searching={opportunities.length > filteredOpportunities.length}
               // TODO Redirect address is wrong
