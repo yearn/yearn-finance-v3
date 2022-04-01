@@ -1,11 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
 import { formatApy, USDC_DECIMALS, humanize } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
-import { TokenIcon, ScanNetworkIcon, ApyTooltipData } from '@components/app';
+import { TokenIcon, ScanNetworkIcon, ApyTooltipData, LabDepositTx, LabWithdrawTx } from '@components/app';
 import {
   Card,
   CardContent,
@@ -16,6 +16,9 @@ import {
   InfoIcon,
   AddCircleIcon,
   Tooltip,
+  Tab,
+  Tabs,
+  TabPanel,
 } from '@components/common';
 import { MetamaskLogo } from '@assets/images';
 import { GeneralLabView, Network } from '@types';
@@ -175,6 +178,25 @@ const LabOverview = styled(Card)`
   }
 `;
 
+const LabActions = styled(Card)`
+  display: flex;
+  flex-direction: column;
+  width: 41.6rem;
+  align-self: stretch;
+
+  @media ${device.tabletL} {
+    width: 100%;
+  } ;
+`;
+
+const ActionsTabs = styled(Tabs)`
+  margin-top: 1.2rem;
+`;
+
+const StyledTabPanel = styled(TabPanel)`
+  margin-top: 1.5rem;
+`;
+
 export interface LabDetailPanelsProps {
   selectedLab: GeneralLabView;
   displayAddToken?: boolean;
@@ -203,6 +225,12 @@ export const LabDetailPanels = ({
   const { t } = useAppTranslation('labdetails');
 
   const context = useContext(AppContext);
+
+  const [selectedTab, setSelectedTab] = useState('deposit');
+
+  const handleTabChange = (selectedTab: string) => {
+    setSelectedTab(selectedTab);
+  };
 
   const handleAddToken = () => {
     const {
@@ -281,6 +309,21 @@ export const LabDetailPanels = ({
             </OverviewInfo>
           )}
         </LabOverview>
+
+        <LabActions>
+          <StyledCardHeader header={t('labdetails:lab-actions-panel.header')} />
+          <ActionsTabs value={selectedTab} onChange={handleTabChange}>
+            <Tab value="deposit">{t('labdetails:lab-actions-panel.deposit')}</Tab>
+            <Tab value="withdraw">{t('labdetails:lab-actions-panel.withdraw')}</Tab>
+          </ActionsTabs>
+
+          <StyledTabPanel value="deposit" tabValue={selectedTab}>
+            <LabDepositTx />
+          </StyledTabPanel>
+          <StyledTabPanel value="withdraw" tabValue={selectedTab}>
+            <LabWithdrawTx />
+          </StyledTabPanel>
+        </LabActions>
       </Row>
     </>
   );
