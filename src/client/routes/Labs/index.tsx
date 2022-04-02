@@ -25,22 +25,18 @@ import {
   ApyTooltipData,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text, Tooltip } from '@components/common';
-import { formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECIMALS } from '@utils';
+import { formatApy, formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECIMALS } from '@utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
 
-const SearchBarContainer = styled.div`
-  margin: 1.2rem;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  grid-gap: ${({ theme }) => theme.layoutPadding};
-  flex-wrap: wrap;
-`;
+// const Row = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   justify-content: flex-start;
+//   grid-gap: ${({ theme }) => theme.layoutPadding};
+//   flex-wrap: wrap;
+// `;
 
 const StyledHelperCursor = styled.span`
   cursor: help;
@@ -127,7 +123,7 @@ export const Labs = () => {
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const { totalDeposits } = useAppSelector(LabsSelectors.selectSummaryData);
+  const { totalDeposits, totalEarnings, estYearlyYield } = useAppSelector(LabsSelectors.selectSummaryData);
   const recommendations = useAppSelector(LabsSelectors.selectRecommendations);
   const holdings = useAppSelector(LabsSelectors.selectDepositedLabs);
   const opportunities = useAppSelector(LabsSelectors.selectLabsOpportunities);
@@ -305,8 +301,8 @@ export const Labs = () => {
       <SummaryCard
         items={[
           { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
-          // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
-          // { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
+          { header: t('dashboard.est-yearly-earnings'), Component: <Amount value={totalEarnings} input="usdc" /> },
+          { header: t('dashboard.est-yearly-yield'), content: `${formatApy(estYearlyYield)}` },
         ]}
         cardSize="small"
       />
@@ -469,14 +465,12 @@ export const Labs = () => {
                 actions: null,
               }))}
               SearchBar={
-                <SearchBarContainer>
-                  <SearchInput
-                    searchableData={opportunities}
-                    searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
-                    placeholder=""
-                    onSearch={(data) => setFilteredOpportunities(data)}
-                  />
-                </SearchBarContainer>
+                <SearchInput
+                  searchableData={opportunities}
+                  searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
+                  placeholder={t('components.search-input.search')}
+                  onSearch={(data) => setFilteredOpportunities(data)}
+                />
               }
               searching={opportunities.length > filteredOpportunities.length}
               // TODO Redirect address is wrong

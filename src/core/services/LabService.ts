@@ -64,6 +64,7 @@ export class LabServiceImpl implements LabService {
     const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { ETH, YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+    const yearn = this.yearnSdk.getInstanceOf(network);
     const providerType = getProviderType(network);
     const provider = this.web3Provider.getInstanceOf(providerType);
     const vaultsPromise = get(YEARN_API);
@@ -140,44 +141,39 @@ export class LabServiceImpl implements LabService {
     // **************** YVBOOST ****************
     let yvBoostLab: Lab | undefined;
     try {
-      const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
-      const [totalAssets, pricePerShare, depositLimit, emergencyShutdown] = await Promise.all([
-        yvBoostContract.totalAssets(),
-        yvBoostContract.pricePerShare(),
-        yvBoostContract.depositLimit(),
-        yvBoostContract.emergencyShutdown(),
-      ]);
+      const [yvBoostVaultDynamic] = await yearn.vaults.getDynamic([YVBOOST]);
       const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-      if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-      const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
+
+      // TODO We could use the data from `yvBoostVaultDynamic`
+      if (!yvBoostData) {
+        throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      }
+
+      if (!yvBoostVaultDynamic) {
+        throw new Error(`yvBoost vault not found on yearn dynamic vaults response`);
+      }
+
+      const { address, decimals, name, symbol, token, version } = yvBoostData;
+
+      const { underlyingTokenBalance } = yvBoostVaultDynamic;
+
       yvBoostLab = {
-        address: YVBOOST,
+        address,
         typeId: 'LAB',
-        token: YVECRV,
-        name: yvBoostData.name,
-        version: yvBoostData.version,
-        symbol: yvBoostData.symbol,
-        decimals: yvBoostData.decimals.toString(),
-        tokenId: YVECRV,
-        underlyingTokenBalance: {
-          amount: totalAssets.toString(),
-          amountUsdc: toBN(normalizeAmount(totalAssets.toString(), yvBoostData.decimals))
-            .times(yveCrvPrice)
-            .times(10 ** USDC_DECIMALS)
-            .toFixed(0),
-        },
+        token: token.address,
+        name,
+        version,
+        symbol,
+        decimals: decimals.toString(),
+        tokenId: token.address,
+        underlyingTokenBalance,
         metadata: {
-          depositLimit: depositLimit.toString(),
-          emergencyShutdown: emergencyShutdown,
-          pricePerShare: pricePerShare.toString(),
-          apy: yvBoostData.apy,
-          displayName: yvBoostData.symbol,
-          displayIcon: `${ASSET_URL}${YVBOOST}/logo-128.png`,
-          defaultDisplayToken: YVECRV,
+          ...yvBoostVaultDynamic.metadata,
+          displayIcon: `${ASSET_URL}${address}/logo-128.png`,
         },
       };
     } catch (error) {
-      errors.push('YvBoost Lab Error');
+      errors.push(`YvBoost Lab Error ${JSON.stringify(error)}`);
     }
 
     // **************** YVBOOST-ETH ****************

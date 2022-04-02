@@ -40,10 +40,6 @@ import {
 import { getConfig } from '@config';
 import { VaultView } from '@src/core/types';
 
-const SearchBarContainer = styled.div`
-  margin: 1.2rem;
-`;
-
 // const Row = styled.div`
 //   display: flex;
 //   flex-wrap: wrap;
@@ -486,14 +482,12 @@ export const Vaults = () => {
                 actions: null,
               }))}
               SearchBar={
-                <SearchBarContainer>
-                  <SearchInput
-                    searchableData={opportunities}
-                    searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
-                    placeholder=""
-                    onSearch={(data) => setFilteredVaults(data)}
-                  />
-                </SearchBarContainer>
+                <SearchInput
+                  searchableData={opportunities}
+                  searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
+                  placeholder={t('components.search-input.search')}
+                  onSearch={(data) => setFilteredVaults(data)}
+                />
               }
               searching={opportunities.length > filteredVaults.length}
               onAction={({ address }) => history.push(`/vault/${address}`)}

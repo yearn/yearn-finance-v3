@@ -198,6 +198,10 @@ export const Portfolio = () => {
                     header: t('dashboard.holdings'),
                     Component: <Amount value={labsSummary.totalDeposits} input="usdc" />,
                   },
+                  {
+                    header: t('dashboard.apy'),
+                    Component: <Amount value={labsSummary.estYearlyYield} input="percent" />,
+                  },
                 ]}
                 redirectTo="labs"
                 cardSize="small"

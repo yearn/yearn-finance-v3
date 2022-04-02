@@ -1,5 +1,8 @@
 {
   "components": {
+    "search-input": {
+      "search": "Search"
+    },
     "back-button": {
       "label": "Back to previous page"
     },
@@ -105,6 +108,7 @@
     "borrowed": "Borrowed",
     "earnings": "Earnings",
     "est-yearly-yield": "Est. yearly yield",
+    "est-yearly-earnings": "Est. yearly earnings",
     "holdings": "Holdings",
     "supplied": "Supplied",
     "total-net-worth": "Total net worth",
