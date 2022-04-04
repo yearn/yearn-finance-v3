@@ -58,9 +58,10 @@ export class VaultServiceImpl implements VaultService {
   /* -------------------------------------------------------------------------- */
 
   public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
+    const { YVBOOST } = this.config.CONTRACT_ADDRESSES;
     const yearn = this.yearnSdk.getInstanceOf(network);
     const vaults = await yearn.vaults.get(addresses);
-    return vaults;
+    return vaults.filter(({ address }) => address !== YVBOOST);
   }
 
   public async getVaultsDynamicData({ network, addresses }: GetVaultsDynamicDataProps): Promise<VaultDynamic[]> {
