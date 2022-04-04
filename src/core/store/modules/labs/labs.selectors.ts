@@ -13,7 +13,7 @@ import {
   LabsPositionsTypes,
 } from '@types';
 import { getConstants } from '@config/constants';
-import { toBN } from '@utils';
+import { computeSummaryData, toBN } from '@utils';
 
 import { createToken } from '../tokens/tokens.selectors';
 
@@ -161,14 +161,7 @@ const selectSelectedLab = createSelector([selectLabs, selectSelectedLabAddress],
 });
 
 const selectSummaryData = createSelector([selectDepositedLabs], (depositedLabs) => {
-  let totalDeposited = toBN('0');
-  depositedLabs.forEach((lab) => (totalDeposited = totalDeposited.plus(lab[lab.mainPositionKey].userDepositedUsdc)));
-
-  return {
-    totalDeposits: totalDeposited.toString(),
-    totalEarnings: '0',
-    estYearlyYeild: '0',
-  };
+  return computeSummaryData(depositedLabs);
 });
 
 const selectLabsStatus = createSelector(
