@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components/macro';
 
-const Container = styled.div<{ wrap?: string }>`
+const Container = styled.article<{ wrap?: string }>`
   display: flex;
   flex-direction: row;
   flex-wrap: ${({ wrap }) => wrap};
