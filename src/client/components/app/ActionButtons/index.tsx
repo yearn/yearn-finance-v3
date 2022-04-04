@@ -22,7 +22,7 @@ const AlertButton = styled.div`
   border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
   background: ${({ theme }) => theme.colors.vaultActionButton.borderColor};
   width: 2.8rem;
-  //height: 2.8rem;
+  height: 2.8rem;
 `;
 
 const ActionButton = styled(Button)<{ hide?: boolean }>`

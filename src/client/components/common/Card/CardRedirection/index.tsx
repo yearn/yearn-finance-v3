@@ -7,7 +7,7 @@ import { ChevronRightIcon, Icon } from '@components/common/Icon';
 
 const Arrow = styled(Icon)`
   height: 1.6rem;
-  fill: currentColor;
+  fill: ${({ theme }) => theme.colors.primary};
 `;
 
 const StyledCardRedirection = styled.div`
