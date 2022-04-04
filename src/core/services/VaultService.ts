@@ -61,6 +61,7 @@ export class VaultServiceImpl implements VaultService {
     const { YVBOOST } = this.config.CONTRACT_ADDRESSES;
     const yearn = this.yearnSdk.getInstanceOf(network);
     const vaults = await yearn.vaults.get(addresses);
+    // TODO: Once SDK has a Labs interface, filtering out yvBoost should not be needed anymore
     return vaults.filter(({ address }) => address !== YVBOOST);
   }
 
