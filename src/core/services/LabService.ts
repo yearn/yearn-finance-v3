@@ -141,7 +141,7 @@ export class LabServiceImpl implements LabService {
     // **************** YVBOOST ****************
     let yvBoostLab: Lab | undefined;
     try {
-      const [yvBoostVaultDynamic] = await yearn.vaults.getDynamic([YVBOOST]);
+      const [yvBoostVaultDynamic] = await yearn.vaults.get([YVBOOST]);
       const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
 
       // TODO We could use the data from `yvBoostVaultDynamic`
