@@ -40,6 +40,10 @@ const light = {
   },
 };
 
+// TODO Clean all themes variables, this is a mess right now, lots of unused vars
+// and lots of unnecessary ones, if we can get an updated figma with matching vars on
+// all the themes, these shouldn't be too difficult
+
 const lightTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
