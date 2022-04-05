@@ -7,7 +7,7 @@ import { ChevronRightIcon, Icon } from '@components/common/Icon';
 
 const Arrow = styled(Icon)`
   height: 1.6rem;
-  fill: ${({ theme }) => theme.colors.primary};
+  fill: currentColor;
 `;
 
 const StyledCardRedirection = styled.div`
@@ -19,6 +19,7 @@ const StyledCardRedirection = styled.div`
   right: 0;
   padding: ${({ theme }) => theme.card.padding};
   transition: color 200ms ease-in-out;
+  color: ${({ theme }) => theme.colors.primary};
 
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
