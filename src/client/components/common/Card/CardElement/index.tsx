@@ -54,7 +54,6 @@ const Content = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 100%;
-  margin-top: 0.8rem;
   color: ${({ theme }) => theme.colors.texts};
 
   :first-child img {
