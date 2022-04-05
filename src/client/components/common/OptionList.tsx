@@ -45,7 +45,8 @@ const StyledSpinnerLoading = styled(SpinnerLoading)`
 
 const ArrowIcon = styled(Icon)<{ open?: boolean }>`
   margin-left: 0.8rem;
-  height: 0.8rem;
+  height: 1rem;
+  fill: currentColor;
   transition: transform 150ms ease-in-out;
   transform: rotate(${({ open }) => (open ? '180deg' : '0deg')});
 `;
