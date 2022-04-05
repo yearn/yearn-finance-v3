@@ -15,7 +15,7 @@ const StyledOptionList = styled(OptionList)`
 const StyledNavbarActions = styled.div`
   display: grid;
   grid-auto-flow: column;
-  grid-gap: 1.6rem;
+  grid-gap: 1.2rem;
   padding-left: 0.8rem;
   align-items: center;
   justify-content: flex-end;
