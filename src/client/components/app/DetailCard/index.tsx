@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Card, CardHeader, CardContent, CardElement, CardEmptyList, ToggleButton } from '@components/common';
 import { sort } from '@utils';
@@ -74,10 +74,10 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolea
 
 const StyledCardHeader = styled(CardHeader)`
   display: flex;
-  flex-wrap: center;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.6rem;
+  margin-bottom: 2rem;
 `;
 
 const StyledCard = styled(Card)`

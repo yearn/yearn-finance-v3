@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { TokenIcon } from '@components/app';

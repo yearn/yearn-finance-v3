@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { useLocation, useHistory, Link } from 'react-router-dom';
 
 import { useAppTranslation, useAppSelector } from '@hooks';
@@ -32,8 +32,8 @@ const StyledLogo = styled(Logo)`
 
 const LinkList = styled.div`
   display: grid;
-  gap: 1.2rem;
-  margin-top: 2.3rem;
+  gap: 2.4rem;
+  margin-top: 2.4rem;
 `;
 
 const LinkIcon = styled(Icon)`
@@ -52,7 +52,7 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
   display: flex;
   align-items: center;
   color: inherit;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 400;
 
   &:hover span {

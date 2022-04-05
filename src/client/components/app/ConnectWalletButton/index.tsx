@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { useAppTranslation } from '@hooks';
 import { Button, Text } from '@components/common';

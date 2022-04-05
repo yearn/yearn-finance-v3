@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Serie } from '@nivo/line';
 
 import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isCustomApyType } from '@utils';

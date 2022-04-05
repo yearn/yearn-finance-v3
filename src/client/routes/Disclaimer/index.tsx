@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { SliderCard, ViewContainer } from '@components/app';
 import { Text } from '@components/common';

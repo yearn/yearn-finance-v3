@@ -88,13 +88,13 @@ const darkTheme: DefaultTheme = {
     },
 
     vaultActionButton: {
-      background: 'transparent',
-      borderColor: '#6E6E6E',
-      color: '#6E6E6E',
+      background: '#272727',
+      borderColor: 'transparent',
+      color: '#FFFFFF',
       // disabledContrast: '1.5',
 
       selected: {
-        background: 'transparent',
+        background: '#272727',
         borderColor: '#FFFFFF',
         color: '#FFFFFF',
       },

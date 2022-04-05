@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { ConnectWalletButton } from '@components/app';
 import { OptionList, EthereumIcon, FantomIcon, ArbitrumIcon } from '@components/common';
@@ -15,21 +15,21 @@ const StyledOptionList = styled(OptionList)`
 const StyledNavbarActions = styled.div`
   display: grid;
   grid-auto-flow: column;
-  grid-gap: 0.8rem;
+  grid-gap: 1.2rem;
   padding-left: 0.8rem;
   align-items: center;
   justify-content: flex-end;
   flex: 1;
 
   > * {
-    height: 2.8rem;
+    height: 3.2rem;
   }
 `;
 
 const StyledText = styled.h1<{ toneDown?: boolean }>`
   display: inline-flex;
   font-size: 2.4rem;
-  font-weight: bold;
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.titles};
   margin: 0;
   padding: 0;

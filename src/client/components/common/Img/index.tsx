@@ -1,5 +1,5 @@
 import { useState, useEffect, ImgHTMLAttributes } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 const StyledImg = styled.img<{ loaded?: boolean }>`
   opacity: ${({ loaded }) => (loaded ? 1 : 0)};

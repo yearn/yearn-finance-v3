@@ -1,5 +1,5 @@
 import { ElementType, FC, InputHTMLAttributes } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Icon } from '../Icon';
 

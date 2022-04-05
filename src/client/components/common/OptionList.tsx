@@ -1,5 +1,5 @@
 import { ElementType, FC, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { ChevronDownIcon, Icon } from './Icon';
 import { Text } from './Text';
@@ -46,6 +46,7 @@ const StyledSpinnerLoading = styled(SpinnerLoading)`
 const ArrowIcon = styled(Icon)<{ open?: boolean }>`
   margin-left: 0.8rem;
   height: 1rem;
+  fill: currentColor;
   transition: transform 150ms ease-in-out;
   transform: rotate(${({ open }) => (open ? '180deg' : '0deg')});
 `;

@@ -1,6 +1,6 @@
 import React, { FC, useRef, useState } from 'react';
 import { usePopper } from 'react-popper';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import flip from '@popperjs/core/lib/modifiers/flip.js';
 import { Placement } from '@popperjs/core';

@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 // NOTE: App errors out when trying to import directly from 'common'
 import { ChevronRightIcon, Icon } from '@components/common/Icon';
 
 const Arrow = styled(Icon)`
   height: 1.6rem;
-  fill: currentColor;
+  fill: ${({ theme }) => theme.colors.primary};
 `;
 
 const StyledCardRedirection = styled.div`

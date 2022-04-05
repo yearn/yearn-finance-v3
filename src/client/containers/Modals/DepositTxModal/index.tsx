@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { useLocation } from 'react-router-dom';
 
 import { useAppTranslation } from '@hooks';

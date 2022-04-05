@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Button, Icon, WarningFilledIcon } from '@components/common';
 

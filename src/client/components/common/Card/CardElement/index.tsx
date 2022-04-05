@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Icon, ArrowDownIcon, IconProps } from '@components/common';
 
@@ -34,10 +34,13 @@ const SortIcon = styled(({ activeSort, sortType, ...props }: SortIconProps) => <
   `}
 `;
 
-const Header = styled.div<{ onClick?: () => void }>`
+const Header = styled.h3<{ onClick?: () => void }>`
   display: flex;
   align-items: center;
   font-size: 1.6rem;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
   color: ${({ theme }) => theme.colors.texts};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
 `;
@@ -51,6 +54,7 @@ const Content = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 100%;
+  margin-top: 0.8rem;
   color: ${({ theme }) => theme.colors.texts};
 
   :first-child img {
