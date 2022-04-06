@@ -87,11 +87,6 @@ const TokensCard = styled(DetailCard)`
   }
 ` as typeof DetailCard;
 
-// const StyledText = styled(Text)`
-//   display: inline-flex;
-//   align-items: center;
-// `;
-
 export const Portfolio = () => {
   const { t } = useAppTranslation(['common', 'home']);
   const { NETWORK_SETTINGS } = getConfig();
@@ -222,7 +217,6 @@ export const Portfolio = () => {
             {
               key: 'displayName',
               header: t('components.list-card.asset'),
-              // token: { displayIcon, symbol },
               transform: ({ displayIcon, displayName, symbol }) => (
                 <>
                   <TokenIcon icon={displayIcon} symbol={symbol} />

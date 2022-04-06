@@ -23,11 +23,6 @@ const navLinks = [
     text: 'navigation.portfolio',
     icon: WalletIcon,
   },
-  // {
-  //   to: '/wallet',
-  //   text: 'navigation.wallet',
-  //   icon: WalletIcon,
-  // },
   {
     to: '/vaults',
     text: 'navigation.vaults',

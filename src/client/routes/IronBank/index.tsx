@@ -177,7 +177,6 @@ export const IronBank = () => {
               {
                 key: 'displayName',
                 header: t('components.list-card.asset'),
-                // token: { displayIcon, symbol },
                 transform: ({ displayIcon, displayName, token }) => (
                   <>
                     <TokenIcon icon={displayIcon} symbol={token.symbol} />
@@ -260,7 +259,6 @@ export const IronBank = () => {
               {
                 key: 'displayName',
                 header: t('components.list-card.asset'),
-                // token: { displayIcon, symbol },
                 transform: ({ displayIcon, displayName, token }) => (
                   <>
                     <TokenIcon icon={displayIcon} symbol={token.symbol} />

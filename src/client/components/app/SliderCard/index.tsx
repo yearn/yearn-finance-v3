@@ -18,7 +18,6 @@ const ArrowIcon = styled(Icon)`
 `;
 
 const ArrowButton = styled(Button)`
-  fill: red;
   padding: 0.7rem;
 `;
 

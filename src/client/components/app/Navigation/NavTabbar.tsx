@@ -56,7 +56,6 @@ const StyledTabbar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: inherit;
   background-color: ${({ theme }) => theme.colors.background};
   border: 2px solid ${({ theme }) => theme.colors.titlesVariant};
   color: ${({ theme }) => theme.colors.texts};

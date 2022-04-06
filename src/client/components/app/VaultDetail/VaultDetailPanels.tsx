@@ -178,13 +178,6 @@ const StyledIcon = styled(Icon)`
   flex-shrink: 0;
 `;
 
-// const InfoValueTitle = styled(Text)`
-//   font-size: 1.8rem;
-//   font-weight: bold;
-//   margin-bottom: 0.3rem;
-//   color: ${(props) => props.theme.colors.secondary};
-// `;
-
 const TokenInfo = styled.div`
   display: flex;
   flex-direction: column;
@@ -353,7 +346,6 @@ export const VaultDetailPanels = ({
       <Row>
         <VaultOverview>
           <StyledCardHeaderContainer>
-            {/* <StyledCardHeader header={t('vaultdetails:overview-panel.header')} /> */}
             <StyledCardHeader header={vaultNameTitle} />
             {displayAddToken ? (
               <RelativeContainer onClick={handleAddToken}>
@@ -375,7 +367,6 @@ export const VaultDetailPanels = ({
             </TokenLogo>
 
             <TokenInfo>
-              {/* <InfoValueTitle>{selectedVault?.displayName}</InfoValueTitle> */}
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.apy')}</span>
                 <TextWithIcon>
@@ -434,7 +425,6 @@ export const VaultDetailPanels = ({
         </VaultOverview>
 
         <VaultActions>
-          {/* <StyledCardHeader header={t('vaultdetails:vault-actions-panel.header')} /> */}
           <ActionsTabs value={selectedTab} onChange={handleTabChange}>
             {isVaultMigratable && <Tab value="migrate">{t('vaultdetails:vault-actions-panel.migrate')}</Tab>}
             {!hideDeposit && <Tab value="deposit">{t('vaultdetails:vault-actions-panel.deposit')}</Tab>}
