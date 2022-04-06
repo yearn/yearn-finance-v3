@@ -222,6 +222,9 @@ const VaultOverview = styled(Card)`
   max-width: 100%;
 
   > *:not(:first-child) {
+    margin-top: 0.8rem;
+  }
+  > ${StyledCardHeader}:not(:first-child) {
     margin-top: ${({ theme }) => theme.card.padding};
   }
 
