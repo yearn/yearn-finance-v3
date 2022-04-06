@@ -14,6 +14,7 @@ import {
   ModalSelectors,
   NetworkActions,
   AlertsActions,
+  VaultsSelectors,
 } from '@store';
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
@@ -98,14 +99,14 @@ export const Layout: FC = ({ children }) => {
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const previousAddress = usePrevious(selectedAddress);
   const previousNetwork = usePrevious(currentNetwork);
+  const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1] as Route;
-  let vaultName = '';
-  // TODO Get vault name and display it on navbar
-  // if (path === 'vault') {
-  //   vaultAddress = location.pathname.toLowerCase().split('/')[2];
-  //   vaultName = xxxx
-  // }
+
+  let vaultName;
+  if (path === 'vault') {
+    vaultName = selectedVault?.displayName;
+  }
 
   // TODO This is only assetAddress on the vault page
   const assetAddress: string | undefined = location.pathname.split('/')[2];
