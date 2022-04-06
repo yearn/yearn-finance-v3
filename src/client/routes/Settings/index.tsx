@@ -125,7 +125,6 @@ const SettingsView = styled(ViewContainer)`
     ${SettingsSection} {
       grid-template-columns: 1fr;
       width: 100%;
-      padding: 0;
 
       :not(:first-child) ${SectionTitle} {
         padding-top: ${({ theme }) => theme.card.padding};
@@ -139,7 +138,7 @@ const SettingsView = styled(ViewContainer)`
       }
     }
     ${SectionContent} {
-      padding: 0 ${({ theme }) => theme.card.padding};
+      padding: 0;
     }
   }
 `;
