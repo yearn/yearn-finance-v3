@@ -78,6 +78,7 @@ const StyledCardHeader = styled(CardHeader)`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2rem;
+  grid-gap: 1.2rem;
 `;
 
 const StyledCard = styled(Card)`
@@ -88,7 +89,7 @@ const StyledCard = styled(Card)`
 const SectionContent = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2rem;
+  grid-gap: 1.2rem;
   align-items: center;
 `;
 
