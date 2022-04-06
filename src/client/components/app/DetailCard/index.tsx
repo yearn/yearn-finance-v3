@@ -54,13 +54,10 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolea
   ${({ pointer }) => pointer && `cursor: pointer;`};
   ${({ wrap }) => wrap && `flex-wrap: wrap;`};
 
-  ${TitleCardElement} {
-    background: red;
-  }
-
   &:hover {
     background-color: ${({ theme }) => theme.colors.selectionBar};
 
+    // NOTE If you want to change other elements on selection bar hover
     // ${StyledCardElement} {
     //   color: ${({ theme }) => theme.colors.titles};
     // }
