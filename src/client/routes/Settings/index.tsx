@@ -26,10 +26,6 @@ import {
   OptionList,
 } from '@components/common';
 
-// const SettingsCardHeader = styled(CardHeader)`
-//   margin-bottom: 1.2rem;
-// `;
-
 const SettingsCardContent = styled(CardContent)`
   flex-direction: column;
   align-items: flex-start;
@@ -79,12 +75,6 @@ const SectionTitle = styled.div<{ centerText?: boolean }>`
   //   border-bottom-right-radius: ${({ theme }) => theme.globalRadius};
   // }
 `;
-
-// const SectionIcon = styled(Icon)`
-//   display: inline-block;
-//   fill: inherit;
-//   margin-right: 0.7rem;
-// `;
 
 const SectionHeading = styled.h3`
   color: ${({ theme }) => theme.colors.titles};
@@ -208,15 +198,10 @@ export const Settings = () => {
   return (
     <SettingsView>
       <SettingsCard>
-        {/* <SettingsCardHeader header={t('settings:preferences')} /> */}
-
         <SettingsCardContent>
           <SettingsSection>
             <SectionTitle>
-              <SectionHeading>
-                {/* <SectionIcon Component={SettingsIcon} /> */}
-                {t('settings:signed-approvals')}
-              </SectionHeading>
+              <SectionHeading>{t('settings:signed-approvals')}</SectionHeading>
             </SectionTitle>
 
             <SectionContent>
@@ -226,10 +211,7 @@ export const Settings = () => {
 
           <SettingsSection>
             <SectionTitle>
-              <SectionHeading>
-                {/* <SectionIcon Component={ClockIcon} /> */}
-                {t('settings:slippage-tolerance')}
-              </SectionHeading>
+              <SectionHeading>{t('settings:slippage-tolerance')}</SectionHeading>
             </SectionTitle>
             <SectionContent>
               {availableSlippages.map((slippage) => (
@@ -246,10 +228,7 @@ export const Settings = () => {
 
           <SettingsSection>
             <SectionTitle>
-              <SectionHeading>
-                {/* <SectionIcon Component={ThemesIcon} /> */}
-                {t('settings:themes')}
-              </SectionHeading>
+              <SectionHeading>{t('settings:themes')}</SectionHeading>
             </SectionTitle>
 
             <SectionContent>
@@ -271,10 +250,7 @@ export const Settings = () => {
 
           <SettingsSection>
             <SectionTitle centerText>
-              <SectionHeading>
-                {/* <SectionIcon Component={WorldIcon} /> */}
-                {t('settings:language')}
-              </SectionHeading>
+              <SectionHeading>{t('settings:language')}</SectionHeading>
             </SectionTitle>
 
             <SectionContent>
@@ -289,10 +265,7 @@ export const Settings = () => {
 
           {ALLOW_DEV_MODE && (
             <SettingsSection>
-              <SectionTitle>
-                {/* <SectionIcon Component={ThemesIcon} /> */}
-                Dev Mode
-              </SectionTitle>
+              <SectionTitle>Dev Mode</SectionTitle>
               <SectionContent>
                 Enable Dev Mode
                 <ToggleButton
@@ -318,10 +291,7 @@ export const Settings = () => {
               </SettingsSection>
 
               <SettingsSection>
-                <SectionTitle>
-                  {/* <SectionIcon Component={ThemesIcon} /> */}
-                  Additional settings
-                </SectionTitle>
+                <SectionTitle>Additional settings</SectionTitle>
                 <SectionContent>
                   Expanded sidenav
                   <ToggleButton selected={!collapsedSidebar} setSelected={toggleSidebar} />
@@ -329,10 +299,7 @@ export const Settings = () => {
               </SettingsSection>
 
               <SettingsSection>
-                <SectionTitle>
-                  {/* <SectionIcon Component={ThemesIcon} /> */}
-                  Modals testing
-                </SectionTitle>
+                <SectionTitle>Modals testing</SectionTitle>
                 <SectionContent>
                   <Button onClick={() => openModal('test', { testVar: 'test variable' })}>Open test modal</Button>
                   <Button onClick={() => openModal('testTx')}>Open TestTx modal</Button>
@@ -344,10 +311,7 @@ export const Settings = () => {
               </SettingsSection>
 
               <SettingsSection>
-                <SectionTitle>
-                  {/* <SectionIcon Component={ThemesIcon} /> */}
-                  Alerts testing
-                </SectionTitle>
+                <SectionTitle>Alerts testing</SectionTitle>
                 <SectionContent>
                   <Button onClick={() => openAlert('Default alert')}>Open default alert</Button>
                   <Button onClick={() => openAlert('Success alert', 'success')}>Open Success alert</Button>

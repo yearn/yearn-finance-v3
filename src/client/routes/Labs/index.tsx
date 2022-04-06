@@ -345,7 +345,6 @@ export const Labs = () => {
                 {
                   key: 'displayName',
                   header: t('components.list-card.asset'),
-                  // token: { displayIcon, symbol },
                   transform: ({ displayIcon, displayName }) => (
                     <>
                       <TokenIcon icon={displayIcon} symbol={displayName} />
@@ -412,7 +411,6 @@ export const Labs = () => {
                 {
                   key: 'displayName',
                   header: t('components.list-card.asset'),
-                  // token: { displayIcon, symbol },
                   transform: ({ displayIcon, displayName }) => (
                     <>
                       <TokenIcon icon={displayIcon} symbol={displayName} />

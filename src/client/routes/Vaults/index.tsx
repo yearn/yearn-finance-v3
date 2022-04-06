@@ -240,7 +240,6 @@ export const Vaults = () => {
           <StyledRecommendationsCard
             header={t('components.recommendations.header')}
             items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
-              // header: 'Vault',
               icon: displayIcon,
               name: displayName,
               info: formatApy(apyData, apyType),
@@ -257,7 +256,6 @@ export const Vaults = () => {
               {
                 key: 'displayName',
                 header: t('components.list-card.asset'),
-                // token: { displayIcon, symbol },
                 transform: ({ displayIcon, displayName, token }) => (
                   <>
                     <TokenIcon icon={displayIcon} symbol={token.symbol} />
@@ -336,7 +334,6 @@ export const Vaults = () => {
                 {
                   key: 'displayName',
                   header: t('components.list-card.asset'),
-                  // token: { displayIcon, symbol },
                   transform: ({ displayIcon, displayName, token }) => (
                     <>
                       <TokenIcon icon={displayIcon} symbol={token.symbol} />
@@ -417,7 +414,6 @@ export const Vaults = () => {
                 {
                   key: 'displayName',
                   header: t('components.list-card.asset'),
-                  // token: { displayIcon, symbol },
                   transform: ({ displayIcon, displayName, token }) => (
                     <>
                       <TokenIcon icon={displayIcon} symbol={token.symbol} />
