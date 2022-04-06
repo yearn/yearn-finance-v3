@@ -221,7 +221,7 @@ const VaultOverview = styled(Card)`
   align-self: stretch;
   max-width: 100%;
 
-  > div:not(:first-child) {
+  > *:not(:first-child) {
     margin-top: ${({ theme }) => theme.card.padding};
   }
 
@@ -365,6 +365,7 @@ export const VaultDetailPanels = ({
             />
           </StyledCardHeaderContainer>
 
+          <StyledCardHeader header={t('vaultdetails:overview-panel.header')} />
           <OverviewTokenInfo>
             <TokenLogo variant="background">
               <TokenIcon icon={selectedVault.displayIcon} symbol={selectedVault.displayName} size="xxBig" />
@@ -403,9 +404,8 @@ export const VaultDetailPanels = ({
           </OverviewTokenInfo>
 
           <StyledCardHeader header={t('vaultdetails:overview-panel.about')} />
-
           {selectedVault.token.description && (
-            <OverviewInfo variant="surface" cardSize="micro">
+            <OverviewInfo variant="background" cardSize="micro">
               <StyledCardContent>
                 <Markdown>{selectedVault.token.description}</Markdown>
               </StyledCardContent>
@@ -418,7 +418,7 @@ export const VaultDetailPanels = ({
 
               <OverviewStrategies>
                 {strategies.map((strategy) => (
-                  <OverviewInfo variant="surface" cardSize="micro" key={strategy.address}>
+                  <OverviewInfo variant="background" cardSize="micro" key={strategy.address}>
                     <StyledCardHeader subHeader={strategy.name} />
                     <StyledCardContent>
                       <Markdown>{strategy.description}</Markdown>
