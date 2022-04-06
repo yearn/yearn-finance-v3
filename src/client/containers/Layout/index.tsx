@@ -20,6 +20,7 @@ import { Navigation, Navbar, Footer } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
 import { Network, Route } from '@types';
+import { device } from '@themes/default';
 
 const contentSeparation = '1.6rem';
 
@@ -36,6 +37,10 @@ const StyledLayout = styled.div`
   justify-content: center;
   flex: 1;
   padding: ${({ theme }) => theme.card.padding};
+
+  @media ${device.mobile} {
+    padding: ${({ theme }) => theme.layoutPadding};
+  }
 
   ${({ theme }) =>
     theme.background &&
