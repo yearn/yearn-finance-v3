@@ -118,7 +118,7 @@ const OverviewStrategies = styled.div`
   overflow-y: auto;
   max-height: 23rem;
 
-  > div:not(:first-child) {
+  > *:not(:first-child) {
     margin-top: ${({ theme }) => theme.card.padding};
   }
 `;
