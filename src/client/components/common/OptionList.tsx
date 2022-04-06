@@ -22,7 +22,7 @@ const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; sele
   position: relative;
   font-size: 1.6rem;
   cursor: ${({ selectable }) => (selectable ? 'pointer' : null)};
-  padding: 0 0.8rem;
+  padding: 0;
   width: max-content;
   min-width: 11rem;
 
@@ -56,6 +56,7 @@ const StyledIcon = styled(Icon)`
   height: 1.6rem;
   margin-right: 0.8rem;
   flex-shrink: 0;
+  fill: inherit;
 `;
 
 const Options = styled.div<{ open?: boolean; listPosition: 'top' | 'bottom' }>`
@@ -95,7 +96,7 @@ const OptionChild = styled.div<{ selected?: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: ${({ theme }) => theme.globalRadius};
-  padding: 0.6rem;
+  padding: 0.8rem;
   transition: opacity 200ms ease-in-out;
   width: 100%;
   position: relative;
