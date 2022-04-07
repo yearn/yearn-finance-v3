@@ -14,7 +14,6 @@ import { ReactComponent as CollapseIcon } from '@assets/icons/collapse.svg';
 import { ReactComponent as ConstructionIcon } from '@assets/icons/construction.svg';
 import { ReactComponent as DeleteIcon } from '@assets/icons/delete.svg';
 import { ReactComponent as DiscordIcon } from '@assets/icons/discord.svg';
-import { ReactComponent as GithubIcon } from '@assets/icons/github.svg';
 import { ReactComponent as HamburguerIcon } from '@assets/icons/hamburguer.svg';
 import { ReactComponent as HelpIcon } from '@assets/icons/help.svg';
 import { ReactComponent as IronBankIcon } from '@assets/icons/iron-bank.svg';
@@ -24,8 +23,6 @@ import { ReactComponent as MediumIcon } from '@assets/icons/medium.svg';
 import { ReactComponent as RedditIcon } from '@assets/icons/reddit.svg';
 import { ReactComponent as SearchIcon } from '@assets/icons/search.svg';
 import { ReactComponent as SettingsIcon } from '@assets/icons/settings.svg';
-import { ReactComponent as StatusArrowIcon } from '@assets/icons/status-arrow.svg';
-import { ReactComponent as TelegramIcon } from '@assets/icons/telegram.svg';
 import { ReactComponent as ThemesIcon } from '@assets/icons/themes.svg';
 import { ReactComponent as TwitterIcon } from '@assets/icons/twitter.svg';
 import { ReactComponent as VaultIcon } from '@assets/icons/vault.svg';
@@ -68,11 +65,9 @@ export const Icon = styled(forwardRef(({ Component, ...props }: IconProps, ref) 
 export {
   DeleteIcon,
   DiscordIcon,
-  GithubIcon,
   HamburguerIcon,
   MediumIcon,
   RedditIcon,
-  TelegramIcon,
   TwitterIcon,
   VaultIcon,
   IronBankIcon,
@@ -94,7 +89,6 @@ export {
   ChevronDownIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
-  StatusArrowIcon,
   WalletMissingIcon,
   ConstructionIcon,
   EthereumIcon,

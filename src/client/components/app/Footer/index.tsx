@@ -1,15 +1,6 @@
 import styled from 'styled-components/macro';
 
-import {
-  Icon,
-  MediumIcon,
-  Link,
-  TwitterIcon,
-  DiscordIcon,
-  // GithubIcon,
-  // TelegramIcon,
-  RedditIcon,
-} from '@components/common';
+import { Icon, MediumIcon, Link, TwitterIcon, DiscordIcon, RedditIcon } from '@components/common';
 import { useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
 
@@ -34,14 +25,6 @@ const footerLinks = [
     link: 'https://github.com/yearn/yearn-security/blob/master/SECURITY.md',
     name: 'security',
   },
-  // {
-  //   link: 'https://v1.yearn.finance',
-  //   name: 'v1',
-  // },
-  // {
-  //   link: 'https://yearn.finance',
-  //   name: 'v2',
-  // },
 ];
 
 const socialLinks = [
@@ -61,14 +44,6 @@ const socialLinks = [
     link: 'https://medium.com/iearn',
     icon: MediumIcon,
   },
-  // {
-  //   link: 'https://github.com/yearn',
-  //   icon: GithubIcon,
-  // },
-  // {
-  //   link: 'https://t.me/yearnfinance',
-  //   icon: TelegramIcon,
-  // },
 ];
 
 const SocialSectionIconSize = '2.4rem';
