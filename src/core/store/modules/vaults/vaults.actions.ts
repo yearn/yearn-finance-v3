@@ -189,7 +189,6 @@ const approveDeposit = createAsyncThunk<
     const amount = extra.config.MAX_UINT256;
 
     const accountAddress = wallet.selectedAddress;
-    const isZapin = vaultData.token !== tokenAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const tx = await vaultService.approveDeposit({
@@ -200,11 +199,16 @@ const approveDeposit = createAsyncThunk<
       vaultAddress: vaultData.address,
     });
 
-    if (typeof tx !== 'boolean') {
-      await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
-    }
+    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
 
-    return { amount, spenderAddress: isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress };
+    const { spender } = await vaultService.getVaultAllowance({
+      network: network.current,
+      vaultAddress: vaultAddress,
+      tokenAddress,
+      accountAddress,
+    });
+
+    return { amount, spenderAddress: spender };
   },
   {
     serializeError: parseError,
@@ -229,9 +233,7 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string; tokenAddres
       tokenAddress,
     });
 
-    if (typeof tx !== 'boolean') {
-      await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
-    }
+    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
   },
   {
     serializeError: parseError,
