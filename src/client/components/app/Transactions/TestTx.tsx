@@ -6,8 +6,6 @@ import { ProgressBar } from '@components/common';
 import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxError } from './components/TxError';
-import { TxArrowStatus } from './components/TxArrowStatus';
-
 export interface TestTxProps {
   onClose?: () => void;
 }
@@ -18,8 +16,6 @@ export const TestTx: FC<TestTxProps> = ({ onClose, children, ...props }) => {
   return (
     <StyledTestTx onClose={onClose} header="Invest" {...props}>
       {/* <TxTokenInput headerText="From wallet" /> */}
-
-      <TxArrowStatus />
 
       {/* <TxTokenInput headerText="To vault" /> */}
 

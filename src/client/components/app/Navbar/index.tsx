@@ -51,9 +51,6 @@ const StyledNavbar = styled.header`
   background-color: ${({ theme }) => theme.colors.surface};
   z-index: ${({ theme }) => theme.zindex.navbar};
   max-width: ${({ theme }) => theme.globalMaxWidth};
-  // margin-top: -${({ theme }) => theme.layoutPadding};
-  // padding-top: calc(0.4rem + ${({ theme }) => theme.layoutPadding});
-  // padding-bottom: 1.6rem;
   padding: ${({ theme }) => theme.card.padding};
   border-radius: ${({ theme }) => theme.globalRadius};
 
