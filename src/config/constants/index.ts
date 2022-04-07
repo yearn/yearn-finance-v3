@@ -57,7 +57,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     zapsEnabled: false,
     labsEnabled: false,
     ironBankEnabled: true,
-    earningsEnabled: false,
+    earningsEnabled: true,
     notifyEnabled: false,
     blockExplorerUrl: 'https://ftmscan.com',
     txConfirmations: 10,
