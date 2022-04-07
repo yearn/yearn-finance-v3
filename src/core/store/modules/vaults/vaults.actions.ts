@@ -211,11 +211,10 @@ const approveDeposit = createAsyncThunk<
   }
 );
 
-const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
+const approveZapOut = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveZapOut',
-  async ({ vaultAddress }, { getState, extra }) => {
-    const { vaults, wallet, network } = getState();
-    const vaultData = vaults.vaultsMap[vaultAddress];
+  async ({ vaultAddress, tokenAddress }, { getState, extra }) => {
+    const { wallet, network } = getState();
     const { vaultService, transactionService } = extra.services;
     const amount = extra.config.MAX_UINT256;
 
@@ -226,7 +225,8 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>
       network: network.current,
       accountAddress,
       amount,
-      vault: vaultData,
+      vaultAddress,
+      tokenAddress,
     });
 
     if (typeof tx !== 'boolean') {

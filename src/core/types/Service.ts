@@ -56,8 +56,8 @@ export interface VaultService {
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
   migrate: (props: MigrateProps) => Promise<TransactionResponse>;
-  approveDeposit: (props: ApproveDepositProps) => Promise<TransactionResponse | Boolean>;
-  approveZapOut: (props: ApproveZapOutProps) => Promise<TransactionResponse | Boolean>;
+  approveDeposit: (props: ApproveDepositProps) => Promise<TransactionResponse>;
+  approveZapOut: (props: ApproveZapOutProps) => Promise<TransactionResponse>;
   getVaultAllowance: (props: GetVaultAllowanceProps) => Promise<TokenAllowance>;
 }
 
@@ -175,9 +175,10 @@ export interface ApproveDepositProps {
 
 export interface ApproveZapOutProps {
   network: Network;
-  accountAddress: Address;
   amount: Wei;
-  vault: Vault;
+  accountAddress: string;
+  tokenAddress: string;
+  vaultAddress: string;
 }
 
 export interface GetVaultAllowanceProps {
