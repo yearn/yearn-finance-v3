@@ -80,7 +80,7 @@ const getNetworkIcon = (network: Network) => {
 interface NavbarProps {
   className?: string;
   title?: string;
-  vaultName?: string;
+  subTitle?: string;
   walletAddress?: string;
   addressEnsName?: string;
   onWalletClick?: () => void;
@@ -93,7 +93,7 @@ interface NavbarProps {
 export const Navbar = ({
   className,
   title,
-  vaultName,
+  subTitle,
   walletAddress,
   addressEnsName,
   onWalletClick,
@@ -117,11 +117,11 @@ export const Navbar = ({
     Icon: getNetworkIcon(network),
   }));
 
-  const secondTitleEnabled = !!vaultName?.length;
+  const secondTitleEnabled = !!subTitle?.length;
 
   const vaultText = (
     <>
-      &nbsp;/&nbsp;<StyledText>{vaultName}</StyledText>
+      &nbsp;/&nbsp;<StyledText>{subTitle}</StyledText>
     </>
   );
 

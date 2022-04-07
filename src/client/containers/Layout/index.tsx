@@ -184,7 +184,7 @@ export const Layout: FC = ({ children }) => {
       <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
         <Navbar
           title={t(`navigation.${path}`)}
-          vaultName={vaultName}
+          subTitle={vaultName}
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}
           onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}
