@@ -53,6 +53,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   const simulationsEnabled = servicesEnabled['tenderly'];
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const vaults = useAppSelector(VaultsSelectors.selectLiveVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
@@ -106,8 +107,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!selectedVault || !selectedSellTokenAddress) return;
-
+    if (!selectedVault || !selectedSellTokenAddress || !walletIsConnected) return;
     const isZap = selectedSellTokenAddress !== selectedVault.token.address;
     const spenderAddress = isZap ? getZapInContractAddress(selectedVault.address) : selectedVault.address;
     dispatch(
@@ -116,7 +116,7 @@ export const DepositTx: FC<DepositTxProps> = ({
         spenderAddress,
       })
     );
-  }, [selectedSellTokenAddress, selectedVault?.address]);
+  }, [selectedSellTokenAddress, selectedVault?.address, walletIsConnected]);
 
   useEffect(() => {
     if (!selectedVault) return;

@@ -47,6 +47,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const simulationsEnabled = servicesEnabled['tenderly'];
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   let zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
@@ -88,7 +89,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   }, []);
 
   useEffect(() => {
-    if (!selectedVault) return;
+    if (!selectedVault || !walletIsConnected) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
@@ -96,7 +97,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
         spenderAddress: CONTRACT_ADDRESSES.zapOut,
       })
     );
-  }, [selectedVault?.address, CONTRACT_ADDRESSES?.zapOut]);
+  }, [selectedVault?.address, CONTRACT_ADDRESSES?.zapOut, walletIsConnected]);
 
   useEffect(() => {
     if (!selectedVault) return;

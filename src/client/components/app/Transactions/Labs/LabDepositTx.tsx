@@ -49,6 +49,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const simulationsEnabled = servicesEnabled['tenderly'];
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
@@ -84,7 +85,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   }, []);
 
   useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress) return;
+    if (!selectedLab || !selectedSellTokenAddress || !isWalletConnected) return;
 
     const isZap = selectedSellTokenAddress !== selectedLab.token.address || selectedLab.address === PSLPYVBOOSTETH;
     const spenderAddress = isZap ? getZapInContractAddress(selectedLab.address) : selectedLab.address;
@@ -95,7 +96,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
         spenderAddress,
       })
     );
-  }, [selectedSellTokenAddress, selectedLab?.address]);
+  }, [selectedSellTokenAddress, selectedLab?.address, isWalletConnected]);
 
   useEffect(() => {
     if (!selectedLab) return;

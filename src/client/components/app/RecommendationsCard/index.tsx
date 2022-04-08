@@ -51,6 +51,9 @@ const ItemInfo = styled(Text)`
   padding-bottom: 0.4rem;
   margin-top: 2.3rem;
   position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const ItemInfoLabel = styled(Text)`

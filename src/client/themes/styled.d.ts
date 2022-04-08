@@ -17,6 +17,7 @@ declare module 'styled-components' {
     zindex: {
       navbar: number;
       sidemenu: number;
+      tooltips: number;
       navSidemenu: number;
       modals: number;
       onboardModal: number;
@@ -111,14 +112,14 @@ declare module 'styled-components' {
       downTrend: string;
 
       toggleSwitch: {
-        background: string,
-        color: string,
+        background: string;
+        color: string;
 
         selected: {
-          background: string,
-          color: string,
-        },
-      },
+          background: string;
+          color: string;
+        };
+      };
 
       vaultActionButton: {
         background: string;

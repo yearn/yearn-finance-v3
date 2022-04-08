@@ -25,7 +25,7 @@ import {
   ApyTooltipData,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text, Tooltip } from '@components/common';
-import { formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECIMALS } from '@utils';
+import { formatApy, formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECIMALS } from '@utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
@@ -132,7 +132,7 @@ export const Labs = () => {
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const { totalDeposits } = useAppSelector(LabsSelectors.selectSummaryData);
+  const { totalDeposits, totalEarnings, estYearlyYield } = useAppSelector(LabsSelectors.selectSummaryData);
   const recommendations = useAppSelector(LabsSelectors.selectRecommendations);
   const holdings = useAppSelector(LabsSelectors.selectDepositedLabs);
   const opportunities = useAppSelector(LabsSelectors.selectLabsOpportunities);
@@ -298,8 +298,8 @@ export const Labs = () => {
         header={t('dashboard.header')}
         items={[
           { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
-          // { header: 'Earnings', content: `${normalizeUsdc(totalEarnings)}` },
-          // { header: 'Est. Yearly Yield', content: `${normalizeUsdc(estYearlyYeild)}` },
+          { header: 'Est. Yearly Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
+          { header: 'Est. Yearly Yield', content: `${formatApy(estYearlyYield)}` },
         ]}
         variant="secondary"
         cardSize="small"

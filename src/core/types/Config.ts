@@ -18,6 +18,7 @@ export interface Env {
   FORTMATIC_KEY: string | undefined;
   PORTIS_KEY: string | undefined;
   ZAPPER_API_KEY: string | undefined;
+  YEARN_SUBGRAPH_KEY: string | undefined;
 }
 
 export interface Constants {
@@ -46,4 +47,5 @@ export interface Constants {
   DEFAULT_LANG: Language;
   SUPPORTED_LANGS: Language[];
   DUST_AMOUNT_USD: string;
+  YEARN_SUBGRAPH_ID: string;
 }

@@ -55,6 +55,7 @@ const ContrastText = styled.span`
 
 const StyledText = styled(Text)`
   color: ${({ theme }) => theme.colors.txModalColors.text};
+  max-width: 11rem;
 `;
 
 const TokenExtras = styled.div`
@@ -267,7 +268,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
 
   return (
     <StyledTxTokenInput {...props}>
-      {headerText && <Header>{headerText}</Header>}
+      <>{headerText && <Header>{headerText}</Header>}</>
       {openedSearch && (
         <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
           <StyledSearchList
@@ -280,42 +281,44 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         </CSSTransition>
       )}
 
-      <TokenInfo center={hideAmount}>
-        <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
-          <TokenIconContainer>
-            <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
-            {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
-          </TokenIconContainer>
-          <TokenName>{selectedItem.label}</TokenName>
-        </TokenSelector>
+      <>
+        <TokenInfo center={hideAmount}>
+          <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
+            <TokenIconContainer>
+              <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
+              {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
+            </TokenIconContainer>
+            <TokenName>{selectedItem.label}</TokenName>
+          </TokenSelector>
 
-        {!hideAmount && (
-          <TokenData>
-            <AmountTitle>{inputText || t('components.transaction.token-input.balance')}</AmountTitle>
-            <StyledAmountInput
-              value={amount}
-              onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-              placeholder={loading ? loadingText : '00000000.00'}
-              readOnly={readOnly}
-              error={inputError}
-              type="number"
-            />
-            <TokenExtras>
-              {amountValue && <StyledText>≈ {formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
-              {maxAmount && (
-                <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
-                  {maxLabel}
-                </StyledButton>
-              )}
-              {yieldPercent && (
-                <StyledText>
-                  {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
-                </StyledText>
-              )}
-            </TokenExtras>
-          </TokenData>
-        )}
-      </TokenInfo>
+          {!hideAmount && (
+            <TokenData>
+              <AmountTitle>{inputText || t('components.transaction.token-input.balance')}</AmountTitle>
+              <StyledAmountInput
+                value={amount}
+                onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
+                placeholder={loading ? loadingText : '00000000.00'}
+                readOnly={readOnly}
+                error={inputError}
+                type="number"
+              />
+              <TokenExtras>
+                {amountValue && <StyledText>≈ {formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
+                {maxAmount && (
+                  <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+                    {maxLabel}
+                  </StyledButton>
+                )}
+                {yieldPercent && (
+                  <StyledText>
+                    {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
+                  </StyledText>
+                )}
+              </TokenExtras>
+            </TokenData>
+          )}
+        </TokenInfo>
+      </>
     </StyledTxTokenInput>
   );
 };

@@ -149,15 +149,29 @@ const InfoValueRow = styled.div`
   color: ${({ theme }) => theme.colors.onSurfaceSH1};
   font-size: 1.4rem;
   align-items: center;
+
+  > * {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 `;
 
 const TextWithIcon = styled.div`
   display: flex;
   align-items: center;
+
+  ${StyledText} {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 10rem;
+  }
 `;
 
 const StyledIcon = styled(Icon)`
   margin-left: 1rem;
+  flex-shrink: 0;
 `;
 
 const InfoValueTitle = styled(Text)`
@@ -372,7 +386,9 @@ export const VaultDetailPanels = ({
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.web')}</span>
-                <StyledLink href={selectedVault.token.website}>{selectedVault.token.website}</StyledLink>
+                <StyledLink target="_blank" href={selectedVault.token.website}>
+                  {selectedVault.token.website}
+                </StyledLink>
               </InfoValueRow>
             </TokenInfo>
           </OverviewTokenInfo>
@@ -393,7 +409,7 @@ export const VaultDetailPanels = ({
 
               <OverviewStrategies>
                 {strategies.map((strategy) => (
-                  <OverviewInfo variant="surface" cardSize="micro">
+                  <OverviewInfo variant="surface" cardSize="micro" key={strategy.address}>
                     <StyledCardHeader subHeader={strategy.name} />
                     <StyledCardContent>
                       <Markdown>{strategy.description}</Markdown>

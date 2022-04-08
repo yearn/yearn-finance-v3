@@ -57,7 +57,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     zapsEnabled: false,
     labsEnabled: false,
     ironBankEnabled: true,
-    earningsEnabled: false,
+    earningsEnabled: true,
     notifyEnabled: false,
     blockExplorerUrl: 'https://ftmscan.com',
     txConfirmations: 10,
@@ -120,5 +120,6 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_LANG: 'en',
     SUPPORTED_LANGS: ['en', 'es'],
     DUST_AMOUNT_USD: '10000000',
+    YEARN_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
   };
 });
