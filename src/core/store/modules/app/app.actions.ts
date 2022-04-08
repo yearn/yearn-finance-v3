@@ -2,7 +2,7 @@ import { createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { isEqual } from 'lodash';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { inIframe } from '@utils';
+import { inIframe, get } from '@utils';
 import { Network, Route, Address, Vault, Service } from '@types';
 
 import { WalletActions } from '../wallet/wallet.actions';
@@ -10,6 +10,7 @@ import { TokensActions } from '../tokens/tokens.actions';
 import { VaultsActions } from '../vaults/vaults.actions';
 import { LabsActions } from '../labs/labs.actions';
 import { IronBankActions } from '../ironBank/ironBank.actions';
+import { AlertsActions } from '../alerts/alerts.actions';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Setters                                  */
@@ -50,6 +51,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   } else if (wallet.name) {
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
+  dispatch(checkServicesStatus());
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
 });
@@ -130,6 +132,47 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
       const { app } = getState();
       if (isEqual(app.statusMap.user.getUserAppData.callArgs, args)) return false;
     },
+  }
+);
+
+/* -------------------------------------------------------------------------- */
+/*                                  Services                                  */
+/* -------------------------------------------------------------------------- */
+
+const checkServicesStatus = createAsyncThunk<void, void, ThunkAPI>(
+  'app/checkServicesStatus',
+  async (_arg, { dispatch, extra }) => {
+    const { YEARN_ALERTS_API } = extra.config;
+    try {
+      const servicesStatusResponse = await get(`${YEARN_ALERTS_API}/health`);
+      if (servicesStatusResponse.status !== 200) throw new Error('Service status provider not currently accesible');
+
+      const errorMessageTemplate =
+        'service is currently experiencing technical issues and have been temporarily disabled. We are sorry for the inconveniences, we are working towards issues been resolved soon.';
+      const downgradedServicesMessages = [];
+      const { zapper, simulations } = servicesStatusResponse.data;
+      if (!zapper) {
+        dispatch(disableService({ service: 'zapper' }));
+        downgradedServicesMessages.push(`Zapper ${errorMessageTemplate}`);
+      }
+
+      if (!simulations) {
+        dispatch(disableService({ service: 'tenderly' }));
+        downgradedServicesMessages.push(`Simulations ${errorMessageTemplate}`);
+      }
+
+      downgradedServicesMessages.forEach(async (message) => {
+        dispatch(
+          AlertsActions.openAlert({
+            message,
+            type: 'warning',
+            persistent: true,
+          })
+        );
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 

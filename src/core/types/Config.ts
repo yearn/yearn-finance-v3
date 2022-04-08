@@ -25,6 +25,7 @@ export interface Constants {
   ETHEREUM_ADDRESS: Address;
   MAX_UINT256: Wei;
   YEARN_API: string;
+  YEARN_ALERTS_API: string;
   SUPPORTED_NETWORKS: Network[];
   NETWORK_SETTINGS: NetworkSettings;
   WEB3_PROVIDER_HTTPS: string;
