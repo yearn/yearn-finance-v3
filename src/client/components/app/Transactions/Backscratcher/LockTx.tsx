@@ -172,6 +172,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
       targetStatus={{ error: targetError }}
       actions={txActions}
       sourceStatus={{ error: sourceError }}
+      onClose={onClose}
     />
   );
 };
