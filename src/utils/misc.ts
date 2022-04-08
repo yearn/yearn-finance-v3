@@ -65,3 +65,5 @@ export const inLedgerIframe = () => {
 };
 
 export const isCustomApyType = (apyType: string) => apyType === 'new' || apyType === 'n/a' || apyType === 'override';
+
+export const getRandomId = (): string => new Date().getTime().toString(36) + Math.random().toString(36).slice(2);

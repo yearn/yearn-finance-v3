@@ -59,7 +59,6 @@ export interface ModalsState {
 
 export interface AlertsState {
   alertsList: Alert[];
-  lastId: number;
 }
 
 export interface RouteState {
