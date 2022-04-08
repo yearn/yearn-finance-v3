@@ -40,15 +40,6 @@ import {
 import { getConfig } from '@config';
 import { VaultView } from '@src/core/types';
 
-// const Row = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-//   justify-content: flex-start;
-//   grid-gap: ${({ theme }) => theme.layoutPadding};
-//   flex-wrap: wrap;
-//   width: 100%;
-// `;
-
 const StyledHelperCursor = styled.span`
   cursor: help;
 `;
@@ -224,6 +215,7 @@ export const Vaults = () => {
             <p>{t('vaults:your-time-card.desc-3')}</p>
           </Text>
         }
+        // NOTE Example for slideshow array
         // slidesContent={[
         // {
         //   header: 'Test header',

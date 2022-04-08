@@ -8,7 +8,6 @@ import { ReactComponent as CheckRoundIcon } from '@assets/icons/check-round.svg'
 import { ReactComponent as ChevronDownIcon } from '@assets/icons/chevron-down.svg';
 import { ReactComponent as ChevronLeftIcon } from '@assets/icons/chevron-left.svg';
 import { ReactComponent as ChevronRightIcon } from '@assets/icons/chevron-right.svg';
-import { ReactComponent as ClockIcon } from '@assets/icons/clock.svg';
 import { ReactComponent as CloseIcon } from '@assets/icons/close.svg';
 import { ReactComponent as CollapseIcon } from '@assets/icons/collapse.svg';
 import { ReactComponent as ConstructionIcon } from '@assets/icons/construction.svg';
@@ -23,14 +22,12 @@ import { ReactComponent as MediumIcon } from '@assets/icons/medium.svg';
 import { ReactComponent as RedditIcon } from '@assets/icons/reddit.svg';
 import { ReactComponent as SearchIcon } from '@assets/icons/search.svg';
 import { ReactComponent as SettingsIcon } from '@assets/icons/settings.svg';
-import { ReactComponent as ThemesIcon } from '@assets/icons/themes.svg';
 import { ReactComponent as TwitterIcon } from '@assets/icons/twitter.svg';
 import { ReactComponent as VaultIcon } from '@assets/icons/vault.svg';
 import { ReactComponent as WalletMissingIcon } from '@assets/icons/wallet-missing.svg';
 import { ReactComponent as WalletIcon } from '@assets/icons/wallet.svg';
 import { ReactComponent as WarningFilledIcon } from '@assets/icons/warning-filled.svg';
 import { ReactComponent as WarningIcon } from '@assets/icons/warning.svg';
-import { ReactComponent as WorldIcon } from '@assets/icons/world.svg';
 // NOTE NETWORK Icons
 import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
 import { ReactComponent as FantomIcon } from '@assets/icons/networks/fantom.svg';
@@ -78,13 +75,10 @@ export {
   ArrowDownIcon,
   CollapseIcon,
   SettingsIcon,
-  ThemesIcon,
-  ClockIcon,
   SearchIcon,
   LabsIcon,
   CheckRoundIcon,
   WarningIcon,
-  WorldIcon,
   WarningFilledIcon,
   ChevronDownIcon,
   ChevronRightIcon,

@@ -70,11 +70,6 @@ const explorerTheme: DefaultTheme = {
       },
     },
 
-    // walletButton: {
-    //   background: '#212121',
-    //   color: '#eeeeee',
-    // },
-
     txModalColors: {
       background: 'rgba(173, 50, 53, 0.5)',
       backgroundVariant: '#cfa368',

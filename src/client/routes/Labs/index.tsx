@@ -30,14 +30,6 @@ import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
 
-// const Row = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-//   justify-content: flex-start;
-//   grid-gap: ${({ theme }) => theme.layoutPadding};
-//   flex-wrap: wrap;
-// `;
-
 const StyledHelperCursor = styled.span`
   cursor: help;
 `;

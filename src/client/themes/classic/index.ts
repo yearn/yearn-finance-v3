@@ -105,11 +105,6 @@ const classicTheme: DefaultTheme = {
       },
     },
 
-    // walletButton: {
-    //   background: '#E5E5E5',
-    //   color: '#006AE3',
-    // },
-
     txModalColors: {
       background: classic.colors.surface,
       backgroundVariant: '#1F255F',

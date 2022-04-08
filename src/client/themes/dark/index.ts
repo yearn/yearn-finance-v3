@@ -100,11 +100,6 @@ const darkTheme: DefaultTheme = {
       },
     },
 
-    // walletButton: {
-    //   background: '#006AE3',
-    //   color: '#202020',
-    // },
-
     txModalColors: {
       background: dark.colors.surface,
       backgroundVariant: '#1C1C1C',

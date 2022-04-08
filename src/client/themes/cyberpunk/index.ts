@@ -62,11 +62,6 @@ const cyberpunkTheme: DefaultTheme = {
       },
     },
 
-    // walletButton: {
-    //   background: '#0CA7C9',
-    //   color: '#FBD282',
-    // },
-
     txModalColors: {
       background: '#523C6E',
       backgroundVariant: '#392850',

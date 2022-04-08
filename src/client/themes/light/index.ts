@@ -104,11 +104,6 @@ const lightTheme: DefaultTheme = {
       },
     },
 
-    // walletButton: {
-    //   background: '#000000',
-    //   color: '#FFFFFF',
-    // },
-
     txModalColors: {
       background: light.colors.surface,
       backgroundVariant: '#E8E8EA',

@@ -104,6 +104,7 @@ export const Layout: FC = ({ children }) => {
   const path = location.pathname.toLowerCase().split('/')[1] as Route;
 
   let vaultName;
+  // TODO Add lab details route when its added the view
   if (path === 'vault') {
     vaultName = selectedVault?.displayName;
   }

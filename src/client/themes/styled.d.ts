@@ -114,13 +114,6 @@ declare module 'styled-components' {
       onPrimaryVariant: string;
       onBackground: string;
 
-      // onSurfaceH1: string;
-      // onSurfaceH1Contrast: string;
-      // onSurfaceH2: string;
-      // onSurfaceH2Hover: string;
-      // onSurfaceSH1: string;
-      // onSurfaceSH1Hover: string;
-
       upTrend: string;
       downTrend: string;
 
@@ -146,11 +139,6 @@ declare module 'styled-components' {
           color: string;
         };
       };
-
-      // walletButton: {
-      //   background: string;
-      //   color: string;
-      // };
 
       txModalColors: {
         background: string;

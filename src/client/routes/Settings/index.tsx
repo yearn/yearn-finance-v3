@@ -11,20 +11,7 @@ import { getConfig } from '@config';
 import { AlertTypes, ModalName, Theme, Language } from '@types';
 import { formatPercent, getCurrentLanguage } from '@utils';
 import { ViewContainer, ThemeBox, CustomThemeButton } from '@components/app';
-import {
-  // ThemesIcon,
-  // WorldIcon,
-  // ClockIcon,
-  // SettingsIcon,
-  // Icon,
-  Button,
-  ToggleButton,
-  Input,
-  Card,
-  // CardHeader,
-  CardContent,
-  OptionList,
-} from '@components/common';
+import { Button, ToggleButton, Input, Card, CardContent, OptionList } from '@components/common';
 
 const SettingsCardContent = styled(CardContent)`
   flex-direction: column;
@@ -59,21 +46,6 @@ const SectionTitle = styled.div<{ centerText?: boolean }>`
   display: flex;
   align-items: ${({ centerText }) => (centerText ? 'center' : 'flex-start')};
   fill: currentColor;
-
-  // background: ${({ theme }) => theme.colors.background};
-  // padding: ${({ theme }) => theme.card.padding};
-
-  ${SettingsSection}:not(:first-child) & {
-    padding-top: ${({ theme }) => theme.card.padding};
-  }
-  // ${SettingsSection}:first-child & {
-  //   border-top-left-radius: ${({ theme }) => theme.globalRadius};
-  //   border-top-right-radius: ${({ theme }) => theme.globalRadius};
-  // }
-  // ${SettingsSection}:last-child & {
-  //   border-bottom-left-radius: ${({ theme }) => theme.globalRadius};
-  //   border-bottom-right-radius: ${({ theme }) => theme.globalRadius};
-  // }
 `;
 
 const SectionHeading = styled.h3`
