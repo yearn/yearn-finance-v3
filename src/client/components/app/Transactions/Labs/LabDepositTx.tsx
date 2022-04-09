@@ -25,8 +25,10 @@ import {
   validateSlippage,
   validateNetwork,
   formatApy,
+  createPlaceholderToken,
 } from '@utils';
 import { getConfig } from '@config';
+import { TokenView } from '@src/core/types';
 
 import { Transaction } from '../Transaction';
 
@@ -39,7 +41,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
+  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS, ETHEREUM_ADDRESS } = getConfig();
   const { YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
@@ -58,12 +60,19 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
+  const selectedTokenMap = useAppSelector(TokensSelectors.selectTokensMap);
 
   const sellTokensOptions = selectedLab
     ? [selectedLab.token, ...userTokens.filter(({ address }) => address !== selectedLab.token.address)]
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
-  const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  let selectedSellToken: TokenView | undefined = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  const addressIsNativeCurrency = selectedSellTokenAddress === ETHEREUM_ADDRESS;
+  const shouldUseNativeCurrency = typeof selectedSellToken === 'undefined' && addressIsNativeCurrency;
+  if (shouldUseNativeCurrency) {
+    const tokenData = selectedTokenMap[ETHEREUM_ADDRESS];
+    selectedSellToken = createPlaceholderToken(tokenData);
+  }
 
   const onExit = () => {
     dispatch(LabsActions.clearSelectedLabAndStatus());
@@ -103,7 +112,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   // TODO: SET LABS SIMULATION
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress) return;
-    if (toBN(debouncedAmount).gt(0) && !inputError) {
+    if (toBN(debouncedAmount).gt(0) && !inputError && selectedSellToken) {
       dispatch(
         VaultsActions.getExpectedTransactionOutcome({
           transactionType: 'DEPOSIT',
@@ -227,26 +236,29 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   };
 
   const approve = async () => {
-    await dispatch(
-      LabsActions.approveDeposit({
-        labAddress: selectedLab.address,
-        tokenAddress: selectedSellToken.address,
-      })
-    );
+    selectedSellToken &&
+      (await dispatch(
+        LabsActions.approveDeposit({
+          labAddress: selectedLab.address,
+          tokenAddress: selectedSellToken.address,
+        })
+      ));
   };
 
   const deposit = async () => {
     try {
-      await dispatchAndUnwrap(
-        LabsActions.deposit({
-          labAddress: selectedLab.address,
-          tokenAddress: selectedSellToken.address,
-          amount: toBN(amount),
-          slippageTolerance: selectedSlippage,
-          targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
-        })
-      );
-      setTxCompleted(true);
+      if (selectedSellToken) {
+        await dispatchAndUnwrap(
+          LabsActions.deposit({
+            labAddress: selectedLab.address,
+            tokenAddress: selectedSellToken.address,
+            amount: toBN(amount),
+            slippageTolerance: selectedSlippage,
+            targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
+          })
+        );
+        setTxCompleted(true);
+      }
     } catch (error) {}
   };
 
