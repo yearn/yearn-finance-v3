@@ -22,8 +22,10 @@ import {
   validateNetwork,
   getZapInContractAddress,
   formatApy,
+  createPlaceholderToken,
 } from '@utils';
 import { getConfig } from '@config';
+import { TokenView } from '@src/core/types';
 
 import { Transaction } from './Transaction';
 
@@ -44,7 +46,7 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { NETWORK_SETTINGS } = getConfig();
+  const { NETWORK_SETTINGS, ETHEREUM_ADDRESS } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
@@ -61,12 +63,19 @@ export const DepositTx: FC<DepositTxProps> = ({
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
+  const selectedTokenMap = useAppSelector(TokensSelectors.selectTokensMap);
 
   const sellTokensOptions = selectedVault
     ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
-  const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  let selectedSellToken: TokenView | undefined = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  const addressIsNativeCurrency = selectedSellTokenAddress === ETHEREUM_ADDRESS;
+  const shouldUseNativeCurrency = typeof selectedSellToken === 'undefined' && addressIsNativeCurrency;
+  if (shouldUseNativeCurrency) {
+    const tokenData = selectedTokenMap[ETHEREUM_ADDRESS];
+    selectedSellToken = createPlaceholderToken(tokenData);
+  }
 
   const onExit = () => {
     dispatch(VaultsActions.clearSelectedVaultAndStatus());
@@ -122,7 +131,7 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   useEffect(() => {
     if (!selectedVault || !selectedSellTokenAddress) return;
-    if (toBN(debouncedAmount).gt(0) && !inputError) {
+    if (toBN(debouncedAmount).gt(0) && !inputError && selectedSellToken) {
       dispatch(
         VaultsActions.getExpectedTransactionOutcome({
           transactionType: 'DEPOSIT',
@@ -234,23 +243,26 @@ export const DepositTx: FC<DepositTxProps> = ({
   };
 
   const approve = async () => {
-    await dispatch(
-      VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
-    );
+    selectedSellToken &&
+      (await dispatch(
+        VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
+      ));
   };
 
   const deposit = async () => {
     try {
-      await dispatchAndUnwrap(
-        VaultsActions.depositVault({
-          vaultAddress: selectedVault.address,
-          tokenAddress: selectedSellToken.address,
-          amount: toBN(amount),
-          slippageTolerance: selectedSlippage,
-          targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
-        })
-      );
-      setTxCompleted(true);
+      if (selectedSellToken) {
+        await dispatchAndUnwrap(
+          VaultsActions.depositVault({
+            vaultAddress: selectedVault.address,
+            tokenAddress: selectedSellToken.address,
+            amount: toBN(amount),
+            slippageTolerance: selectedSlippage,
+            targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
+          })
+        );
+        setTxCompleted(true);
+      }
     } catch (error) {}
   };
 
