@@ -48,12 +48,12 @@ const GlobalStyle = createGlobalStyle`
       color: inherit;
     }
   }
-  
+
   p {
     letter-spacing: .015rem;
     margin: 0;
   }
-  
+
   p + p {
     margin-top: 1rem;
   }
