@@ -24,6 +24,7 @@ import {
   calculateUnderlyingAmount,
 } from '@utils';
 import { getConfig } from '@config';
+import useIsAmbireWC from '@hooks/useIsAmbireWC';
 
 import { Transaction } from './Transaction';
 
@@ -72,6 +73,8 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       })
     : '';
   const yvTokenAmountNormalized = normalizeAmount(yvTokenAmount, toBN(selectedVault?.decimals).toNumber());
+
+  const isAmbireWC = useIsAmbireWC(currentNetwork);
 
   const onExit = () => {
     dispatch(VaultsActions.clearSelectedVaultAndStatus());
@@ -238,13 +241,17 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       label: signedApprovalsEnabled ? t('components.transaction.sign') : t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveZapOut,
-      disabled: isApproved,
+      disabled: isApproved || isAmbireWC,
     },
     {
       label: t('components.transaction.withdraw'),
       onAction: withdraw,
       status: actionsStatus.withdraw,
-      disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading || selectedVault.withdrawalsDisabled,
+      disabled:
+        !(isApproved || isAmbireWC) ||
+        !isValidAmount ||
+        expectedTxOutcomeStatus.loading ||
+        selectedVault.withdrawalsDisabled,
       contrast: true,
     },
   ];

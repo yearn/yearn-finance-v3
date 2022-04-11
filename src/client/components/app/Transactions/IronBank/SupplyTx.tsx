@@ -19,6 +19,7 @@ import {
   COLLATERAL_FACTOR_DECIMALS,
   humanize,
 } from '@utils';
+import useIsAmbireWC from '@hooks/useIsAmbireWC';
 
 import { IronBankTransaction } from '../IronBankTransaction';
 
@@ -43,6 +44,8 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
   const selectedTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const userIronBankSummary = useAppSelector(IronBankSelectors.selectSummaryData);
   const actionsStatus = useAppSelector(IronBankSelectors.selectSelectedMarketActionsStatusMap);
+
+  const isAmbireWC = useIsAmbireWC(currentNetwork);
 
   const onExit = () => {
     dispatch(IronBankActions.clearSelectedMarketAndStatus());
@@ -137,6 +140,7 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
         IronBankActions.supplyMarket({
           marketAddress: selectedMarket.address,
           amount: toBN(amount),
+          isApproved,
         })
       );
       setTxCompleted(true);
@@ -148,13 +152,13 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
       label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approve,
-      disabled: isApproved,
+      disabled: isApproved || isAmbireWC,
     },
     {
       label: t('components.transaction.supply'),
       onAction: supply,
       status: actionsStatus.supply,
-      disabled: !isApproved || !isValidAmount,
+      disabled: !(isApproved || isAmbireWC) || !isValidAmount,
       contrast: true,
     },
   ];

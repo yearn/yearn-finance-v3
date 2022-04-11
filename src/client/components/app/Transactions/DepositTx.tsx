@@ -24,6 +24,7 @@ import {
   formatApy,
 } from '@utils';
 import { getConfig } from '@config';
+import useIsAmbireWC from '@hooks/useIsAmbireWC';
 
 import { Transaction } from './Transaction';
 
@@ -73,6 +74,8 @@ export const DepositTx: FC<DepositTxProps> = ({
     dispatch(VaultsActions.clearTransactionData());
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: undefined }));
   };
+
+  const isAmbireWC = useIsAmbireWC(currentNetwork);
 
   useEffect(() => {
     if (!selectedSellTokenAddress && selectedVault) {
@@ -259,14 +262,14 @@ export const DepositTx: FC<DepositTxProps> = ({
       label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approve,
-      disabled: isApproved || selectedVault.depositsDisabled,
+      disabled: isApproved || isAmbireWC || selectedVault.depositsDisabled,
     },
     {
       label: t('components.transaction.deposit'),
       onAction: deposit,
       status: actionsStatus.deposit,
       disabled:
-        !isApproved ||
+        !(isApproved || isAmbireWC) ||
         !isValidAmount ||
         expectedTxOutcomeStatus.loading ||
         isDebouncePending ||

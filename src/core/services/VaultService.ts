@@ -1,3 +1,7 @@
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import { ethers } from 'ethers';
+import { ZapProtocol } from '@yfi/sdk';
+
 import { getContract, signTypedData } from '@frameworks/ethers';
 import { toBN, normalizeAmount, getProviderType } from '@utils';
 import {
@@ -23,7 +27,9 @@ import {
   Web3Provider,
   TransactionService,
   Config,
+  ApproveProps,
 } from '@types';
+import erc20Abi from '@services/contracts/erc20.json';
 
 import v2VaultAbi from './contracts/v2Vault.json';
 import eip2612Abi from './contracts/eip2612.json';
@@ -226,12 +232,125 @@ export class VaultServiceImpl implements VaultService {
     });
   }
 
+  public async approveAndDeposit(approveProps: ApproveProps, depositProps: DepositProps): Promise<TransactionResponse> {
+    const { spenderAddress, amount: approveAmount } = approveProps;
+    const { accountAddress, vaultAddress, amount: depositAmount } = depositProps;
+
+    const untypedProvider = this.web3Provider.getSigner().provider as any;
+    const wcProvider = untypedProvider.provider as WalletConnectProvider;
+
+    const ercTokenInterface = new ethers.utils.Interface(erc20Abi);
+    const encodedApprove = ercTokenInterface.encodeFunctionData('approve', [spenderAddress, approveAmount]);
+
+    const vaultInterface = new ethers.utils.Interface(v2VaultAbi);
+    const encodedDeposit = vaultInterface.encodeFunctionData('deposit(uint256,address)', [
+      depositAmount,
+      accountAddress,
+    ]);
+
+    const params = [
+      {
+        to: approveProps.tokenAddress,
+        data: encodedApprove,
+      },
+      {
+        to: vaultAddress,
+        data: encodedDeposit,
+      },
+    ];
+
+    return new Promise<TransactionResponse>((resolve, reject) => {
+      wcProvider.connector
+        .sendCustomRequest({
+          method: 'ambire_sendBatchTransaction',
+          params,
+        })
+        .then((res) => {
+          const txResponse = {
+            hash: res,
+            wait: (txConfirmations) => untypedProvider.waitForTransaction(res, txConfirmations),
+          } as TransactionResponse;
+          resolve(txResponse);
+        })
+        .catch(reject);
+    });
+  }
+
   public async withdraw(props: WithdrawProps): Promise<TransactionResponse> {
     const { network, accountAddress, tokenAddress, vaultAddress, amountOfShares, slippageTolerance, signature } = props;
     const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
       slippage: slippageTolerance,
       signature,
+    });
+  }
+
+  public async approveAndWithdraw(
+    approveProps: ApproveProps,
+    withdrawProps: WithdrawProps
+  ): Promise<TransactionResponse> {
+    const { network, amount: approveAmount } = approveProps;
+
+    let params: any[] = [];
+    const yearn = this.yearnSdk.getInstanceOf(network);
+
+    const adapters = Object.values(yearn.services.lens.adapters.vaults);
+    const [vaultRef] = await Promise.all(
+      adapters.map(async (adapter) => {
+        return await adapter.assetsStatic([withdrawProps.vaultAddress], {});
+      })
+    ).then((arr) => arr.flat());
+
+    if (vaultRef.token === withdrawProps.tokenAddress) {
+      const vaultInterface = new ethers.utils.Interface(v2VaultAbi);
+      const encodedWithdraw = vaultInterface.encodeFunctionData('withdraw(uint256)', [withdrawProps.amountOfShares]);
+      params.push({
+        to: withdrawProps.vaultAddress,
+        data: encodedWithdraw,
+      });
+    } else {
+      const zapOutParams = await yearn.services.zapper.zapOut(
+        withdrawProps.accountAddress,
+        withdrawProps.tokenAddress,
+        withdrawProps.amountOfShares,
+        withdrawProps.vaultAddress,
+        '0',
+        withdrawProps.slippageTolerance || 0,
+        true,
+        ZapProtocol.YEARN
+      );
+
+      const ercTokenInterface = new ethers.utils.Interface(erc20Abi);
+      const encodedApprove = ercTokenInterface.encodeFunctionData('approve', [zapOutParams.to, approveAmount]);
+
+      params.push({
+        to: withdrawProps.vaultAddress,
+        data: encodedApprove,
+      });
+
+      params.push({
+        to: zapOutParams.to,
+        data: zapOutParams.data,
+      });
+    }
+
+    const untypedProvider = this.web3Provider.getSigner().provider as any;
+    const wcProvider = untypedProvider.provider as WalletConnectProvider;
+
+    return new Promise<TransactionResponse>((resolve, reject) => {
+      wcProvider.connector
+        .sendCustomRequest({
+          method: 'ambire_sendBatchTransaction',
+          params,
+        })
+        .then((res) => {
+          const txResponse = {
+            hash: res,
+            wait: (txConfirmations) => untypedProvider.waitForTransaction(res, txConfirmations),
+          } as TransactionResponse;
+          resolve(txResponse);
+        })
+        .catch(reject);
     });
   }
 

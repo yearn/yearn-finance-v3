@@ -1,5 +1,5 @@
 import { getConfig } from '@config';
-import { Network, ProviderType } from '@types';
+import { Network, ProviderType, YearnSdk } from '@types';
 
 export const getNetworkId = (network: Network): number => {
   switch (network) {
@@ -69,4 +69,11 @@ export const getProviderType = (network: Network): ProviderType => {
     default:
       throw Error('Unknown Network');
   }
+};
+
+export const isAmbireWCFromContext = (yearnSdk: YearnSdk, network: Network): Boolean => {
+  const yearnInstance = yearnSdk.getInstanceOf(network) as any;
+  const writeProvider = yearnInstance?.context?.ctx?.provider?.write?.provider;
+
+  return writeProvider?.wc?._peerMeta?.name === 'Ambire Wallet';
 };
