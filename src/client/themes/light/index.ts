@@ -106,7 +106,7 @@ const lightTheme: DefaultTheme = {
 
     txModalColors: {
       background: light.colors.surface,
-      backgroundVariant: '#E8E8EA',
+      backgroundVariant: light.colors.background,
       onBackgroundVariantColor: '#6e6e6e',
       primary: '#00A3FF',
       onPrimary: '#FFFFFF',

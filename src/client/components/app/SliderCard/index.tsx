@@ -47,7 +47,6 @@ const StyledCardContent = styled(CardContent)`
 `;
 
 const StyledCard = styled(Card)`
-  // max-width: max-content;
   padding: ${({ theme }) => theme.card.padding} 0;
   background: ${({ theme }) => theme.colors.backgroundVariant};
   border: 2px solid ${({ theme }) => theme.colors.primary};
@@ -57,9 +56,8 @@ const StyledCard = styled(Card)`
 `;
 
 interface SlideContent {
-  header: any;
-  content: any;
-  background?: string;
+  header: string;
+  content: ReactNode | string;
 }
 
 interface SliderCardProps {
@@ -82,8 +80,8 @@ export const SliderCard = ({
 }: SliderCardProps) => {
   const [selectedSlide, setSelectedSlide] = useState(0);
 
-  const textHeader = !!slidesContent?.length ? slidesContent[selectedSlide]?.header : header;
-  const extraContent = !!slidesContent?.length ? slidesContent[selectedSlide].content : Component;
+  const textHeader = slidesContent?.length ? slidesContent[selectedSlide]?.header : header;
+  const extraContent = slidesContent?.length ? slidesContent[selectedSlide]?.content : Component;
 
   const previousSlide = () => {
     if (!slidesContent?.length) return;

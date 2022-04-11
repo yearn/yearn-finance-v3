@@ -111,10 +111,10 @@ const StyledFooter = styled.footer`
   ${StyledLink},
   ${StyledIconLink} {
     transition: filter 200ms ease-in-out;
-    filter: opacity(50%);
+    filter: opacity(100%);
 
     &:hover {
-      filter: opacity(100%);
+      filter: opacity(70%);
     }
   }
 `;
@@ -125,23 +125,19 @@ export const Footer = ({ className }: FooterProps) => {
   return (
     <StyledFooter className={className}>
       <LinkSection>
-        {footerLinks.map((footerLink) => {
-          return (
-            <StyledLink href={footerLink.link} key={footerLink.name} target="_blank">
-              {t(`footer.links.${footerLink.name}`)}
-            </StyledLink>
-          );
-        })}
+        {footerLinks.map((footerLink) => (
+          <StyledLink href={footerLink.link} key={footerLink.name} target="_blank">
+            {t(`footer.links.${footerLink.name}`)}
+          </StyledLink>
+        ))}
       </LinkSection>
 
       <SocialSection>
-        {socialLinks.map((social, index) => {
-          return (
-            <StyledIconLink href={social.link} target="_blank" key={index}>
-              <StyledIcon Component={social.icon} />
-            </StyledIconLink>
-          );
-        })}
+        {socialLinks.map((social, index) => (
+          <StyledIconLink href={social.link} target="_blank" key={index}>
+            <StyledIcon Component={social.icon} />
+          </StyledIconLink>
+        ))}
       </SocialSection>
     </StyledFooter>
   );

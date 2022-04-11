@@ -8,11 +8,10 @@ import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from
 import { formatUsd, humanize } from '@utils';
 
 const MaxButton = styled(Button)`
-  // background: transparent;
-  // color: ${({ theme }) => theme.colors.txModalColors.primary};
-  border-radius: 1em;
+  border-radius: ${({ theme }) => theme.globalRadius};
   width: min-content;
   margin-left: 0.5rem;
+  text-transform: capitalize;
 `;
 
 const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
@@ -231,7 +230,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   onAmountChange,
   amountValue,
   maxAmount,
-  maxLabel = 'MAX',
+  maxLabel = 'Max',
   selectedToken,
   onSelectedTokenChange,
   yieldPercent,
