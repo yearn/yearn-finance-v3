@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 const Container = styled.article<{ wrap?: string }>`
   display: flex;

@@ -1,5 +1,5 @@
 import { ElementType, SVGProps, forwardRef } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 import { ReactComponent as AddCircleIcon } from '@assets/icons/add-circle.svg';
 import { ReactComponent as AddIcon } from '@assets/icons/add.svg';

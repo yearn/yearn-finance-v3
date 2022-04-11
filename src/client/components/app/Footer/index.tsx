@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 import { Icon, MediumIcon, Link, TwitterIcon, DiscordIcon, RedditIcon } from '@components/common';
 import { useAppTranslation } from '@hooks';

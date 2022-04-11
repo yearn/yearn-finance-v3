@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 import { Card, CardHeader, CardContent, CardElement, CardEmptyList, ToggleButton } from '@components/common';
 import { sort } from '@utils';

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 // NOTE: App errors out when trying to import directly from 'common'
 import { ChevronRightIcon, Icon } from '@components/common/Icon';

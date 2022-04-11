@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 import { Address, Network } from '@types';
 import { DefaultscanIcon, EtherscanIcon, FtmscanIcon, ArbiscanIcon, Icon } from '@components/common';

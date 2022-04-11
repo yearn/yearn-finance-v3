@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';

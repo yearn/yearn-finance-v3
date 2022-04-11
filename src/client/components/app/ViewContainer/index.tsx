@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 const StyledViewContainer = styled.main`
   display: flex;

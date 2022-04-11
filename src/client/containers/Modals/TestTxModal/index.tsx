@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 import { ModalTx } from '@components/common';
 import { TestTx } from '@components/app';

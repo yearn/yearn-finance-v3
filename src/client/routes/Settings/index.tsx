@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import i18n from 'i18next';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppTranslation, useAppSelector, useAppDispatch, useWindowDimensions } from '@hooks';

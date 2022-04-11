@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 import { Icon, Text, WarningIcon } from '@components/common';
 import { useAppTranslation } from '@hooks';
