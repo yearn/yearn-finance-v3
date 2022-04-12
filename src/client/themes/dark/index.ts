@@ -72,7 +72,7 @@ const darkTheme: DefaultTheme = {
     selectionBar: dark.colors.surfaceVariant,
 
     onPrimaryVariant: '#FFFFFF',
-    onBackground: '#000000',
+    onBackground: '#A8A8A8',
 
     upTrend: '#C6E11E',
     downTrend: '#FF005E',
