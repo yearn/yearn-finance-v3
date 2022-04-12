@@ -19,6 +19,9 @@ const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMa
 /* ----------------------------- Main Selectors ----------------------------- */
 const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user): TokenView[] => {
   const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
+  const {
+    CONTRACT_ADDRESSES: { ETH },
+  } = getConfig();
   const tokens = userTokensAddresses
     .filter((address) => !!tokensMap[address])
     .map((address) => {
@@ -27,7 +30,7 @@ const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (to
       const allowancesMap = userTokensAllowancesMap[address] ?? {};
       return createToken({ tokenData, userTokenData, allowancesMap });
     });
-  return tokens.filter((token) => toBN(token.balance).gt(0));
+  return tokens.filter((token) => toBN(token.balance).gt(0) || token.address === ETH);
 });
 
 const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
