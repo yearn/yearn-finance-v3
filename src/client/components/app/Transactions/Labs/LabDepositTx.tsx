@@ -1,7 +1,14 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
+import {
+  useAppSelector,
+  useAppDispatch,
+  useAppDispatchAndUnwrap,
+  useDebounce,
+  useAppTranslation,
+  useAllowance,
+} from '@hooks';
 import {
   TokensSelectors,
   LabsSelectors,
@@ -19,12 +26,10 @@ import {
   toWei,
   USDC_DECIMALS,
   validateVaultDeposit,
-  validateVaultAllowance,
-  getZapInContractAddress,
-  validateYvBoostEthActionsAllowance,
   validateSlippage,
   validateNetwork,
   formatApy,
+  basicValidateAllowance,
   createPlaceholderToken,
 } from '@utils';
 import { getConfig } from '@config';
@@ -41,14 +46,12 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS, ETHEREUM_ADDRESS } = getConfig();
-  const { YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+  const { ETHEREUM_ADDRESS, NETWORK_SETTINGS } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
-  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
@@ -67,6 +70,11 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   let selectedSellToken: TokenView | undefined = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceErrors] = useAllowance({
+    tokenAddress: selectedSellTokenAddress,
+    vaultAddress: selectedLab?.address,
+    isLab: true,
+  });
   const addressIsNativeCurrency = selectedSellTokenAddress === ETHEREUM_ADDRESS;
   const shouldUseNativeCurrency = typeof selectedSellToken === 'undefined' && addressIsNativeCurrency;
   if (shouldUseNativeCurrency) {
@@ -89,20 +97,6 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       onExit();
     };
   }, []);
-
-  useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress || !isWalletConnected) return;
-
-    const isZap = selectedSellTokenAddress !== selectedLab.token.address || selectedLab.address === PSLPYVBOOSTETH;
-    const spenderAddress = isZap ? getZapInContractAddress(selectedLab.address) : selectedLab.address;
-
-    dispatch(
-      TokensActions.getTokenAllowance({
-        tokenAddress: selectedSellTokenAddress,
-        spenderAddress,
-      })
-    );
-  }, [selectedSellTokenAddress, selectedLab?.address, isWalletConnected]);
 
   useEffect(() => {
     if (!selectedLab) return;
@@ -131,30 +125,14 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   let isApproved: boolean | undefined;
   let allowanceError: string | undefined;
 
-  if (selectedLab.address === YVBOOST) {
-    const { approved, error } = validateVaultAllowance({
-      amount: toBN(debouncedAmount),
-      vaultAddress: selectedLab.address,
-      vaultUnderlyingTokenAddress: selectedLab.token.address,
-      sellTokenAddress: selectedSellTokenAddress,
-      sellTokenDecimals: selectedSellToken.decimals.toString(),
-      sellTokenAllowancesMap: selectedSellToken.allowancesMap,
-    });
-    isApproved = approved;
-    allowanceError = error;
-  }
-
-  if (selectedLab.address === PSLPYVBOOSTETH) {
-    const { approved, error } = validateYvBoostEthActionsAllowance({
-      action: 'INVEST',
-      sellTokenAmount: toBN(debouncedAmount),
-      sellTokenAddress: selectedSellTokenAddress,
-      sellTokenDecimals: selectedSellToken.decimals.toString(),
-      sellTokenAllowancesMap: selectedSellToken.allowancesMap,
-    });
-    isApproved = approved;
-    allowanceError = error;
-  }
+  const { approved, error } = basicValidateAllowance({
+    tokenAddress: selectedSellTokenAddress,
+    tokenAmount: toBN(debouncedAmount),
+    tokenDecimals: selectedSellToken.decimals.toString(),
+    rawAllowance: tokenAllowance?.amount || '0',
+  });
+  isApproved = approved;
+  allowanceError = error;
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
     sellTokenAmount: toBN(debouncedAmount),
@@ -183,8 +161,9 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       expectedTxOutcomeStatus.error ||
       actionsStatus.approveDeposit.error ||
       actionsStatus.deposit.error ||
-      slippageError,
-    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+      slippageError ||
+      tokenAllowanceErrors,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending || isLoadingTokenAllowance,
   };
 
   const selectedLabOption = {

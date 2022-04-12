@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { Lab, LabDynamic, Position } from '@types';
+import { Lab, LabDynamic, Position, TokenAllowance, TransactionResponse } from '@types';
 import {
   toBN,
   getNetwork,
@@ -15,6 +15,7 @@ import {
   getZapInContractAddress,
   validateYveCrvActionsAllowance,
   toWei,
+  parseError,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -142,18 +143,64 @@ interface WithdrawProps {
   slippageTolerance?: number;
 }
 
-const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
+const approveDeposit = createAsyncThunk<{ amount: string; spenderAddress: string }, ApproveDepositProps, ThunkAPI>(
   'labs/approveDeposit',
-  async ({ labAddress, tokenAddress }, { dispatch, getState }) => {
-    const { labs } = getState();
+  async ({ labAddress, tokenAddress }, { getState, extra }) => {
+    const { labs, wallet, network } = getState();
     const labData = labs.labsMap[labAddress];
-    const isZapin = tokenAddress !== labData.token || labAddress === PSLPYVBOOSTETH;
-    const spenderAddress = isZapin ? getZapInContractAddress(labAddress) : labAddress;
+    const { vaultService, transactionService } = extra.services;
+    const amount = extra.config.MAX_UINT256;
 
-    const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
-    unwrapResult(result);
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const tx = await vaultService.approveDeposit({
+      network: network.current,
+      accountAddress,
+      tokenAddress,
+      amount,
+      vaultAddress: labData.address,
+    });
+
+    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
+
+    const { spender } = await vaultService.getVaultAllowance({
+      network: network.current,
+      vaultAddress: labAddress,
+      tokenAddress,
+      accountAddress,
+    });
+
+    return { amount, spenderAddress: spender };
+  },
+  {
+    serializeError: parseError,
   }
 );
+
+const getLabAllowance = createAsyncThunk<
+  TokenAllowance,
+  {
+    tokenAddress: string;
+    vaultAddress: string;
+  },
+  ThunkAPI
+>('labs/getLabAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState }) => {
+  const {
+    services: { vaultService },
+  } = extra;
+  const { network, wallet } = getState();
+  const userAddress = wallet.selectedAddress;
+
+  if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+  return vaultService.getVaultAllowance({
+    network: network.current,
+    vaultAddress: vaultAddress,
+    tokenAddress,
+    accountAddress: userAddress,
+  });
+});
 
 const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/deposit',
@@ -726,6 +773,7 @@ export const LabsActions = {
   clearSelectedLabAndStatus,
   clearLabStatus,
   clearUserData,
+  getLabAllowance,
   yvBoost: {
     yvBoostApproveDeposit,
     yvBoostDeposit,

@@ -23,6 +23,7 @@ import {
   TransactionOutcome,
   EarningsDayData,
   StrategyMetadata,
+  TokenAllowance,
 } from '@yfi/sdk';
 
 import { Network } from './Blockchain';
@@ -98,4 +99,5 @@ export type {
   EarningsDayData,
   StrategyMetadata,
   Apy,
+  TokenAllowance,
 };
