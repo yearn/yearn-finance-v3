@@ -33,6 +33,7 @@ const ThemePreview = styled.div<{ selected?: boolean; themePallete: DefaultTheme
     background-color: ${(props) => props.themePallete.colors.primary};
     margin-right: 0.4rem;
   }
+
   .themebox-content {
     display: grid;
     grid-auto-rows: auto 1fr;
@@ -77,9 +78,9 @@ const StyledThemeBox = styled.div<{ selected?: boolean }>`
   ${(props) =>
     props.selected &&
     `
-    background-color: ${props.theme.colors.secondary};
-    border-color: ${props.theme.colors.secondary};
-    color: ${props.theme.colors.surface};
+    background-color: ${props.theme.colors.backgroundVariant};
+    border-color: ${props.theme.colors.titlesVariant};
+    color: ${props.theme.colors.titlesVariant};
   `};
 `;
 

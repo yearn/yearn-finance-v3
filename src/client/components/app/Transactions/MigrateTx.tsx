@@ -146,7 +146,6 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
       onAction: migrate,
       status: actionsStatus.migrate,
       disabled: !isApproved,
-      contrast: true,
     },
   ];
 

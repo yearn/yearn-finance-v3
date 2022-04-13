@@ -18,7 +18,6 @@
   },
   "vault-actions-panel": {
     "deposit": "Yatırmak",
-    "header": "İşlemler",
     "migrate": "Taşı",
     "withdraw": "Çek"
   }

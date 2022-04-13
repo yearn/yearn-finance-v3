@@ -16,13 +16,16 @@ export interface LineChartProps {
 
 const StyledTooltip = styled.div<{ align: 'left' | 'right' }>`
   background: transparent;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.icons.variant};
+  background-color: ${({ theme }) => theme.colors.background};
   font-size: 1.4rem;
   position: relative;
   text-align: center;
+  padding: ${({ theme }) => theme.layoutPadding};
+  border-radius: ${({ theme }) => theme.globalRadius};
 
-  ${({ align }) => align === 'left' && `left: 100%; transform: translateX(-50%)`};
-  ${({ align }) => align === 'right' && `right: 100%; transform: translateX(50%)`};
+  ${({ align }) => align === 'left' && `left: 100%; transform: translateX(-45%)`};
+  ${({ align }) => align === 'right' && `right: 100%; transform: translateX(45%)`};
 `;
 
 const LineBackground = styled.div`
@@ -34,9 +37,9 @@ const LineBackground = styled.div`
   left: 0;
   background: ${({ theme }) => `
     repeating-linear-gradient(90deg, ${theme.colors.surfaceVariantA},
-                                     ${theme.colors.surfaceVariantA} 12rem,
-                                     transparent 12rem,
-                                     transparent 24rem)
+                                     ${theme.colors.surfaceVariantA} 12.2rem,
+                                     ${theme.colors.background} 12.2rem,
+                                     ${theme.colors.background} 24.4rem)
   `};
 
   // NOTE If you want to create variant bgs for each point with different widths use this:
@@ -69,16 +72,15 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const theme = getTheme(currentTheme);
 
-  // TODO Load currentTheme instead of defaultTheme
   const lineTheme = {
     crosshair: {
       line: {
-        stroke: theme.colors.secondary,
+        stroke: theme.colors.primary,
         strokeWidth: 1,
         strokeOpacity: 0.35,
       },
     },
-    textColor: theme.colors.onSurfaceSH1,
+    textColor: theme.colors.icons.variant,
   };
 
   return (
@@ -89,7 +91,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
         data={chartData}
         theme={lineTheme}
         curve="linear"
-        colors={theme.colors.secondary}
+        colors={theme.colors.icons.variant}
         margin={{ top: 20, right: 10, bottom: 36, left: 15 }}
         // xScale={{ type: 'point' }}
         xScale={{

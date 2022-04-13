@@ -18,7 +18,6 @@
   },
   "vault-actions-panel": {
     "deposit": "Deposit",
-    "header": "Transactions",
     "migrate": "Migrate",
     "withdraw": "Withdraw"
   }

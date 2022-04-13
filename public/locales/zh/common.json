@@ -3,11 +3,6 @@
     "back-button": {
       "label": "回到前页"
     },
-    "beta-card": {
-      "desc-1": "Yearn的v3 beta网页已开始运作，加了存款模拟，Iron Bank功能，新的Labs部分，和可定制的主题等。如果你有发现错误，请在Discord上联系我们。",
-      "desc-2": "v1 机枪池的迁移 (但如果你怀旧），我们维护着原来的v2用户界面，仍然可在这里用",
-      "header": "已经不是Beta了！"
-    },
     "connect-button": {
       "connect": "连接钱包"
     },
@@ -29,7 +24,6 @@
       "earned": "赚取",
       "lend-apy": "借款APY",
       "market-liquidity": "市场流动性",
-      "name": "姓名",
       "opportunities": "机会",
       "price": "价格",
       "supplying": "供应",
@@ -76,7 +70,6 @@
       "to-vault": "到机枪池",
       "to-wallet": "到钱包",
       "token-input": {
-        "balance": "结余",
         "search-select-token": "选择代币",
         "search-select-vault": "选择机枪池",
         "yield": "收益"
@@ -94,7 +87,6 @@
     "borrowed": "已借",
     "earnings": "收益",
     "est-yearly-yield": "估算年收益",
-    "header": "仪表盘",
     "holdings": "持有",
     "supplied": "已提供",
     "total-net-worth": "总净值",
@@ -131,7 +123,6 @@
       "small": "©"
     },
     "disclaimer": "声明",
-    "home": "主页",
     "ironbank": "Iron Bank",
     "labs": "实验室",
     "settings": "设置",

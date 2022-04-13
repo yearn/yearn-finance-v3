@@ -15,15 +15,15 @@ const StyledButton = styled.button<{ outline?: boolean }>`
   align-items: center;
   justify-content: center;
   padding: 0 1rem;
-  height: 2.8rem;
+  height: 3.2rem;
   border: 2px solid transparent;
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${(props) => props.theme.colors.secondary};
-  color: ${(props) => props.theme.colors.background};
+  color: ${(props) => props.theme.colors.titlesVariant};
   font-family: inherit;
   cursor: pointer;
   user-select: none;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   transition: filter 200ms ease-in-out;
 
   a,
