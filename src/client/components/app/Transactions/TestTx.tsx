@@ -6,8 +6,6 @@ import { ProgressBar } from '@components/common';
 import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxError } from './components/TxError';
-import { TxArrowStatus } from './components/TxArrowStatus';
-
 export interface TestTxProps {
   onClose?: () => void;
 }
@@ -18,8 +16,6 @@ export const TestTx: FC<TestTxProps> = ({ onClose, children, ...props }) => {
   return (
     <StyledTestTx onClose={onClose} header="Invest" {...props}>
       {/* <TxTokenInput headerText="From wallet" /> */}
-
-      <TxArrowStatus />
 
       {/* <TxTokenInput headerText="To vault" /> */}
 
@@ -35,12 +31,14 @@ export const TestTx: FC<TestTxProps> = ({ onClose, children, ...props }) => {
 
         <TxActionButton onClick={() => console.log('deposit')}>Deposit</TxActionButton>
 
-        <TxActionButton onClick={() => console.log('withdraw')} contrast></TxActionButton>
+        <TxActionButton onClick={() => console.log('withdraw')} contrast>
+          Loading
+        </TxActionButton>
       </TxActions>
 
       <TxActions>
         <TxActionButton onClick={() => console.log('exit')} success>
-          Exit
+          Success
         </TxActionButton>
       </TxActions>
     </StyledTestTx>

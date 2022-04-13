@@ -3,11 +3,6 @@
     "back-button": {
       "label": "前のページに戻る"
     },
-    "beta-card": {
-      "desc-1": "Yearnのv3ベータサイトは本格稼動をはじめました。入金シミュレーション、Iron Bank機能、新しいラボセクション、カスタマイズ可能なテーマなどが追加されています。今後も毎週、機能追加や修正を行っていきます。バグが発生した場合やフィードバックをご希望の場合は、下記までお知らせください。",
-      "desc-2": "v1ボールトからの移行のために（あるいは感傷的な気分に浸るために）、昔のv2 UIもまだ利用可能な状態を保っています。",
-      "header": "もうベータ版ではありません！"
-    },
     "connect-button": {
       "connect": "ウォレットに接続する"
     },
@@ -29,7 +24,6 @@
       "earned": "獲得",
       "lend-apy": "貸出APY",
       "market-liquidity": "市場流動性",
-      "name": "名前",
       "opportunities": "リスト",
       "price": "値段",
       "supplying": "供給中",
@@ -76,7 +70,6 @@
       "to-vault": "ボールトへ",
       "to-wallet": "ウォレットへ",
       "token-input": {
-        "balance": "残高",
         "search-select-token": "トークンを選択する",
         "search-select-vault": "ボールトを選択する",
         "yield": "利回り"
@@ -94,7 +87,6 @@
     "borrowed": "貸出済",
     "earnings": "収益",
     "est-yearly-yield": "推定年間利回り",
-    "header": "ダッシュボード",
     "holdings": "保有中",
     "supplied": "供給済",
     "total-net-worth": "総純資産",
@@ -131,7 +123,6 @@
       "small": "©"
     },
     "disclaimer": "免責事項",
-    "home": "ホーム",
     "ironbank": "Iron Bank",
     "labs": "研究所",
     "settings": "設定",

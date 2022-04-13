@@ -8,7 +8,6 @@ const sharedTheme: SharedTheme = {
   navbar: {
     height: '6.6rem',
   },
-
   zindex: {
     navbar: 400,
     sidemenu: 500,
@@ -26,8 +25,8 @@ const sharedTheme: SharedTheme = {
     desktop: 1920,
     desktopL: 2560,
   },
-  globalFont: 'Oxygen, sans-serif',
-  globalMaxWidth: '112rem',
+  globalFont: '"Roboto", sans-serif',
+  globalMaxWidth: '120rem',
   globalRadius: '0.8rem',
 
   sideBar: {
@@ -65,7 +64,7 @@ const sharedTheme: SharedTheme = {
 
   txModal: {
     width: '38.4rem',
-    gap: '1.2rem',
+    gap: '.8rem',
   },
 
   searchList: {
@@ -77,7 +76,7 @@ const sharedTheme: SharedTheme = {
 
   layoutPadding: '1.6rem',
   card: {
-    padding: '1.2rem',
+    padding: '2.4rem',
   },
 };
 

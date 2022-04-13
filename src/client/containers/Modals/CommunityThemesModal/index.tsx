@@ -16,7 +16,7 @@ const CustomThemesList = styled(Card)`
   justify-content: space-between;
   grid-gap: 1.2rem;
   flex: 1;
-  background-color: ${({ theme }) => theme.colors.surface};
+  background-color: ${({ theme }) => theme.colors.background};
   margin-top: 1.2rem;
   padding: 2.8rem 2.3rem;
   overflow: hidden;
@@ -32,6 +32,7 @@ const StyledTabPanel = styled(TabPanel)`
 
 const StyledTabs = styled(Tabs)`
   margin-top: 1.3rem;
+  height: 3.2rem;
 `;
 
 const StyledCommunityThemesModal = styled(Modal)`
@@ -39,7 +40,7 @@ const StyledCommunityThemesModal = styled(Modal)`
   flex-direction: column;
   width: 38.5rem;
   height: 52rem;
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.surface};
 `;
 export interface CommunityThemesModalProps {
   onClose: () => void;

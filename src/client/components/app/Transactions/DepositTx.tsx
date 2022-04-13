@@ -72,7 +72,7 @@ export const DepositTx: FC<DepositTxProps> = ({
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
-  const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceErrors] = useAllowance({
+  const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceError] = useAllowance({
     tokenAddress: selectedSellTokenAddress,
     vaultAddress: selectedVault?.address,
   });
@@ -199,7 +199,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       actionsStatus.approve.error ||
       actionsStatus.deposit.error ||
       slippageError ||
-      tokenAllowanceErrors,
+      tokenAllowanceError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending || isLoadingTokenAllowance,
   };
 
@@ -271,7 +271,6 @@ export const DepositTx: FC<DepositTxProps> = ({
         expectedTxOutcomeStatus.loading ||
         isDebouncePending ||
         selectedVault.depositsDisabled,
-      contrast: true,
     },
   ];
 

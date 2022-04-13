@@ -181,7 +181,6 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
       onAction: deposit,
       status: actionsStatus.stake,
       disabled: !isApproved || !isValidAmount,
-      contrast: true,
     },
   ];
 

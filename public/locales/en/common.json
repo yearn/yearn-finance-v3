@@ -1,12 +1,10 @@
 {
   "components": {
+    "search-input": {
+      "search": "Search"
+    },
     "back-button": {
       "label": "Back to previous page"
-    },
-    "beta-card": {
-      "desc-1": "Yearn’s v3 beta site has now moved into production, and adds deposit simulations, Iron Bank functionality, a new Labs section, customizable themes, and more. We will continue to add features and fixes every week, and if you encounter any bugs or would like to provide feedback, please let us know on",
-      "desc-2": "For migration of v1 vaults (or if you’re feeling sentimental), we are maintaining a legacy v2 UI, still available at",
-      "header": "Beta no longer!"
     },
     "connect-button": {
       "connect": "Connect Wallet"
@@ -29,6 +27,7 @@
       "convex-apr": "Convex APR"
     },
     "list-card": {
+      "asset": "Asset",
       "apy": "APY",
       "available-deposit": "Available to deposit",
       "available-stake": "Available to stake",
@@ -42,13 +41,13 @@
       "earned": "Earned",
       "lend-apy": "Lend APY",
       "market-liquidity": "Market liquidity",
-      "name": "Name",
       "opportunities": "Opportunities",
       "price": "Price",
       "supplying": "Supplying",
       "tokens": "Tokens",
       "total-assets": "Total assets",
-      "value": "Value"
+      "value": "Value",
+      "wallet": "Wallet"
     },
     "no-wallet": "Wallet not connected",
     "recommendations": {
@@ -91,7 +90,7 @@
       "to-vault": "To vault",
       "to-wallet": "To wallet",
       "token-input": {
-        "balance": "Balance",
+        "you-have": "You have",
         "search-select-token": "Select a Token",
         "search-select-vault": "Select a Vault",
         "yield": "Yield"
@@ -109,7 +108,7 @@
     "borrowed": "Borrowed",
     "earnings": "Earnings",
     "est-yearly-yield": "Est. yearly yield",
-    "header": "Dashboard",
+    "est-yearly-earnings": "Est. yearly earnings",
     "holdings": "Holdings",
     "supplied": "Supplied",
     "total-net-worth": "Total net worth",
@@ -123,8 +122,8 @@
   "footer": {
     "links": {
       "disclaimer": "Disclaimer",
-      "docs": "Docs",
-      "gov": "Gov",
+      "docs": "Documentation",
+      "gov": "Governance forum",
       "security": "Security"
     }
   },
@@ -146,11 +145,11 @@
       "small": "©"
     },
     "disclaimer": "Disclaimer",
-    "home": "Home",
+    "portfolio": "Portfolio",
     "ironbank": "Iron Bank",
     "labs": "Labs",
     "settings": "Settings",
-    "vault": "Vault details",
+    "vault": "Vaults",
     "vaults": "Vaults",
     "wallet": "Wallet"
   },

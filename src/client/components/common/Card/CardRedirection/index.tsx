@@ -12,18 +12,17 @@ const Arrow = styled(Icon)`
 
 const StyledCardRedirection = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
   cursor: pointer;
   position: absolute;
   top: 0;
   right: 0;
-  height: 100%;
-  padding: 0 3.5rem;
+  padding: ${({ theme }) => theme.card.padding};
   transition: color 200ms ease-in-out;
+  color: ${({ theme }) => theme.colors.primary};
 
   &:hover {
-    color: ${({ theme }) => theme.colors.primaryVariant};
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 

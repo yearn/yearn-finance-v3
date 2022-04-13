@@ -13,7 +13,7 @@ export * from './Modal';
 export * from './SearchInput';
 export * from './SeparatorLine';
 export * from './Sidemenu';
-export * from './SimpleDropdown';
+export * from './SimpleDropdown_old';
 export * from './SpinnerLoading';
 export * from './Text';
 export * from './Toggle';

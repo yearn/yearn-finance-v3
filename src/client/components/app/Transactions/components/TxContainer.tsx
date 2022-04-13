@@ -33,15 +33,17 @@ const TxHeaderActions = styled.div`
   margin: -${actionsPadding};
 `;
 
-const TxHeaderTitle = styled.div`
-  color: ${({ theme }) => theme.colors.txModalColors.textContrast};
+const TxHeaderTitle = styled.h1`
+  color: ${({ theme }) => theme.colors.titles};
+  font-size: 2.4rem;
+  margin: 0;
 `;
 
 const TxContainerContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: ${({ theme }) => theme.txModal.gap};
+  gap: ${({ theme }) => theme.card.padding};
   position: relative;
   border-radius: ${({ theme }) => theme.globalRadius};
   flex: 1;
@@ -58,7 +60,7 @@ const TxHeader = styled.div`
 const StyledTxContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${({ theme }) => theme.txModal.gap};
+  padding: ${({ theme }) => theme.card.padding};
   width: 100%;
   height: 53rem;
   background: ${({ theme }) => theme.colors.txModalColors.background};

@@ -10,9 +10,7 @@ const StyledCard = styled(Card)`
   position: relative;
 `;
 
-const StyledCardContent = styled(CardContent)<{ withArrow?: boolean }>`
-  ${({ withArrow }) => withArrow && `margin-right: 5rem`};
-`;
+const StyledCardContent = styled(CardContent)``;
 
 const StyledCardElement = styled(CardElement)`
   max-width: 100%;
@@ -24,8 +22,7 @@ const StyledCardElement = styled(CardElement)`
 
 const StyledText = styled(Text)<{ variant?: string }>`
   font-weight: 600;
-  color: ${({ theme, variant }) =>
-    variant === 'secondary' ? theme.colors.onSurfaceH1Contrast : theme.colors.onSurfaceH2};
+  color: ${({ theme, variant }) => (variant === 'secondary' ? theme.colors.secondary : theme.colors.titles)};
 `;
 
 interface Item {
@@ -46,7 +43,9 @@ export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, card
   return (
     <StyledCard variant={variant} cardSize={cardSize} {...props}>
       {header && <CardHeader header={header} />}
-      <StyledCardContent wrap withArrow={!!redirectTo}>
+      {redirectTo && <CardRedirection redirectTo={redirectTo} />}
+
+      <StyledCardContent wrap>
         {items.map((item) => (
           <StyledCardElement
             key={item.header}
@@ -57,8 +56,6 @@ export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, card
           </StyledCardElement>
         ))}
       </StyledCardContent>
-
-      {redirectTo && <CardRedirection redirectTo={redirectTo} />}
     </StyledCard>
   );
 };

@@ -24,7 +24,7 @@ const CloseModal = styled.div`
 const StyledModal = styled.div`
   overflow: hidden;
   overflow-y: auto;
-  padding: 1.6rem;
+  padding: 2.6rem;
   background: ${({ theme }) => theme.colors.txModalColors.background};
   border-radius: ${({ theme }) => theme.globalRadius};
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};

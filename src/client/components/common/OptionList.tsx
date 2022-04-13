@@ -6,11 +6,11 @@ import { Text } from './Text';
 import { SpinnerLoading } from './SpinnerLoading';
 
 const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
-  --dropdown-background: ${({ theme }) => theme.colors.surface};
-  --dropdown-color: ${({ theme }) => theme.colors.onSurfaceH2};
+  --dropdown-background: ${({ theme }) => theme.colors.secondary};
+  --dropdown-color: ${({ theme }) => theme.colors.titlesVariant};
   --dropdown-hover-color: ${({ theme }) => theme.colors.secondary};
   --dropdown-selected-color: ${({ theme }) => theme.colors.surface};
-  --dropdown-selected-background: ${({ theme }) => theme.colors.onSurfaceH2};
+  --dropdown-selected-background: ${({ theme }) => theme.colors.titles};
 
   display: flex;
   background: var(--dropdown-background);
@@ -22,7 +22,7 @@ const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; sele
   position: relative;
   font-size: 1.6rem;
   cursor: ${({ selectable }) => (selectable ? 'pointer' : null)};
-  padding: 0 0.8rem;
+  padding: 0;
   width: max-content;
   min-width: 11rem;
 
@@ -36,7 +36,6 @@ const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; sele
 
 const StyledText = styled(Text)`
   flex: 1;
-  text-align: center;
 `;
 
 const StyledSpinnerLoading = styled(SpinnerLoading)`
@@ -47,6 +46,7 @@ const StyledSpinnerLoading = styled(SpinnerLoading)`
 const ArrowIcon = styled(Icon)<{ open?: boolean }>`
   margin-left: 0.8rem;
   height: 1rem;
+  fill: currentColor;
   transition: transform 150ms ease-in-out;
   transform: rotate(${({ open }) => (open ? '180deg' : '0deg')});
 `;
@@ -56,6 +56,7 @@ const StyledIcon = styled(Icon)`
   height: 1.6rem;
   margin-right: 0.8rem;
   flex-shrink: 0;
+  fill: inherit;
 `;
 
 const Options = styled.div<{ open?: boolean; listPosition: 'top' | 'bottom' }>`
@@ -95,7 +96,7 @@ const OptionChild = styled.div<{ selected?: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: ${({ theme }) => theme.globalRadius};
-  padding: 0.6rem;
+  padding: 0.8rem;
   transition: opacity 200ms ease-in-out;
   width: 100%;
   position: relative;
