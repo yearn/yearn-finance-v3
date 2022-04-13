@@ -13,6 +13,15 @@ interface useAllowanceProps {
   vaultAddress?: string;
   isLab?: boolean;
 }
+
+type AllowanceError = {
+  name?: string;
+  message?: string;
+  stack?: string;
+};
+
+const isError = (err: unknown): err is Error => err instanceof Error;
+
 export function useAllowance({
   tokenAddress,
   vaultAddress,
@@ -20,7 +29,7 @@ export function useAllowance({
 }: useAllowanceProps): [TokenAllowance | undefined, boolean, string?] {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<TokenAllowance | undefined>(undefined);
-  const [error, setError] = useState<any | undefined>(undefined);
+  const [error, setError] = useState<AllowanceError>();
   const prevVault = usePrevious(vaultAddress);
   const prevTokenAddress = usePrevious(tokenAddress);
   const dispatch = useAppDispatch();
@@ -49,7 +58,11 @@ export function useAllowance({
           setResult(result);
           setError(undefined);
         } catch (e) {
-          setError(e);
+          if (isError(e) && e.message) {
+            setError(e);
+          } else {
+            setError({ message: JSON.stringify(e) });
+          }
         }
       }
       setIsLoading(false);
@@ -68,5 +81,5 @@ export function useAllowance({
     }
   }, [vaultAddress, prevVault, prevTokenAddress, tokenAddress, isLoading, result, error]);
 
-  return [result, isLoading, error];
+  return [result, isLoading, error?.message];
 }
