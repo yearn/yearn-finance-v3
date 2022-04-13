@@ -9,18 +9,17 @@ export interface TabsProps extends StyledSystemProps {
 }
 
 const StyledTabs = styled.div`
-  --tabs-selected-bg: ${({ theme }) => theme.colors.secondary};
-  --tabs-selected-color: ${({ theme }) => theme.colors.background};
+  --tabs-selected-bg: transparent;
+  --tabs-selected-color: ${({ theme }) => theme.colors.titlesVariant};
+  --tabs-color: ${({ theme }) => theme.colors.texts};
 
   display: flex;
-  height: 3.2rem;
-  font-size: 1.4rem;
-  font-weight: 500;
+  height: 8rem;
+  font-size: 2rem;
+  font-weight: 400;
   text-align: center;
-  text-transform: uppercase;
-  border-radius: ${({ theme }) => theme.globalRadius};
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  background: transparent;
+  color: var(--tabs-color);
   overflow: hidden;
   user-select: none;
 
@@ -49,13 +48,6 @@ export const Tabs: FC<TabsProps> = ({ value, onChange, children, ...props }) => 
   return <StyledTabs {...props}>{childrenElements}</StyledTabs>;
 };
 
-export interface TabProps extends StyledSystemProps {
-  value?: number | string;
-  selected?: boolean;
-  disabled?: boolean;
-  onChange?: (value: any) => void;
-}
-
 const StyledTab = styled.div<{ selected?: boolean }>`
   display: flex;
   align-items: center;
@@ -67,6 +59,7 @@ const StyledTab = styled.div<{ selected?: boolean }>`
   text-align: inherit;
   text-transform: inherit;
   border-radius: inherit;
+  border-bottom: 2px solid var(--tabs-color);
   background: inherit;
   cursor: pointer;
 
@@ -75,11 +68,20 @@ const StyledTab = styled.div<{ selected?: boolean }>`
     `
     background: var(--tabs-selected-bg);
     color: var(--tabs-selected-color);
+    border-color: var(--tabs-selected-color);
+    font-weight: 700;
     cursor: default;
   `};
 
   ${styledSystem}
 `;
+
+export interface TabProps extends StyledSystemProps {
+  value?: number | string;
+  selected?: boolean;
+  disabled?: boolean;
+  onChange?: (value: any) => void;
+}
 
 export const Tab: FC<TabProps> = ({ value, selected, onChange, children, ...props }) => {
   const handleClick = () => {

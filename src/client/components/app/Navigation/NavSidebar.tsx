@@ -32,13 +32,13 @@ const StyledLogo = styled(Logo)`
 
 const LinkList = styled.div`
   display: grid;
-  gap: 1.2rem;
-  margin-top: 2.3rem;
+  gap: 2.4rem;
+  margin-top: 2.4rem;
 `;
 
 const LinkIcon = styled(Icon)`
   margin-right: 1.2rem;
-  fill: ${({ theme }) => theme.colors.primaryVariant};
+  fill: ${({ theme }) => theme.colors.icons.variant};
   cursor: pointer;
   width: 2.4rem;
   height: 2.4rem;
@@ -52,7 +52,8 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
   display: flex;
   align-items: center;
   color: inherit;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  font-weight: 400;
 
   &:hover span {
     filter: ${linkHoverFilter};
@@ -65,10 +66,11 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
     props.selected &&
     `
     ${LinkIcon} {
-      fill: ${props.theme.colors.secondary};
+      fill: ${props.theme.colors.primary};
     }
     ${LinkText} {
-      color: ${props.theme.colors.secondary};
+      color: ${props.theme.colors.primary};
+      font-weight: 700;
     }
   `}
 `;
@@ -85,19 +87,20 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
 const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.colors.primaryVariant};
-  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.icons.variant};
+  background-color: transparent;
   border-radius: ${({ theme }) => theme.globalRadius};
   width: ${({ theme }) => theme.sideBar.width};
   height: 100%;
   max-width: 100%;
+  max-height: calc(100% - ${({ theme }) => theme.card.padding} * 2);
+  top: ${({ theme }) => theme.card.padding};
   padding: 1rem 1.2rem;
-  position: fixed;
-  top: ${({ theme }) => theme.layoutPadding};
-  max-height: calc(100% - ${({ theme }) => theme.layoutPadding} * 2);
+  padding-top: ${({ theme }) => theme.card.padding};
   transition: width ${({ theme }) => theme.sideBar.animation};
   overflow: hidden;
   overflow-y: auto;
+  position: fixed;
   z-index: ${({ theme }) => theme.zindex.navSidemenu};
 
   ${(props) =>
@@ -145,7 +148,7 @@ export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
   return (
     <StyledSidebar collapsed={collapsedSidebar}>
       <SidebarHeader>
-        <StyledLogo full={!collapsedSidebar} onClick={() => history.push('/home')} />
+        <StyledLogo full={!collapsedSidebar} onClick={() => history.push('/portfolio')} />
         {/* {!isMobile && <ToggleSidebarButton Component={CollapseIcon} onClick={toggleSidebar} />} */}
       </SidebarHeader>
 

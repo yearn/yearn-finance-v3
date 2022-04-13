@@ -4,6 +4,44 @@ import { sharedTheme } from '../default';
 
 import ClassicBackground from './background.jpg';
 
+// TODO Dehardcode this
+const classic = {
+  name: 'classic',
+  colors: {
+    background: '#012A7C',
+    backgroundVariant: '#001E59',
+    surface: '#001746',
+    surfaceVariant: '#012A7C',
+    primary: '#0657F9',
+    primaryVariant: '#004ADF',
+    secondary: '#0657F9',
+    titles: '#FFFFFF',
+    titlesVariant: '#FFFFFF',
+    texts: '#7F8DA9',
+    disabled: '#CED5E3',
+    icons: {
+      primary: '#7F8DA9',
+      variant: '#FFFFFF',
+    },
+    button: {
+      filled: {
+        primary: '#0657F9',
+        variant: '#004ADF',
+        text: '#FFFFFF',
+      },
+      outlined: {
+        primary: '#0657F9',
+        variant: '#012A7C',
+        text: '#0657F9',
+      },
+      disabled: {
+        primary: '#012A7C',
+        text: '#7F8DA9',
+      },
+    },
+  },
+};
+
 const classicTheme: DefaultTheme = {
   ...sharedTheme,
   background: {
@@ -12,13 +50,24 @@ const classicTheme: DefaultTheme = {
   colors: {
     logo: '#006AE3',
 
-    primary: '#0A1D3F',
-    background: '#1F255F',
-    surface: '#0A1D3F',
+    primary: classic.colors.primary,
+    background: classic.colors.background,
+    surface: classic.colors.surface,
 
-    primaryVariant: '#b5b5b5',
+    primaryVariant: classic.colors.primaryVariant,
 
-    secondary: '#fff',
+    secondary: classic.colors.secondary,
+
+    backgroundVariant: classic.colors.backgroundVariant,
+    icons: {
+      primary: classic.colors.icons.primary,
+      variant: classic.colors.icons.variant,
+    },
+    titles: classic.colors.titles,
+    titlesVariant: classic.colors.titlesVariant,
+    texts: classic.colors.texts,
+    surfaceVariant: classic.colors.surfaceVariant,
+
     secondaryVariantA: '#006AE3',
     secondaryVariantB: '#006AE3',
 
@@ -30,20 +79,13 @@ const classicTheme: DefaultTheme = {
     onPrimaryVariant: '#E5E5E5',
     onBackground: '#E5E5E5',
 
-    onSurfaceH1: '#fff',
-    onSurfaceH1Contrast: '#fff',
-    onSurfaceH2: '#fff',
-    onSurfaceH2Hover: '#fff',
-    onSurfaceSH1: '#fff',
-    onSurfaceSH1Hover: '#fff',
-
     toggleSwitch: {
-      background: '#b5b5b5',
-      color: '#E5E5E5',
+      background: 'transparent',
+      color: classic.colors.primary,
 
       selected: {
         background: '#01E2A0',
-        color: 'white',
+        color: classic.colors.primary,
       },
     },
 
@@ -54,7 +96,7 @@ const classicTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#fff',
       color: '#fff',
-      disabledContrast: '0.1',
+      // disabledContrast: '0.1',
 
       selected: {
         background: 'transparent',
@@ -63,18 +105,12 @@ const classicTheme: DefaultTheme = {
       },
     },
 
-    walletButton: {
-      background: '#E5E5E5',
-      color: '#006AE3',
-    },
-
     txModalColors: {
-      background: '#0A1D3F',
+      background: classic.colors.surface,
       backgroundVariant: '#1F255F',
-      onBackgroundVariant: '#0A1D3F',
-      onBackgroundVariantB: '#1F255F',
       onBackgroundVariantColor: '#fff',
       primary: '#006AE3',
+      onPrimary: '#FFFFFF',
       loading: '#FFA800',
       error: '#EF1E02',
       warning: '#FFA800',

@@ -134,7 +134,6 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isValidAmount,
-      contrast: true,
     },
   ];
 
