@@ -21,7 +21,6 @@ export const getTheme = (theme?: Theme): DefaultTheme => {
     case 'explorer':
       return explorerTheme;
     default:
-      const isDarkMode: MediaQueryList = window?.matchMedia('(prefers-color-scheme: dark)');
       const { matches: prefersColorSchemeDark } = window?.matchMedia('(prefers-color-scheme: dark)');
       return prefersColorSchemeDark ? darkTheme : lightTheme;
   }
