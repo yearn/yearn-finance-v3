@@ -22,7 +22,7 @@ export const getTheme = (theme?: Theme): DefaultTheme => {
       return explorerTheme;
     default:
       const isDarkMode: MediaQueryList = window?.matchMedia('(prefers-color-scheme: dark)');
-      if (isDarkMode.matches) return darkTheme;
-      return lightTheme;
+      const { matches: prefersColorSchemeDark } = window?.matchMedia('(prefers-color-scheme: dark)');
+      return prefersColorSchemeDark ? darkTheme : lightTheme;
   }
 };
