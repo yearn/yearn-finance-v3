@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import { ArrowDownIcon, Icon } from '../Icon';
 
 const StyledSimpleDropdown = styled.div<{ disabled?: boolean; tabIndex: number; selectable?: boolean }>`
-  --dropdown-background: ${({ theme }) => theme.colors.onSurfaceH1};
-  --dropdown-color: ${({ theme }) => theme.colors.primaryVariant};
-  --dropdown-hover-color: ${({ theme }) => theme.colors.onSurfaceH2};
-  --dropdown-selected-color: ${({ theme }) => theme.colors.onPrimaryVariant};
+  --dropdown-background: ${({ theme }) => theme.colors.secondary};
+  --dropdown-color: ${({ theme }) => theme.colors.titlesVariant};
+  --dropdown-hover-color: ${({ theme }) => theme.colors.secondary};
+  --dropdown-selected-color: ${({ theme }) => theme.colors.titlesVariant};
 
   display: flex;
   background: var(--dropdown-background);

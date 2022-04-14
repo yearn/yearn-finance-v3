@@ -20,7 +20,7 @@ import {
   RecommendationsCard,
   ActionButtons,
   TokenIcon,
-  InfoCard,
+  SliderCard,
   ViewContainer,
   NoWalletCard,
   Amount,
@@ -40,31 +40,14 @@ import {
 import { getConfig } from '@config';
 import { VaultView } from '@src/core/types';
 
-const SearchBarContainer = styled.div`
-  margin: 1.2rem;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  grid-gap: ${({ theme }) => theme.layoutPadding};
-  flex-wrap: wrap;
-  width: 100%;
-`;
-
 const StyledHelperCursor = styled.span`
   cursor: help;
 `;
 
-const StyledRecommendationsCard = styled(RecommendationsCard)`
-  ${halfWidthCss}
-`;
+const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
-const StyledInfoCard = styled(InfoCard)`
-  max-width: 100%;
-  flex: 1;
-  ${halfWidthCss}
+const StyledSliderCard = styled(SliderCard)`
+  width: 100%;
 `;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
@@ -75,7 +58,7 @@ const StyledNoWalletCard = styled(NoWalletCard)`
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
   }
   @media (max-width: 750px) {
@@ -98,7 +81,7 @@ const OpportunitiesCard = styled(DetailCard)`
 const DepositsCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
     .col-balance {
       width: 10rem;
@@ -124,7 +107,7 @@ const DepositsCard = styled(DetailCard)`
 const DeprecatedCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
     .col-balance {
       width: 10rem;
@@ -223,34 +206,39 @@ export const Vaults = () => {
 
   return (
     <ViewContainer>
-      <SummaryCard header={t('dashboard.header')} items={summaryCardItems} variant="secondary" cardSize="small" />
+      <StyledSliderCard
+        header={t('vaults:your-time-card.header')}
+        Component={
+          <Text>
+            <p>{t('vaults:your-time-card.desc-1')}</p>
+            <p>{t('vaults:your-time-card.desc-2')}</p>
+            <p>{t('vaults:your-time-card.desc-3')}</p>
+          </Text>
+        }
+        // NOTE Example for slideshow array
+        // slidesContent={[
+        // {
+        //   header: 'Test header',
+        //   content: 'test content',
+        // },
+        // ]}
+      />
+
+      <SummaryCard items={summaryCardItems} cardSize="small" />
       {opportunitiesLoading && <SpinnerLoading flex="1" width="100%" />}
+
       {!opportunitiesLoading && (
         <>
-          <Row>
-            <StyledRecommendationsCard
-              header={t('components.recommendations.header')}
-              items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
-                // header: 'Vault',
-                icon: displayIcon,
-                name: displayName,
-                info: formatApy(apyData, apyType),
-                infoDetail: 'EYY',
-                onAction: () => history.push(`/vault/${address}`),
-              }))}
-            />
-
-            <StyledInfoCard
-              header={t('vaults:your-time-card.header')}
-              Component={
-                <Text>
-                  <p>{t('vaults:your-time-card.desc-1')}</p>
-                  <p>{t('vaults:your-time-card.desc-2')}</p>
-                  <p>{t('vaults:your-time-card.desc-3')}</p>
-                </Text>
-              }
-            />
-          </Row>
+          <StyledRecommendationsCard
+            header={t('components.recommendations.header')}
+            items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
+              icon: displayIcon,
+              name: displayName,
+              info: formatApy(apyData, apyType),
+              infoDetail: 'EYY',
+              onAction: () => history.push(`/vault/${address}`),
+            }))}
+          />
 
           {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 
@@ -258,19 +246,19 @@ export const Vaults = () => {
             header={t('components.list-card.deprecated')}
             metadata={[
               {
-                key: 'displayIcon',
-                transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                width: '6rem',
-                className: 'col-icon',
-              },
-              {
                 key: 'displayName',
-                header: 'Name',
+                header: t('components.list-card.asset'),
+                transform: ({ displayIcon, displayName, token }) => (
+                  <>
+                    <TokenIcon icon={displayIcon} symbol={token.symbol} />
+                    <Text ellipsis>{displayName}</Text>
+                  </>
+                ),
+                width: '23rem',
                 sortable: true,
-                fontWeight: 600,
-                width: '17rem',
                 className: 'col-name',
               },
+
               {
                 key: 'apy',
                 header: 'APY',
@@ -336,19 +324,19 @@ export const Vaults = () => {
               header={t('components.list-card.deposits')}
               metadata={[
                 {
-                  key: 'displayIcon',
-                  transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                  width: '6rem',
-                  className: 'col-icon',
-                },
-                {
                   key: 'displayName',
-                  header: t('components.list-card.name'),
+                  header: t('components.list-card.asset'),
+                  transform: ({ displayIcon, displayName, token }) => (
+                    <>
+                      <TokenIcon icon={displayIcon} symbol={token.symbol} />
+                      <Text ellipsis>{displayName}</Text>
+                    </>
+                  ),
+                  width: '23rem',
                   sortable: true,
-                  fontWeight: 600,
-                  width: '17rem',
                   className: 'col-name',
                 },
+
                 {
                   key: 'apy',
                   header: t('components.list-card.apy'),
@@ -416,19 +404,19 @@ export const Vaults = () => {
               data-testid="vaults-opportunities-list"
               metadata={[
                 {
-                  key: 'displayIcon',
-                  transform: ({ displayIcon, token }) => <TokenIcon icon={displayIcon} symbol={token.symbol} />,
-                  width: '6rem',
-                  className: 'col-icon',
-                },
-                {
                   key: 'displayName',
-                  header: t('components.list-card.name'),
+                  header: t('components.list-card.asset'),
+                  transform: ({ displayIcon, displayName, token }) => (
+                    <>
+                      <TokenIcon icon={displayIcon} symbol={token.symbol} />
+                      <Text ellipsis>{displayName}</Text>
+                    </>
+                  ),
+                  width: '23rem',
                   sortable: true,
-                  fontWeight: 600,
-                  width: '17rem',
                   className: 'col-name',
                 },
+
                 {
                   key: 'apy',
                   header: t('components.list-card.apy'),
@@ -482,14 +470,12 @@ export const Vaults = () => {
                 actions: null,
               }))}
               SearchBar={
-                <SearchBarContainer>
-                  <SearchInput
-                    searchableData={opportunities}
-                    searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
-                    placeholder=""
-                    onSearch={(data) => setFilteredVaults(data)}
-                  />
-                </SearchBarContainer>
+                <SearchInput
+                  searchableData={opportunities}
+                  searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
+                  placeholder={t('components.search-input.search')}
+                  onSearch={(data) => setFilteredVaults(data)}
+                />
               }
               searching={opportunities.length > filteredVaults.length}
               onAction={({ address }) => history.push(`/vault/${address}`)}

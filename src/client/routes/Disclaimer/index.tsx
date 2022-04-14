@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { InfoCard, ViewContainer } from '@components/app';
+import { SliderCard, ViewContainer } from '@components/app';
 import { Text } from '@components/common';
 
 const StyledViewContainer = styled(ViewContainer)`
@@ -8,7 +8,7 @@ const StyledViewContainer = styled(ViewContainer)`
   grid-auto-rows: min-content;
 `;
 
-const StyledInfoCard = styled(InfoCard)`
+const StyledSliderCard = styled(SliderCard)`
   max-width: 100%;
   flex: 1;
 `;
@@ -22,7 +22,7 @@ const StyledLink = styled.a`
 export const Disclaimer = () => {
   return (
     <StyledViewContainer>
-      <StyledInfoCard
+      <StyledSliderCard
         header=""
         Component={
           <div>

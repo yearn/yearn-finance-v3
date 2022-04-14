@@ -278,12 +278,29 @@ interface ValidateAllowanceProps {
 }
 export function validateAllowance(props: ValidateAllowanceProps): ValidationResponse {
   const { tokenAddress, tokenAmount, tokenDecimals, tokenAllowancesMap, spenderAddress } = props;
+  return basicValidateAllowance({
+    tokenAddress,
+    tokenAmount,
+    tokenDecimals,
+    rawAllowance: tokenAllowancesMap[spenderAddress],
+  });
+}
+
+export interface BasicValidateAllowanceProps {
+  tokenAddress: string;
+  tokenAmount: BigNumber;
+  tokenDecimals: string;
+  rawAllowance: string;
+}
+
+export function basicValidateAllowance(props: BasicValidateAllowanceProps): ValidationResponse {
+  const { tokenAddress, tokenAmount, tokenDecimals, rawAllowance } = props;
   const ONE_UNIT = toBN('10').pow(tokenDecimals);
   const amountInWei = tokenAmount.multipliedBy(ONE_UNIT);
   const isETH = tokenAddress === getConfig().ETHEREUM_ADDRESS;
   if (isETH) return { approved: true };
 
-  const allowance = toBN(tokenAllowancesMap[spenderAddress]);
+  const allowance = toBN(rawAllowance);
 
   if (tokenAmount.isEqualTo(0) && allowance.isEqualTo(0)) {
     return { approved: false };

@@ -6,12 +6,12 @@ const ActionButtonsContainer = styled.div<{ actions: number }>`
   display: flex;
   align-items: center;
   // grid-template-columns: repeat(${({ actions }) => actions}, 1fr);
-  gap: ${({ theme }) => theme.card.padding};
+  gap: ${({ theme }) => theme.layoutPadding};
 `;
 
 const AlertIcon = styled(Icon)`
   width: 1.6rem;
-  fill: ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
+  fill: ${({ theme }) => theme.colors.titles};
 `;
 
 const AlertButton = styled.div`
@@ -36,7 +36,7 @@ const ActionButton = styled(Button)<{ hide?: boolean }>`
 
   &[disabled],
   &.disabled {
-    filter: contrast(${({ theme }) => theme.colors.vaultActionButton.disabledContrast});
+    opacity: 0.6;
   }
 `;
 

@@ -3,11 +3,6 @@
     "back-button": {
       "label": "Zurück zur vorherigen Seite"
     },
-    "beta-card": {
-      "desc-1": "Diese Website befindet sich noch im Beta-Stadium und wird wahrscheinlich noch Fehler enthalten. Wenn Sie einen Fehler finden oder uns Rückmeldung geben möchten, lassen Sie es uns bitte wissen",
-      "desc-2": "Für die Umstellung von v1 Vaults (oder wenn du sentimental bist), behalten wir eine alte v2 UI bei, die immer noch verfügbar ist als",
-      "header": "Die Beta gibt es nicht mehr!"
-    },
     "connect-button": {
       "connect": "Verbinde Wallet"
     },
@@ -24,7 +19,6 @@
       "earned": "Verdient",
       "lend-apy": "APY für Verleihen",
       "market-liquidity": "Marktliquidität",
-      "name": "Name",
       "opportunities": "Möglichkeiten",
       "price": "Preis",
       "supplying": "Bereitstellen",
@@ -71,7 +65,6 @@
       "to-vault": "Zum Tresor",
       "to-wallet": "Zur Wallet",
       "token-input": {
-        "balance": "Bilanz",
         "search-select-token": "Wähle ein Token",
         "search-select-vault": "Wähle ein Tresor",
         "yield": "Rendite"
@@ -125,7 +118,6 @@
       "small": "©"
     },
     "disclaimer": "Disclaimer",
-    "home": "Home",
     "ironbank": "Iron Bank",
     "labs": "Labore",
     "settings": "Einstellungen",

@@ -18,7 +18,6 @@
   },
   "vault-actions-panel": {
     "deposit": "存款",
-    "header": "交易",
     "migrate": "迁移",
     "withdraw": "撤离"
   }

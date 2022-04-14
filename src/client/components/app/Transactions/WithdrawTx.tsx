@@ -213,7 +213,9 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
         const signResult = await dispatchAndUnwrap(VaultsActions.signZapOut({ vaultAddress: selectedVault.address }));
         setSignature(signResult.signature);
       } else {
-        await dispatch(VaultsActions.approveZapOut({ vaultAddress: selectedVault.address }));
+        await dispatch(
+          VaultsActions.approveZapOut({ vaultAddress: selectedVault.address, tokenAddress: selectedTargetTokenAddress })
+        );
       }
     } catch (error) {}
   };
@@ -245,7 +247,6 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading || selectedVault.withdrawalsDisabled,
-      contrast: true,
     },
   ];
 

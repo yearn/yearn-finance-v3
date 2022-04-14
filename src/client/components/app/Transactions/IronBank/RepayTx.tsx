@@ -156,7 +156,6 @@ export const IronBankRepayTx: FC<IronBankRepayTxProps> = ({ onClose }) => {
       onAction: repay,
       status: actionsStatus.repay,
       disabled: !isApproved || !isValidAmount,
-      contrast: true,
     },
   ];
 

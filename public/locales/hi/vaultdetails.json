@@ -18,7 +18,6 @@
   },
   "vault-actions-panel": {
     "deposit": "जमा",
-    "header": "लेनदेन",
     "migrate": "माइग्रेट",
     "withdraw": "निकालें"
   }

@@ -155,7 +155,6 @@ export const IronBankSupplyTx: FC<IronBankSupplyTxProps> = ({ onClose }) => {
       onAction: supply,
       status: actionsStatus.supply,
       disabled: !isApproved || !isValidAmount,
-      contrast: true,
     },
   ];
 

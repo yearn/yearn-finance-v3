@@ -52,11 +52,8 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
   'app/getAppData',
   async ({ route, addresses }, { dispatch }) => {
     switch (route) {
-      case 'home':
-        await dispatch(LabsActions.initiateLabs());
-        break;
-      case 'wallet':
-        await Promise.all([dispatch(VaultsActions.initiateSaveVaults()), dispatch(IronBankActions.initiateIronBank())]);
+      case 'portfolio':
+        await Promise.all([dispatch(VaultsActions.initiateSaveVaults()), dispatch(LabsActions.initiateLabs())]);
         break;
       case 'vaults':
         await dispatch(VaultsActions.initiateSaveVaults());
@@ -90,15 +87,14 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
   async ({ route, addresses }, { dispatch }) => {
     dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
     switch (route) {
-      case 'home':
+      case 'portfolio':
         dispatch(VaultsActions.getUserVaultsSummary());
         dispatch(LabsActions.getUserLabsPositions({}));
 
+        // TODO Check if we still need this
         dispatch(IronBankActions.getIronBankSummary()); // use only this when lens summary calculation fixed
         dispatch(IronBankActions.getUserMarketsPositions({})); // remove this when lens summary calculation fixed
         dispatch(IronBankActions.getUserMarketsMetadata({})); // remove this when lens summary calculation fixed
-        break;
-      case 'wallet':
         break;
       case 'vaults':
         dispatch(VaultsActions.getUserVaultsSummary());

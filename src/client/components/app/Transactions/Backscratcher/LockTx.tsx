@@ -149,7 +149,6 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
       onAction: lock,
       status: actionsStatus.deposit,
       disabled: !isApproved || !isValidAmount,
-      contrast: true,
     },
   ];
 
@@ -172,6 +171,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
       targetStatus={{ error: targetError }}
       actions={txActions}
       sourceStatus={{ error: sourceError }}
+      onClose={onClose}
     />
   );
 };
