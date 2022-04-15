@@ -243,26 +243,27 @@ export const DepositTx: FC<DepositTxProps> = ({
   };
 
   const approve = async () => {
-    selectedSellToken &&
-      (await dispatch(
-        VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
-      ));
+    if (!selectedSellToken) return;
+
+    await dispatch(
+      VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
+    );
   };
 
   const deposit = async () => {
     try {
-      if (selectedSellToken) {
-        await dispatchAndUnwrap(
-          VaultsActions.depositVault({
-            vaultAddress: selectedVault.address,
-            tokenAddress: selectedSellToken.address,
-            amount: toBN(amount),
-            slippageTolerance: selectedSlippage,
-            targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
-          })
-        );
-        setTxCompleted(true);
-      }
+      if (!selectedSellToken) return;
+
+      await dispatchAndUnwrap(
+        VaultsActions.depositVault({
+          vaultAddress: selectedVault.address,
+          tokenAddress: selectedSellToken.address,
+          amount: toBN(amount),
+          slippageTolerance: selectedSlippage,
+          targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
+        })
+      );
+      setTxCompleted(true);
     } catch (error) {}
   };
 
