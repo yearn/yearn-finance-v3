@@ -14,10 +14,6 @@ export interface LineChartProps {
   customSymbol?: string;
 }
 
-const TooltipText = styled(Text)`
-  display: block;
-`;
-
 const StyledTooltip = styled.div<{ align: 'left' | 'right' }>`
   background: transparent;
   color: ${({ theme }) => theme.colors.icons.variant};
@@ -30,6 +26,10 @@ const StyledTooltip = styled.div<{ align: 'left' | 'right' }>`
 
   ${({ align }) => align === 'left' && `left: 100%; transform: translateX(-45%)`};
   ${({ align }) => align === 'right' && `right: 100%; transform: translateX(45%)`};
+
+  span {
+    display: block;
+  }
 `;
 
 const LineBackground = styled.div`
@@ -93,10 +93,10 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
 
     return (
       <StyledTooltip align={isFirstHalf ? 'left' : 'right'}>
-        <TooltipText>{tooltipLabel || point.serieId}</TooltipText>
-        <TooltipText>
+        <Text>{tooltipLabel || point.serieId}</Text>
+        <Text>
           <SymbolText point={point} customSymbol={customSymbol} />
-        </TooltipText>
+        </Text>
       </StyledTooltip>
     );
   };
