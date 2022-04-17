@@ -4773,13 +4773,13 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.yarnpkg.com/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz#92f95616501069d07d10edb2fc37d3e1c65123b7"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
-awilix@4.3.4:
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/awilix/-/awilix-4.3.4.tgz#aeecc662efa96256981af3bc6243eb201c8b4a4f"
-  integrity sha512-NgRwUPxUnoK+OTRa2fXcRQVFPOPQXlwCN1FJPkhO3IHKQJHokhdVpDfgz9L3VZTcA1iSaOFE3N/Q/5P7lIDqig==
+awilix@7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/awilix/-/awilix-7.0.2.tgz#8dfdfd5f803f148492e94265bea44fd7a8c053cf"
+  integrity sha512-eaI6aIhqVAoLZjCScpkEFz54ALMBgbjX00x45oOCFteye9AFs3Qm9FjbT20uYb3wR1FEEMhXUc1/rh4yVSY23g==
   dependencies:
     camel-case "^4.1.2"
-    glob "^7.1.6"
+    fast-glob "^3.2.11"
 
 aws-sign2@~0.7.0:
   version "0.7.0"
@@ -8938,6 +8938,17 @@ fast-glob@^3.1.1:
   version "3.2.7"
   resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.7.tgz#fd6cb7a2d7e9aa7a7846111e85a196d6b2f766a1"
   integrity sha512-rYGMRwip6lUMvYD3BTScMwT1HtAs2d71SMv66Vrxs0IekGZEjhM0pcMfjQPnknBt2zeCwQMEupiN02ZP4DiT1Q==
+  dependencies:
+    "@nodelib/fs.stat" "^2.0.2"
+    "@nodelib/fs.walk" "^1.2.3"
+    glob-parent "^5.1.2"
+    merge2 "^1.3.0"
+    micromatch "^4.0.4"
+
+fast-glob@^3.2.11:
+  version "3.2.11"
+  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.11.tgz#a1172ad95ceb8a16e20caa5c5e56480e5129c1d9"
+  integrity sha512-xrO3+1bxSo3ZVHAnqzyuewYT6aMFHRAd4Kcs92MAonjwQZLsK9d0SF1IyQ3k5PoirxTW0Oe/RqFgMQ6TcNE5Ew==
   dependencies:
     "@nodelib/fs.stat" "^2.0.2"
     "@nodelib/fs.walk" "^1.2.3"

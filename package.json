@@ -43,7 +43,7 @@
     "@types/styled-components": "5.1.12",
     "@types/styled-system": "5.1.13",
     "@yfi/sdk": "2.0.0",
-    "awilix": "4.3.4",
+    "awilix": "7.0.2",
     "axios": "0.21.2",
     "bignumber.js": "9.0.2",
     "bnc-notify": "1.9.4",
