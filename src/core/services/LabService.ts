@@ -64,6 +64,7 @@ export class LabServiceImpl implements LabService {
     const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { ETH, YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+    const yearn = this.yearnSdk.getInstanceOf(network);
     const providerType = getProviderType(network);
     const provider = this.web3Provider.getInstanceOf(providerType);
     const vaultsPromise = get(YEARN_API);
@@ -71,6 +72,8 @@ export class LabServiceImpl implements LabService {
       'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault&vs_currencies=usd'
     );
     const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
+
+    const ASSET_URL = 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/';
 
     // **************** BACKSCRATCHER ****************
     let backscratcherLab: Lab | undefined;
@@ -126,7 +129,7 @@ export class LabServiceImpl implements LabService {
               }
             : undefined,
           displayName: backscratcherData.name,
-          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVECRV}/logo-128.png`,
+          displayIcon: `${ASSET_URL}${YVECRV}/logo-128.png`,
           defaultDisplayToken: CRV,
         },
       };
@@ -138,44 +141,40 @@ export class LabServiceImpl implements LabService {
     // **************** YVBOOST ****************
     let yvBoostLab: Lab | undefined;
     try {
-      const yvBoostContract = getContract(YVBOOST, yvBoostAbi, provider);
-      const [totalAssets, pricePerShare, depositLimit, emergencyShutdown] = await Promise.all([
-        yvBoostContract.totalAssets(),
-        yvBoostContract.pricePerShare(),
-        yvBoostContract.depositLimit(),
-        yvBoostContract.emergencyShutdown(),
-      ]);
+      // TODO: Use yearn.vaults.getDynamic when issue solved in SDK
+      const [yvBoostVaultDynamic] = await yearn.vaults.get([YVBOOST]);
       const yvBoostData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-      if (!yvBoostData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-      const yveCrvPrice = pricesResponse.data['vecrv-dao-yvault']['usd'];
+
+      // TODO We could use the data from `yvBoostVaultDynamic`
+      if (!yvBoostData) {
+        throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
+      }
+
+      if (!yvBoostVaultDynamic) {
+        throw new Error(`yvBoost vault not found on yearn dynamic vaults response`);
+      }
+
+      const { address, decimals, name, symbol, token, version } = yvBoostData;
+
+      const { underlyingTokenBalance } = yvBoostVaultDynamic;
+
       yvBoostLab = {
-        address: YVBOOST,
+        address,
         typeId: 'LAB',
-        token: YVECRV,
-        name: yvBoostData.name,
-        version: yvBoostData.version,
-        symbol: yvBoostData.symbol,
-        decimals: yvBoostData.decimals.toString(),
-        tokenId: YVECRV,
-        underlyingTokenBalance: {
-          amount: totalAssets.toString(),
-          amountUsdc: toBN(normalizeAmount(totalAssets.toString(), yvBoostData.decimals))
-            .times(yveCrvPrice)
-            .times(10 ** USDC_DECIMALS)
-            .toFixed(0),
-        },
+        token: token.address,
+        name,
+        version,
+        symbol,
+        decimals: decimals.toString(),
+        tokenId: token.address,
+        underlyingTokenBalance,
         metadata: {
-          depositLimit: depositLimit.toString(),
-          emergencyShutdown: emergencyShutdown,
-          pricePerShare: pricePerShare.toString(),
-          apy: yvBoostData.apy,
-          displayName: yvBoostData.symbol,
-          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVBOOST}/logo-128.png`,
-          defaultDisplayToken: YVECRV,
+          ...yvBoostVaultDynamic.metadata,
+          displayIcon: `${ASSET_URL}${address}/logo-128.png`,
         },
       };
     } catch (error) {
-      errors.push('YvBoost Lab Error');
+      errors.push(`YvBoost Lab Error ${JSON.stringify(error)}`);
     }
 
     // **************** YVBOOST-ETH ****************
@@ -229,7 +228,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: pJarRatio.toString(),
           apy: { ...pJarData.apy, net_apy: toBN(performance.toString()).dividedBy(100).toNumber() },
           displayName: 'pSLPyvBOOST-ETH',
-          displayIcon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
+          displayIcon: `${ASSET_URL}${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
         },
       };

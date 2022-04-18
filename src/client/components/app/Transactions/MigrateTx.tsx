@@ -26,6 +26,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const vaults = useAppSelector(VaultsSelectors.selectLiveVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
@@ -37,13 +38,12 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
 
   useEffect(() => {
     return () => {
-      // TODO Fix clear on vault details
       onExit();
     };
   }, []);
 
   useEffect(() => {
-    if (!selectedVault || !selectedVault.migrationContract) return;
+    if (!selectedVault || !selectedVault.migrationContract || !isWalletConnected) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
@@ -51,7 +51,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
         spenderAddress: selectedVault.migrationContract,
       })
     );
-  }, [selectedVault?.address]);
+  }, [selectedVault?.address, isWalletConnected]);
 
   if (!selectedVault || !selectedVault.migrationContract || !selectedVault.migrationTargetVault || !migrateToVault)
     return null;
@@ -97,9 +97,19 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
   };
 
   const loadingText = t('components.transaction.status.calculating');
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
 
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -136,7 +146,6 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
       onAction: migrate,
       status: actionsStatus.migrate,
       disabled: !isApproved,
-      contrast: true,
     },
   ];
 
@@ -144,7 +153,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[sourceVault]}

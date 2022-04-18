@@ -134,7 +134,6 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isValidAmount,
-      contrast: true,
     },
   ];
 
@@ -142,7 +141,6 @@ export const IronBankWithdrawTx: FC<IronBankWithdrawTxProps> = ({ onClose }) => 
     <IronBankTransaction
       transactionLabel={t('components.transaction.withdraw')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       assetHeader={t('components.transaction.from-iron-bank')}
       assetLabel={t('components.transaction.supplied-balance')}

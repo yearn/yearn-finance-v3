@@ -12,6 +12,8 @@ import {
   VaultUserMetadata,
   Address,
   Wei,
+  TransactionResponse,
+  TokenAllowance,
 } from '@types';
 import {
   calculateSharesAmount,
@@ -24,6 +26,7 @@ import {
   validateVaultWithdraw,
   validateVaultWithdrawAllowance,
   validateMigrateVaultAllowance,
+  parseError,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -141,60 +144,129 @@ const getExpectedTransactionOutcome = createAsyncThunk<
   { txOutcome: TransactionOutcome },
   GetExpectedTransactionOutcomeProps,
   ThunkAPI
->('vaults/getExpectedTransactionOutcome', async (getExpectedTxOutcomeProps, { getState, extra }) => {
-  const { network } = getState();
-  const { services } = extra;
-  const { vaultService } = services;
-  const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
-  const accountAddress = getState().wallet.selectedAddress;
-  if (!accountAddress) {
-    throw new Error('WALLET NOT CONNECTED');
-  }
+>(
+  'vaults/getExpectedTransactionOutcome',
+  async (getExpectedTxOutcomeProps, { getState, extra }) => {
+    const { network } = getState();
+    const { services } = extra;
+    const { vaultService } = services;
+    const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
+    const accountAddress = getState().wallet.selectedAddress;
+    if (!accountAddress) {
+      throw new Error('WALLET NOT CONNECTED');
+    }
 
-  const txOutcome = await vaultService.getExpectedTransactionOutcome({
-    network: network.current,
-    transactionType,
-    accountAddress,
-    sourceTokenAddress,
-    sourceTokenAmount,
-    targetTokenAddress,
-  });
-  return { txOutcome };
-});
+    const txOutcome = await vaultService.getExpectedTransactionOutcome({
+      network: network.current,
+      transactionType,
+      accountAddress,
+      sourceTokenAddress,
+      sourceTokenAmount,
+      targetTokenAddress,
+    });
+
+    return { txOutcome };
+  },
+  {
+    serializeError: parseError,
+  }
+);
 
 /* -------------------------------------------------------------------------- */
 /*                             Transaction Methods                            */
 /* -------------------------------------------------------------------------- */
 
-const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
+const approveDeposit = createAsyncThunk<
+  { amount: string; spenderAddress: string },
+  { vaultAddress: string; tokenAddress: string },
+  ThunkAPI
+>(
   'vaults/approveDeposit',
-  async ({ vaultAddress, tokenAddress }, { dispatch, getState }) => {
-    try {
-      const { vaults } = getState();
-      const vaultData = vaults.vaultsMap[vaultAddress];
-      const isZapin = vaultData.tokenId !== tokenAddress;
-      const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress;
+  async ({ vaultAddress, tokenAddress }, { dispatch, getState, extra }) => {
+    const { vaults, wallet, network } = getState();
+    const vaultData = vaults.vaultsMap[vaultAddress];
+    const { vaultService, transactionService } = extra.services;
+    const amount = extra.config.MAX_UINT256;
 
-      const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
-      unwrapResult(result);
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const tx = await vaultService.approveDeposit({
+      network: network.current,
+      accountAddress,
+      tokenAddress,
+      amount,
+      vaultAddress: vaultData.address,
+    });
+
+    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
+
+    const { spender } = await vaultService.getVaultAllowance({
+      network: network.current,
+      vaultAddress: vaultAddress,
+      tokenAddress,
+      accountAddress,
+    });
+
+    return { amount, spenderAddress: spender };
+  },
+  {
+    serializeError: parseError,
   }
 );
 
-const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
+const approveZapOut = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveZapOut',
-  async ({ vaultAddress }, { dispatch }) => {
-    try {
-      const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
-      const result = await dispatch(
-        TokensActions.approve({ tokenAddress: vaultAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
-      );
-      unwrapResult(result);
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+  async ({ vaultAddress, tokenAddress }, { getState, extra }) => {
+    const { wallet, network } = getState();
+    const { vaultService, transactionService } = extra.services;
+    const amount = extra.config.MAX_UINT256;
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const tx = await vaultService.approveZapOut({
+      network: network.current,
+      accountAddress,
+      amount,
+      vaultAddress,
+      tokenAddress,
+    });
+
+    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
+  },
+  {
+    serializeError: parseError,
+  }
+);
+
+const signZapOut = createAsyncThunk<{ signature: string }, { vaultAddress: string }, ThunkAPI>(
+  'vaults/signZapOut',
+  async ({ vaultAddress }, { getState, extra }) => {
+    const { network, wallet } = getState();
+    const { vaultService } = extra.services;
+    const { CONTRACT_ADDRESSES } = extra.config;
+
+    // NOTE: this values are hardcoded on zappers zapOut contract
+    const amount = '79228162514260000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L83
+    const deadline = '0xf000000000000000000000000000000000000000000000000000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L80
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const signature = await vaultService.signPermit({
+      network: network.current,
+      accountAddress,
+      vaultAddress,
+      spenderAddress: CONTRACT_ADDRESSES.zapOut,
+      amount,
+      deadline,
+    });
+
+    return { signature };
+  },
+  {
+    serializeError: parseError,
   }
 );
 
@@ -272,16 +344,25 @@ const depositVault = createAsyncThunk<
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
     dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
+  },
+  {
+    serializeError: parseError,
   }
 );
 
 const withdrawVault = createAsyncThunk<
   void,
-  { vaultAddress: string; amount: BigNumber; targetTokenAddress: string; slippageTolerance?: number },
+  {
+    vaultAddress: string;
+    amount: BigNumber;
+    targetTokenAddress: string;
+    slippageTolerance?: number;
+    signature?: string;
+  },
   ThunkAPI
 >(
   'vaults/withdrawVault',
-  async ({ vaultAddress, amount, targetTokenAddress, slippageTolerance }, { extra, getState, dispatch }) => {
+  async ({ vaultAddress, amount, targetTokenAddress, slippageTolerance, signature }, { extra, getState, dispatch }) => {
     const { network, wallet, vaults, tokens } = getState();
     const { services, config } = extra;
 
@@ -315,6 +396,7 @@ const withdrawVault = createAsyncThunk<
       underlyingTokenAddress: tokenData.address ?? '',
       yvTokenDecimals: tokenData.decimals.toString() ?? '0',
       yvTokenAllowancesMap: vaultAllowancesMap ?? {},
+      signature,
     });
 
     const { error: withdrawError } = validateVaultWithdraw({
@@ -332,8 +414,9 @@ const withdrawVault = createAsyncThunk<
       accountAddress: userAddress,
       tokenAddress: targetTokenAddress,
       vaultAddress,
-      amountOfShares: withdrawAll ? config.MAX_UINT256 : amountOfShares,
+      amountOfShares,
       slippageTolerance,
+      signature,
     });
     await transactionService.handleTransaction({ tx, network: network.current });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
@@ -341,6 +424,9 @@ const withdrawVault = createAsyncThunk<
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
     dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, vaultAddress] }));
+  },
+  {
+    serializeError: parseError,
   }
 );
 
@@ -352,6 +438,30 @@ const approveMigrate = createAsyncThunk<
   const spenderAddress = migrationContractAddress ?? getConfig().CONTRACT_ADDRESSES.trustedVaultMigrator;
   const result = await dispatch(TokensActions.approve({ tokenAddress: vaultFromAddress, spenderAddress }));
   unwrapResult(result);
+});
+
+const getVaultAllowance = createAsyncThunk<
+  TokenAllowance,
+  {
+    tokenAddress: string;
+    vaultAddress: string;
+  },
+  ThunkAPI
+>('vaults/getVaultAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState }) => {
+  const {
+    services: { vaultService },
+  } = extra;
+  const { network, wallet } = getState();
+  const userAddress = wallet.selectedAddress;
+
+  if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+  return vaultService.getVaultAllowance({
+    network: network.current,
+    vaultAddress: vaultAddress,
+    tokenAddress,
+    accountAddress: userAddress,
+  });
 });
 
 const migrateVault = createAsyncThunk<
@@ -407,6 +517,9 @@ const migrateVault = createAsyncThunk<
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultFromAddress, vaultToAddress] }));
     dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultFromAddress, vaultToAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [vaultFromAddress, vaultToAddress] }));
+  },
+  {
+    serializeError: parseError,
   }
 );
 
@@ -448,6 +561,7 @@ export const VaultsActions = {
   approveDeposit,
   depositVault,
   approveZapOut,
+  signZapOut,
   withdrawVault,
   approveMigrate,
   migrateVault,
@@ -462,4 +576,5 @@ export const VaultsActions = {
   getUserVaultsMetadata,
   clearSelectedVaultAndStatus,
   clearVaultStatus,
+  getVaultAllowance,
 };

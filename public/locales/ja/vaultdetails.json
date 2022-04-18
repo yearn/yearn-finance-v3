@@ -18,7 +18,6 @@
   },
   "vault-actions-panel": {
     "deposit": "入金",
-    "header": "トランザクション",
     "migrate": "移行",
     "withdraw": "出金"
   }

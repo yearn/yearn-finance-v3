@@ -24,8 +24,7 @@ const FORMAT = {
 /* -------------------------------------------------------------------------- */
 
 export const toBN = (amount?: Amount | number): BigNumber => {
-  if (!amount || amount === '') amount = '0';
-  return new BigNumber(amount);
+  return new BigNumber(amount || 0);
 };
 
 export const toWei = (amount: Unit, decimals: number): Wei => {
@@ -95,7 +94,8 @@ export const formatPercent = (amount: Fraction, decimals = 2): FormattedAmount =
 export const formatUsd = (amount?: Amount, decimals = 2): FormattedAmount =>
   toBN(amount).toFormat(decimals, { ...FORMAT, prefix: '$ ' });
 
-export const formatApy = (apyData: Fraction, apyType: string): FormattedAmount => {
+export const formatApy = (apyData: Fraction, apyType?: string): FormattedAmount => {
+  if (apyType === 'error') return '-';
   if (apyType === 'new') return 'NEW ✨';
   if (apyType === 'n/a') return 'N/A';
 

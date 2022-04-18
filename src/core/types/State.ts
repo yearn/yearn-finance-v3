@@ -56,10 +56,12 @@ export interface ModalsState {
   activeModal: string | undefined;
   modalProps: any | undefined;
 }
+
 export interface AlertsState {
   alertsList: Alert[];
   lastId: number;
 }
+
 export interface RouteState {
   path: string | undefined;
 }
@@ -73,14 +75,17 @@ export interface VaultActionsStatusMap {
   approve: Status;
   deposit: Status;
   approveZapOut: Status;
+  signZapOut: Status;
   withdraw: Status;
   approveMigrate: Status;
   migrate: Status;
 }
+
 export interface UserVaultActionsStatusMap {
   getPosition: Status;
   getMetadata: Status;
 }
+
 export interface VaultPositionsMap {
   DEPOSIT: Position;
 }
@@ -132,10 +137,12 @@ export interface WalletState {
 export interface UserVaultActionsMap {
   get: Status;
 }
+
 export interface UserTokenActionsMap {
   get: Status;
   getAllowances: Status;
 }
+
 export interface TokensState {
   tokensAddresses: string[];
   tokensMap: { [address: string]: Token };
@@ -165,6 +172,7 @@ export interface MarketActionsStatusMap {
   exitMarket: Status;
   get: Status;
 }
+
 export type MarketActionsTypes = keyof MarketActionsStatusMap;
 
 export interface UserMarketActionsStatusMap {
@@ -204,6 +212,7 @@ export interface SettingsState {
   stateVersion: number;
   sidebarCollapsed: boolean;
   defaultSlippage: number;
+  signedApprovalsEnabled: boolean;
   devMode: {
     enabled: boolean;
     walletAddressOverride: Address;
@@ -232,6 +241,7 @@ export interface LabActionsStatusMap {
   approveStake: Status;
   stake: Status;
 }
+
 export interface UserLabActionsStatusMap {
   get: Status;
   getPositions: Status;

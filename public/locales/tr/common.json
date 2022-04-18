@@ -3,11 +3,6 @@
     "back-button": {
       "label": "Önceki sayfaya geri dön"
     },
-    "beta-card": {
-      "desc-1": "Yearn'in v3 beta sitesi artık üretime geçti ve para yatırma simülasyonları, Iron Bank işlevi, yeni bir Lab bölümü, kişiselleştirilebilen temalar ve daha fazlasını ekledi. Her hafta özellikler ve düzeltmeler eklemeye devam edeceğiz ve herhangi bir hatayla karşılaşırsanız veya geri bildirimde bulunmak isterseniz lütfen bize bildirin.",
-      "desc-2": "v1 vault'larının taşınması için, hala şu adreste bulunan eski bir v2 kullanıcı arayüzünü sürdürüyoruz:",
-      "header": "Beta artık yok!"
-    },
     "connect-button": {
       "connect": "Cüzdanı Bağla"
     },
@@ -29,7 +24,6 @@
       "earned": "Kazanç",
       "lend-apy": "Borç verme YFG",
       "market-liquidity": "Piyasa likiditesi",
-      "name": "ad",
       "opportunities": "Olanaklar",
       "price": "Fiyat",
       "supplying": "Tedarik",
@@ -76,7 +70,6 @@
       "to-vault": "Vault'a",
       "to-wallet": "Cüzdana",
       "token-input": {
-        "balance": "Bakiye",
         "search-select-token": "Bir Token Seç",
         "search-select-vault": "Bir Vault seç",
         "yield": "Verim"
@@ -94,7 +87,6 @@
     "borrowed": "Borç alınan",
     "earnings": "kazançlar",
     "est-yearly-yield": "Tahmini yıllık gelir",
-    "header": "Pano",
     "holdings": "Varlıklar",
     "supplied": "Yatırılan",
     "total-net-worth": "Toplam net değer",
@@ -131,7 +123,6 @@
       "small": "©"
     },
     "disclaimer": "Feragat",
-    "home": "Ana sayfa",
     "ironbank": "Iron Bank",
     "labs": "Lablar",
     "settings": "Ayarlar",

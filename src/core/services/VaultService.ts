@@ -1,8 +1,9 @@
-import { getContract } from '@frameworks/ethers';
+import { getContract, signTypedData } from '@frameworks/ethers';
 import { toBN, normalizeAmount, getProviderType } from '@utils';
 import {
   VaultService,
   YearnSdk,
+  SignPermitProps,
   DepositProps,
   WithdrawProps,
   MigrateProps,
@@ -22,9 +23,14 @@ import {
   Web3Provider,
   TransactionService,
   Config,
+  ApproveDepositProps,
+  ApproveZapOutProps,
+  GetVaultAllowanceProps,
+  TokenAllowance,
 } from '@types';
 
 import v2VaultAbi from './contracts/v2Vault.json';
+import eip2612Abi from './contracts/eip2612.json';
 import trustedVaultMigratorAbi from './contracts/trustedVaultMigrator.json';
 import triCryptoVaultMigratorAbi from './contracts/triCryptoVaultMigrator.json';
 
@@ -56,9 +62,11 @@ export class VaultServiceImpl implements VaultService {
   /* -------------------------------------------------------------------------- */
 
   public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
+    const { YVBOOST } = this.config.CONTRACT_ADDRESSES;
     const yearn = this.yearnSdk.getInstanceOf(network);
     const vaults = await yearn.vaults.get(addresses);
-    return vaults;
+    // TODO: Once SDK has a Labs interface, filtering out yvBoost should not be needed anymore
+    return vaults.filter(({ address }) => address !== YVBOOST);
   }
 
   public async getVaultsDynamicData({ network, addresses }: GetVaultsDynamicDataProps): Promise<VaultDynamic[]> {
@@ -159,6 +167,61 @@ export class VaultServiceImpl implements VaultService {
   /*                             Transaction Methods                            */
   /* -------------------------------------------------------------------------- */
 
+  public async signPermit(props: SignPermitProps): Promise<string> {
+    const { network, accountAddress, vaultAddress, spenderAddress, amount, deadline } = props;
+    const { NETWORK_SETTINGS } = this.config;
+    const currentNetworkSettings = NETWORK_SETTINGS[network];
+
+    const signer = this.web3Provider.getSigner();
+    const vaultContract = getContract(vaultAddress, v2VaultAbi, signer);
+    const apiVersion = await vaultContract.apiVersion();
+    const eip2612Contract = getContract(vaultAddress, eip2612Abi, signer);
+    const nonce = await eip2612Contract.nonces(accountAddress);
+
+    const domain = {
+      name: 'Yearn Vault',
+      version: apiVersion.toString(),
+      chainId: currentNetworkSettings.networkId,
+      verifyingContract: vaultAddress,
+    };
+
+    const types = {
+      Permit: [
+        {
+          name: 'owner',
+          type: 'address',
+        },
+        {
+          name: 'spender',
+          type: 'address',
+        },
+        {
+          name: 'value',
+          type: 'uint256',
+        },
+        {
+          name: 'nonce',
+          type: 'uint256',
+        },
+        {
+          name: 'deadline',
+          type: 'uint256',
+        },
+      ],
+    };
+
+    const message = {
+      owner: accountAddress,
+      spender: spenderAddress,
+      value: amount,
+      nonce: nonce.toString(),
+      deadline,
+    };
+
+    const signature = await signTypedData(signer, domain, types, message);
+    return signature;
+  }
+
   public async deposit(props: DepositProps): Promise<TransactionResponse> {
     const { network, accountAddress, tokenAddress, vaultAddress, amount, slippageTolerance } = props;
     const yearn = this.yearnSdk.getInstanceOf(network);
@@ -168,10 +231,11 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async withdraw(props: WithdrawProps): Promise<TransactionResponse> {
-    const { network, accountAddress, tokenAddress, vaultAddress, amountOfShares, slippageTolerance } = props;
+    const { network, accountAddress, tokenAddress, vaultAddress, amountOfShares, slippageTolerance, signature } = props;
     const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
       slippage: slippageTolerance,
+      signature,
     });
   }
 
@@ -197,5 +261,31 @@ export class VaultServiceImpl implements VaultService {
           abi: trustedVaultMigratorAbi,
         });
     }
+  }
+
+  public async approveDeposit(props: ApproveDepositProps): Promise<TransactionResponse> {
+    const { network, tokenAddress, amount, accountAddress, vaultAddress } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
+
+    return yearn.vaults.approveDeposit(accountAddress, vaultAddress, tokenAddress, amount);
+  }
+
+  public async approveZapOut(props: ApproveZapOutProps): Promise<TransactionResponse> {
+    const { network, vaultAddress, tokenAddress, accountAddress, amount } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
+
+    return yearn.vaults.approveWithdraw(accountAddress, vaultAddress, tokenAddress, amount);
+  }
+
+  public async getVaultAllowance({
+    network,
+    vaultAddress,
+    tokenAddress,
+    accountAddress,
+  }: GetVaultAllowanceProps): Promise<TokenAllowance> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    const allowance = await yearn.vaults.getDepositAllowance(accountAddress, vaultAddress, tokenAddress);
+
+    return allowance;
   }
 }

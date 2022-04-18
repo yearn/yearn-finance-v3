@@ -23,6 +23,7 @@ import {
   GasFees,
   Overrides,
   Network,
+  TokenAllowance,
 } from '@types';
 
 // *************** USER ***************
@@ -51,9 +52,13 @@ export interface VaultService {
   getUserVaultsSummary: (props: GetUserVaultsSummaryProps) => Promise<VaultsUserSummary>;
   getUserVaultsMetadata: (props: GetUserVaultsMetadataProps) => Promise<VaultUserMetadata[]>;
   getExpectedTransactionOutcome: (props: GetExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
+  signPermit: (props: SignPermitProps) => Promise<string>;
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
   migrate: (props: MigrateProps) => Promise<TransactionResponse>;
+  approveDeposit: (props: ApproveDepositProps) => Promise<TransactionResponse>;
+  approveZapOut: (props: ApproveZapOutProps) => Promise<TransactionResponse>;
+  getVaultAllowance: (props: GetVaultAllowanceProps) => Promise<TokenAllowance>;
 }
 
 export interface GetSupportedVaultsProps {
@@ -93,6 +98,15 @@ export interface GetExpectedTransactionOutcomeProps {
   slippageTolerance?: number;
 }
 
+export interface SignPermitProps {
+  network: Network;
+  accountAddress: Address;
+  vaultAddress: Address;
+  spenderAddress: Address;
+  amount: Wei;
+  deadline: string;
+}
+
 export interface DepositProps {
   network: Network;
   accountAddress: Address;
@@ -109,6 +123,7 @@ export interface WithdrawProps {
   vaultAddress: Address;
   amountOfShares: Wei;
   slippageTolerance?: number;
+  signature?: string;
 }
 
 export interface MigrateProps {
@@ -126,7 +141,6 @@ export interface TokenService {
   getUserTokensData: (props: GetUserTokensDataProps) => Promise<Balance[]>;
   getTokenAllowance: (props: GetTokenAllowanceProps) => Promise<Integer>;
   approve: (props: ApproveProps) => Promise<TransactionResponse>;
-  // getTokenRates:
 }
 
 export interface GetSupportedTokensProps {
@@ -149,6 +163,29 @@ export interface GetTokenAllowanceProps {
   accountAddress: string;
   tokenAddress: string;
   spenderAddress: string;
+}
+
+export interface ApproveDepositProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  amount: Wei;
+  vaultAddress: string;
+}
+
+export interface ApproveZapOutProps {
+  network: Network;
+  amount: Wei;
+  accountAddress: string;
+  tokenAddress: string;
+  vaultAddress: string;
+}
+
+export interface GetVaultAllowanceProps {
+  network: Network;
+  accountAddress: string;
+  tokenAddress: string;
+  vaultAddress: string;
 }
 
 export interface ApproveProps {
@@ -283,8 +320,6 @@ export interface HandleTransactionProps {
   network: Network;
   renderNotification?: boolean;
 }
-
-type ContractFunction = (...args: Array<any>) => Promise<TransactionResponse>;
 
 // *************** GAS ***************
 

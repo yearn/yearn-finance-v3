@@ -5,7 +5,7 @@ import { sharedTheme } from '../default';
 const cyberpunkTheme: DefaultTheme = {
   ...sharedTheme,
   colors: {
-    logo: '#392850',
+    logo: '#0CA7C9',
 
     primary: '#0CA7C9',
     background: '#3D305F',
@@ -13,7 +13,18 @@ const cyberpunkTheme: DefaultTheme = {
 
     primaryVariant: '#7AF6FF',
 
-    secondary: '#FBD282',
+    secondary: '#3D305F',
+
+    backgroundVariant: '#3D305F',
+    icons: {
+      primary: '#0CA7C9',
+      variant: '#0CA7C9',
+    },
+    titles: '#0CA7C9',
+    titlesVariant: '#0CA7C9',
+    texts: '#9dd9e6',
+    surfaceVariant: '#FFF',
+
     secondaryVariantA: '#392850',
     secondaryVariantB: '#BB6FA1',
 
@@ -25,21 +36,24 @@ const cyberpunkTheme: DefaultTheme = {
     onPrimaryVariant: '#FBD282',
     onBackground: '#FBD282',
 
-    onSurfaceH1: '#D35290',
-    onSurfaceH1Contrast: '#0CA7C9',
-    onSurfaceH2: '#0CA7C9',
-    onSurfaceH2Hover: '#FBD282',
-    onSurfaceSH1: '#BB6FA1',
-    onSurfaceSH1Hover: '#523C6E',
-
     upTrend: '#ADFF00',
     downTrend: '#DE0B3B',
+
+    toggleSwitch: {
+      background: 'transparent',
+      color: '#0CA7C9',
+
+      selected: {
+        background: '#D35290',
+        color: '#0CA7C9',
+      },
+    },
 
     vaultActionButton: {
       background: 'transparent',
       borderColor: '#BB6FA1',
       color: '#BB6FA1',
-      disabledContrast: '0.6',
+      // disabledContrast: '0.6',
 
       selected: {
         background: 'transparent',
@@ -48,18 +62,12 @@ const cyberpunkTheme: DefaultTheme = {
       },
     },
 
-    walletButton: {
-      background: '#0CA7C9',
-      color: '#FBD282',
-    },
-
     txModalColors: {
-      background: '#3D305F',
+      background: '#523C6E',
       backgroundVariant: '#392850',
-      onBackgroundVariant: '#523C6E',
-      onBackgroundVariantB: '#523C6E',
       onBackgroundVariantColor: '#BB6FA1',
       primary: '#00A3FF',
+      onPrimary: '#FFFFFF',
       loading: '#FFA800',
       error: '#FF005E',
       warning: '#FF7500',

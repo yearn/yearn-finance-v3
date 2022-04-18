@@ -1,17 +1,16 @@
 {
   "components": {
+    "search-input": {
+      "search": "Buscar"
+    },
     "back-button": {
       "label": "Volver a la última página"
-    },
-    "beta-card": {
-      "desc-1": "Este sitio ha pasado a la fase de producción, y añade simulaciones en depósitos, funcionalidad del Iron Bank, una nueva sección de Labs, temas personalizables, y más. Seguiremos añadiendo funciones y correcciones cada semana, y si encuentra algún fallo o quiere hacernos llegar sus comentarios, háganoslo saber en",
-      "desc-2": "Para migraciones de vaults v1 (o si te sientes sentimental), seguimos manteniendo la versión anterior en",
-      "header": "¡No más Beta!"
     },
     "connect-button": {
       "connect": "Conectar Billetera"
     },
     "list-card": {
+      "asset": "Activos",
       "apy": "APY",
       "available-deposit": "Disp. para depositar",
       "available-stake": "Disponible para stake",
@@ -21,13 +20,13 @@
       "deposits": "Depósitos",
       "earned": "Ganado",
       "market-liquidity": "Liquidez de mercado",
-      "name": "Nombre",
       "opportunities": "Oportunidades",
       "price": "Precio",
       "supplying": "Suministrando",
       "tokens": "Tokens",
       "total-assets": "Activos totales",
-      "value": "Valor"
+      "value": "Valor",
+      "wallet": "Billetera"
     },
     "no-wallet": "Billetera no conectada",
     "recommendations": {
@@ -44,9 +43,11 @@
       "migrate": "Migrar",
       "reinvest": "Reinvertir",
       "reward": "Recompensa",
+      "sign": "Firmar",
       "status": {
         "calculating": "Calculando...",
         "exit": "Cerrar",
+        "done": "OK",
         "simulating": "Simulando...",
         "transaction-completed": "Transacción completada"
       },
@@ -55,7 +56,7 @@
       "to-vault": "A vault",
       "to-wallet": "A billetera",
       "token-input": {
-        "balance": "Balance",
+        "you-have": "Tú tienes",
         "search-select-token": "Selecciona un Token",
         "search-select-vault": "Selecciona una Vault"
       },
@@ -72,7 +73,7 @@
     "borrowed": "Prestado",
     "earnings": "Ganancias",
     "est-yearly-yield": "Rendimiento anual est.",
-    "header": "Panel de control",
+    "est-yearly-earnings": "Ganancias anuales est.",
     "holdings": "Activos",
     "supplied": "Suministrado",
     "total-net-worth": "Valor total neto",
@@ -109,7 +110,7 @@
       "small": "©"
     },
     "disclaimer": "Disclaimer",
-    "home": "Inicio",
+    "portfolio": "Portfolio",
     "ironbank": "Iron Bank",
     "labs": "Laboratorios",
     "settings": "Ajustes",

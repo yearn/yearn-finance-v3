@@ -1,7 +1,14 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
+import {
+  useAppSelector,
+  useAppDispatch,
+  useAppDispatchAndUnwrap,
+  useDebounce,
+  useAppTranslation,
+  useAllowance,
+} from '@hooks';
 import {
   TokensSelectors,
   LabsSelectors,
@@ -19,12 +26,10 @@ import {
   toWei,
   USDC_DECIMALS,
   validateVaultDeposit,
-  validateVaultAllowance,
-  getZapInContractAddress,
-  validateYvBoostEthActionsAllowance,
   validateSlippage,
   validateNetwork,
-  formatPercent,
+  formatApy,
+  basicValidateAllowance,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -39,8 +44,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
-  const { YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+  const { NETWORK_SETTINGS } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
@@ -63,6 +67,11 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceError] = useAllowance({
+    tokenAddress: selectedSellTokenAddress,
+    vaultAddress: selectedLab?.address,
+    isLab: true,
+  });
 
   const onExit = () => {
     dispatch(LabsActions.clearSelectedLabAndStatus());
@@ -79,20 +88,6 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       onExit();
     };
   }, []);
-
-  useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress) return;
-
-    const isZap = selectedSellTokenAddress !== selectedLab.token.address || selectedLab.address === PSLPYVBOOSTETH;
-    const spenderAddress = isZap ? getZapInContractAddress(selectedLab.address) : selectedLab.address;
-
-    dispatch(
-      TokensActions.getTokenAllowance({
-        tokenAddress: selectedSellTokenAddress,
-        spenderAddress,
-      })
-    );
-  }, [selectedSellTokenAddress, selectedLab?.address]);
 
   useEffect(() => {
     if (!selectedLab) return;
@@ -121,30 +116,14 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   let isApproved: boolean | undefined;
   let allowanceError: string | undefined;
 
-  if (selectedLab.address === YVBOOST) {
-    const { approved, error } = validateVaultAllowance({
-      amount: toBN(debouncedAmount),
-      vaultAddress: selectedLab.address,
-      vaultUnderlyingTokenAddress: selectedLab.token.address,
-      sellTokenAddress: selectedSellTokenAddress,
-      sellTokenDecimals: selectedSellToken.decimals.toString(),
-      sellTokenAllowancesMap: selectedSellToken.allowancesMap,
-    });
-    isApproved = approved;
-    allowanceError = error;
-  }
-
-  if (selectedLab.address === PSLPYVBOOSTETH) {
-    const { approved, error } = validateYvBoostEthActionsAllowance({
-      action: 'INVEST',
-      sellTokenAmount: toBN(debouncedAmount),
-      sellTokenAddress: selectedSellTokenAddress,
-      sellTokenDecimals: selectedSellToken.decimals.toString(),
-      sellTokenAllowancesMap: selectedSellToken.allowancesMap,
-    });
-    isApproved = approved;
-    allowanceError = error;
-  }
+  const { approved, error } = basicValidateAllowance({
+    tokenAddress: selectedSellTokenAddress,
+    tokenAmount: toBN(debouncedAmount),
+    tokenDecimals: selectedSellToken.decimals.toString(),
+    rawAllowance: tokenAllowance?.amount || '0',
+  });
+  isApproved = approved;
+  allowanceError = error;
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
     sellTokenAmount: toBN(debouncedAmount),
@@ -173,8 +152,9 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       expectedTxOutcomeStatus.error ||
       actionsStatus.approveDeposit.error ||
       actionsStatus.deposit.error ||
-      slippageError,
-    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+      slippageError ||
+      tokenAllowanceError,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending || isLoadingTokenAllowance,
   };
 
   const selectedLabOption = {
@@ -184,7 +164,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     balance: selectedLab.DEPOSIT.userBalance,
     balanceUsdc: selectedLab.DEPOSIT.userDepositedUsdc,
     decimals: toBN(selectedLab.decimals).toNumber(),
-    yield: formatPercent(selectedLab.apyData, 2),
+    yield: formatApy(selectedLab.apyData, selectedLab.apyMetadata?.type),
   };
 
   const amountValue = toBN(amount).times(normalizeAmount(selectedSellToken.priceUsdc, USDC_DECIMALS)).toString();
@@ -209,8 +189,20 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
   };
 
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
+
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    // NOTE if there is no onClose then we are on vault details
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -249,16 +241,14 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       onAction: deposit,
       status: actionsStatus.deposit,
       disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading,
-      contrast: true,
     },
   ];
 
   return (
-    // TODO Check transactionCompletedLabel (I think it's not used)
     <Transaction
       transactionLabel={t('components.transaction.deposit')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={sellTokensOptions}

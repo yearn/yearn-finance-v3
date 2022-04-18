@@ -37,6 +37,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
   const [debouncedAmount] = useDebounce(amount, 500);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const selectedSellToken = tokenSelectorFilter(selectedLab?.address ?? '');
@@ -59,7 +60,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
   }, []);
 
   useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress) return;
+    if (!selectedLab || !selectedSellTokenAddress || !walletIsConnected) return;
 
     const spenderAddress = getStakingContractAddress(selectedLab.address);
     dispatch(
@@ -68,7 +69,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
         spenderAddress,
       })
     );
-  }, [selectedSellTokenAddress, selectedLab?.address]);
+  }, [selectedSellTokenAddress, selectedLab?.address, walletIsConnected]);
 
   useEffect(() => {
     if (!selectedLab) return;
@@ -130,8 +131,20 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
     dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
   };
 
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
+
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    // NOTE if there is no onClose then we are on vault details
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -168,7 +181,6 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
       onAction: deposit,
       status: actionsStatus.stake,
       disabled: !isApproved || !isValidAmount,
-      contrast: true,
     },
   ];
 
@@ -176,7 +188,7 @@ export const LabStakeTx: FC<LabStakeTxProps> = ({ onClose, children, ...props })
     <Transaction
       transactionLabel={t('components.transaction.stake')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={sellTokensOptions}

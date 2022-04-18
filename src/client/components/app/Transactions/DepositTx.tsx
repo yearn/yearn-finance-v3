@@ -1,7 +1,14 @@
 import { FC, useState, useEffect } from 'react';
 import { keyBy } from 'lodash';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
+import {
+  useAppSelector,
+  useAppDispatch,
+  useAppDispatchAndUnwrap,
+  useDebounce,
+  useAppTranslation,
+  useAllowance,
+} from '@hooks';
 import {
   TokensSelectors,
   VaultsSelectors,
@@ -17,11 +24,10 @@ import {
   toWei,
   USDC_DECIMALS,
   validateVaultDeposit,
-  validateVaultAllowance,
   validateSlippage,
   validateNetwork,
-  getZapInContractAddress,
-  formatPercent,
+  formatApy,
+  basicValidateAllowance,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -66,6 +72,10 @@ export const DepositTx: FC<DepositTxProps> = ({
     : userTokens;
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceError] = useAllowance({
+    tokenAddress: selectedSellTokenAddress,
+    vaultAddress: selectedVault?.address,
+  });
 
   const onExit = () => {
     dispatch(VaultsActions.clearSelectedVaultAndStatus());
@@ -85,9 +95,11 @@ export const DepositTx: FC<DepositTxProps> = ({
         (vault) =>
           vault.token.address === selectedSellTokenAddress || vault.defaultDisplayToken === selectedSellTokenAddress
       );
-      const highestYieldingVault = vaults
-        .filter((vaults) => vaults.allowZapIn)
-        .reduce((prev, current) => (prev.apyData > current.apyData ? prev : current));
+      const vaultsWithZapIn = vaults.filter((vault) => vault.allowZapIn);
+      const highestYieldingVault = vaultsWithZapIn.reduce(
+        (prev, current) => (parseFloat(prev.apyData) > parseFloat(current.apyData) ? prev : current),
+        vaultsWithZapIn[0]
+      );
       dispatch(
         VaultsActions.setSelectedVaultAddress({
           vaultAddress: matchingVault?.address ?? highestYieldingVault.address,
@@ -96,23 +108,9 @@ export const DepositTx: FC<DepositTxProps> = ({
     }
 
     return () => {
-      // TODO Fix clear on vault details
       onExit();
     };
   }, []);
-
-  useEffect(() => {
-    if (!selectedVault || !selectedSellTokenAddress) return;
-
-    const isZap = selectedSellTokenAddress !== selectedVault.token.address;
-    const spenderAddress = isZap ? getZapInContractAddress(selectedVault.address) : selectedVault.address;
-    dispatch(
-      TokensActions.getTokenAllowance({
-        tokenAddress: selectedSellTokenAddress,
-        spenderAddress,
-      })
-    );
-  }, [selectedSellTokenAddress, selectedVault?.address]);
 
   useEffect(() => {
     if (!selectedVault) return;
@@ -138,13 +136,11 @@ export const DepositTx: FC<DepositTxProps> = ({
     return null;
   }
 
-  const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
-    amount: toBN(debouncedAmount),
-    vaultAddress: selectedVault.address,
-    vaultUnderlyingTokenAddress: selectedVault.token.address,
-    sellTokenAddress: selectedSellTokenAddress,
-    sellTokenDecimals: selectedSellToken.decimals.toString(),
-    sellTokenAllowancesMap: selectedSellToken.allowancesMap,
+  const { approved: isApproved, error: allowanceError } = basicValidateAllowance({
+    tokenAddress: selectedSellTokenAddress,
+    tokenAmount: toBN(debouncedAmount),
+    tokenDecimals: selectedSellToken.decimals.toString(),
+    rawAllowance: tokenAllowance?.amount || '0',
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
@@ -169,14 +165,14 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
-    .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData }) => ({
+    .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData, apyMetadata }) => ({
       address,
       symbol: displayName,
       icon: displayIcon,
       balance: DEPOSIT.userDeposited,
       balanceUsdc: DEPOSIT.userDepositedUsdc,
       decimals: token.decimals,
-      yield: formatPercent(apyData, 2),
+      yield: formatApy(apyData, apyMetadata?.type),
     }));
   const selectedVaultOption = vaultsOptions.find(({ address }) => address === selectedVault.address)!;
 
@@ -198,8 +194,13 @@ export const DepositTx: FC<DepositTxProps> = ({
   const sourceError = networkError || allowanceError || inputError || depositsDisabledError;
 
   const targetStatus = {
-    error: expectedTxOutcomeStatus.error || actionsStatus.approve.error || actionsStatus.deposit.error || slippageError,
-    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
+    error:
+      expectedTxOutcomeStatus.error ||
+      actionsStatus.approve.error ||
+      actionsStatus.deposit.error ||
+      slippageError ||
+      tokenAllowanceError,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending || isLoadingTokenAllowance,
   };
 
   const loadingText = currentNetworkSettings.simulationsEnabled
@@ -216,8 +217,20 @@ export const DepositTx: FC<DepositTxProps> = ({
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
   };
 
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
+
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    // NOTE if there is no onClose then we are on vault details
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -246,7 +259,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approve,
-      disabled: isApproved || selectedVault.depositsDisabled,
+      disabled: isApproved || selectedVault.depositsDisabled || isLoadingTokenAllowance,
     },
     {
       label: t('components.transaction.deposit'),
@@ -258,7 +271,6 @@ export const DepositTx: FC<DepositTxProps> = ({
         expectedTxOutcomeStatus.loading ||
         isDebouncePending ||
         selectedVault.depositsDisabled,
-      contrast: true,
     },
   ];
 
@@ -266,7 +278,7 @@ export const DepositTx: FC<DepositTxProps> = ({
     <Transaction
       transactionLabel={header}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={allowTokenSelect ? sellTokensOptions : [selectedSellToken]}

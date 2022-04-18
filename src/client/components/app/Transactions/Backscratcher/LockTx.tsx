@@ -28,6 +28,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const selectedLab = useAppSelector(LabsSelectors.selectYveCrvLab);
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
   const selectedSellTokenAddress = selectedLab?.token.address;
@@ -46,7 +47,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   }, []);
 
   useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress) return;
+    if (!selectedLab || !selectedSellTokenAddress || !isWalletConnected) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
@@ -54,7 +55,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
         spenderAddress: selectedLab.address,
       })
     );
-  }, [selectedSellTokenAddress, selectedLab?.address]);
+  }, [selectedSellTokenAddress, selectedLab?.address, isWalletConnected]);
 
   useEffect(() => {
     if (!selectedLab) return;
@@ -106,6 +107,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
   const expectedAmount = amount;
   const expectedAmountValue = amountValue;
 
+  // NOTE If component is added to vault details, update this function to reflect logic from depositTx
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
   };
@@ -147,7 +149,6 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
       onAction: lock,
       status: actionsStatus.deposit,
       disabled: !isApproved || !isValidAmount,
-      contrast: true,
     },
   ];
 
@@ -155,7 +156,6 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
     <Transaction
       transactionLabel={t('components.transaction.lock')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
       sourceAssetOptions={[selectedSellToken]}
@@ -171,6 +171,7 @@ export const BackscratcherLockTx: FC<BackscratcherLockTxProps> = ({ onClose, chi
       targetStatus={{ error: targetError }}
       actions={txActions}
       sourceStatus={{ error: sourceError }}
+      onClose={onClose}
     />
   );
 };

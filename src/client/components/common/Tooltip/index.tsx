@@ -24,7 +24,7 @@ const StyledTooltipArrow = styled.div`
 
 const StyledTooltip = styled.div`
   background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
   fill: currentColor;
   stroke: currentColor;
   user-select: none;
@@ -34,6 +34,7 @@ const StyledTooltip = styled.div`
   padding: 0.8rem;
   width: max-content;
   min-width: 11rem;
+  z-index: ${({ theme }) => theme.zindex.tooltips};
 
   &[data-popper-placement^='top'] > ${StyledTooltipArrow} {
     bottom: -0.5rem;

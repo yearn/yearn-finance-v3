@@ -13,7 +13,7 @@ const explorerTheme: DefaultTheme = {
   },
 
   colors: {
-    logo: '#ffb74d',
+    logo: '#AD3235',
 
     primary: '#AD3235',
     background: '#cfa368',
@@ -21,7 +21,18 @@ const explorerTheme: DefaultTheme = {
 
     primaryVariant: '#9e9e9e',
 
-    secondary: '#fff',
+    secondary: '#FFF',
+
+    backgroundVariant: '#cfa368',
+    icons: {
+      primary: '#AD3235',
+      variant: '#FFF',
+    },
+    titles: '#FFF',
+    titlesVariant: '#AD3235',
+    texts: '#FFF',
+    surfaceVariant: '#FFF',
+
     secondaryVariantA: 'rgba(173, 50, 53, 0.5)',
     secondaryVariantB: '#006AE3',
 
@@ -33,12 +44,15 @@ const explorerTheme: DefaultTheme = {
     onPrimaryVariant: '#fff',
     onBackground: '#E5E5E5',
 
-    onSurfaceH1: '#fff',
-    onSurfaceH1Contrast: '#eeeeee',
-    onSurfaceH2: '#f5f5f5',
-    onSurfaceH2Hover: '#f5f5f5',
-    onSurfaceSH1: '#eeeeee',
-    onSurfaceSH1Hover: '#eeeeee',
+    toggleSwitch: {
+      background: 'transparent',
+      color: '#E5E5E5',
+
+      selected: {
+        background: '#C6E11E',
+        color: 'white',
+      },
+    },
 
     upTrend: '#01E2A0',
     downTrend: '#EF1E02',
@@ -47,7 +61,7 @@ const explorerTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#eeeeee',
       color: '#eeeeee',
-      disabledContrast: '',
+      // disabledContrast: '',
 
       selected: {
         background: 'transparent',
@@ -56,18 +70,12 @@ const explorerTheme: DefaultTheme = {
       },
     },
 
-    walletButton: {
-      background: '#212121',
-      color: '#eeeeee',
-    },
-
     txModalColors: {
-      background: '#AD3235',
+      background: 'rgba(173, 50, 53, 0.5)',
       backgroundVariant: '#cfa368',
-      onBackgroundVariant: '#eeeeee',
-      onBackgroundVariantB: '#cfa368',
       onBackgroundVariantColor: '#212121',
-      primary: '#212121',
+      primary: '#FFA800',
+      onPrimary: '#FFFFFF',
       loading: '#9f1431',
       error: '#EF1E02',
       warning: '#FFA800',

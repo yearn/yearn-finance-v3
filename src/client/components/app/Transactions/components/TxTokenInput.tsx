@@ -7,18 +7,16 @@ import { useAppTranslation } from '@hooks';
 import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from '@components/common';
 import { formatUsd, humanize } from '@utils';
 
-const StyledButton = styled(Button)`
-  background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
-  color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
-  text-transform: uppercase;
-  border-radius: 1em;
+const MaxButton = styled(Button)`
+  border-radius: ${({ theme }) => theme.globalRadius};
+  width: min-content;
+  margin-left: 0.5rem;
+  text-transform: capitalize;
 `;
 
 const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
-  font-size: 3.6rem;
-  font-weight: 600;
-  width: 100%;
-  text-align: right;
+  font-size: 2.4rem;
+  font-weight: 700;
   background: transparent;
   outline: none;
   border: none;
@@ -26,16 +24,21 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   padding: 0;
   font-family: inherit;
   appearance: textfield;
+  width: 100%;
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
+    color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   }
 
   ${({ readOnly, theme }) =>
     readOnly &&
     `
-    color: ${theme.colors.txModalColors.onBackgroundVariantColor};
+    color: ${theme.colors.txModalColors.text};
     cursor: default;
+
+    &::placeholder {
+      color: ${theme.colors.txModalColors.text};
+    }
   `}
 
   ${({ error, theme }) => error && `color: ${theme.colors.txModalColors.error};`}
@@ -55,6 +58,7 @@ const ContrastText = styled.span`
 
 const StyledText = styled(Text)`
   color: ${({ theme }) => theme.colors.txModalColors.text};
+  max-width: 11rem;
 `;
 
 const TokenExtras = styled.div`
@@ -62,6 +66,7 @@ const TokenExtras = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin-top: 0.8rem;
 
   ${StyledText} {
     text-overflow: ellipsis;
@@ -70,15 +75,25 @@ const TokenExtras = styled.div`
   }
 `;
 
+const AmountInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 0.8rem;
+`;
+
 const AmountTitle = styled(Text)`
-  color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
+  color: ${({ theme }) => theme.colors.txModalColors.text};
+  text-overflow: ellipsis;
 `;
 
 const TokenData = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   overflow: hidden;
+  border-radius: ${({ theme }) => theme.globalRadius};
+  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
+  padding: ${({ theme }) => theme.layoutPadding};
   font-size: 1.4rem;
   flex: 1;
 `;
@@ -89,12 +104,12 @@ const TokenName = styled.div`
   text-overflow: ellipsis;
   text-align: center;
   font-size: 1.3rem;
+  max-height: 3rem;
 `;
 
 const TokenListIcon = styled(Icon)`
   position: absolute;
   right: 0.7rem;
-  top: 3.4rem;
   fill: inherit;
   color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
 `;
@@ -112,9 +127,8 @@ const TokenSelector = styled.div<{ onClick?: () => void }>`
   align-items: center;
   justify-content: center;
   width: 8.4rem;
-  height: 9.2rem;
   border-radius: ${({ theme }) => theme.globalRadius};
-  background: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariant};
+  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   fill: ${({ theme }) => theme.colors.txModalColors.text};
   flex-shrink: 0;
@@ -128,6 +142,7 @@ const TokenSelector = styled.div<{ onClick?: () => void }>`
 const TokenInfo = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.txModal.gap};
+  overflow: hidden;
 `;
 
 const StyledSearchList = styled(SearchList)`
@@ -140,8 +155,7 @@ const StyledSearchList = styled(SearchList)`
 `;
 
 const Header = styled.div`
-  font-weight: 600;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-transform: capitalize;
   color: ${({ theme }) => theme.colors.txModalColors.text};
 `;
@@ -150,11 +164,9 @@ const scaleTransitionTime = 300;
 
 const StyledTxTokenInput = styled(TransitionGroup)`
   display: grid;
-  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
-  min-height: 15.6rem;
+  // min-height: 15.6rem;
   width: 100%;
   border-radius: ${({ theme }) => theme.globalRadius};
-  padding: ${({ theme }) => theme.txModal.gap};
   grid-gap: 0.8rem;
 
   .scale-enter {
@@ -218,7 +230,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   onAmountChange,
   amountValue,
   maxAmount,
-  maxLabel = 'MAX',
+  maxLabel = 'Max',
   selectedToken,
   onSelectedTokenChange,
   yieldPercent,
@@ -264,7 +276,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
 
   return (
     <StyledTxTokenInput {...props}>
-      {headerText && <Header>{headerText}</Header>}
+      <>{headerText && <Header>{headerText}</Header>}</>
       {openedSearch && (
         <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
           <StyledSearchList
@@ -277,40 +289,47 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         </CSSTransition>
       )}
 
-      <TokenInfo>
-        <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
-          <TokenIconContainer>
-            <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
-            {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
-          </TokenIconContainer>
-          <TokenName>{selectedItem.label}</TokenName>
-        </TokenSelector>
+      {/* NOTE Using fragments here because: https://github.com/yearn/yearn-finance-v3/pull/565 */}
+      <>
+        <TokenInfo>
+          <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
+            <TokenIconContainer>
+              <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
+              {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
+            </TokenIconContainer>
+            <TokenName>{selectedItem.label}</TokenName>
+          </TokenSelector>
 
-        <TokenData>
-          <AmountTitle>{inputText || t('components.transaction.token-input.balance')}</AmountTitle>
-          <StyledAmountInput
-            value={amount}
-            onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-            placeholder={loading ? loadingText : '00000000.00'}
-            readOnly={readOnly}
-            error={inputError}
-            type="number"
-          />
-          <TokenExtras>
-            {amountValue && <StyledText>≈ {formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
-            {maxAmount && (
-              <StyledButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
-                {maxLabel}
-              </StyledButton>
-            )}
-            {yieldPercent && (
-              <StyledText>
-                {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
-              </StyledText>
-            )}
-          </TokenExtras>
-        </TokenData>
-      </TokenInfo>
+          <TokenData>
+            <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
+
+            <AmountInputContainer>
+              <StyledAmountInput
+                value={amount}
+                onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
+                placeholder={loading ? loadingText : '0.00000000'}
+                readOnly={readOnly}
+                error={inputError}
+                type="number"
+              />
+              {maxAmount && (
+                <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+                  {maxLabel}
+                </MaxButton>
+              )}
+            </AmountInputContainer>
+
+            <TokenExtras>
+              {amountValue && <StyledText>{formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
+              {yieldPercent && (
+                <StyledText>
+                  {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
+                </StyledText>
+              )}
+            </TokenExtras>
+          </TokenData>
+        </TokenInfo>
+      </>
     </StyledTxTokenInput>
   );
 };

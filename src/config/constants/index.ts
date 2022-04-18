@@ -21,6 +21,7 @@ const ADDRESSES = {
   YFI: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
   BLUEPILLNFT: '0x35f5A420ef9BCc748329021FBD4ed0986AbdF201',
   WOOFYNFT: '0x0966a53f2533EaF01D0bB2fa0E2274f3002287F1',
+  LEDGER_PARTNER_ID: '0x558247e365be655f9144e1a0140D793984372Ef3',
 };
 
 const NETWORK_SETTINGS: NetworkSettings = {
@@ -75,8 +76,8 @@ const NETWORK_SETTINGS: NetworkSettings = {
     simulationsEnabled: false,
     zapsEnabled: false,
     labsEnabled: false,
-    ironBankEnabled: true,
-    earningsEnabled: false,
+    ironBankEnabled: false,
+    earningsEnabled: true,
     notifyEnabled: false,
     blockExplorerUrl: 'https://arbiscan.io',
     txConfirmations: 2,
@@ -90,14 +91,14 @@ export const getConstants = memoize((): Constants => {
     ETHEREUM_ADDRESS: ADDRESSES.ETH,
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
     YEARN_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
-    SUPPORTED_NETWORKS: ['mainnet', 'fantom'],
+    SUPPORTED_NETWORKS: ['mainnet', 'fantom', 'arbitrum'],
     NETWORK_SETTINGS,
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
     ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
     CONTRACT_ADDRESSES: {
-      zapIn: '0x92Be6ADB6a12Da0CA607F9d87DB2F9978cD6ec3E',
+      zapIn: '0x8E52522E6a77578904ddd7f528A22521DC4154F5',
       zapOut: '0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c',
       pickleZapIn: '0xc695f73c1862e050059367B2E64489E66c525983',
       y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
@@ -119,5 +120,6 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_LANG: 'en',
     SUPPORTED_LANGS: ['en', 'es'],
     DUST_AMOUNT_USD: '10000000',
+    YEARN_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
   };
 });

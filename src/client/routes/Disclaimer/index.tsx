@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { InfoCard, ViewContainer } from '@components/app';
+import { SliderCard, ViewContainer } from '@components/app';
 import { Text } from '@components/common';
 
 const StyledViewContainer = styled(ViewContainer)`
@@ -8,7 +8,7 @@ const StyledViewContainer = styled(ViewContainer)`
   grid-auto-rows: min-content;
 `;
 
-const StyledInfoCard = styled(InfoCard)`
+const StyledSliderCard = styled(SliderCard)`
   max-width: 100%;
   flex: 1;
 `;
@@ -22,7 +22,7 @@ const StyledLink = styled.a`
 export const Disclaimer = () => {
   return (
     <StyledViewContainer>
-      <StyledInfoCard
+      <StyledSliderCard
         header=""
         Component={
           <div>
@@ -105,8 +105,14 @@ export const Disclaimer = () => {
               </u>{' '}
               The only way to fully understand such risks is to have a strong understanding of the relevant technical
               systems and the incentive design mechanisms they embody--we strongly encourage you to review Yearn’s{' '}
-              <StyledLink href="https://docs.yearn.finance">technical documentation</StyledLink> and{' '}
-              <StyledLink href="https://github.com/yearn">code</StyledLink> before use.
+              <StyledLink href="https://docs.yearn.finance" target="_blank">
+                technical documentation
+              </StyledLink>{' '}
+              and{' '}
+              <StyledLink href="https://github.com/yearn" target="_blank">
+                code
+              </StyledLink>{' '}
+              before use.
             </Text>
           </div>
         }

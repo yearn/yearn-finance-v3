@@ -29,27 +29,36 @@ const SortIcon = styled(({ activeSort, sortType, ...props }: SortIconProps) => <
   ${({ activeSort, sortType, theme }) =>
     activeSort &&
     `
-    color: ${theme.colors.onSurfaceH2};
+    color: ${theme.colors.titles};
     transform: ${sortType === 'asc' ? 'rotateZ(180deg)' : 'rotateZ(0deg)'};
   `}
 `;
 
-const Header = styled.div<{ onClick?: () => void }>`
+const Header = styled.h3<{ onClick?: () => void }>`
   display: flex;
   align-items: center;
-  font-size: 1.4rem;
-  color: ${({ theme }) => theme.colors.onSurfaceSH1};
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  color: ${({ theme }) => theme.colors.texts};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
 `;
 
 const Content = styled.div`
-  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.8rem;
   font-size: 2.4rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 100%;
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.texts};
+
+  :first-child img {
+    margin-right: ${({ theme }) => theme.layoutPadding};
+  }
 `;
 
 type SortType = 'asc' | 'desc';

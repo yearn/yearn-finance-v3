@@ -1,5 +1,3 @@
-import { Interface } from '@ethersproject/abi';
-
 import { notify, UpdateNotification } from '@frameworks/blocknative';
 import { getConfig } from '@config';
 import {
@@ -65,7 +63,17 @@ export class TransactionServiceImpl implements TransactionService {
       // const decodedData = contractIface.decodeFunctionData(methodName, unsignedTx.data!.toString());
       // console.log({ decodedData });
 
-      // TODO call contract verification here.
+      const yearn = this.yearnSdk.getInstanceOf(network);
+      if (yearn.services.allowList) {
+        const { success: isValid, error } = await yearn.services.allowList.validateCalldata(
+          contractAddress,
+          unsignedTx.data
+        );
+        if (!isValid) {
+          if (!error) throw new Error('Unexpected Error on Allow List');
+          throw new Error(error);
+        }
+      }
 
       const tx = await signer.sendTransaction(unsignedTx);
       return tx;

@@ -10,20 +10,23 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const StyledInputContainer = styled.div`
-  --input-placeholder: ${(props) => props.theme.colors.onSurfaceH2};
+  --input-placeholder: ${({ theme }) => theme.colors.texts};
 
   display: flex;
   height: 2.8rem;
-  background: ${(props) => props.theme.colors.background};
-  color: ${(props) => props.theme.colors.secondary};
-  fill: ${(props) => props.theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.texts};
+  fill: currentColor;
   border-radius: ${({ theme }) => theme.globalRadius};
-  padding: 0 1rem;
+  padding: 0 0.8rem;
   transition: border 200ms ease-in-out;
-  border: 2px solid ${(props) => props.theme.colors.onSurfaceSH1};
+  border: 2px solid transparent;
+  font-family: inherit;
+  font-size: 1.6rem;
+  font-weight: 400;
 
   &:focus-within {
-    border-color: ${(props) => props.theme.colors.onSurfaceH2};
+    border-color: ${({ theme }) => theme.colors.texts};
   }
 `;
 
@@ -38,6 +41,8 @@ const StyledInput = styled.input`
   text-align: inherit;
   font-size: inherit;
   font-weight: inherit;
+  font-family: inherit;
+  padding: 0;
 
   &::placeholder {
     color: var(--input-placeholder);
@@ -46,7 +51,7 @@ const StyledInput = styled.input`
 
 const StyledIcon = styled(Icon)`
   width: 1.6rem;
-  margin-right: 0.5rem;
+  margin-right: 0.8rem;
   fill: inherit;
 `;
 

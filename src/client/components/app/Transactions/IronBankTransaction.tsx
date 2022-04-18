@@ -36,7 +36,6 @@ interface Asset {
 interface IronBankTransactionProps {
   transactionLabel: string;
   transactionCompleted: boolean;
-  transactionCompletedLabel: string;
   onTransactionCompletedDismissed: () => void;
   assetHeader: string;
   assetLabel: string;
@@ -111,7 +110,7 @@ export const IronBankTransaction: FC<IronBankTransactionProps> = (props) => {
         onAmountChange={onAmountChange}
         amountValue={amountValue}
         maxAmount={safeMax ?? assetBalance}
-        maxLabel={maxLabel ?? (safeMax ? 'SAFE MAX' : 'MAX')}
+        maxLabel={maxLabel ?? (safeMax ? 'Safe max' : 'Max')}
         selectedToken={asset}
         inputError={!!sourceStatus.error}
         readOnly={!onAmountChange}

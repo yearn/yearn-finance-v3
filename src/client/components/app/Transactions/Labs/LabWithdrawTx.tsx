@@ -42,6 +42,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const [txCompleted, setTxCompleted] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
@@ -78,7 +79,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   }, []);
 
   useEffect(() => {
-    if (!selectedLab) return;
+    if (!selectedLab || !walletIsConnected) return;
 
     dispatch(
       TokensActions.getTokenAllowance({
@@ -86,7 +87,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
         spenderAddress: CONTRACT_ADDRESSES.zapOut,
       })
     );
-  }, [selectedTargetTokenAddress, selectedLab?.address]);
+  }, [selectedTargetTokenAddress, selectedLab?.address, walletIsConnected]);
 
   useEffect(() => {
     if (!selectedLab) return;
@@ -173,8 +174,20 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     setSelectedTargetTokenAddress(tokenAddress);
   };
 
+  // NOTE if there is no onClose then we are on vault details
+  let transactionCompletedLabel;
+  if (!onClose) {
+    transactionCompletedLabel = t('components.transaction.status.done');
+  }
+
   const onTransactionCompletedDismissed = () => {
-    if (onClose) onClose();
+    // NOTE if there is no onClose then we are on vault details
+    if (onClose) {
+      onClose();
+    } else {
+      setTxCompleted(false);
+      dispatch(VaultsActions.clearTransactionData());
+    }
   };
 
   const approve = async () => {
@@ -207,7 +220,6 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       onAction: withdraw,
       status: actionsStatus.withdraw,
       disabled: !isApproved || !isValidAmount || expectedTxOutcomeStatus.loading,
-      contrast: true,
     },
   ];
 
@@ -215,7 +227,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     <Transaction
       transactionLabel={t('components.transaction.withdraw')}
       transactionCompleted={txCompleted}
-      transactionCompletedLabel={t('components.transaction.status.exit')}
+      transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-vault')}
       sourceAssetOptions={[selectedLabOption]}

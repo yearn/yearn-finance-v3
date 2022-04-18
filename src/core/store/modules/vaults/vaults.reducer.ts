@@ -18,6 +18,7 @@ export const initialVaultActionsStatusMap: VaultActionsStatusMap = {
   approve: initialStatus,
   deposit: initialStatus,
   approveZapOut: initialStatus,
+  signZapOut: initialStatus,
   withdraw: initialStatus,
   approveMigrate: initialStatus,
   migrate: initialStatus,
@@ -61,6 +62,7 @@ const {
   approveDeposit,
   depositVault,
   approveZapOut,
+  signZapOut,
   withdrawVault,
   approveMigrate,
   migrateVault,
@@ -279,7 +281,7 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.statusMap.getExpectedTransactionOutcome = {};
     })
     .addCase(getExpectedTransactionOutcome.rejected, (state, { error }) => {
-      state.statusMap.getExpectedTransactionOutcome = { error: 'Simulation Failed' };
+      state.statusMap.getExpectedTransactionOutcome = { error: error.message };
     })
 
     /* -------------------------------------------------------------------------- */
@@ -326,6 +328,20 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(approveZapOut.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = { error: error.message };
+    })
+
+    /* ------------------------------ signZapOut ----------------------------- */
+    .addCase(signZapOut.pending, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].signZapOut = { loading: true };
+    })
+    .addCase(signZapOut.fulfilled, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].signZapOut = {};
+    })
+    .addCase(signZapOut.rejected, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].signZapOut = { error: error.message };
     })
 
     /* ------------------------------ withdrawVault ----------------------------- */

@@ -14,7 +14,7 @@ const bigSize = css`
 `;
 
 const smallSize = css`
-  min-height: 12.8rem;
+  min-height: 11.2rem;
 `;
 
 const microSize = css`
@@ -23,17 +23,17 @@ const microSize = css`
 
 const defaultVariant = css`
   background-color: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
 `;
 
 const primaryVariant = css`
   background-color: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
 `;
 
 const secondaryVariant = css`
-  background-color: ${({ theme }) => theme.colors.secondaryVariantA};
-  color: ${({ theme }) => theme.colors.onSurfaceH1};
+  background-color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.titles};
 `;
 
 const backgroundVariant = css`
@@ -43,7 +43,7 @@ const backgroundVariant = css`
 
 const surfaceVariant = css`
   background-color: ${({ theme }) => theme.colors.surfaceVariantA};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
+  color: ${({ theme }) => theme.colors.titles};
 `;
 
 const sizeStyle = ({ cardSize }: CardProps) => {
@@ -83,7 +83,7 @@ export interface CardProps extends StyledSystemProps {
   cardSize?: CardSizeType;
 }
 
-const StyledDiv = styled.div<CardProps>`
+const StyledDiv = styled.article<CardProps>`
   border-radius: ${({ theme }) => theme.globalRadius};
   padding: 1.7rem ${({ theme }) => theme.card.padding};
 

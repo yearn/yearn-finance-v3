@@ -11,26 +11,7 @@ import { getConfig } from '@config';
 import { AlertTypes, ModalName, Theme, Language } from '@types';
 import { formatPercent, getCurrentLanguage } from '@utils';
 import { ViewContainer, ThemeBox, CustomThemeButton } from '@components/app';
-import {
-  ThemesIcon,
-  WorldIcon,
-  ClockIcon,
-  Icon,
-  Button,
-  ToggleButton,
-  Input,
-  Card,
-  CardHeader,
-  CardContent,
-  OptionList,
-} from '@components/common';
-
-const sectionsGap = '2.2rem';
-const sectionsBorderRadius = '0.8rem';
-
-const SettingsCardHeader = styled(CardHeader)`
-  margin-bottom: 1.2rem;
-`;
+import { Button, ToggleButton, Input, Card, CardContent, OptionList } from '@components/common';
 
 const SettingsCardContent = styled(CardContent)`
   flex-direction: column;
@@ -39,57 +20,36 @@ const SettingsCardContent = styled(CardContent)`
 
 const SettingsCard = styled(Card)`
   display: grid;
-  padding-left: 0;
-  padding-right: 0;
+  padding: ${({ theme }) => theme.card.padding} 0;
   width: 100%;
 `;
 
 const SettingsSection = styled.div`
   display: grid;
-  grid-template-columns: 18rem 1fr;
+  grid-template-columns: 15rem 1fr;
   padding: 0 ${({ theme }) => theme.card.padding};
-  grid-gap: 1.5rem;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
 `;
 
 const SectionContent = styled.div`
   display: flex;
   flex-wrap: wrap;
-  grid-gap: 1.2rem;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
   align-items: center;
 
   ${SettingsSection}:not(:first-child) & {
-    padding-top: ${sectionsGap};
+    padding-top: ${({ theme }) => theme.card.padding};
   }
 `;
 
-const SectionTitle = styled.div`
+const SectionTitle = styled.div<{ centerText?: boolean }>`
   display: flex;
-  align-items: flex-start;
-  fill: ${({ theme }) => theme.colors.secondary};
-  background: ${({ theme }) => theme.colors.surfaceVariantA};
-  padding: ${({ theme }) => theme.card.padding};
-
-  ${SettingsSection}:not(:first-child) & {
-    padding-top: ${sectionsGap};
-  }
-  ${SettingsSection}:first-child & {
-    border-top-left-radius: ${sectionsBorderRadius};
-    border-top-right-radius: ${sectionsBorderRadius};
-  }
-  ${SettingsSection}:last-child & {
-    border-bottom-left-radius: ${sectionsBorderRadius};
-    border-bottom-right-radius: ${sectionsBorderRadius};
-  }
-`;
-
-const SectionIcon = styled(Icon)`
-  display: inline-block;
-  fill: inherit;
-  margin-right: 0.7rem;
+  align-items: ${({ centerText }) => (centerText ? 'center' : 'flex-start')};
+  fill: currentColor;
 `;
 
 const SectionHeading = styled.h3`
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.titles};
   display: inline-block;
   font-size: 1.6rem;
   font-weight: 500;
@@ -101,18 +61,21 @@ const SlippageOption = styled.div<{ active?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 6.4rem;
-  height: 6.4rem;
-  border: 2px solid ${({ theme }) => theme.colors.secondary};
-  color: ${({ theme }) => theme.colors.secondary};
+  width: 8rem;
+  height: 8rem;
+  border: 2px solid transparent;
+  color: ${({ theme }) => theme.colors.titles};
+  background-color: ${({ theme }) => theme.colors.background};
   border-radius: ${({ theme }) => theme.globalRadius};
+  font-weight: 700;
   cursor: pointer;
 
   ${({ active, theme }) =>
     active &&
     `
-    background-color: ${theme.colors.secondary};
-    color: ${theme.colors.surface};
+    background-color: ${theme.colors.backgroundVariant};
+    color: ${theme.colors.titlesVariant};
+    border-color: ${theme.colors.primary};
   `}
 `;
 
@@ -124,7 +87,6 @@ const SettingsView = styled(ViewContainer)`
     ${SettingsSection} {
       grid-template-columns: 1fr;
       width: 100%;
-      padding: 0;
 
       :not(:first-child) ${SectionTitle} {
         padding-top: ${({ theme }) => theme.card.padding};
@@ -138,7 +100,7 @@ const SettingsView = styled(ViewContainer)`
       }
     }
     ${SectionContent} {
-      padding: 0 ${({ theme }) => theme.card.padding};
+      padding: 0;
     }
   }
 `;
@@ -153,6 +115,7 @@ export const Settings = () => {
   const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
   const defaultSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
+  const signedApprovalsEnabled = useAppSelector(SettingsSelectors.selectSignedApprovalsEnabled);
 
   const availableSlippages = getConfig().SLIPPAGE_OPTIONS;
   const { ALLOW_DEV_MODE, AVAILABLE_THEMES, AVAILABLE_CUSTOM_THEMES, SUPPORTED_LANGS } = getConfig();
@@ -175,6 +138,10 @@ export const Settings = () => {
   const changeTheme = (theme: Theme) => dispatch(ThemeActions.changeTheme({ theme }));
 
   const isCustomThemeSelected = AVAILABLE_CUSTOM_THEMES.includes(currentTheme);
+
+  const toggleSignedApprovals = () => {
+    dispatch(SettingsActions.toggleSignedApprovals());
+  };
 
   const changeSlippage = (slippage: number) => {
     dispatch(SettingsActions.setDefaultSlippage({ slippage }));
@@ -203,15 +170,20 @@ export const Settings = () => {
   return (
     <SettingsView>
       <SettingsCard>
-        <SettingsCardHeader header={t('settings:preferences')} />
-
         <SettingsCardContent>
           <SettingsSection>
             <SectionTitle>
-              <SectionHeading>
-                <SectionIcon Component={ClockIcon} />
-                {t('settings:slippage-tolerance')}
-              </SectionHeading>
+              <SectionHeading>{t('settings:signed-approvals')}</SectionHeading>
+            </SectionTitle>
+
+            <SectionContent>
+              <ToggleButton selected={signedApprovalsEnabled} setSelected={toggleSignedApprovals} />
+            </SectionContent>
+          </SettingsSection>
+
+          <SettingsSection>
+            <SectionTitle>
+              <SectionHeading>{t('settings:slippage-tolerance')}</SectionHeading>
             </SectionTitle>
             <SectionContent>
               {availableSlippages.map((slippage) => (
@@ -228,10 +200,7 @@ export const Settings = () => {
 
           <SettingsSection>
             <SectionTitle>
-              <SectionHeading>
-                <SectionIcon Component={ThemesIcon} />
-                {t('settings:themes')}
-              </SectionHeading>
+              <SectionHeading>{t('settings:themes')}</SectionHeading>
             </SectionTitle>
 
             <SectionContent>
@@ -252,11 +221,8 @@ export const Settings = () => {
           </SettingsSection>
 
           <SettingsSection>
-            <SectionTitle>
-              <SectionHeading>
-                <SectionIcon Component={WorldIcon} />
-                {t('settings:language')}
-              </SectionHeading>
+            <SectionTitle centerText>
+              <SectionHeading>{t('settings:language')}</SectionHeading>
             </SectionTitle>
 
             <SectionContent>
@@ -271,10 +237,7 @@ export const Settings = () => {
 
           {ALLOW_DEV_MODE && (
             <SettingsSection>
-              <SectionTitle>
-                <SectionIcon Component={ThemesIcon} />
-                Dev Mode
-              </SectionTitle>
+              <SectionTitle>Dev Mode</SectionTitle>
               <SectionContent>
                 Enable Dev Mode
                 <ToggleButton
@@ -300,10 +263,7 @@ export const Settings = () => {
               </SettingsSection>
 
               <SettingsSection>
-                <SectionTitle>
-                  <SectionIcon Component={ThemesIcon} />
-                  Additional settings
-                </SectionTitle>
+                <SectionTitle>Additional settings</SectionTitle>
                 <SectionContent>
                   Expanded sidenav
                   <ToggleButton selected={!collapsedSidebar} setSelected={toggleSidebar} />
@@ -311,10 +271,7 @@ export const Settings = () => {
               </SettingsSection>
 
               <SettingsSection>
-                <SectionTitle>
-                  <SectionIcon Component={ThemesIcon} />
-                  Modals testing
-                </SectionTitle>
+                <SectionTitle>Modals testing</SectionTitle>
                 <SectionContent>
                   <Button onClick={() => openModal('test', { testVar: 'test variable' })}>Open test modal</Button>
                   <Button onClick={() => openModal('testTx')}>Open TestTx modal</Button>
@@ -326,10 +283,7 @@ export const Settings = () => {
               </SettingsSection>
 
               <SettingsSection>
-                <SectionTitle>
-                  <SectionIcon Component={ThemesIcon} />
-                  Alerts testing
-                </SectionTitle>
+                <SectionTitle>Alerts testing</SectionTitle>
                 <SectionContent>
                   <Button onClick={() => openAlert('Default alert')}>Open default alert</Button>
                   <Button onClick={() => openAlert('Success alert', 'success')}>Open Success alert</Button>

@@ -9,7 +9,6 @@ import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
 import { TxStatus } from './components/TxStatus';
-import { TxArrowStatus, TxArrowStatusTypes } from './components/TxArrowStatus';
 
 interface Status {
   loading?: boolean;
@@ -37,7 +36,7 @@ interface Asset {
 interface TransactionProps {
   transactionLabel?: string;
   transactionCompleted: boolean;
-  transactionCompletedLabel: string;
+  transactionCompletedLabel?: string;
   onTransactionCompletedDismissed: () => void;
   sourceHeader: string;
   sourceAssetOptions: Asset[];
@@ -67,6 +66,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const {
     transactionLabel,
     transactionCompleted,
+    transactionCompletedLabel,
     onTransactionCompletedDismissed,
     sourceHeader,
     sourceAssetOptions,
@@ -91,25 +91,10 @@ export const Transaction: FC<TransactionProps> = (props) => {
   const sourceBalance = normalizeAmount(selectedSourceAsset.balance, selectedSourceAsset.decimals);
   const targetBalance = normalizeAmount(selectedTargetAsset.balance, selectedTargetAsset.decimals);
 
-  let txArrowStatus: TxArrowStatusTypes = 'preparing';
-
-  if (actions.length && actions.length > 1) {
-    if (!actions[0].disabled && !actions[0].status.loading) {
-      txArrowStatus = 'preparing';
-      if (targetStatus.loading) txArrowStatus = 'firstPending';
-    } else if (actions[0].status.loading || targetStatus.loading) {
-      txArrowStatus = 'firstPending';
-    } else if (!actions[1].status.loading) {
-      txArrowStatus = 'secondPreparing';
-    } else if (actions[1].status.loading) {
-      txArrowStatus = 'secondPending';
-    }
-  }
-
   if (transactionCompleted) {
     return (
-      <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
-        <TxStatus exit={onTransactionCompletedDismissed} />
+      <StyledTransaction onClose={onClose} header={transactionLabel}>
+        <TxStatus transactionCompletedLabel={transactionCompletedLabel} exit={onTransactionCompletedDismissed} />
       </StyledTransaction>
     );
   }
@@ -121,15 +106,15 @@ export const Transaction: FC<TransactionProps> = (props) => {
     error: sourceStatus.error || targetStatus.error,
   };
 
-  const sourceInputText = `${t('components.transaction.token-input.balance')} ${formatAmount(sourceBalance, 4)} ${
+  const sourceInputText = `${t('components.transaction.token-input.you-have')} ${formatAmount(sourceBalance, 4)} ${
     selectedSourceAsset.symbol
   }`;
-  const targetInputText = `${t('components.transaction.token-input.balance')} ${formatAmount(targetBalance, 4)} ${
+  const targetInputText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
     selectedTargetAsset.symbol
   }`;
 
   return (
-    <StyledTransaction onClose={onClose} header={transactionLabel} {...props}>
+    <StyledTransaction onClose={onClose} header={transactionLabel}>
       <TxTokenInput
         headerText={sourceHeader}
         inputText={sourceInputText}
@@ -143,9 +128,6 @@ export const Transaction: FC<TransactionProps> = (props) => {
         inputError={!!sourceStatus.error}
         readOnly={!onSourceAmountChange}
       />
-
-      {!generalStatus.error && <TxArrowStatus status={txArrowStatus} />}
-      {generalStatus.error && <TxError errorType="warning" errorText={generalStatus.error} />}
 
       <TxTokenInput
         headerText={targetHeader}
@@ -161,6 +143,8 @@ export const Transaction: FC<TransactionProps> = (props) => {
         loading={outputLoading}
         loadingText={loadingText ?? t('components.transaction.status.simulating')}
       />
+
+      {generalStatus.error && <TxError errorType="warning" errorText={generalStatus.error} />}
 
       <TxActions>
         {actions.map(({ label, onAction, status, disabled, contrast }) => (

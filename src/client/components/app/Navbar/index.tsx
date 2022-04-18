@@ -15,23 +15,30 @@ const StyledOptionList = styled(OptionList)`
 const StyledNavbarActions = styled.div`
   display: grid;
   grid-auto-flow: column;
-  grid-gap: 0.8rem;
+  grid-gap: 1.2rem;
   padding-left: 0.8rem;
   align-items: center;
   justify-content: flex-end;
   flex: 1;
 
   > * {
-    height: 2.8rem;
+    height: 3.2rem;
   }
 `;
 
-const StyledText = styled.h1`
+const StyledText = styled.h1<{ toneDown?: boolean }>`
+  display: inline-flex;
   font-size: 2.4rem;
-  font-weight: bold;
-  color: ${({ theme }) => theme.colors.secondary};
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.titles};
   margin: 0;
   padding: 0;
+
+  ${({ toneDown, theme }) =>
+    toneDown &&
+    `
+    color: ${theme.colors.texts};
+  `}
 `;
 
 const StyledNavbar = styled.header`
@@ -41,12 +48,11 @@ const StyledNavbar = styled.header`
   width: 100%;
   display: flex;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.background};
-  z-index: ${(props) => props.theme.zindex.navbar};
+  background-color: ${({ theme }) => theme.colors.surface};
+  z-index: ${({ theme }) => theme.zindex.navbar};
   max-width: ${({ theme }) => theme.globalMaxWidth};
-  margin-top: -${({ theme }) => theme.layoutPadding};
-  padding-top: calc(0.4rem + ${({ theme }) => theme.layoutPadding});
-  padding-bottom: 1.6rem;
+  padding: ${({ theme }) => theme.card.padding};
+  border-radius: ${({ theme }) => theme.globalRadius};
 
   @media ${device.mobile} {
     ${StyledText} {
@@ -74,6 +80,7 @@ const getNetworkIcon = (network: Network) => {
 interface NavbarProps {
   className?: string;
   title?: string;
+  subTitle?: string;
   walletAddress?: string;
   addressEnsName?: string;
   onWalletClick?: () => void;
@@ -86,6 +93,7 @@ interface NavbarProps {
 export const Navbar = ({
   className,
   title,
+  subTitle,
   walletAddress,
   addressEnsName,
   onWalletClick,
@@ -109,9 +117,22 @@ export const Navbar = ({
     Icon: getNetworkIcon(network),
   }));
 
+  const secondTitleEnabled = !!subTitle?.length;
+
+  const vaultText = (
+    <>
+      &nbsp;/&nbsp;<StyledText>{subTitle}</StyledText>
+    </>
+  );
+
   return (
     <StyledNavbar className={className}>
-      {title && <StyledText>{title}</StyledText>}
+      {title && (
+        <StyledText toneDown={secondTitleEnabled}>
+          {title}
+          {secondTitleEnabled && vaultText}
+        </StyledText>
+      )}
 
       <StyledNavbarActions>
         <StyledOptionList
