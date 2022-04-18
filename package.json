@@ -50,15 +50,18 @@
     "bnc-onboard": "1.38.2",
     "craco-alias": "3.0.1",
     "cross-env": "7.0.3",
+    "crypto-browserify": "3.12.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.0.0",
     "ethers": "5.4.5",
+    "https-browserify": "1.0.0",
     "husky": "5.2.0",
     "i18next": "21.6.16",
     "i18next-browser-languagedetector": "6.1.4",
     "i18next-http-backend": "1.4.0",
     "lint-staged": "10.5.4",
     "lodash": "4.17.21",
+    "os-browserify": "0.3.0",
     "prettier": "2.6.2",
     "react": "17.0.2",
     "react-countup": "5.2.0",
@@ -68,10 +71,12 @@
     "react-popper": "2.2.5",
     "react-redux": "7.2.8",
     "react-router-dom": "5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.0",
     "react-transition-group": "4.4.2",
     "redux-localstorage-simple": "2.4.1",
     "redux-logger": "3.0.6",
+    "stream-browserify": "3.0.0",
+    "stream-http": "3.2.0",
     "styled-components": "5.3.5",
     "styled-system": "5.1.5",
     "typescript": "4.3.5",
@@ -81,10 +86,15 @@
     "locize-cli": "7.10.1"
   },
   "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"]
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": ["prettier --write"]
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
   },
   "husky": {
     "hooks": {
