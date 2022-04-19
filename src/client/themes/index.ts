@@ -1,6 +1,7 @@
 import { DefaultTheme } from 'styled-components';
 
 import { Theme } from '@types';
+import { getConfig } from '@config';
 
 import { cyberpunkTheme } from './cyberpunk';
 import { darkTheme } from './dark';
@@ -20,8 +21,10 @@ export const getTheme = (theme?: Theme): DefaultTheme => {
       return classicTheme;
     case 'explorer':
       return explorerTheme;
-    default:
+    case 'system-prefs':
       const { matches: prefersColorSchemeDark } = window?.matchMedia('(prefers-color-scheme: dark)');
       return prefersColorSchemeDark ? darkTheme : lightTheme;
+    default:
+      return lightTheme;
   }
 };
