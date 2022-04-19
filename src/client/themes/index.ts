@@ -1,7 +1,6 @@
 import { DefaultTheme } from 'styled-components';
 
 import { Theme } from '@types';
-import { getConfig } from '@config';
 
 import { cyberpunkTheme } from './cyberpunk';
 import { darkTheme } from './dark';
