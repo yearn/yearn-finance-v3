@@ -8,8 +8,7 @@ import { getStore } from '@frameworks/redux';
 import { AppContextProvider, NavSideMenuContextProvider } from '@context';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
-
-import '@assets/fonts/RobotoFont.css';
+import { RobotoFontCss } from '@assets/fonts/RobotoFont';
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -68,6 +67,8 @@ const GlobalStyle = createGlobalStyle`
   .bn-onboard-modal {
     z-index: ${(props) => props.theme.zindex.onboardModal}
   }
+
+  ${RobotoFontCss}
 `;
 
 const container = new Container();
