@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from 'react';
-import { keyBy } from 'lodash';
 
 import {
   useAppSelector,
@@ -8,6 +7,7 @@ import {
   useDebounce,
   useAppTranslation,
   useAllowance,
+  useSelectedSellToken,
 } from '@hooks';
 import {
   TokensSelectors,
@@ -60,18 +60,15 @@ export const DepositTx: FC<DepositTxProps> = ({
   const vaults = useAppSelector(VaultsSelectors.selectLiveVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
-  let userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
-  userTokens = selectedVault?.allowZapIn ? userTokens : [];
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
-
-  const sellTokensOptions = selectedVault
-    ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
-    : userTokens;
-  const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
-  const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
+    selectedSellTokenAddress,
+    selectedVaultOrLab: selectedVault,
+    allowTokenSelect,
+  });
   const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceError] = useAllowance({
     tokenAddress: selectedSellTokenAddress,
     vaultAddress: selectedVault?.address,
@@ -118,21 +115,28 @@ export const DepositTx: FC<DepositTxProps> = ({
   }, [debouncedAmount, selectedSellTokenAddress, selectedVault]);
 
   useEffect(() => {
-    if (!selectedVault || !selectedSellTokenAddress) return;
-    if (toBN(debouncedAmount).gt(0) && !inputError) {
-      dispatch(
-        VaultsActions.getExpectedTransactionOutcome({
-          transactionType: 'DEPOSIT',
-          sourceTokenAddress: selectedSellTokenAddress,
-          sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
-          targetTokenAddress: selectedVault.address,
-        })
-      );
-      dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedSellTokenAddress] }));
+    if (
+      !selectedVault ||
+      !selectedSellTokenAddress ||
+      toBN(debouncedAmount).lte(0) ||
+      inputError ||
+      !selectedSellToken
+    ) {
+      return;
     }
+
+    dispatch(
+      VaultsActions.getExpectedTransactionOutcome({
+        transactionType: 'DEPOSIT',
+        sourceTokenAddress: selectedSellTokenAddress,
+        sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
+        targetTokenAddress: selectedVault.address,
+      })
+    );
+    dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedSellTokenAddress] }));
   }, [debouncedAmount]);
 
-  if (!selectedVault || !selectedSellTokenAddress || !selectedSellToken || !sellTokensOptions) {
+  if (!selectedVault || !selectedSellTokenAddress || !selectedSellToken) {
     return null;
   }
 
@@ -234,6 +238,8 @@ export const DepositTx: FC<DepositTxProps> = ({
   };
 
   const approve = async () => {
+    if (!selectedSellToken) return;
+
     await dispatch(
       VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
     );
@@ -241,6 +247,8 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const deposit = async () => {
     try {
+      if (!selectedSellToken) return;
+
       await dispatchAndUnwrap(
         VaultsActions.depositVault({
           vaultAddress: selectedVault.address,
@@ -281,7 +289,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
-      sourceAssetOptions={allowTokenSelect ? sellTokensOptions : [selectedSellToken]}
+      sourceAssetOptions={sourceAssetOptions}
       selectedSourceAsset={selectedSellToken}
       onSelectedSourceAssetChange={onSelectedSellTokenChange}
       sourceAmount={amount}

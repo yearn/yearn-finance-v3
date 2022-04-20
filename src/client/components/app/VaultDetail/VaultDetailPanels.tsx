@@ -30,13 +30,15 @@ const StyledLineChart = styled(LineChart)`
 `;
 
 const ChartValue = styled(Text)`
+  display: block;
   font-size: 2.4rem;
-  font-weight: 600;
-  margin-top: 0.5rem;
+  font-weight: 700;
+  margin-top: 0.8rem;
 `;
 
 const ChartValueLabel = styled(Text)`
-  font-size: 1.4rem;
+  display: block;
+  font-size: 1.6rem;
   font-weight: 400;
   color: ${({ theme }) => theme.colors.titles};
 `;

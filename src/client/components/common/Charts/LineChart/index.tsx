@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import { Serie, ResponsiveLine } from '@nivo/line';
+import { Serie, ResponsiveLine, Point } from '@nivo/line';
 
 import { useAppSelector, useWindowDimensions } from '@hooks';
 import { getTheme } from '@themes';
@@ -26,6 +26,10 @@ const StyledTooltip = styled.div<{ align: 'left' | 'right' }>`
 
   ${({ align }) => align === 'left' && `left: 100%; transform: translateX(-45%)`};
   ${({ align }) => align === 'right' && `right: 100%; transform: translateX(45%)`};
+
+  span {
+    display: block;
+  }
 `;
 
 const LineBackground = styled.div`
@@ -83,6 +87,20 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
     textColor: theme.colors.icons.variant,
   };
 
+  // NOTE Custom tooltip to fix position
+  const tooltip = ({ point }: { point: Point }) => {
+    const isFirstHalf = point.index < chartData[0].data.length / 2;
+
+    return (
+      <StyledTooltip align={isFirstHalf ? 'left' : 'right'}>
+        <Text>{tooltipLabel || point.serieId}</Text>
+        <Text>
+          <SymbolText point={point} customSymbol={customSymbol} />
+        </Text>
+      </StyledTooltip>
+    );
+  };
+
   return (
     <StyledLineChart className={className} {...props}>
       <LineBackground />
@@ -93,7 +111,6 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
         curve="linear"
         colors={theme.colors.icons.variant}
         margin={{ top: 20, right: 10, bottom: 36, left: 15 }}
-        // xScale={{ type: 'point' }}
         xScale={{
           type: 'time',
           format: '%Y-%m-%d',
@@ -102,15 +119,12 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
         yFormat=" >-.2f"
         axisTop={null}
         axisRight={null}
-        // axisBottom={null}
         axisBottom={{
-          orient: 'bottom',
           tickSize: 0,
           tickPadding: 16,
           format: '%b %d',
           tickValues: isTablet ? 'every 8 days' : 'every 4 days',
         }}
-        // xFormat="time:%Y-%m-%d"
         axisLeft={null}
         enableGridY={false}
         enableGridX={false}
@@ -122,19 +136,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
         useMesh={true}
         legends={[]}
         lineWidth={3}
-        // NOTE Custom tooltip to fix position
-        tooltip={({ point }) => {
-          const isFirstHalf = point.index < chartData[0].data.length / 2;
-
-          return (
-            <StyledTooltip align={isFirstHalf ? 'left' : 'right'}>
-              <Text>{tooltipLabel || point.serieId}</Text>
-              <Text>
-                <SymbolText point={point} customSymbol={customSymbol} />
-              </Text>
-            </StyledTooltip>
-          );
-        }}
+        tooltip={tooltip}
       />
     </StyledLineChart>
   );

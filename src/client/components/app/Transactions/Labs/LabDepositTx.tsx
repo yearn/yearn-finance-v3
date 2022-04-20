@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from 'react';
-import { keyBy } from 'lodash';
 
 import {
   useAppSelector,
@@ -8,6 +7,7 @@ import {
   useDebounce,
   useAppTranslation,
   useAllowance,
+  useSelectedSellToken,
 } from '@hooks';
 import {
   TokensSelectors,
@@ -53,20 +53,16 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
-  let userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
-  userTokens = selectedLab?.allowZapIn ? userTokens : [];
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
 
   // TODO: ADD EXPECTED OUTCOME TO LABS
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
-
-  const sellTokensOptions = selectedLab
-    ? [selectedLab.token, ...userTokens.filter(({ address }) => address !== selectedLab.token.address)]
-    : userTokens;
-  const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
-  const selectedSellToken = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
+    selectedSellTokenAddress,
+    selectedVaultOrLab: selectedLab,
+  });
   const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceError] = useAllowance({
     tokenAddress: selectedSellTokenAddress,
     vaultAddress: selectedLab?.address,
@@ -96,20 +92,21 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   // TODO: SET LABS SIMULATION
   useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress) return;
-    if (toBN(debouncedAmount).gt(0) && !inputError) {
-      dispatch(
-        VaultsActions.getExpectedTransactionOutcome({
-          transactionType: 'DEPOSIT',
-          sourceTokenAddress: selectedSellTokenAddress,
-          sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
-          targetTokenAddress: selectedLab.address,
-        })
-      );
+    if (!selectedLab || !selectedSellTokenAddress || toBN(debouncedAmount).lte(0) || inputError || !selectedSellToken) {
+      return;
     }
+
+    dispatch(
+      VaultsActions.getExpectedTransactionOutcome({
+        transactionType: 'DEPOSIT',
+        sourceTokenAddress: selectedSellTokenAddress,
+        sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
+        targetTokenAddress: selectedLab.address,
+      })
+    );
   }, [debouncedAmount]);
 
-  if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken || !sellTokensOptions) {
+  if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken) {
     return null;
   }
 
@@ -206,16 +203,17 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   };
 
   const approve = async () => {
+    if (!selectedSellToken) return;
+
     await dispatch(
-      LabsActions.approveDeposit({
-        labAddress: selectedLab.address,
-        tokenAddress: selectedSellToken.address,
-      })
+      LabsActions.approveDeposit({ labAddress: selectedLab.address, tokenAddress: selectedSellToken.address })
     );
   };
 
   const deposit = async () => {
     try {
+      if (!selectedSellToken) return;
+
       await dispatchAndUnwrap(
         LabsActions.deposit({
           labAddress: selectedLab.address,
@@ -251,7 +249,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
-      sourceAssetOptions={sellTokensOptions}
+      sourceAssetOptions={sourceAssetOptions}
       selectedSourceAsset={selectedSellToken}
       onSelectedSourceAssetChange={onSelectedSellTokenChange}
       sourceAmount={amount}

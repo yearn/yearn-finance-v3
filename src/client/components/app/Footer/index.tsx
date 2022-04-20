@@ -22,6 +22,10 @@ const footerLinks = [
     name: 'gov',
   },
   {
+    link: 'https://blog.yearn.finance/',
+    name: 'blog',
+  },
+  {
     link: 'https://github.com/yearn/yearn-security/blob/master/SECURITY.md',
     name: 'security',
   },
