@@ -53,11 +53,13 @@ const CardBackground = styled.div`
   border-radius: ${({ theme }) => theme.globalRadius};
   margin: -2px;
   overflow: hidden;
+  max-height: 23rem;
+  min-height: -webkit-fill-available;
 
   img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
   }
 `;
