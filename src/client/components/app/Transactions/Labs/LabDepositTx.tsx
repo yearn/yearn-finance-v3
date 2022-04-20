@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from 'react';
-import { keyBy } from 'lodash';
 
 import {
   useAppSelector,
@@ -8,6 +7,7 @@ import {
   useDebounce,
   useAppTranslation,
   useAllowance,
+  useSelectedSellToken,
 } from '@hooks';
 import {
   TokensSelectors,
@@ -30,10 +30,8 @@ import {
   validateNetwork,
   formatApy,
   basicValidateAllowance,
-  createPlaceholderToken,
 } from '@utils';
 import { getConfig } from '@config';
-import { TokenView } from '@src/core/types';
 
 import { Transaction } from '../Transaction';
 
@@ -46,7 +44,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { ETHEREUM_ADDRESS, NETWORK_SETTINGS } = getConfig();
+  const { NETWORK_SETTINGS } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
@@ -55,32 +53,21 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
-  let userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
-  userTokens = selectedLab?.allowZapIn ? userTokens : [];
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
 
   // TODO: ADD EXPECTED OUTCOME TO LABS
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(LabsSelectors.selectSelectedLabActionsStatusMap);
-  const selectedTokenMap = useAppSelector(TokensSelectors.selectTokensMap);
-
-  const sellTokensOptions = selectedLab
-    ? [selectedLab.token, ...userTokens.filter(({ address }) => address !== selectedLab.token.address)]
-    : userTokens;
-  const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
-  let selectedSellToken: TokenView | undefined = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
+    selectedSellTokenAddress,
+    selectedVaultOrLab: selectedLab,
+  });
   const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceError] = useAllowance({
     tokenAddress: selectedSellTokenAddress,
     vaultAddress: selectedLab?.address,
     isLab: true,
   });
-  const addressIsNativeCurrency = selectedSellTokenAddress === ETHEREUM_ADDRESS;
-  const shouldUseNativeCurrency = typeof selectedSellToken === 'undefined' && addressIsNativeCurrency;
-  if (shouldUseNativeCurrency) {
-    const tokenData = selectedTokenMap[ETHEREUM_ADDRESS];
-    selectedSellToken = createPlaceholderToken(tokenData);
-  }
 
   const onExit = () => {
     dispatch(LabsActions.clearSelectedLabAndStatus());
@@ -105,20 +92,21 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
 
   // TODO: SET LABS SIMULATION
   useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress) return;
-    if (toBN(debouncedAmount).gt(0) && !inputError && selectedSellToken) {
-      dispatch(
-        VaultsActions.getExpectedTransactionOutcome({
-          transactionType: 'DEPOSIT',
-          sourceTokenAddress: selectedSellTokenAddress,
-          sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
-          targetTokenAddress: selectedLab.address,
-        })
-      );
+    if (!selectedLab || !selectedSellTokenAddress || toBN(debouncedAmount).lte(0) || inputError || !selectedSellToken) {
+      return;
     }
+
+    dispatch(
+      VaultsActions.getExpectedTransactionOutcome({
+        transactionType: 'DEPOSIT',
+        sourceTokenAddress: selectedSellTokenAddress,
+        sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
+        targetTokenAddress: selectedLab.address,
+      })
+    );
   }, [debouncedAmount]);
 
-  if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken || !sellTokensOptions) {
+  if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken) {
     return null;
   }
 
@@ -215,29 +203,27 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   };
 
   const approve = async () => {
-    selectedSellToken &&
-      (await dispatch(
-        LabsActions.approveDeposit({
-          labAddress: selectedLab.address,
-          tokenAddress: selectedSellToken.address,
-        })
-      ));
+    if (!selectedSellToken) return;
+
+    await dispatch(
+      LabsActions.approveDeposit({ labAddress: selectedLab.address, tokenAddress: selectedSellToken.address })
+    );
   };
 
   const deposit = async () => {
     try {
-      if (selectedSellToken) {
-        await dispatchAndUnwrap(
-          LabsActions.deposit({
-            labAddress: selectedLab.address,
-            tokenAddress: selectedSellToken.address,
-            amount: toBN(amount),
-            slippageTolerance: selectedSlippage,
-            targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
-          })
-        );
-        setTxCompleted(true);
-      }
+      if (!selectedSellToken) return;
+
+      await dispatchAndUnwrap(
+        LabsActions.deposit({
+          labAddress: selectedLab.address,
+          tokenAddress: selectedSellToken.address,
+          amount: toBN(amount),
+          slippageTolerance: selectedSlippage,
+          targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
+        })
+      );
+      setTxCompleted(true);
     } catch (error) {}
   };
 
@@ -263,7 +249,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
-      sourceAssetOptions={sellTokensOptions}
+      sourceAssetOptions={sourceAssetOptions}
       selectedSourceAsset={selectedSellToken}
       onSelectedSourceAssetChange={onSelectedSellTokenChange}
       sourceAmount={amount}

@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from 'react';
-import { keyBy } from 'lodash';
 
 import {
   useAppSelector,
@@ -8,6 +7,7 @@ import {
   useDebounce,
   useAppTranslation,
   useAllowance,
+  useSelectedSellToken,
 } from '@hooks';
 import {
   TokensSelectors,
@@ -28,10 +28,8 @@ import {
   validateNetwork,
   formatApy,
   basicValidateAllowance,
-  createPlaceholderToken,
 } from '@utils';
 import { getConfig } from '@config';
-import { TokenView } from '@src/core/types';
 
 import { Transaction } from './Transaction';
 
@@ -52,7 +50,7 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { NETWORK_SETTINGS, ETHEREUM_ADDRESS } = getConfig();
+  const { NETWORK_SETTINGS } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
@@ -62,29 +60,19 @@ export const DepositTx: FC<DepositTxProps> = ({
   const vaults = useAppSelector(VaultsSelectors.selectLiveVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
-  let userTokens = useAppSelector(TokensSelectors.selectZapInTokens);
-  userTokens = selectedVault?.allowZapIn ? userTokens : [];
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
-  const selectedTokenMap = useAppSelector(TokensSelectors.selectTokensMap);
-
-  const sellTokensOptions = selectedVault
-    ? [selectedVault.token, ...userTokens.filter(({ address }) => address !== selectedVault.token.address)]
-    : userTokens;
-  const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
-  let selectedSellToken: TokenView | undefined = sellTokensOptionsMap[selectedSellTokenAddress ?? ''];
+  const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
+    selectedSellTokenAddress,
+    selectedVaultOrLab: selectedVault,
+    allowTokenSelect,
+  });
   const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceError] = useAllowance({
     tokenAddress: selectedSellTokenAddress,
     vaultAddress: selectedVault?.address,
   });
-  const addressIsNativeCurrency = selectedSellTokenAddress === ETHEREUM_ADDRESS;
-  const shouldUseNativeCurrency = typeof selectedSellToken === 'undefined' && addressIsNativeCurrency;
-  if (shouldUseNativeCurrency) {
-    const tokenData = selectedTokenMap[ETHEREUM_ADDRESS];
-    selectedSellToken = createPlaceholderToken(tokenData);
-  }
 
   const onExit = () => {
     dispatch(VaultsActions.clearSelectedVaultAndStatus());
@@ -127,21 +115,28 @@ export const DepositTx: FC<DepositTxProps> = ({
   }, [debouncedAmount, selectedSellTokenAddress, selectedVault]);
 
   useEffect(() => {
-    if (!selectedVault || !selectedSellTokenAddress) return;
-    if (toBN(debouncedAmount).gt(0) && !inputError && selectedSellToken) {
-      dispatch(
-        VaultsActions.getExpectedTransactionOutcome({
-          transactionType: 'DEPOSIT',
-          sourceTokenAddress: selectedSellTokenAddress,
-          sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
-          targetTokenAddress: selectedVault.address,
-        })
-      );
-      dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedSellTokenAddress] }));
+    if (
+      !selectedVault ||
+      !selectedSellTokenAddress ||
+      toBN(debouncedAmount).lte(0) ||
+      inputError ||
+      !selectedSellToken
+    ) {
+      return;
     }
+
+    dispatch(
+      VaultsActions.getExpectedTransactionOutcome({
+        transactionType: 'DEPOSIT',
+        sourceTokenAddress: selectedSellTokenAddress,
+        sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
+        targetTokenAddress: selectedVault.address,
+      })
+    );
+    dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedSellTokenAddress] }));
   }, [debouncedAmount]);
 
-  if (!selectedVault || !selectedSellTokenAddress || !selectedSellToken || !sellTokensOptions) {
+  if (!selectedVault || !selectedSellTokenAddress || !selectedSellToken) {
     return null;
   }
 
@@ -294,7 +289,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       transactionCompletedLabel={transactionCompletedLabel}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       sourceHeader={t('components.transaction.from-wallet')}
-      sourceAssetOptions={allowTokenSelect ? sellTokensOptions : [selectedSellToken]}
+      sourceAssetOptions={sourceAssetOptions}
       selectedSourceAsset={selectedSellToken}
       onSelectedSourceAssetChange={onSelectedSellTokenChange}
       sourceAmount={amount}
