@@ -189,7 +189,7 @@ export const Portfolio = () => {
             </p>
           </Text>
         }
-        background={AmsterdamLogo}
+        background={<img src={AmsterdamLogo} alt="Amsterdam logo"></img>}
       />
       <HeaderCard items={summaryCardItems} cardSize="small" />
 

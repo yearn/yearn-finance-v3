@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, ReactElement, useState } from 'react';
 import styled from 'styled-components';
 
 import {
@@ -99,7 +99,7 @@ interface SliderCardProps {
   variant?: 'primary' | 'secondary';
   cardSize?: CardSizeType;
   slidesContent?: SlideContent[];
-  background?: string;
+  background?: ReactElement;
 }
 
 export const SliderCard = ({
@@ -139,11 +139,7 @@ export const SliderCard = ({
         </StyledCardContent>
       </CardWrapper>
 
-      {background && (
-        <CardBackground>
-          <img src={background} alt="Amsterdam banner" />
-        </CardBackground>
-      )}
+      {background && <CardBackground>{background}</CardBackground>}
 
       {!!slidesContent?.length && (
         <SliderCounter>
