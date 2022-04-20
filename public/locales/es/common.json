@@ -119,6 +119,7 @@
     "wallet": "Billetera"
   },
   "themes": {
+    "system-prefs": "Sistema",
     "classic": "Classic v2",
     "cyberpunk": "Cyberpunk",
     "dark": "Mono Dark",

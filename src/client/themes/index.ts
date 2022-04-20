@@ -20,8 +20,10 @@ export const getTheme = (theme?: Theme): DefaultTheme => {
       return classicTheme;
     case 'explorer':
       return explorerTheme;
-    default:
+    case 'system-prefs':
       const { matches: prefersColorSchemeDark } = window?.matchMedia('(prefers-color-scheme: dark)');
       return prefersColorSchemeDark ? darkTheme : lightTheme;
+    default:
+      return lightTheme;
   }
 };

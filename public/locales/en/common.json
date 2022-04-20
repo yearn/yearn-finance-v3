@@ -155,6 +155,7 @@
     "wallet": "Wallet"
   },
   "themes": {
+    "system-prefs": "System",
     "classic": "Classic v2",
     "cyberpunk": "Cyberpunk",
     "dark": "Mono Dark",
