@@ -1,10 +1,10 @@
 import { keyBy } from 'lodash';
 
 import { getConfig } from '@config';
-import { useAppSelector } from '@src/client/hooks';
-import { TokensSelectors } from '@src/core/store';
-import { GeneralLabView, GeneralVaultView, TokenView } from '@src/core/types';
-import { createPlaceholderToken } from '@src/utils';
+import { useAppSelector } from '@hooks';
+import { TokensSelectors } from '@store';
+import { GeneralLabView, GeneralVaultView, TokenView } from '@types';
+import { createPlaceholderToken } from '@utils';
 
 interface SelectedSellTokenProps {
   selectedSellTokenAddress?: string;

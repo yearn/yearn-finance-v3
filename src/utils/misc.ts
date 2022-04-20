@@ -1,8 +1,8 @@
 import { ethers } from 'ethers';
 import { keyBy, merge, values, orderBy, toNumber, isString } from 'lodash';
 
-import { createToken } from '@src/core/store/modules/tokens/tokens.selectors';
-import { Balance, Token, TokenView } from '@src/core/types';
+import { createToken } from '@store/modules/tokens/tokens.selectors';
+import { Balance, Token, TokenView } from '@types';
 
 export const isValidAddress = (address: string): boolean => {
   try {
