@@ -36,8 +36,8 @@ const StyledViewContainer = styled(ViewContainer)`
 `;
 
 const AmsterdamButton = styled(Button)`
-  background: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.surface};
+  background: #0657f9;
+  color: #fff;
 `;
 
 const StyledSliderCard = styled(SliderCard)`
