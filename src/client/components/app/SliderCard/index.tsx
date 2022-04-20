@@ -57,7 +57,7 @@ const CardBackground = styled.div`
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
   }
 `;
@@ -99,7 +99,7 @@ interface SliderCardProps {
   variant?: 'primary' | 'secondary';
   cardSize?: CardSizeType;
   slidesContent?: SlideContent[];
-  background?: ReactElement;
+  background?: ReactNode;
 }
 
 export const SliderCard = ({
