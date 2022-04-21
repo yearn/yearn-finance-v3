@@ -112,8 +112,14 @@ const classicTheme: DefaultTheme = {
       primary: '#006AE3',
       onPrimary: '#FFFFFF',
       loading: '#FFA800',
-      error: '#EF1E02',
-      warning: '#FFA800',
+      error: {
+        background: '#FFD9D9',
+        color: '#FF0000',
+      },
+      warning: {
+        background: '#FFF9D9',
+        color: '#FF8A00',
+      },
       success: '#01E2A0',
       text: '#fff',
       textContrast: '#fff',

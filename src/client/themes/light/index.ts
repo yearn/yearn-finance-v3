@@ -111,8 +111,14 @@ const lightTheme: DefaultTheme = {
       primary: '#00A3FF',
       onPrimary: '#FFFFFF',
       loading: '#FFA800',
-      error: '#FF005E',
-      warning: '#FFA800',
+      error: {
+        background: '#FFD9D9',
+        color: '#FF0000',
+      },
+      warning: {
+        background: '#FFF9D9',
+        color: '#FF8A00',
+      },
       success: '#A8C300',
       text: light.colors.icons.variant,
       textContrast: light.colors.titles,

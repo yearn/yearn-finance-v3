@@ -69,8 +69,14 @@ const cyberpunkTheme: DefaultTheme = {
       primary: '#00A3FF',
       onPrimary: '#FFFFFF',
       loading: '#FFA800',
-      error: '#FF005E',
-      warning: '#FF7500',
+      error: {
+        background: '#FF005E',
+        color: '#FBD282',
+      },
+      warning: {
+        background: '#FF7500',
+        color: '#FBD282',
+      },
       success: '#C6E11E',
       text: '#D35290',
       textContrast: '#FBD282',

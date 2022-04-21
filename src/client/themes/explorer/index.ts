@@ -77,8 +77,14 @@ const explorerTheme: DefaultTheme = {
       primary: '#FFA800',
       onPrimary: '#FFFFFF',
       loading: '#9f1431',
-      error: '#EF1E02',
-      warning: '#FFA800',
+      error: {
+        background: '#EF1E02',
+        color: '#212121',
+      },
+      warning: {
+        background: '#FFA800',
+        color: '#212121',
+      },
       success: '#01E2A0',
       text: '#eeeeee',
       textContrast: '#212121',
