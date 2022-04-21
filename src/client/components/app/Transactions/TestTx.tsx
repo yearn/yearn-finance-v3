@@ -22,7 +22,7 @@ export const TestTx: FC<TestTxProps> = ({ onClose, children, ...props }) => {
       <ProgressBar value={2140} diffValue={3040} maxValue={5032} />
       <ProgressBar value={2140} diffValue={1540} maxValue={5032} />
 
-      <TxError errorText="Test error" />
+      <TxError errorTitle="Test error" />
 
       <TxActions>
         <TxActionButton onClick={() => console.log('approve')} disabled>
