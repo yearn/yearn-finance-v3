@@ -21,6 +21,7 @@ const StyledTextTitle = styled(Text)`
   overflow: hidden;
   text-overflow: ellipsis;
   flex-grow: 1;
+  white-space: no-wrap;
 `;
 
 const StyledTextDescription = styled(Text)`
@@ -52,7 +53,6 @@ const StyledTxError = styled.div<{ errorType?: ErrorType }>`
 const StyledTxErrorTitle = styled.div`
   display: flex;
   flex: 1;
-  text-transform: capitalize;
   gap: 0.7rem;
   align-items: center;
 `;
