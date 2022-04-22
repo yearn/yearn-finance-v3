@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { ChevronDownIcon, ChevronUpIcon, Icon, Text, WarningIcon } from '@components/common';
+import { ChevronDownIcon, ChevronUpIcon, ErrorIcon, Icon, Text, WarningIcon } from '@components/common';
 import { useAppTranslation } from '@hooks';
 
 const StyledIcon = styled(Icon)<{ errorType?: ErrorType }>`
@@ -39,13 +39,13 @@ const StyledTxError = styled.div<{ errorType?: ErrorType }>`
   padding: 0.5rem 0.7rem;
   flex-direction: column;
 
-  background-color: ${({ theme }) => theme.colors.txModalColors.error.background};
+  background-color: ${({ theme }) => theme.colors.txModalColors.error.backgroundColor};
   color: ${({ theme }) => theme.colors.txModalColors.error.color};
 
   ${({ errorType, theme }) =>
     errorType === 'warning' &&
     `
-    background-color: ${theme.colors.txModalColors.warning.background};
+    background-color: ${theme.colors.txModalColors.warning.backgroundColor};
     color: ${theme.colors.txModalColors.warning.color};
   `}
 `;
@@ -57,7 +57,7 @@ const StyledTxErrorTitle = styled.div`
   align-items: center;
 `;
 
-const StyledTxErrorDescription = styled.div<{ isExpanded: boolean }>`
+const StyledTxErrorDescription = styled.div<{ isExpanded: boolean; errorType?: ErrorType }>`
   max-height: ${({ isExpanded }) => (isExpanded ? '7rem' : '0')};
   overflow-y: scroll;
   margin-top: ${({ isExpanded }) => (isExpanded ? '1rem' : '0')};
@@ -68,13 +68,27 @@ const StyledTxErrorDescription = styled.div<{ isExpanded: boolean }>`
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.txModalColors.warning.color}80;
+    background: ${({ theme }) => theme.colors.txModalColors.error.color}80;
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.colors.txModalColors.warning.color};
+    background: ${({ theme }) => theme.colors.txModalColors.error.color};
   }
+
+  ${({ errorType, theme }) =>
+    errorType === 'warning' &&
+    `
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background: ${theme.colors.txModalColors.warning.color}80;
+      }
+
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        background: ${theme.colors.txModalColors.warning.color};
+      }
+  `}
 `;
 
 type ErrorType = 'error' | 'warning';
@@ -96,20 +110,20 @@ export const TxError: FC<TxErrorProps> = ({ errorTitle, errorDescription, errorT
   return (
     <StyledTxError errorType={errorType} {...props}>
       <StyledTxErrorTitle>
-        <StyledIcon Component={WarningIcon} errorType={errorType} />
+        <StyledIcon Component={errorType === 'warning' ? WarningIcon : ErrorIcon} errorType={errorType} />
 
         <StyledTextTitle>{errorTitle || t('errors.unknown')}</StyledTextTitle>
 
         {errorDescription && (
           <StyledIcon
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => setIsExpanded((prevIsExpanded) => !prevIsExpanded)}
             Component={isExpanded ? ChevronUpIcon : ChevronDownIcon}
             errorType={errorType}
           />
         )}
       </StyledTxErrorTitle>
       {errorDescription && (
-        <StyledTxErrorDescription isExpanded={isExpanded}>
+        <StyledTxErrorDescription isExpanded={isExpanded} errorType={errorType}>
           <StyledTextDescription>{errorDescription}</StyledTextDescription>
         </StyledTxErrorDescription>
       )}

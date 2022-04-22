@@ -113,11 +113,11 @@ const classicTheme: DefaultTheme = {
       onPrimary: '#FFFFFF',
       loading: '#FFA800',
       error: {
-        background: '#FFD9D9',
+        backgroundColor: '#FFD9D9',
         color: '#FF0000',
       },
       warning: {
-        background: '#FFF9D9',
+        backgroundColor: '#FFF9D9',
         color: '#FF8A00',
       },
       success: '#01E2A0',

@@ -148,11 +148,11 @@ declare module 'styled-components' {
         onPrimary: string;
         loading: string;
         error: {
-          background: string;
+          backgroundColor: string;
           color: string;
         };
         warning: {
-          background: string;
+          backgroundColor: string;
           color: string;
         };
         success: string;
