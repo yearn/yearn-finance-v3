@@ -4,14 +4,9 @@ import styled from 'styled-components';
 import { ChevronDownIcon, ChevronUpIcon, ErrorIcon, Icon, Text, WarningIcon } from '@components/common';
 import { useAppTranslation } from '@hooks';
 
-const StyledIcon = styled(Icon)<{ errorType?: ErrorType }>`
+const StyledIcon = styled(Icon)`
   width: 2rem;
-  fill: ${({ theme }) => theme.colors.txModalColors.error.color};
-  ${({ errorType, theme }) =>
-    errorType === 'warning' &&
-    `
-    fill: ${theme.colors.txModalColors.warning.color};
-  `}
+  fill: currentColor;
   flex-shrink: 0;
 `;
 
@@ -110,7 +105,7 @@ export const TxError: FC<TxErrorProps> = ({ errorTitle, errorDescription, errorT
   return (
     <StyledTxError errorType={errorType} {...props}>
       <StyledTxErrorTitle>
-        <StyledIcon Component={errorType === 'warning' ? WarningIcon : ErrorIcon} errorType={errorType} />
+        <StyledIcon Component={errorType === 'warning' ? WarningIcon : ErrorIcon} />
 
         <StyledTextTitle>{errorTitle || t('errors.unknown')}</StyledTextTitle>
 
@@ -118,7 +113,6 @@ export const TxError: FC<TxErrorProps> = ({ errorTitle, errorDescription, errorT
           <StyledIcon
             onClick={() => setIsExpanded((prevIsExpanded) => !prevIsExpanded)}
             Component={isExpanded ? ChevronUpIcon : ChevronDownIcon}
-            errorType={errorType}
           />
         )}
       </StyledTxErrorTitle>
