@@ -58,6 +58,6 @@ const StyledIcon = styled(Icon)`
 export const Input: FC<InputProps> = ({ className, color, placeholder, Icon, ...props }) => (
   <StyledInputContainer className={className} color={color} {...props}>
     {Icon && <StyledIcon Component={Icon} />}
-    <StyledInput placeholder={placeholder} />
+    <StyledInput placeholder={placeholder} aria-label={placeholder} />
   </StyledInputContainer>
 );

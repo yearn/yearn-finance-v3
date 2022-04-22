@@ -311,6 +311,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
                 readOnly={readOnly}
                 error={inputError}
                 type="number"
+                aria-label={headerText}
               />
               {maxAmount && (
                 <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>

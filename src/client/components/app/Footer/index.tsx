@@ -35,18 +35,22 @@ const socialLinks = [
   {
     link: 'https://twitter.com/iearnfinance',
     icon: TwitterIcon,
+    ariaLabel: 'Visit Yearn Twitter',
   },
   {
     link: 'https://reddit.com/r/yearn_finance',
     icon: RedditIcon,
+    ariaLabel: 'Visit Yearn Reddit',
   },
   {
     link: 'https://discord.yearn.finance',
     icon: DiscordIcon,
+    ariaLabel: 'Join Yearn Discord',
   },
   {
     link: 'https://medium.com/iearn',
     icon: MediumIcon,
+    ariaLabel: 'Visit Yearn Medium',
   },
 ];
 
@@ -138,7 +142,7 @@ export const Footer = ({ className }: FooterProps) => {
 
       <SocialSection>
         {socialLinks.map((social, index) => (
-          <StyledIconLink href={social.link} target="_blank" key={index}>
+          <StyledIconLink href={social.link} target="_blank" key={index} aria-label={social.ariaLabel}>
             <StyledIcon Component={social.icon} />
           </StyledIconLink>
         ))}
