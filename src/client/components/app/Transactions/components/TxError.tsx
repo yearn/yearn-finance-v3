@@ -78,7 +78,7 @@ const StyledTxErrorDescription = styled.div<{ isExpanded: boolean; errorType?: E
   ${({ isExpanded }) =>
     isExpanded &&
     `
-    max-height: 6.4rem;
+    max-height: 8rem;
     margin: .8rem 0;
   `}
 
