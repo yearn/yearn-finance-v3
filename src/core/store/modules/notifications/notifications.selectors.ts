@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { RootState, Message } from '@types';
+import { RootState } from '@types';
 
 /* ---------------------------------- State --------------------------------- */
 const selectDismissedMessageIds = (state: RootState) => state.notifications.dismissedMessageIds;

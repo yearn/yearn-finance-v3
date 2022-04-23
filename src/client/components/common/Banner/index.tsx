@@ -8,23 +8,28 @@ import { Markdown } from '../Markdown';
 import { Icon, CloseIcon, InfoIcon, WarningFilledIcon, WarningIcon } from '../Icon';
 
 const StyledCloseIcon = styled(Icon)`
-  width: 1.5rem;
-  height: 1rem;
-  margin-top: 2.5px;
+  width: 2rem;
+  padding: 2rem;
+  right: 0;
+  margin: -2rem;
+  margin-left: 0;
   cursor: pointer;
+  fill: currentColor;
+  box-sizing: content-box;
+
   &:hover {
     opacity: 0.7;
-    fill: ${({ theme }) => theme.colors.primaryVariant};
   }
 `;
 
 const StyledSymbol = styled(Icon)`
   width: 2.5rem;
-  height: 1.6rem;
-  margin-right: -2.5px;
+  fill: currentColor;
+  margin-right: 0.8rem;
 `;
 
 const StyledMarkdown = styled(Markdown)`
+  flex: 1;
   a {
     text-decoration: underline;
   }
@@ -33,28 +38,16 @@ const StyledMarkdown = styled(Markdown)`
 const StyledNotification = styled.div`
   display: flex;
   align-items: center;
-  > * {
-    padding-right: 5px;
-  }
-`;
-
-const StyledBanner = styled.div`
-  background: ${({ theme }) => theme.colors.surface};
-  height: rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  position: relative;
-  padding: 30px 0px 30px 0px;
-`;
-
-const StyledNotificationBanner = styled.div`
-  height: rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+  background: ${({ theme }) => theme.alerts.info.background};
+  color: ${({ theme }) => theme.alerts.info.color};
+  padding: 2.5rem;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  flex: 1;
+  z-index: ${({ theme }) => theme.zindex.alerts};
+  position: fixed;
 `;
 
 const StyledTransitionGroup = styled(TransitionGroup)`
@@ -77,7 +70,7 @@ const StyledTransitionGroup = styled(TransitionGroup)`
   }
   .transition-exit-active {
     opacity: 0;
-    position: absolute;
+    position: fixed;
     transition: opacity 800ms;
     left: 0;
     right: 0;
@@ -88,18 +81,16 @@ const StyledTransitionGroup = styled(TransitionGroup)`
   }
 `;
 
+const StyledBanner = styled.div``;
+
 interface BannerProps {
   notification?: Message;
   onClose?: () => void;
 }
 
-export const Banner: FC<BannerProps> = ({ notification, onClose, children }) => {
-  if (!notification && !children) {
-    return null;
-  }
-
+export const Banner: FC<BannerProps> = ({ notification, onClose }) => {
   if (!notification) {
-    return <StyledBanner>{children}</StyledBanner>;
+    return null;
   }
 
   let messageSymbol: React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string | undefined }>;
@@ -119,18 +110,15 @@ export const Banner: FC<BannerProps> = ({ notification, onClose, children }) => 
 
   return (
     <StyledBanner>
-      <StyledNotificationBanner>
-        <StyledTransitionGroup>
-          <CSSTransition appear={true} key={notification.id} timeout={800} classNames={'transition'}>
-            <StyledNotification>
-              <StyledSymbol Component={messageSymbol} />
-              <StyledMarkdown>{notification.message}</StyledMarkdown>
-              <StyledCloseIcon Component={CloseIcon} onClick={onClose} />
-            </StyledNotification>
-          </CSSTransition>
-        </StyledTransitionGroup>
-      </StyledNotificationBanner>
-      {children}
+      <StyledTransitionGroup>
+        <CSSTransition appear key={notification.id} timeout={800} classNames={'transition'}>
+          <StyledNotification>
+            <StyledSymbol Component={messageSymbol} />
+            <StyledMarkdown>{notification.message}</StyledMarkdown>
+            <StyledCloseIcon Component={CloseIcon} onClick={onClose} />
+          </StyledNotification>
+        </CSSTransition>
+      </StyledTransitionGroup>
     </StyledBanner>
   );
 };
