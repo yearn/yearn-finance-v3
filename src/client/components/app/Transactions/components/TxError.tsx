@@ -19,6 +19,7 @@ const StyledArrowIcon = styled(Icon)<{ isExpanded: boolean }>`
 `;
 const StyledIcon = styled(Icon)`
   width: 2.4rem;
+  padding: 0 0.2rem;
   fill: currentColor;
   flex-shrink: 0;
 `;
@@ -30,6 +31,7 @@ const StyledTextTitle = styled(Text)`
   text-overflow: ellipsis;
   flex-grow: 1;
   white-space: no-wrap;
+  line-height: 2.4rem;
 `;
 
 const StyledTextDescription = styled(Text)`
