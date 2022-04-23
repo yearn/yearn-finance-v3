@@ -177,7 +177,11 @@ export const Settings = () => {
             </SectionTitle>
 
             <SectionContent>
-              <ToggleButton selected={signedApprovalsEnabled} setSelected={toggleSignedApprovals} />
+              <ToggleButton
+                ariaLabel={t('settings:signed-approvals')}
+                selected={signedApprovalsEnabled}
+                setSelected={toggleSignedApprovals}
+              />
             </SectionContent>
           </SettingsSection>
 

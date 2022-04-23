@@ -168,7 +168,7 @@ export const DetailCard = <T,>({
           {!!filterBy && (
             <>
               {filterLabel}
-              <ToggleButton selected={filterToggle} setSelected={setFilterToggle} />
+              <ToggleButton ariaLabel={filterLabel} selected={filterToggle} setSelected={setFilterToggle} />
             </>
           )}
           {SearchBar}

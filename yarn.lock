@@ -4222,10 +4222,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@yfi/sdk@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-2.0.0.tgz#49fceaac0c596c503c910368653e93c788dd719a"
-  integrity sha512-SGp9zSmIXwb3tzi8nU77ZYvXsrJJw6IOgW/wEM4j87FsIoJBqwosLSQlHHhPKxSeSvbFCFfsuD4yM2FueXoc0Q==
+"@yfi/sdk@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-2.0.1.tgz#6f1ab5717676dda6b64a03137f02f4c463bfdf32"
+  integrity sha512-K4A8Ib/8Ri+DWskHioKNBLGdSYtllBHKKSb52j3Ie7xhJGka3+pVHKzPt2SDNM3sdJslKOlWlb6T23P0CDgiTw==
   dependencies:
     bignumber.js "9.0.1"
     cross-fetch "3.1.4"
@@ -17857,8 +17857,10 @@ watchpack@^1.4.0, watchpack@^1.7.4:
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.7.5.tgz#1267e6c55e0b9b5be44c2023aed5437a2c26c453"
   integrity sha512-9P3MWk6SrKjHsGkLT2KHXdQ/9SNkyoJbabxnKOoJepsvJjJG8uYTR3yTPxPQvNDI3w4Nz1xnE0TLHK4RIVe/MQ==
   dependencies:
+    chokidar "^3.4.1"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
+    watchpack-chokidar2 "^2.0.1"
   optionalDependencies:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"

@@ -8,6 +8,7 @@ export interface ToggleButtonProps {
   disabled?: boolean;
   color?: string;
   onClick?: () => void;
+  ariaLabel?: string;
 }
 
 const ToggleCircle = styled.div`
@@ -70,6 +71,7 @@ export const ToggleButton: FC<ToggleButtonProps> = ({
   disabled,
   color,
   onClick,
+  ariaLabel,
   ...props
 }) => (
   <StyledToggleButton
@@ -77,6 +79,7 @@ export const ToggleButton: FC<ToggleButtonProps> = ({
     selected={selected}
     disabled={disabled}
     color={color}
+    aria-label={ariaLabel}
     onClick={() => setSelected(!selected)}
     {...props}
   >

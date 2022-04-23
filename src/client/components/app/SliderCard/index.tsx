@@ -11,6 +11,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@components/common';
+import { device } from '@themes/default';
 
 const ArrowIcon = styled(Icon)`
   fill: currentColor;
@@ -46,13 +47,46 @@ const StyledCardContent = styled(CardContent)`
   color: inherit;
 `;
 
-const StyledCard = styled(Card)`
+const CardBackground = styled.div`
+  display: flex;
+  border: 2px solid ${({ theme }) => theme.colors.primary};
+  border-radius: ${({ theme }) => theme.globalRadius};
+  margin: -2px;
+  overflow: hidden;
+  max-height: 23rem;
+  min-height: -webkit-fill-available;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+`;
+
+const CardWrapper = styled.article`
   padding: ${({ theme }) => theme.card.padding} 0;
+  min-width: 50%;
+`;
+
+const StyledCard = styled(Card)`
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: 0;
   background: ${({ theme }) => theme.colors.backgroundVariant};
   border: 2px solid ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.primary};
   min-width: 28rem;
   position: relative;
+
+  @media ${device.mobile} {
+    flex-direction: column;
+
+    ${CardBackground} {
+      order: -1;
+    }
+  }
 `;
 
 interface SlideContent {
@@ -67,6 +101,7 @@ interface SliderCardProps {
   variant?: 'primary' | 'secondary';
   cardSize?: CardSizeType;
   slidesContent?: SlideContent[];
+  background?: ReactNode;
 }
 
 export const SliderCard = ({
@@ -76,6 +111,7 @@ export const SliderCard = ({
   variant,
   cardSize,
   slidesContent,
+  background,
   ...props
 }: SliderCardProps) => {
   const [selectedSlide, setSelectedSlide] = useState(0);
@@ -97,11 +133,15 @@ export const SliderCard = ({
 
   return (
     <StyledCard variant={variant} cardSize={cardSize} {...props}>
-      <CardHeader bigHeader={textHeader} />
-      <StyledCardContent>
-        {content}
-        {extraContent}
-      </StyledCardContent>
+      <CardWrapper>
+        <CardHeader bigHeader={textHeader} />
+        <StyledCardContent>
+          {content}
+          {extraContent}
+        </StyledCardContent>
+      </CardWrapper>
+
+      {background && <CardBackground>{background}</CardBackground>}
 
       {!!slidesContent?.length && (
         <SliderCounter>
