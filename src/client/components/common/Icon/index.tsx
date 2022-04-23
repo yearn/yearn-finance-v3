@@ -8,7 +8,7 @@ import { ReactComponent as CheckRoundIcon } from '@assets/icons/check-round.svg'
 import { ReactComponent as ChevronDownIcon } from '@assets/icons/chevron-down.svg';
 import { ReactComponent as ChevronLeftIcon } from '@assets/icons/chevron-left.svg';
 import { ReactComponent as ChevronRightIcon } from '@assets/icons/chevron-right.svg';
-import { ReactComponent as ChevronUpIcon } from '@assets/icons/chevron-up.svg';
+import { ReactComponent as ChevronTxIcon } from '@assets/icons/chevron-tx.svg';
 import { ReactComponent as CloseIcon } from '@assets/icons/close.svg';
 import { ReactComponent as CollapseIcon } from '@assets/icons/collapse.svg';
 import { ReactComponent as ConstructionIcon } from '@assets/icons/construction.svg';
@@ -86,7 +86,7 @@ export {
   ChevronDownIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
-  ChevronUpIcon,
+  ChevronTxIcon,
   WalletMissingIcon,
   ConstructionIcon,
   EthereumIcon,
