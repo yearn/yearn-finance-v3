@@ -351,7 +351,7 @@ export const VaultDetailPanels = ({
             <StyledCardHeader header={vaultNameTitle} />
             {displayAddToken ? (
               <RelativeContainer onClick={handleAddToken}>
-                <StyledImg src={MetamaskLogo} />
+                <StyledImg src={MetamaskLogo} alt="Add token to Metamask" />
                 <IconOverImage Component={AddCircleIcon} />
               </RelativeContainer>
             ) : null}
