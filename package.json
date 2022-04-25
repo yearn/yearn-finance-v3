@@ -12,10 +12,10 @@
     "prettier": "prettier --write --ignore-unknown './src/**/*.{js,jsx,ts,tsx,css,scss,md}'",
     "eject": "react-scripts eject",
     "upgrade-sdk": "yarn add yearn/yearn-sdk",
-    "syncDevLocales": "locize sync --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=dev --api-key=xxxx --path=./public/locales --format json --reference-language-only false",
-    "downloadProdLocales": "locize download --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=latest --path=./public/locales --clean true",
-    "downloadDevLocales": "locize download --project-id=e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52 --ver=dev --path=./public/locales --clean true",
-    "checkDevLocales": "npm run syncDevLocales --dry true"
+    "syncDevLocales": "locize sync --project-id=1c6d6900-5989-49fe-b221-0001423041d2 --api-key=xxxx --ver=develop --path=./public/locales --format json --reference-language-only false",
+    "downloadProdLocales": "locize download --project-id=1c6d6900-5989-49fe-b221-0001423041d2 --ver=latest --path=./public/locales --clean true",
+    "downloadDevLocales": "locize download --project-id=1c6d6900-5989-49fe-b221-0001423041d2 --ver=develop --path=./public/locales --clean true",
+    "checkDevLocales": "yarn syncDevLocales --dry true"
   },
   "dependencies": {
     "@craco/craco": "6.4.3",
