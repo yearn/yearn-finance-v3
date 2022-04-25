@@ -78,12 +78,12 @@ const explorerTheme: DefaultTheme = {
       onPrimary: '#FFFFFF',
       loading: '#9f1431',
       error: {
-        backgroundColor: '#EF1E02',
-        color: '#212121',
+        backgroundColor: '#FFD9D9',
+        color: '#FF0000',
       },
       warning: {
-        backgroundColor: '#FFA800',
-        color: '#212121',
+        backgroundColor: '#FFF9D9',
+        color: '#FF8A00',
       },
       success: '#01E2A0',
       text: '#eeeeee',
