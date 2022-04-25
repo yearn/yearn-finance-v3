@@ -1,1 +1,6 @@
-{}
+{
+  "language": "Lingua",
+  "preferences": "Preferenze",
+  "slippage-tolerance": "Tolleranza allo slittamento del prezzo",
+  "themes": "Temi"
+}
