@@ -7,5 +7,9 @@ import { getTheme } from '@themes';
 export const Themable: FC = ({ children }) => {
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const theme = getTheme(currentTheme);
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+  return (
+    <ThemeProvider theme={theme}>
+      <>{children}</>
+    </ThemeProvider>
+  );
 };

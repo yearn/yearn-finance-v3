@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -48,7 +48,7 @@ export interface VaultDetailRouteParams {
 export const VaultDetail = () => {
   const { t } = useAppTranslation(['common', 'vaultdetails']);
   const dispatch = useAppDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const isMounting = useIsMounting();
   const { NETWORK_SETTINGS } = getConfig();
@@ -71,7 +71,7 @@ export const VaultDetail = () => {
     const assetAddress: string | undefined = location.pathname.split('/')[2];
     if (!assetAddress || !isValidAddress(assetAddress)) {
       dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
-      history.push('/portfolio');
+      navigate('/portfolio');
       return;
     }
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));

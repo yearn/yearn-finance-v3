@@ -6,7 +6,7 @@ import '@i18n';
 import { Container } from '@container';
 import { getStore } from '@frameworks/redux';
 import { AppContextProvider, NavSideMenuContextProvider } from '@context';
-import { Routes } from '@routes';
+import { AppRoutes } from '@routes';
 import { Themable } from '@containers';
 
 import '@assets/fonts/RobotoFont.css';
@@ -81,7 +81,7 @@ export const App = () => {
           <Themable>
             <GlobalStyle />
             <Suspense fallback={null}>
-              <Routes />
+              <AppRoutes />
             </Suspense>
           </Themable>
         </NavSideMenuContextProvider>

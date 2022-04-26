@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
@@ -150,7 +150,7 @@ const ApyTooltip = ({
 export const Vaults = () => {
   const { t } = useAppTranslation(['common', 'vaults']);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   // const { isTablet, isMobile, width: DWidth } = useWindowDimensions();
@@ -236,7 +236,7 @@ export const Vaults = () => {
               name: displayName,
               info: formatApy(apyData, apyType),
               infoDetail: 'EYY',
-              onAction: () => history.push(`/vault/${address}`),
+              onAction: () => navigate(`/vault/${address}`),
             }))}
           />
 
@@ -314,7 +314,7 @@ export const Vaults = () => {
               balance: normalizeAmount(vault.userDeposited, vault.token.decimals),
               actions: null,
             }))}
-            onAction={({ address }) => history.push(`/vault/${address}`)}
+            onAction={({ address }) => navigate(`/vault/${address}`)}
             initialSortBy="userDepositedUsdc"
             wrap
           />
@@ -392,7 +392,7 @@ export const Vaults = () => {
                 balance: normalizeAmount(vault.userDeposited, vault.token.decimals),
                 actions: null,
               }))}
-              onAction={({ address }) => history.push(`/vault/${address}`)}
+              onAction={({ address }) => navigate(`/vault/${address}`)}
               initialSortBy="userDepositedUsdc"
               wrap
             />
@@ -478,7 +478,7 @@ export const Vaults = () => {
                 />
               }
               searching={opportunities.length > filteredVaults.length}
-              onAction={({ address }) => history.push(`/vault/${address}`)}
+              onAction={({ address }) => navigate(`/vault/${address}`)}
               initialSortBy="apy"
               wrap
             />

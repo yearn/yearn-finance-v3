@@ -12,7 +12,8 @@ export const List = <T1,>({ Component, items, itemProps, ...props }: ListProps<T
   return (
     <Box {...props}>
       {items.map((item) => (
-        <Component {...itemProps} {...item} />
+        <div>hi</div>
+        // <Component {...itemProps} {...item} />
       ))}
     </Box>
   );

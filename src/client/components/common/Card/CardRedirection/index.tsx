@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 // NOTE: App errors out when trying to import directly from 'common'
@@ -32,10 +32,10 @@ interface CardRedirectionProps {
 }
 
 export const CardRedirection: FC<CardRedirectionProps> = ({ children, redirectTo, className, ...props }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
-    <StyledCardRedirection className={className} {...props} onClick={() => history.push(`/${redirectTo}`)}>
+    <StyledCardRedirection className={className} {...props} onClick={() => navigate(`/${redirectTo}`)}>
       <Arrow Component={ChevronRightIcon} />
     </StyledCardRedirection>
   );

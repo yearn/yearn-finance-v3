@@ -48,7 +48,16 @@ export interface IconProps
   onClick?: () => void;
 }
 
-export const Icon = styled(forwardRef(({ Component, ...props }: IconProps, ref) => <Component {...props} ref={ref} />))`
+export const Icon = styled(
+  forwardRef(({ Component, ...props }: IconProps, ref) => {
+    return (
+      <>
+        hi
+        {/* <Component {...props} ref={ref} /> */}
+      </>
+    );
+  })
+)`
   display: flex;
   align-items: center;
   justify-content: center;

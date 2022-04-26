@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import i18n from 'i18next';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useAppTranslation, useAppSelector, useAppDispatch, useWindowDimensions } from '@hooks';
 import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions, ModalsActions } from '@store';
@@ -109,7 +109,7 @@ export const Settings = () => {
   const { t } = useAppTranslation(['common', 'settings']);
   const { isTablet } = useWindowDimensions();
   const dispatch = useAppDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const currentTheme = useAppSelector(({ theme }) => theme.current);
   const devModeSettings = useAppSelector(SettingsSelectors.selectDevModeSettings);
@@ -156,7 +156,7 @@ export const Settings = () => {
   };
 
   const openVault = (address: string) => {
-    history.push(`/vault/${address}`);
+    navigate(`/vault/${address}`);
   };
 
   const openAlert = (message: string, type?: AlertTypes, persistent?: boolean) => {

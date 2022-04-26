@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import { Layout } from '@containers';
 
@@ -43,25 +43,25 @@ const routesMap = [
   },
 ];
 
-export const Routes = () => {
+export const AppRoutes = () => {
   return (
     <Router basename="/#">
-      <Switch>
-        <Route exact path="/health" component={Health} />
+      <Routes>
+        <Route path="/health" element={Health} />
 
         <Route>
           <Layout>
-            <Switch>
+            <Routes>
               {routesMap.map((route, index) => (
-                <Route key={index} exact path={route.path} component={route.component} />
+                <Route key={index} path={route.path} element={route.component} />
               ))}
               <Route path="*">
-                <Redirect to="/portfolio" />
+                <Navigate to="/portfolio" replace />
               </Route>
-            </Switch>
+            </Routes>
           </Layout>
         </Route>
-      </Switch>
+      </Routes>
     </Router>
   );
 };

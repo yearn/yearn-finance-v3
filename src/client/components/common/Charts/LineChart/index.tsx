@@ -105,7 +105,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
     <StyledLineChart className={className} {...props}>
       <LineBackground />
 
-      <ResponsiveLine
+      {/* <ResponsiveLine
         data={chartData}
         theme={lineTheme}
         curve="linear"
@@ -137,7 +137,7 @@ export const LineChart: FC<LineChartProps> = ({ chartData, tooltipLabel, customS
         legends={[]}
         lineWidth={3}
         tooltip={tooltip}
-      />
+      /> */}
     </StyledLineChart>
   );
 };
