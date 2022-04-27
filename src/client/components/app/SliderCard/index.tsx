@@ -56,6 +56,7 @@ const CardBackground = styled.div`
   position: relative;
   width: 100%;
   box-sizing: content-box;
+  min-height: 20rem;
 
   img {
     position: absolute;
@@ -87,7 +88,6 @@ const StyledCard = styled(Card)`
 
     ${CardBackground} {
       order: -1;
-      height: 20rem;
     }
   }
 `;
