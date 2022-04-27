@@ -53,12 +53,16 @@ const CardBackground = styled.div`
   border-radius: ${({ theme }) => theme.globalRadius};
   margin: -2px;
   overflow: hidden;
-  max-height: 23rem;
-  min-height: -webkit-fill-available;
+  position: relative;
+  width: 100%;
+  box-sizing: content-box;
 
   img {
+    position: absolute;
     width: 100%;
     height: 100%;
+    top: 0;
+    left: 0;
     object-fit: cover;
     object-position: center;
   }
@@ -71,8 +75,6 @@ const CardWrapper = styled.article`
 
 const StyledCard = styled(Card)`
   display: flex;
-  align-items: stretch;
-  justify-content: space-between;
   padding: 0;
   background: ${({ theme }) => theme.colors.backgroundVariant};
   border: 2px solid ${({ theme }) => theme.colors.primary};
@@ -85,6 +87,7 @@ const StyledCard = styled(Card)`
 
     ${CardBackground} {
       order: -1;
+      height: 20rem;
     }
   }
 `;
