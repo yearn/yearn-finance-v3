@@ -31,8 +31,8 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
   ```
   cp .env.example .env
   ```
-  - `REACT_APP_INFURA_PROJECT_ID` should remain blank because we are currently using Alchemy as our provider
-  - `REACT_APP_ALCHEMY_API_KEY` alchemy api key should be provided by the contributor if he hits api limits
+  - `VITE_INFURA_PROJECT_ID` should remain blank because we are currently using Alchemy as our provider
+  - `VITE_ALCHEMY_API_KEY` alchemy api key should be provided by the contributor if he hits api limits
 
 ### Making Changes
 
@@ -75,7 +75,7 @@ or for Windows:
 yarn dev-win
 ```
 
-- To enable Dev Mode set `REACT_APP_ALLOW_DEV_MODE=true` in your `.env`
+- To enable Dev Mode set `VITE_ALLOW_DEV_MODE=true` in your `.env`
 - Wallet Address Override can be activated by navigating to Settings in the app and clicking `Enable Dev Mode`
 
 ## Production
