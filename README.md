@@ -1,6 +1,6 @@
 # yearn.finance
 
-<img src="https://img.shields.io/badge/dynamic/json.svg?style=plastic&color=2096F3&label=locize&query=%24.translatedPercentage&url=https://api.locize.app/badgedata/e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52&suffix=%+translated&link=https://www.locize.com" />
+<img src="https://img.shields.io/badge/dynamic/json.svg?style=plastic&color=2096F3&label=locize&query=%24.translatedPercentage&url=https://api.locize.app/badgedata/1c6d6900-5989-49fe-b221-0001423041d2&suffix=%+translated&link=https://www.locize.com" />
 
 ## Contributing
 
@@ -32,6 +32,7 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
   cp .env.example .env
   ```
   - `REACT_APP_INFURA_PROJECT_ID` should remain blank because we are currently using Alchemy as our provider
+  - `REACT_APP_ALCHEMY_API_KEY` alchemy api key should be provided by the contributor if he hits api limits
 
 ### Making Changes
 
@@ -91,8 +92,8 @@ We use i18n react with locize cli to update/download translations.
 Refer to main repo for documentation:
 https://github.com/locize/locize-cli
 
-Sync with: `npm run syncLocales` **must provide api key**
+Sync with: `yarn syncDevLocales` **must provide api key**
 
-Check sync changes with: `npm run checkLocales`
+Check sync changes with: `yarn checkDevLocales`
 
-Download locales with: `npm run downloadLocales`
+Download prod locales with: `yarn downloadProdLocales`

@@ -3,11 +3,6 @@
     "back-button": {
       "label": "Trở lại trang trước"
     },
-    "beta-card": {
-      "desc-1": "Trang web Yearn v3 đã chính thức ra mắt với tính năng mô phỏng ký gửi, Iron Bank, mục Thí điểm (`Lab`) mới, giao diện tùy chỉnh, v.v... Chúng tôi sẽ tiếp tục tối ưu hóa và bổ sung thêm tiện ích hàng tuần. Nếu tìm thấy lỗi hoặc muốn góp ý, xin vui lòng liên hệ với chúng tôi qua",
-      "desc-2": "Để tiện di chuyển khỏi kho bạc v1 (hoặc nếu bạn còn nhớ nhung), chúng tôi vẫn giữ lại di sản UI v2 tại",
-      "header": "Hết Beta rồi!"
-    },
     "connect-button": {
       "connect": "Kết nối Ví"
     },
@@ -29,7 +24,6 @@
       "earned": "Đã nhận",
       "lend-apy": "APY cho vay",
       "market-liquidity": "Thanh khoản",
-      "name": "Tên",
       "opportunities": "Cơ hội",
       "price": "Tỷ giá",
       "supplying": "Sắp cấp",
@@ -76,7 +70,6 @@
       "to-vault": "Đến kho bạc",
       "to-wallet": "Đến ví",
       "token-input": {
-        "balance": "Số dư",
         "search-select-token": "Chọn Tôken",
         "search-select-vault": "Chọn Kho bạc",
         "yield": "Lãi"
@@ -94,7 +87,6 @@
     "borrowed": "Đã vay",
     "earnings": "Thu nhập",
     "est-yearly-yield": "Ước tính lãi/năm",
-    "header": "Tổng quan",
     "holdings": "Đang nắm giữ",
     "supplied": "Đã cấp",
     "total-net-worth": "Tổng tài sản",
@@ -131,7 +123,6 @@
       "small": "©"
     },
     "disclaimer": "Thông cáo!",
-    "home": "Chính",
     "ironbank": "Iron Bank",
     "labs": "Thí điểm",
     "settings": "Thiết lập",

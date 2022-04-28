@@ -1,5 +1,4 @@
 export * from './components/TxActions';
-export * from './components/TxArrowStatus';
 export * from './components/TxBorrowLimit';
 export * from './components/TxContainer';
 export * from './components/TxError';

@@ -8,32 +8,39 @@ export interface ToggleButtonProps {
   disabled?: boolean;
   color?: string;
   onClick?: () => void;
+  ariaLabel?: string;
 }
 
 const ToggleCircle = styled.div`
   background: var(--toggle-color);
   border-radius: 100%;
-  width: var(--toggle-size);
-  height: var(--toggle-size);
+  width: calc(var(--toggle-size) - 0.8rem);
+  height: calc(var(--toggle-size) - 0.8rem);
   position: absolute;
   transition: transform 200ms ease-in-out;
   left: 50%;
-  transform: translateX(calc(-100% - var(--toggle-offset) / 2));
+  transform: translateX(calc(-100% - var(--toggle-offset) / 2 - var(--toggle-x-offset)));
 `;
 
 const StyledToggleButton = styled.button<{ selected?: boolean }>`
-  --toggle-size: 2.6rem;
-  --toggle-offset: 0.2rem;
+  --toggle-size: 2.4rem;
+  /* NOTE This defines how much extra width should have (size + offset) */
+  --toggle-offset: 0rem;
+  /* NOTE This defines separation between toggle circle and borders. */
+  --toggle-x-offset: 0.3rem;
+
   --toggle-color: ${({ theme }) => theme.colors.toggleSwitch.color};
+  --toggle-color-selected: ${({ theme }) => theme.colors.toggleSwitch.selected.color};
   --toggle-background: ${({ theme }) => theme.colors.toggleSwitch.background};
+  --toggle-background-selected: ${({ theme }) => theme.colors.toggleSwitch.selected.background};
 
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--toggle-background);
-  border-radius: 1em;
+  border: 2px solid var(--toggle-color);
+  border-radius: 99rem;
   outline: none;
-  border: 0;
   padding: 0;
   cursor: pointer;
   height: var(--toggle-size);
@@ -44,10 +51,11 @@ const StyledToggleButton = styled.button<{ selected?: boolean }>`
   ${({ selected, theme }) =>
     selected &&
     `
-      --toggle-color: ${theme.colors.toggleSwitch.selected.color};
-      --toggle-background: ${theme.colors.toggleSwitch.selected.background};
+      background: var(--toggle-background-selected);
+      color: var(--toggle-color-selected);
       ${ToggleCircle} {
-        transform: translateX(calc(0% + var(--toggle-offset) / 2));
+        background: var(--toggle-color-selected);
+        transform: translateX(calc(0% + var(--toggle-offset) / 2 + var(--toggle-x-offset)));
       }
   `};
 
@@ -63,6 +71,7 @@ export const ToggleButton: FC<ToggleButtonProps> = ({
   disabled,
   color,
   onClick,
+  ariaLabel,
   ...props
 }) => (
   <StyledToggleButton
@@ -70,6 +79,7 @@ export const ToggleButton: FC<ToggleButtonProps> = ({
     selected={selected}
     disabled={disabled}
     color={color}
+    aria-label={ariaLabel}
     onClick={() => setSelected(!selected)}
     {...props}
   >

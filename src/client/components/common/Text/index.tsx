@@ -8,7 +8,7 @@ export interface TextProps extends StyledSystemProps {
   ellipsis?: boolean;
 }
 
-const StyledDiv = styled.div<StyledSystemProps & { ellipsis?: boolean }>`
+const StyledDiv = styled.span<StyledSystemProps & { ellipsis?: boolean }>`
   ${({ ellipsis }) =>
     ellipsis &&
     `

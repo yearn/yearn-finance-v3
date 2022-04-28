@@ -11,6 +11,9 @@ const DEFAULT_TOKEN: Token = {
   icon: 'icon.svg',
   metadata: {
     address: '0x001',
+    description: 'Dead token',
+    website: 'dead.com',
+    localization: {},
   },
 };
 

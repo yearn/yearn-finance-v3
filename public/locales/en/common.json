@@ -3,11 +3,6 @@
     "back-button": {
       "label": "Back to previous page"
     },
-    "beta-card": {
-      "desc-1": "Yearn’s v3 beta site has now moved into production, and adds deposit simulations, Iron Bank functionality, a new Labs section, customizable themes, and more. We will continue to add features and fixes every week, and if you encounter any bugs or would like to provide feedback, please let us know on",
-      "desc-2": "For migration of v1 vaults (or if you’re feeling sentimental), we are maintaining a legacy v2 UI, still available at",
-      "header": "Beta no longer!"
-    },
     "connect-button": {
       "connect": "Connect Wallet"
     },
@@ -15,21 +10,9 @@
       "searching-text": "Please search for another asset",
       "text": "No assets to display"
     },
-    "tooltips": {
-      "gross-apr": "Gross APR",
-      "net-apy": "Net APY",
-      "weekly-apy": "Weekly APY",
-      "monthly-apy": "Monthly APY",
-      "inception-apy": "Inception APY",
-      "vecrv-apy": "veCRV APY",
-      "boost": "Boost",
-      "pool-apy": "Pool APY",
-      "rewards-apr": "Bonus Rewards APR",
-      "base-apr": "Base CRV APR",
-      "convex-apr": "Convex APR"
-    },
     "list-card": {
       "apy": "APY",
+      "asset": "Asset",
       "available-deposit": "Available to deposit",
       "available-stake": "Available to stake",
       "available-supply": "Available to supply",
@@ -42,17 +25,33 @@
       "earned": "Earned",
       "lend-apy": "Lend APY",
       "market-liquidity": "Market liquidity",
-      "name": "Name",
       "opportunities": "Opportunities",
       "price": "Price",
       "supplying": "Supplying",
       "tokens": "Tokens",
       "total-assets": "Total assets",
-      "value": "Value"
+      "value": "Value",
+      "wallet": "Wallet"
     },
     "no-wallet": "Wallet not connected",
     "recommendations": {
       "header": "Highest APY"
+    },
+    "search-input": {
+      "search": "Search"
+    },
+    "tooltips": {
+      "base-apr": "Base CRV APR",
+      "boost": "Boost",
+      "convex-apr": "Convex APR",
+      "gross-apr": "Gross APR",
+      "inception-apy": "Inception APY",
+      "monthly-apy": "Monthly APY",
+      "net-apy": "Net APY",
+      "pool-apy": "Pool APY",
+      "rewards-apr": "Bonus Rewards APR",
+      "vecrv-apy": "veCRV APY",
+      "weekly-apy": "Weekly APY"
     },
     "transaction": {
       "approve": "Approve",
@@ -80,8 +79,8 @@
       "stake": "Stake",
       "status": {
         "calculating": "Calculating...",
-        "exit": "Exit",
         "done": "Done",
+        "exit": "Exit",
         "simulating": "Simulating...",
         "transaction-completed": "Transaction completed"
       },
@@ -91,10 +90,10 @@
       "to-vault": "To vault",
       "to-wallet": "To wallet",
       "token-input": {
-        "balance": "Balance",
         "search-select-token": "Select a Token",
         "search-select-vault": "Select a Vault",
-        "yield": "Yield"
+        "yield": "Yield",
+        "you-have": "You have"
       },
       "wallet-balance": "Wallet Balance",
       "withdraw": "Withdraw"
@@ -108,8 +107,8 @@
     "borrow-limit-used": "Borrow limit used",
     "borrowed": "Borrowed",
     "earnings": "Earnings",
+    "est-yearly-earnings": "Est. yearly earnings",
     "est-yearly-yield": "Est. yearly yield",
-    "header": "Dashboard",
     "holdings": "Holdings",
     "supplied": "Supplied",
     "total-net-worth": "Total net worth",
@@ -122,9 +121,10 @@
   },
   "footer": {
     "links": {
+      "blog": "Blog",
       "disclaimer": "Disclaimer",
-      "docs": "Docs",
-      "gov": "Gov",
+      "docs": "Documentation",
+      "gov": "Governance",
       "security": "Security"
     }
   },
@@ -134,6 +134,7 @@
     "es": "Español",
     "fr": "Français",
     "hi": "हिंदी",
+    "it": "Italian",
     "ja": "日本語",
     "pt": "Português",
     "tr": "Türk",
@@ -146,11 +147,11 @@
       "small": "©"
     },
     "disclaimer": "Disclaimer",
-    "home": "Home",
     "ironbank": "Iron Bank",
     "labs": "Labs",
+    "portfolio": "Portfolio",
     "settings": "Settings",
-    "vault": "Vault details",
+    "vault": "Vaults",
     "vaults": "Vaults",
     "wallet": "Wallet"
   },
@@ -159,6 +160,7 @@
     "cyberpunk": "Cyberpunk",
     "dark": "Mono Dark",
     "explorer": "Explorer",
-    "light": "Mono Light"
+    "light": "Mono Light",
+    "system-prefs": "System"
   }
 }

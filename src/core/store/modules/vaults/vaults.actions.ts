@@ -12,6 +12,8 @@ import {
   VaultUserMetadata,
   Address,
   Wei,
+  TransactionResponse,
+  TokenAllowance,
 } from '@types';
 import {
   calculateSharesAmount,
@@ -176,30 +178,64 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 /*                             Transaction Methods                            */
 /* -------------------------------------------------------------------------- */
 
-const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
+const approveDeposit = createAsyncThunk<
+  { amount: string; spenderAddress: string },
+  { vaultAddress: string; tokenAddress: string },
+  ThunkAPI
+>(
   'vaults/approveDeposit',
-  async ({ vaultAddress, tokenAddress }, { dispatch, getState }) => {
-    const { vaults } = getState();
+  async ({ vaultAddress, tokenAddress }, { dispatch, getState, extra }) => {
+    const { vaults, wallet, network } = getState();
     const vaultData = vaults.vaultsMap[vaultAddress];
-    const isZapin = vaultData.tokenId !== tokenAddress;
-    const spenderAddress = isZapin ? getConfig().CONTRACT_ADDRESSES.zapIn : vaultAddress;
+    const { vaultService, transactionService } = extra.services;
+    const amount = extra.config.MAX_UINT256;
 
-    const result = await dispatch(TokensActions.approve({ tokenAddress, spenderAddress }));
-    unwrapResult(result);
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const tx = await vaultService.approveDeposit({
+      network: network.current,
+      accountAddress,
+      tokenAddress,
+      amount,
+      vaultAddress: vaultData.address,
+    });
+
+    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
+
+    const { spender } = await vaultService.getVaultAllowance({
+      network: network.current,
+      vaultAddress: vaultAddress,
+      tokenAddress,
+      accountAddress,
+    });
+
+    return { amount, spenderAddress: spender };
   },
   {
     serializeError: parseError,
   }
 );
 
-const approveZapOut = createAsyncThunk<void, { vaultAddress: string }, ThunkAPI>(
+const approveZapOut = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
   'vaults/approveZapOut',
-  async ({ vaultAddress }, { dispatch }) => {
-    const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
-    const result = await dispatch(
-      TokensActions.approve({ tokenAddress: vaultAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
-    );
-    unwrapResult(result);
+  async ({ vaultAddress, tokenAddress }, { getState, extra }) => {
+    const { wallet, network } = getState();
+    const { vaultService, transactionService } = extra.services;
+    const amount = extra.config.MAX_UINT256;
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const tx = await vaultService.approveZapOut({
+      network: network.current,
+      accountAddress,
+      amount,
+      vaultAddress,
+      tokenAddress,
+    });
+
+    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
   },
   {
     serializeError: parseError,
@@ -407,6 +443,30 @@ const approveMigrate = createAsyncThunk<
   unwrapResult(result);
 });
 
+const getVaultAllowance = createAsyncThunk<
+  TokenAllowance,
+  {
+    tokenAddress: string;
+    vaultAddress: string;
+  },
+  ThunkAPI
+>('vaults/getVaultAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState }) => {
+  const {
+    services: { vaultService },
+  } = extra;
+  const { network, wallet } = getState();
+  const userAddress = wallet.selectedAddress;
+
+  if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+  return vaultService.getVaultAllowance({
+    network: network.current,
+    vaultAddress: vaultAddress,
+    tokenAddress,
+    accountAddress: userAddress,
+  });
+});
+
 const migrateVault = createAsyncThunk<
   void,
   { vaultFromAddress: string; vaultToAddress: string; migrationContractAddress: string },
@@ -520,4 +580,5 @@ export const VaultsActions = {
   getUserVaultsMetadata,
   clearSelectedVaultAndStatus,
   clearVaultStatus,
+  getVaultAllowance,
 };

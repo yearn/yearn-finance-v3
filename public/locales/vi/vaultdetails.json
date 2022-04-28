@@ -18,7 +18,6 @@
   },
   "vault-actions-panel": {
     "deposit": "Ký gửi",
-    "header": "Giao dịch",
     "migrate": "Chuyển",
     "withdraw": "Rút"
   }

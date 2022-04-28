@@ -18,7 +18,7 @@ import {
   RecommendationsCard,
   ActionButtons,
   TokenIcon,
-  InfoCard,
+  SliderCard,
   ViewContainer,
   NoWalletCard,
   Amount,
@@ -30,35 +30,18 @@ import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
 
-const SearchBarContainer = styled.div`
-  margin: 1.2rem;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  grid-gap: ${({ theme }) => theme.layoutPadding};
-  flex-wrap: wrap;
-`;
-
 const StyledHelperCursor = styled.span`
   cursor: help;
 `;
 
-const StyledRecommendationsCard = styled(RecommendationsCard)`
-  ${halfWidthCss}
-`;
+const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
-const StyledInfoCard = styled(InfoCard)`
-  flex: 1;
-  ${halfWidthCss}
-`;
+const StyledSliderCard = styled(SliderCard)``;
 
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 15rem;
+      width: 21rem;
     }
   }
   @media (max-width: 820px) {
@@ -68,7 +51,7 @@ const OpportunitiesCard = styled(DetailCard)`
   }
   @media ${device.mobile} {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
     .col-available {
       width: 10rem;
@@ -84,7 +67,7 @@ const OpportunitiesCard = styled(DetailCard)`
 const HoldingsCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
-      width: 15rem;
+      width: 21rem;
     }
     .col-balance {
       width: 10rem;
@@ -97,7 +80,7 @@ const HoldingsCard = styled(DetailCard)`
   }
   @media ${device.mobile} {
     .col-name {
-      width: 12rem;
+      width: 18rem;
     }
     .col-apy {
       display: none;
@@ -294,14 +277,25 @@ export const Labs = () => {
 
   return (
     <ViewContainer>
+      {!opportunitiesLoading && currentNetworkSettings.labsEnabled && (
+        <StyledSliderCard
+          header={t('labs:risks-card.header')}
+          Component={
+            <Text>
+              <p>{t('labs:risks-card.desc-1')}</p>
+              <p>{t('labs:risks-card.desc-2')}</p>
+              <p>{t('labs:risks-card.desc-3')}</p>
+            </Text>
+          }
+        />
+      )}
+
       <SummaryCard
-        header={t('dashboard.header')}
         items={[
           { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
-          { header: 'Est. Yearly Earnings', Component: <Amount value={totalEarnings} input="usdc" /> },
-          { header: 'Est. Yearly Yield', content: `${formatApy(estYearlyYield)}` },
+          { header: t('dashboard.est-yearly-earnings'), Component: <Amount value={totalEarnings} input="usdc" /> },
+          { header: t('dashboard.est-yearly-yield'), content: `${formatApy(estYearlyYield)}` },
         ]}
-        variant="secondary"
         cardSize="small"
       />
 
@@ -309,32 +303,22 @@ export const Labs = () => {
 
       {!opportunitiesLoading && (
         <>
-          {currentNetworkSettings.labsEnabled ? (
-            <Row>
-              <StyledRecommendationsCard
-                header={t('components.recommendations.header')}
-                items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
-                  // header: 'Special Token',
-                  icon: displayIcon,
-                  name: displayName,
-                  info: formatPercent(apyData, 2),
-                  infoDetail: 'EYY',
-                  // onAction: () => history.push(`/vault/${address}`),
-                }))}
-              />
-              <StyledInfoCard
-                header={t('labs:risks-card.header')}
-                Component={
-                  <Text>
-                    <p>{t('labs:risks-card.desc-1')}</p>
-                    <p>{t('labs:risks-card.desc-2')}</p>
-                    <p>{t('labs:risks-card.desc-3')}</p>
-                  </Text>
-                }
-              />
-            </Row>
-          ) : (
-            <StyledInfoCard
+          {currentNetworkSettings.labsEnabled && (
+            <StyledRecommendationsCard
+              header={t('components.recommendations.header')}
+              items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
+                // header: 'Special Token',
+                icon: displayIcon,
+                name: displayName,
+                info: formatPercent(apyData, 2),
+                infoDetail: 'EYY',
+                // onAction: () => history.push(`/vault/${address}`),
+              }))}
+            />
+          )}
+
+          {!currentNetworkSettings.labsEnabled && (
+            <StyledSliderCard
               header={t('labs:no-labs-card.header', { network: currentNetworkSettings.name })}
               Component={
                 <Text>
@@ -351,19 +335,19 @@ export const Labs = () => {
               header="Holdings"
               metadata={[
                 {
-                  key: 'displayIcon',
-                  transform: ({ displayIcon, displayName }) => <TokenIcon icon={displayIcon} symbol={displayName} />,
-                  width: '6rem',
-                  className: 'col-icon',
-                },
-                {
                   key: 'displayName',
-                  header: t('components.list-card.name'),
+                  header: t('components.list-card.asset'),
+                  transform: ({ displayIcon, displayName }) => (
+                    <>
+                      <TokenIcon icon={displayIcon} symbol={displayName} />
+                      <Text ellipsis>{displayName}</Text>
+                    </>
+                  ),
+                  width: '23rem',
                   sortable: true,
-                  fontWeight: 600,
-                  width: '17rem',
                   className: 'col-name',
                 },
+
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
@@ -417,19 +401,19 @@ export const Labs = () => {
               header={t('components.list-card.opportunities')}
               metadata={[
                 {
-                  key: 'displayIcon',
-                  transform: ({ displayIcon, displayName }) => <TokenIcon icon={displayIcon} symbol={displayName} />,
-                  width: '6rem',
-                  className: 'col-icon',
-                },
-                {
                   key: 'displayName',
-                  header: t('components.list-card.name'),
+                  header: t('components.list-card.asset'),
+                  transform: ({ displayIcon, displayName }) => (
+                    <>
+                      <TokenIcon icon={displayIcon} symbol={displayName} />
+                      <Text ellipsis>{displayName}</Text>
+                    </>
+                  ),
+                  width: '23rem',
                   sortable: true,
-                  fontWeight: 600,
-                  width: '17rem',
                   className: 'col-name',
                 },
+
                 {
                   key: 'apyData',
                   header: t('components.list-card.apy'),
@@ -471,14 +455,12 @@ export const Labs = () => {
                 actions: null,
               }))}
               SearchBar={
-                <SearchBarContainer>
-                  <SearchInput
-                    searchableData={opportunities}
-                    searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
-                    placeholder=""
-                    onSearch={(data) => setFilteredOpportunities(data)}
-                  />
-                </SearchBarContainer>
+                <SearchInput
+                  searchableData={opportunities}
+                  searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
+                  placeholder={t('components.search-input.search')}
+                  onSearch={(data) => setFilteredOpportunities(data)}
+                />
               }
               searching={opportunities.length > filteredOpportunities.length}
               // TODO Redirect address is wrong

@@ -21,6 +21,7 @@ const ADDRESSES = {
   YFI: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
   BLUEPILLNFT: '0x35f5A420ef9BCc748329021FBD4ed0986AbdF201',
   WOOFYNFT: '0x0966a53f2533EaF01D0bB2fa0E2274f3002287F1',
+  LEDGER_PARTNER_ID: '0x558247e365be655f9144e1a0140D793984372Ef3',
 };
 
 const NETWORK_SETTINGS: NetworkSettings = {
@@ -57,7 +58,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     zapsEnabled: false,
     labsEnabled: false,
     ironBankEnabled: true,
-    earningsEnabled: true,
+    earningsEnabled: false,
     notifyEnabled: false,
     blockExplorerUrl: 'https://ftmscan.com',
     txConfirmations: 10,
@@ -113,8 +114,8 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_SLIPPAGE: 0.01,
     IRON_BANK_MAX_RATIO: 0.8,
     ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
-    DEFAULT_THEME: 'classic',
-    AVAILABLE_THEMES: ['light', 'dark', 'cyberpunk', 'classic'],
+    DEFAULT_THEME: 'system-prefs',
+    AVAILABLE_THEMES: ['system-prefs', 'light', 'dark', 'cyberpunk', 'classic'],
     AVAILABLE_CUSTOM_THEMES: ['explorer'],
     DEFAULT_ALERT_TIMEOUT: 3000,
     DEFAULT_LANG: 'en',

@@ -12,8 +12,8 @@ import {
   WalletSelectors,
 } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
-import { VaultDetailPanels, ViewContainer, InfoCard } from '@components/app';
-import { SpinnerLoading, Button, Text } from '@components/common';
+import { VaultDetailPanels, ViewContainer, SliderCard } from '@components/app';
+import { SpinnerLoading, Text } from '@components/common';
 import {
   parseHistoricalEarningsUnderlying,
   parseHistoricalEarningsUsd,
@@ -24,17 +24,10 @@ import {
 import { getConfig } from '@config';
 import { device } from '@themes/default';
 
-const BackButton = styled(Button)`
-  background-color: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
-`;
-
-const StyledInfoCard = styled(InfoCard)`
+const StyledSliderCard = styled(SliderCard)`
   padding: 3rem;
   margin: auto;
 `;
-
-const ViewHeader = styled.div``;
 
 const VaultDetailView = styled(ViewContainer)`
   display: flex;
@@ -42,7 +35,7 @@ const VaultDetailView = styled(ViewContainer)`
   align-items: flex-start;
 
   @media ${device.mobile} {
-    ${StyledInfoCard} {
+    ${StyledSliderCard} {
       padding: 1rem;
     }
   }
@@ -78,7 +71,7 @@ export const VaultDetail = () => {
     const assetAddress: string | undefined = location.pathname.split('/')[2];
     if (!assetAddress || !isValidAddress(assetAddress)) {
       dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
-      history.push('/home');
+      history.push('/portfolio');
       return;
     }
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress: assetAddress }));
@@ -124,14 +117,10 @@ export const VaultDetail = () => {
 
   return (
     <VaultDetailView>
-      <ViewHeader>
-        <BackButton onClick={() => history.push(`/vaults`)}>{t('components.back-button.label')}</BackButton>
-      </ViewHeader>
-
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
 
       {!generalLoading && !selectedVault && (
-        <StyledInfoCard
+        <StyledSliderCard
           header={t('vaultdetails:no-vault-supported-card.header', { network: currentNetworkSettings.name })}
           Component={
             <Text>

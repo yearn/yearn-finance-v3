@@ -8,9 +8,19 @@ const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
   display: flex;
   justify-content: center;
   margin: 0;
-  padding: 0.6rem ${({ theme }) => theme.card.padding};
+  // NOTE Card element uses card padding and layout padding, also other card child components too, doing this
+  // all the card components will work fine when modifying either of the paddings, since the paddings are
+  // related between them
+  padding: calc(${({ theme }) => theme.card.padding} / 4) calc(${({ theme }) => theme.layoutPadding} / 2);
   font-size: 1.4rem;
   flex-shrink: 0;
+
+  &:first-child {
+    padding-left: ${({ theme }) => theme.card.padding};
+  }
+  &:last-child {
+    padding-right: ${({ theme }) => theme.card.padding};
+  }
 
   > * {
     margin-top: 0;
@@ -29,14 +39,19 @@ const StyledCardElement = styled(CardElement)<{ stripes?: boolean }>`
 
 const TitleCardElement = styled(CardElement)`
   margin: 0;
-  padding: 0.6rem ${({ theme }) => theme.card.padding};
+  padding: 0.6rem calc(${({ theme }) => theme.layoutPadding} / 2);
   flex-shrink: 0;
   user-select: none;
+
+  &:first-child {
+    padding-left: ${({ theme }) => theme.card.padding};
+  }
+  &:last-child {
+    padding-right: ${({ theme }) => theme.card.padding};
+  }
 `;
 
 const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolean }>`
-  // display: grid;
-  // grid-template-columns: 6rem 16.8rem 16.8rem 16.8rem 16.8rem 1fr; */
   align-items: stretch;
   justify-content: stretch;
   ${({ pointer }) => pointer && `cursor: pointer;`};
@@ -45,22 +60,25 @@ const StyledCardContent = styled(CardContent)<{ wrap?: boolean; pointer?: boolea
   &:hover {
     background-color: ${({ theme }) => theme.colors.selectionBar};
 
-    ${StyledCardElement} {
-      color: ${({ theme }) => theme.colors.onSurfaceH2Hover};
-    }
-    .action-button {
-      background: ${({ theme }) => theme.colors.vaultActionButton.selected.background};
-      color: ${({ theme }) => theme.colors.vaultActionButton.selected.color};
-      border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
-    }
+    // NOTE If you want to change other elements on selection bar hover
+    // ${StyledCardElement} {
+    //   color: ${({ theme }) => theme.colors.titles};
+    // }
+    // .action-button {
+    //   background: ${({ theme }) => theme.colors.vaultActionButton.selected.background};
+    //   color: ${({ theme }) => theme.colors.vaultActionButton.selected.color};
+    //   border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
+    // }
   }
 `;
 
 const StyledCardHeader = styled(CardHeader)`
   display: flex;
-  flex-wrap: center;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.6rem;
+  margin-bottom: 2rem;
+  grid-gap: 1.2rem;
 `;
 
 const StyledCard = styled(Card)`
@@ -71,7 +89,7 @@ const StyledCard = styled(Card)`
 const SectionContent = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2rem;
+  grid-gap: 1.2rem;
   align-items: center;
 `;
 
@@ -146,14 +164,16 @@ export const DetailCard = <T,>({
   return (
     <StyledCard {...props}>
       <StyledCardHeader header={header}>
-        {!!filterBy && (
-          <SectionContent>
-            {filterLabel}
-            <ToggleButton selected={filterToggle} setSelected={setFilterToggle} />
-          </SectionContent>
-        )}
+        <SectionContent>
+          {!!filterBy && (
+            <>
+              {filterLabel}
+              <ToggleButton ariaLabel={filterLabel} selected={filterToggle} setSelected={setFilterToggle} />
+            </>
+          )}
+          {SearchBar}
+        </SectionContent>
       </StyledCardHeader>
-      {SearchBar}
 
       {!!displayData.length && (
         <CardContent>

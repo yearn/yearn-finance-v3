@@ -1,0 +1,11 @@
+{
+  "ironbank-card": {
+    "desc-1": "La Banca di Ferro offre un modo semplice per esporsi a nuove monete. Ottieni dei prestiti usando le tue cripto come collaterale, senza dover vendere. Non hai trovata la giusta cassaforte per le tue monete? Dalle in prestito alla Banca di Ferro per guadagnare degli interssi.",
+    "desc-2": "Ma stai attento e ricorda, anche con dei mezzi semplici come la Banca di Ferro, esistono  rischi legati agli smart contract e  rischi sistemici dovuti alle cripto sottostanti.",
+    "header": "Lascia le tue cripto lavorare per te"
+  },
+  "no-ironbank-card": {
+    "header": "La Banca di Ferro non è ancora disponibile su {{network}}",
+    "text": "Controlla di nuovo fra un po' di tempo."
+  }
+}

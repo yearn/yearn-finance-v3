@@ -106,7 +106,6 @@ export const IronBankBorrowTx: FC<IronBankBorrowTxProps> = ({ onClose }) => {
       onAction: borrow,
       status: actionsStatus.borrow,
       disabled: !isValidAmount,
-      contrast: true,
     },
   ];
 

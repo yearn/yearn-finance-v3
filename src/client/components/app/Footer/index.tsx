@@ -1,16 +1,6 @@
 import styled from 'styled-components';
 
-import { ReactComponent as AlchemyCertified } from '@assets/images/alchemy-certified.svg';
-import {
-  Icon,
-  MediumIcon,
-  Link,
-  TwitterIcon,
-  DiscordIcon,
-  GithubIcon,
-  TelegramIcon,
-  RedditIcon,
-} from '@components/common';
+import { Icon, MediumIcon, Link, TwitterIcon, DiscordIcon, RedditIcon } from '@components/common';
 import { useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
 
@@ -20,28 +10,24 @@ interface FooterProps {
 
 const footerLinks = [
   {
-    link: 'https://gov.yearn.finance',
-    name: 'gov',
+    link: '/disclaimer',
+    name: 'disclaimer',
   },
   {
     link: 'https://docs.yearn.finance',
     name: 'docs',
   },
   {
+    link: 'https://gov.yearn.finance',
+    name: 'gov',
+  },
+  {
+    link: 'https://blog.yearn.finance/',
+    name: 'blog',
+  },
+  {
     link: 'https://github.com/yearn/yearn-security/blob/master/SECURITY.md',
     name: 'security',
-  },
-  // {
-  //   link: 'https://v1.yearn.finance',
-  //   name: 'v1',
-  // },
-  // {
-  //   link: 'https://yearn.finance',
-  //   name: 'v2',
-  // },
-  {
-    link: '/disclaimer',
-    name: 'disclaimer',
   },
 ];
 
@@ -49,54 +35,50 @@ const socialLinks = [
   {
     link: 'https://twitter.com/iearnfinance',
     icon: TwitterIcon,
-  },
-  {
-    link: 'https://github.com/yearn',
-    icon: GithubIcon,
-  },
-  {
-    link: 'https://discord.yearn.finance',
-    icon: DiscordIcon,
-  },
-  {
-    link: 'https://medium.com/iearn',
-    icon: MediumIcon,
-  },
-  {
-    link: 'https://t.me/yearnfinance',
-    icon: TelegramIcon,
+    ariaLabel: 'Visit Yearn Twitter',
   },
   {
     link: 'https://reddit.com/r/yearn_finance',
     icon: RedditIcon,
+    ariaLabel: 'Visit Yearn Reddit',
+  },
+  {
+    link: 'https://discord.yearn.finance',
+    icon: DiscordIcon,
+    ariaLabel: 'Join Yearn Discord',
+  },
+  {
+    link: 'https://medium.com/iearn',
+    icon: MediumIcon,
+    ariaLabel: 'Visit Yearn Medium',
   },
 ];
 
+const SocialSectionIconSize = '2.4rem';
 const SocialSection = styled.div`
-  --icon-size: 3rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, var(--icon-size));
+  grid-template-columns: repeat(auto-fit, ${SocialSectionIconSize});
   align-items: center;
-  gap: 0.6rem;
+  justify-content: flex-end;
+  grid-gap: ${({ theme }) => theme.layoutPadding};
   width: 100%;
-  min-width: calc(var(--icon-size) * ${socialLinks.length} / 2 + 3rem);
+  min-width: calc(${SocialSectionIconSize} * ${socialLinks.length} / 2 + 3rem);
 `;
 
 const LinkSection = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-wrap: wrap;
-  column-gap: 4rem;
+  column-gap: ${({ theme }) => theme.card.padding};
   row-gap: 1rem;
   flex: 1;
-  font-size: 1.8rem;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.icons.variant};
 `;
 
 const StyledLink = styled(Link)`
   padding: 1rem;
   margin: -1rem;
+  font-size: 1.6rem;
 `;
 
 const StyledIconLink = styled(Link)`
@@ -107,93 +89,64 @@ const StyledIconLink = styled(Link)`
 `;
 
 const StyledIcon = styled(Icon)`
-  width: var(--icon-size);
-  height: var(--icon-size);
-  fill: ${({ theme }) => theme.colors.secondary};
-`;
-
-const LogoSection = styled.a`
-  display: flex;
-  justify-content: flex-end;
-`;
-
-const AlchemyLogo = styled(AlchemyCertified)`
-  width: 17.2rem;
-  fill: ${({ theme }) => theme.colors.secondary};
+  width: ${SocialSectionIconSize};
+  height: ${SocialSectionIconSize};
+  fill: ${({ theme }) => theme.colors.icons.variant};
 `;
 
 const StyledFooter = styled.footer`
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: auto auto;
   align-items: center;
   width: 100%;
   flex-wrap: wrap;
   gap: 1rem;
   row-gap: 1.5rem;
-  padding: 4rem;
+  padding: ${({ theme }) => theme.card.padding};
   border-radius: ${({ theme }) => theme.globalRadius};
-  background-color: ${({ theme }) => theme.colors.surface};
   max-width: ${({ theme }) => theme.globalMaxWidth};
-  margin-top: ${({ theme }) => theme.layoutPadding};
 
   @media ${device.tablet} {
     grid-template-columns: 1fr;
     padding: 2rem;
 
     ${SocialSection},
-    ${LinkSection},
-    ${LogoSection} {
+    ${LinkSection} {
       justify-content: center;
     }
   }
 
   ${StyledLink},
-  ${StyledIconLink},
-  ${AlchemyLogo} {
+  ${StyledIconLink} {
     transition: filter 200ms ease-in-out;
-    filter: opacity(50%);
+    filter: opacity(100%);
 
     &:hover {
-      filter: opacity(100%);
+      filter: opacity(70%);
     }
   }
 `;
-
-const socialIcons = (
-  <SocialSection>
-    {socialLinks.map((social, index) => {
-      return (
-        <StyledIconLink href={social.link} target="_blank" key={index}>
-          <StyledIcon Component={social.icon} />
-        </StyledIconLink>
-      );
-    })}
-  </SocialSection>
-);
 
 export const Footer = ({ className }: FooterProps) => {
   const { t } = useAppTranslation('common');
 
   return (
     <StyledFooter className={className}>
-      {socialIcons}
-
       <LinkSection>
-        {footerLinks.map((footerLink) => {
-          return (
-            <StyledLink href={footerLink.link} key={footerLink.name} target="_blank">
-              {t(`footer.links.${footerLink.name}`)}
-            </StyledLink>
-          );
-        })}
+        {footerLinks.map((footerLink) => (
+          <StyledLink href={footerLink.link} key={footerLink.name} target="_blank">
+            {t(`footer.links.${footerLink.name}`)}
+          </StyledLink>
+        ))}
       </LinkSection>
 
-      <LogoSection
-        href="https://dashboard.alchemyapi.io/signup?referral=c642981b-19e0-45e9-a169-0b80b633992b"
-        target="_blank"
-      >
-        <AlchemyLogo />
-      </LogoSection>
+      <SocialSection>
+        {socialLinks.map((social, index) => (
+          <StyledIconLink href={social.link} target="_blank" key={index} aria-label={social.ariaLabel}>
+            <StyledIcon Component={social.icon} />
+          </StyledIconLink>
+        ))}
+      </SocialSection>
     </StyledFooter>
   );
 };

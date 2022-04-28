@@ -26,19 +26,21 @@ import { MetamaskLogo } from '@assets/images';
 import { GeneralVaultView, StrategyMetadata, Network } from '@types';
 
 const StyledLineChart = styled(LineChart)`
-  margin-top: 2.4rem;
+  margin-top: ${({ theme }) => theme.card.padding};
 `;
 
 const ChartValue = styled(Text)`
+  display: block;
   font-size: 2.4rem;
-  font-weight: 600;
-  margin-top: 0.5rem;
+  font-weight: 700;
+  margin-top: 0.8rem;
 `;
 
 const ChartValueLabel = styled(Text)`
-  font-size: 1.4rem;
+  display: block;
+  font-size: 1.6rem;
   font-weight: 400;
-  color: ${({ theme }) => theme.colors.onSurfaceSH1};
+  color: ${({ theme }) => theme.colors.titles};
 `;
 
 const ChartValueContainer = styled.div`
@@ -83,33 +85,30 @@ const IconOverImage = styled(Icon)`
   width: 50%;
 `;
 
-const StyledTabPanel = styled(TabPanel)`
-  margin-top: 1.5rem;
-`;
+const StyledTabPanel = styled(TabPanel)``;
 
-const ActionsTabs = styled(Tabs)`
-  margin-top: 1.2rem;
-`;
+const ActionsTabs = styled(Tabs)``;
 
 const VaultActions = styled(Card)`
   display: flex;
   flex-direction: column;
-  width: 41.6rem;
+  width: 42rem;
   align-self: stretch;
+  padding: 0;
 
-  @media ${device.tabletL} {
+  @media (max-width: 1180px) {
     width: 100%;
   } ;
 `;
 
 const OverviewInfo = styled(Card)`
-  padding: ${({ theme }) => theme.card.padding};
+  padding: ${({ theme }) => theme.layoutPadding};
   flex-shrink: 0;
 
   a {
     text-decoration: underline;
     color: inherit;
-    color: ${({ theme }) => theme.colors.onSurfaceSH1};
+    color: ${({ theme }) => theme.colors.titles};
   }
 `;
 
@@ -121,15 +120,22 @@ const OverviewStrategies = styled.div`
   overflow-y: auto;
   max-height: 23rem;
 
-  > div:not(:first-child) {
+  > *:not(:first-child) {
     margin-top: ${({ theme }) => theme.card.padding};
   }
 `;
 
-const StyledText = styled(Text)`
+const StyledText = styled(Text)<{ accent?: boolean }>`
   display: block;
-  color: ${(props) => props.theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.titles};
   white-space: initial;
+
+  ${({ theme, accent }) =>
+    accent &&
+    `
+    color: ${theme.colors.primary};
+    font-weight: bold;
+  `};
 `;
 
 const StyledLink = styled.a`
@@ -146,8 +152,8 @@ const InfoValueRow = styled.div`
   grid-template-columns: 9.6rem 1fr;
   grid-gap: 0.6rem;
   white-space: nowrap;
-  color: ${({ theme }) => theme.colors.onSurfaceSH1};
-  font-size: 1.4rem;
+  color: ${({ theme }) => theme.colors.titles};
+  font-size: 1.6rem;
   align-items: center;
 
   > * {
@@ -165,7 +171,7 @@ const TextWithIcon = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 10rem;
+    max-width: 10rem;
   }
 `;
 
@@ -174,17 +180,14 @@ const StyledIcon = styled(Icon)`
   flex-shrink: 0;
 `;
 
-const InfoValueTitle = styled(Text)`
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: 0.3rem;
-  color: ${(props) => props.theme.colors.secondary};
-`;
-
 const TokenInfo = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+
+  ${InfoValueRow}:not(:first-child) {
+    margin-top: 0.8rem;
+  }
 `;
 
 const TokenLogo = styled(Card)`
@@ -195,7 +198,7 @@ const TokenLogo = styled(Card)`
 const OverviewTokenInfo = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
-  grid-gap: 4.7rem;
+  grid-gap: ${({ theme }) => theme.card.padding};
 `;
 
 const Row = styled.div`
@@ -213,7 +216,10 @@ const VaultOverview = styled(Card)`
   align-self: stretch;
   max-width: 100%;
 
-  > div:not(:first-child) {
+  > *:not(:first-child) {
+    margin-top: 0.8rem;
+  }
+  > ${StyledCardHeader}:not(:first-child) {
     margin-top: ${({ theme }) => theme.card.padding};
   }
 
@@ -228,7 +234,7 @@ const VaultOverview = styled(Card)`
     }
   }
 
-  @media (max-width: 360px) {
+  @media (max-width: 460px) {
     ${OverviewTokenInfo} {
       display: flex;
       flex-direction: column;
@@ -315,6 +321,7 @@ export const VaultDetailPanels = ({
     }
   };
 
+  const vaultNameTitle = `${selectedVault.name} (${selectedVault.displayName})`;
   const shouldShowChart = (data: Serie[]): boolean => {
     // Only show earnings chart if more than one data point
     return data.length > 0 && data[0].data?.length > 1;
@@ -341,10 +348,10 @@ export const VaultDetailPanels = ({
       <Row>
         <VaultOverview>
           <StyledCardHeaderContainer>
-            <StyledCardHeader header={t('vaultdetails:overview-panel.header')} />
+            <StyledCardHeader header={vaultNameTitle} />
             {displayAddToken ? (
               <RelativeContainer onClick={handleAddToken}>
-                <StyledImg src={MetamaskLogo} />
+                <StyledImg src={MetamaskLogo} alt="Add token to Metamask" />
                 <IconOverImage Component={AddCircleIcon} />
               </RelativeContainer>
             ) : null}
@@ -355,18 +362,17 @@ export const VaultDetailPanels = ({
             />
           </StyledCardHeaderContainer>
 
+          <StyledCardHeader header={t('vaultdetails:overview-panel.header')} />
           <OverviewTokenInfo>
             <TokenLogo variant="background">
-              <TokenIcon icon={selectedVault.displayIcon} symbol={selectedVault.displayName} size="xBig" />
+              <TokenIcon icon={selectedVault.displayIcon} symbol={selectedVault.displayName} size="xxBig" />
             </TokenLogo>
 
             <TokenInfo>
-              <InfoValueTitle>{selectedVault?.displayName}</InfoValueTitle>
-
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.apy')}</span>
                 <TextWithIcon>
-                  <StyledText fontWeight="bold">
+                  <StyledText accent>
                     <span>{formatApy(selectedVault.apyData, selectedVault.apyType)}</span>
                   </StyledText>
                   {getTooltip({
@@ -394,9 +400,8 @@ export const VaultDetailPanels = ({
           </OverviewTokenInfo>
 
           <StyledCardHeader header={t('vaultdetails:overview-panel.about')} />
-
           {selectedVault.token.description && (
-            <OverviewInfo variant="surface" cardSize="micro">
+            <OverviewInfo variant="background" cardSize="micro">
               <StyledCardContent>
                 <Markdown>{selectedVault.token.description}</Markdown>
               </StyledCardContent>
@@ -409,7 +414,7 @@ export const VaultDetailPanels = ({
 
               <OverviewStrategies>
                 {strategies.map((strategy) => (
-                  <OverviewInfo variant="surface" cardSize="micro" key={strategy.address}>
+                  <OverviewInfo variant="background" cardSize="micro" key={strategy.address}>
                     <StyledCardHeader subHeader={strategy.name} />
                     <StyledCardContent>
                       <Markdown>{strategy.description}</Markdown>
@@ -422,7 +427,6 @@ export const VaultDetailPanels = ({
         </VaultOverview>
 
         <VaultActions>
-          <StyledCardHeader header={t('vaultdetails:vault-actions-panel.header')} />
           <ActionsTabs value={selectedTab} onChange={handleTabChange}>
             {isVaultMigratable && <Tab value="migrate">{t('vaultdetails:vault-actions-panel.migrate')}</Tab>}
             {!hideDeposit && <Tab value="deposit">{t('vaultdetails:vault-actions-panel.deposit')}</Tab>}
