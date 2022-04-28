@@ -123,7 +123,7 @@ export const TxError: FC<TxErrorProps> = ({ errorTitle, errorDescription, errorT
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    //clean state once error message changes
+    // NOTE Clean state once error message changes
     setIsExpanded(false);
   }, [errorTitle, errorDescription]);
 
