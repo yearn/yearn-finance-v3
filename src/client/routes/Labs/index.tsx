@@ -306,14 +306,14 @@ export const Labs = () => {
           {currentNetworkSettings.labsEnabled && (
             <StyledRecommendationsCard
               header={t('components.recommendations.header')}
-              items={recommendations
-                .sort((a, b) => Number(b.apyData) - Number(a.apyData))
-                .map(({ displayName, apyData, displayIcon }) => ({
-                  icon: displayIcon,
-                  name: displayName,
-                  info: formatPercent(apyData, 2),
-                  infoDetail: 'EYY',
-                }))}
+              items={recommendations.map(({ address, displayName, apyData, displayIcon }) => ({
+                // header: 'Special Token',
+                icon: displayIcon,
+                name: displayName,
+                info: formatPercent(apyData, 2),
+                infoDetail: 'EYY',
+                // onAction: () => history.push(`/vault/${address}`),
+              }))}
             />
           )}
 

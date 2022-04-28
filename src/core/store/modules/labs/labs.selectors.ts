@@ -150,7 +150,7 @@ const selectLabsOpportunities = createSelector([selectLabs], (labs) => {
 
 const selectRecommendations = createSelector([selectLabs], (labs) => {
   // TODO criteria
-  return labs.slice(0, 3);
+  return labs.slice(0, 3).sort((a, b) => Number(b.apyData) - Number(a.apyData));
 });
 
 const selectSelectedLab = createSelector([selectLabs, selectSelectedLabAddress], (labs, selectedLabAddress) => {
