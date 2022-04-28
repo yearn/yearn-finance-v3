@@ -34,7 +34,7 @@ const navLinks = [
     icon: LabsIcon,
   },
   {
-    to: '/ironbank',
+    to: 'https://ironbank.io',
     text: 'navigation.ironbank',
     icon: IronBankIcon,
   },

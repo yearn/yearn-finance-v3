@@ -15,12 +15,6 @@ import { BackscratcherLockTxModal, BackscratcherClaimTxModal, BackscratcherReinv
 import { LabDepositTxModal } from './LabDepositTxModal';
 import { LabWithdrawTxModal } from './LabWithdrawTxModal';
 import { LabStakeTxModal } from './LabStakeTxModal';
-import {
-  IronBankSupplyTxModal,
-  IronBankWithdrawTxModal,
-  IronBankBorrowTxModal,
-  IronBankRepayTxModal,
-} from './IronBank';
 
 const modalTimeout = 300;
 
@@ -182,30 +176,6 @@ export const Modals = () => {
       {activeModal === 'labStakeTx' && (
         <CSSTransition key={'labStakeTx'} timeout={modalTimeout} classNames="slideBottom">
           <LabStakeTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'IronBankSupplyTx' && (
-        <CSSTransition key={'IronBankSupplyTx'} timeout={modalTimeout} classNames="slideBottom">
-          <IronBankSupplyTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'IronBankWithdrawTx' && (
-        <CSSTransition key={'IronBankWithdrawTx'} timeout={modalTimeout} classNames="slideBottom">
-          <IronBankWithdrawTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'IronBankBorrowTx' && (
-        <CSSTransition key={'IronBankBorrowTx'} timeout={modalTimeout} classNames="slideBottom">
-          <IronBankBorrowTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'IronBankRepayTx' && (
-        <CSSTransition key={'IronBankRepayTx'} timeout={modalTimeout} classNames="slideBottom">
-          <IronBankRepayTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 
