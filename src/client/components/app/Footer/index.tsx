@@ -122,7 +122,7 @@ const StyledFooter = styled.footer`
     filter: opacity(100%);
 
     &:hover {
-      filter: opacity(30%);
+      filter: opacity(70%);
     }
   }
 `;
