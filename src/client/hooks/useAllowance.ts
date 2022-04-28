@@ -20,7 +20,12 @@ type AllowanceError = {
   stack?: string;
 };
 
-const isError = (err: unknown): err is Error => err instanceof Error;
+const isError = (err: unknown): err is AllowanceError => {
+  if (err instanceof Error && err.message) return true;
+
+  const errObject = err as Record<string, unknown>;
+  return !!errObject && errObject.hasOwnProperty('message') && typeof errObject.message === 'string';
+};
 
 export function useAllowance({
   tokenAddress,
@@ -58,7 +63,7 @@ export function useAllowance({
           setResult(result);
           setError(undefined);
         } catch (e) {
-          if (isError(e) && e.message) {
+          if (isError(e)) {
             setError(e);
           } else {
             setError({ message: JSON.stringify(e) });
