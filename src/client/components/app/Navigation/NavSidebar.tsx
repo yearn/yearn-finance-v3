@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { useLocation, useHistory, Link } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 import { useAppTranslation, useAppSelector } from '@hooks';
 import { SettingsSelectors } from '@store';
 import { NavigationLink } from '@components/app';
-import { Icon, Logo } from '@components/common';
+import { Link, Icon, Logo, RedirectIcon } from '@components/common';
 
 const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
@@ -34,6 +34,12 @@ const LinkList = styled.div`
   display: grid;
   gap: 2.4rem;
   margin-top: 2.4rem;
+`;
+
+const LinkRedirectIcon = styled(Icon)`
+  display: inline-block;
+  fill: currentColor;
+  width: 1.1rem;
 `;
 
 const LinkIcon = styled(Icon)`
@@ -137,8 +143,11 @@ export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
     <LinkList className="link-list">
       {navLinks.map((link, index) => {
         return (
-          <RouterLink to={link.to} key={index} selected={currentPath === link.to}>
-            <LinkIcon Component={link.icon} /> <LinkText>{t(link.text)}</LinkText>
+          <RouterLink to={link.to} key={index} selected={currentPath === link.to} external={link.external}>
+            <LinkIcon Component={link.icon} />
+            <LinkText>
+              {t(link.text)} {link.external && <LinkRedirectIcon Component={RedirectIcon} />}
+            </LinkText>
           </RouterLink>
         );
       })}
