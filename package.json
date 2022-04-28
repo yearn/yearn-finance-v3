@@ -78,13 +78,19 @@
     "web-vitals": "1.1.2"
   },
   "devDependencies": {
+    "babel-plugin-styled-components": "^2.0.7",
     "locize-cli": "7.10.1"
   },
   "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"]
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": ["prettier --write"]
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
   },
   "husky": {
     "hooks": {
