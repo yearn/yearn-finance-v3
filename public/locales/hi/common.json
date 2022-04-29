@@ -12,6 +12,7 @@
     },
     "list-card": {
       "apy": "APY",
+      "asset": "संपत्ति",
       "available-deposit": "जमा करने के लिए उपलब्ध",
       "available-stake": "दांव के लिए उपलब्ध",
       "available-supply": "आपूर्ति के लिए उपलब्ध",
@@ -29,11 +30,28 @@
       "supplying": "आपूर्ति",
       "tokens": "मुद्रा",
       "total-assets": "कुल संपत्ति",
-      "value": "मूल्य"
+      "value": "मूल्य",
+      "wallet": "बटुआ"
     },
     "no-wallet": "बटुआ जुड़ा नहीं है",
     "recommendations": {
       "header": "उच्चतम APY"
+    },
+    "search-input": {
+      "search": "खोज"
+    },
+    "tooltips": {
+      "base-apr": "आधार CRV APR ",
+      "boost": "बढ़ावा",
+      "convex-apr": "कॉन्वेक्स APR",
+      "gross-apr": "सकल APR",
+      "inception-apy": "आरंभ APY",
+      "monthly-apy": "महीने के APY",
+      "net-apy": "कुल APY",
+      "pool-apy": "पूल APY",
+      "rewards-apr": "बोनस इनाम APR",
+      "vecrv-apy": "veCRV APY",
+      "weekly-apy": "साप्ताहिक APY"
     },
     "transaction": {
       "approve": "अनुमोदन",
@@ -57,9 +75,11 @@
       "reinvest": "पुनर्निवेश",
       "repay": "चुकाना",
       "reward": "इनाम",
+      "sign": "चिह्न",
       "stake": "दांव लगाना",
       "status": {
         "calculating": "गणना जारी...",
+        "done": "पूर्ण",
         "exit": "प्रस्थान",
         "simulating": "सिम्युलेशन जारी",
         "transaction-completed": "लेन-देन पूर्ण"
@@ -72,7 +92,8 @@
       "token-input": {
         "search-select-token": "एक मुद्रा चुनें",
         "search-select-vault": "तिजोरी चुनें",
-        "yield": "उपज"
+        "yield": "उपज",
+        "you-have": "आपके पास"
       },
       "wallet-balance": "बटुआ राशि",
       "withdraw": "निकालेंं"
@@ -86,6 +107,7 @@
     "borrow-limit-used": "उधार निकासी सीमा पार",
     "borrowed": "उधारित",
     "earnings": "आय",
+    "est-yearly-earnings": "अनुमानित वार्षिक आय",
     "est-yearly-yield": "अनुमानित वार्षिक उपज ",
     "holdings": "संपत्ति",
     "supplied": "आपूर्तित",
@@ -99,6 +121,7 @@
   },
   "footer": {
     "links": {
+      "blog": "ब्लॉग",
       "disclaimer": "अस्वीकरण",
       "docs": "दस्तावेज़",
       "gov": "शासन",
@@ -111,6 +134,7 @@
     "es": "Español",
     "fr": "Français",
     "hi": "हिंदी",
+    "it": "इटालियन ",
     "ja": "日本語",
     "pt": "Português",
     "tr": "Türk",
@@ -125,6 +149,7 @@
     "disclaimer": "अस्वीकरण",
     "ironbank": "आयरन बैंक",
     "labs": "प्रयोगशाला",
+    "portfolio": "पोर्टफोलियो",
     "settings": "सेटिंग्स",
     "vault": "तिजोरी विवरण",
     "vaults": "तिजोरियाँ",
@@ -135,6 +160,7 @@
     "cyberpunk": "साइबरपंक",
     "dark": "मोनो डार्क",
     "explorer": "एक्सप्लोरर ",
-    "light": "मोनो लाइट"
+    "light": "मोनो लाइट",
+    "system-prefs": "प्रणाली"
   }
 }
