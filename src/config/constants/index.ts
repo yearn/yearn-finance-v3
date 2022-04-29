@@ -118,7 +118,7 @@ export const getConstants = memoize((): Constants => {
     AVAILABLE_CUSTOM_THEMES: ['explorer'],
     DEFAULT_ALERT_TIMEOUT: 3000,
     DEFAULT_LANG: 'en',
-    SUPPORTED_LANGS: ['en', 'es'],
+    SUPPORTED_LANGS: ['en', 'de', 'es', 'fr', 'hi', 'ja', 'pt', 'tr', 'vi', 'zh'],
     DUST_AMOUNT_USD: '10000000',
     YEARN_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
   };
