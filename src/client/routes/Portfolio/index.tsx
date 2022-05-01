@@ -20,9 +20,8 @@ import {
   DetailCard,
   TokenIcon,
   ActionButtons,
-  SliderCard,
 } from '@components/app';
-import { SpinnerLoading, Text, Button } from '@components/common';
+import { SpinnerLoading, Text } from '@components/common';
 import { toBN, halfWidthCss, humanize, normalizeAmount } from '@utils';
 import { getConfig } from '@config';
 import { getConstants } from '@config/constants';
