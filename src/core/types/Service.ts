@@ -4,10 +4,6 @@ import {
   Token,
   TokenDynamicData,
   Position,
-  IronBankMarket,
-  CyTokenUserMetadata,
-  IronBankMarketDynamic,
-  IronBankUserSummary,
   Lab,
   LabDynamic,
   LabUserMetadata,
@@ -251,53 +247,6 @@ export interface ClaimProps {
 export interface ReinvestProps {
   network: Network;
   accountAddress: Address;
-}
-
-// *************** IRON BANK ***************
-
-export interface IronBankService {
-  getSupportedMarkets: (props: GetSupportedMarketsProps) => Promise<IronBankMarket[]>;
-  getUserMarketsPositions: (props: IronBankGenericGetUserDataProps) => Promise<Position[]>;
-  getUserMarketsMetadata: (props: IronBankGenericGetUserDataProps) => Promise<CyTokenUserMetadata[]>;
-  getUserIronBankSummary: (props: GetUserIronBankSummaryProps) => Promise<IronBankUserSummary>;
-  getMarketsDynamicData: (props: GetMarketDynamicDataProps) => Promise<IronBankMarketDynamic[]>;
-  executeTransaction: (props: IronBankTransactionProps) => Promise<TransactionResponse>;
-  enterOrExitMarket: (props: EnterOrExitMarketProps) => Promise<TransactionResponse>;
-}
-
-export interface GetSupportedMarketsProps {
-  network: Network;
-}
-
-export interface IronBankGenericGetUserDataProps {
-  network: Network;
-  userAddress: Address;
-  marketAddresses?: string[];
-}
-
-export interface GetUserIronBankSummaryProps {
-  network: Network;
-  userAddress: Address;
-}
-
-export interface GetMarketDynamicDataProps {
-  network: Network;
-  marketAddresses: string[];
-}
-
-export interface IronBankTransactionProps {
-  network: Network;
-  userAddress: Address;
-  marketAddress: string;
-  amount: Wei;
-  action: 'supply' | 'borrow' | 'withdraw' | 'repay';
-}
-
-export interface EnterOrExitMarketProps {
-  network: Network;
-  userAddress: Address;
-  marketAddress: string;
-  actionType: 'enterMarket' | 'exitMarket';
 }
 
 // *************** TRANSACTION ***************

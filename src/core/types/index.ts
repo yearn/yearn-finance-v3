@@ -3,7 +3,6 @@ export * from './Blockchain';
 export * from './Config';
 export * from './Container';
 export * from './General';
-export * from './IronBank';
 export * from './Lab';
 export * from './Modals';
 export * from './Position';

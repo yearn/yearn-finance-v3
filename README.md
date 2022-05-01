@@ -1,6 +1,6 @@
 # yearn.finance
 
-<img src="https://img.shields.io/badge/dynamic/json.svg?style=plastic&color=2096F3&label=locize&query=%24.translatedPercentage&url=https://api.locize.app/badgedata/e4f1bb87-9ed4-4f7c-8adc-d6ca4a329e52&suffix=%+translated&link=https://www.locize.com" />
+<img src="https://img.shields.io/badge/dynamic/json.svg?style=plastic&color=2096F3&label=locize&query=%24.translatedPercentage&url=https://api.locize.app/badgedata/1c6d6900-5989-49fe-b221-0001423041d2&suffix=%+translated&link=https://www.locize.com" />
 
 ## Contributing
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
-import { WalletIcon, VaultIcon, LabsIcon, IronBankIcon, SettingsIcon } from '@components/common';
+import { WalletIcon, VaultIcon, LabsIcon, SettingsIcon, IronBankIcon } from '@components/common';
 
 import { NavSidebar } from './NavSidebar';
 import { NavTabbar } from './NavTabbar';
@@ -13,11 +13,12 @@ export interface NavigationLink {
   text: string;
   icon: ElementType;
   hideMobile?: boolean;
+  external?: boolean;
 }
 
 const StyledNavigation = styled.div``;
 
-const navLinks = [
+const navLinks: NavigationLink[] = [
   {
     to: '/portfolio',
     text: 'navigation.portfolio',
@@ -34,9 +35,10 @@ const navLinks = [
     icon: LabsIcon,
   },
   {
-    to: '/ironbank',
+    to: 'https://app.ib.xyz',
     text: 'navigation.ironbank',
     icon: IronBankIcon,
+    external: true,
   },
   {
     to: '/settings',
@@ -64,8 +66,7 @@ export const Navigation = () => {
 
   return (
     <StyledNavigation>
-      {!isMobile && <NavSidebar navLinks={navLinks} />}
-      {isMobile && <NavTabbar navLinks={navLinks} />}
+      {isMobile ? <NavTabbar navLinks={navLinks} /> : <NavSidebar navLinks={navLinks} />}
     </StyledNavigation>
   );
 };

@@ -1,13 +1,7 @@
-
 {
   "components": {
     "back-button": {
       "label": "Ritorna alla pagina precedente"
-    },
-    "beta-card": {
-      "desc-1": "La terza versiona del sito di Yearn è entrata in produzione, e aggiunge simulazione dei depositi, funzionalità della Banca di Ferro, una nuova sezione Laboratori, temi personalizzabili, ed altro. Continueremo ad aggiungere nuove funzioni e soluzioni a problemi ogni giorno, e se trovi dei bug oppure ci vuoi dare dei feedback facci sapere",
-      "desc-2": "Per la migrazione delle cassaforti v1 (o se ti senti nostalgico), stiamo mantenendo l'interfaccia utente V2, ancora disponibile a",
-      "header": "Beta non più!"
     },
     "connect-button": {
       "connect": "Connetti Wallet"
@@ -15,16 +9,6 @@
     "empty-list": {
       "searching-text": "Perfavore cerca un altro asset",
       "text": "Nessun asset da mostrare"
-    },
-    "tooltips": {
-      "gross-apr": "Gross APR",
-      "net-apy": "Net APY",
-      "vecrv-apy": "veCRV APY",
-      "boost": "Boost",
-      "pool-apy": "Pool APY",
-      "rewards-apr": "Bonus Rewards APR",
-      "base-apr": "Base CRV APR",
-      "convex-apr": "Convex APR"
     },
     "list-card": {
       "apy": "APY",
@@ -40,7 +24,6 @@
       "earned": "Guadagnati",
       "lend-apy": "APY Prestiti",
       "market-liquidity": "Liquidità del mercato",
-      "name": "Nome",
       "opportunities": "Opportunità",
       "price": "Prezzo",
       "supplying": "In prestito",
@@ -51,6 +34,16 @@
     "no-wallet": "Nessun wallet connesso",
     "recommendations": {
       "header": "APY massimo"
+    },
+    "tooltips": {
+      "base-apr": "Base CRV APR",
+      "boost": "Boost",
+      "convex-apr": "Convex APR",
+      "gross-apr": "Gross APR",
+      "net-apy": "Net APY",
+      "pool-apy": "Pool APY",
+      "rewards-apr": "Bonus Rewards APR",
+      "vecrv-apy": "veCRV APY"
     },
     "transaction": {
       "approve": "Approva",
@@ -87,7 +80,6 @@
       "to-vault": "Alla Cassaforte",
       "to-wallet": "Al Wallet",
       "token-input": {
-        "balance": "Balance",
         "search-select-token": "Seleziona una Moneta",
         "search-select-vault": "Seleziona un vault",
         "yield": "Interessi"
@@ -105,7 +97,6 @@
     "borrowed": "Presi in prestito",
     "earnings": "Guadagni",
     "est-yearly-yield": "Interessi annui stimati",
-    "header": "Dashboard",
     "holdings": "Possedimenti",
     "supplied": "In prestito",
     "total-net-worth": "Valore totale del patrimonio",
@@ -130,12 +121,12 @@
     "es": "Español",
     "fr": "Français",
     "hi": "हिंदी",
+    "it": "Italiano",
     "ja": "日本語",
     "pt": "Português",
     "tr": "Türk",
     "vi": "Tiếng Việt",
     "zh": "中文"
-    "it": "Italiano",
   },
   "navigation": {
     "copyright": {
@@ -143,7 +134,6 @@
       "small": "©"
     },
     "disclaimer": "Disclaimer",
-    "home": "Home",
     "ironbank": "Banca di Ferro",
     "labs": "Laboratori",
     "settings": "Impostazioni",
