@@ -103,7 +103,7 @@ export interface TabPanelProps extends StyledSystemProps {
 }
 
 const StyledTabPanel = styled.div<{ hidden?: boolean }>`
-  ${({ hidden }) => (hidden ? 'display: none;' : 'display: flex;flex: 1;')}
+  ${({ hidden }) => (hidden ? 'display: none;' : 'display: flex; flex: 1;')}
   ${styledSystem}
 `;
 
