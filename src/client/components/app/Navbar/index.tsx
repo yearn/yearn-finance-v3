@@ -6,7 +6,6 @@ import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
-import { inIframe } from '@utils';
 
 const StyledOptionList = styled(OptionList)`
   width: 15rem;
@@ -84,10 +83,12 @@ interface NavbarProps {
   walletAddress?: string;
   addressEnsName?: string;
   onWalletClick?: () => void;
+  disableWalletSelect?: boolean;
   selectedNetwork: Network;
   networkOptions: Network[];
   onNetworkChange: (network: string) => void;
   disableNetworkChange?: boolean;
+  hideDisabledControls?: boolean;
 }
 
 export const Navbar = ({
@@ -97,14 +98,15 @@ export const Navbar = ({
   walletAddress,
   addressEnsName,
   onWalletClick,
+  disableWalletSelect,
   selectedNetwork,
   networkOptions,
   onNetworkChange,
   disableNetworkChange,
+  hideDisabledControls,
 }: NavbarProps) => {
   const { isMobile } = useWindowDimensions();
   const { NETWORK_SETTINGS } = getConfig();
-  const isInIframe = inIframe();
 
   const dropdownSelectedNetwork = {
     value: selectedNetwork,
@@ -135,20 +137,22 @@ export const Navbar = ({
       )}
 
       <StyledNavbarActions>
-        <StyledOptionList
-          selected={dropdownSelectedNetwork}
-          setSelected={(option) => onNetworkChange(option.value)}
-          options={dropdownNetworkOptions}
-          hideIcons={isMobile}
-          isLoading={disableNetworkChange}
-          disabled={disableNetworkChange || isInIframe}
-        />
+        {!hideDisabledControls && (
+          <StyledOptionList
+            selected={dropdownSelectedNetwork}
+            setSelected={(option) => onNetworkChange(option.value)}
+            options={dropdownNetworkOptions}
+            hideIcons={isMobile}
+            isLoading={disableNetworkChange}
+            disabled={disableNetworkChange}
+          />
+        )}
 
         <ConnectWalletButton
           address={walletAddress}
           ensName={addressEnsName}
           onClick={() => onWalletClick && onWalletClick()}
-          disabled={isInIframe}
+          disabled={disableWalletSelect}
         />
       </StyledNavbarActions>
     </StyledNavbar>

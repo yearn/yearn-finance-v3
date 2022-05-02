@@ -14,6 +14,7 @@ export interface NavigationLink {
   icon: ElementType;
   hideMobile?: boolean;
   external?: boolean;
+  optional?: boolean;
 }
 
 const StyledNavigation = styled.div``;
@@ -33,12 +34,14 @@ const navLinks: NavigationLink[] = [
     to: '/labs',
     text: 'navigation.labs',
     icon: LabsIcon,
+    optional: true,
   },
   {
     to: 'https://app.ib.xyz',
     text: 'navigation.ironbank',
     icon: IronBankIcon,
     external: true,
+    optional: true,
   },
   {
     to: '/settings',
@@ -48,8 +51,13 @@ const navLinks: NavigationLink[] = [
   },
 ];
 
-export const Navigation = () => {
+interface NavigationProps {
+  hideOptionals?: boolean;
+}
+
+export const Navigation = ({ hideOptionals }: NavigationProps) => {
   const { isMobile, isTablet, isDesktop } = useWindowDimensions();
+  const displayLinks = navLinks.filter((link) => !(link.optional && hideOptionals));
 
   // NOTE Auto collapse sidenav on mobile
   const dispatch = useAppDispatch();
@@ -66,7 +74,7 @@ export const Navigation = () => {
 
   return (
     <StyledNavigation>
-      {isMobile ? <NavTabbar navLinks={navLinks} /> : <NavSidebar navLinks={navLinks} />}
+      {isMobile ? <NavTabbar navLinks={displayLinks} /> : <NavSidebar navLinks={displayLinks} />}
     </StyledNavigation>
   );
 };
