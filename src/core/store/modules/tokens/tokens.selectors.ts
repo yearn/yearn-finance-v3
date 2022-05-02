@@ -5,6 +5,10 @@ import { AllowancesMap, Balance, RootState, Status, Token, TokenView } from '@ty
 import { toBN } from '@utils';
 import { getConfig } from '@config';
 
+import { AppSelectors } from '../app/app.selectors';
+
+const { selectServicesEnabled } = AppSelectors;
+
 /* ---------------------------------- State --------------------------------- */
 const selectTokensState = (state: RootState) => state.tokens;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
@@ -17,18 +21,21 @@ const selectGetUserTokensStatus = (state: RootState) => state.tokens.statusMap.u
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
 
 /* ----------------------------- Main Selectors ----------------------------- */
-const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user): TokenView[] => {
-  const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
-  const tokens = userTokensAddresses
-    .filter((address) => !!tokensMap[address])
-    .map((address) => {
-      const tokenData = tokensMap[address];
-      const userTokenData = userTokensMap[address];
-      const allowancesMap = userTokensAllowancesMap[address] ?? {};
-      return createToken({ tokenData, userTokenData, allowancesMap });
-    });
-  return tokens.filter((token) => toBN(token.balance).gt(0));
-});
+const selectUserTokens = createSelector(
+  [selectTokensMap, selectTokensUser, selectServicesEnabled],
+  (tokensMap, user, servicesEnabled): TokenView[] => {
+    const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
+    const tokens = userTokensAddresses
+      .filter((address) => !!tokensMap[address])
+      .map((address) => {
+        const tokenData = tokensMap[address];
+        const userTokenData = userTokensMap[address];
+        const allowancesMap = userTokensAllowancesMap[address] ?? {};
+        return createToken({ tokenData, userTokenData, allowancesMap });
+      });
+    return tokens.filter((token) => toBN(token.balance).gt(0) && (!token.sourceIsZapper || servicesEnabled.zapper));
+  }
+);
 
 const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
   let totalBalance = toBN('0');
@@ -40,28 +47,33 @@ const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
   };
 });
 
-const selectZapInTokens = createSelector([selectUserTokens], (userTokens) => {
-  return userTokens.filter(({ isZapable }) => isZapable);
+const selectZapInTokens = createSelector([selectUserTokens, selectServicesEnabled], (userTokens, servicesEnabled) => {
+  return userTokens.filter(({ isZapable }) => isZapable && servicesEnabled.zapper);
 });
 
-const selectZapOutTokens = createSelector([selectTokensMap, selectUserTokensMap], (tokensMap, userTokensMap) => {
-  const { ZAP_OUT_TOKENS } = getConfig();
-  const tokens = ZAP_OUT_TOKENS.map((address) => {
-    const tokenData = tokensMap[address];
-    const userTokenData = userTokensMap[address];
-    return {
-      address: tokenData?.address,
-      name: tokenData?.name,
-      symbol: tokenData?.symbol,
-      decimals: parseInt(tokenData?.decimals),
-      icon: tokenData?.icon,
-      balance: userTokenData?.balance ?? '0',
-      balanceUsdc: userTokenData?.balanceUsdc ?? '0',
-      priceUsdc: tokenData?.priceUsdc ?? '0',
-    };
-  });
-  return tokens;
-});
+const selectZapOutTokens = createSelector(
+  [selectTokensMap, selectUserTokensMap, selectServicesEnabled],
+  (tokensMap, userTokensMap, servicesEnabled) => {
+    if (!servicesEnabled.zapper) return [];
+
+    const { ZAP_OUT_TOKENS } = getConfig();
+    const tokens = ZAP_OUT_TOKENS.map((address) => {
+      const tokenData = tokensMap[address];
+      const userTokenData = userTokensMap[address];
+      return {
+        address: tokenData?.address,
+        name: tokenData?.name,
+        symbol: tokenData?.symbol,
+        decimals: parseInt(tokenData?.decimals),
+        icon: tokenData?.icon,
+        balance: userTokenData?.balance ?? '0',
+        balanceUsdc: userTokenData?.balanceUsdc ?? '0',
+        priceUsdc: tokenData?.priceUsdc ?? '0',
+      };
+    });
+    return tokens;
+  }
+);
 
 const selectToken = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user) =>
   memoize((tokenAddress: string): TokenView => {
@@ -106,6 +118,7 @@ export function createToken(props: CreateTokenProps): TokenView {
     description: tokenData?.metadata?.description ?? '',
     website: tokenData?.metadata?.website ?? '',
     isZapable: tokenData?.supported.zapper ?? false,
+    sourceIsZapper: tokenData?.dataSource === 'zapper',
     allowancesMap: allowancesMap ?? {},
   };
 }
