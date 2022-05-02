@@ -1,0 +1,21 @@
+import { createReducer } from '@reduxjs/toolkit';
+
+import { PartnerState } from '@types';
+
+import { PartnerActions } from './partner.actions';
+
+export const partnerInitialState: PartnerState = {
+  id: undefined,
+  address: undefined,
+};
+
+const { changePartner } = PartnerActions;
+
+const partnerReducer = createReducer(partnerInitialState, (builder) => {
+  builder.addCase(changePartner, (state, { payload: { partnerId, address } }) => {
+    state.id = partnerId;
+    state.address = address;
+  });
+});
+
+export default partnerReducer;

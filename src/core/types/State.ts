@@ -1,5 +1,6 @@
 import { Alert } from './Alerts';
 import { Address, Network } from './Blockchain';
+import { PartnerId } from './Partner';
 import { Theme } from './Settings';
 import { Status } from './Status';
 import {
@@ -27,6 +28,7 @@ export interface RootState {
   labs: LabsState;
   settings: SettingsState;
   user: UserState;
+  partner: PartnerState;
 }
 
 export interface AppState {
@@ -240,4 +242,9 @@ export interface UserState {
   statusMap: {
     getNftBalance: Status;
   };
+}
+
+export interface PartnerState {
+  id: PartnerId | undefined;
+  address: Address | undefined;
 }
