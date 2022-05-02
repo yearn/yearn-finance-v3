@@ -30,6 +30,7 @@ import { ReactComponent as WalletIcon } from '@assets/icons/wallet.svg';
 import { ReactComponent as WarningFilledIcon } from '@assets/icons/warning-filled.svg';
 import { ReactComponent as WarningIcon } from '@assets/icons/warning.svg';
 import { ReactComponent as ErrorIcon } from '@assets/icons/error.svg';
+import { ReactComponent as RedirectIcon } from '@assets/icons/redirect.svg';
 // NOTE NETWORK Icons
 import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
 import { ReactComponent as FantomIcon } from '@assets/icons/networks/fantom.svg';
@@ -81,6 +82,7 @@ export {
   LabsIcon,
   CheckRoundIcon,
   WarningIcon,
+  RedirectIcon,
   WarningFilledIcon,
   ErrorIcon,
   ChevronDownIcon,
