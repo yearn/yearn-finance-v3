@@ -9,7 +9,6 @@ import { WalletActions } from '../wallet/wallet.actions';
 import { TokensActions } from '../tokens/tokens.actions';
 import { VaultsActions } from '../vaults/vaults.actions';
 import { LabsActions } from '../labs/labs.actions';
-import { IronBankActions } from '../ironBank/ironBank.actions';
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
@@ -20,7 +19,6 @@ const clearAppData = createAsyncThunk<void, void, ThunkAPI>('app/clearAppData', 
     dispatch(TokensActions.clearTokensData()),
     dispatch(VaultsActions.clearVaultsData()),
     dispatch(LabsActions.clearLabsData()),
-    dispatch(IronBankActions.clearIronBankData()),
   ]);
 });
 
@@ -29,7 +27,6 @@ const clearUserAppData = createAsyncThunk<void, void, ThunkAPI>('app/clearUserAp
     dispatch(TokensActions.clearUserTokenState()),
     dispatch(VaultsActions.clearUserData()),
     dispatch(LabsActions.clearUserData()),
-    dispatch(IronBankActions.clearUserData()),
   ]);
 });
 
@@ -69,9 +66,6 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
       case 'labs':
         await dispatch(LabsActions.initiateLabs());
         break;
-      case 'ironbank':
-        await dispatch(IronBankActions.initiateIronBank());
-        break;
     }
   },
   {
@@ -90,11 +84,6 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
       case 'portfolio':
         dispatch(VaultsActions.getUserVaultsSummary());
         dispatch(LabsActions.getUserLabsPositions({}));
-
-        // TODO Check if we still need this
-        dispatch(IronBankActions.getIronBankSummary()); // use only this when lens summary calculation fixed
-        dispatch(IronBankActions.getUserMarketsPositions({})); // remove this when lens summary calculation fixed
-        dispatch(IronBankActions.getUserMarketsMetadata({})); // remove this when lens summary calculation fixed
         break;
       case 'vaults':
         dispatch(VaultsActions.getUserVaultsSummary());
@@ -107,11 +96,6 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
         break;
       case 'labs':
         dispatch(LabsActions.getUserLabsPositions({}));
-        break;
-      case 'ironbank':
-        dispatch(IronBankActions.getIronBankSummary());
-        dispatch(IronBankActions.getUserMarketsPositions({}));
-        dispatch(IronBankActions.getUserMarketsMetadata({}));
         break;
     }
   },

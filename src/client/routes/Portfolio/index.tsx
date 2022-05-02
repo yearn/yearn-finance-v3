@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { BannerEventAmsterdam } from '@yearn/web-lib';
 
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import {
@@ -32,10 +31,6 @@ const StyledViewContainer = styled(ViewContainer)`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: min-content;
-`;
-
-const AmsterdamCard = styled.div`
-  grid-column: 1 / 3;
 `;
 
 const HeaderCard = styled(SummaryCard)`
@@ -169,10 +164,6 @@ export const Portfolio = () => {
 
   return (
     <StyledViewContainer>
-      {/* TODO Remove banner after event and clean slidercard background code */}
-      <AmsterdamCard>
-        <BannerEventAmsterdam />
-      </AmsterdamCard>
       <HeaderCard items={summaryCardItems} cardSize="small" />
 
       {walletIsConnected && (
