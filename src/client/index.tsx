@@ -28,8 +28,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-color: rgb(var(--color-background));
-    color: rgb(var(--color-typo-secondary));
+    background-color: ${(props) => props.theme.colors.background};
+    color: ${(props) => props.theme.colors.texts};
     font-size: 1.6rem;
     overflow: hidden;
     overflow-y: scroll;
