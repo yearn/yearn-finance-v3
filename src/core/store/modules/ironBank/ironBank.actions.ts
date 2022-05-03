@@ -2,7 +2,6 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { AlertsActions, TokensActions } from '@store';
 import {
   CyTokenUserMetadata,
   Address,
@@ -12,6 +11,9 @@ import {
   Position,
 } from '@types';
 import { toBN, getNetwork, validateExitMarket, validateNetwork } from '@utils';
+
+import { AlertsActions } from '../alerts/alerts.actions';
+import { TokensActions } from '../tokens/tokens.actions';
 
 const setSelectedMarketAddress = createAction<{ marketAddress: string }>('ironbank/setSelectedMarketAddress');
 const clearIronBankData = createAction<void>('ironbank/clearIronBankData');

@@ -1,10 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { union } from 'lodash';
 
-import { TokensState, UserTokenActionsMap } from '@types';
-import { initialStatus } from '@types';
+import { TokensState, UserTokenActionsMap, initialStatus } from '@types';
 
-import { VaultsActions } from '../..';
+import { VaultsActions } from '../vaults/vaults.actions';
 
 import { TokensActions } from './tokens.actions';
 

@@ -2,7 +2,6 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { TokensActions } from '@store';
 import {
   Position,
   Vault,
@@ -29,6 +28,8 @@ import {
   parseError,
 } from '@utils';
 import { getConfig } from '@config';
+
+import { TokensActions } from '../tokens/tokens.actions';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Setters                                  */
