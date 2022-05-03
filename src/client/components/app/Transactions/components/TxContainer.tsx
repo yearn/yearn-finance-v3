@@ -62,7 +62,7 @@ const StyledTxContainer = styled.div`
   flex-direction: column;
   padding: ${({ theme }) => theme.card.padding};
   width: 100%;
-  height: 53rem;
+  flex: 1;
   background: ${({ theme }) => theme.colors.txModalColors.background};
   color: ${({ theme }) => theme.colors.txModalColors.text};
   border-radius: ${({ theme }) => theme.globalRadius};
