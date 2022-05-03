@@ -141,7 +141,12 @@ export const Portfolio = () => {
     switch (action) {
       case 'invest':
         dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
-        dispatch(ModalsActions.openModal({ modalName: 'depositTx' }));
+        dispatch(
+          ModalsActions.openModal({
+            modalName: 'depositTx',
+            modalProps: { allowTokenSelect: false, allowVaultSelect: true },
+          })
+        );
         break;
       default:
         break;
