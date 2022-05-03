@@ -291,6 +291,7 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
 
 export const VaultsSelectors = {
   selectVaultsState,
+  selectVaultsMap,
   selectVaults,
   selectLiveVaults,
   selectDeprecatedVaults,
