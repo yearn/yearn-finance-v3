@@ -42,7 +42,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   if (inLedgerIframe()) {
     if (network.current !== 'mainnet') await dispatch(NetworkActions.changeNetwork({ network: 'mainnet' }));
     await dispatch(WalletActions.walletSelect({ walletName: 'Iframe', network: 'mainnet' }));
-    await dispatch(PartnerActions.changePartner({ partnerId: 'ledger', address: CONTRACT_ADDRESSES.LEDGER }));
+    await dispatch(PartnerActions.changePartner({ id: 'ledger', address: CONTRACT_ADDRESSES.LEDGER }));
   } else if (inIframe()) {
     if (network.current !== 'mainnet') await dispatch(NetworkActions.changeNetwork({ network: 'mainnet' }));
   } else if (wallet.name && wallet.name !== 'Iframe') {

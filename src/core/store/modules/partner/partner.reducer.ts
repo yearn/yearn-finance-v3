@@ -12,8 +12,8 @@ export const partnerInitialState: PartnerState = {
 const { changePartner } = PartnerActions;
 
 const partnerReducer = createReducer(partnerInitialState, (builder) => {
-  builder.addCase(changePartner, (state, { payload: { partnerId, address } }) => {
-    state.id = partnerId;
+  builder.addCase(changePartner, (state, { payload: { id, address } }) => {
+    state.id = id;
     state.address = address;
   });
 });
