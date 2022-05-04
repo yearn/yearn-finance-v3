@@ -185,7 +185,7 @@ export const Layout: FC = ({ children }) => {
     <StyledLayout>
       <Alerts />
       <Modals />
-      <Navigation hideOptionals={hideControls} />
+      <Navigation hideOptionalLinks={hideControls} />
 
       <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
         <Navbar

@@ -52,12 +52,12 @@ const navLinks: NavigationLink[] = [
 ];
 
 interface NavigationProps {
-  hideOptionals?: boolean;
+  hideOptionalLinks?: boolean;
 }
 
-export const Navigation = ({ hideOptionals }: NavigationProps) => {
+export const Navigation = ({ hideOptionalLinks }: NavigationProps) => {
   const { isMobile, isTablet, isDesktop } = useWindowDimensions();
-  const displayLinks = navLinks.filter((link) => !(link.optional && hideOptionals));
+  const displayLinks = navLinks.filter((link) => !(link.optional && hideOptionalLinks));
 
   // NOTE Auto collapse sidenav on mobile
   const dispatch = useAppDispatch();
