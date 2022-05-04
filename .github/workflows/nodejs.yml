@@ -46,8 +46,8 @@ jobs:
 
       - name: Install project dependencies
         run: yarn --prefer-offline
-#        env:
-#          NODE_AUTH_TOKEN: "${{ github.token }}"
+        env:
+          NODE_AUTH_TOKEN: "${{ github.token }}"
         id: install
 
       - name: Install project dependencies
