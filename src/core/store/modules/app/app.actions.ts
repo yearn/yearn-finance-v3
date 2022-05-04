@@ -11,6 +11,7 @@ import { VaultsActions } from '../vaults/vaults.actions';
 import { LabsActions } from '../labs/labs.actions';
 import { NetworkActions } from '../network/network.actions';
 import { PartnerActions } from '../partner/partner.actions';
+import { SettingsActions } from '../settings/settings.actions';
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
@@ -38,9 +39,10 @@ const clearUserAppData = createAsyncThunk<void, void, ThunkAPI>('app/clearUserAp
 
 const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_arg, { dispatch, getState, extra }) => {
   const { CONTRACT_ADDRESSES } = extra.config;
-  const { wallet, network } = getState();
+  const { wallet, network, settings } = getState();
   if (inLedgerIframe()) {
     if (network.current !== 'mainnet') await dispatch(NetworkActions.changeNetwork({ network: 'mainnet' }));
+    if (settings.signedApprovalsEnabled) await dispatch(SettingsActions.toggleSignedApprovals());
     await dispatch(WalletActions.walletSelect({ walletName: 'Iframe', network: 'mainnet' }));
     await dispatch(PartnerActions.changePartner({ id: 'ledger', address: CONTRACT_ADDRESSES.LEDGER }));
   } else if (inIframe()) {
