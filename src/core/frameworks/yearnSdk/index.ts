@@ -16,7 +16,7 @@ export class YearnSdkImpl implements YearnSdk {
       const networkId = getNetworkId(network) as SdkNetwork;
       const sdkInstance = new Yearn(networkId, {
         provider,
-        partnerId: isLedger && networkId === 1 ? CONTRACT_ADDRESSES.LEDGER : undefined,
+        partnerId: isLedger && networkId === 1 ? CONTRACT_ADDRESSES.LEDGER_PARTNER_ID : undefined,
         ...(YEARN_SUBGRAPH_KEY && {
           subgraph: {
             mainnetSubgraphEndpoint: `https://gateway.thegraph.com/api/${YEARN_SUBGRAPH_KEY}/subgraphs/id/${YEARN_SUBGRAPH_ID}`,
