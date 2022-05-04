@@ -8,6 +8,9 @@ import { TokenDynamicData, Token, Balance, Integer } from '@types';
 /* -------------------------------------------------------------------------- */
 
 const setSelectedTokenAddress = createAction<{ tokenAddress?: string }>('tokens/setSelectedTokenAddress');
+const setTokenAllowance = createAction<{ tokenAddress: string; spenderAddress: string; allowance: Integer }>(
+  'tokens/setTokenAllowance'
+);
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
@@ -149,6 +152,7 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
 
 export const TokensActions = {
   setSelectedTokenAddress,
+  setTokenAllowance,
   getTokens,
   getTokensDynamicData,
   getUserTokens,

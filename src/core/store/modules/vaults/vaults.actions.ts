@@ -12,7 +12,6 @@ import {
   VaultUserMetadata,
   Address,
   Wei,
-  TransactionResponse,
   TokenAllowance,
 } from '@types';
 import {
@@ -182,7 +181,7 @@ const approveDeposit = createAsyncThunk<
   ThunkAPI
 >(
   'vaults/approveDeposit',
-  async ({ vaultAddress, tokenAddress }, { dispatch, getState, extra }) => {
+  async ({ vaultAddress, tokenAddress }, { getState, extra }) => {
     const { vaults, wallet, network } = getState();
     const vaultData = vaults.vaultsMap[vaultAddress];
     const { vaultService, transactionService } = extra.services;
@@ -199,7 +198,7 @@ const approveDeposit = createAsyncThunk<
       vaultAddress: vaultData.address,
     });
 
-    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
+    await transactionService.handleTransaction({ tx, network: network.current });
 
     const { spender } = await vaultService.getVaultAllowance({
       network: network.current,
@@ -233,7 +232,7 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string; tokenAddres
       tokenAddress,
     });
 
-    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
+    await transactionService.handleTransaction({ tx, network: network.current });
   },
   {
     serializeError: parseError,
@@ -447,7 +446,7 @@ const getVaultAllowance = createAsyncThunk<
     vaultAddress: string;
   },
   ThunkAPI
->('vaults/getVaultAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState }) => {
+>('vaults/getVaultAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState, dispatch }) => {
   const {
     services: { vaultService },
   } = extra;
@@ -456,12 +455,22 @@ const getVaultAllowance = createAsyncThunk<
 
   if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-  return vaultService.getVaultAllowance({
+  const tokenAllowance = await vaultService.getVaultAllowance({
     network: network.current,
     vaultAddress: vaultAddress,
     tokenAddress,
     accountAddress: userAddress,
   });
+
+  await dispatch(
+    TokensActions.setTokenAllowance({
+      tokenAddress,
+      spenderAddress: tokenAllowance.spender,
+      allowance: tokenAllowance.amount,
+    })
+  );
+
+  return tokenAllowance;
 });
 
 const migrateVault = createAsyncThunk<

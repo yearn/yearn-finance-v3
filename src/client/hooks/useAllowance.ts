@@ -47,7 +47,7 @@ export function useAllowance({
           if (isLab) {
             promiseResult = await dispatch(
               LabsActions.getLabAllowance({
-                vaultAddress,
+                labAddress: vaultAddress,
                 tokenAddress,
               })
             );
