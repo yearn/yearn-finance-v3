@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js';
 
-import { AllowancesMap, IronBankUserSummary, Network } from '@types';
+import { AllowancesMap, Network } from '@types';
 import { getConfig } from '@config';
 
-import { COLLATERAL_FACTOR_DECIMALS, normalizeAmount, toBN, formatPercent } from './format';
+import { toBN, formatPercent } from './format';
 
 interface ValidateVaultDepositProps {
   sellTokenAmount: BigNumber;
@@ -111,11 +111,11 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
   if (yvTokenAmount.isZero()) return {};
 
   if (amountInWei.lt(0)) {
-    return { error: 'INVALID AMOUNT' };
+    return { error: 'Invalid amount' };
   }
 
   if (amountInWei.gt(userYvTokenBalance)) {
-    return { error: 'INSUFFICIENT FUNDS' };
+    return { error: 'Insufficient funds' };
   }
 
   return { approved: true };
@@ -157,31 +157,6 @@ export function validateMigrateVaultAllowance(props: ValidateMigrateVaultAllowan
   });
 }
 
-// ********************* Iron Bank *********************
-
-export function validateExitMarket(props: ValidateExitMarketsProps): ValidationResponse {
-  const { marketSuppliedUsdc, marketCollateralFactor, userIronBankSummary } = props;
-
-  if (!userIronBankSummary) return { error: 'USER SUMMARY IS UNDEFINED' };
-  const totalBorrowedUsdc = userIronBankSummary.borrowBalanceUsdc;
-  const totalBorrowLimitUsdc = userIronBankSummary.borrowLimitUsdc;
-
-  const marketBorrowLimit = toBN(marketSuppliedUsdc)
-    .times(normalizeAmount(marketCollateralFactor, COLLATERAL_FACTOR_DECIMALS))
-    .toFixed(0);
-
-  const futureBorrowLimit = toBN(totalBorrowLimitUsdc).minus(marketBorrowLimit);
-
-  if (futureBorrowLimit.lt(totalBorrowedUsdc)) return { error: 'INSUFFICIENT COLLATERAL TO EXIT MARKET' };
-
-  return { approved: true };
-}
-
-export interface ValidateExitMarketsProps {
-  marketSuppliedUsdc: string;
-  marketCollateralFactor: string;
-  userIronBankSummary: IronBankUserSummary | undefined;
-}
 // ********************* Labs *********************
 
 // TODO: IMPLEMENT GENERIC LAB VALIDATIONS
@@ -329,15 +304,15 @@ export function basicValidateAmount(props: BasicValidateAmountProps): Validation
   if (sellTokenAmount.isZero()) return {};
 
   if (amountInWei.lt(0)) {
-    return { error: 'INVALID AMOUNT' };
+    return { error: 'Invalid amount' };
   }
 
   if (maxAmountAllowed && amountInWei.gt(maxAmountAllowed)) {
-    return { error: 'EXCEEDED ACCEPTED AMOUNT' };
+    return { error: 'Exceeded accepted amount' };
   }
 
   if (amountInWei.gt(totalAmountAvailable)) {
-    return { error: 'INSUFFICIENT FUNDS' };
+    return { error: 'Insufficient funds' };
   }
 
   return { approved: true };

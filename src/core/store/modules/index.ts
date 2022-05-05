@@ -37,10 +37,6 @@ import { WalletSelectors } from './wallet/wallet.selectors';
 import tokensReducer, { tokensInitialState } from './tokens/tokens.reducer';
 import { TokensActions } from './tokens/tokens.actions';
 import { TokensSelectors } from './tokens/tokens.selectors';
-// Iron Bank State
-import ironBankReducer, { ironBankInitialState } from './ironBank/ironBank.reducer';
-import { IronBankActions } from './ironBank/ironBank.actions';
-import { IronBankSelectors } from './ironBank/ironBank.selectors';
 // Labs State
 import labsReducer, { labsInitialState } from './labs/labs.reducer';
 import { LabsActions } from './labs/labs.actions';
@@ -68,7 +64,6 @@ const rootReducer: Reducer<RootState> = combineReducers({
   vaults: vaultsReducer,
   wallet: walletReducer,
   tokens: tokensReducer,
-  ironBank: ironBankReducer,
   labs: labsReducer,
   settings: settingsReducer,
   user: userReducer,
@@ -88,7 +83,6 @@ export {
   ThemeActions,
   WalletActions,
   TokensActions,
-  IronBankActions,
   LabsActions,
   SettingsActions,
   UserActions,
@@ -104,7 +98,6 @@ export {
   RouteSelectors,
   VaultsSelectors,
   WalletSelectors,
-  IronBankSelectors,
   TokensSelectors,
   SettingsSelectors,
   LabsSelectors,
@@ -123,7 +116,6 @@ export {
   vaultsInitialState,
   walletInitialState,
   tokensInitialState,
-  ironBankInitialState,
   labsInitialState,
   settingsInitialState,
   userInitialState,

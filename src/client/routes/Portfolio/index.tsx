@@ -20,28 +20,17 @@ import {
   DetailCard,
   TokenIcon,
   ActionButtons,
-  SliderCard,
 } from '@components/app';
-import { SpinnerLoading, Text, Button } from '@components/common';
+import { SpinnerLoading, Text } from '@components/common';
 import { toBN, halfWidthCss, humanize, normalizeAmount } from '@utils';
 import { getConfig } from '@config';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
-import { AmsterdamLogo } from '@assets/images';
 
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: min-content;
-`;
-
-const AmsterdamButton = styled(Button)`
-  background: #0657f9;
-  color: #fff;
-`;
-
-const StyledSliderCard = styled(SliderCard)`
-  grid-column: 1 / 3;
 `;
 
 const HeaderCard = styled(SummaryCard)`
@@ -175,22 +164,6 @@ export const Portfolio = () => {
 
   return (
     <StyledViewContainer>
-      {/* TODO Remove banner after event and clean slidercard background code */}
-      <StyledSliderCard
-        header="Take the blue pill, and follow the bunny."
-        Component={
-          <Text>
-            <p>At Eth Amsterdam, the most mind expanding drug you can take is the blue pill.</p>
-            <p>Find the bunny:</p>
-            <p>
-              <a href="https://twitter.com/iearnfinance" target="_blank" rel="noreferrer">
-                <AmsterdamButton>Follow @iearnfinance</AmsterdamButton>
-              </a>
-            </p>
-          </Text>
-        }
-        background={<img src={AmsterdamLogo} alt="Amsterdam logo"></img>}
-      />
       <HeaderCard items={summaryCardItems} cardSize="small" />
 
       {walletIsConnected && (

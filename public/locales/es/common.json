@@ -1,8 +1,5 @@
 {
   "components": {
-    "search-input": {
-      "search": "Buscar"
-    },
     "back-button": {
       "label": "Volver a la última página"
     },
@@ -10,8 +7,8 @@
       "connect": "Conectar Billetera"
     },
     "list-card": {
-      "asset": "Activos",
       "apy": "APY",
+      "asset": "Activos",
       "available-deposit": "Disp. para depositar",
       "available-stake": "Disponible para stake",
       "available-supply": "Disp. para suministrar",
@@ -32,6 +29,9 @@
     "recommendations": {
       "header": "Mayor APY"
     },
+    "search-input": {
+      "search": "Buscar"
+    },
     "transaction": {
       "approve": "Aprobar",
       "claim": "Reclamar",
@@ -46,8 +46,8 @@
       "sign": "Firmar",
       "status": {
         "calculating": "Calculando...",
-        "exit": "Cerrar",
         "done": "OK",
+        "exit": "Cerrar",
         "simulating": "Simulando...",
         "transaction-completed": "Transacción completada"
       },
@@ -56,9 +56,9 @@
       "to-vault": "A vault",
       "to-wallet": "A billetera",
       "token-input": {
-        "you-have": "Tú tienes",
         "search-select-token": "Selecciona un Token",
-        "search-select-vault": "Selecciona una Vault"
+        "search-select-vault": "Selecciona una Vault",
+        "you-have": "Tú tienes"
       },
       "wallet-balance": "Balance Billetera",
       "withdraw": "Retirar"
@@ -72,8 +72,8 @@
     "borrow-limit-used": "Límite de préstamo utilizado",
     "borrowed": "Prestado",
     "earnings": "Ganancias",
-    "est-yearly-yield": "Rendimiento anual est.",
     "est-yearly-earnings": "Ganancias anuales est.",
+    "est-yearly-yield": "Rendimiento anual est.",
     "holdings": "Activos",
     "supplied": "Suministrado",
     "total-net-worth": "Valor total neto",
@@ -110,20 +110,20 @@
       "small": "©"
     },
     "disclaimer": "Disclaimer",
-    "portfolio": "Portfolio",
     "ironbank": "Iron Bank",
     "labs": "Laboratorios",
+    "portfolio": "Portfolio",
     "settings": "Ajustes",
     "vault": "Detalle de vault",
     "vaults": "Vaults",
     "wallet": "Billetera"
   },
   "themes": {
-    "system-prefs": "Sistema",
     "classic": "Classic v2",
     "cyberpunk": "Cyberpunk",
     "dark": "Mono Dark",
     "explorer": "Explorer",
-    "light": "Mono Light"
+    "light": "Mono Light",
+    "system-prefs": "Sistema"
   }
 }

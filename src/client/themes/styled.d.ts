@@ -147,8 +147,14 @@ declare module 'styled-components' {
         primary: string;
         onPrimary: string;
         loading: string;
-        error: string;
-        warning: string;
+        error: {
+          backgroundColor: string;
+          color: string;
+        };
+        warning: {
+          backgroundColor: string;
+          color: string;
+        };
         success: string;
         text: string;
         textContrast: string;

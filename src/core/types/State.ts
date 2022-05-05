@@ -9,13 +9,10 @@ import {
   Vault,
   Integer,
   Balance,
-  IronBankMarket,
   Lab,
   VaultsUserSummary,
   VaultUserMetadata,
   TransactionOutcome,
-  CyTokenUserMetadata,
-  IronBankUserSummary,
 } from './Yearn-Sdk';
 
 export interface RootState {
@@ -28,7 +25,6 @@ export interface RootState {
   vaults: VaultsState;
   wallet: WalletState;
   tokens: TokensState;
-  ironBank: IronBankState;
   labs: LabsState;
   settings: SettingsState;
   user: UserState;
@@ -178,34 +174,6 @@ export type MarketActionsTypes = keyof MarketActionsStatusMap;
 export interface UserMarketActionsStatusMap {
   getPosition: Status;
   getMetadata: Status;
-}
-
-export interface IronBankMarketPositionsMap {
-  LEND: Position;
-  BORROW: Position;
-}
-
-export interface IronBankState {
-  marketAddresses: Address[];
-  marketsMap: { [marketAddress: string]: IronBankMarket };
-  selectedMarketAddress: Address | undefined;
-  user: {
-    userIronBankSummary: IronBankUserSummary | undefined;
-    userMarketsPositionsMap: { [marketAddress: string]: IronBankMarketPositionsMap };
-    userMarketsMetadataMap: { [marketAddress: string]: CyTokenUserMetadata };
-    marketsAllowancesMap: { [marketAddress: string]: AllowancesMap };
-  };
-  statusMap: {
-    initiateIronBank: Status;
-    getMarkets: Status;
-    marketsActionsMap: { [marketAddress: string]: MarketActionsStatusMap };
-    user: {
-      getUserIronBankSummary: Status;
-      getUserMarketsPositions: Status;
-      getUserMarketsMetadata: Status;
-      userMarketsActionsMap: { [marketAddress: string]: UserMarketActionsStatusMap };
-    };
-  };
 }
 
 export interface SettingsState {
