@@ -127,7 +127,7 @@ export const Modals = () => {
 
       {activeModal === 'depositTx' && (
         <CSSTransition key={'depositTx'} timeout={modalTimeout} classNames="slideBottom">
-          <DepositTxModal onClose={closeModal} />
+          <DepositTxModal modalProps={modalProps} onClose={closeModal} />
         </CSSTransition>
       )}
 
