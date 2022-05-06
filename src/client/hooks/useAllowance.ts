@@ -46,14 +46,14 @@ export function useAllowance({
           let promiseResult;
           if (isLab) {
             promiseResult = await dispatch(
-              LabsActions.getLabAllowance({
-                vaultAddress,
+              LabsActions.getDepositAllowance({
+                labAddress: vaultAddress,
                 tokenAddress,
               })
             );
           } else {
             promiseResult = await dispatch(
-              VaultsActions.getVaultAllowance({
+              VaultsActions.getDepositAllowance({
                 vaultAddress,
                 tokenAddress,
               })

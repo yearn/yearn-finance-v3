@@ -25,7 +25,7 @@ import {
   Config,
   ApproveDepositProps,
   ApproveZapOutProps,
-  GetVaultAllowanceProps,
+  GetDepositAllowanceProps,
   TokenAllowance,
 } from '@types';
 
@@ -277,12 +277,12 @@ export class VaultServiceImpl implements VaultService {
     return yearn.vaults.approveWithdraw(accountAddress, vaultAddress, tokenAddress, amount);
   }
 
-  public async getVaultAllowance({
+  public async getDepositAllowance({
     network,
     vaultAddress,
     tokenAddress,
     accountAddress,
-  }: GetVaultAllowanceProps): Promise<TokenAllowance> {
+  }: GetDepositAllowanceProps): Promise<TokenAllowance> {
     const yearn = this.yearnSdk.getInstanceOf(network);
     const allowance = await yearn.vaults.getDepositAllowance(accountAddress, vaultAddress, tokenAddress);
 

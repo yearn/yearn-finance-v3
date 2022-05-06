@@ -34,6 +34,9 @@ const GlobalStyle = createGlobalStyle`
     overflow: hidden;
     overflow-y: scroll;
     font-family: ${(props) => props.theme.globalFont};
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: .15s
   }
 
   #root {
