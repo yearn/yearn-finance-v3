@@ -18,6 +18,7 @@ import {
 } from '@types';
 import { getContract } from '@frameworks/ethers';
 import { get, getUniqueAndCombine, toBN, USDC_DECIMALS } from '@utils';
+import { getConstants } from '@config/constants';
 
 import erc20Abi from './contracts/erc20.json';
 
@@ -121,7 +122,7 @@ export class TokenServiceImpl implements TokenService {
         zapper: false,
       },
       symbol: 'yvBOOST',
-      icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVBOOST}/logo-128.png`,
+      icon: `${getConstants().ASSETS_ICON_URL}${YVBOOST}/logo-128.png`,
     };
   }
 
@@ -146,7 +147,7 @@ export class TokenServiceImpl implements TokenService {
         zapper: false,
       },
       symbol: 'pSLPyvBOOST-ETH',
-      icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
+      icon: `${getConstants().ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
     };
   }
 

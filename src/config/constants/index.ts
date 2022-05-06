@@ -118,5 +118,6 @@ export const getConstants = memoize((): Constants => {
     SUPPORTED_LANGS: ['en', 'es'],
     DUST_AMOUNT_USD: '10000000',
     YEARN_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
+    ASSETS_ICON_URL: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/',
   };
 });
