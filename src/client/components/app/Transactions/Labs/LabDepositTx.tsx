@@ -86,7 +86,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     const fetchAllowance = async () => {
       setIsFetchingAllowance(true);
       await dispatch(
-        LabsActions.getLabAllowance({
+        LabsActions.getDepositAllowance({
           labAddress: selectedLab.address,
           tokenAddress: selectedSellTokenAddress,
         })

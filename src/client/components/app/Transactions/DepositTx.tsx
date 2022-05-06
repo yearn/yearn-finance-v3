@@ -111,7 +111,7 @@ export const DepositTx: FC<DepositTxProps> = ({
     const fetchAllowance = async () => {
       setIsFetchingAllowance(true);
       await dispatch(
-        VaultsActions.getVaultAllowance({
+        VaultsActions.getDepositAllowance({
           vaultAddress: selectedVault.address,
           tokenAddress: selectedSellTokenAddress,
         })
