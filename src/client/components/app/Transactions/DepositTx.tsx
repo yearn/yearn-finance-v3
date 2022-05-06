@@ -56,7 +56,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
-  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const vaults = useAppSelector(VaultsSelectors.selectLiveVaults);
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
@@ -107,7 +107,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!selectedVault || !selectedSellTokenAddress || !walletIsConnected) return;
+    if (!selectedVault || !selectedSellTokenAddress || !isWalletConnected) return;
     const fetchAllowance = async () => {
       setIsFetchingAllowance(true);
       await dispatch(
@@ -119,7 +119,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       setIsFetchingAllowance(false);
     };
     fetchAllowance();
-  }, [selectedSellTokenAddress, selectedVault?.address, walletIsConnected]);
+  }, [selectedSellTokenAddress, selectedVault?.address, isWalletConnected]);
 
   useEffect(() => {
     if (!selectedVault) return;

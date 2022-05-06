@@ -50,7 +50,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
-  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
@@ -82,7 +82,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   }, []);
 
   useEffect(() => {
-    if (!selectedLab || !selectedSellTokenAddress || !walletIsConnected) return;
+    if (!selectedLab || !selectedSellTokenAddress || !isWalletConnected) return;
     const fetchAllowance = async () => {
       setIsFetchingAllowance(true);
       await dispatch(
@@ -94,7 +94,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       setIsFetchingAllowance(false);
     };
     fetchAllowance();
-  }, [selectedSellTokenAddress, selectedLab?.address, walletIsConnected]);
+  }, [selectedSellTokenAddress, selectedLab?.address, isWalletConnected]);
 
   useEffect(() => {
     if (!selectedLab) return;
