@@ -54,7 +54,7 @@ export interface VaultService {
   migrate: (props: MigrateProps) => Promise<TransactionResponse>;
   approveDeposit: (props: ApproveDepositProps) => Promise<TransactionResponse>;
   approveZapOut: (props: ApproveZapOutProps) => Promise<TransactionResponse>;
-  getVaultAllowance: (props: GetVaultAllowanceProps) => Promise<TokenAllowance>;
+  getDepositAllowance: (props: GetDepositAllowanceProps) => Promise<TokenAllowance>;
 }
 
 export interface GetSupportedVaultsProps {
@@ -177,7 +177,7 @@ export interface ApproveZapOutProps {
   vaultAddress: string;
 }
 
-export interface GetVaultAllowanceProps {
+export interface GetDepositAllowanceProps {
   network: Network;
   accountAddress: string;
   tokenAddress: string;
