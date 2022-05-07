@@ -91,6 +91,7 @@ const darkTheme: DefaultTheme = {
       background: '#272727',
       borderColor: 'transparent',
       color: '#FFFFFF',
+      iconFill: dark.colors.backgroundVariant,
       // disabledContrast: '1.5',
 
       selected: {
