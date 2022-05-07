@@ -20,6 +20,7 @@ const light = {
     icons: {
       primary: '#CED5E3',
       variant: '#475570',
+      text: '#475570',
     },
     button: {
       filled: {
@@ -61,6 +62,7 @@ const lightTheme: DefaultTheme = {
     icons: {
       primary: light.colors.icons.primary,
       variant: light.colors.icons.variant,
+      text: light.colors.icons.text,
     },
     titles: light.colors.titles,
     titlesVariant: light.colors.titlesVariant,

@@ -27,6 +27,7 @@ const explorerTheme: DefaultTheme = {
     icons: {
       primary: '#AD3235',
       variant: '#FFF',
+      text: '#FFF',
     },
     titles: '#FFF',
     titlesVariant: '#AD3235',
