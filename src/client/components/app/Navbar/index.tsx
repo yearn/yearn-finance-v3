@@ -36,7 +36,7 @@ const StyledText = styled.h1<{ toneDown?: boolean }>`
   ${({ toneDown, theme }) =>
     toneDown &&
     `
-    color: ${theme.colors.texts};
+    color: ${theme.colors.textsVariant};
   `}
 `;
 

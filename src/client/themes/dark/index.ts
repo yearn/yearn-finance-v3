@@ -16,6 +16,7 @@ const dark = {
     titles: '#FFFFFF',
     titlesVariant: '#FFFFFF',
     texts: '#A8A8A8',
+    textsVariant: '#A8A8A8',
     disabled: '#A8A8A8',
     icons: {
       primary: '#A8A8A8',
@@ -61,6 +62,7 @@ const darkTheme: DefaultTheme = {
     titles: dark.colors.titles,
     titlesVariant: dark.colors.titlesVariant,
     texts: dark.colors.texts,
+    textsVariant: dark.colors.textsVariant,
     surfaceVariant: dark.colors.surfaceVariant,
 
     secondaryVariantA: '#000000',

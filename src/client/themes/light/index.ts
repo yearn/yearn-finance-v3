@@ -15,7 +15,8 @@ const light = {
     secondary: '#E0EAFF',
     titles: '#001746',
     titlesVariant: '#0657F9',
-    texts: '#7F8DA9',
+    texts: '#475570',
+    textsVariant: '#7F8DA9',
     disabled: '#CED5E3',
     icons: {
       primary: '#CED5E3',
@@ -65,6 +66,7 @@ const lightTheme: DefaultTheme = {
     titles: light.colors.titles,
     titlesVariant: light.colors.titlesVariant,
     texts: light.colors.texts,
+    textsVariant: light.colors.textsVariant,
     surfaceVariant: light.colors.surfaceVariant,
 
     secondaryVariantA: '#000000',
@@ -109,7 +111,7 @@ const lightTheme: DefaultTheme = {
       background: light.colors.surface,
       backgroundVariant: light.colors.background,
       onBackgroundVariantColor: '#6e6e6e',
-      primary: '#00A3FF',
+      primary: '#0657F9',
       onPrimary: '#FFFFFF',
       loading: '#FFA800',
       error: {

@@ -53,6 +53,7 @@ const VaultChart = styled(Card)`
 
 const StyledCardContent = styled(CardContent)`
   margin-top: 0.4rem;
+  color: ${({ theme }) => theme.colors.texts};
 `;
 
 const StyledCardHeader = styled(CardHeader)`
@@ -108,7 +109,7 @@ const OverviewInfo = styled(Card)`
   a {
     text-decoration: underline;
     color: inherit;
-    color: ${({ theme }) => theme.colors.titles};
+    //color: ${({ theme }) => theme.colors.titles};
   }
 `;
 

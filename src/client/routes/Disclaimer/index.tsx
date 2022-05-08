@@ -1,16 +1,10 @@
 import styled from 'styled-components';
 
-import { SliderCard, ViewContainer } from '@components/app';
-import { Text } from '@components/common';
+import { TextCard, ViewContainer } from '@components/app';
 
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
   grid-auto-rows: min-content;
-`;
-
-const StyledSliderCard = styled(SliderCard)`
-  max-width: 100%;
-  flex: 1;
 `;
 
 const StyledLink = styled.a`
@@ -22,19 +16,17 @@ const StyledLink = styled.a`
 export const Disclaimer = () => {
   return (
     <StyledViewContainer>
-      <StyledSliderCard
-        header=""
+      <TextCard
         Component={
-          <div>
-            <Text>
+          <article>
+            <p>
               When used on this website, the terms “debt,” “lend,” “borrow,” “collateral”, “credit,” “leverage,” “bank”,
               “borrow”, yield”, “invest” and other similar terms are not meant to be interpreted literally. Rather, such
               terms are being used to draw rough, fuzzy-logic analogies between the heavily automated and mostly
               deterministic operations of a decentralized-finance smart contract system and the discretionary
-              performance of traditional-finance transactions by people. 
-            </Text>
-            <br />
-            <Text>
+              performance of traditional-finance transactions by people.
+            </p>
+            <p>
               For example, ‘debt’ is a legally enforceable promise from a debtor to a creditor to pay an interest rate
               and eventually repay the principal. Therefore, ‘debt’ cannot exist without legal agreements and cannot be
               enforced without courts of law.{' '}
@@ -42,9 +34,8 @@ export const Disclaimer = () => {
                 By contrast, with the Iron Bank, there are no legal agreements, promises of payment or courts of law,
                 and therefore there are no debts, loans or other traditional finance transactions involved.
               </u>
-            </Text>
-            <br />
-            <Text>
+            </p>
+            <p>
               Instead, the Iron Bank consists of software (including embedded game-theoretic incentives and assumptions)
               through which people can share their tokens with other people or smart contract systems and,{' '}
               <i>
@@ -64,10 +55,9 @@ export const Disclaimer = () => {
               ‘collateral’ was worth much less than the ‘borrowed’ tokens--or that a technical issue--such as congestion
               of Ethereum--prevented them from doing so. Regardless, the ‘borrowers’ do not have an obligation to repay
               tokens when they do not want to or cannot do so, and there is no legal remedy for damaged ‘lenders’ when
-              insufficient incentives or technical problems result in a token shortfall. 
-            </Text>
-            <br />
-            <Text>
+              insufficient incentives or technical problems result in a token shortfall.
+            </p>
+            <p>
               When the Iron Bank or Vaults are used to ‘lend’ or ‘deposit’ tokens into a third-party smart-contract
               system, the situation is even less like traditional debt: the ‘borrowing’ smart contract has not posted
               ‘collateral’ and could malfunction or suffer a loss that results in complete or partial failure to return
@@ -76,9 +66,8 @@ export const Disclaimer = () => {
               under the full control of any person or persons and may be impossible to pause or reverse. A
               malfunctioning, exploited or underperforming smart contract cannot be forced (in court or otherwise) to
               pay the ‘borrowed’ tokens back.
-            </Text>
-            <br />
-            <Text>
+            </p>
+            <p>
               The stated APR or APY for a given token, vault or strategy (the 'Rate') is denominated in terms of a
               specific relevant token, not in terms of U.S. Dollars or other fiat currencies. Each Rate is a
               forward-looking projection based on a good faith belief of how to reasonably project results over the
@@ -92,9 +81,8 @@ export const Disclaimer = () => {
               the fiat-denominated value of the relevant tokens (your deposit and any tokens allocated or distributed to
               you pursuant to the Rate) declines during the deposit period. APRs and APYs are not interest rates being
               paid on a debt.
-            </Text>
-            <br />
-            <Text>
+            </p>
+            <p>
               Thus, the transactions you can effect through the Iron Bank, Vaults and other Yearn decentralized finance
               systems, while superficially similar to traditional financial transactions in some ways, are in fact very
               different. DeFi and TradFi each have unique costs and benefits, risks and protection mechanisms.{' '}
@@ -113,8 +101,8 @@ export const Disclaimer = () => {
                 code
               </StyledLink>{' '}
               before use.
-            </Text>
-          </div>
+            </p>
+          </article>
         }
       />
     </StyledViewContainer>

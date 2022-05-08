@@ -31,6 +31,7 @@ const explorerTheme: DefaultTheme = {
     titles: '#FFF',
     titlesVariant: '#AD3235',
     texts: '#FFF',
+    textsVariant: '#FFF',
     surfaceVariant: '#FFF',
 
     secondaryVariantA: 'rgba(173, 50, 53, 0.5)',
