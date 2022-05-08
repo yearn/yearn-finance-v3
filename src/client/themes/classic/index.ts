@@ -96,6 +96,7 @@ const classicTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#fff',
       color: '#fff',
+      iconFill: classic.colors.backgroundVariant,
       // disabledContrast: '0.1',
 
       selected: {

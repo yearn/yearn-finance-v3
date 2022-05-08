@@ -95,6 +95,7 @@ const lightTheme: DefaultTheme = {
       background: light.colors.secondary,
       borderColor: light.colors.secondary,
       color: light.colors.titlesVariant,
+      iconFill: light.colors.backgroundVariant,
       // disabledContrast: '1',
 
       selected: {

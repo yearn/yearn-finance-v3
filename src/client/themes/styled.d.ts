@@ -131,6 +131,7 @@ declare module 'styled-components' {
         background: string;
         borderColor: string;
         color: string;
+        iconFill: string;
         // disabledContrast: string;
 
         selected: {

@@ -61,6 +61,7 @@ const explorerTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#eeeeee',
       color: '#eeeeee',
+      iconFill: '#cfa368',
       // disabledContrast: '',
 
       selected: {
