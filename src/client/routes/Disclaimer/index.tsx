@@ -1,16 +1,46 @@
 import styled from 'styled-components';
 
+import { device } from '@themes/default';
 import { ViewContainer } from '@components/app';
 
 const StyledViewContainer = styled(ViewContainer)`
   display: grid;
   grid-auto-rows: min-content;
-  padding: ${({ theme }) => theme.card.padding};
+  padding: ${({ theme }) => theme.card.paddingVariant};
   font-size: 1.6rem;
-  line-height: 2.4rem;
+  line-height: 2.8rem;
   background: ${({ theme }) => theme.colors.surface};
   color: ${({ theme }) => theme.colors.texts};
   border-radius: ${({ theme }) => theme.globalRadius};
+
+  article {
+    margin: 0 auto;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 4rem 0 2rem 0;
+    padding: 0;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  p {
+    max-width: 60rem;
+  }
+
+  p + p {
+    margin-top: 4rem;
+  }
+
+  @media ${device.mobile} {
+    padding: ${({ theme }) => theme.card.padding};
+    p {
+      width: 100%;
+    }
+  }
 `;
 
 const StyledLink = styled.a`
@@ -23,6 +53,7 @@ export const Disclaimer = () => {
   return (
     <StyledViewContainer>
       <article>
+        <h2>Terms</h2>
         <p>
           When used on this website, the terms “debt,” “lend,” “borrow,” “collateral”, “credit,” “leverage,” “bank”,
           “borrow”, yield”, “invest” and other similar terms are not meant to be interpreted literally. Rather, such
@@ -61,6 +92,7 @@ export const Disclaimer = () => {
           cannot do so, and there is no legal remedy for damaged ‘lenders’ when insufficient incentives or technical
           problems result in a token shortfall.
         </p>
+        <h2>Deposit</h2>
         <p>
           When the Iron Bank or Vaults are used to ‘lend’ or ‘deposit’ tokens into a third-party smart-contract system,
           the situation is even less like traditional debt: the ‘borrowing’ smart contract has not posted ‘collateral’
@@ -70,6 +102,7 @@ export const Disclaimer = () => {
           control of any person or persons and may be impossible to pause or reverse. A malfunctioning, exploited or
           underperforming smart contract cannot be forced (in court or otherwise) to pay the ‘borrowed’ tokens back.
         </p>
+        <h2>Rate</h2>
         <p>
           The stated APR or APY for a given token, vault or strategy (the 'Rate') is denominated in terms of a specific
           relevant token, not in terms of U.S. Dollars or other fiat currencies. Each Rate is a forward-looking
@@ -84,6 +117,7 @@ export const Disclaimer = () => {
           (your deposit and any tokens allocated or distributed to you pursuant to the Rate) declines during the deposit
           period. APRs and APYs are not interest rates being paid on a debt.
         </p>
+        <h2>Risk</h2>
         <p>
           Thus, the transactions you can effect through the Iron Bank, Vaults and other Yearn decentralized finance
           systems, while superficially similar to traditional financial transactions in some ways, are in fact very

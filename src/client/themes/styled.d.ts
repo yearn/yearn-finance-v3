@@ -75,6 +75,7 @@ declare module 'styled-components' {
     layoutPadding: string;
     card: {
       padding: string;
+      paddingVariant: string;
     };
   }
 
