@@ -5,7 +5,6 @@ export * from './ConnectWalletButton';
 export * from './DetailCard';
 export * from './Footer';
 export * from './SliderCard';
-export * from './TextCard';
 export * from './Navbar';
 export * from './Navigation';
 export * from './NoWalletCard';

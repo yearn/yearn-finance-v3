@@ -246,7 +246,7 @@ const VaultOverview = styled(Card)`
 const StyledChartTab = styled.span<{ active?: boolean }>`
   margin: 10px;
   cursor: pointer;
-  color: ${(props) => (props.active ? props.theme.colors.secondary : props.theme.colors.primaryVariant)};
+  color: ${(props) => (props.active ? props.theme.colors.primary : props.theme.colors.texts)};
   text-decoration: ${(props) => (props.active ? 'underline' : 'none')};
   text-underline-offset: 4px;
   &: {
