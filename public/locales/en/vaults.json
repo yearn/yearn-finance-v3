@@ -4,5 +4,9 @@
     "desc-2": "Custody, and responsibility, for your holdings remains yours.",
     "desc-3": "You can withdraw anytime.",
     "header": "Spend your time wisely"
+  },
+  "banner": {
+    "header": "Goblin town or the Citadel?",
+    "desc": "Wherever we're going, relax and earn yield"
   }
 }
