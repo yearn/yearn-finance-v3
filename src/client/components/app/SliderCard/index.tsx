@@ -44,7 +44,16 @@ const StyledCardContent = styled(CardContent)`
   margin-bottom: 0;
   font-size: 1.6rem;
   line-height: 2.4rem;
+  padding-right: 12.8rem;
   color: inherit;
+
+  @media ${device.tablet} {
+    padding-right: 6rem;
+  }
+
+  @media ${device.mobile} {
+    padding-right: 0;
+  }
 `;
 
 const CardBackground = styled.div`
