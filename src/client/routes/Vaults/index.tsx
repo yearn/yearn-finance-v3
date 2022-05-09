@@ -294,11 +294,7 @@ export const Vaults = () => {
                 transform: ({ address, migrationAvailable }) => (
                   <ActionButtons
                     actions={[
-                      {
-                        name: 'Migrate',
-                        handler: () => migrateHandler(address),
-                        disabled: !migrationAvailable,
-                      },
+                      { name: 'Migrate', handler: () => migrateHandler(address), disabled: !migrationAvailable },
                       { name: 'Withdraw', handler: () => withdrawHandler(address) },
                     ]}
                   />
@@ -376,14 +372,8 @@ export const Vaults = () => {
                   transform: ({ address }) => (
                     <ActionButtons
                       actions={[
-                        {
-                          name: t('components.transaction.deposit'),
-                          handler: () => depositHandler(address),
-                        },
-                        {
-                          name: t('components.transaction.withdraw'),
-                          handler: () => withdrawHandler(address),
-                        },
+                        { name: t('components.transaction.deposit'), handler: () => depositHandler(address) },
+                        { name: t('components.transaction.withdraw'), handler: () => withdrawHandler(address) },
                       ]}
                     />
                   ),
