@@ -22,6 +22,7 @@ const classic = {
     icons: {
       primary: '#7F8DA9',
       variant: '#FFFFFF',
+      text: '#012A7C',
     },
     button: {
       filled: {
@@ -62,6 +63,7 @@ const classicTheme: DefaultTheme = {
     icons: {
       primary: classic.colors.icons.primary,
       variant: classic.colors.icons.variant,
+      text: classic.colors.icons.text,
     },
     titles: classic.colors.titles,
     titlesVariant: classic.colors.titlesVariant,
@@ -96,6 +98,7 @@ const classicTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#fff',
       color: '#fff',
+      iconFill: classic.colors.backgroundVariant,
       // disabledContrast: '0.1',
 
       selected: {

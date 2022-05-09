@@ -19,6 +19,7 @@ const cyberpunkTheme: DefaultTheme = {
     icons: {
       primary: '#0CA7C9',
       variant: '#0CA7C9',
+      text: '#0CA7C9',
     },
     titles: '#0CA7C9',
     titlesVariant: '#0CA7C9',
@@ -53,6 +54,7 @@ const cyberpunkTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#BB6FA1',
       color: '#BB6FA1',
+      iconFill: '#3D305F',
       // disabledContrast: '0.6',
 
       selected: {
