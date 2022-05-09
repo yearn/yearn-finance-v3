@@ -21,6 +21,7 @@ const dark = {
     icons: {
       primary: '#A8A8A8',
       variant: '#FFFFFF',
+      text: '#FFFFFF',
     },
     button: {
       filled: {
@@ -58,6 +59,7 @@ const darkTheme: DefaultTheme = {
     icons: {
       primary: dark.colors.icons.primary,
       variant: dark.colors.icons.variant,
+      text: dark.colors.icons.text,
     },
     titles: dark.colors.titles,
     titlesVariant: dark.colors.titlesVariant,

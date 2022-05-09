@@ -19,6 +19,7 @@ const cyberpunkTheme: DefaultTheme = {
     icons: {
       primary: '#0CA7C9',
       variant: '#0CA7C9',
+      text: '#0CA7C9',
     },
     titles: '#0CA7C9',
     titlesVariant: '#0CA7C9',
