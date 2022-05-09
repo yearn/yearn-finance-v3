@@ -19,6 +19,7 @@
 .env.test.local
 .env.production.local
 .idea
+.npmrc
 .yalc
 yalc.lock
 npm-debug.log*

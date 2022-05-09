@@ -39,6 +39,7 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { VaultView } from '@src/core/types';
+import { GoblinTown } from '@assets/images';
 
 const StyledHelperCursor = styled.span`
   cursor: help;
@@ -48,6 +49,7 @@ const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
 const StyledSliderCard = styled(SliderCard)`
   width: 100%;
+  min-height: 24rem;
 `;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
@@ -83,6 +85,7 @@ const DepositsCard = styled(DetailCard)`
     .col-name {
       width: 18rem;
     }
+
     .col-balance {
       width: 10rem;
     }
@@ -109,6 +112,7 @@ const DeprecatedCard = styled(DetailCard)`
     .col-name {
       width: 18rem;
     }
+
     .col-balance {
       width: 10rem;
     }
@@ -207,21 +211,13 @@ export const Vaults = () => {
   return (
     <ViewContainer>
       <StyledSliderCard
-        header={t('vaults:your-time-card.header')}
+        header="Goblin town or the Citadel?"
         Component={
           <Text>
-            <p>{t('vaults:your-time-card.desc-1')}</p>
-            <p>{t('vaults:your-time-card.desc-2')}</p>
-            <p>{t('vaults:your-time-card.desc-3')}</p>
+            <p>Wherever we’re going, relax and earn yield</p>
           </Text>
         }
-        // NOTE Example for slideshow array
-        // slidesContent={[
-        // {
-        //   header: 'Test header',
-        //   content: 'test content',
-        // },
-        // ]}
+        background={<img src={GoblinTown} alt="Goblin town or the Citadel?"></img>}
       />
 
       <SummaryCard items={summaryCardItems} cardSize="small" />
@@ -298,7 +294,11 @@ export const Vaults = () => {
                 transform: ({ address, migrationAvailable }) => (
                   <ActionButtons
                     actions={[
-                      { name: 'Migrate', handler: () => migrateHandler(address), disabled: !migrationAvailable },
+                      {
+                        name: 'Migrate',
+                        handler: () => migrateHandler(address),
+                        disabled: !migrationAvailable,
+                      },
                       { name: 'Withdraw', handler: () => withdrawHandler(address) },
                     ]}
                   />
@@ -376,8 +376,14 @@ export const Vaults = () => {
                   transform: ({ address }) => (
                     <ActionButtons
                       actions={[
-                        { name: t('components.transaction.deposit'), handler: () => depositHandler(address) },
-                        { name: t('components.transaction.withdraw'), handler: () => withdrawHandler(address) },
+                        {
+                          name: t('components.transaction.deposit'),
+                          handler: () => depositHandler(address),
+                        },
+                        {
+                          name: t('components.transaction.withdraw'),
+                          handler: () => withdrawHandler(address),
+                        },
                       ]}
                     />
                   ),
