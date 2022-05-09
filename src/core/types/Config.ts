@@ -47,4 +47,5 @@ export interface Constants {
   SUPPORTED_LANGS: Language[];
   DUST_AMOUNT_USD: string;
   YEARN_SUBGRAPH_ID: string;
+  ASSETS_ICON_URL: string;
 }

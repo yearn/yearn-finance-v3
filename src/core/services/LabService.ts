@@ -19,6 +19,7 @@ import {
   GetSupportedLabsProps,
 } from '@types';
 import { get, toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress, getProviderType } from '@utils';
+import { getConstants } from '@config/constants';
 
 import backscratcherAbi from './contracts/backscratcher.json';
 import y3CrvBackZapperAbi from './contracts/y3CrvBackZapper.json';
@@ -64,6 +65,7 @@ export class LabServiceImpl implements LabService {
     const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { ETH, YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+    const { ASSETS_ICON_URL } = getConstants();
     const yearn = this.yearnSdk.getInstanceOf(network);
     const providerType = getProviderType(network);
     const provider = this.web3Provider.getInstanceOf(providerType);
@@ -72,8 +74,6 @@ export class LabServiceImpl implements LabService {
       'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault&vs_currencies=usd'
     );
     const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
-
-    const ASSET_URL = 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/';
 
     // **************** BACKSCRATCHER ****************
     let backscratcherLab: Lab | undefined;
@@ -129,7 +129,7 @@ export class LabServiceImpl implements LabService {
               }
             : undefined,
           displayName: backscratcherData.name,
-          displayIcon: `${ASSET_URL}${YVECRV}/logo-128.png`,
+          displayIcon: `${ASSETS_ICON_URL}${YVECRV}/logo-128.png`,
           defaultDisplayToken: CRV,
         },
       };
@@ -170,7 +170,7 @@ export class LabServiceImpl implements LabService {
         underlyingTokenBalance,
         metadata: {
           ...yvBoostVaultDynamic.metadata,
-          displayIcon: `${ASSET_URL}${address}/logo-128.png`,
+          displayIcon: `${ASSETS_ICON_URL}${address}/logo-128.png`,
         },
       };
     } catch (error) {
@@ -228,7 +228,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: pJarRatio.toString(),
           apy: { ...pJarData.apy, net_apy: toBN(performance.toString()).dividedBy(100).toNumber() },
           displayName: 'pSLPyvBOOST-ETH',
-          displayIcon: `${ASSET_URL}${PSLPYVBOOSTETH}/logo-128.png`,
+          displayIcon: `${ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
         },
       };
