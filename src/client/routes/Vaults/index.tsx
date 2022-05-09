@@ -217,7 +217,7 @@ export const Vaults = () => {
             <p>Wherever we’re going, relax and earn yield</p>
           </Text>
         }
-        background={<img src={GoblinTown} alt="Goblin town or the Citadel?">}
+        background={<img src={GoblinTown} alt="Goblin town or the Citadel?" />}
       />
 
       <SummaryCard items={summaryCardItems} cardSize="small" />
