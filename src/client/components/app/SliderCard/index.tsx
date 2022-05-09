@@ -48,7 +48,7 @@ const StyledCardContent = styled(CardContent)`
   color: inherit;
 
   @media ${device.tablet} {
-    padding-right: 6rem;
+    padding-right: 6.4rem;
   }
 
   @media ${device.mobile} {

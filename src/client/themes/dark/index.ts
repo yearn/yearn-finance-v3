@@ -16,7 +16,7 @@ const dark = {
     titles: '#FFFFFF',
     titlesVariant: '#FFFFFF',
     texts: '#A8A8A8',
-    textsVariant: '#A8A8A8',
+    textsVariant: '#FFFFFF',
     disabled: '#A8A8A8',
     icons: {
       primary: '#A8A8A8',
