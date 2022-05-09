@@ -6,7 +6,6 @@ import { SettingsSelectors } from '@store';
 import { NavigationLink } from '@components/app';
 import { Link, Icon, Logo, RedirectIcon } from '@components/common';
 
-// const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
 
 const SidebarHeader = styled.div`
@@ -91,7 +90,7 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
     }
     &:hover {
         ${LinkIcon} {
-      fill: ${props.theme.colors.primary};
+        fill: ${props.theme.colors.primary};
     }
     ${LinkText} {
       color: ${props.theme.colors.primary};

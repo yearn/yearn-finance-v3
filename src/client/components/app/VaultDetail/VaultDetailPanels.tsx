@@ -109,7 +109,6 @@ const OverviewInfo = styled(Card)`
   a {
     text-decoration: underline;
     color: inherit;
-    //color: ${({ theme }) => theme.colors.titles};
   }
 `;
 
