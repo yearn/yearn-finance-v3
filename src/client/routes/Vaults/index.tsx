@@ -211,10 +211,10 @@ export const Vaults = () => {
   return (
     <ViewContainer>
       <StyledSliderCard
-        header={'Goblin town or the Citadel?'}
+        header={t('vaults:banner.header')}
         Component={
           <Text>
-            <p>Wherever we’re going, relax and earn yield</p>
+            <p>{t('vaults:banner.desc')}</p>
           </Text>
         }
         background={<img src={GoblinTown} alt={'Goblin town or the Citadel?'} />}
