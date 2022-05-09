@@ -12,19 +12,14 @@ import {
   LabsActions,
 } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
-import { ViewContainer, InfoCard } from '@components/app';
-import { SpinnerLoading, Button, Text } from '@components/common';
+import { ViewContainer, SliderCard } from '@components/app';
+import { SpinnerLoading, Text } from '@components/common';
 import { isValidAddress } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
 import { LabDetailPanels } from '@src/client/components/app/LabDetail';
 
-const BackButton = styled(Button)`
-  background-color: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.onSurfaceH2};
-`;
-
-const StyledInfoCard = styled(InfoCard)`
+const StyledSliderCard = styled(SliderCard)`
   padding: 3rem;
   margin: auto;
 `;
@@ -35,7 +30,7 @@ const LabDetailView = styled(ViewContainer)`
   align-items: flex-start;
 
   @media ${device.mobile} {
-    ${StyledInfoCard} {
+    ${StyledSliderCard} {
       padding: 1rem;
     }
   }
@@ -94,12 +89,10 @@ export const LabDetail = () => {
 
   return (
     <LabDetailView>
-      <BackButton onClick={() => history.push(`/labs`)}>{t('components.back-button.label')}</BackButton>
-
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
 
       {!generalLoading && !selectedLab && (
-        <StyledInfoCard
+        <StyledSliderCard
           header={t('labdetails:no-lab-supported-card.header', { network: currentNetworkSettings.name })}
           Component={
             <Text>

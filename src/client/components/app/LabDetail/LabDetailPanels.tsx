@@ -58,20 +58,26 @@ const IconOverImage = styled(Icon)`
 `;
 
 const OverviewInfo = styled(Card)`
-  padding: ${({ theme }) => theme.card.padding};
+  padding: ${({ theme }) => theme.layoutPadding};
   flex-shrink: 0;
 
   a {
     text-decoration: underline;
     color: inherit;
-    color: ${({ theme }) => theme.colors.onSurfaceSH1};
+    color: ${({ theme }) => theme.colors.titles};
   }
 `;
 
-const StyledText = styled(Text)`
+const StyledText = styled(Text)<{ accent?: boolean }>`
   display: block;
-  color: ${(props) => props.theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.titles};
   white-space: initial;
+  ${({ theme, accent }) =>
+    accent &&
+    `
+  color: ${theme.colors.primary};
+  font-weight: bold;
+`};
 `;
 
 const StyledLink = styled.a`
@@ -88,8 +94,8 @@ const InfoValueRow = styled.div`
   grid-template-columns: 9.6rem 1fr;
   grid-gap: 0.6rem;
   white-space: nowrap;
-  color: ${({ theme }) => theme.colors.onSurfaceSH1};
-  font-size: 1.4rem;
+  color: ${({ theme }) => theme.colors.titles};
+  font-size: 1.6rem;
   align-items: center;
 
   > * {
@@ -107,7 +113,7 @@ const TextWithIcon = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 10rem;
+    max-width: 10rem;
   }
 `;
 
@@ -137,7 +143,7 @@ const TokenLogo = styled(Card)`
 const OverviewTokenInfo = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
-  grid-gap: 4.7rem;
+  grid-gap: ${({ theme }) => theme.card.padding};
 `;
 
 const Row = styled.div`
@@ -155,7 +161,10 @@ const LabOverview = styled(Card)`
   align-self: stretch;
   max-width: 100%;
 
-  > div:not(:first-child) {
+  > *:not(:first-child) {
+    margin-top: 0.8rem;
+  }
+  > ${StyledCardHeader}:not(:first-child) {
     margin-top: ${({ theme }) => theme.card.padding};
   }
 
@@ -170,7 +179,7 @@ const LabOverview = styled(Card)`
     }
   }
 
-  @media (max-width: 360px) {
+  @media (max-width: 460px) {
     ${OverviewTokenInfo} {
       display: flex;
       flex-direction: column;
