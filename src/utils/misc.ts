@@ -58,10 +58,7 @@ export const inIframe = () => {
 
 export const inLedgerIframe = () => {
   try {
-    return (
-      window.self !== window.top &&
-      (window?.location?.ancestorOrigins?.[0]?.includes('ledger') || window?.navigator?.userAgent.includes('Firefox'))
-    );
+    return window.self !== window.top && window?.location?.ancestorOrigins?.[0]?.includes('ledger');
   } catch (e) {
     return true;
   }

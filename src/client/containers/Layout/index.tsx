@@ -194,7 +194,7 @@ export const Layout: FC = ({ children }) => {
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}
           onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}
-          disableWalletSelect={hideControls || isInIframe}
+          disableWalletSelect={hideControls}
           selectedNetwork={currentNetwork}
           networkOptions={SUPPORTED_NETWORKS}
           onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
