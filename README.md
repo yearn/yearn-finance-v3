@@ -39,8 +39,9 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
 You will need to generate a [Github Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), and create or update the ~/.npmrc file with the following content:
 
 ```
-registry=https://registry.npmjs.org/
-@yearn:registry=https://npm.pkg.github.com
+always-auth=true
+@yearn:registry=https://npm.pkg.github.com/
+registry=https://registry.npmjs.org
 //npm.pkg.github.com/:_authToken=YOUR_ACCESS_TOKEN
 ```
 
