@@ -211,7 +211,7 @@ export const Vaults = () => {
   return (
     <ViewContainer>
       <StyledSliderCard
-        header="Goblin town or the Citadel?"
+        header={'Goblin·town·or·the·Citadel?'}
         Component={
           <Text>
             <p>Wherever we’re going, relax and earn yield</p>
