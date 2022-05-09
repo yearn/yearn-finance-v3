@@ -65,6 +65,7 @@ export class LabServiceImpl implements LabService {
     const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { ETH, YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+    const { ASSETS_ICON_URL } = getConstants();
     const yearn = this.yearnSdk.getInstanceOf(network);
     const providerType = getProviderType(network);
     const provider = this.web3Provider.getInstanceOf(providerType);
@@ -128,7 +129,7 @@ export class LabServiceImpl implements LabService {
               }
             : undefined,
           displayName: backscratcherData.name,
-          displayIcon: `${getConstants().ASSETS_ICON_URL}${YVECRV}/logo-128.png`,
+          displayIcon: `${ASSETS_ICON_URL}${YVECRV}/logo-128.png`,
           defaultDisplayToken: CRV,
         },
       };
@@ -169,7 +170,7 @@ export class LabServiceImpl implements LabService {
         underlyingTokenBalance,
         metadata: {
           ...yvBoostVaultDynamic.metadata,
-          displayIcon: `${getConstants().ASSETS_ICON_URL}${address}/logo-128.png`,
+          displayIcon: `${ASSETS_ICON_URL}${address}/logo-128.png`,
         },
       };
     } catch (error) {
@@ -227,7 +228,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: pJarRatio.toString(),
           apy: { ...pJarData.apy, net_apy: toBN(performance.toString()).dividedBy(100).toNumber() },
           displayName: 'pSLPyvBOOST-ETH',
-          displayIcon: `${getConstants().ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
+          displayIcon: `${ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
         },
       };

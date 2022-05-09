@@ -108,6 +108,7 @@ export class TokenServiceImpl implements TokenService {
 
   private async getYvBoostToken(): Promise<Token> {
     const { YVBOOST } = this.config.CONTRACT_ADDRESSES;
+    const { ASSETS_ICON_URL } = getConstants();
     const pricesResponse = await get('https://api.coingecko.com/api/v3/simple/price?ids=yvboost&vs_currencies=usd');
     const yvBoostPrice = pricesResponse.data['yvboost']['usd'];
     return {
@@ -122,13 +123,14 @@ export class TokenServiceImpl implements TokenService {
         zapper: false,
       },
       symbol: 'yvBOOST',
-      icon: `${getConstants().ASSETS_ICON_URL}${YVBOOST}/logo-128.png`,
+      icon: `${ASSETS_ICON_URL}${YVBOOST}/logo-128.png`,
     };
   }
 
   private async getPSLPyvBoostEthToken(): Promise<Token> {
     const { ZAPPER_API_KEY } = this.config;
     const { PSLPYVBOOSTETH } = this.config.CONTRACT_ADDRESSES;
+    const { ASSETS_ICON_URL } = getConstants();
     const pricesResponse = await get(
       `https://api.zapper.fi/v1/protocols/pickle/token-market-data?api_key=${ZAPPER_API_KEY}&type=vault`
     );
@@ -147,7 +149,7 @@ export class TokenServiceImpl implements TokenService {
         zapper: false,
       },
       symbol: 'pSLPyvBOOST-ETH',
-      icon: `${getConstants().ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
+      icon: `${ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
     };
   }
 
