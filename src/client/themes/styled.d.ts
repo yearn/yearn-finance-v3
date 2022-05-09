@@ -96,6 +96,7 @@ declare module 'styled-components' {
       icons: {
         primary: string;
         variant: string;
+        text: string;
       };
       titles: string;
       titlesVariant: string;
