@@ -39,6 +39,7 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { VaultView } from '@src/core/types';
+import { GoblinTown } from '@assets/images';
 
 const StyledHelperCursor = styled.span`
   cursor: help;
@@ -48,6 +49,7 @@ const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
 const StyledSliderCard = styled(SliderCard)`
   width: 100%;
+  min-height: 24rem;
 `;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
@@ -207,14 +209,13 @@ export const Vaults = () => {
   return (
     <ViewContainer>
       <StyledSliderCard
-        header={t('vaults:your-time-card.header')}
+        header={t('vaults:banner.header')}
         Component={
           <Text>
-            <p>{t('vaults:your-time-card.desc-1')}</p>
-            <p>{t('vaults:your-time-card.desc-2')}</p>
-            <p>{t('vaults:your-time-card.desc-3')}</p>
+            <p>{t('vaults:banner.desc')}</p>
           </Text>
         }
+        background={<img src={GoblinTown} alt={t('vaults:banner.header')} />}
         // NOTE Example for slideshow array
         // slidesContent={[
         // {
