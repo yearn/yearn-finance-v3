@@ -14,6 +14,10 @@ const footerLinks = [
     name: 'disclaimer',
   },
   {
+    link: 'https://buyback.yearn.finance',
+    name: 'buyback',
+  },
+  {
     link: 'https://docs.yearn.finance',
     name: 'docs',
   },
@@ -106,7 +110,7 @@ const StyledFooter = styled.footer`
   border-radius: ${({ theme }) => theme.globalRadius};
   max-width: ${({ theme }) => theme.globalMaxWidth};
 
-  @media ${device.tablet} {
+  @media ${device.desktopS} {
     grid-template-columns: 1fr;
     padding: 2rem;
 

@@ -77,6 +77,7 @@ const sharedTheme: SharedTheme = {
   layoutPadding: '1.6rem',
   card: {
     padding: '2.4rem',
+    paddingVariant: '8rem',
   },
 };
 

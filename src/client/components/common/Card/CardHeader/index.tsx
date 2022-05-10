@@ -6,7 +6,7 @@ const Container = styled.div`
   padding: 0 ${({ theme }) => theme.card.padding};
 `;
 
-const BigHeader = styled.h1`
+const BigHeader = styled.h2`
   font-size: 2.4rem;
   font-weight: 700;
   margin: 0;

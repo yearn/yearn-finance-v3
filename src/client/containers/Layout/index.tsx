@@ -23,6 +23,7 @@ import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
 import { Network, Route } from '@types';
 import { device } from '@themes/default';
+import { isInIframe } from '@utils';
 
 const contentSeparation = '1.6rem';
 
@@ -104,12 +105,17 @@ export const Layout: FC = ({ children }) => {
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1] as Route;
-  const hideControls = partner.id === 'ledger';
+  const isLedgerLive = partner.id === 'ledger';
+  const isIframe = isInIframe();
+  const hideControls = isIframe || isLedgerLive;
+  const hideOptionalLinks = isLedgerLive;
 
   let vaultName;
+  let titleLink;
   // TODO Add lab details route when its added the view
   if (path === 'vault') {
     vaultName = selectedVault?.displayName;
+    titleLink = '/vaults';
   }
 
   // TODO This is only assetAddress on the vault page
@@ -183,11 +189,12 @@ export const Layout: FC = ({ children }) => {
     <StyledLayout>
       <Alerts />
       <Modals />
-      <Navigation hideOptionalLinks={hideControls} />
+      <Navigation hideOptionalLinks={hideOptionalLinks} />
 
       <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
         <Navbar
           title={t(`navigation.${path}`)}
+          titleLink={titleLink}
           subTitle={vaultName}
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}

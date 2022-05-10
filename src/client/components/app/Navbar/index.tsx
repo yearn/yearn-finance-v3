@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
-import { OptionList, EthereumIcon, FantomIcon, ArbitrumIcon } from '@components/common';
+import { OptionList, EthereumIcon, FantomIcon, ArbitrumIcon, Link } from '@components/common';
 import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';
@@ -36,8 +36,13 @@ const StyledText = styled.h1<{ toneDown?: boolean }>`
   ${({ toneDown, theme }) =>
     toneDown &&
     `
-    color: ${theme.colors.texts};
+    color: ${theme.colors.textsVariant};
   `}
+`;
+
+const StyledLink = styled(Link)`
+  font-size: 2.4rem;
+  font-weight: 700;
 `;
 
 const StyledNavbar = styled.header`
@@ -79,6 +84,7 @@ const getNetworkIcon = (network: Network) => {
 interface NavbarProps {
   className?: string;
   title?: string;
+  titleLink?: string;
   subTitle?: string;
   walletAddress?: string;
   addressEnsName?: string;
@@ -94,6 +100,7 @@ interface NavbarProps {
 export const Navbar = ({
   className,
   title,
+  titleLink,
   subTitle,
   walletAddress,
   addressEnsName,
@@ -131,7 +138,7 @@ export const Navbar = ({
     <StyledNavbar className={className}>
       {title && (
         <StyledText toneDown={secondTitleEnabled}>
-          {title}
+          {titleLink ? <StyledLink to={titleLink}>{title}</StyledLink> : title}
           {secondTitleEnabled && vaultText}
         </StyledText>
       )}
@@ -143,7 +150,6 @@ export const Navbar = ({
             setSelected={(option) => onNetworkChange(option.value)}
             options={dropdownNetworkOptions}
             hideIcons={isMobile}
-            isLoading={disableNetworkChange}
             disabled={disableNetworkChange}
           />
         )}
