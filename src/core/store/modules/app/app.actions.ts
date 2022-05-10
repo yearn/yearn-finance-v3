@@ -47,7 +47,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
     await dispatch(PartnerActions.changePartner({ id: 'ledger', address: CONTRACT_ADDRESSES.LEDGER }));
   } else if (isGnosisApp()) {
     if (network.current !== 'mainnet') await dispatch(NetworkActions.changeNetwork({ network: 'mainnet' }));
-    await dispatch(WalletActions.walletSelect({ walletName: 'gnosis', network: 'mainnet' }));
+    await dispatch(WalletActions.walletSelect({ walletName: 'Gnosis Safe', network: 'mainnet' }));
   } else if (wallet.name && wallet.name !== 'Iframe') {
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
