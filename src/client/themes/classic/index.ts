@@ -17,7 +17,7 @@ const classic = {
     secondary: '#0657F9',
     titles: '#FFFFFF',
     titlesVariant: '#FFFFFF',
-    texts: '#7F8DA9',
+    texts: '#CED5E3',
     textsVariant: '#7F8DA9',
     disabled: '#CED5E3',
     icons: {
