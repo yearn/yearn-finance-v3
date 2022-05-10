@@ -110,9 +110,9 @@ const StyledFooter = styled.footer`
   border-radius: ${({ theme }) => theme.globalRadius};
   max-width: ${({ theme }) => theme.globalMaxWidth};
 
-  @media ${device.tablet} {
+  @media ${device.desktopS} {
     grid-template-columns: 1fr;
-    padding: 2rem;
+    padding: 1rem;
 
     ${SocialSection},
     ${LinkSection} {
