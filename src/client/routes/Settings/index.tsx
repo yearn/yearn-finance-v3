@@ -33,7 +33,7 @@ const SettingsCard = styled(Card)`
 
 const SettingsSection = styled.div`
   display: grid;
-  grid-template-columns: 15rem 1fr;
+  grid-template-columns: 18rem 1fr;
   padding: 0 ${({ theme }) => theme.card.padding};
   grid-gap: ${({ theme }) => theme.layoutPadding};
 `;
@@ -53,6 +53,10 @@ const SectionTitle = styled.div<{ centerText?: boolean }>`
   display: flex;
   align-items: ${({ centerText }) => (centerText ? 'center' : 'flex-start')};
   fill: currentColor;
+
+  ${SettingsSection}:not(:first-child) & {
+    padding-top: ${({ theme }) => theme.card.padding};
+  }
 `;
 
 const SectionHeading = styled.h3`
