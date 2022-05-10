@@ -107,9 +107,11 @@ export const Layout: FC = ({ children }) => {
   const hideControls = partner.id === 'ledger';
 
   let vaultName;
+  let titleLink;
   // TODO Add lab details route when its added the view
   if (path === 'vault') {
     vaultName = selectedVault?.displayName;
+    titleLink = '/vaults';
   }
 
   // TODO This is only assetAddress on the vault page
@@ -188,6 +190,7 @@ export const Layout: FC = ({ children }) => {
       <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
         <Navbar
           title={t(`navigation.${path}`)}
+          titleLink={titleLink}
           subTitle={vaultName}
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}
