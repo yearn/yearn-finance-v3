@@ -112,7 +112,7 @@ const StyledFooter = styled.footer`
 
   @media ${device.desktopS} {
     grid-template-columns: 1fr;
-    padding: 1rem;
+    padding: 2rem;
 
     ${SocialSection},
     ${LinkSection} {
