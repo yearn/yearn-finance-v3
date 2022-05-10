@@ -14,6 +14,10 @@ const footerLinks = [
     name: 'disclaimer',
   },
   {
+    link: 'https://buyback.yearn.finance',
+    name: 'buyback',
+  },
+  {
     link: 'https://docs.yearn.finance',
     name: 'docs',
   },
