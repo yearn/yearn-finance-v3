@@ -23,7 +23,6 @@ import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
 import { Network, Route } from '@types';
 import { device } from '@themes/default';
-import { inIframe } from '@utils';
 
 const contentSeparation = '1.6rem';
 
@@ -92,7 +91,6 @@ export const Layout: FC = ({ children }) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const isInIframe = inIframe();
   const { SUPPORTED_NETWORKS } = getConfig();
   const { isMobile } = useWindowDimensions();
   const partner = useAppSelector(PartnerSelectors.selectPartnerState);
@@ -194,11 +192,11 @@ export const Layout: FC = ({ children }) => {
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}
           onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}
-          disableWalletSelect={hideControls || isInIframe}
+          disableWalletSelect={hideControls}
           selectedNetwork={currentNetwork}
           networkOptions={SUPPORTED_NETWORKS}
           onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
-          disableNetworkChange={hideControls || isInIframe}
+          disableNetworkChange={hideControls}
           hideDisabledControls={hideControls}
         />
 
