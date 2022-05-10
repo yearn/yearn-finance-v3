@@ -7,8 +7,11 @@ export const isInIframe = () => {
 };
 
 export const isLoadedInOtherDomain = (domain: string) => {
+  // TODO: remove logs when verified iframes work as expected
+  console.log('ancestorOrigins', window?.location?.ancestorOrigins);
+  console.log('referrer', document?.referrer);
   return (
-    isInIframe() && (window?.location?.ancestorOrigins?.[0]?.includes(domain) || document.referrer.includes(domain))
+    isInIframe() && (window?.location?.ancestorOrigins?.[0]?.includes(domain) || document?.referrer?.includes(domain))
   );
 };
 
