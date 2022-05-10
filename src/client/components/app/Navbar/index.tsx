@@ -150,7 +150,6 @@ export const Navbar = ({
             setSelected={(option) => onNetworkChange(option.value)}
             options={dropdownNetworkOptions}
             hideIcons={isMobile}
-            isLoading={disableNetworkChange}
             disabled={disableNetworkChange}
           />
         )}
