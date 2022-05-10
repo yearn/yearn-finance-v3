@@ -89,12 +89,12 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
       font-weight: 700;
     }
     &:hover {
-        ${LinkIcon} {
+      ${LinkIcon} {
         fill: ${props.theme.colors.primary};
-    }
-    ${LinkText} {
-      color: ${props.theme.colors.primary};
-    }
+      }
+      ${LinkText} {
+        color: ${props.theme.colors.primary};
+      }
     }
   `}
 `;
