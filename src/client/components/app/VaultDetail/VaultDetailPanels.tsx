@@ -53,6 +53,7 @@ const VaultChart = styled(Card)`
 
 const StyledCardContent = styled(CardContent)`
   margin-top: 0.4rem;
+  color: ${({ theme }) => theme.colors.texts};
 `;
 
 const StyledCardHeader = styled(CardHeader)`
@@ -108,7 +109,6 @@ const OverviewInfo = styled(Card)`
   a {
     text-decoration: underline;
     color: inherit;
-    color: ${({ theme }) => theme.colors.titles};
   }
 `;
 
@@ -245,7 +245,7 @@ const VaultOverview = styled(Card)`
 const StyledChartTab = styled.span<{ active?: boolean }>`
   margin: 10px;
   cursor: pointer;
-  color: ${(props) => (props.active ? props.theme.colors.secondary : props.theme.colors.primaryVariant)};
+  color: ${(props) => (props.active ? props.theme.colors.primary : props.theme.colors.texts)};
   text-decoration: ${(props) => (props.active ? 'underline' : 'none')};
   text-underline-offset: 4px;
   &: {

@@ -5,6 +5,7 @@ export * from './css';
 export * from './environment';
 export * from './format';
 export * from './http';
+export * from './iframe';
 export * from './language';
 export * from './misc';
 export * from './network';

@@ -19,10 +19,12 @@ const cyberpunkTheme: DefaultTheme = {
     icons: {
       primary: '#0CA7C9',
       variant: '#0CA7C9',
+      text: '#0CA7C9',
     },
     titles: '#0CA7C9',
     titlesVariant: '#0CA7C9',
     texts: '#9dd9e6',
+    textsVariant: '#0CA7C9',
     surfaceVariant: '#FFF',
 
     secondaryVariantA: '#392850',
@@ -53,6 +55,7 @@ const cyberpunkTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#BB6FA1',
       color: '#BB6FA1',
+      iconFill: '#3D305F',
       // disabledContrast: '0.6',
 
       selected: {
@@ -69,8 +72,14 @@ const cyberpunkTheme: DefaultTheme = {
       primary: '#00A3FF',
       onPrimary: '#FFFFFF',
       loading: '#FFA800',
-      error: '#FF005E',
-      warning: '#FF7500',
+      error: {
+        backgroundColor: '#FFD9D9',
+        color: '#FF0000',
+      },
+      warning: {
+        backgroundColor: '#FFF9D9',
+        color: '#FF8A00',
+      },
       success: '#C6E11E',
       text: '#D35290',
       textContrast: '#FBD282',

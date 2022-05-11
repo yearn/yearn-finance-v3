@@ -15,11 +15,13 @@ const light = {
     secondary: '#E0EAFF',
     titles: '#001746',
     titlesVariant: '#0657F9',
-    texts: '#7F8DA9',
+    texts: '#475570',
+    textsVariant: '#7F8DA9',
     disabled: '#CED5E3',
     icons: {
       primary: '#CED5E3',
       variant: '#475570',
+      text: '#475570',
     },
     button: {
       filled: {
@@ -61,10 +63,12 @@ const lightTheme: DefaultTheme = {
     icons: {
       primary: light.colors.icons.primary,
       variant: light.colors.icons.variant,
+      text: light.colors.icons.text,
     },
     titles: light.colors.titles,
     titlesVariant: light.colors.titlesVariant,
     texts: light.colors.texts,
+    textsVariant: light.colors.textsVariant,
     surfaceVariant: light.colors.surfaceVariant,
 
     secondaryVariantA: '#000000',
@@ -95,6 +99,7 @@ const lightTheme: DefaultTheme = {
       background: light.colors.secondary,
       borderColor: light.colors.secondary,
       color: light.colors.titlesVariant,
+      iconFill: light.colors.backgroundVariant,
       // disabledContrast: '1',
 
       selected: {
@@ -108,11 +113,17 @@ const lightTheme: DefaultTheme = {
       background: light.colors.surface,
       backgroundVariant: light.colors.background,
       onBackgroundVariantColor: '#6e6e6e',
-      primary: '#00A3FF',
+      primary: '#0657F9',
       onPrimary: '#FFFFFF',
       loading: '#FFA800',
-      error: '#FF005E',
-      warning: '#FFA800',
+      error: {
+        backgroundColor: '#FFD9D9',
+        color: '#FF0000',
+      },
+      warning: {
+        backgroundColor: '#FFF9D9',
+        color: '#FF8A00',
+      },
       success: '#A8C300',
       text: light.colors.icons.variant,
       textContrast: light.colors.titles,

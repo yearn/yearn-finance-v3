@@ -21,6 +21,9 @@ const ADDRESSES = {
   YFI: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
   BLUEPILLNFT: '0x35f5A420ef9BCc748329021FBD4ed0986AbdF201',
   WOOFYNFT: '0x0966a53f2533EaF01D0bB2fa0E2274f3002287F1',
+};
+
+const PARTNERS = {
   LEDGER_PARTNER_ID: '0x558247e365be655f9144e1a0140D793984372Ef3',
 };
 
@@ -38,7 +41,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     simulationsEnabled: true,
     zapsEnabled: true,
     labsEnabled: true,
-    ironBankEnabled: true,
+    ironBankEnabled: false,
     earningsEnabled: true,
     notifyEnabled: true,
     blockExplorerUrl: 'https://etherscan.io',
@@ -57,7 +60,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     simulationsEnabled: false,
     zapsEnabled: false,
     labsEnabled: false,
-    ironBankEnabled: true,
+    ironBankEnabled: false,
     earningsEnabled: false,
     notifyEnabled: false,
     blockExplorerUrl: 'https://ftmscan.com',
@@ -102,12 +105,10 @@ export const getConstants = memoize((): Constants => {
       zapOut: '0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c',
       pickleZapIn: '0xc695f73c1862e050059367B2E64489E66c525983',
       y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
-      ironBankComptroller: '0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB',
-      ironBankComptrollerFantom: '0x4250A6D3BD57455d7C6821eECb6206F507576cD2',
-      ironBankComptrollerArbitrum: '0xbadaC56c9aca307079e8B8FC699987AAc89813ee',
       trustedVaultMigrator: '0x1824df8D751704FA10FA371d62A37f9B8772ab90',
       triCryptoVaultMigrator: '0xC306a5ef4B990A7F2b3bC2680E022E6a84D75fC1',
       ...ADDRESSES,
+      ...PARTNERS,
     },
     SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
     DEFAULT_SLIPPAGE: 0.01,
@@ -121,5 +122,6 @@ export const getConstants = memoize((): Constants => {
     SUPPORTED_LANGS: ['en', 'de', 'es', 'fr', 'hi', 'ja', 'pt', 'tr', 'vi', 'zh'],
     DUST_AMOUNT_USD: '10000000',
     YEARN_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
+    ASSETS_ICON_URL: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/',
   };
 });

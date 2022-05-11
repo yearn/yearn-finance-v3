@@ -1,6 +1,6 @@
 import { SubscriptionService, SubscriptionProps, YearnSdk } from '@types';
 
-// type SdkModule = 'vaults' | 'tokens' | 'earnings' | 'ironBank';
+// type SdkModule = 'vaults' | 'tokens' | 'earnings';
 
 export class SubscriptionServiceImpl implements SubscriptionService {
   private yearnSdk: YearnSdk;

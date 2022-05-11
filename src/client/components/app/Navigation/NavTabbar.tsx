@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { useAppTranslation } from '@hooks';
 import { NavigationLink } from '@components/app';
-import { Icon } from '@components/common';
+import { Link, Icon } from '@components/common';
 
 const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
@@ -84,7 +84,7 @@ export const NavTabbar = ({ navLinks, ...props }: NavTabbarProps) => {
         {navLinks.map(
           (link: NavigationLink, index) =>
             !link.hideMobile && (
-              <RouterLink to={link.to} key={index} selected={currentPath === link.to}>
+              <RouterLink to={link.to} key={index} selected={currentPath === link.to} external={link.external}>
                 <LinkIcon Component={link.icon} />
                 <LinkText>{t(link.text)}</LinkText>
               </RouterLink>

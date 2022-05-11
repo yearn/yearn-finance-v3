@@ -14,6 +14,10 @@ const footerLinks = [
     name: 'disclaimer',
   },
   {
+    link: 'https://buyback.yearn.finance',
+    name: 'buyback',
+  },
+  {
     link: 'https://docs.yearn.finance',
     name: 'docs',
   },
@@ -72,7 +76,7 @@ const LinkSection = styled.div`
   column-gap: ${({ theme }) => theme.card.padding};
   row-gap: 1rem;
   flex: 1;
-  color: ${({ theme }) => theme.colors.icons.variant};
+  color: ${({ theme }) => theme.colors.icons.text};
 `;
 
 const StyledLink = styled(Link)`
@@ -106,7 +110,7 @@ const StyledFooter = styled.footer`
   border-radius: ${({ theme }) => theme.globalRadius};
   max-width: ${({ theme }) => theme.globalMaxWidth};
 
-  @media ${device.tablet} {
+  @media ${device.desktopS} {
     grid-template-columns: 1fr;
     padding: 2rem;
 
@@ -134,7 +138,7 @@ export const Footer = ({ className }: FooterProps) => {
     <StyledFooter className={className}>
       <LinkSection>
         {footerLinks.map((footerLink) => (
-          <StyledLink href={footerLink.link} key={footerLink.name} target="_blank">
+          <StyledLink external to={footerLink.link} key={footerLink.name}>
             {t(`footer.links.${footerLink.name}`)}
           </StyledLink>
         ))}
@@ -142,7 +146,7 @@ export const Footer = ({ className }: FooterProps) => {
 
       <SocialSection>
         {socialLinks.map((social, index) => (
-          <StyledIconLink href={social.link} target="_blank" key={index} aria-label={social.ariaLabel}>
+          <StyledIconLink external to={social.link} key={index} aria-label={social.ariaLabel}>
             <StyledIcon Component={social.icon} />
           </StyledIconLink>
         ))}

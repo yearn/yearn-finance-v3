@@ -20,7 +20,7 @@ const AlertButton = styled.div`
   justify-content: center;
   border-radius: 0.8rem;
   border: 2px solid ${({ theme }) => theme.colors.vaultActionButton.selected.borderColor};
-  background: ${({ theme }) => theme.colors.vaultActionButton.borderColor};
+  background: ${({ theme }) => theme.colors.vaultActionButton.iconFill};
   width: 2.8rem;
   height: 2.8rem;
 `;
