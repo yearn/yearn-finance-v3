@@ -23,7 +23,7 @@ import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
 import { Network, Route } from '@types';
 import { device } from '@themes/default';
-import { encode, isInIframe } from '@utils';
+import { isInIframe } from '@utils';
 
 const contentSeparation = '1.6rem';
 
