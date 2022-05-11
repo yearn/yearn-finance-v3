@@ -128,12 +128,12 @@ export class TokenServiceImpl implements TokenService {
   }
 
   private async getPSLPyvBoostEthToken(): Promise<Token> {
-    const { ZAPPER_API_KEY } = this.config;
+    const { ZAPPER_AUTH_TOKEN } = this.config;
     const { PSLPYVBOOSTETH } = this.config.CONTRACT_ADDRESSES;
     const { ASSETS_ICON_URL } = getConstants();
-    const pricesResponse = await get(
-      `https://api.zapper.fi/v1/protocols/pickle/token-market-data?api_key=${ZAPPER_API_KEY}&type=vault`
-    );
+    const pricesResponse = await get(`https://api.zapper.fi/v2/apps/pickle/tokens?groupId=jar`, {
+      headers: { Authorization: `Basic ${ZAPPER_AUTH_TOKEN}` },
+    });
     const pJarPricePerToken = pricesResponse.data.find(
       ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
     )?.price;
