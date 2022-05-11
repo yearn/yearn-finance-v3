@@ -16,6 +16,7 @@ import {
   GeneralVaultView,
 } from '@types';
 import { toBN } from '@utils';
+import { getConfig } from '@config';
 
 import { createToken } from '../tokens/tokens.selectors';
 
@@ -104,8 +105,14 @@ const selectDepositedVaults = createSelector([selectLiveVaults], (vaults): Vault
 });
 
 const selectVaultsOpportunities = createSelector([selectLiveVaults], (vaults): VaultView[] => {
+  const YFI_VAULT_ADDRESS = getConfig().CONTRACT_ADDRESSES.YVYFI;
+
   const depositVaults = vaults.map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
-  const opportunities = depositVaults.filter((vault) => toBN(vault.userDeposited).lte(0));
+  const opportunities = depositVaults.filter((vault) => {
+    if (toBN(vault.userDeposited).lte(0) && (!!vault.apyMetadata?.net_apy || vault.address === YFI_VAULT_ADDRESS)) {
+      return vault;
+    }
+  });
 
   return opportunities;
 });
