@@ -153,12 +153,12 @@ export const Portfolio = () => {
     }
   };
 
-  const investButton = (tokenAddress: string, isZapable: boolean) => {
+  const investButton = ({ address, isZapIn }: { address: string; isZapIn: boolean }) => {
     return [
       {
         name: t('components.transaction.deposit'),
-        handler: () => actionHandler('invest', tokenAddress),
-        disabled: !walletIsConnected || !(isZapable || vaultsUnderlyingTokens.includes(tokenAddress)),
+        handler: () => actionHandler('invest', address),
+        disabled: !walletIsConnected || !(isZapIn || vaultsUnderlyingTokens.includes(address)),
       },
     ];
   };
@@ -258,7 +258,9 @@ export const Portfolio = () => {
             },
             {
               key: 'invest',
-              transform: ({ address, isZapable }) => <ActionButtons actions={[...investButton(address, isZapable)]} />,
+              transform: ({ address, isZapperZapIn, isFtmApeZap }) => (
+                <ActionButtons actions={[...investButton({ address, isZapIn: isZapperZapIn || isFtmApeZap })]} />
+              ),
               align: 'flex-end',
               width: 'auto',
               grow: '1',

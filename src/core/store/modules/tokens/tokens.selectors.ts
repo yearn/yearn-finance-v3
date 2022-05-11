@@ -41,7 +41,7 @@ const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
 });
 
 const selectZapInTokens = createSelector([selectUserTokens], (userTokens) => {
-  return userTokens.filter(({ isZapable }) => isZapable);
+  return userTokens.filter(({ isZapperZapIn }) => isZapperZapIn);
 });
 
 const selectZapOutTokens = createSelector([selectTokensMap, selectUserTokensMap], (tokensMap, userTokensMap) => {
@@ -105,7 +105,9 @@ export function createToken(props: CreateTokenProps): TokenView {
     categories: tokenData?.metadata?.categories ?? [],
     description: tokenData?.metadata?.description ?? '',
     website: tokenData?.metadata?.website ?? '',
-    isZapable: tokenData?.supported.zapper ?? false,
+    isZapperZapIn: tokenData?.supported.zapperZapIn ?? false,
+    isZapperZapOut: tokenData?.supported.zapperZapOut ?? false,
+    isFtmApeZap: tokenData?.supported.ftmApeZap ?? false,
     allowancesMap: allowancesMap ?? {},
   };
 }

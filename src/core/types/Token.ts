@@ -19,7 +19,9 @@ export interface TokenView {
   categories: string[];
   description: string;
   website: string;
-  isZapable: boolean;
+  isZapperZapIn: boolean;
+  isZapperZapOut: boolean;
+  isFtmApeZap: boolean;
   allowancesMap: { [tokenAddress: string]: string };
 }
 
