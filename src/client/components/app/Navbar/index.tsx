@@ -128,19 +128,17 @@ export const Navbar = ({
 
   const secondTitleEnabled = !!subTitle?.length;
 
-  const vaultText = (
-    <>
-      &nbsp;/&nbsp;<StyledText>{subTitle}</StyledText>
-    </>
-  );
+  const titleText = secondTitleEnabled ? <>{title}&nbsp;/&nbsp;</> : title;
 
   return (
     <StyledNavbar className={className}>
       {title && (
-        <StyledText toneDown={secondTitleEnabled}>
-          {titleLink ? <StyledLink to={titleLink}>{title}</StyledLink> : title}
-          {secondTitleEnabled && vaultText}
-        </StyledText>
+        <>
+          <StyledText toneDown={secondTitleEnabled}>
+            {titleLink ? <StyledLink to={titleLink}>{titleText}</StyledLink> : titleText}
+          </StyledText>
+          {secondTitleEnabled && <StyledText>{subTitle}</StyledText>}
+        </>
       )}
 
       <StyledNavbarActions>
