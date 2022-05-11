@@ -48,4 +48,5 @@ export interface Constants {
   DUST_AMOUNT_USD: string;
   YEARN_SUBGRAPH_ID: string;
   ASSETS_ICON_URL: string;
+  ZAPPER_AUTH_TOKEN: string;
 }
