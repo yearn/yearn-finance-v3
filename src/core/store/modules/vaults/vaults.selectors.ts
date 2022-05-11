@@ -109,7 +109,9 @@ const selectVaultsOpportunities = createSelector([selectLiveVaults], (vaults): V
 
   const depositVaults = vaults.map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
   const opportunities = depositVaults.filter(
-    (vault) => toBN(vault.userDeposited).lte(0) && (!!vault.apyMetadata?.net_apy || vault.address === YFI_VAULT_ADDRESS)
+    (vault) =>
+      toBN(vault.userDeposited).lte(0) &&
+      (toBN(vault.apyMetadata?.net_apy).gt(0) || vault.address === YFI_VAULT_ADDRESS)
   );
 
   return opportunities;
