@@ -53,6 +53,10 @@ import { UserSelectors } from './user/user.selectors';
 import notificationsReducer, { notificationsInitialState } from './notifications/notifications.reducer';
 import { NotificationsActions } from './notifications/notifications.actions';
 import { NotificationsSelectors } from './notifications/notifications.selectors';
+// Partner State
+import partnerReducer, { partnerInitialState } from './partner/partner.reducer';
+import { PartnerActions } from './partner/partner.actions';
+import { PartnerSelectors } from './partner/partner.selectors';
 
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
@@ -68,6 +72,7 @@ const rootReducer: Reducer<RootState> = combineReducers({
   settings: settingsReducer,
   user: userReducer,
   notifications: notificationsReducer,
+  partner: partnerReducer,
 });
 
 export default rootReducer;
@@ -87,6 +92,7 @@ export {
   SettingsActions,
   UserActions,
   NotificationsActions,
+  PartnerActions,
 };
 
 // Selectors
@@ -103,6 +109,7 @@ export {
   LabsSelectors,
   UserSelectors,
   NotificationsSelectors,
+  PartnerSelectors,
 };
 
 // initialState
@@ -120,4 +127,5 @@ export {
   settingsInitialState,
   userInitialState,
   notificationsInitialState,
+  partnerInitialState,
 };

@@ -27,10 +27,12 @@ const explorerTheme: DefaultTheme = {
     icons: {
       primary: '#AD3235',
       variant: '#FFF',
+      text: '#FFF',
     },
     titles: '#FFF',
     titlesVariant: '#AD3235',
     texts: '#FFF',
+    textsVariant: '#AD3235',
     surfaceVariant: '#FFF',
 
     secondaryVariantA: 'rgba(173, 50, 53, 0.5)',
@@ -61,6 +63,7 @@ const explorerTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#eeeeee',
       color: '#eeeeee',
+      iconFill: '#cfa368',
       // disabledContrast: '',
 
       selected: {

@@ -4,7 +4,14 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
 import { useAppTranslation, useAppSelector, useAppDispatch, useWindowDimensions } from '@hooks';
-import { ThemeActions, SettingsActions, SettingsSelectors, AlertsActions, ModalsActions } from '@store';
+import {
+  ThemeActions,
+  SettingsActions,
+  SettingsSelectors,
+  AlertsActions,
+  ModalsActions,
+  PartnerSelectors,
+} from '@store';
 import { getTheme } from '@themes';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
@@ -26,7 +33,7 @@ const SettingsCard = styled(Card)`
 
 const SettingsSection = styled.div`
   display: grid;
-  grid-template-columns: 15rem 1fr;
+  grid-template-columns: 18rem 1fr;
   padding: 0 ${({ theme }) => theme.card.padding};
   grid-gap: ${({ theme }) => theme.layoutPadding};
 `;
@@ -46,6 +53,10 @@ const SectionTitle = styled.div<{ centerText?: boolean }>`
   display: flex;
   align-items: ${({ centerText }) => (centerText ? 'center' : 'flex-start')};
   fill: currentColor;
+
+  ${SettingsSection}:not(:first-child) & {
+    padding-top: ${({ theme }) => theme.card.padding};
+  }
 `;
 
 const SectionHeading = styled.h3`
@@ -116,7 +127,9 @@ export const Settings = () => {
   const defaultSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const signedApprovalsEnabled = useAppSelector(SettingsSelectors.selectSignedApprovalsEnabled);
+  const partner = useAppSelector(PartnerSelectors.selectPartnerState);
 
+  const hideControls = partner.id === 'ledger';
   const availableSlippages = getConfig().SLIPPAGE_OPTIONS;
   const { ALLOW_DEV_MODE, AVAILABLE_THEMES, AVAILABLE_CUSTOM_THEMES, SUPPORTED_LANGS } = getConfig();
 
@@ -171,19 +184,21 @@ export const Settings = () => {
     <SettingsView>
       <SettingsCard>
         <SettingsCardContent>
-          <SettingsSection>
-            <SectionTitle>
-              <SectionHeading>{t('settings:signed-approvals')}</SectionHeading>
-            </SectionTitle>
+          {!hideControls && (
+            <SettingsSection>
+              <SectionTitle>
+                <SectionHeading>{t('settings:signed-approvals')}</SectionHeading>
+              </SectionTitle>
 
-            <SectionContent>
-              <ToggleButton
-                ariaLabel={t('settings:signed-approvals')}
-                selected={signedApprovalsEnabled}
-                setSelected={toggleSignedApprovals}
-              />
-            </SectionContent>
-          </SettingsSection>
+              <SectionContent>
+                <ToggleButton
+                  ariaLabel={t('settings:signed-approvals')}
+                  selected={signedApprovalsEnabled}
+                  setSelected={toggleSignedApprovals}
+                />
+              </SectionContent>
+            </SettingsSection>
+          )}
 
           <SettingsSection>
             <SectionTitle>

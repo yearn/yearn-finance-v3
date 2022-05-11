@@ -5,6 +5,7 @@ export * from './Container';
 export * from './General';
 export * from './Lab';
 export * from './Modals';
+export * from './Partner';
 export * from './Position';
 export * from './Service';
 export * from './Settings';

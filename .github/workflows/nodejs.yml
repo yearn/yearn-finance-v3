@@ -26,8 +26,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
-        with:
+        with: 
           node-version: ${{ matrix.node-version }}
+          registry-url: https://npm.pkg.github.com
+          scope: ${{ github.repository-owner }}
+          always-auth: true
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -40,9 +43,11 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-            
+
       - name: Install project dependencies
         run: yarn --prefer-offline
+        env:
+          NODE_AUTH_TOKEN: "${{ github.token }}"
         id: install
 
       - name: Install project dependencies

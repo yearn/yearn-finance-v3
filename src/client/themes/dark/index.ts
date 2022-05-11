@@ -16,10 +16,12 @@ const dark = {
     titles: '#FFFFFF',
     titlesVariant: '#FFFFFF',
     texts: '#A8A8A8',
+    textsVariant: '#FFFFFF',
     disabled: '#A8A8A8',
     icons: {
       primary: '#A8A8A8',
       variant: '#FFFFFF',
+      text: '#FFFFFF',
     },
     button: {
       filled: {
@@ -57,10 +59,12 @@ const darkTheme: DefaultTheme = {
     icons: {
       primary: dark.colors.icons.primary,
       variant: dark.colors.icons.variant,
+      text: dark.colors.icons.text,
     },
     titles: dark.colors.titles,
     titlesVariant: dark.colors.titlesVariant,
     texts: dark.colors.texts,
+    textsVariant: dark.colors.textsVariant,
     surfaceVariant: dark.colors.surfaceVariant,
 
     secondaryVariantA: '#000000',
@@ -91,6 +95,7 @@ const darkTheme: DefaultTheme = {
       background: '#272727',
       borderColor: 'transparent',
       color: '#FFFFFF',
+      iconFill: dark.colors.backgroundVariant,
       // disabledContrast: '1.5',
 
       selected: {

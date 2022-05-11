@@ -1,6 +1,6 @@
 import { Yearn } from '@yfi/sdk';
 
-import { getNetworkId, getProviderType, inLedgerIframe } from '@utils';
+import { getNetworkId, getProviderType, isLedgerLive } from '@utils';
 import { YearnSdk, SdkNetwork, Web3Provider, Network, Config } from '@types';
 
 export class YearnSdkImpl implements YearnSdk {
@@ -9,7 +9,7 @@ export class YearnSdkImpl implements YearnSdk {
   constructor({ web3Provider, config }: { web3Provider: Web3Provider; config: Config }) {
     const { SUPPORTED_NETWORKS, CONTRACT_ADDRESSES, YEARN_SUBGRAPH_ID, YEARN_SUBGRAPH_KEY } = config;
 
-    const isLedger = inLedgerIframe();
+    const isLedger = isLedgerLive();
     SUPPORTED_NETWORKS.forEach((network) => {
       const providerType = getProviderType(network);
       const provider = web3Provider.getInstanceOf(providerType);

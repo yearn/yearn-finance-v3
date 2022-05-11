@@ -21,6 +21,9 @@ const ADDRESSES = {
   YFI: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
   BLUEPILLNFT: '0x35f5A420ef9BCc748329021FBD4ed0986AbdF201',
   WOOFYNFT: '0x0966a53f2533EaF01D0bB2fa0E2274f3002287F1',
+};
+
+const PARTNERS = {
   LEDGER_PARTNER_ID: '0x558247e365be655f9144e1a0140D793984372Ef3',
 };
 
@@ -105,6 +108,7 @@ export const getConstants = memoize((): Constants => {
       trustedVaultMigrator: '0x1824df8D751704FA10FA371d62A37f9B8772ab90',
       triCryptoVaultMigrator: '0xC306a5ef4B990A7F2b3bC2680E022E6a84D75fC1',
       ...ADDRESSES,
+      ...PARTNERS,
     },
     SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
     DEFAULT_SLIPPAGE: 0.01,
@@ -118,5 +122,6 @@ export const getConstants = memoize((): Constants => {
     SUPPORTED_LANGS: ['en', 'es'],
     DUST_AMOUNT_USD: '10000000',
     YEARN_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
+    ASSETS_ICON_URL: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/',
   };
 });

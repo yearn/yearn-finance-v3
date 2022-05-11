@@ -17,11 +17,13 @@ const classic = {
     secondary: '#0657F9',
     titles: '#FFFFFF',
     titlesVariant: '#FFFFFF',
-    texts: '#7F8DA9',
+    texts: '#CED5E3',
+    textsVariant: '#7F8DA9',
     disabled: '#CED5E3',
     icons: {
       primary: '#7F8DA9',
       variant: '#FFFFFF',
+      text: '#012A7C',
     },
     button: {
       filled: {
@@ -62,10 +64,12 @@ const classicTheme: DefaultTheme = {
     icons: {
       primary: classic.colors.icons.primary,
       variant: classic.colors.icons.variant,
+      text: classic.colors.icons.text,
     },
     titles: classic.colors.titles,
     titlesVariant: classic.colors.titlesVariant,
     texts: classic.colors.texts,
+    textsVariant: classic.colors.textsVariant,
     surfaceVariant: classic.colors.surfaceVariant,
 
     secondaryVariantA: '#006AE3',
@@ -96,6 +100,7 @@ const classicTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#fff',
       color: '#fff',
+      iconFill: classic.colors.backgroundVariant,
       // disabledContrast: '0.1',
 
       selected: {
