@@ -17,7 +17,7 @@ export interface Env {
   BLOCKNATIVE_KEY: string | undefined;
   FORTMATIC_KEY: string | undefined;
   PORTIS_KEY: string | undefined;
-  ZAPPER_AUTH_TOKEN: string | undefined;
+  ZAPPER_API_KEY: string | undefined;
   YEARN_SUBGRAPH_KEY: string | undefined;
 }
 
@@ -48,4 +48,5 @@ export interface Constants {
   DUST_AMOUNT_USD: string;
   YEARN_SUBGRAPH_ID: string;
   ASSETS_ICON_URL: string;
+  ZAPPER_AUTH_TOKEN: string;
 }

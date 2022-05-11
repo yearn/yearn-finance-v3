@@ -2,6 +2,7 @@ import { memoize } from 'lodash';
 
 import { Constants, NetworkSettings } from '@types';
 import { getEnv } from '@config/env';
+import { encode } from '@src/utils';
 
 const ADDRESSES = {
   ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
@@ -88,7 +89,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
 };
 
 export const getConstants = memoize((): Constants => {
-  const { ALCHEMY_API_KEY } = getEnv();
+  const { ALCHEMY_API_KEY, ZAPPER_API_KEY } = getEnv();
   return {
     STATE_VERSION: 1,
     ETHEREUM_ADDRESS: ADDRESSES.ETH,
@@ -123,5 +124,6 @@ export const getConstants = memoize((): Constants => {
     DUST_AMOUNT_USD: '10000000',
     YEARN_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
     ASSETS_ICON_URL: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/',
+    ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
   };
 });

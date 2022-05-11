@@ -1,7 +1,6 @@
 import { memoize } from 'lodash';
 
 import { Env, Network } from '@types';
-import { encode } from '@src/utils/encode';
 
 export const getEnv = memoize(
   (): Env => ({
@@ -18,7 +17,7 @@ export const getEnv = memoize(
     BLOCKNATIVE_KEY: process.env.REACT_APP_BLOCKNATIVE_KEY,
     FORTMATIC_KEY: process.env.REACT_APP_FORTMATIC_KEY,
     PORTIS_KEY: process.env.REACT_APP_PORTIS_KEY,
-    ZAPPER_AUTH_TOKEN: encode({ str: `${process.env.REACT_APP_ZAPPER_API_KEY}:`, encoding: 'base64' }),
+    ZAPPER_API_KEY: process.env.REACT_APP_ZAPPER_API_KEY,
     YEARN_SUBGRAPH_KEY: process.env.REACT_APP_YEARN_SUBGRAPH_KEY,
   })
 );
