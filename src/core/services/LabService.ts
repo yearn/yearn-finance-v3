@@ -19,6 +19,7 @@ import {
   GetSupportedLabsProps,
 } from '@types';
 import { get, toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress, getProviderType } from '@utils';
+import { getConstants } from '@config/constants';
 
 import backscratcherAbi from './contracts/backscratcher.json';
 import y3CrvBackZapperAbi from './contracts/y3CrvBackZapper.json';
@@ -64,6 +65,7 @@ export class LabServiceImpl implements LabService {
     const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
     const { ETH, YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+    const { ASSETS_ICON_URL } = getConstants();
     const yearn = this.yearnSdk.getInstanceOf(network);
     const providerType = getProviderType(network);
     const provider = this.web3Provider.getInstanceOf(providerType);
@@ -72,8 +74,6 @@ export class LabServiceImpl implements LabService {
       'https://api.coingecko.com/api/v3/simple/price?ids=curve-dao-token,vecrv-dao-yvault&vs_currencies=usd'
     );
     const [vaultsResponse, pricesResponse] = await Promise.all([vaultsPromise, pricesPromise]);
-
-    const ASSET_URL = 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/';
 
     // **************** BACKSCRATCHER ****************
     let backscratcherLab: Lab | undefined;
@@ -129,7 +129,7 @@ export class LabServiceImpl implements LabService {
               }
             : undefined,
           displayName: backscratcherData.name,
-          displayIcon: `${ASSET_URL}${YVECRV}/logo-128.png`,
+          displayIcon: `${ASSETS_ICON_URL}${YVECRV}/logo-128.png`,
           defaultDisplayToken: CRV,
         },
       };
@@ -170,7 +170,7 @@ export class LabServiceImpl implements LabService {
         underlyingTokenBalance,
         metadata: {
           ...yvBoostVaultDynamic.metadata,
-          displayIcon: `${ASSET_URL}${address}/logo-128.png`,
+          displayIcon: `${ASSETS_ICON_URL}${address}/logo-128.png`,
         },
       };
     } catch (error) {
@@ -228,7 +228,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: pJarRatio.toString(),
           apy: { ...pJarData.apy, net_apy: toBN(performance.toString()).dividedBy(100).toNumber() },
           displayName: 'pSLPyvBOOST-ETH',
-          displayIcon: `${ASSET_URL}${PSLPYVBOOSTETH}/logo-128.png`,
+          displayIcon: `${ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
         },
       };
@@ -250,7 +250,7 @@ export class LabServiceImpl implements LabService {
 
   public async getUserLabsPositions(props: GetUserLabsPositionsProps) {
     const { userAddress, network } = props;
-    const { YEARN_API, ZAPPER_API_KEY, CONTRACT_ADDRESSES } = this.config;
+    const { YEARN_API, ZAPPER_AUTH_TOKEN, CONTRACT_ADDRESSES } = this.config;
     const { YVECRV, CRV, THREECRV, YVBOOST, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = CONTRACT_ADDRESSES;
     const THREECRV_DECIMALS = 18;
     const providerType = getProviderType(network);
@@ -375,9 +375,9 @@ export class LabServiceImpl implements LabService {
       const pickleGaugeContract = getContract(PSLPYVBOOSTETH_GAUGE, pickleGaugeAbi, provider);
       const pJarBalanceOfPromise = pSLPyvBoostEthContract.balanceOf(userAddress);
       const pGaugeBalanceOfPromise = pickleGaugeContract.balanceOf(userAddress);
-      const pJarPricePerTokenPromise = get(
-        `https://api.zapper.fi/v1/protocols/pickle/token-market-data?api_key=${ZAPPER_API_KEY}&type=vault`
-      );
+      const pJarPricePerTokenPromise = get(`https://api.zapper.fi/v2/apps/pickle/tokens?groupId=jar`, {
+        headers: { Authorization: `Basic ${ZAPPER_AUTH_TOKEN}` },
+      });
       const [pJarBalanceOf, pGaugeBalanceOf, pJarPricePerTokenResponse] = await Promise.all([
         pJarBalanceOfPromise,
         pGaugeBalanceOfPromise,

@@ -24,11 +24,11 @@ const TENDERLY_ERRORS = {
 };
 const ZAPPER_ERRORS = {
   [ZapperError.ZAP_IN]: 'Error Zapping in token',
-  [ZapperError.ZAP_IN_APPROVAL]: 'Error getting approval Zap in state of token',
-  [ZapperError.ZAP_IN_APPROVAL_STATE]: 'Error approving Zap in of token fetching token',
+  [ZapperError.ZAP_IN_APPROVAL_STATE]: 'Error getting approval Zap in state of token',
+  [ZapperError.ZAP_IN_APPROVAL]: 'Error approving Zap in of token',
   [ZapperError.ZAP_OUT]: 'Error Zapping out token',
-  [ZapperError.ZAP_OUT_APPROVAL]: 'Error getting approval Zap out state of token',
-  [ZapperError.ZAP_OUT_APPROVAL_STATE]: 'Error approving Zap out of token fetching token',
+  [ZapperError.ZAP_OUT_APPROVAL_STATE]: 'Error getting approval Zap out state of token',
+  [ZapperError.ZAP_OUT_APPROVAL]: 'Error approving Zap out of token',
 };
 
 export const parseError = (e: any): SerializedError => {
@@ -87,7 +87,7 @@ export const parseError = (e: any): SerializedError => {
   }
 
   return {
-    message: 'An unknown error ocurred',
+    message: 'An unknown error occurred',
     name: 'Unknown',
   };
 };

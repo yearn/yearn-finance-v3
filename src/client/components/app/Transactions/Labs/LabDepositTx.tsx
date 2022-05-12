@@ -6,7 +6,6 @@ import {
   useAppDispatchAndUnwrap,
   useDebounce,
   useAppTranslation,
-  useAllowance,
   useSelectedSellToken,
 } from '@hooks';
 import {
@@ -30,7 +29,7 @@ import {
   validateSlippage,
   validateNetwork,
   formatApy,
-  basicValidateAllowance,
+  validateVaultAllowance,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -49,10 +48,12 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
   const simulationsEnabled = servicesEnabled['tenderly'];
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
@@ -65,11 +66,6 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
     selectedSellTokenAddress,
     selectedVaultOrLab: selectedLab,
-  });
-  const [tokenAllowance, isLoadingTokenAllowance, tokenAllowanceError] = useAllowance({
-    tokenAddress: selectedSellTokenAddress,
-    vaultAddress: selectedLab?.address,
-    isLab: true,
   });
 
   const onExit = () => {
@@ -87,6 +83,21 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       onExit();
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedLab || !selectedSellTokenAddress || !isWalletConnected) return;
+    const fetchAllowance = async () => {
+      setIsFetchingAllowance(true);
+      await dispatch(
+        LabsActions.getDepositAllowance({
+          labAddress: selectedLab.address,
+          tokenAddress: selectedSellTokenAddress,
+        })
+      );
+      setIsFetchingAllowance(false);
+    };
+    fetchAllowance();
+  }, [selectedSellTokenAddress, selectedLab?.address, isWalletConnected]);
 
   useEffect(() => {
     if (!selectedLab) return;
@@ -113,17 +124,14 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     return null;
   }
 
-  let isApproved: boolean | undefined;
-  let allowanceError: string | undefined;
-
-  const { approved, error } = basicValidateAllowance({
-    tokenAddress: selectedSellTokenAddress,
-    tokenAmount: toBN(debouncedAmount),
-    tokenDecimals: selectedSellToken.decimals.toString(),
-    rawAllowance: tokenAllowance?.amount || '0',
+  const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
+    amount: toBN(debouncedAmount),
+    vaultAddress: selectedLab.address,
+    vaultUnderlyingTokenAddress: selectedLab.token.address,
+    sellTokenAddress: selectedSellTokenAddress,
+    sellTokenDecimals: selectedSellToken.decimals.toString(),
+    sellTokenAllowancesMap: selectedSellToken.allowancesMap,
   });
-  isApproved = approved;
-  allowanceError = error;
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({
     sellTokenAmount: toBN(debouncedAmount),
@@ -152,9 +160,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       expectedTxOutcomeStatus.error ||
       actionsStatus.approveDeposit.error ||
       actionsStatus.deposit.error ||
-      slippageError ||
-      tokenAllowanceError,
-    loading: expectedTxOutcomeStatus.loading || isDebouncePending || isLoadingTokenAllowance,
+      slippageError,
+    loading: expectedTxOutcomeStatus.loading || isDebouncePending,
   };
 
   const selectedLabOption = {
@@ -235,7 +242,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveDeposit,
-      disabled: isApproved,
+      disabled: isApproved || isFetchingAllowance,
     },
     {
       label: t('components.transaction.deposit'),

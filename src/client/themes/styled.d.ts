@@ -75,6 +75,7 @@ declare module 'styled-components' {
     layoutPadding: string;
     card: {
       padding: string;
+      paddingVariant: string;
     };
   }
 
@@ -96,10 +97,12 @@ declare module 'styled-components' {
       icons: {
         primary: string;
         variant: string;
+        text: string;
       };
       titles: string;
       titlesVariant: string;
       texts: string;
+      textsVariant: string;
       surfaceVariant: string;
       // END REWORK
 
@@ -131,6 +134,7 @@ declare module 'styled-components' {
         background: string;
         borderColor: string;
         color: string;
+        iconFill: string;
         // disabledContrast: string;
 
         selected: {
@@ -147,8 +151,14 @@ declare module 'styled-components' {
         primary: string;
         onPrimary: string;
         loading: string;
-        error: string;
-        warning: string;
+        error: {
+          backgroundColor: string;
+          color: string;
+        };
+        warning: {
+          backgroundColor: string;
+          color: string;
+        };
         success: string;
         text: string;
         textContrast: string;

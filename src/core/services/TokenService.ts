@@ -18,6 +18,7 @@ import {
 } from '@types';
 import { getContract } from '@frameworks/ethers';
 import { get, getUniqueAndCombine, toBN, USDC_DECIMALS } from '@utils';
+import { getConstants } from '@config/constants';
 
 import erc20Abi from './contracts/erc20.json';
 
@@ -113,6 +114,7 @@ export class TokenServiceImpl implements TokenService {
 
   private async getYvBoostToken(): Promise<Token> {
     const { YVBOOST } = this.config.CONTRACT_ADDRESSES;
+    const { ASSETS_ICON_URL } = getConstants();
     const pricesResponse = await get('https://api.coingecko.com/api/v3/simple/price?ids=yvboost&vs_currencies=usd');
     const yvBoostPrice = pricesResponse.data['yvboost']['usd'];
     return {
@@ -127,16 +129,17 @@ export class TokenServiceImpl implements TokenService {
         zapper: false,
       },
       symbol: 'yvBOOST',
-      icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${YVBOOST}/logo-128.png`,
+      icon: `${ASSETS_ICON_URL}${YVBOOST}/logo-128.png`,
     };
   }
 
   private async getPSLPyvBoostEthToken(): Promise<Token> {
-    const { ZAPPER_API_KEY } = this.config;
+    const { ZAPPER_AUTH_TOKEN } = this.config;
     const { PSLPYVBOOSTETH } = this.config.CONTRACT_ADDRESSES;
-    const pricesResponse = await get(
-      `https://api.zapper.fi/v1/protocols/pickle/token-market-data?api_key=${ZAPPER_API_KEY}&type=vault`
-    );
+    const { ASSETS_ICON_URL } = getConstants();
+    const pricesResponse = await get(`https://api.zapper.fi/v2/apps/pickle/tokens?groupId=jar`, {
+      headers: { Authorization: `Basic ${ZAPPER_AUTH_TOKEN}` },
+    });
     const pJarPricePerToken = pricesResponse.data.find(
       ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
     )?.price;
@@ -152,7 +155,7 @@ export class TokenServiceImpl implements TokenService {
         zapper: false,
       },
       symbol: 'pSLPyvBOOST-ETH',
-      icon: `https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/tokens/${PSLPYVBOOSTETH}/logo-128.png`,
+      icon: `${ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
     };
   }
 

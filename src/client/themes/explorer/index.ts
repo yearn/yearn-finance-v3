@@ -27,10 +27,12 @@ const explorerTheme: DefaultTheme = {
     icons: {
       primary: '#AD3235',
       variant: '#FFF',
+      text: '#FFF',
     },
     titles: '#FFF',
     titlesVariant: '#AD3235',
     texts: '#FFF',
+    textsVariant: '#AD3235',
     surfaceVariant: '#FFF',
 
     secondaryVariantA: 'rgba(173, 50, 53, 0.5)',
@@ -61,6 +63,7 @@ const explorerTheme: DefaultTheme = {
       background: 'transparent',
       borderColor: '#eeeeee',
       color: '#eeeeee',
+      iconFill: '#cfa368',
       // disabledContrast: '',
 
       selected: {
@@ -77,8 +80,14 @@ const explorerTheme: DefaultTheme = {
       primary: '#FFA800',
       onPrimary: '#FFFFFF',
       loading: '#9f1431',
-      error: '#EF1E02',
-      warning: '#FFA800',
+      error: {
+        backgroundColor: '#FFD9D9',
+        color: '#FF0000',
+      },
+      warning: {
+        backgroundColor: '#FFF9D9',
+        color: '#FF8A00',
+      },
       success: '#01E2A0',
       text: '#eeeeee',
       textContrast: '#212121',

@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
-import { OptionList, EthereumIcon, FantomIcon, ArbitrumIcon } from '@components/common';
+import { OptionList, EthereumIcon, FantomIcon, ArbitrumIcon, Link } from '@components/common';
 import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';
 import { getConfig } from '@config';
-import { inIframe } from '@utils';
 
 const StyledOptionList = styled(OptionList)`
   width: 15rem;
@@ -37,8 +36,13 @@ const StyledText = styled.h1<{ toneDown?: boolean }>`
   ${({ toneDown, theme }) =>
     toneDown &&
     `
-    color: ${theme.colors.texts};
+    color: ${theme.colors.textsVariant};
   `}
+`;
+
+const StyledLink = styled(Link)`
+  font-size: 2.4rem;
+  font-weight: 700;
 `;
 
 const StyledNavbar = styled.header`
@@ -80,31 +84,36 @@ const getNetworkIcon = (network: Network) => {
 interface NavbarProps {
   className?: string;
   title?: string;
+  titleLink?: string;
   subTitle?: string;
   walletAddress?: string;
   addressEnsName?: string;
   onWalletClick?: () => void;
+  disableWalletSelect?: boolean;
   selectedNetwork: Network;
   networkOptions: Network[];
   onNetworkChange: (network: string) => void;
   disableNetworkChange?: boolean;
+  hideDisabledControls?: boolean;
 }
 
 export const Navbar = ({
   className,
   title,
+  titleLink,
   subTitle,
   walletAddress,
   addressEnsName,
   onWalletClick,
+  disableWalletSelect,
   selectedNetwork,
   networkOptions,
   onNetworkChange,
   disableNetworkChange,
+  hideDisabledControls,
 }: NavbarProps) => {
   const { isMobile } = useWindowDimensions();
   const { NETWORK_SETTINGS } = getConfig();
-  const isInIframe = inIframe();
 
   const dropdownSelectedNetwork = {
     value: selectedNetwork,
@@ -119,36 +128,35 @@ export const Navbar = ({
 
   const secondTitleEnabled = !!subTitle?.length;
 
-  const vaultText = (
-    <>
-      &nbsp;/&nbsp;<StyledText>{subTitle}</StyledText>
-    </>
-  );
+  const titleText = secondTitleEnabled ? <>{title}&nbsp;/&nbsp;</> : title;
 
   return (
     <StyledNavbar className={className}>
       {title && (
-        <StyledText toneDown={secondTitleEnabled}>
-          {title}
-          {secondTitleEnabled && vaultText}
-        </StyledText>
+        <>
+          <StyledText toneDown={secondTitleEnabled}>
+            {titleLink ? <StyledLink to={titleLink}>{titleText}</StyledLink> : titleText}
+          </StyledText>
+          {secondTitleEnabled && <StyledText>{subTitle}</StyledText>}
+        </>
       )}
 
       <StyledNavbarActions>
-        <StyledOptionList
-          selected={dropdownSelectedNetwork}
-          setSelected={(option) => onNetworkChange(option.value)}
-          options={dropdownNetworkOptions}
-          hideIcons={isMobile}
-          isLoading={disableNetworkChange}
-          disabled={disableNetworkChange || isInIframe}
-        />
+        {!hideDisabledControls && (
+          <StyledOptionList
+            selected={dropdownSelectedNetwork}
+            setSelected={(option) => onNetworkChange(option.value)}
+            options={dropdownNetworkOptions}
+            hideIcons={isMobile}
+            disabled={disableNetworkChange}
+          />
+        )}
 
         <ConnectWalletButton
           address={walletAddress}
           ensName={addressEnsName}
           onClick={() => onWalletClick && onWalletClick()}
-          disabled={isInIframe}
+          disabled={disableWalletSelect}
         />
       </StyledNavbarActions>
     </StyledNavbar>

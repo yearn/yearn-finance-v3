@@ -48,25 +48,6 @@ export const orderApy = (apyData: string, apyType: string) => {
   return toNumber(apyData) ?? 0;
 };
 
-export const inIframe = () => {
-  try {
-    return window.self !== window.top;
-  } catch (e) {
-    return true;
-  }
-};
-
-export const inLedgerIframe = () => {
-  try {
-    return (
-      window.self !== window.top &&
-      (window?.location?.ancestorOrigins?.[0]?.includes('ledger') || window?.navigator?.userAgent.includes('Firefox'))
-    );
-  } catch (e) {
-    return true;
-  }
-};
-
 export const isCustomApyType = (apyType: string) => apyType === 'new' || apyType === 'n/a' || apyType === 'override';
 
 export const getRandomId = (): string => new Date().getTime().toString(36) + Math.random().toString(36).slice(2);

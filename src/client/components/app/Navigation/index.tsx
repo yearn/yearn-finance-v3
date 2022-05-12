@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
-import { WalletIcon, VaultIcon, LabsIcon, IronBankIcon, SettingsIcon } from '@components/common';
+import { WalletIcon, VaultIcon, LabsIcon, SettingsIcon, IronBankIcon } from '@components/common';
 
 import { NavSidebar } from './NavSidebar';
 import { NavTabbar } from './NavTabbar';
@@ -13,11 +13,13 @@ export interface NavigationLink {
   text: string;
   icon: ElementType;
   hideMobile?: boolean;
+  external?: boolean;
+  optional?: boolean;
 }
 
 const StyledNavigation = styled.div``;
 
-const navLinks = [
+const navLinks: NavigationLink[] = [
   {
     to: '/portfolio',
     text: 'navigation.portfolio',
@@ -32,11 +34,14 @@ const navLinks = [
     to: '/labs',
     text: 'navigation.labs',
     icon: LabsIcon,
+    optional: true,
   },
   {
-    to: '/ironbank',
+    to: 'https://app.ib.xyz',
     text: 'navigation.ironbank',
     icon: IronBankIcon,
+    external: true,
+    optional: true,
   },
   {
     to: '/settings',
@@ -46,8 +51,13 @@ const navLinks = [
   },
 ];
 
-export const Navigation = () => {
+interface NavigationProps {
+  hideOptionalLinks?: boolean;
+}
+
+export const Navigation = ({ hideOptionalLinks }: NavigationProps) => {
   const { isMobile, isTablet, isDesktop } = useWindowDimensions();
+  const displayLinks = navLinks.filter((link) => !(link.optional && hideOptionalLinks));
 
   // NOTE Auto collapse sidenav on mobile
   const dispatch = useAppDispatch();
@@ -64,8 +74,7 @@ export const Navigation = () => {
 
   return (
     <StyledNavigation>
-      {!isMobile && <NavSidebar navLinks={navLinks} />}
-      {isMobile && <NavTabbar navLinks={navLinks} />}
+      {isMobile ? <NavTabbar navLinks={displayLinks} /> : <NavSidebar navLinks={displayLinks} />}
     </StyledNavigation>
   );
 };

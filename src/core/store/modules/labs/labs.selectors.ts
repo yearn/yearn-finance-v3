@@ -31,7 +31,33 @@ const selectUserYveCrvTokenData = (state: RootState) => state.tokens.user.userTo
 const selectYveCrvTokenAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVECRV];
 
 const selectYvBoostData = (state: RootState) => state.tokens.tokensMap[YVBOOST];
-const selectUserYvBoostData = (state: RootState) => state.tokens.user.userTokensMap[YVBOOST];
+const selectUserYvBoostData = (state: RootState) => {
+  const userToken = state.tokens.user.userTokensMap[YVBOOST];
+  if (userToken) {
+    return userToken;
+  }
+
+  // if yvBOOST not in userTokensMap, get balance from lab positions
+  const token = state.tokens.tokensMap[YVBOOST];
+  const position = state.labs.user.userLabsPositionsMap[YVBOOST]?.DEPOSIT;
+  if (!token || !position) {
+    return userToken;
+  }
+
+  const balance: Balance = {
+    address: position.assetAddress,
+    token: {
+      address: token.address,
+      name: token.name,
+      symbol: token.symbol,
+      decimals: token.decimals,
+    },
+    balance: position.balance,
+    balanceUsdc: position.underlyingTokenBalance.amountUsdc,
+    priceUsdc: token.priceUsdc,
+  };
+  return balance;
+};
 const selectYvBoostAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVBOOST];
 
 const selectSelectedLabAddress = (state: RootState) => state.labs.selectedLabAddress;
@@ -150,7 +176,7 @@ const selectLabsOpportunities = createSelector([selectLabs], (labs) => {
 
 const selectRecommendations = createSelector([selectLabs], (labs) => {
   // TODO criteria
-  return labs.slice(0, 3);
+  return labs.slice(0, 3).sort((a, b) => Number(b.apyData) - Number(a.apyData));
 });
 
 const selectSelectedLab = createSelector([selectLabs, selectSelectedLabAddress], (labs, selectedLabAddress) => {

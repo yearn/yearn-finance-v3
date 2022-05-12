@@ -36,6 +36,7 @@ const {
   getTokensDynamicData,
   getUserTokens,
   setSelectedTokenAddress,
+  setTokenAllowance,
   approve,
   getTokenAllowance,
   clearTokensData,
@@ -52,6 +53,12 @@ const tokensReducer = createReducer(tokensInitialState, (builder) => {
     /* -------------------------------------------------------------------------- */
     .addCase(setSelectedTokenAddress, (state, { payload: { tokenAddress } }) => {
       state.selectedTokenAddress = tokenAddress;
+    })
+    .addCase(setTokenAllowance, (state, { payload: { tokenAddress, spenderAddress, allowance } }) => {
+      state.user.userTokensAllowancesMap[tokenAddress] = {
+        ...state.user.userTokensAllowancesMap[tokenAddress],
+        [spenderAddress]: allowance,
+      };
     })
 
     /* -------------------------------------------------------------------------- */

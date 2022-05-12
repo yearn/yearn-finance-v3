@@ -15,6 +15,7 @@ import {
   NetworkActions,
   AlertsActions,
   VaultsSelectors,
+  PartnerSelectors,
 } from '@store';
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
@@ -22,6 +23,7 @@ import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
 import { Network, Route } from '@types';
 import { device } from '@themes/default';
+import { isInIframe } from '@utils';
 
 const contentSeparation = '1.6rem';
 
@@ -92,6 +94,7 @@ export const Layout: FC = ({ children }) => {
   const location = useLocation();
   const { SUPPORTED_NETWORKS } = getConfig();
   const { isMobile } = useWindowDimensions();
+  const partner = useAppSelector(PartnerSelectors.selectPartnerState);
   const selectedAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const addressEnsName = useAppSelector(WalletSelectors.selectAddressEnsName);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
@@ -102,27 +105,32 @@ export const Layout: FC = ({ children }) => {
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1] as Route;
+  const isLedgerLive = partner.id === 'ledger';
+  const isIframe = isInIframe();
+  const hideControls = isIframe || isLedgerLive;
+  const hideOptionalLinks = isLedgerLive;
 
   let vaultName;
+  let titleLink;
   // TODO Add lab details route when its added the view
   if (path === 'vault') {
     vaultName = selectedVault?.displayName;
+    titleLink = '/vaults';
   }
 
   // TODO This is only assetAddress on the vault page
   const assetAddress: string | undefined = location.pathname.split('/')[2];
 
   // Used to check zapper api
-  const { ZAPPER_API_KEY } = getConfig();
+  const { ZAPPER_AUTH_TOKEN } = getConfig();
 
   useEffect(() => {
     dispatch(AppActions.initApp());
 
     // NOTE Test zapper API
-    const url = 'https://api.zapper.fi/v1/prices';
-    const params = new URLSearchParams({ api_key: ZAPPER_API_KEY ?? '' });
-
-    fetch(`${url}?${params}`).catch((error) => {
+    fetch('https://api.zapper.fi/v2/prices', {
+      headers: { Authorization: `Basic ${ZAPPER_AUTH_TOKEN}` },
+    }).catch((_error) => {
       dispatch(
         AlertsActions.openAlert({
           message:
@@ -180,18 +188,22 @@ export const Layout: FC = ({ children }) => {
     <StyledLayout>
       <Alerts />
       <Modals />
-      <Navigation />
+      <Navigation hideOptionalLinks={hideOptionalLinks} />
 
       <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
         <Navbar
           title={t(`navigation.${path}`)}
+          titleLink={titleLink}
           subTitle={vaultName}
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}
           onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}
+          disableWalletSelect={hideControls}
           selectedNetwork={currentNetwork}
           networkOptions={SUPPORTED_NETWORKS}
           onNetworkChange={(network) => dispatch(NetworkActions.changeNetwork({ network: network as Network }))}
+          disableNetworkChange={hideControls}
+          hideDisabledControls={hideControls}
         />
 
         {children}

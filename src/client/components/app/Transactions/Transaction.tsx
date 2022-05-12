@@ -147,7 +147,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         loadingText={loadingText ?? t('components.transaction.status.simulating')}
       />
 
-      {generalStatus.error && <TxError errorType="warning" errorText={generalStatus.error} />}
+      {generalStatus.error && <TxError errorType="warning" errorTitle={generalStatus.error} />}
 
       <TxActions>
         {actions.map(({ label, onAction, status, disabled, contrast }) => (

@@ -18,29 +18,30 @@ interface TokenIconProps {
   size?: TokenIconSize;
 }
 
-export const TokenIcon = ({ icon, symbol, size, ...props }: TokenIconProps) => {
+export const TokenIcon = ({ icon, symbol, size }: TokenIconProps) => {
   const src = icon === '' || !icon ? fallbackIcon : icon;
-  // TODO: use rem units instead of pixels
   let height;
   switch (size) {
     case 'big':
-      height = 42;
+      height = '4.2rem';
       break;
     case 'xBig':
-      height = 64;
+      height = '6.4rem';
       break;
     case 'xxBig':
-      height = 80;
+      height = '8rem';
       break;
     default:
-      height = 32;
+      height = '3.2rem';
       break;
   }
   const width = height;
+  const style = {
+    minWidth: width,
+    minHeight: height,
+    width: width,
+    height: height,
+  };
 
-  return (
-    <StyledTokenIcon {...props}>
-      {src && <Img alt={symbol ?? 'n/a'} width={width} height={height} src={src} />}
-    </StyledTokenIcon>
-  );
+  return <StyledTokenIcon>{src && <Img alt={symbol ?? 'n/a'} style={style} src={src} />}</StyledTokenIcon>;
 };

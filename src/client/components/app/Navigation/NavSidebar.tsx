@@ -1,12 +1,11 @@
 import styled from 'styled-components';
-import { useLocation, useHistory, Link } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 import { useAppTranslation, useAppSelector } from '@hooks';
 import { SettingsSelectors } from '@store';
 import { NavigationLink } from '@components/app';
-import { Icon, Logo } from '@components/common';
+import { Link, Icon, Logo, RedirectIcon } from '@components/common';
 
-const linkHoverFilter = 'brightness(90%)';
 const linkTransition = 'filter 200ms ease-in-out';
 
 const SidebarHeader = styled.div`
@@ -36,6 +35,14 @@ const LinkList = styled.div`
   margin-top: 2.4rem;
 `;
 
+const LinkRedirectIcon = styled(Icon)`
+  display: inline-block;
+  fill: currentColor;
+  width: 1.2rem;
+  margin-left: 0.4rem;
+  padding-bottom: 0.2rem;
+`;
+
 const LinkIcon = styled(Icon)`
   margin-right: 1.2rem;
   fill: ${({ theme }) => theme.colors.icons.variant};
@@ -46,22 +53,31 @@ const LinkIcon = styled(Icon)`
 
 const LinkText = styled.span`
   white-space: nowrap;
+  color: ${(props) => props.theme.colors.texts};
 `;
 
 const RouterLink = styled(Link)<{ selected: boolean }>`
   display: flex;
   align-items: center;
-  color: inherit;
   font-size: 1.6rem;
   font-weight: 400;
 
   &:hover span {
-    filter: ${linkHoverFilter};
+    color: ${(props) => props.theme.colors.textsVariant};
+  }
+
+  svg {
+    fill: ${(props) => props.theme.colors.texts};
+  }
+
+  &:hover svg {
+    fill: ${(props) => props.theme.colors.textsVariant};
   }
 
   span {
     transition: ${linkTransition};
   }
+
   ${(props) =>
     props.selected &&
     `
@@ -71,6 +87,14 @@ const RouterLink = styled(Link)<{ selected: boolean }>`
     ${LinkText} {
       color: ${props.theme.colors.primary};
       font-weight: 700;
+    }
+    &:hover {
+      ${LinkIcon} {
+        fill: ${props.theme.colors.primary};
+      }
+      ${LinkText} {
+        color: ${props.theme.colors.primary};
+      }
     }
   `}
 `;
@@ -96,7 +120,7 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
   max-height: calc(100% - ${({ theme }) => theme.card.padding} * 2);
   top: ${({ theme }) => theme.card.padding};
   padding: 1rem 1.2rem;
-  padding-top: ${({ theme }) => theme.card.padding};
+  padding-top: 3.1rem;
   transition: width ${({ theme }) => theme.sideBar.animation};
   overflow: hidden;
   overflow-y: auto;
@@ -113,6 +137,7 @@ const StyledSidebar = styled.div<{ collapsed?: boolean }>`
     }
   `};
 `;
+
 interface NavSidebarProps {
   navLinks: NavigationLink[];
 }
@@ -137,8 +162,11 @@ export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
     <LinkList className="link-list">
       {navLinks.map((link, index) => {
         return (
-          <RouterLink to={link.to} key={index} selected={currentPath === link.to}>
-            <LinkIcon Component={link.icon} /> <LinkText>{t(link.text)}</LinkText>
+          <RouterLink to={link.to} key={index} selected={currentPath === link.to} external={link.external}>
+            <LinkIcon Component={link.icon} />
+            <LinkText>
+              {t(link.text)} {link.external && <LinkRedirectIcon Component={RedirectIcon} />}
+            </LinkText>
           </RouterLink>
         );
       })}

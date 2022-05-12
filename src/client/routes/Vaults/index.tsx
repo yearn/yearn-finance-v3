@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation, usePrevious } from '@hooks';
 import {
   ModalsActions,
   ModalSelectors,
@@ -39,6 +39,7 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { VaultView } from '@src/core/types';
+import { GoblinTown } from '@assets/images';
 
 const StyledHelperCursor = styled.span`
   cursor: help;
@@ -48,6 +49,7 @@ const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
 const StyledSliderCard = styled(SliderCard)`
   width: 100%;
+  min-height: 24rem;
 `;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
@@ -83,6 +85,7 @@ const DepositsCard = styled(DetailCard)`
     .col-name {
       width: 18rem;
     }
+
     .col-balance {
       width: 10rem;
     }
@@ -109,6 +112,7 @@ const DeprecatedCard = styled(DetailCard)`
     .col-name {
       width: 18rem;
     }
+
     .col-balance {
       width: 10rem;
     }
@@ -163,6 +167,7 @@ export const Vaults = () => {
   const deprecated = useAppSelector(VaultsSelectors.selectDeprecatedVaults);
   const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOpportunities);
+  const previousOpportunities = usePrevious(opportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
@@ -175,8 +180,10 @@ export const Vaults = () => {
   const depositsLoading = generalLoading && !deposits.length;
 
   useEffect(() => {
-    setFilteredVaults(opportunities);
-  }, [opportunities]);
+    if (previousOpportunities?.length !== opportunities.length) {
+      setFilteredVaults(opportunities);
+    }
+  }, [opportunities, previousOpportunities]);
 
   const depositHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
@@ -207,21 +214,13 @@ export const Vaults = () => {
   return (
     <ViewContainer>
       <StyledSliderCard
-        header={t('vaults:your-time-card.header')}
+        header={t('vaults:banner.header')}
         Component={
           <Text>
-            <p>{t('vaults:your-time-card.desc-1')}</p>
-            <p>{t('vaults:your-time-card.desc-2')}</p>
-            <p>{t('vaults:your-time-card.desc-3')}</p>
+            <p>{t('vaults:banner.desc')}</p>
           </Text>
         }
-        // NOTE Example for slideshow array
-        // slidesContent={[
-        // {
-        //   header: 'Test header',
-        //   content: 'test content',
-        // },
-        // ]}
+        background={<img src={GoblinTown} alt={'Goblin town or the Citadel?'} />}
       />
 
       <SummaryCard items={summaryCardItems} cardSize="small" />

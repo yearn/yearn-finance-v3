@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { Lab, LabDynamic, Position, TokenAllowance, TransactionResponse } from '@types';
+import { Lab, LabDynamic, Position, TokenAllowance } from '@types';
 import {
   toBN,
   getNetwork,
@@ -162,9 +162,9 @@ const approveDeposit = createAsyncThunk<{ amount: string; spenderAddress: string
       vaultAddress: labData.address,
     });
 
-    await transactionService.handleTransaction({ tx: tx as TransactionResponse, network: network.current });
+    await transactionService.handleTransaction({ tx, network: network.current });
 
-    const { spender } = await vaultService.getVaultAllowance({
+    const { spender } = await vaultService.getDepositAllowance({
       network: network.current,
       vaultAddress: labAddress,
       tokenAddress,
@@ -178,14 +178,14 @@ const approveDeposit = createAsyncThunk<{ amount: string; spenderAddress: string
   }
 );
 
-const getLabAllowance = createAsyncThunk<
+const getDepositAllowance = createAsyncThunk<
   TokenAllowance,
   {
     tokenAddress: string;
-    vaultAddress: string;
+    labAddress: string;
   },
   ThunkAPI
->('labs/getLabAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState }) => {
+>('labs/getDepositAllowance', async ({ labAddress, tokenAddress }, { extra, getState, dispatch }) => {
   const {
     services: { vaultService },
   } = extra;
@@ -194,12 +194,22 @@ const getLabAllowance = createAsyncThunk<
 
   if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-  return vaultService.getVaultAllowance({
+  const tokenAllowance = await vaultService.getDepositAllowance({
     network: network.current,
-    vaultAddress: vaultAddress,
+    vaultAddress: labAddress,
     tokenAddress,
     accountAddress: userAddress,
   });
+
+  await dispatch(
+    TokensActions.setTokenAllowance({
+      tokenAddress,
+      spenderAddress: tokenAllowance.spender,
+      allowance: tokenAllowance.amount,
+    })
+  );
+
+  return tokenAllowance;
 });
 
 const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
@@ -778,7 +788,7 @@ export const LabsActions = {
   clearSelectedLabAndStatus,
   clearLabStatus,
   clearUserData,
-  getLabAllowance,
+  getDepositAllowance,
   yvBoost: {
     yvBoostApproveDeposit,
     yvBoostDeposit,
