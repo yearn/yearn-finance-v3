@@ -158,7 +158,7 @@ export const Vaults = () => {
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   // const { isTablet, isMobile, width: DWidth } = useWindowDimensions();
-  const { NETWORK_SETTINGS } = getConfig();
+  const { NETWORK_SETTINGS, CONTRACT_ADDRESSES } = getConfig();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
@@ -210,6 +210,10 @@ export const Vaults = () => {
       { header: t('dashboard.est-yearly-yield'), Component: <Amount value={estYearlyYeild} input="usdc" /> }
     );
   }
+
+  const filterVaults = (vault: VaultView) => {
+    return toBN(vault.apyMetadata?.net_apy).gt(0) || vault.address === CONTRACT_ADDRESSES.YVYFI;
+  };
 
   return (
     <ViewContainer>
@@ -477,6 +481,8 @@ export const Vaults = () => {
                 />
               }
               searching={opportunities.length > filteredVaults.length}
+              filterLabel="Show 0% APY"
+              filterBy={filterVaults}
               onAction={({ address }) => history.push(`/vault/${address}`)}
               initialSortBy="apy"
               wrap
