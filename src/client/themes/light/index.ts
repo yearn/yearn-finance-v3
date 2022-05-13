@@ -17,6 +17,7 @@ const light = {
     titlesVariant: '#0657F9',
     texts: '#475570',
     textsVariant: '#7F8DA9',
+    textsSecondary: '#A8A8A8',
     disabled: '#CED5E3',
     icons: {
       primary: '#CED5E3',
@@ -69,6 +70,7 @@ const lightTheme: DefaultTheme = {
     titlesVariant: light.colors.titlesVariant,
     texts: light.colors.texts,
     textsVariant: light.colors.textsVariant,
+    textsSecondary: light.colors.textsSecondary,
     surfaceVariant: light.colors.surfaceVariant,
 
     secondaryVariantA: '#000000',

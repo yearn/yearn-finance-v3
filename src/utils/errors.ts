@@ -5,7 +5,7 @@ const ETHERS_ERRORS = {
   [EthersError.FAIL_TOKEN_FETCH]: 'Error fetching token',
   [EthersError.NO_DECIMALS]: 'No decimals set for vault',
   [EthersError.NO_PRICE_PER_SHARE]: 'No price per share set for vault',
-  [EthersError.POPULATING_TRANSACTION]: 'Error populating transaction',
+  [EthersError.POPULATING_TRANSACTION]: 'Error populating transaction. Make sure you have enough funds for gas fees.',
 };
 const PRICE_FETCHING_ERRORS = {
   [PriceFetchingError.FETCHING_PRICE_PICKLE]: 'Error fetching price from pickle',

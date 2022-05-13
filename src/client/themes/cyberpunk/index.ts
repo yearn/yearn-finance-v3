@@ -25,6 +25,7 @@ const cyberpunkTheme: DefaultTheme = {
     titlesVariant: '#0CA7C9',
     texts: '#9dd9e6',
     textsVariant: '#0CA7C9',
+    textsSecondary: '#A8A8A8',
     surfaceVariant: '#FFF',
 
     secondaryVariantA: '#392850',
