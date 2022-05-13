@@ -103,6 +103,7 @@ declare module 'styled-components' {
       titlesVariant: string;
       texts: string;
       textsVariant: string;
+      textsSecondary: string;
       surfaceVariant: string;
       // END REWORK
 
