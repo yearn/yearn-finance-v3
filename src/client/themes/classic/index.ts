@@ -19,6 +19,7 @@ const classic = {
     titlesVariant: '#FFFFFF',
     texts: '#CED5E3',
     textsVariant: '#7F8DA9',
+    textsSecondary: '#A8A8A8',
     disabled: '#CED5E3',
     icons: {
       primary: '#7F8DA9',
@@ -70,6 +71,7 @@ const classicTheme: DefaultTheme = {
     titlesVariant: classic.colors.titlesVariant,
     texts: classic.colors.texts,
     textsVariant: classic.colors.textsVariant,
+    textsSecondary: classic.colors.textsSecondary,
     surfaceVariant: classic.colors.surfaceVariant,
 
     secondaryVariantA: '#006AE3',
