@@ -13,6 +13,7 @@ import {
   NetworkSelectors,
   WalletSelectors,
   AppSelectors,
+  selectWithdrawTokenOptionsByAsset,
 } from '@store';
 import {
   toBN,
@@ -43,6 +44,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const [txCompleted, setTxCompleted] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
   const simulationsEnabled = servicesEnabled['tenderly'];
+  const zapperEnabled = servicesEnabled['zapper'];
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -50,14 +52,10 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const selectedLabToken = tokenSelectorFilter(selectedLab?.address ?? '');
-  let zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
-  zapOutTokens = selectedLab?.allowZapOut ? zapOutTokens : [];
-  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedLab?.defaultDisplayToken ?? '');
+  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState('');
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
-
-  const targetTokensOptions = selectedLab
-    ? [selectedLab.token, ...zapOutTokens.filter(({ address }) => address !== selectedLab.token.address)]
-    : zapOutTokens;
+  const withdrawTokenOptionsByVault = useAppSelector(selectWithdrawTokenOptionsByAsset);
+  const targetTokensOptions = withdrawTokenOptionsByVault(selectedLab?.address);
   const targetTokensOptionsMap = keyBy(targetTokensOptions, 'address');
   const selectedTargetToken = targetTokensOptionsMap[selectedTargetTokenAddress];
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
@@ -80,6 +78,16 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       onExit();
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedTargetTokenAddress && selectedLab) {
+      setSelectedTargetTokenAddress(
+        !zapperEnabled && selectedLab.zapOutWith === 'zapperZapOut'
+          ? selectedLab.token.address
+          : selectedLab.defaultDisplayToken
+      );
+    }
+  }, [selectedTargetTokenAddress, selectedLab]);
 
   useEffect(() => {
     if (!selectedLab || !walletIsConnected) return;

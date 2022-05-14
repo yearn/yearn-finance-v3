@@ -51,6 +51,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
   const simulationsEnabled = servicesEnabled['tenderly'];
+  const zapperEnabled = servicesEnabled['zapper'];
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -75,14 +76,23 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   };
 
   useEffect(() => {
-    if (!selectedSellTokenAddress && selectedLab) {
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedLab.defaultDisplayToken }));
-    }
-
     return () => {
       onExit();
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedSellTokenAddress && selectedLab) {
+      dispatch(
+        TokensActions.setSelectedTokenAddress({
+          tokenAddress:
+            !zapperEnabled && selectedLab.zapInWith === 'zapperZapIn'
+              ? selectedLab.token.address
+              : selectedLab.defaultDisplayToken,
+        })
+      );
+    }
+  }, [selectedSellTokenAddress, selectedLab]);
 
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress || !isWalletConnected) return;

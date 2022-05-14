@@ -19,6 +19,8 @@ export interface GeneralLabView {
   pricePerShare: string;
   allowZapIn: boolean;
   allowZapOut: boolean;
+  zapInWith?: string;
+  zapOutWith?: string;
   mainPositionKey: LabsPositionsTypes;
   DEPOSIT: PositionView;
   YIELD: PositionView;
