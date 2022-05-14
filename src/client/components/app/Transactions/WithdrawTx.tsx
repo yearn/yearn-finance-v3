@@ -3,7 +3,6 @@ import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import {
-  TokensSelectors,
   VaultsSelectors,
   VaultsActions,
   TokensActions,
@@ -11,6 +10,7 @@ import {
   NetworkSelectors,
   WalletSelectors,
   AppSelectors,
+  selectWithdrawTokenOptionsByVault,
 } from '@store';
 import {
   toUnit,
@@ -45,21 +45,17 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const [txCompleted, setTxCompleted] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
   const simulationsEnabled = servicesEnabled['tenderly'];
+  const zapperEnabled = servicesEnabled['zapper'];
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
-  let zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
-  zapOutTokens = selectedVault?.allowZapOut ? zapOutTokens : [];
-  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(
-    selectedVault?.defaultDisplayToken ?? ''
-  );
+  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState('');
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
   const signedApprovalsEnabled = useAppSelector(SettingsSelectors.selectSignedApprovalsEnabled);
-  const targetTokensOptions = selectedVault
-    ? [selectedVault.token, ...zapOutTokens.filter(({ address }) => address !== selectedVault.token.address)]
-    : zapOutTokens;
+  const withdrawTokenOptionsByVault = useAppSelector(selectWithdrawTokenOptionsByVault);
+  const targetTokensOptions = withdrawTokenOptionsByVault(selectedVault?.address);
   const targetTokensOptionsMap = keyBy(targetTokensOptions, 'address');
   const selectedTargetToken = targetTokensOptionsMap[selectedTargetTokenAddress];
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
@@ -87,6 +83,16 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       onExit();
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedTargetTokenAddress && selectedVault) {
+      setSelectedTargetTokenAddress(
+        !zapperEnabled && selectedVault.zapOutWith === 'zapperZapOut'
+          ? selectedVault.token.address
+          : selectedVault.defaultDisplayToken
+      );
+    }
+  }, [selectedTargetTokenAddress, selectedVault]);
 
   useEffect(() => {
     if (!selectedVault || !walletIsConnected) return;
