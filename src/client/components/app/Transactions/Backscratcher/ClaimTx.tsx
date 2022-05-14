@@ -60,7 +60,7 @@ export const BackscratcherClaimTx: FC<BackscratcherClaimTxProps> = ({ onClose, c
 
   const selectedLabOption = {
     address: selectedLab.address,
-    symbol: selectedTargetToken.name,
+    symbol: selectedTargetToken.symbol,
     icon: selectedTargetToken.icon,
     balance: selectedLab.YIELD.userDeposited,
     balanceUsdc: selectedLab.YIELD.userDepositedUsdc,
