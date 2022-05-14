@@ -1,1 +1,1 @@
-export * from './tokensByVault.selectors';
+export * from './tokensByAsset.selectors';

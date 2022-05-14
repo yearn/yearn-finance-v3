@@ -6,33 +6,35 @@ import { getConfig } from '@config';
 import { TokenView, Address } from '@types';
 
 import { VaultsSelectors } from '../modules/vaults/vaults.selectors';
+import { LabsSelectors } from '../modules/labs/labs.selectors';
 import { TokensSelectors } from '../modules/tokens/tokens.selectors';
 import { AppSelectors } from '../modules/app/app.selectors';
 import { createToken } from '../modules/tokens/tokens.selectors';
 
 const { selectVaultsMap } = VaultsSelectors;
+const { selectLabsMap } = LabsSelectors;
 const { selectTokensMap, selectTokensUser } = TokensSelectors;
 const { selectServicesEnabled } = AppSelectors;
 
-export const selectDepositTokenOptionsByVault = createSelector(
-  [selectVaultsMap, selectTokensMap, selectTokensUser, selectServicesEnabled],
-  (vaultsMap, tokensMap, tokensUser, servicesEnabled) =>
-    memoize((vaultAddress?: string): TokenView[] => {
-      if (!vaultAddress) return [];
+export const selectDepositTokenOptionsByAsset = createSelector(
+  [selectVaultsMap, selectLabsMap, selectTokensMap, selectTokensUser, selectServicesEnabled],
+  (vaultsMap, labsMap, tokensMap, tokensUser, servicesEnabled) =>
+    memoize((assetAddress?: string): TokenView[] => {
+      if (!assetAddress) return [];
 
       const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = tokensUser;
-      const vaultData = vaultsMap[vaultAddress];
-      if (!vaultData) return [];
+      const assetData = vaultsMap[assetAddress] ?? labsMap[assetAddress];
+      if (!assetData) return [];
 
       const zapperDisabled = !servicesEnabled.zapper; // TODO: add vaultData.metadata.zapInWith === 'zapperZapIn' when sdk updates
-      console.log(zapperDisabled, vaultData, servicesEnabled);
+      console.log(zapperDisabled, assetData, servicesEnabled);
       const depositTokenAddresses: Address[] = [];
       let mainVaultToken: Address;
       if (zapperDisabled) {
-        mainVaultToken = vaultData.token;
+        mainVaultToken = assetData.token;
         depositTokenAddresses.push(mainVaultToken);
       } else {
-        mainVaultToken = vaultData.metadata.defaultDisplayToken;
+        mainVaultToken = assetData.metadata.defaultDisplayToken;
         depositTokenAddresses.push(mainVaultToken);
         depositTokenAddresses.push(...userTokensAddresses.filter((address) => address !== mainVaultToken));
       }
@@ -49,26 +51,26 @@ export const selectDepositTokenOptionsByVault = createSelector(
     })
 );
 
-export const selectWithdrawTokenOptionsByVault = createSelector(
-  [selectVaultsMap, selectTokensMap, selectTokensUser, selectServicesEnabled],
-  (vaultsMap, tokensMap, tokensUser, servicesEnabled) =>
-    memoize((vaultAddress?: string): TokenView[] => {
-      if (!vaultAddress) return [];
+export const selectWithdrawTokenOptionsByAsset = createSelector(
+  [selectVaultsMap, selectLabsMap, selectTokensMap, selectTokensUser, selectServicesEnabled],
+  (vaultsMap, labsMap, tokensMap, tokensUser, servicesEnabled) =>
+    memoize((assetAddress?: string): TokenView[] => {
+      if (!assetAddress) return [];
 
       const { ZAP_OUT_TOKENS } = getConfig();
       const { userTokensMap, userTokensAllowancesMap } = tokensUser;
-      const vaultData = vaultsMap[vaultAddress];
-      if (!vaultData) return [];
+      const assetData = vaultsMap[assetAddress] ?? labsMap[assetAddress];
+      if (!assetData) return [];
 
       const zapperDisabled = !servicesEnabled.zapper; // TODO: add vaultData.metadata.zapOutWith === 'zapperZapOut' when sdk updates
-      console.log(zapperDisabled, vaultData, servicesEnabled);
+      console.log(zapperDisabled, assetData, servicesEnabled);
       const withdrawTokenAddresses: Address[] = [];
       let mainVaultToken: Address;
       if (zapperDisabled) {
-        mainVaultToken = vaultData.token;
+        mainVaultToken = assetData.token;
         withdrawTokenAddresses.push(mainVaultToken);
       } else {
-        mainVaultToken = vaultData.metadata.defaultDisplayToken;
+        mainVaultToken = assetData.metadata.defaultDisplayToken;
         withdrawTokenAddresses.push(mainVaultToken);
         withdrawTokenAddresses.push(...ZAP_OUT_TOKENS.filter((address) => address !== mainVaultToken));
       }

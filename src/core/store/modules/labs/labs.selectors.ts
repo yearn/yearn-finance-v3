@@ -22,6 +22,8 @@ import { initialLabActionsStatusMap } from './labs.reducer';
 const { YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
 
 // general selectors
+const selectLabsMap = (state: RootState) => state.labs.labsMap;
+
 const selectCrvTokenData = (state: RootState) => state.tokens.tokensMap[CRV];
 const selectUserCrvTokenData = (state: RootState) => state.tokens.user.userTokensMap[CRV];
 const selectCrvTokenAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[CRV];
@@ -235,6 +237,8 @@ function createLab(props: CreateLabProps): GeneralLabView {
     pricePerShare: labData.metadata.pricePerShare,
     allowZapIn: true,
     allowZapOut: true,
+    zapInWith: 'zapperZapIn',
+    zapOutWith: 'zapperZapOut',
     mainPositionKey,
     DEPOSIT: {
       userBalance: userPositions?.DEPOSIT?.balance ?? '0',
@@ -256,6 +260,7 @@ function createLab(props: CreateLabProps): GeneralLabView {
 }
 
 export const LabsSelectors = {
+  selectLabsMap,
   selectYveCrvLab,
   selectYvBoostLab,
   selectYvBoostEthLab,
