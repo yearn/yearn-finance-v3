@@ -50,8 +50,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const [txCompleted, setTxCompleted] = useState(false);
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
-  const simulationsEnabled = servicesEnabled['tenderly'];
-  const zapperEnabled = servicesEnabled['zapper'];
+  const simulationsEnabled = servicesEnabled.tenderly;
+  const zapperEnabled = servicesEnabled.zapper;
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);

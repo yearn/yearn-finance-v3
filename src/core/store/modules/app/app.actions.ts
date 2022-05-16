@@ -3,7 +3,7 @@ import { isEqual } from 'lodash';
 
 import { ThunkAPI } from '@frameworks/redux';
 import { isGnosisApp, isLedgerLive, get } from '@utils';
-import { Network, Route, Address, Vault, Service } from '@types';
+import { Network, Route, Address, Vault, ServiceId } from '@types';
 
 import { WalletActions } from '../wallet/wallet.actions';
 import { TokensActions } from '../tokens/tokens.actions';
@@ -18,7 +18,7 @@ import { SettingsActions } from '../settings/settings.actions';
 /*                                   Setters                                  */
 /* -------------------------------------------------------------------------- */
 
-const disableService = createAction<{ service: Service }>('app/disableService');
+const disableService = createAction<{ service: ServiceId }>('app/disableService');
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
