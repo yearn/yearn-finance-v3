@@ -12,6 +12,7 @@
     },
     "list-card": {
       "apy": "YFG",
+      "asset": "Varlık",
       "available-deposit": "Yatırım yapılabilir",
       "available-stake": "Stake yapılabilir",
       "available-supply": "Arz edilebilir",
@@ -29,11 +30,28 @@
       "supplying": "Tedarik",
       "tokens": "token'ler",
       "total-assets": "Toplam varlıkları",
-      "value": "Bedel"
+      "value": "Bedel",
+      "wallet": "Cüzdan"
     },
     "no-wallet": "Cüzdan bağlanamadı",
     "recommendations": {
       "header": "En yüksek YFG"
+    },
+    "search-input": {
+      "search": "Ara"
+    },
+    "tooltips": {
+      "base-apr": "Taban CRV APR",
+      "boost": "Arttır",
+      "convex-apr": "Convex APR",
+      "gross-apr": "Brüt APR",
+      "inception-apy": "Başlangıç ​​YFG",
+      "monthly-apy": "Aylık YFG",
+      "net-apy": "Net YFG",
+      "pool-apy": "Havuz YFG",
+      "rewards-apr": "Ek Ödül YFG",
+      "vecrv-apy": "veCRV YFG",
+      "weekly-apy": "Haftalık YFG"
     },
     "transaction": {
       "approve": "Onayla",
@@ -57,9 +75,11 @@
       "reinvest": "Geri yatır",
       "repay": "Geri öde",
       "reward": "Ödül",
+      "sign": "İmzala",
       "stake": "Stake",
       "status": {
         "calculating": "Hesaplanıyor...",
+        "done": "Bitti",
         "exit": "Çıkış",
         "simulating": "Simüle ediliyor...",
         "transaction-completed": "İşlem tamamlandı"
@@ -72,7 +92,8 @@
       "token-input": {
         "search-select-token": "Bir Token Seç",
         "search-select-vault": "Bir Vault seç",
-        "yield": "Verim"
+        "yield": "Verim",
+        "you-have": "Var"
       },
       "wallet-balance": "Cüzdan Bakiyesi",
       "withdraw": "Çek"
@@ -86,6 +107,7 @@
     "borrow-limit-used": "kullanılan borçlanma limiti",
     "borrowed": "Borç alınan",
     "earnings": "kazançlar",
+    "est-yearly-earnings": "Takribi yıllık gelir",
     "est-yearly-yield": "Tahmini yıllık gelir",
     "holdings": "Varlıklar",
     "supplied": "Yatırılan",
@@ -99,6 +121,7 @@
   },
   "footer": {
     "links": {
+      "blog": "Blog",
       "disclaimer": "Feragat",
       "docs": "dokümanlar",
       "gov": "Yönetim",
@@ -111,9 +134,10 @@
     "es": "Español",
     "fr": "Français",
     "hi": "हिंदी",
+    "it": "Italian",
     "ja": "日本語",
     "pt": "Português",
-    "tr": "Türk",
+    "tr": "Türkçe",
     "vi": "Tiếng Việt",
     "zh": "中文"
   },
@@ -125,6 +149,7 @@
     "disclaimer": "Feragat",
     "ironbank": "Iron Bank",
     "labs": "Lablar",
+    "portfolio": "Portfolyo",
     "settings": "Ayarlar",
     "vault": "Vault detayları",
     "vaults": "Vault'lar",
@@ -135,6 +160,7 @@
     "cyberpunk": "Cyberpunk",
     "dark": "Mono Dark",
     "explorer": "Explorer",
-    "light": "Mono Light"
+    "light": "Mono Light",
+    "system-prefs": "sistem"
   }
 }

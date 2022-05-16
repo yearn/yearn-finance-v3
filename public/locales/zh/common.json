@@ -12,6 +12,7 @@
     },
     "list-card": {
       "apy": "APY",
+      "asset": "資產",
       "available-deposit": "可存入",
       "available-stake": "可抵押",
       "available-supply": "可供应",
@@ -29,11 +30,28 @@
       "supplying": "供应",
       "tokens": "代币",
       "total-assets": "总资产",
-      "value": "价值"
+      "value": "价值",
+      "wallet": "钱包"
     },
     "no-wallet": "钱包未连接",
     "recommendations": {
       "header": "最高APY"
+    },
+    "search-input": {
+      "search": "搜索"
+    },
+    "tooltips": {
+      "base-apr": "基础 CRV 年化率",
+      "boost": "提升",
+      "convex-apr": "Convex 年化率",
+      "gross-apr": "总年化率",
+      "inception-apy": "从成立起年化率",
+      "monthly-apy": "月年化率",
+      "net-apy": "净年化率",
+      "pool-apy": "池年化率",
+      "rewards-apr": "额外奖励年化率",
+      "vecrv-apy": "veCRV 年化率",
+      "weekly-apy": "周年化率"
     },
     "transaction": {
       "approve": "批准",
@@ -57,9 +75,11 @@
       "reinvest": "再投资",
       "repay": "偿还",
       "reward": "奖励",
+      "sign": "签名",
       "stake": "抵押",
       "status": {
         "calculating": "计算中...",
+        "done": "完成",
         "exit": "离开",
         "simulating": "模拟...",
         "transaction-completed": "交易完成"
@@ -72,7 +92,8 @@
       "token-input": {
         "search-select-token": "选择代币",
         "search-select-vault": "选择机枪池",
-        "yield": "收益"
+        "yield": "收益",
+        "you-have": "你有"
       },
       "wallet-balance": "钱包结余",
       "withdraw": "撤销"
@@ -86,6 +107,7 @@
     "borrow-limit-used": "借款限额已用",
     "borrowed": "已借",
     "earnings": "收益",
+    "est-yearly-earnings": "估计年收入",
     "est-yearly-yield": "估算年收益",
     "holdings": "持有",
     "supplied": "已提供",
@@ -99,6 +121,7 @@
   },
   "footer": {
     "links": {
+      "blog": "部路格",
       "disclaimer": "声明",
       "docs": "文档",
       "gov": "治理",
@@ -111,6 +134,7 @@
     "es": "Español",
     "fr": "Français",
     "hi": "हिंदी",
+    "it": "意大利文",
     "ja": "日本語",
     "pt": "Português",
     "tr": "Türk",
@@ -125,6 +149,7 @@
     "disclaimer": "声明",
     "ironbank": "Iron Bank",
     "labs": "实验室",
+    "portfolio": "投资组合",
     "settings": "设置",
     "vault": "机枪池详情",
     "vaults": "机枪池",
@@ -135,6 +160,7 @@
     "cyberpunk": "Cyberpunk",
     "dark": "单色暗",
     "explorer": "浏览器",
-    "light": "单色亮"
+    "light": "单色亮",
+    "system-prefs": "系统"
   }
 }

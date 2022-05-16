@@ -6,6 +6,10 @@
     "connect-button": {
       "connect": "Conectar Billetera"
     },
+    "empty-list": {
+      "searching-text": "Por favor busca otro activo",
+      "text": "Ningún activo para mostrar"
+    },
     "list-card": {
       "apy": "APY",
       "asset": "Activos",
@@ -13,9 +17,13 @@
       "available-stake": "Disponible para stake",
       "available-supply": "Disp. para suministrar",
       "balance": "Balance",
+      "borrow-apy": "APY préstamo",
+      "borrowing": "Tomar prestado",
       "collateral": "Colateral",
       "deposits": "Depósitos",
+      "deprecated": "Obsoleto",
       "earned": "Ganado",
+      "lend-apy": "APY préstamo",
       "market-liquidity": "Liquidez de mercado",
       "opportunities": "Oportunidades",
       "price": "Precio",
@@ -32,18 +40,43 @@
     "search-input": {
       "search": "Buscar"
     },
+    "tooltips": {
+      "base-apr": "APR base CRV",
+      "boost": "Impulso",
+      "convex-apr": "APR Convex",
+      "gross-apr": "APR bruto",
+      "inception-apy": "APY origen",
+      "monthly-apy": "APY mensual",
+      "net-apy": "APY neto",
+      "pool-apy": "APY grupo",
+      "rewards-apr": "APR recompensa bonificada",
+      "vecrv-apy": "APY veCRV",
+      "weekly-apy": "APY semanal"
+    },
     "transaction": {
       "approve": "Aprobar",
+      "available-borrow": "Disponible tomar prestado",
+      "borrow": "Préstamo",
+      "borrow-limit": {
+        "borrow-apy": "APY préstamo",
+        "borrowing": "Tomar préstamo",
+        "supply-apy": "APY suministro",
+        "total-borrow-limit": "Límite total préstamo",
+        "total-borrow-limit-used": "Límite total préstamo utilizado"
+      },
       "claim": "Reclamar",
       "deposit": "Depositar",
       "from-iron-bank": "Desde Iron Bank",
       "from-vault": "Desde vault",
       "from-wallet": "Desde billetera",
+      "lock": "Bloqueo",
       "max": "MAX",
       "migrate": "Migrar",
       "reinvest": "Reinvertir",
+      "repay": "\nReembolsar",
       "reward": "Recompensa",
       "sign": "Firmar",
+      "stake": "Hacer staking",
       "status": {
         "calculating": "Calculando...",
         "done": "OK",
@@ -52,12 +85,14 @@
         "transaction-completed": "Transacción completada"
       },
       "supply": "Suministrar",
+      "to-gauge": "Calibrar",
       "to-iron-bank": "A Iron Bank",
       "to-vault": "A vault",
       "to-wallet": "A billetera",
       "token-input": {
         "search-select-token": "Selecciona un Token",
         "search-select-vault": "Selecciona una Vault",
+        "yield": "Rendimiento",
         "you-have": "Tú tienes"
       },
       "wallet-balance": "Balance Billetera",
@@ -86,6 +121,7 @@
   },
   "footer": {
     "links": {
+      "blog": "Blog",
       "disclaimer": "Disclaimer",
       "docs": "Docs",
       "gov": "Gov",
@@ -98,6 +134,7 @@
     "es": "Español",
     "fr": "Français",
     "hi": "हिंदी",
+    "it": "Italiano",
     "ja": "日本語",
     "pt": "Português",
     "tr": "Türk",

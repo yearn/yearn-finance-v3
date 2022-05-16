@@ -1,6 +1,7 @@
 {
   "language": "语言",
   "preferences": "偏好",
+  "signed-approvals": "启用签署的批准",
   "slippage-tolerance": "可允许滑点",
   "themes": "主题"
 }
