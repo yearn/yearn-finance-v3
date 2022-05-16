@@ -2,6 +2,7 @@ import { memoize } from 'lodash';
 
 import { Constants, NetworkSettings } from '@types';
 import { getEnv } from '@config/env';
+import { encode } from '@src/utils';
 
 const ADDRESSES = {
   ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
@@ -19,6 +20,7 @@ const ADDRESSES = {
   PSLPYVBOOSTETH: '0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378',
   PSLPYVBOOSTETH_GAUGE: '0xDA481b277dCe305B97F4091bD66595d57CF31634',
   YFI: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
+  YVYFI: '0xdb25cA703181E7484a155DD612b06f57E12Be5F0',
   BLUEPILLNFT: '0x35f5A420ef9BCc748329021FBD4ed0986AbdF201',
   WOOFYNFT: '0x0966a53f2533EaF01D0bB2fa0E2274f3002287F1',
 };
@@ -88,7 +90,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
 };
 
 export const getConstants = memoize((): Constants => {
-  const { ALCHEMY_API_KEY } = getEnv();
+  const { ALCHEMY_API_KEY, ZAPPER_API_KEY } = getEnv();
   return {
     STATE_VERSION: 1,
     ETHEREUM_ADDRESS: ADDRESSES.ETH,
@@ -123,5 +125,6 @@ export const getConstants = memoize((): Constants => {
     DUST_AMOUNT_USD: '10000000',
     YEARN_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
     ASSETS_ICON_URL: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/',
+    ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
   };
 });

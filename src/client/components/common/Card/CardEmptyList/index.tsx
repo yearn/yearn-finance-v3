@@ -28,8 +28,10 @@ export const CardEmptyList: FC<CardEmptyListProps> = ({ children, text, searchin
     <StyledCardEmptyList onClick={onClick} {...props}>
       {text ?? (
         <Text>
-          <Text fontWeight="bold">{t('components.empty-list.text')}</Text>
-          {searching && <Text>{t('components.empty-list.searching-text')}</Text>}
+          <Text center fontWeight="bold">
+            {t('components.empty-list.text')}
+          </Text>
+          {searching && <Text center>{t('components.empty-list.searching-text')}</Text>}
         </Text>
       )}
     </StyledCardEmptyList>

@@ -122,16 +122,15 @@ export const Layout: FC = ({ children }) => {
   const assetAddress: string | undefined = location.pathname.split('/')[2];
 
   // Used to check zapper api
-  const { ZAPPER_API_KEY } = getConfig();
+  const { ZAPPER_AUTH_TOKEN } = getConfig();
 
   useEffect(() => {
     dispatch(AppActions.initApp());
 
     // NOTE Test zapper API
-    const url = 'https://api.zapper.fi/v1/prices';
-    const params = new URLSearchParams({ api_key: ZAPPER_API_KEY ?? '' });
-
-    fetch(`${url}?${params}`).catch((error) => {
+    fetch('https://api.zapper.fi/v2/prices', {
+      headers: { Authorization: `Basic ${ZAPPER_AUTH_TOKEN}` },
+    }).catch((_error) => {
       dispatch(
         AlertsActions.openAlert({
           message:

@@ -250,7 +250,7 @@ export class LabServiceImpl implements LabService {
 
   public async getUserLabsPositions(props: GetUserLabsPositionsProps) {
     const { userAddress, network } = props;
-    const { YEARN_API, ZAPPER_API_KEY, CONTRACT_ADDRESSES } = this.config;
+    const { YEARN_API, ZAPPER_AUTH_TOKEN, CONTRACT_ADDRESSES } = this.config;
     const { YVECRV, CRV, THREECRV, YVBOOST, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = CONTRACT_ADDRESSES;
     const THREECRV_DECIMALS = 18;
     const providerType = getProviderType(network);
@@ -375,9 +375,9 @@ export class LabServiceImpl implements LabService {
       const pickleGaugeContract = getContract(PSLPYVBOOSTETH_GAUGE, pickleGaugeAbi, provider);
       const pJarBalanceOfPromise = pSLPyvBoostEthContract.balanceOf(userAddress);
       const pGaugeBalanceOfPromise = pickleGaugeContract.balanceOf(userAddress);
-      const pJarPricePerTokenPromise = get(
-        `https://api.zapper.fi/v1/protocols/pickle/token-market-data?api_key=${ZAPPER_API_KEY}&type=vault`
-      );
+      const pJarPricePerTokenPromise = get(`https://api.zapper.fi/v2/apps/pickle/tokens?groupId=jar`, {
+        headers: { Authorization: `Basic ${ZAPPER_AUTH_TOKEN}` },
+      });
       const [pJarBalanceOf, pGaugeBalanceOf, pJarPricePerTokenResponse] = await Promise.all([
         pJarBalanceOfPromise,
         pGaugeBalanceOfPromise,

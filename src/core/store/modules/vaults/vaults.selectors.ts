@@ -106,7 +106,6 @@ const selectDepositedVaults = createSelector([selectLiveVaults], (vaults): Vault
 const selectVaultsOpportunities = createSelector([selectLiveVaults], (vaults): VaultView[] => {
   const depositVaults = vaults.map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
   const opportunities = depositVaults.filter((vault) => toBN(vault.userDeposited).lte(0));
-
   return opportunities;
 });
 
