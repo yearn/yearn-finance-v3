@@ -3,6 +3,7 @@ import { Address, Network } from './Blockchain';
 import { PartnerId } from './Partner';
 import { Theme } from './Settings';
 import { Status } from './Status';
+import { Message } from './Notifications';
 import {
   Position,
   Token,
@@ -28,6 +29,7 @@ export interface RootState {
   labs: LabsState;
   settings: SettingsState;
   user: UserState;
+  notifications: NotificationsState;
   partner: PartnerState;
 }
 
@@ -241,6 +243,14 @@ export interface UserState {
   };
   statusMap: {
     getNftBalance: Status;
+  };
+}
+
+export interface NotificationsState {
+  messages: Message[];
+  dismissedMessageIds: number[];
+  statusMap: {
+    getNotificationMessages: Status;
   };
 }
 

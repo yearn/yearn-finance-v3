@@ -19,7 +19,7 @@ import {
 } from '@store';
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
 import { Navigation, Navbar, Footer } from '@components/app';
-import { Modals, Alerts } from '@containers';
+import { Modals, Alerts, NotificationBanner } from '@containers';
 import { getConfig } from '@config';
 import { Network, Route } from '@types';
 import { device } from '@themes/default';
@@ -186,6 +186,7 @@ export const Layout: FC = ({ children }) => {
 
   return (
     <StyledLayout>
+      <NotificationBanner />
       <Alerts />
       <Modals />
       <Navigation hideOptionalLinks={hideOptionalLinks} />

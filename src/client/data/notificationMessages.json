@@ -1,0 +1,15 @@
+[   
+    {
+        "id": 0, 
+        "type": "info",
+        "active": true,
+        "message": "Welcome to Yearn Finance" 
+    },
+
+    {
+        "id": 1, 
+        "type": "info",
+        "active": true,
+        "message": "Welcome to Yearn Finance 2" 
+    }
+]

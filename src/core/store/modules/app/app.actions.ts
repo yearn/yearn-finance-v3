@@ -9,6 +9,7 @@ import { WalletActions } from '../wallet/wallet.actions';
 import { TokensActions } from '../tokens/tokens.actions';
 import { VaultsActions } from '../vaults/vaults.actions';
 import { LabsActions } from '../labs/labs.actions';
+import { NotificationsActions } from '../notifications/notifications.actions';
 import { NetworkActions } from '../network/network.actions';
 import { PartnerActions } from '../partner/partner.actions';
 import { SettingsActions } from '../settings/settings.actions';
@@ -51,6 +52,9 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   } else if (wallet.name && wallet.name !== 'Iframe') {
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
+
+  await dispatch(NotificationsActions.getNotificationMessages());
+
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
 });
