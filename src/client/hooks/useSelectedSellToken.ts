@@ -22,11 +22,10 @@ export const useSelectedSellToken = ({
 }: SelectedSellTokenProps): SelectedSellToken => {
   const depositTokenOptionsByAsset = useAppSelector(selectDepositTokenOptionsByAsset);
   const sellTokensOptions = depositTokenOptionsByAsset(selectedVaultOrLab?.address);
-
-  if (!selectedSellTokenAddress) return { selectedSellToken: undefined, sourceAssetOptions: [] };
-
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
-  let selectedSellToken: TokenView | undefined = sellTokensOptionsMap[selectedSellTokenAddress];
+  let selectedSellToken: TokenView | undefined = selectedSellTokenAddress
+    ? sellTokensOptionsMap[selectedSellTokenAddress]
+    : undefined;
 
   const sourceAssetOptions = selectedSellToken && allowTokenSelect === false ? [selectedSellToken] : sellTokensOptions;
   return { selectedSellToken, sourceAssetOptions };
