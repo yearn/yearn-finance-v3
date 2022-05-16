@@ -117,6 +117,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
         })
       );
     }
+    dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedLab.token.address] }));
   }, [debouncedAmount]);
 
   if (!selectedLab || !selectedTargetToken || !targetTokensOptions) {

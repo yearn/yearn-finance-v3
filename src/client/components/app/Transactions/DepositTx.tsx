@@ -150,14 +150,16 @@ export const DepositTx: FC<DepositTxProps> = ({
       return;
     }
 
-    dispatch(
-      VaultsActions.getExpectedTransactionOutcome({
-        transactionType: 'DEPOSIT',
-        sourceTokenAddress: selectedSellTokenAddress,
-        sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
-        targetTokenAddress: selectedVault.address,
-      })
-    );
+    if (simulationsEnabled) {
+      dispatch(
+        VaultsActions.getExpectedTransactionOutcome({
+          transactionType: 'DEPOSIT',
+          sourceTokenAddress: selectedSellTokenAddress,
+          sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
+          targetTokenAddress: selectedVault.address,
+        })
+      );
+    }
     dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedSellTokenAddress] }));
   }, [debouncedAmount]);
 

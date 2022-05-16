@@ -121,8 +121,8 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
           targetTokenAddress: selectedTargetTokenAddress,
         })
       );
-      dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedVault.token.address] }));
     }
+    dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedVault.token.address] }));
   }, [debouncedAmount]);
 
   if (!selectedVault || !selectedTargetToken || !targetTokensOptions) {
