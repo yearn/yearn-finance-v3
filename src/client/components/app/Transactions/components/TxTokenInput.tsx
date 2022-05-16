@@ -121,12 +121,13 @@ const TokenIconContainer = styled.div`
   width: 100%;
 `;
 
-const TokenSelector = styled.div<{ onClick?: () => void }>`
+const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 8.4rem;
+  width: ${({ center }) => (center ? '100%' : '8.4rem')};
+  height: ${({ center }) => (center ? '12.6rem' : undefined)};
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
@@ -295,7 +296,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
       {/* NOTE Using fragments here because: https://github.com/yearn/yearn-finance-v3/pull/565 */}
       <>
         <TokenInfo center={hideAmount}>
-          <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined}>
+          <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined} center={hideAmount}>
             <TokenIconContainer>
               <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
               {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
