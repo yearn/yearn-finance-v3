@@ -134,7 +134,14 @@ const checkServicesStatus = createAsyncThunk<void, void, ThunkAPI>(
   async (_arg, { dispatch, extra }) => {
     const { YEARN_ALERTS_API } = extra.config;
     try {
-      const servicesStatusResponse = await get(`${YEARN_ALERTS_API}/health`);
+      // const servicesStatusResponse = await get(`${YEARN_ALERTS_API}/health`);
+      const servicesStatusResponse = {
+        status: 200,
+        data: {
+          zapper: true,
+          simulations: false,
+        },
+      };
       if (servicesStatusResponse.status !== 200) throw new Error('Service status provider not currently accesible');
 
       const errorMessageTemplate =
