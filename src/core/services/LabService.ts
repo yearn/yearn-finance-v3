@@ -230,6 +230,8 @@ export class LabServiceImpl implements LabService {
           displayName: 'pSLPyvBOOST-ETH',
           displayIcon: `${ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
+          zapInWith: 'zapperZapIn',
+          zapOutWith: 'zapperZapOut',
         },
       };
     } catch (error) {

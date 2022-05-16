@@ -59,6 +59,8 @@ interface LabMetadata {
   displayName: string;
   displayIcon: string;
   defaultDisplayToken: Address;
+  zapInWith?: string; // TODO: Import zapInType from sdk when updated
+  zapOutWith?: string; // TODO: Import zapOutType from sdk when updated
 }
 
 interface LabUserMetadata {}

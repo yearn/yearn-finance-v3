@@ -23,10 +23,10 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       if (!assetAddress) return [];
 
       const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = tokensUser;
-      const assetData = vaultsMap[assetAddress] ?? labsMap[assetAddress];
+      const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
 
-      const zapperDisabled = !servicesEnabled.zapper; // TODO: add vaultData.metadata.zapInWith === 'zapperZapIn' when sdk updates
+      const zapperDisabled = !servicesEnabled.zapper && assetData.metadata.zapInWith === 'zapperZapIn';
       console.log(zapperDisabled, assetData, servicesEnabled);
       const depositTokenAddresses: Address[] = [];
       let mainVaultToken: Address;
@@ -59,11 +59,10 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
 
       const { ZAP_OUT_TOKENS } = getConfig();
       const { userTokensMap, userTokensAllowancesMap } = tokensUser;
-      const assetData = vaultsMap[assetAddress] ?? labsMap[assetAddress];
+      const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
 
-      const zapperDisabled = !servicesEnabled.zapper; // TODO: add vaultData.metadata.zapOutWith === 'zapperZapOut' when sdk updates
-      console.log(zapperDisabled, assetData, servicesEnabled);
+      const zapperDisabled = !servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut';
       const withdrawTokenAddresses: Address[] = [];
       let mainVaultToken: Address;
       if (zapperDisabled) {
