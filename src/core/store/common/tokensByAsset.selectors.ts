@@ -27,7 +27,6 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       if (!assetData) return [];
 
       const zapperDisabled = !servicesEnabled.zapper && assetData.metadata.zapInWith === 'zapperZapIn';
-      console.log(zapperDisabled, assetData, servicesEnabled);
       const depositTokenAddresses: Address[] = [];
       let mainVaultToken: Address;
       if (zapperDisabled) {
