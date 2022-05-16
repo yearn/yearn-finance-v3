@@ -2,7 +2,7 @@ import { createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { isEqual } from 'lodash';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { isGnosisApp, isLedgerLive, get } from '@utils';
+import { isGnosisApp, isLedgerLive } from '@utils';
 import { Network, Route, Address, Vault, ServiceId } from '@types';
 
 import { WalletActions } from '../wallet/wallet.actions';
@@ -132,7 +132,7 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
 const checkServicesStatus = createAsyncThunk<void, void, ThunkAPI>(
   'app/checkServicesStatus',
   async (_arg, { dispatch, extra }) => {
-    const { YEARN_ALERTS_API } = extra.config;
+    // const { YEARN_ALERTS_API } = extra.config;
     try {
       // const servicesStatusResponse = await get(`${YEARN_ALERTS_API}/health`);
       const servicesStatusResponse = {
