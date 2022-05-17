@@ -82,7 +82,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     zapsEnabled: false,
     labsEnabled: false,
     ironBankEnabled: false,
-    earningsEnabled: true,
+    earningsEnabled: false,
     notifyEnabled: false,
     blockExplorerUrl: 'https://arbiscan.io',
     txConfirmations: 2,
