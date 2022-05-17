@@ -1,6 +1,6 @@
 {
   "no-labs-card": {
-    "header": "Noch keine Labs im {{Netzwerk}}",
+    "header": "Noch keine Labs im {{network}}",
     "text": "Schaue für neue Experimente später wieder vorbei."
   },
   "risks-card": {
