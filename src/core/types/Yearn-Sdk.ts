@@ -31,6 +31,9 @@ interface YearnSdk {
   register: (network: Network, instance: Yearn<SdkNetwork>) => void;
 }
 
+type ZapInType = keyof Token['supported'];
+type ZapOutType = keyof Token['supported'];
+
 declare type Lab = LabStatic & LabDynamic;
 interface LabStatic {
   address: Address;
@@ -94,4 +97,6 @@ export type {
   StrategyMetadata,
   Apy,
   TokenAllowance,
+  ZapInType,
+  ZapOutType,
 };
