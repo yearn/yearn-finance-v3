@@ -99,7 +99,7 @@ describe('Chart', () => {
       ${'no decimal is given'}                   | ${earnings}  | ${undefined}
       ${'earning is [] and no decimal is given'} | ${[]}        | ${undefined}
       ${'earning is []'}                         | ${[]}        | ${underlyingDecimals}
-    `(`should return [] when $printText`, ({ earnings, underlyingDecimals }) => {
+    `(`should return 0 when $printText`, ({ earnings, underlyingDecimals }) => {
       const actual = parseLastEarningsUnderlying(earnings, underlyingDecimals);
 
       expect(actual).toEqual('0');
@@ -165,7 +165,7 @@ describe('Chart', () => {
       printText                | earnings
       ${'no earning is given'} | ${undefined}
       ${'earning is []'}       | ${[]}
-    `(`should return [] when $printText`, ({ earnings }) => {
+    `(`should return 0 when $printText`, ({ earnings }) => {
       const actual = parseLastEarningsUsd(earnings);
 
       expect(actual).toEqual('0');
