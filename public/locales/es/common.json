@@ -58,7 +58,7 @@
       "token-input": {
         "search-select-token": "Selecciona un Token",
         "search-select-vault": "Selecciona una Vault",
-        "you-have": "Tú tienes"
+        "you-have": "Tienes"
       },
       "wallet-balance": "Balance Billetera",
       "withdraw": "Retirar"
@@ -86,6 +86,7 @@
   },
   "footer": {
     "links": {
+      "buyback": "Recompra de YFI",
       "disclaimer": "Disclaimer",
       "docs": "Docs",
       "gov": "Gov",
@@ -122,7 +123,7 @@
     "classic": "Classic v2",
     "cyberpunk": "Cyberpunk",
     "dark": "Mono Dark",
-    "explorer": "Explorer",
+    "explorer": "Explorador",
     "light": "Mono Light",
     "system-prefs": "Sistema"
   }
