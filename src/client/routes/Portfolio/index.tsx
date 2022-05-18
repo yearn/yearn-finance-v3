@@ -258,8 +258,8 @@ export const Portfolio = () => {
             },
             {
               key: 'invest',
-              transform: ({ address, isZapperZapIn, isFtmApeZap }) => (
-                <ActionButtons actions={[...investButton({ address, isZapIn: isZapperZapIn || isFtmApeZap })]} />
+              transform: ({ address, zaps }) => (
+                <ActionButtons actions={[...investButton({ address, isZapIn: zaps.zapperZapIn ?? false })]} />
               ),
               align: 'flex-end',
               width: 'auto',

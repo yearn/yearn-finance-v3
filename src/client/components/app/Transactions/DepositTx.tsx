@@ -183,6 +183,7 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
+    .filter(({ token }) => token.zaps.zapperZapIn)
     .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData, apyMetadata }) => ({
       address,
       symbol: displayName,
@@ -191,6 +192,10 @@ export const DepositTx: FC<DepositTxProps> = ({
       balanceUsdc: DEPOSIT.userDepositedUsdc,
       decimals: token.decimals,
       yield: formatApy(apyData, apyMetadata?.type),
+      zapper: token.zaps.zapper,
+      zapperZapIn: token.zaps.zapperZapIn,
+      zapperZapOut: token.zaps.zapperZapOut,
+      ftmApeZap: token.zaps.ftmApeZap,
     }));
   const selectedVaultOption = vaultsOptions.find(({ address }) => address === selectedVault.address)!;
 

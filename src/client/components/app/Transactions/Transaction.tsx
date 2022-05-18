@@ -31,6 +31,10 @@ interface Asset {
   balanceUsdc: string;
   decimals: number;
   yield?: string;
+  zapper?: boolean;
+  zapperZapIn?: boolean;
+  zapperZapOut?: boolean;
+  ftmApeZap?: boolean;
 }
 
 interface TransactionProps {

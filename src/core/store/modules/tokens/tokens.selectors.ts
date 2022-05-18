@@ -41,7 +41,7 @@ const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
 });
 
 const selectZapInTokens = createSelector([selectUserTokens], (userTokens) => {
-  return userTokens.filter(({ isZapperZapIn }) => isZapperZapIn);
+  return userTokens.filter(({ zaps: { zapperZapIn } }) => zapperZapIn);
 });
 
 const selectZapOutTokens = createSelector([selectTokensMap, selectUserTokensMap], (tokensMap, userTokensMap) => {
@@ -86,18 +86,19 @@ const selectWalletTokensStatus = createSelector(
 
 /* --------------------------------- Helper --------------------------------- */
 interface CreateTokenProps {
-  tokenData: Token;
+  tokenData?: Token;
   userTokenData: Balance;
   allowancesMap: AllowancesMap;
 }
 
 export function createToken(props: CreateTokenProps): TokenView {
   const { tokenData, userTokenData, allowancesMap } = props;
+
   return {
-    address: tokenData?.address,
-    name: tokenData?.name,
-    symbol: tokenData?.symbol,
-    decimals: parseInt(tokenData?.decimals),
+    address: tokenData?.address ?? '',
+    name: tokenData?.name ?? '',
+    symbol: tokenData?.symbol ?? '',
+    decimals: parseInt(tokenData?.decimals ?? '0'),
     icon: tokenData?.icon,
     balance: userTokenData?.balance ?? '0',
     balanceUsdc: userTokenData?.balanceUsdc ?? '0',
@@ -105,9 +106,12 @@ export function createToken(props: CreateTokenProps): TokenView {
     categories: tokenData?.metadata?.categories ?? [],
     description: tokenData?.metadata?.description ?? '',
     website: tokenData?.metadata?.website ?? '',
-    isZapperZapIn: tokenData?.supported.zapperZapIn ?? false,
-    isZapperZapOut: tokenData?.supported.zapperZapOut ?? false,
-    isFtmApeZap: tokenData?.supported.ftmApeZap ?? false,
+    zaps: {
+      zapper: tokenData?.supported.zapper,
+      zapperZapIn: tokenData?.supported.zapperZapIn,
+      zapperZapOut: tokenData?.supported.zapperZapOut,
+      ftmApeZap: tokenData?.supported.ftmApeZap,
+    },
     allowancesMap: allowancesMap ?? {},
   };
 }
