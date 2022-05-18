@@ -1,6 +1,6 @@
 import { Alert } from './Alerts';
 import { Address, Network } from './Blockchain';
-import { ServiceId } from './General';
+import { ExternalServiceId } from './General';
 import { PartnerId } from './Partner';
 import { Theme } from './Settings';
 import { Status } from './Status';
@@ -34,7 +34,7 @@ export interface RootState {
 
 export interface AppState {
   isInitialized: boolean;
-  servicesEnabled: Record<ServiceId, boolean>;
+  servicesEnabled: Record<ExternalServiceId, boolean>;
   statusMap: {
     initApp: Status;
     getAppData: Status;

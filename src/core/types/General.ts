@@ -8,6 +8,6 @@ export type DataType = 'amount' | 'percent' | 'usd';
 
 export type Route = 'portfolio' | 'vaults' | 'vault' | 'labs';
 
-export type ServiceId = 'zapper' | 'tenderly' | 'notify';
+export type ExternalServiceId = 'zapper' | 'tenderly' | 'notify';
 
 export type YDeepPartial<T> = T extends object ? { [P in keyof T]?: YDeepPartial<T[P]> } : T;
