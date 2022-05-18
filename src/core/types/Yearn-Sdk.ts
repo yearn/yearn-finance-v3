@@ -31,8 +31,8 @@ interface YearnSdk {
   register: (network: Network, instance: Yearn<SdkNetwork>) => void;
 }
 
-type ZapInType = keyof Token['supported'];
-type ZapOutType = keyof Token['supported'];
+type ZapInType = keyof Token['supported']; // TODO: import from SDK once is updated
+type ZapOutType = keyof Token['supported']; // TODO: import from SDK once is updated
 
 declare type Lab = LabStatic & LabDynamic;
 interface LabStatic {
@@ -62,8 +62,8 @@ interface LabMetadata {
   displayName: string;
   displayIcon: string;
   defaultDisplayToken: Address;
-  zapInWith?: string; // TODO: Import zapInType from sdk when updated
-  zapOutWith?: string; // TODO: Import zapOutType from sdk when updated
+  zapInWith?: ZapInType;
+  zapOutWith?: ZapOutType;
 }
 
 interface LabUserMetadata {}
