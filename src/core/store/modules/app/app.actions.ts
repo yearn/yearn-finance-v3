@@ -135,7 +135,7 @@ const checkExternalServicesStatus = createAsyncThunk<void, void, ThunkAPI>(
     const { YEARN_ALERTS_API } = extra.config;
     try {
       const servicesStatusResponse = await get(`${YEARN_ALERTS_API}/health`);
-      if (servicesStatusResponse.status !== 200) throw new Error('Service status provider not currently accesible');
+      if (servicesStatusResponse.status !== 200) throw new Error('Service status provider not currently accessible');
 
       const errorMessageTemplate =
         'service is currently experiencing technical issues and have been temporarily disabled. We are sorry for the inconveniences, we are working towards issues been resolved soon.';
