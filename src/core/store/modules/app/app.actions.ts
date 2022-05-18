@@ -138,7 +138,7 @@ const checkExternalServicesStatus = createAsyncThunk<void, void, ThunkAPI>(
       if (status !== 200) throw new Error('Service status provider not currently accessible');
 
       const errorMessageTemplate =
-        'service is currently experiencing technical issues and have been temporarily disabled. We are sorry for the inconveniences, we are working towards issues been resolved soon.';
+        'service is currently experiencing technical issues and have been temporarily disabled. We apologize for any inconvenience this may cause, we are actively working on resolving these issues';
       const downgradedServicesMessages = [];
       const { zapper, simulations } = data;
       if (!zapper) {
