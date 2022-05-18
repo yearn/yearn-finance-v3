@@ -162,6 +162,11 @@
     "dark": "Mono Dark",
     "explorer": "Explorer",
     "light": "Mono Light",
-    "system-prefs": "System"
+    "system-prefs": "System",
+    "custom": "Custom",
+    "gallery": {
+      "title": "Custom Theme Gallery",
+      "community": "Community"
+    }
   }
 }

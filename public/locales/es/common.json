@@ -124,6 +124,11 @@
     "dark": "Mono Dark",
     "explorer": "Explorer",
     "light": "Mono Light",
-    "system-prefs": "Sistema"
+    "system-prefs": "Sistema",
+    "custom": "Personalizado",
+    "gallery": {
+      "title": "Galería de Temas Personalizados",
+      "community": "Comunidad"
+    }
   }
 }
