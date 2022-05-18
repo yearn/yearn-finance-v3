@@ -49,8 +49,10 @@ export const selectDepositTokenOptionsByAsset = createSelector(
           const allowancesMap = userTokensAllowancesMap[address] ?? {};
           return createToken({ tokenData, userTokenData, allowancesMap });
         });
-      return tokens.filter((token) =>
-        isSupportedToken({ assetData, token, mainVaultToken, zapperDisabled, zapType: 'zapInWith' })
+      return tokens.filter(
+        (token) =>
+          isSupportedToken({ assetData, token, mainVaultToken, zapperDisabled, zapType: 'zapInWith' }) &&
+          toBN(token.balance).gt(0)
       );
     })
 );
@@ -92,8 +94,8 @@ const isSupportedToken = ({ assetData, token, mainVaultToken, zapperDisabled, za
     const zap = assetData.metadata[zapType];
 
     // TODO Need to cast here because VaultMetadata is still coming as string from the SDK
-    return token.supported[zap as keyof TokenView['supported']] && toBN(token.balance).gt(0);
+    return token.supported[zap as keyof TokenView['supported']];
   }
 
-  return toBN(token.balance).gt(0) || token.address === mainVaultToken;
+  return token.address === mainVaultToken;
 };
