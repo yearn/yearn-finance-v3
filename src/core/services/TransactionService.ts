@@ -101,7 +101,7 @@ export class TransactionServiceImpl implements TransactionService {
   public handleTransaction = async ({
     network,
     tx,
-    useExternalService = false,
+    useExternalService,
     renderNotification = true,
   }: HandleTransactionProps): Promise<TransactionReceipt> => {
     const { NETWORK_SETTINGS } = getConfig();
@@ -110,7 +110,7 @@ export class TransactionServiceImpl implements TransactionService {
 
     let updateNotification: UpdateNotification | undefined;
     let dismissNotification: () => void = () => undefined;
-    let notifyServiceFailed = false;
+    let notifyServiceFailed;
     if (renderNotification && useNotifyService) {
       try {
         notify.hash(tx.hash);
