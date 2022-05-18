@@ -96,12 +96,12 @@ const selectDeprecatedVaults = createSelector([selectVaults], (vaults): VaultVie
   const deprecatedVaults = vaults
     .filter((vault) => vault.hideIfNoDeposits)
     .map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
-  return deprecatedVaults.filter((vault) => toBN(vault.userDeposited).gt(0));
+  return deprecatedVaults.filter((vault) => vault.allowZapIn && toBN(vault.userDeposited).gt(0));
 });
 
 const selectDepositedVaults = createSelector([selectLiveVaults], (vaults): VaultView[] => {
   const depositVaults = vaults.map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
-  return depositVaults.filter((vault) => toBN(vault.userDeposited).gt(0));
+  return depositVaults.filter((vault) => vault.allowZapIn && toBN(vault.userDeposited).gt(0));
 });
 
 const selectVaultsOpportunities = createSelector([selectLiveVaults], (vaults): VaultView[] => {
@@ -110,6 +110,7 @@ const selectVaultsOpportunities = createSelector([selectLiveVaults], (vaults): V
   const depositVaults = vaults.map(({ DEPOSIT, token, ...rest }) => ({ token, ...DEPOSIT, ...rest }));
   const opportunities = depositVaults.filter(
     (vault) =>
+      vault.allowZapIn &&
       toBN(vault.userDeposited).lte(0) &&
       (toBN(vault.apyMetadata?.net_apy).gt(0) || vault.address === YFI_VAULT_ADDRESS)
   );

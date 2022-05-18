@@ -139,7 +139,17 @@ export const Labs = () => {
     setFilteredOpportunities(opportunities);
   }, [opportunities]);
 
-  const LabHoldingsActions = ({ labAddress, alert }: { labAddress: string; alert?: string }) => {
+  const LabHoldingsActions = ({
+    labAddress,
+    alert,
+    allowZapIn,
+    allowZapOut,
+  }: {
+    labAddress: string;
+    alert?: string;
+    allowZapIn: boolean;
+    allowZapOut: boolean;
+  }) => {
     switch (labAddress) {
       case YVECRV:
         return (
@@ -176,22 +186,30 @@ export const Labs = () => {
         return (
           <ActionButtons
             actions={[
-              {
-                name: t('components.transaction.deposit'),
-                handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
-                },
-                disabled: !walletIsConnected,
-              },
-              {
-                name: t('components.transaction.withdraw'),
-                handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'labWithdrawTx' }));
-                },
-                disabled: !walletIsConnected,
-              },
+              ...(allowZapIn
+                ? [
+                    {
+                      name: t('components.transaction.deposit'),
+                      handler: () => {
+                        dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                        dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                      },
+                      disabled: !walletIsConnected,
+                    },
+                  ]
+                : []),
+              ...(allowZapOut
+                ? [
+                    {
+                      name: t('components.transaction.withdraw'),
+                      handler: () => {
+                        dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                        dispatch(ModalsActions.openModal({ modalName: 'labWithdrawTx' }));
+                      },
+                      disabled: !walletIsConnected,
+                    },
+                  ]
+                : []),
             ]}
           />
         );
@@ -200,14 +218,18 @@ export const Labs = () => {
           <ActionButtons
             alert={alert}
             actions={[
-              {
-                name: t('components.transaction.deposit'),
-                handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
-                },
-                disabled: !walletIsConnected,
-              },
+              ...(allowZapIn
+                ? [
+                    {
+                      name: t('components.transaction.deposit'),
+                      handler: () => {
+                        dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                        dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                      },
+                      disabled: !walletIsConnected,
+                    },
+                  ]
+                : []),
               {
                 name: t('components.transaction.stake'),
                 handler: () => {
@@ -224,7 +246,7 @@ export const Labs = () => {
     }
   };
 
-  const LabOpportunitiesActions = ({ labAddress }: { labAddress: string }) => {
+  const LabOpportunitiesActions = ({ labAddress, allowZapIn }: { labAddress: string; allowZapIn: boolean }) => {
     switch (labAddress) {
       case YVECRV:
         return (
@@ -246,14 +268,18 @@ export const Labs = () => {
         return (
           <ActionButtons
             actions={[
-              {
-                name: t('components.transaction.deposit'),
-                handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
-                },
-                disabled: !walletIsConnected,
-              },
+              ...(allowZapIn
+                ? [
+                    {
+                      name: t('components.transaction.deposit'),
+                      handler: () => {
+                        dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
+                        dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
+                      },
+                      disabled: !walletIsConnected,
+                    },
+                  ]
+                : []),
             ]}
           />
         );
@@ -376,7 +402,14 @@ export const Labs = () => {
                 },
                 {
                   key: 'actions',
-                  transform: ({ address, alert }) => <LabHoldingsActions labAddress={address} alert={alert} />,
+                  transform: ({ address, alert, allowZapIn, allowZapOut }) => (
+                    <LabHoldingsActions
+                      labAddress={address}
+                      alert={alert}
+                      allowZapIn={allowZapIn}
+                      allowZapOut={allowZapOut}
+                    />
+                  ),
                   align: 'flex-end',
                   width: 'auto',
                   grow: '1',
@@ -443,7 +476,9 @@ export const Labs = () => {
                 },
                 {
                   key: 'actions',
-                  transform: ({ address }) => <LabOpportunitiesActions labAddress={address} />,
+                  transform: ({ address, allowZapIn, allowZapOut }) => (
+                    <LabOpportunitiesActions labAddress={address} allowZapIn={allowZapIn} />
+                  ),
                   align: 'flex-end',
                   width: 'auto',
                   grow: '1',

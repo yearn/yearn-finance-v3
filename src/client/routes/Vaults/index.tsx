@@ -372,14 +372,30 @@ export const Vaults = () => {
                 },
                 {
                   key: 'actions',
-                  transform: ({ address }) => (
-                    <ActionButtons
-                      actions={[
-                        { name: t('components.transaction.deposit'), handler: () => depositHandler(address) },
-                        { name: t('components.transaction.withdraw'), handler: () => withdrawHandler(address) },
-                      ]}
-                    />
-                  ),
+                  transform: ({ address, allowZapIn, allowZapOut }) => {
+                    return (
+                      <ActionButtons
+                        actions={[
+                          ...(allowZapIn
+                            ? [
+                                {
+                                  name: t('components.transaction.deposit'),
+                                  handler: () => depositHandler(address),
+                                },
+                              ]
+                            : []),
+                          ...(allowZapOut
+                            ? [
+                                {
+                                  name: t('components.transaction.withdraw'),
+                                  handler: () => withdrawHandler(address),
+                                },
+                              ]
+                            : []),
+                        ]}
+                      />
+                    );
+                  },
                   align: 'flex-end',
                   width: 'auto',
                   grow: '1',
@@ -445,14 +461,18 @@ export const Vaults = () => {
                 },
                 {
                   key: 'actions',
-                  transform: ({ address }) => (
+                  transform: ({ address, allowZapIn }) => (
                     <ActionButtons
                       actions={[
-                        {
-                          name: t('components.transaction.deposit'),
-                          handler: () => depositHandler(address),
-                          disabled: !walletIsConnected,
-                        },
+                        ...(allowZapIn
+                          ? [
+                              {
+                                name: t('components.transaction.deposit'),
+                                handler: () => depositHandler(address),
+                                disabled: !walletIsConnected,
+                              },
+                            ]
+                          : []),
                       ]}
                     />
                   ),
