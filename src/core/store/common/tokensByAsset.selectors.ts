@@ -3,7 +3,7 @@ import { memoize } from 'lodash';
 
 import { toBN } from '@utils';
 import { getConfig } from '@config';
-import { TokenView, Address } from '@types';
+import { TokenView } from '@types';
 
 import { VaultsSelectors } from '../modules/vaults/vaults.selectors';
 import { LabsSelectors } from '../modules/labs/labs.selectors';
@@ -27,15 +27,11 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       if (!assetData) return [];
 
       const zapperDisabled = !servicesEnabled.zapper && assetData.metadata.zapInWith === 'zapperZapIn';
-      const depositTokenAddresses: Address[] = [];
-      let mainVaultToken: Address;
-      if (zapperDisabled) {
-        mainVaultToken = assetData.token;
-      } else {
-        mainVaultToken = assetData.metadata.defaultDisplayToken;
+      const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
+      const depositTokenAddresses = [mainVaultToken];
+      if (!zapperDisabled) {
         depositTokenAddresses.push(...userTokensAddresses.filter((address) => address !== mainVaultToken));
       }
-      depositTokenAddresses.unshift(mainVaultToken);
 
       const tokens = depositTokenAddresses
         .filter((address) => !!tokensMap[address])
@@ -60,16 +56,12 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
       if (!assetData) return [];
 
       const zapperDisabled = !servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut';
-      const withdrawTokenAddresses: Address[] = [];
-      let mainVaultToken: Address;
-      if (zapperDisabled) {
-        mainVaultToken = assetData.token;
-      } else {
+      const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
+      const withdrawTokenAddresses = [mainVaultToken];
+      if (!zapperDisabled) {
         const { ZAP_OUT_TOKENS } = getConfig();
-        mainVaultToken = assetData.metadata.defaultDisplayToken;
         withdrawTokenAddresses.push(...ZAP_OUT_TOKENS.filter((address) => address !== mainVaultToken));
       }
-      withdrawTokenAddresses.unshift(mainVaultToken);
 
       const tokens = withdrawTokenAddresses
         .filter((address) => !!tokensMap[address])
