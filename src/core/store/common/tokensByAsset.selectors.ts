@@ -56,7 +56,6 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
     memoize((assetAddress?: string): TokenView[] => {
       if (!assetAddress) return [];
 
-      const { ZAP_OUT_TOKENS } = getConfig();
       const { userTokensMap, userTokensAllowancesMap } = tokensUser;
       const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
@@ -68,6 +67,7 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
         mainVaultToken = assetData.token;
         withdrawTokenAddresses.push(mainVaultToken);
       } else {
+        const { ZAP_OUT_TOKENS } = getConfig();
         mainVaultToken = assetData.metadata.defaultDisplayToken;
         withdrawTokenAddresses.push(mainVaultToken);
         withdrawTokenAddresses.push(...ZAP_OUT_TOKENS.filter((address) => address !== mainVaultToken));
