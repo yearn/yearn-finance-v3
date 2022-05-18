@@ -3,13 +3,21 @@ import { memoize } from 'lodash';
 
 import { toBN } from '@utils';
 import { getConfig } from '@config';
-import { Lab, TokenView, Vault, ZapInType } from '@types';
+import { Lab, TokenView, Vault } from '@types';
 
 import { VaultsSelectors } from '../modules/vaults/vaults.selectors';
 import { LabsSelectors } from '../modules/labs/labs.selectors';
 import { TokensSelectors } from '../modules/tokens/tokens.selectors';
 import { AppSelectors } from '../modules/app/app.selectors';
 import { createToken } from '../modules/tokens/tokens.selectors';
+
+type SupportedTokenProps = {
+  assetData: Vault | Lab;
+  token: TokenView;
+  mainVaultToken: string;
+  zapperDisabled: boolean;
+  zapType: 'zapInWith' | 'zapOutWith';
+};
 
 const { selectVaultsMap } = VaultsSelectors;
 const { selectLabsMap } = LabsSelectors;
@@ -41,30 +49,11 @@ export const selectDepositTokenOptionsByAsset = createSelector(
           const allowancesMap = userTokensAllowancesMap[address] ?? {};
           return createToken({ tokenData, userTokenData, allowancesMap });
         });
-      return tokens.filter((token) => isSupportedToken({ assetData, token, mainVaultToken, zapperDisabled }));
+      return tokens.filter((token) =>
+        isSupportedToken({ assetData, token, mainVaultToken, zapperDisabled, zapType: 'zapInWith' })
+      );
     })
 );
-
-const isSupportedToken = ({
-  assetData,
-  token,
-  mainVaultToken,
-  zapperDisabled,
-}: {
-  assetData: Vault | Lab;
-  token: TokenView;
-  mainVaultToken: string;
-  zapperDisabled: boolean;
-}) => {
-  if (!zapperDisabled && token.address !== mainVaultToken) {
-    const { zapInWith } = assetData.metadata;
-
-    // TODO Need to cast here because VaultMetadata is still coming as string from the SDK
-    return token.supported[zapInWith as keyof TokenView['supported']] && toBN(token.balance).gt(0);
-  }
-
-  return toBN(token.balance).gt(0) || token.address === mainVaultToken;
-};
 
 export const selectWithdrawTokenOptionsByAsset = createSelector(
   [selectVaultsMap, selectLabsMap, selectTokensMap, selectTokensUser, selectServicesEnabled],
@@ -92,6 +81,19 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
           const allowancesMap = userTokensAllowancesMap[address] ?? {};
           return createToken({ tokenData, userTokenData, allowancesMap });
         });
-      return tokens;
+      return tokens.filter((token) =>
+        isSupportedToken({ assetData, token, mainVaultToken, zapperDisabled, zapType: 'zapOutWith' })
+      );
     })
 );
+
+const isSupportedToken = ({ assetData, token, mainVaultToken, zapperDisabled, zapType }: SupportedTokenProps) => {
+  if (!zapperDisabled && token.address !== mainVaultToken) {
+    const zap = assetData.metadata[zapType];
+
+    // TODO Need to cast here because VaultMetadata is still coming as string from the SDK
+    return token.supported[zap as keyof TokenView['supported']] && toBN(token.balance).gt(0);
+  }
+
+  return toBN(token.balance).gt(0) || token.address === mainVaultToken;
+};
