@@ -31,12 +31,11 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       let mainVaultToken: Address;
       if (zapperDisabled) {
         mainVaultToken = assetData.token;
-        depositTokenAddresses.push(mainVaultToken);
       } else {
         mainVaultToken = assetData.metadata.defaultDisplayToken;
-        depositTokenAddresses.push(mainVaultToken);
         depositTokenAddresses.push(...userTokensAddresses.filter((address) => address !== mainVaultToken));
       }
+      depositTokenAddresses.unshift(mainVaultToken);
 
       const tokens = depositTokenAddresses
         .filter((address) => !!tokensMap[address])
@@ -65,13 +64,12 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
       let mainVaultToken: Address;
       if (zapperDisabled) {
         mainVaultToken = assetData.token;
-        withdrawTokenAddresses.push(mainVaultToken);
       } else {
         const { ZAP_OUT_TOKENS } = getConfig();
         mainVaultToken = assetData.metadata.defaultDisplayToken;
-        withdrawTokenAddresses.push(mainVaultToken);
         withdrawTokenAddresses.push(...ZAP_OUT_TOKENS.filter((address) => address !== mainVaultToken));
       }
+      withdrawTokenAddresses.unshift(mainVaultToken);
 
       const tokens = withdrawTokenAddresses
         .filter((address) => !!tokensMap[address])
