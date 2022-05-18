@@ -106,12 +106,12 @@ export class TransactionServiceImpl implements TransactionService {
   }: HandleTransactionProps): Promise<TransactionReceipt> => {
     const { NETWORK_SETTINGS } = getConfig();
     const currentNetworkSettings = NETWORK_SETTINGS[network];
-    const useNotifyService = useExternalService && currentNetworkSettings.notifyEnabled;
+    const useBlocknativeNotifyService = useExternalService && currentNetworkSettings.notifyEnabled;
 
     let updateNotification: UpdateNotification | undefined;
     let dismissNotification: () => void = () => undefined;
     let notifyServiceFailed;
-    if (renderNotification && useNotifyService) {
+    if (renderNotification && useBlocknativeNotifyService) {
       try {
         notify.hash(tx.hash);
       } catch (error: any) {
@@ -120,7 +120,8 @@ export class TransactionServiceImpl implements TransactionService {
       }
     }
 
-    if (renderNotification && (!useNotifyService || notifyServiceFailed)) {
+    if (renderNotification && (!useBlocknativeNotifyService || notifyServiceFailed)) {
+      // Send custom notification that does not consumes Blocknative service
       const { update, dismiss } = notify.notification({
         eventCode: 'txSentCustom',
         type: 'pending',
@@ -165,7 +166,7 @@ export class TransactionServiceImpl implements TransactionService {
             tx: error.replacement,
             network,
             useExternalService,
-            renderNotification: !useNotifyService || notifyServiceFailed,
+            renderNotification: !useBlocknativeNotifyService || notifyServiceFailed,
           });
         }
       }
