@@ -183,9 +183,9 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const vaultsOptions = vaults
     .filter(({ address }) => allowVaultSelect || selectedVault.address === address)
-    .map(({ address, displayName, displayIcon, DEPOSIT, token, apyData, apyMetadata }) => ({
+    .map(({ address, displayIcon, DEPOSIT, token, apyData, apyMetadata }) => ({
       address,
-      symbol: displayName,
+      symbol: token.symbol,
       icon: displayIcon,
       balance: DEPOSIT.userDeposited,
       balanceUsdc: DEPOSIT.userDepositedUsdc,
