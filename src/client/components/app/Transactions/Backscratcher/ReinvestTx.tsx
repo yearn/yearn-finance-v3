@@ -70,7 +70,7 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
 
   const selectedLabOption = {
     address: selectedLab.address,
-    symbol: selectedTargetToken.name,
+    symbol: selectedTargetToken.symbol,
     icon: selectedTargetToken.icon,
     balance: selectedTargetVault.DEPOSIT.userDeposited,
     balanceUsdc: selectedTargetVault.DEPOSIT.userDepositedUsdc,
@@ -79,7 +79,7 @@ export const BackscratcherReinvestTx: FC<BackscratcherReinvestTxProps> = ({ onCl
 
   const selectedVaultOption = {
     address: selectedTargetToken.address,
-    symbol: selectedTargetToken.name,
+    symbol: selectedTargetToken.symbol,
     icon: selectedTargetToken.icon,
     balance: selectedTargetToken.balance,
     balanceUsdc: selectedTargetToken.balanceUsdc,

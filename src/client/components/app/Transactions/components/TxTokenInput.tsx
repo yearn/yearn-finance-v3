@@ -101,6 +101,7 @@ const TokenData = styled.div`
 const TokenName = styled.div`
   width: 100%;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
   text-align: center;
   font-size: 1.3rem;

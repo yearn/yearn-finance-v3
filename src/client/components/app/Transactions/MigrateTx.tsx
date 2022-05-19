@@ -79,7 +79,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
 
   const sourceVault = {
     address: selectedVault.address,
-    symbol: selectedVault.displayName,
+    symbol: selectedVault.token.symbol,
     icon: selectedVault.displayIcon,
     balance: selectedVault.DEPOSIT.userDeposited,
     balanceUsdc: selectedVault.DEPOSIT.userDepositedUsdc,
@@ -88,7 +88,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
 
   const targetVault = {
     address: selectedVault.migrationTargetVault,
-    symbol: migrateToVault?.displayName ?? selectedVault.displayName,
+    symbol: migrateToVault?.token.symbol ?? selectedVault.token.symbol,
     icon: migrateToVault?.displayIcon ?? selectedVault.displayIcon,
     balance: migrateToVault?.DEPOSIT.userDeposited ?? '0',
     balanceUsdc: migrateToVault?.DEPOSIT.userDepositedUsdc ?? '0',

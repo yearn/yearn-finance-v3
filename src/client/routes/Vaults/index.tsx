@@ -212,7 +212,11 @@ export const Vaults = () => {
   }
 
   const filterVaults = (vault: VaultView) => {
-    return toBN(vault.apyMetadata?.net_apy).gt(0) || vault.address === CONTRACT_ADDRESSES.YVYFI;
+    return (
+      toBN(vault.apyMetadata?.net_apy).gt(0) ||
+      isCustomApyType(vault.apyType) ||
+      vault.address === CONTRACT_ADDRESSES.YVYFI
+    );
   };
 
   return (
