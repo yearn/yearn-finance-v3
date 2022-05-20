@@ -1,7 +1,7 @@
 {
   "no-vault-supported-card": {
     "content": "Versuchen Sie, in das richtige Netz zu wechseln.",
-    "header": "Tresor wird in {{network}} nicht unterstützt"
+    "header": "Vault wird in {{network}} nicht unterstützt"
   },
   "overview-panel": {
     "about": "About",
