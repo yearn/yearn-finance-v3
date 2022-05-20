@@ -92,7 +92,7 @@
       "token-input": {
         "search-select-token": "Select a token to ZAP",
         "search-select-vault": "Select a Vault",
-        "yield": "Yield",
+        "yield": "APY",
         "you-have": "You have"
       },
       "wallet-balance": "Wallet Balance",

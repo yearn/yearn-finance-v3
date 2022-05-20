@@ -52,6 +52,10 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   `}
 `;
 
+const ContrastText = styled.span`
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
 const StyledText = styled(Text)`
   color: ${({ theme }) => theme.colors.txModalColors.text};
   max-width: 11rem;
@@ -336,6 +340,12 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
 
               <TokenExtras>
                 {amountValue && <StyledText>{formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
+                {yieldPercent && (
+                  <StyledText>
+                    {t('components.transaction.token-input.yield')}
+                    <ContrastText> {yieldPercent} </ContrastText>
+                  </StyledText>
+                )}
               </TokenExtras>
             </TokenData>
           )}
