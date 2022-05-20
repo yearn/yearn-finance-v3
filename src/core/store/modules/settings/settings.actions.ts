@@ -1,9 +1,10 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { WalletActions } from '@store';
 import { isValidAddress } from '@utils';
 import { getConfig } from '@config';
+
+import { WalletActions } from '../wallet/wallet.actions';
 
 const toggleSidebar = createAction('settings/toggleSidebar');
 const closeSidebar = createAction('settings/closeSidebar');

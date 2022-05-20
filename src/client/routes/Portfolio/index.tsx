@@ -106,6 +106,8 @@ export const Portfolio = () => {
   const vaultsUnderlyingTokens = useAppSelector(VaultsSelectors.selectUnderlyingTokensAddresses);
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
+  const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
+  const zapperEnabled = servicesEnabled.zapper;
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const generalLoading = (appStatus.loading || tokensListStatus.loading || isMounting) && !activeModal;
   const userTokensLoading = generalLoading && !userTokens.length;
@@ -144,7 +146,7 @@ export const Portfolio = () => {
         dispatch(
           ModalsActions.openModal({
             modalName: 'depositTx',
-            modalProps: { allowTokenSelect: false, allowVaultSelect: true },
+            modalProps: { allowTokenSelect: false, allowVaultSelect: zapperEnabled },
           })
         );
         break;

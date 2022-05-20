@@ -49,6 +49,7 @@ export class TokenServiceImpl implements TokenService {
   /*                                Fetch Methods                               */
   /* -------------------------------------------------------------------------- */
   public async getSupportedTokens({ network }: GetSupportedTokensProps): Promise<Token[]> {
+    const { WETH } = this.config.CONTRACT_ADDRESSES;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
     const supportedTokens = await yearn.tokens.supported();
@@ -62,7 +63,12 @@ export class TokenServiceImpl implements TokenService {
       console.log({ error });
     }
 
-    return getUniqueAndCombine(supportedTokens, labsTokens, 'address');
+    // TODO: remove fixedSupportedTokens when WETH symbol is fixed on sdk
+    const fixedSupportedTokens = supportedTokens.map((token) => ({
+      ...token,
+      symbol: token.address === WETH ? 'WETH' : token.symbol,
+    }));
+    return getUniqueAndCombine(fixedSupportedTokens, labsTokens, 'address');
   }
 
   public async getTokensDynamicData({ network, addresses }: GetTokensDynamicDataProps): Promise<TokenDynamicData[]> {

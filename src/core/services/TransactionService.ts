@@ -101,27 +101,37 @@ export class TransactionServiceImpl implements TransactionService {
   public handleTransaction = async ({
     network,
     tx,
+    useExternalService,
     renderNotification = true,
   }: HandleTransactionProps): Promise<TransactionReceipt> => {
     const { NETWORK_SETTINGS } = getConfig();
     const currentNetworkSettings = NETWORK_SETTINGS[network];
+    const useBlocknativeNotifyService = useExternalService && currentNetworkSettings.notifyEnabled;
+
     let updateNotification: UpdateNotification | undefined;
     let dismissNotification: () => void = () => undefined;
-    try {
-      if (renderNotification) {
-        if (currentNetworkSettings.notifyEnabled) {
-          notify.hash(tx.hash);
-        } else {
-          const { update, dismiss } = notify.notification({
-            eventCode: 'txSentCustom',
-            type: 'pending',
-            message: 'Your transaction has been sent to the network',
-          });
-          updateNotification = update;
-          dismissNotification = dismiss;
-        }
+    let blocknativeNotifyServiceFailed;
+    if (renderNotification && useBlocknativeNotifyService) {
+      try {
+        notify.hash(tx.hash);
+      } catch (error: any) {
+        blocknativeNotifyServiceFailed = true;
+        console.error(error);
       }
+    }
 
+    if (renderNotification && (!useBlocknativeNotifyService || blocknativeNotifyServiceFailed)) {
+      // Send custom notification that does not consumes Blocknative service
+      const { update, dismiss } = notify.notification({
+        eventCode: 'txSentCustom',
+        type: 'pending',
+        message: 'Your transaction has been sent to the network',
+      });
+      updateNotification = update;
+      dismissNotification = dismiss;
+    }
+
+    try {
       const providerType = getProviderType(network);
       const provider = this.web3Provider.getInstanceOf(providerType);
       const { txConfirmations } = currentNetworkSettings;
@@ -155,7 +165,8 @@ export class TransactionServiceImpl implements TransactionService {
           return await this.handleTransaction({
             tx: error.replacement,
             network,
-            renderNotification: !currentNetworkSettings.notifyEnabled,
+            useExternalService,
+            renderNotification: !useBlocknativeNotifyService || blocknativeNotifyServiceFailed,
           });
         }
       }

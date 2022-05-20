@@ -12,6 +12,8 @@ import {
   SettingsSelectors,
   NetworkSelectors,
   WalletSelectors,
+  AppSelectors,
+  selectWithdrawTokenOptionsByAsset,
 } from '@store';
 import {
   toBN,
@@ -40,6 +42,9 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
+  const simulationsEnabled = servicesEnabled.tenderly;
+  const zapperEnabled = servicesEnabled.zapper;
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -47,14 +52,10 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const selectedLab = useAppSelector(LabsSelectors.selectSelectedLab);
   const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const selectedLabToken = tokenSelectorFilter(selectedLab?.address ?? '');
-  let zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
-  zapOutTokens = selectedLab?.allowZapOut ? zapOutTokens : [];
-  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(selectedLab?.defaultDisplayToken ?? '');
+  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState('');
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
-
-  const targetTokensOptions = selectedLab
-    ? [selectedLab.token, ...zapOutTokens.filter(({ address }) => address !== selectedLab.token.address)]
-    : zapOutTokens;
+  const withdrawTokenOptionsByVault = useAppSelector(selectWithdrawTokenOptionsByAsset);
+  const targetTokensOptions = withdrawTokenOptionsByVault(selectedLab?.address);
   const targetTokensOptionsMap = keyBy(targetTokensOptions, 'address');
   const selectedTargetToken = targetTokensOptionsMap[selectedTargetTokenAddress];
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
@@ -79,6 +80,16 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   }, []);
 
   useEffect(() => {
+    if (!selectedTargetTokenAddress && selectedLab) {
+      setSelectedTargetTokenAddress(
+        !zapperEnabled && selectedLab.zapOutWith === 'zapperZapOut'
+          ? selectedLab.token.address
+          : selectedLab.defaultDisplayToken
+      );
+    }
+  }, [selectedTargetTokenAddress, selectedLab]);
+
+  useEffect(() => {
     if (!selectedLab || !walletIsConnected) return;
 
     dispatch(
@@ -96,7 +107,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
 
   useEffect(() => {
     if (!selectedLab || !selectedTargetTokenAddress) return;
-    if (toBN(debouncedAmount).gt(0) && !inputError) {
+    if (simulationsEnabled && toBN(debouncedAmount).gt(0) && !inputError) {
       dispatch(
         VaultsActions.getExpectedTransactionOutcome({
           transactionType: 'WITHDRAW',
@@ -106,6 +117,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
         })
       );
     }
+    dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedLab.token.address] }));
   }, [debouncedAmount]);
 
   if (!selectedLab || !selectedTargetToken || !targetTokensOptions) {
@@ -239,6 +251,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       targetAssetOptions={targetTokensOptions}
       selectedTargetAsset={selectedTargetToken}
       onSelectedTargetAssetChange={onSelectedTargetTokenChange}
+      targetAmountDisabled={!simulationsEnabled}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}

@@ -1,6 +1,7 @@
 {
   "language": "Dil",
   "preferences": "Tercihler",
+  "signed-approvals": "İmzalı Onayları Etkinleştir",
   "slippage-tolerance": "Slipaj Toleransı",
   "themes": "Temalar"
 }
