@@ -309,7 +309,6 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined} center={hideAmount}>
             <TokenIconContainer>
               <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
-              {/*{listItems?.length > 1 && <TokenListIcon Component={ZapIcon} />}*/}
             </TokenIconContainer>
             <TokenName>{selectedItem.label}</TokenName>
           </TokenSelector>

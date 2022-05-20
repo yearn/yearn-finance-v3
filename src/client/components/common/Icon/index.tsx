@@ -8,7 +8,6 @@ import { ReactComponent as CheckRoundIcon } from '@assets/icons/check-round.svg'
 import { ReactComponent as ChevronDownIcon } from '@assets/icons/chevron-down.svg';
 import { ReactComponent as ChevronLeftIcon } from '@assets/icons/chevron-left.svg';
 import { ReactComponent as ChevronRightIcon } from '@assets/icons/chevron-right.svg';
-import { ReactComponent as ZapIcon } from '@assets/icons/zap-icon.svg';
 import { ReactComponent as ChevronTxIcon } from '@assets/icons/chevron-tx.svg';
 import { ReactComponent as CloseIcon } from '@assets/icons/close.svg';
 import { ReactComponent as CollapseIcon } from '@assets/icons/collapse.svg';
@@ -88,7 +87,6 @@ export {
   ErrorIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  ZapIcon,
   ChevronLeftIcon,
   ChevronTxIcon,
   WalletMissingIcon,
