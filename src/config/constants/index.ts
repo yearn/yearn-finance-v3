@@ -6,6 +6,7 @@ import { encode } from '@src/utils';
 
 const ADDRESSES = {
   ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+  WETH: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
   DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
   USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   USDT: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
@@ -96,6 +97,7 @@ export const getConstants = memoize((): Constants => {
     ETHEREUM_ADDRESS: ADDRESSES.ETH,
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
     YEARN_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
+    YEARN_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
     SUPPORTED_NETWORKS: ['mainnet', 'fantom', 'arbitrum'],
     NETWORK_SETTINGS,
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,

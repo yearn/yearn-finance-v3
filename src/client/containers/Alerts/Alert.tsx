@@ -60,7 +60,7 @@ const StyledIcon = styled(Icon)`
 `;
 
 export interface AlertProps {
-  id: number;
+  id: string;
   className?: string;
   onClose?: () => void;
   type: AlertTypes;

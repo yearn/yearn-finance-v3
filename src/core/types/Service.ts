@@ -267,6 +267,7 @@ export interface ExecuteTransactionProps {
 export interface HandleTransactionProps {
   tx: TransactionResponse;
   network: Network;
+  useExternalService?: boolean;
   renderNotification?: boolean;
 }
 

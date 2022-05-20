@@ -1,5 +1,5 @@
 export interface Alert {
-  id: number;
+  id: string;
   message: string;
   type: AlertTypes;
   persistent: boolean;

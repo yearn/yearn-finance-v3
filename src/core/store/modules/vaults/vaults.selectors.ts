@@ -274,6 +274,8 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     historicalEarnings: vaultData.metadata.historicEarnings ?? [],
     allowZapIn: !!vaultData.metadata.allowZapIn,
     allowZapOut: !!vaultData.metadata.allowZapOut,
+    zapInWith: vaultData.metadata.zapInWith,
+    zapOutWith: vaultData.metadata.zapOutWith,
     migrationAvailable: vaultData.metadata.migrationAvailable,
     migrationContract: vaultData.metadata.migrationContract,
     migrationTargetVault: vaultData.metadata.migrationTargetVault,
@@ -288,6 +290,7 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
 
 export const VaultsSelectors = {
   selectVaultsState,
+  selectVaultsMap,
   selectVaults,
   selectLiveVaults,
   selectDeprecatedVaults,

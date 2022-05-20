@@ -3,6 +3,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import { Alert, AlertTypes } from '@types';
 import { getConfig } from '@config';
+import { getRandomId } from '@utils';
 
 export interface AlertProps {
   message: string;
@@ -11,15 +12,16 @@ export interface AlertProps {
   timeout?: number;
 }
 
-const closeAlert = createAction<{ alertId: number }>('alerts/closeAlert');
+const closeAlert = createAction<{ alertId: string }>('alerts/closeAlert');
 
 const openAlert = createAsyncThunk<
   { alert: Alert },
   { message: string; type?: AlertTypes; persistent?: boolean; timeout?: number },
   ThunkAPI
->('alerts/openAlert', async ({ message, type, persistent, timeout }, { getState, dispatch }) => {
+>('alerts/openAlert', async ({ message, type, persistent, timeout }, { dispatch }) => {
+  const id = getRandomId();
   const alert: Alert = {
-    id: (getState().alerts.lastId || 0) + 1,
+    id,
     type: type || 'default',
     persistent: !!persistent,
     message,

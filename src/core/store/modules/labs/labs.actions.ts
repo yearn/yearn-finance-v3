@@ -220,7 +220,7 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   ) => {
     const { services } = extra;
     const { labService, transactionService } = services;
-    const { wallet, labs, tokens, network } = getState();
+    const { wallet, labs, tokens, network, app } = getState();
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
@@ -269,7 +269,8 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabled.notify;
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -297,7 +298,7 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
   async ({ labAddress, amount, tokenAddress, slippageTolerance }, { dispatch, extra, getState }) => {
     const { services } = extra;
     const { labService, transactionService } = services;
-    const { wallet, labs, tokens, network } = getState();
+    const { wallet, labs, tokens, network, app } = getState();
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
@@ -343,7 +344,8 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
       amountOfShares,
       slippageTolerance,
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabled.notify;
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -500,12 +502,11 @@ const yveCrvApproveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAP
 const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yveCrv/yveCrvDeposit',
   async ({ labAddress, tokenAddress, amount }, { dispatch, getState, extra }) => {
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { services } = extra;
+
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
       currentNetwork: network.current,
@@ -528,7 +529,8 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultAddress: labAddress,
       amount: amountInWei.toString(),
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabled.notify;
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -539,7 +541,7 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
 const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
   'labs/yveCrv/yveCrvClaimReward',
   async (_args, { dispatch, extra, getState }) => {
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { services } = extra;
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
@@ -557,7 +559,8 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
       network: network.current,
       accountAddress: userAddress,
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabled.notify;
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
@@ -578,8 +581,9 @@ const yveCrvApproveReinvest = createAsyncThunk<void, { labAddress: string; token
 const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
   'labs/yveCrv/yveCrvReinvest',
   async (_args, { dispatch, extra, getState }) => {
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { services } = extra;
+
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
@@ -612,7 +616,8 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
       network: network.current,
       accountAddress: userAddress,
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabled.notify;
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
@@ -706,12 +711,11 @@ const yvBoostEthApproveStake = createAsyncThunk<void, { labAddress: string }, Th
 const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
   'labs/yvBoostEth/yvBoostEthStake',
   async ({ labAddress, amount, targetUnderlyingTokenAmount }, { dispatch, extra, getState }) => {
-    const { network, wallet } = getState();
+    const { network, wallet, app } = getState();
     const { services } = extra;
+
     const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
       currentNetwork: network.current,
@@ -757,7 +761,8 @@ const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultAddress: labAddress,
       amount: amountInWei.toString(),
     });
-    await transactionService.handleTransaction({ tx, network: network.current });
+    const notifyEnabled = app.servicesEnabled.notify;
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
     dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
     dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));

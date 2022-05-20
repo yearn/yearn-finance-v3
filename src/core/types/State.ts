@@ -1,5 +1,6 @@
 import { Alert } from './Alerts';
 import { Address, Network } from './Blockchain';
+import { ExternalServiceId } from './General';
 import { PartnerId } from './Partner';
 import { Theme } from './Settings';
 import { Status } from './Status';
@@ -33,6 +34,7 @@ export interface RootState {
 
 export interface AppState {
   isInitialized: boolean;
+  servicesEnabled: Record<ExternalServiceId, boolean>;
   statusMap: {
     initApp: Status;
     getAppData: Status;
@@ -55,7 +57,6 @@ export interface ModalsState {
 
 export interface AlertsState {
   alertsList: Alert[];
-  lastId: number;
 }
 
 export interface RouteState {

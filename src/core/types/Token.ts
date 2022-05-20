@@ -1,4 +1,4 @@
-import { Address } from '@types';
+import { Address } from './Blockchain';
 
 export interface UserTokenData {
   address: string;
@@ -20,6 +20,7 @@ export interface TokenView {
   description: string;
   website: string;
   isZapable: boolean;
+  sourceIsZapper: boolean;
   allowancesMap: { [tokenAddress: string]: string };
 }
 

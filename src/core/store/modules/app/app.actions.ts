@@ -1,17 +1,24 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { isEqual } from 'lodash';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { isGnosisApp, isLedgerLive } from '@utils';
-import { Network, Route, Address, Vault } from '@types';
+import { isGnosisApp, isLedgerLive, get } from '@utils';
+import { Network, Route, Address, Vault, ExternalServiceId } from '@types';
 
 import { WalletActions } from '../wallet/wallet.actions';
 import { TokensActions } from '../tokens/tokens.actions';
 import { VaultsActions } from '../vaults/vaults.actions';
 import { LabsActions } from '../labs/labs.actions';
+import { AlertsActions } from '../alerts/alerts.actions';
 import { NetworkActions } from '../network/network.actions';
 import { PartnerActions } from '../partner/partner.actions';
 import { SettingsActions } from '../settings/settings.actions';
+
+/* -------------------------------------------------------------------------- */
+/*                                   Setters                                  */
+/* -------------------------------------------------------------------------- */
+
+const disableService = createAction<{ service: ExternalServiceId }>('app/disableService');
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
@@ -51,6 +58,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   } else if (wallet.name && wallet.name !== 'Iframe') {
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
+  dispatch(checkExternalServicesStatus());
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
 });
@@ -118,6 +126,47 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
 );
 
 /* -------------------------------------------------------------------------- */
+/*                                  Services                                  */
+/* -------------------------------------------------------------------------- */
+
+const checkExternalServicesStatus = createAsyncThunk<void, void, ThunkAPI>(
+  'app/checkExternalServicesStatus',
+  async (_arg, { dispatch, extra }) => {
+    const { YEARN_ALERTS_API } = extra.config;
+    try {
+      const { status, data } = await get(`${YEARN_ALERTS_API}/health`);
+      if (status !== 200) throw new Error('Service status provider not currently accessible');
+
+      const errorMessageTemplate =
+        'service is currently experiencing technical issues and have been temporarily disabled. We apologize for any inconvenience this may cause, we are actively working on resolving these issues';
+      const downgradedServicesMessages = [];
+      const { zapper, simulations } = data;
+      if (!zapper) {
+        dispatch(disableService({ service: 'zapper' }));
+        downgradedServicesMessages.push(`Zapper ${errorMessageTemplate}`);
+      }
+
+      if (!simulations) {
+        dispatch(disableService({ service: 'tenderly' }));
+        downgradedServicesMessages.push(`Simulations ${errorMessageTemplate}`);
+      }
+
+      downgradedServicesMessages.forEach(async (message) => {
+        dispatch(
+          AlertsActions.openAlert({
+            message,
+            type: 'warning',
+            persistent: true,
+          })
+        );
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+/* -------------------------------------------------------------------------- */
 /*                                Subscriptions                               */
 /* -------------------------------------------------------------------------- */
 
@@ -134,6 +183,7 @@ const initSubscriptions = createAsyncThunk<void, void, ThunkAPI>(
 /* -------------------------------------------------------------------------- */
 
 export const AppActions = {
+  disableService,
   clearAppData,
   clearUserAppData,
   initApp,

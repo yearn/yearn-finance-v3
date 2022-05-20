@@ -18,6 +18,7 @@ import {
   SettingsSelectors,
   NetworkSelectors,
   WalletSelectors,
+  AppSelectors,
 } from '@store';
 import {
   toBN,
@@ -48,6 +49,9 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
+  const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
+  const simulationsEnabled = servicesEnabled.tenderly;
+  const zapperEnabled = servicesEnabled.zapper;
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -72,14 +76,23 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   };
 
   useEffect(() => {
-    if (!selectedSellTokenAddress && selectedLab) {
-      dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress: selectedLab.defaultDisplayToken }));
-    }
-
     return () => {
       onExit();
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedSellTokenAddress && selectedLab) {
+      dispatch(
+        TokensActions.setSelectedTokenAddress({
+          tokenAddress:
+            !zapperEnabled && selectedLab.zapInWith === 'zapperZapIn'
+              ? selectedLab.token.address
+              : selectedLab.defaultDisplayToken,
+        })
+      );
+    }
+  }, [selectedSellTokenAddress, selectedLab]);
 
   useEffect(() => {
     if (!selectedLab || !selectedSellTokenAddress || !isWalletConnected) return;
@@ -107,14 +120,17 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       return;
     }
 
-    dispatch(
-      VaultsActions.getExpectedTransactionOutcome({
-        transactionType: 'DEPOSIT',
-        sourceTokenAddress: selectedSellTokenAddress,
-        sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
-        targetTokenAddress: selectedLab.address,
-      })
-    );
+    if (simulationsEnabled) {
+      dispatch(
+        VaultsActions.getExpectedTransactionOutcome({
+          transactionType: 'DEPOSIT',
+          sourceTokenAddress: selectedSellTokenAddress,
+          sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
+          targetTokenAddress: selectedLab.address,
+        })
+      );
+    }
+    dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedSellTokenAddress] }));
   }, [debouncedAmount]);
 
   if (!selectedLab || !selectedSellTokenAddress || !selectedSellToken) {
@@ -266,6 +282,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       targetAssetOptions={[selectedLabOption]}
       selectedTargetAsset={selectedLabOption}
       onSelectedTargetAssetChange={onSelectedLabChange}
+      targetAmountDisabled={!simulationsEnabled}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}

@@ -171,6 +171,8 @@ export class LabServiceImpl implements LabService {
         metadata: {
           ...yvBoostVaultDynamic.metadata,
           displayIcon: `${ASSETS_ICON_URL}${address}/logo-128.png`,
+          zapInWith: 'zapperZapIn', // TODO: should not be hardcoded. Update once SDK is updated
+          zapOutWith: 'zapperZapOut', // TODO: should not be hardcoded. Update once SDK is updated
         },
       };
     } catch (error) {
@@ -230,6 +232,8 @@ export class LabServiceImpl implements LabService {
           displayName: 'pSLPyvBOOST-ETH',
           displayIcon: `${ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
           defaultDisplayToken: ETH,
+          zapInWith: 'zapperZapIn',
+          zapOutWith: 'zapperZapOut',
         },
       };
     } catch (error) {

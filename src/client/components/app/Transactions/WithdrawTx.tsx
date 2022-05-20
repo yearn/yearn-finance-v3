@@ -3,13 +3,14 @@ import { keyBy } from 'lodash';
 
 import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce, useAppTranslation } from '@hooks';
 import {
-  TokensSelectors,
   VaultsSelectors,
   VaultsActions,
   TokensActions,
   SettingsSelectors,
   NetworkSelectors,
   WalletSelectors,
+  AppSelectors,
+  selectWithdrawTokenOptionsByAsset,
 } from '@store';
 import {
   toUnit,
@@ -42,21 +43,19 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
+  const simulationsEnabled = servicesEnabled.tenderly;
+  const zapperEnabled = servicesEnabled.zapper;
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
-  let zapOutTokens = useAppSelector(TokensSelectors.selectZapOutTokens);
-  zapOutTokens = selectedVault?.allowZapOut ? zapOutTokens : [];
-  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState(
-    selectedVault?.defaultDisplayToken ?? ''
-  );
+  const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState('');
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
   const signedApprovalsEnabled = useAppSelector(SettingsSelectors.selectSignedApprovalsEnabled);
-  const targetTokensOptions = selectedVault
-    ? [selectedVault.token, ...zapOutTokens.filter(({ address }) => address !== selectedVault.token.address)]
-    : zapOutTokens;
+  const withdrawTokenOptionsByVault = useAppSelector(selectWithdrawTokenOptionsByAsset);
+  const targetTokensOptions = withdrawTokenOptionsByVault(selectedVault?.address);
   const targetTokensOptionsMap = keyBy(targetTokensOptions, 'address');
   const selectedTargetToken = targetTokensOptionsMap[selectedTargetTokenAddress];
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
@@ -86,6 +85,16 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   }, []);
 
   useEffect(() => {
+    if (!selectedTargetTokenAddress && selectedVault) {
+      setSelectedTargetTokenAddress(
+        !zapperEnabled && selectedVault.zapOutWith === 'zapperZapOut'
+          ? selectedVault.token.address
+          : selectedVault.defaultDisplayToken
+      );
+    }
+  }, [selectedTargetTokenAddress, selectedVault]);
+
+  useEffect(() => {
     if (!selectedVault || !walletIsConnected) return;
 
     dispatch(
@@ -103,7 +112,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   useEffect(() => {
     if (!selectedVault || !selectedTargetTokenAddress) return;
-    if (toBN(debouncedAmount).gt(0) && !inputError) {
+    if (simulationsEnabled && toBN(debouncedAmount).gt(0) && !inputError) {
       dispatch(
         VaultsActions.getExpectedTransactionOutcome({
           transactionType: 'WITHDRAW',
@@ -112,8 +121,8 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
           targetTokenAddress: selectedTargetTokenAddress,
         })
       );
-      dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedVault.token.address] }));
     }
+    dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedVault.token.address] }));
   }, [debouncedAmount]);
 
   if (!selectedVault || !selectedTargetToken || !targetTokensOptions) {
@@ -266,6 +275,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       targetAssetOptions={targetTokensOptions}
       selectedTargetAsset={selectedTargetToken}
       onSelectedTargetAssetChange={onSelectedTargetTokenChange}
+      targetAmountDisabled={!simulationsEnabled}
       targetAmount={expectedAmount}
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}

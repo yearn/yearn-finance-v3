@@ -95,7 +95,7 @@ const approve = createAsyncThunk<
   { tokenAddress: string; spenderAddress: string; amountToApprove?: string },
   ThunkAPI
 >('tokens/approve', async ({ tokenAddress, spenderAddress, amountToApprove }, { extra, getState }) => {
-  const { network, wallet } = getState();
+  const { network, wallet, app } = getState();
   const { tokenService, transactionService } = extra.services;
   const amount = amountToApprove ?? extra.config.MAX_UINT256;
 
@@ -109,7 +109,8 @@ const approve = createAsyncThunk<
     spenderAddress,
     amount,
   });
-  await transactionService.handleTransaction({ tx, network: network.current });
+  const notifyEnabled = app.servicesEnabled.notify;
+  await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
 
   return { amount };
 });
