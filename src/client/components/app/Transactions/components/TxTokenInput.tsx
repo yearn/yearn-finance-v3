@@ -341,7 +341,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           )}
         </TokenInfo>
         {listItems?.length > 1 && (
-          <ZapMessageContainer onClick={listItems?.length > 1 ? openSearchList : undefined}>
+          <ZapMessageContainer onClick={openSearchList}>
             ⚡ Or <HighlightText> select a token </HighlightText> in your wallet to ZAP
           </ZapMessageContainer>
         )}
