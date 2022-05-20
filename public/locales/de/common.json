@@ -6,8 +6,13 @@
     "connect-button": {
       "connect": "Verbinde Wallet"
     },
+    "empty-list": {
+      "searching-text": "Suche bitte nach einem anderen Vermögenswert",
+      "text": "Keine Vermögenswerte, die angezeigt werden können"
+    },
     "list-card": {
       "apy": "APY",
+      "asset": "Vermögenswert",
       "available-deposit": "Einzahlungen sind verfügbar",
       "available-stake": "Staking verfügbar",
       "available-supply": "Verfügbares Kapital",
@@ -16,6 +21,7 @@
       "borrowing": "Ausleihen",
       "collateral": "Sicherheiten",
       "deposits": "Einzahlungen",
+      "deprecated": "abgewertet",
       "earned": "Verdient",
       "lend-apy": "APY für Verleihen",
       "market-liquidity": "Marktliquidität",
@@ -24,11 +30,28 @@
       "supplying": "Bereitstellen",
       "tokens": "Tokens",
       "total-assets": "Gesamtvermögen",
-      "value": "Wert"
+      "value": "Wert",
+      "wallet": "Wallet"
     },
     "no-wallet": "Wallet nicht verbunden",
     "recommendations": {
       "header": "Höchste APY"
+    },
+    "search-input": {
+      "search": "Suche"
+    },
+    "tooltips": {
+      "base-apr": "Base CRV APR",
+      "boost": "verstärken",
+      "convex-apr": "Convex APR",
+      "gross-apr": "Gesamt APR",
+      "inception-apy": "Beginn von APY",
+      "monthly-apy": "monatlicher APY",
+      "net-apy": "Net APY",
+      "pool-apy": "Pool APY",
+      "rewards-apr": "Bonus APR",
+      "vecrv-apy": "veCRV APY",
+      "weekly-apy": "wöchentlicher APY"
     },
     "transaction": {
       "approve": "Bestätigen",
@@ -44,7 +67,7 @@
       "claim": "Anspruch",
       "deposit": "Einzahlung",
       "from-iron-bank": "Von Iron Bank",
-      "from-vault": "Vom Tresor",
+      "from-vault": "Vom Vault",
       "from-wallet": "Von der Wallet",
       "lock": "Sperre",
       "max": "MAX",
@@ -52,9 +75,11 @@
       "reinvest": "Reinvestieren",
       "repay": "Zurückzahlen",
       "reward": "Vergütung",
+      "sign": "Zeichen",
       "stake": "Stake",
       "status": {
         "calculating": "Berechnung...",
+        "done": "fertiggestellt",
         "exit": "Ausgang",
         "simulating": "Simulierung...",
         "transaction-completed": "Übersetzung komplett"
@@ -67,7 +92,8 @@
       "token-input": {
         "search-select-token": "Wähle ein Token",
         "search-select-vault": "Wähle ein Tresor",
-        "yield": "Rendite"
+        "yield": "Rendite",
+        "you-have": "Du hast"
       },
       "wallet-balance": "Wallet Bilanz",
       "withdraw": "Auszahlung"
@@ -81,6 +107,7 @@
     "borrow-limit-used": "Ausgenutzter Kreditrahmen",
     "borrowed": "Geliehen",
     "earnings": "Erträge",
+    "est-yearly-earnings": "geschätztes Jahreseinkommen",
     "est-yearly-yield": "Geschätzter jährlicher Ertrag",
     "holdings": "Bestand",
     "supplied": "Bereitgestellt",
@@ -94,6 +121,8 @@
   },
   "footer": {
     "links": {
+      "blog": "Blog",
+      "buyback": "YFI Rückkauf",
       "disclaimer": "Disclaimer",
       "docs": "Dokumente",
       "gov": "Gov",
@@ -106,9 +135,10 @@
     "es": "Español",
     "fr": "Français",
     "hi": "हिंदी",
+    "it": "Italiano",
     "ja": "日本語",
     "pt": "Português",
-    "tr": "Türk",
+    "tr": "Türkçe",
     "vi": "Tiếng Việt",
     "zh": "中文"
   },
@@ -120,6 +150,7 @@
     "disclaimer": "Disclaimer",
     "ironbank": "Iron Bank",
     "labs": "Labore",
+    "portfolio": "Portfolio",
     "settings": "Einstellungen",
     "vault": "Details Tresore",
     "vaults": "Tresore",
@@ -130,6 +161,7 @@
     "cyberpunk": "Cyberpunk",
     "dark": "Mono Dark",
     "explorer": "Explorer",
-    "light": "Mono Light"
+    "light": "Mono Light",
+    "system-prefs": "System"
   }
 }

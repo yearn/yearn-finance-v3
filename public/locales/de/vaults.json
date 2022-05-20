@@ -1,6 +1,10 @@
 {
+  "banner": {
+    "desc": "Wo auch immer wir hingehen, entspann dich und verdiene Ertrag",
+    "header": "Goblinstadt oder die Zitadelle"
+  },
   "your-time-card": {
-    "desc-1": "Yearn Tresore sind eine Möglichkeit, die Technologie zur Verwaltung Ihrer Anlagen zu nutzen. Sie wählen die Strategie, die am besten zu Ihnen passt, zahlen in den Tresor ein, und die Yearn-Technologie hilft Ihnen, die Rendite durch Kapitalumschichtung, automatisches Zusammenstellung und Neugewichtung zu maximieren.",
+    "desc-1": "Yearn Vaults sind eine Möglichkeit, die Technologie zur Verwaltung Ihrer Anlagen zu nutzen. Sie wählen die Strategie, die am besten zu Ihnen passt, zahlen in den Tresor ein, und die Yearn-Technologie hilft Ihnen, die Rendite durch Kapitalumschichtung, automatisches Zusammenstellung und Neugewichtung zu maximieren.",
     "desc-2": "Sie tragen die Verantwortung für Ihr Vermögen und bleiben selbst verantwortlich.",
     "desc-3": "Sie können jederzeit abheben.",
     "header": "Verbringen Sie Ihre Zeit weise"
