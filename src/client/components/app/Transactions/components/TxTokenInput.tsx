@@ -4,7 +4,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
-import { Text, Button, SearchList, SearchListItem } from '@components/common';
+import { Text, Icon, Button, SearchList, ZapIcon, SearchListItem } from '@components/common';
 import { formatUsd, humanize } from '@utils';
 
 const MaxButton = styled(Button)`
@@ -106,6 +106,13 @@ const TokenName = styled.div`
   text-align: center;
   font-size: 1.3rem;
   max-height: 3rem;
+`;
+
+const TokenListIcon = styled(Icon)`
+  position: absolute;
+  top: 0.8rem;
+  right: 0.4rem;
+  color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
 `;
 
 const TokenIconContainer = styled.div`
@@ -313,6 +320,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined} center={hideAmount}>
             <TokenIconContainer>
               <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
+              {listItems?.length > 1 && <TokenListIcon Component={ZapIcon} />}
             </TokenIconContainer>
             <TokenName>{selectedItem.label}</TokenName>
           </TokenSelector>
