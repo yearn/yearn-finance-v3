@@ -90,13 +90,18 @@
       "to-vault": "To vault",
       "to-wallet": "To wallet",
       "token-input": {
-        "search-select-token": "Select a Token",
+        "search-select-token": "Select a token",
         "search-select-vault": "Select a Vault",
-        "yield": "Yield",
+        "yield": "APY",
         "you-have": "You have"
       },
       "wallet-balance": "Wallet Balance",
-      "withdraw": "Withdraw"
+      "withdraw": "Withdraw",
+      "zap-guidance": {
+        "part-1": "Or",
+        "part-2": "select a token",
+        "part-3": "in your wallet to ZAP"
+      }
     }
   },
   "dashboard": {
