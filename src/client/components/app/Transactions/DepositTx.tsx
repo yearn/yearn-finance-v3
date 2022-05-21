@@ -319,6 +319,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
+      displaySourceGuidance={allowTokenSelect}
       targetHeader={t('components.transaction.to-vault')}
       targetAssetOptions={vaultsOptions}
       selectedTargetAsset={selectedVaultOption}

@@ -20,12 +20,13 @@ const ListItem = styled.div<{ selected?: boolean }>`
   text-transform: uppercase;
 
   &:hover {
-    background-color: ${({ theme }) => theme.searchList.primaryHover};
+    background-color: ${({ theme }) => theme.colors.surface};
   }
+
   ${(props) =>
     props.selected &&
     `
-    background-color: ${props.theme.searchList.primaryHover};
+    background-color: ${props.theme.colors.surface};
   `}
 `;
 
@@ -41,11 +42,7 @@ const List = styled.div`
 `;
 
 const StyledSearchInput = styled(SearchInput)`
-  --input-placeholder: ${({ theme }) => theme.searchList.primaryHover};
-  background-color: ${({ theme }) => theme.searchList.primaryVariant};
-  color: ${({ theme }) => theme.searchList.primaryHover};
-  fill: ${({ theme }) => theme.searchList.primaryHover};
-  border: 0;
+  background-color: ${({ theme }) => theme.colors.surface};
 `;
 
 const BackButton = styled(Icon)`
@@ -60,8 +57,9 @@ const BackButton = styled(Icon)`
 `;
 
 const HeaderTitle = styled.div`
-  font-size: 1.8rem;
-  font-weight: bold;
+  color: ${({ theme }) => theme.colors.titles};
+  font-size: 1.6rem;
+  font-weight: 700;
   flex: 1;
   text-align: center;
 `;
@@ -75,13 +73,13 @@ const Header = styled.div`
 const StyledSearchList = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.searchList.primary};
-  color: ${({ theme }) => theme.searchList.onPrimary};
-  fill: ${({ theme }) => theme.searchList.onPrimary};
+  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
+  color: ${({ theme }) => theme.colors.texts};
+  fill: ${({ theme }) => theme.colors.texts};
   border-radius: ${({ theme }) => theme.globalRadius};
   padding: 1.6rem;
   gap: 1.6rem;
-  max-height: 50rem;
+  max-height: 60rem;
   overflow: hidden;
   user-select: none;
   z-index: 1;

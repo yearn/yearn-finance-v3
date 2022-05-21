@@ -4,7 +4,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
-import { Text, Icon, ChevronRightIcon, Button, SearchList, SearchListItem } from '@components/common';
+import { Text, Icon, Button, SearchList, ZapIcon, SearchListItem } from '@components/common';
 import { formatUsd, humanize } from '@utils';
 
 const MaxButton = styled(Button)`
@@ -53,7 +53,7 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
 `;
 
 const ContrastText = styled.span`
-  color: ${({ theme }) => theme.colors.txModalColors.success};
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 const StyledText = styled(Text)`
@@ -110,8 +110,8 @@ const TokenName = styled.div`
 
 const TokenListIcon = styled(Icon)`
   position: absolute;
-  right: 0.7rem;
-  fill: inherit;
+  top: 0.8rem;
+  right: 0.4rem;
   color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
 `;
 
@@ -119,6 +119,16 @@ const TokenIconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+`;
+
+const ZapMessageContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  border-radius: ${({ theme }) => theme.globalRadius};
+  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
+  padding: ${({ theme }) => theme.layoutPadding};
+  font-size: 1.4rem;
   width: 100%;
 `;
 
@@ -163,6 +173,13 @@ const Header = styled.div`
   color: ${({ theme }) => theme.colors.txModalColors.text};
 `;
 
+const HighlightText = styled.span`
+  text-decoration: underline;
+  color: ${({ theme }) => theme.colors.primary};
+  padding: 0 0.5rem;
+  cursor: pointer;
+`;
+
 const scaleTransitionTime = 300;
 
 const StyledTxTokenInput = styled(TransitionGroup)`
@@ -177,14 +194,17 @@ const StyledTxTokenInput = styled(TransitionGroup)`
     transform: scale(0);
     transition: opacity ${scaleTransitionTime}ms ease, transform ${scaleTransitionTime}ms ease;
   }
+
   .scale-enter-active {
     opacity: 1;
     transform: scale(1);
   }
+
   .scale-exit {
     opacity: 1;
     transform: scale(1);
   }
+
   .scale-exit-active {
     opacity: 0;
     transform: scale(0);
@@ -224,6 +244,7 @@ export interface TxTokenInputProps {
   hideAmount?: boolean;
   loading?: boolean;
   loadingText?: string;
+  displayGuidance?: boolean;
 }
 
 export const TxTokenInput: FC<TxTokenInputProps> = ({
@@ -243,6 +264,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   hideAmount,
   loading,
   loadingText,
+  displayGuidance,
   children,
   ...props
 }) => {
@@ -300,7 +322,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined} center={hideAmount}>
             <TokenIconContainer>
               <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
-              {listItems?.length > 1 && <TokenListIcon Component={ChevronRightIcon} />}
+              {listItems?.length > 1 && <TokenListIcon Component={ZapIcon} />}
             </TokenIconContainer>
             <TokenName>{selectedItem.label}</TokenName>
           </TokenSelector>
@@ -330,13 +352,21 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
                 {amountValue && <StyledText>{formatUsd(!loading && !inputError ? amountValue : '0')}</StyledText>}
                 {yieldPercent && (
                   <StyledText>
-                    {t('components.transaction.token-input.yield')} <ContrastText>{yieldPercent}</ContrastText>
+                    {t('components.transaction.token-input.yield')}
+                    <ContrastText> {yieldPercent} </ContrastText>
                   </StyledText>
                 )}
               </TokenExtras>
             </TokenData>
           )}
         </TokenInfo>
+        {listItems?.length > 1 && displayGuidance && (
+          <ZapMessageContainer onClick={openSearchList}>
+            ⚡ {t('components.transaction.zap-guidance.part-1')}{' '}
+            <HighlightText> {t('components.transaction.zap-guidance.part-2')} </HighlightText>{' '}
+            {t('components.transaction.zap-guidance.part-3')}
+          </ZapMessageContainer>
+        )}
       </>
     </StyledTxTokenInput>
   );

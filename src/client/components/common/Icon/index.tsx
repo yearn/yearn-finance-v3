@@ -29,6 +29,7 @@ import { ReactComponent as WalletMissingIcon } from '@assets/icons/wallet-missin
 import { ReactComponent as WalletIcon } from '@assets/icons/wallet.svg';
 import { ReactComponent as WarningFilledIcon } from '@assets/icons/warning-filled.svg';
 import { ReactComponent as WarningIcon } from '@assets/icons/warning.svg';
+import { ReactComponent as ZapIcon } from '@assets/icons/zap-icon.svg';
 import { ReactComponent as ErrorIcon } from '@assets/icons/error.svg';
 import { ReactComponent as RedirectIcon } from '@assets/icons/redirect.svg';
 // NOTE NETWORK Icons
@@ -100,4 +101,5 @@ export {
   FtmscanIcon,
   ArbiscanIcon,
   DefaultscanIcon,
+  ZapIcon,
 };
