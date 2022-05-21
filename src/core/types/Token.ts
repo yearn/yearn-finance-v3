@@ -6,7 +6,6 @@ export interface UserTokenData {
   balanceUsdc: string;
   allowancesMap: { [spenderAddress: string]: string };
 }
-
 export interface TokenView {
   address: Address;
   name: string;
@@ -22,9 +21,9 @@ export interface TokenView {
   isZapable: boolean;
   sourceIsZapper: boolean;
   allowancesMap: { [tokenAddress: string]: string };
-}
-
-export interface TokenDynamicData {
-  address: Address;
-  priceUsdc: string;
+  supported: {
+    zapperZapIn?: boolean;
+    zapperZapOut?: boolean;
+    ftmApeZap?: boolean;
+  };
 }
