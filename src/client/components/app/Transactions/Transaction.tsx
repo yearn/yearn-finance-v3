@@ -45,6 +45,8 @@ interface TransactionProps {
   sourceAmount: string;
   sourceAmountValue?: string;
   onSourceAmountChange?: (amount: string) => void;
+  displaySourceGuidance?: boolean;
+  sourceStatus: Status;
   targetHeader: string;
   targetAssetOptions: Asset[];
   selectedTargetAsset: Asset;
@@ -52,9 +54,9 @@ interface TransactionProps {
   targetAmountDisabled?: boolean;
   targetAmount: string;
   targetAmountValue?: string;
+  displayTargetGuidance?: boolean;
   targetStatus: Status;
   actions: Action[];
-  sourceStatus: Status;
   loadingText?: string;
   onClose?: () => void;
 }
@@ -76,6 +78,8 @@ export const Transaction: FC<TransactionProps> = (props) => {
     sourceAmount,
     sourceAmountValue,
     onSourceAmountChange,
+    displaySourceGuidance,
+    sourceStatus,
     targetHeader,
     targetAssetOptions,
     selectedTargetAsset,
@@ -83,9 +87,9 @@ export const Transaction: FC<TransactionProps> = (props) => {
     targetAmountDisabled,
     targetAmount,
     targetAmountValue,
+    displayTargetGuidance,
     targetStatus,
     actions,
-    sourceStatus,
     loadingText,
     onClose,
   } = props;
@@ -129,6 +133,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         onSelectedTokenChange={onSelectedSourceAssetChange}
         inputError={!!sourceStatus.error}
         readOnly={!onSourceAmountChange}
+        displayGuidance={displaySourceGuidance}
       />
 
       <TxTokenInput
@@ -145,6 +150,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
         hideAmount={targetAmountDisabled}
         loading={outputLoading}
         loadingText={loadingText ?? t('components.transaction.status.simulating')}
+        displayGuidance={displayTargetGuidance}
       />
 
       {generalStatus.error && <TxError errorType="warning" errorTitle={generalStatus.error} />}

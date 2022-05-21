@@ -244,6 +244,7 @@ export interface TxTokenInputProps {
   hideAmount?: boolean;
   loading?: boolean;
   loadingText?: string;
+  displayGuidance?: boolean;
 }
 
 export const TxTokenInput: FC<TxTokenInputProps> = ({
@@ -263,6 +264,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   hideAmount,
   loading,
   loadingText,
+  displayGuidance,
   children,
   ...props
 }) => {
@@ -358,7 +360,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
             </TokenData>
           )}
         </TokenInfo>
-        {listItems?.length > 1 && (
+        {listItems?.length > 1 && displayGuidance && (
           <ZapMessageContainer onClick={openSearchList}>
             ⚡ Or <HighlightText> select a token </HighlightText> in your wallet to ZAP
           </ZapMessageContainer>
