@@ -362,7 +362,9 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         </TokenInfo>
         {listItems?.length > 1 && displayGuidance && (
           <ZapMessageContainer onClick={openSearchList}>
-            ⚡ Or <HighlightText> select a token </HighlightText> in your wallet to ZAP
+            ⚡ {t('components.transaction.zap-guidance.part-1')}{' '}
+            <HighlightText> {t('components.transaction.zap-guidance.part-2')} </HighlightText>{' '}
+            {t('components.transaction.zap-guidance.part-3')}
           </ZapMessageContainer>
         )}
       </>
