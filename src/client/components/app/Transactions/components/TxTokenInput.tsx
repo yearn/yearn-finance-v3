@@ -122,14 +122,48 @@ const TokenIconContainer = styled.div`
   width: 100%;
 `;
 
+const ZappableTokenButton = styled(Button)<{ selected?: boolean; right?: boolean }>`
+  font-size: 1.2rem;
+  height: 2.4rem;
+  padding: 0 0.8rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  ${({ selected, theme }) =>
+    selected &&
+    `
+      background-color: ${theme.colors.secondary};
+    `}
+
+  ${({ right }) =>
+    right &&
+    `
+    margin-right: 0;
+    margin-left: auto;
+  `}
+`;
+
+const ZappableTokensList = styled.div`
+  display: flex;
+  overflow: hidden;
+  overflow-x: auto;
+  margin-top: 0.8rem;
+  grid-gap: 0.8rem;
+  width: 100%;
+`;
+
 const ZapMessageContainer = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
   padding: ${({ theme }) => theme.layoutPadding};
   font-size: 1.4rem;
   width: 100%;
+  overflow: hidden;
 `;
 
 const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
@@ -171,13 +205,6 @@ const Header = styled.div`
   font-size: 1.6rem;
   text-transform: capitalize;
   color: ${({ theme }) => theme.colors.txModalColors.text};
-`;
-
-const HighlightText = styled.span`
-  text-decoration: underline;
-  color: ${({ theme }) => theme.colors.primary};
-  padding: 0 0.5rem;
-  cursor: pointer;
 `;
 
 const scaleTransitionTime = 300;
@@ -271,6 +298,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   const { t } = useAppTranslation('common');
 
   let listItems: SearchListItem[] = [];
+  let zappableItems: SearchListItem[] = [];
   let selectedItem: SearchListItem = {
     id: selectedToken.address,
     icon: selectedToken.icon,
@@ -289,6 +317,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         };
       })
       .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));
+    zappableItems = listItems.slice(0, 5);
     listItems.sort((a, b) => (a.id === selectedItem.id ? -1 : 1));
   }
 
@@ -360,11 +389,26 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
             </TokenData>
           )}
         </TokenInfo>
-        {listItems?.length > 1 && displayGuidance && (
-          <ZapMessageContainer onClick={openSearchList}>
-            ⚡ {t('components.transaction.zap-guidance.part-1')}{' '}
-            <HighlightText> {t('components.transaction.zap-guidance.part-2')} </HighlightText>{' '}
-            {t('components.transaction.zap-guidance.part-3')}
+
+        {zappableItems?.length > 1 && displayGuidance && (
+          <ZapMessageContainer>
+            ⚡ {t('components.transaction.zap-guidance.desc')}
+            <ZappableTokensList>
+              {zappableItems.slice(0, 4).map((item) => (
+                <ZappableTokenButton
+                  key={item.id}
+                  outline
+                  selected={item.id === selectedItem.id}
+                  onClick={() => (onSelectedTokenChange ? onSelectedTokenChange(item.id) : undefined)}
+                >
+                  {item.label}
+                </ZappableTokenButton>
+              ))}
+
+              <ZappableTokenButton right outline onClick={openSearchList}>
+                {t('components.transaction.zap-guidance.view-all')}
+              </ZappableTokenButton>
+            </ZappableTokensList>
           </ZapMessageContainer>
         )}
       </>
