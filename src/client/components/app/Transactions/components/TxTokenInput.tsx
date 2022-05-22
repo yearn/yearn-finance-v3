@@ -161,7 +161,7 @@ const ZapMessageContainer = styled.div`
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
   padding: ${({ theme }) => theme.layoutPadding};
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   width: 100%;
   overflow: hidden;
 `;
@@ -392,7 +392,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
 
         {zappableItems?.length > 1 && displayGuidance && (
           <ZapMessageContainer>
-            ⚡ {t('components.transaction.zap-guidance.desc')}
+            {t('components.transaction.zap-guidance.desc')}
             <ZappableTokensList>
               {zappableItems.slice(0, 4).map((item) => (
                 <ZappableTokenButton
