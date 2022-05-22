@@ -123,6 +123,7 @@ const TokenIconContainer = styled.div`
 `;
 
 const ZappableTokenButton = styled(Button)<{ selected?: boolean; right?: boolean }>`
+  display: block;
   font-size: 1.2rem;
   height: 2.4rem;
   padding: 0 0.8rem;
@@ -130,6 +131,7 @@ const ZappableTokenButton = styled(Button)<{ selected?: boolean; right?: boolean
   text-overflow: ellipsis;
   flex-shrink: 0;
   overflow: hidden;
+  max-width: 6.5rem;
 
   ${({ selected, theme }) =>
     selected &&
@@ -141,8 +143,8 @@ const ZappableTokenButton = styled(Button)<{ selected?: boolean; right?: boolean
 
 const ZappableTokensList = styled.div`
   display: flex;
+  flex-wrap: wrap;
   overflow: hidden;
-  overflow-x: auto;
   margin-top: 0.8rem;
   grid-gap: 0.8rem;
   width: 100%;
