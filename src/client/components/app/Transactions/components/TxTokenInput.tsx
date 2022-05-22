@@ -130,6 +130,13 @@ const ZapMessageContainer = styled.div`
   padding: ${({ theme }) => theme.layoutPadding};
   font-size: 1.4rem;
   width: 100%;
+
+  @media (max-width: 400px) {
+    font-size: 1.3rem;
+    padding-left: 0rem;
+    padding-right: 0rem;
+    justify-content: center;
+  }
 `;
 
 const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
