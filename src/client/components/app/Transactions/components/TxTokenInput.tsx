@@ -135,6 +135,7 @@ const ZappableTokenButton = styled(Button)<{ selected?: boolean; right?: boolean
     selected &&
     `
       background-color: ${theme.colors.secondary};
+      color: ${theme.colors.titlesVariant};
     `}
 `;
 
