@@ -136,13 +136,6 @@ const ZappableTokenButton = styled(Button)<{ selected?: boolean; right?: boolean
     `
       background-color: ${theme.colors.secondary};
     `}
-
-  ${({ right }) =>
-    right &&
-    `
-    margin-right: 0;
-    margin-left: auto;
-  `}
 `;
 
 const ZappableTokensList = styled.div`
@@ -405,7 +398,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
                 </ZappableTokenButton>
               ))}
 
-              <ZappableTokenButton right outline onClick={openSearchList}>
+              <ZappableTokenButton outline onClick={openSearchList}>
                 {t('components.transaction.zap-guidance.view-all')}
               </ZappableTokenButton>
             </ZappableTokensList>
