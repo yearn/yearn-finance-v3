@@ -43,7 +43,7 @@
     "@types/styled-components": "5.1.12",
     "@types/styled-system": "5.1.13",
     "@yearn/web-lib": "0.2.27",
-    "@yfi/sdk": "2.0.1",
+    "@yfi/sdk": "2.1.0",
     "awilix": "7.0.2",
     "axios": "0.21.2",
     "bignumber.js": "9.0.2",
