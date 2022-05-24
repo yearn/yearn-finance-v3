@@ -122,16 +122,18 @@ const TokenIconContainer = styled.div`
   width: 100%;
 `;
 
-const ZappableTokenButton = styled(Button)<{ selected?: boolean; right?: boolean }>`
+const ZappableTokenButton = styled(Button)<{ selected?: boolean; viewAll?: boolean }>`
   display: block;
   font-size: 1.2rem;
   height: 2.4rem;
   padding: 0 0.8rem;
   white-space: nowrap;
   text-overflow: ellipsis;
-  flex-shrink: 0;
   overflow: hidden;
+  width: -webkit-fill-available;
+  // NOTE - hack fallback if fill-available is not supported
   max-width: 6.6rem;
+  max-width: max-content;
 
   ${({ selected, theme }) =>
     selected &&
@@ -139,11 +141,20 @@ const ZappableTokenButton = styled(Button)<{ selected?: boolean; right?: boolean
       background-color: ${theme.colors.secondary};
       color: ${theme.colors.titlesVariant};
     `}
+  ${({ viewAll }) =>
+    viewAll &&
+    `
+      flex-shrink: 0;
+    `}
 `;
 
 const ZappableTokensList = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  // NOTE This will make the list with css grid, an alternative to flexbox wrapping.
+  // We should leave this piece of code here because I think we will need to change the style.
+  // grid-template-columns: repeat(auto-fit, minmax(3rem, max-content));
+  // grid-auto-flow: column;
+  // flex-wrap: wrap;
   overflow: hidden;
   margin-top: 0.8rem;
   grid-gap: 0.8rem;
@@ -401,7 +412,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
                 </ZappableTokenButton>
               ))}
 
-              <ZappableTokenButton outline onClick={openSearchList}>
+              <ZappableTokenButton viewAll outline onClick={openSearchList}>
                 {t('components.transaction.zap-guidance.view-all')}
               </ZappableTokenButton>
             </ZappableTokensList>
