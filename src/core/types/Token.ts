@@ -27,3 +27,8 @@ export interface TokenView {
     ftmApeZap?: boolean;
   };
 }
+
+export interface TokenDynamicData {
+  address: Address;
+  priceUsdc: string;
+}
