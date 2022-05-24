@@ -131,7 +131,7 @@ const ZappableTokenButton = styled(Button)<{ selected?: boolean; right?: boolean
   text-overflow: ellipsis;
   flex-shrink: 0;
   overflow: hidden;
-  max-width: 6.5rem;
+  max-width: 6.8rem;
 
   ${({ selected, theme }) =>
     selected &&
@@ -156,7 +156,7 @@ const ZapMessageContainer = styled.div`
   align-items: flex-start;
   border-radius: ${({ theme }) => theme.globalRadius};
   background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
-  padding: ${({ theme }) => theme.layoutPadding};
+  padding: 0.8rem;
   font-size: 1.2rem;
   width: 100%;
   overflow: hidden;

@@ -93,7 +93,7 @@ const ActionsTabs = styled(Tabs)``;
 const VaultActions = styled(Card)`
   display: flex;
   flex-direction: column;
-  width: 42rem;
+  width: 50.4rem;
   align-self: stretch;
   padding: 0;
 
