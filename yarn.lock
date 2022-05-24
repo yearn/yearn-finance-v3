@@ -4866,13 +4866,13 @@
     react-hot-toast "^2.2.0"
     react-virtualized "^9.22.3"
 
-"@yfi/sdk@2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-2.0.1.tgz#6f1ab5717676dda6b64a03137f02f4c463bfdf32"
-  integrity sha512-K4A8Ib/8Ri+DWskHioKNBLGdSYtllBHKKSb52j3Ie7xhJGka3+pVHKzPt2SDNM3sdJslKOlWlb6T23P0CDgiTw==
+"@yfi/sdk@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-2.1.0.tgz#24ac7d0c1eace1345c62017c84ac259673f51b25"
+  integrity sha512-x5l4+yTkQ7uXlkBQdueYDXbFqZ2sXq0gNMK6QPnUfd2J7aBbtAp4qCLa46a86DSHsUPzoT4rBmau0tUWVZU9Bg==
   dependencies:
     bignumber.js "9.0.1"
-    cross-fetch "3.1.4"
+    cross-fetch "3.1.5"
     dotenv "10.0.0"
     emittery "0.8.1"
     type-fest "1.2.1"
@@ -7232,13 +7232,6 @@ cross-env@7.0.3:
   dependencies:
     cross-spawn "^7.0.1"
 
-cross-fetch@3.1.4, cross-fetch@^3.1.4:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
-  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
-  dependencies:
-    node-fetch "2.6.1"
-
 cross-fetch@3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
@@ -7253,6 +7246,13 @@ cross-fetch@^2.1.0:
   dependencies:
     node-fetch "2.6.1"
     whatwg-fetch "2.0.4"
+
+cross-fetch@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
+  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
+  dependencies:
+    node-fetch "2.6.1"
 
 cross-spawn@7.0.3, cross-spawn@^7.0.0, cross-spawn@^7.0.1, cross-spawn@^7.0.2:
   version "7.0.3"

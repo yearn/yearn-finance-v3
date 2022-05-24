@@ -98,9 +98,8 @@
       "wallet-balance": "Wallet Balance",
       "withdraw": "Withdraw",
       "zap-guidance": {
-        "part-1": "Or",
-        "part-2": "select a token",
-        "part-3": "in your wallet to ZAP"
+        "desc": "⚡ Or select a token from your wallet to Zap",
+        "view-all": "View all"
       }
     }
   },
