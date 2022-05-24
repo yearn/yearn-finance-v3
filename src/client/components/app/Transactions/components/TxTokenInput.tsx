@@ -131,7 +131,7 @@ const ZappableTokenButton = styled(Button)<{ selected?: boolean; right?: boolean
   text-overflow: ellipsis;
   flex-shrink: 0;
   overflow: hidden;
-  max-width: 6.8rem;
+  max-width: 6.6rem;
 
   ${({ selected, theme }) =>
     selected &&
