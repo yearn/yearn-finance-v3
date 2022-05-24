@@ -390,7 +390,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <ZapMessageContainer>
             {t('components.transaction.zap-guidance.desc')}
             <ZappableTokensList>
-              {zappableItems.slice(0, 4).map((item) => (
+              {zappableItems.map((item) => (
                 <ZappableTokenButton
                   key={item.id}
                   outline
