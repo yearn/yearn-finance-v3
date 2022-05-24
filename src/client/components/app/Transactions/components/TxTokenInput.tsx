@@ -324,7 +324,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         };
       })
       .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));
-    zappableItems = listItems.slice(0, 5);
+    zappableItems = listItems.slice(0, 4);
     listItems.sort((a, b) => (a.id === selectedItem.id ? -1 : 1));
   }
 
