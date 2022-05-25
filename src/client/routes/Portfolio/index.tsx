@@ -107,7 +107,7 @@ export const Portfolio = () => {
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
-  const zapperEnabled = servicesEnabled.zapper;
+  const zapperEnabled = servicesEnabled.zapper && currentNetwork === 'mainnet';
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const generalLoading = (appStatus.loading || tokensListStatus.loading || isMounting) && !activeModal;
   const userTokensLoading = generalLoading && !userTokens.length;
