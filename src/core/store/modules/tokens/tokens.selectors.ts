@@ -89,6 +89,7 @@ export function createToken(props: CreateTokenProps): TokenView {
     isZapable: tokenData?.supported.zapper ?? false,
     sourceIsZapper: tokenData?.dataSource === 'zapper',
     allowancesMap: allowancesMap ?? {},
+    supported: tokenData?.supported,
   };
 }
 
