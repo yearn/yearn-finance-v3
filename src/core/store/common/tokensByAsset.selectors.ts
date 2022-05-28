@@ -10,6 +10,7 @@ import { LabsSelectors } from '../modules/labs/labs.selectors';
 import { TokensSelectors } from '../modules/tokens/tokens.selectors';
 import { AppSelectors } from '../modules/app/app.selectors';
 import { createToken } from '../modules/tokens/tokens.selectors';
+import { NetworkSelectors } from '../modules/network/network.selectors';
 
 type SupportedTokenProps = {
   assetData: Vault | Lab;
@@ -21,10 +22,11 @@ const { selectVaultsMap } = VaultsSelectors;
 const { selectLabsMap } = LabsSelectors;
 const { selectTokensMap, selectTokensUser } = TokensSelectors;
 const { selectServicesEnabled } = AppSelectors;
+const { selectCurrentNetwork } = NetworkSelectors;
 
 export const selectDepositTokenOptionsByAsset = createSelector(
-  [selectVaultsMap, selectLabsMap, selectTokensMap, selectTokensUser, selectServicesEnabled],
-  (vaultsMap, labsMap, tokensMap, tokensUser, servicesEnabled) =>
+  [selectVaultsMap, selectLabsMap, selectTokensMap, selectTokensUser, selectServicesEnabled, selectCurrentNetwork],
+  (vaultsMap, labsMap, tokensMap, tokensUser, servicesEnabled, currentNetwork) =>
     memoize((assetAddress?: string): TokenView[] => {
       if (!assetAddress) return [];
 
@@ -32,7 +34,8 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
 
-      const zapperDisabled = !servicesEnabled.zapper && assetData.metadata.zapInWith === 'zapperZapIn';
+      const zapperDisabled =
+        (!servicesEnabled.zapper && assetData.metadata.zapInWith === 'zapperZapIn') || currentNetwork !== 'mainnet';
       const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const depositTokenAddresses = [mainVaultToken];
       if (!zapperDisabled) {
@@ -54,8 +57,8 @@ export const selectDepositTokenOptionsByAsset = createSelector(
 );
 
 export const selectWithdrawTokenOptionsByAsset = createSelector(
-  [selectVaultsMap, selectLabsMap, selectTokensMap, selectTokensUser, selectServicesEnabled],
-  (vaultsMap, labsMap, tokensMap, tokensUser, servicesEnabled) =>
+  [selectVaultsMap, selectLabsMap, selectTokensMap, selectTokensUser, selectServicesEnabled, selectCurrentNetwork],
+  (vaultsMap, labsMap, tokensMap, tokensUser, servicesEnabled, currentNetwork) =>
     memoize((assetAddress?: string): TokenView[] => {
       if (!assetAddress) return [];
 
@@ -63,7 +66,8 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
       const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
 
-      const zapperDisabled = !servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut';
+      const zapperDisabled =
+        (!servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut') || currentNetwork !== 'mainnet';
       const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const withdrawTokenAddresses = [mainVaultToken];
       if (!zapperDisabled) {
