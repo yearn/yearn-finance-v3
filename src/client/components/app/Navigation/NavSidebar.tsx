@@ -24,7 +24,7 @@ const SidebarContent = styled.nav`
 
 const StyledLogo = styled(Logo)`
   justify-content: flex-start;
-  height: 2.4rem;
+  height: 3.1rem;
   fill: ${({ theme }) => theme.colors.logo};
   cursor: pointer;
 `;
