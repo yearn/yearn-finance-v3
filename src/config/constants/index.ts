@@ -26,6 +26,10 @@ const ADDRESSES = {
   WOOFYNFT: '0x0966a53f2533EaF01D0bB2fa0E2274f3002287F1',
 };
 
+const FTM_ADDRESSES = {
+  USDC: '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75',
+};
+
 const PARTNERS = {
   LEDGER_PARTNER_ID: '0x558247e365be655f9144e1a0140D793984372Ef3',
 };
@@ -105,9 +109,11 @@ export const getConstants = memoize((): Constants => {
     FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
     ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
     CONTRACT_ADDRESSES: {
-      zapIn: '0x8E52522E6a77578904ddd7f528A22521DC4154F5',
-      zapOut: '0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c',
+      // TODO this should be set depending on the network
+      zapIn: '0x7Bbd6348db83C2fb3633Eebb70367E1AEc258764',
+      zapOut: '0x7Bbd6348db83C2fb3633Eebb70367E1AEc258764',
       pickleZapIn: '0xc695f73c1862e050059367B2E64489E66c525983',
+      widoZapRouter: '0x7Bbd6348db83C2fb3633Eebb70367E1AEc258764',
       y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
       trustedVaultMigrator: '0x1824df8D751704FA10FA371d62A37f9B8772ab90',
       triCryptoVaultMigrator: '0xC306a5ef4B990A7F2b3bC2680E022E6a84D75fC1',
@@ -118,6 +124,7 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_SLIPPAGE: 0.01,
     IRON_BANK_MAX_RATIO: 0.8,
     ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
+    FANTOM_ZAP_TOKENS: [FTM_ADDRESSES.USDC],
     DEFAULT_THEME: 'system-prefs',
     AVAILABLE_THEMES: ['system-prefs', 'light', 'dark', 'cyberpunk', 'classic'],
     AVAILABLE_CUSTOM_THEMES: ['explorer'],

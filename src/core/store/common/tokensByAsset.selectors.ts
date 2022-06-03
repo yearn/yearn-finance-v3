@@ -34,12 +34,17 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
 
-      const zapperDisabled =
-        (!servicesEnabled.zapper && assetData.metadata.zapInWith === 'zapperZapIn') || currentNetwork !== 'mainnet';
+      // TODO update assetData.metadata.zapInWith
+      const zapperDisabled = false;
       const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const depositTokenAddresses = [mainVaultToken];
-      if (!zapperDisabled) {
+      if (!zapperDisabled && currentNetwork !== 'fantom') {
         depositTokenAddresses.push(...userTokensAddresses.filter((address) => address !== mainVaultToken));
+      }
+
+      if (currentNetwork === 'fantom') {
+        const { FANTOM_ZAP_TOKENS } = getConfig();
+        depositTokenAddresses.push(...FANTOM_ZAP_TOKENS.filter((address) => address !== mainVaultToken));
       }
 
       const tokens = depositTokenAddresses
@@ -66,13 +71,19 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
       const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
 
-      const zapperDisabled =
-        (!servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut') || currentNetwork !== 'mainnet';
+      // TODO update assetData.metadata.zapInWith
+      const zapperDisabled = false;
       const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const withdrawTokenAddresses = [mainVaultToken];
-      if (!zapperDisabled) {
+
+      if (!zapperDisabled && currentNetwork !== 'fantom') {
         const { ZAP_OUT_TOKENS } = getConfig();
         withdrawTokenAddresses.push(...ZAP_OUT_TOKENS.filter((address) => address !== mainVaultToken));
+      }
+
+      if (currentNetwork === 'fantom') {
+        const { FANTOM_ZAP_TOKENS } = getConfig();
+        withdrawTokenAddresses.push(...FANTOM_ZAP_TOKENS.filter((address) => address !== mainVaultToken));
       }
 
       const tokens = withdrawTokenAddresses
@@ -90,12 +101,14 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
 );
 
 const isZappable = ({ assetData, token, zapType }: SupportedTokenProps) => {
-  if (zapType === 'zapInWith' && !toBN(token.balance).gt(0)) {
-    return false;
-  }
+  // TODO update assetData.metadata.zapInWith
+  return true;
+  // if (zapType === 'zapInWith' && !toBN(token.balance).gt(0)) {
+  //   return false;
+  // }
 
-  const zap = assetData.metadata[zapType];
+  // const zap = assetData.metadata[zapType];
 
-  // TODO Need to cast here because VaultMetadata is still coming as string from the SDK
-  return token.supported[zap as keyof TokenView['supported']];
+  // // TODO Need to cast here because VaultMetadata is still coming as string from the SDK
+  // return token.supported[zap as keyof TokenView['supported']];
 };
