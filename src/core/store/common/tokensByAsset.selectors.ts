@@ -34,8 +34,8 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
 
-      // TODO update assetData.metadata.zapInWith
-      const zapperDisabled = false;
+      const zapperDisabled =
+        (!servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut') || currentNetwork === 'arbitrum';
       const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const depositTokenAddresses = [mainVaultToken];
       if (!zapperDisabled && currentNetwork !== 'fantom') {
@@ -71,8 +71,8 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
       const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
 
-      // TODO update assetData.metadata.zapInWith
-      const zapperDisabled = false;
+      const zapperDisabled =
+        (!servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut') || currentNetwork === 'arbitrum';
       const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const withdrawTokenAddresses = [mainVaultToken];
 
@@ -101,14 +101,12 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
 );
 
 const isZappable = ({ assetData, token, zapType }: SupportedTokenProps) => {
-  // TODO update assetData.metadata.zapInWith
-  return true;
-  // if (zapType === 'zapInWith' && !toBN(token.balance).gt(0)) {
-  //   return false;
-  // }
+  if (zapType === 'zapInWith' && !toBN(token.balance).gt(0)) {
+    return false;
+  }
 
-  // const zap = assetData.metadata[zapType];
+  const zap = assetData.metadata[zapType];
 
-  // // TODO Need to cast here because VaultMetadata is still coming as string from the SDK
-  // return token.supported[zap as keyof TokenView['supported']];
+  // TODO Need to cast here because VaultMetadata is still coming as string from the SDK
+  return token.supported[zap as keyof TokenView['supported']];
 };

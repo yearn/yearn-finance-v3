@@ -64,7 +64,33 @@ export class VaultServiceImpl implements VaultService {
   public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
     const { YVBOOST } = this.config.CONTRACT_ADDRESSES;
     const yearn = this.yearnSdk.getInstanceOf(network);
-    const vaults = await yearn.vaults.get(addresses);
+    let vaults = await yearn.vaults.get(addresses);
+
+    if (network === 'fantom') {
+      const supportedVaults = [
+        '0x637eC617c86D24E421328e6CAEa1d92114892439',
+        '0x357ca46da26E1EefC195287ce9D838A6D5023ef3',
+        '0x0A0b23D9786963DE69CB2447dC125c49929419d8',
+        '0x1b48641D8251c3E84ecbe3f2bD76B3701401906D',
+        '0x148c05caf1Bb09B5670f00D511718f733C54bC4c',
+        '0xF137D22d7B23eeB1950B3e19d1f578c053ed9715',
+      ];
+      vaults = vaults.map((vault: Vault) => {
+        if (supportedVaults.includes(vault.address)) {
+          return {
+            ...vault,
+            metadata: {
+              ...vault.metadata,
+              allowZapIn: true,
+              allowZapOut: true,
+              zapInWith: 'zapperZapIn',
+              zapOutWith: 'zapperZapOut',
+            },
+          };
+        }
+        return vault;
+      });
+    }
     // TODO: Once SDK has a Labs interface, filtering out yvBoost should not be needed anymore
     return vaults.filter(({ address }) => address !== YVBOOST);
   }
