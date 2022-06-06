@@ -9,6 +9,7 @@ import { Labs } from './Labs';
 import { Settings } from './Settings';
 import { Disclaimer } from './Disclaimer';
 import { Health } from './Health';
+import { Log } from './Log';
 
 const routesMap = [
   {
@@ -31,10 +32,14 @@ const routesMap = [
     path: '/disclaimer',
     component: Disclaimer,
   },
-
   {
     path: '/vault/:vaultAddress',
     component: VaultDetail,
+  },
+  // TODO: remove when debugging no longer needed
+  {
+    path: '/log',
+    component: Log,
   },
 ];
 
