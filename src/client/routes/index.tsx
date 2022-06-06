@@ -31,7 +31,6 @@ const routesMap = [
     path: '/disclaimer',
     component: Disclaimer,
   },
-
   {
     path: '/vault/:vaultAddress',
     component: VaultDetail,
