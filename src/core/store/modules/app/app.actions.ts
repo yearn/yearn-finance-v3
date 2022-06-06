@@ -2,7 +2,7 @@ import { createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { isEqual } from 'lodash';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { isGnosisApp, isLedgerLive, get } from '@utils';
+import { isGnosisApp, isLedgerLive, isCoinbaseApp, get } from '@utils';
 import { Network, Route, Address, Vault, ExternalServiceId } from '@types';
 
 import { WalletActions } from '../wallet/wallet.actions';
@@ -53,8 +53,12 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
     await dispatch(WalletActions.walletSelect({ walletName: 'Iframe', network: 'mainnet' }));
     await dispatch(PartnerActions.changePartner({ id: 'ledger', address: CONTRACT_ADDRESSES.LEDGER }));
   } else if (isGnosisApp()) {
+    const walletName = 'Gnosis Safe';
     if (network.current !== 'mainnet') await dispatch(NetworkActions.changeNetwork({ network: 'mainnet' }));
-    await dispatch(WalletActions.walletSelect({ walletName: 'Gnosis Safe', network: 'mainnet' }));
+    await dispatch(WalletActions.walletSelect({ walletName, network: 'mainnet' }));
+  } else if (isCoinbaseApp()) {
+    const walletName = 'Coinbase Wallet';
+    await dispatch(WalletActions.walletSelect({ walletName, network: 'mainnet' }));
   } else if (wallet.name && wallet.name !== 'Iframe') {
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }

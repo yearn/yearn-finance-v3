@@ -19,3 +19,7 @@ export const isLedgerLive = () => {
 export const isGnosisApp = () => {
   return isLoadedInOtherDomain('gnosis');
 };
+
+export const isCoinbaseApp = () => {
+  return window?.ethereum?.isCoinbaseBrowser || isLoadedInOtherDomain('coinbase');
+};

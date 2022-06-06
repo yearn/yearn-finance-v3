@@ -8,3 +8,7 @@ declare module '*.webm' {
   const src: string;
   export default src;
 }
+
+interface Window {
+  ethereum: any;
+}
