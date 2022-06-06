@@ -8,7 +8,7 @@ export const Log = () => {
     {
       status: 'OK',
       wallet,
-      eth: window.ethereum,
+      eth: window?.ethereum?.isCoinbaseWallet,
       isCoinbase: isCoinbaseApp(),
     },
     null,
