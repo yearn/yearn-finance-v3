@@ -21,5 +21,5 @@ export const isGnosisApp = () => {
 };
 
 export const isCoinbaseApp = () => {
-  return window?.ethereum?.isCoinbaseWallet || isLoadedInOtherDomain('coinbase');
+  return window?.ethereum?.isCoinbaseWallet;
 };
