@@ -40,6 +40,7 @@ export interface Constants {
   DEFAULT_SLIPPAGE: number;
   IRON_BANK_MAX_RATIO: number;
   ZAP_OUT_TOKENS: string[];
+  FANTOM_ZAP_TOKENS: string[];
   DEFAULT_THEME: Theme;
   AVAILABLE_THEMES: Theme[];
   AVAILABLE_CUSTOM_THEMES: Theme[];

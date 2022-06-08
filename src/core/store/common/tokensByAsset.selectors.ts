@@ -35,11 +35,16 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       if (!assetData) return [];
 
       const zapperDisabled =
-        (!servicesEnabled.zapper && assetData.metadata.zapInWith === 'zapperZapIn') || currentNetwork !== 'mainnet';
+        (!servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut') || currentNetwork === 'arbitrum';
       const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const depositTokenAddresses = [mainVaultToken];
-      if (!zapperDisabled) {
+      if (!zapperDisabled && currentNetwork !== 'fantom') {
         depositTokenAddresses.push(...userTokensAddresses.filter((address) => address !== mainVaultToken));
+      }
+
+      if (currentNetwork === 'fantom') {
+        const { FANTOM_ZAP_TOKENS } = getConfig();
+        depositTokenAddresses.push(...FANTOM_ZAP_TOKENS.filter((address) => address !== mainVaultToken));
       }
 
       const tokens = depositTokenAddresses
@@ -67,12 +72,18 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
       if (!assetData) return [];
 
       const zapperDisabled =
-        (!servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut') || currentNetwork !== 'mainnet';
+        (!servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut') || currentNetwork === 'arbitrum';
       const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const withdrawTokenAddresses = [mainVaultToken];
-      if (!zapperDisabled) {
+
+      if (!zapperDisabled && currentNetwork !== 'fantom') {
         const { ZAP_OUT_TOKENS } = getConfig();
         withdrawTokenAddresses.push(...ZAP_OUT_TOKENS.filter((address) => address !== mainVaultToken));
+      }
+
+      if (currentNetwork === 'fantom') {
+        const { FANTOM_ZAP_TOKENS } = getConfig();
+        withdrawTokenAddresses.push(...FANTOM_ZAP_TOKENS.filter((address) => address !== mainVaultToken));
       }
 
       const tokens = withdrawTokenAddresses

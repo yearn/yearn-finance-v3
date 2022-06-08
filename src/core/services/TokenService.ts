@@ -52,7 +52,22 @@ export class TokenServiceImpl implements TokenService {
     const { WETH } = this.config.CONTRACT_ADDRESSES;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
-    const supportedTokens = await yearn.tokens.supported();
+    let supportedTokens = await yearn.tokens.supported();
+
+    if (network === 'fantom') {
+      supportedTokens = supportedTokens.map((token: Token) => {
+        if (token.address === '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75') {
+          return {
+            ...token,
+            supported: {
+              zapperZapIn: true,
+              zapperZapOut: true,
+            },
+          };
+        }
+        return token;
+      });
+    }
 
     // We separated this because request is broken outside of this repo so we need to handle it separated
     // so we get the rest of the tokens.
