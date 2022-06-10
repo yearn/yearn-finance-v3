@@ -20,6 +20,11 @@ import {
   Overrides,
   Network,
   TokenAllowance,
+  VotingEscrow,
+  VotingEscrowDynamic,
+  Gauge,
+  GaugeDynamic,
+  Week,
 } from '@types';
 
 // *************** USER ***************
@@ -247,6 +252,151 @@ export interface ClaimProps {
 export interface ReinvestProps {
   network: Network;
   accountAddress: Address;
+}
+
+// *************** VOTING ESCROW ***************
+export interface VotingEscrowService {
+  getSupportedVotingEscrows: (props: GetSupportedVotingEscrowsProps) => Promise<VotingEscrow[]>;
+  getVotingEscrowsDynamicData: (props: GetVotingEscrowsDynamicDataProps) => Promise<VotingEscrowDynamic[]>;
+  getUserVotingEscrowsPositions: (props: GetUserVotingEscrowsPositionsProps) => Promise<Position[]>;
+  getLockAllowance: (props: GetLockAllowanceProps) => Promise<TokenAllowance>;
+  approveLock: (props: ApproveLockProps) => Promise<TransactionResponse>;
+  lock: (props: VotingEscrowLockProps) => Promise<TransactionResponse>;
+  increaseLockAmount: (props: IncreaseLockAmountProps) => Promise<TransactionResponse>;
+  extendLockTime: (props: ExtendLockTimeProps) => Promise<TransactionResponse>;
+  withdrawLocked: (props: WithdrawLocked) => Promise<TransactionResponse>;
+  withdrawUnlocked: (props: WithdrawUnlocked) => Promise<TransactionResponse>;
+}
+
+export interface GetSupportedVotingEscrowsProps {
+  network: Network;
+  addresses?: Address[];
+}
+
+export interface GetVotingEscrowsDynamicDataProps {
+  network: Network;
+  addresses?: Address[];
+}
+
+export interface GetUserVotingEscrowsPositionsProps {
+  network: Network;
+  accountAddress: Address;
+  addresses?: Address[];
+}
+
+export interface GetLockAllowanceProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  votingEscrowAddress: Address;
+}
+
+export interface ApproveLockProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  votingEscrowAddress: Address;
+  amount: Wei;
+}
+
+export interface VotingEscrowLockProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  votingEscrowAddress: Address;
+  amount: Wei;
+  time: Week;
+}
+
+export interface IncreaseLockAmountProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  votingEscrowAddress: Address;
+  amount: Wei;
+}
+
+export interface ExtendLockTimeProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  votingEscrowAddress: Address;
+  time: Week;
+}
+
+export interface WithdrawLocked {
+  network: Network;
+  accountAddress: Address;
+  votingEscrowAddress: Address;
+}
+
+export interface WithdrawUnlocked {
+  network: Network;
+  accountAddress: Address;
+  votingEscrowAddress: Address;
+}
+
+// *************** GAUGE ***************
+export interface GaugeService {
+  getSupportedGauges: (props: GetSupportedGaugesProps) => Promise<Gauge[]>;
+  getGaugesDynamicData: (props: GetGaugesDynamicDataProps) => Promise<GaugeDynamic[]>;
+  getUserGaugesPositions: (props: GetUserGaugesPositionsProps) => Promise<Position[]>;
+  getStakeAllowance: (props: GetStakeAllowanceProps) => Promise<TokenAllowance>;
+  approveStake: (props: ApproveStakeProps) => Promise<TransactionResponse>;
+  stake: (props: GaugeStakeProps) => Promise<TransactionResponse>;
+  unstake: (props: GaugeUnstakeProps) => Promise<TransactionResponse>;
+  claimRewards: (props: ClaimRewardsProps) => Promise<TransactionResponse>;
+}
+
+export interface GetSupportedGaugesProps {
+  network: Network;
+  addresses?: Address[];
+}
+
+export interface GetGaugesDynamicDataProps {
+  network: Network;
+  addresses?: Address[];
+}
+
+export interface GetUserGaugesPositionsProps {
+  network: Network;
+  accountAddress: Address;
+  addresses?: Address[];
+}
+
+export interface GetStakeAllowanceProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  gaugeAddress: Address;
+}
+
+export interface ApproveStakeProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  gaugeAddress: Address;
+  amount: Wei;
+}
+
+export interface GaugeStakeProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  gaugeAddress: Address;
+  amount: Wei;
+}
+
+export interface GaugeUnstakeProps {
+  network: Network;
+  accountAddress: Address;
+  gaugeAddress: Address;
+}
+
+export interface ClaimRewardsProps {
+  network: Network;
+  accountAddress: Address;
+  gaugeAddress: Address;
 }
 
 // *************** TRANSACTION ***************

@@ -12,7 +12,9 @@ import {
   DepositProps,
   WithdrawProps,
   StakeProps,
+  LockProps,
   ClaimProps,
+  ReinvestProps,
   TransactionResponse,
   TransactionService,
   YearnSdk,
@@ -476,7 +478,7 @@ export class LabServiceImpl implements LabService {
     });
   }
 
-  public async lock(props: StakeProps): Promise<TransactionResponse> {
+  public async lock(props: LockProps): Promise<TransactionResponse> {
     const { network, vaultAddress, amount } = props;
 
     return await this.transactionService.execute({
@@ -501,7 +503,7 @@ export class LabServiceImpl implements LabService {
     });
   }
 
-  public async reinvest(props: ClaimProps): Promise<TransactionResponse> {
+  public async reinvest(props: ReinvestProps): Promise<TransactionResponse> {
     const { network } = props;
     const { CONTRACT_ADDRESSES } = this.config;
     const { y3CrvBackZapper } = CONTRACT_ADDRESSES;
