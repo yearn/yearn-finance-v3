@@ -13,6 +13,8 @@ import {
   Lab,
   VaultsUserSummary,
   VaultUserMetadata,
+  VotingEscrow,
+  Gauge,
   TransactionOutcome,
 } from './Yearn-Sdk';
 
@@ -30,6 +32,8 @@ export interface RootState {
   settings: SettingsState;
   user: UserState;
   partner: PartnerState;
+  votingEscrows: VotingEscrowsState;
+  gauges: GaugesState;
 }
 
 export interface AppState {
@@ -248,4 +252,46 @@ export interface UserState {
 export interface PartnerState {
   id: PartnerId | undefined;
   address: Address | undefined;
+}
+
+export interface VotingEscrowPositionsMap {
+  DEPOSIT: Position;
+  YIELD: Position;
+}
+
+export interface VotingEscrowsState {
+  votingEscrowsAddresses: Address[];
+  votingEscrowsMap: { [address: string]: VotingEscrow };
+  selectedvotingEscrowAddress: Address | undefined;
+  user: {
+    userVotingEscrowsPositionsMap: { [address: string]: VotingEscrowPositionsMap };
+  };
+  statusMap: {
+    initiateVotingEscrows: Status;
+    getVotingEscrows: Status;
+    user: {
+      getUserVotingEscrowsPositions: Status;
+    };
+  };
+}
+
+export interface GaugePositionsMap {
+  DEPOSIT: Position;
+  YIELD: Position;
+}
+
+export interface GaugesState {
+  gaugesAddresses: Address[];
+  gaugesMap: { [address: string]: Gauge };
+  selectedGaugeAddress: Address | undefined;
+  user: {
+    userGaugesPositionsMap: { [address: string]: GaugePositionsMap };
+  };
+  statusMap: {
+    initiateGauges: Status;
+    getGauges: Status;
+    user: {
+      getUserGaugesPositions: Status;
+    };
+  };
 }
