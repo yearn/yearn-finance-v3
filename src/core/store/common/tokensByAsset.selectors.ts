@@ -36,10 +36,10 @@ export const selectDepositTokenOptionsByAsset = createSelector(
 
       const zapperDisabled =
         (!servicesEnabled.zapper && assetData.metadata.zapInWith === 'zapperZapIn') || currentNetwork !== 'mainnet';
-      const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
-      const depositTokenAddresses = [mainVaultToken];
+      const mainVaultTokenAddress = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
+      const depositTokenAddresses = [mainVaultTokenAddress];
       if (!zapperDisabled) {
-        depositTokenAddresses.push(...userTokensAddresses.filter((address) => address !== mainVaultToken));
+        depositTokenAddresses.push(...userTokensAddresses.filter((address) => address !== mainVaultTokenAddress));
       }
 
       const tokens = depositTokenAddresses
@@ -51,7 +51,7 @@ export const selectDepositTokenOptionsByAsset = createSelector(
           return createToken({ tokenData, userTokenData, allowancesMap });
         });
       return tokens.filter(
-        (token) => isZappable({ assetData, token, zapType: 'zapInWith' }) || token.address === mainVaultToken
+        (token) => isZappable({ assetData, token, zapType: 'zapInWith' }) || token.address === mainVaultTokenAddress
       );
     })
 );
@@ -68,11 +68,12 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
 
       const zapperDisabled =
         (!servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut') || currentNetwork !== 'mainnet';
-      const mainVaultToken = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
-      const withdrawTokenAddresses = [mainVaultToken];
+      const mainVaultTokenAddress = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
+      const withdrawTokenAddresses = [mainVaultTokenAddress];
       if (!zapperDisabled) {
         const { ZAP_OUT_TOKENS } = getConfig();
-        withdrawTokenAddresses.push(...ZAP_OUT_TOKENS.filter((address) => address !== mainVaultToken));
+        if (assetData.token !== mainVaultTokenAddress) withdrawTokenAddresses.push(assetData.token);
+        withdrawTokenAddresses.push(...ZAP_OUT_TOKENS.filter((address) => !withdrawTokenAddresses.includes(address)));
       }
 
       const tokens = withdrawTokenAddresses
@@ -84,7 +85,10 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
           return createToken({ tokenData, userTokenData, allowancesMap });
         });
       return tokens.filter(
-        (token) => isZappable({ assetData, token, zapType: 'zapOutWith' }) || token.address === mainVaultToken
+        (token) =>
+          isZappable({ assetData, token, zapType: 'zapOutWith' }) ||
+          token.address === assetData.token ||
+          token.address === assetData.metadata.defaultDisplayToken
       );
     })
 );
