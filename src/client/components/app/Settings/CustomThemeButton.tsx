@@ -38,14 +38,14 @@ interface CustomThemeButtonProps {
 }
 
 export const CustomThemeButton = ({ onClick }: CustomThemeButtonProps) => {
-  const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation('modals');
   return (
     <StyledCustomThemeButton onClick={onClick}>
       <AddButton>
         <StyledIcon Component={AddIcon} />
       </AddButton>
 
-      <ButtonText>{t('themes.custom')}</ButtonText>
+      <ButtonText>{t('theme-gallery.custom')}</ButtonText>
     </StyledCustomThemeButton>
   );
 };

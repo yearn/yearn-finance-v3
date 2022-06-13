@@ -47,7 +47,7 @@ export interface CommunityThemesModalProps {
 }
 
 export const CommunityThemesModal: FC<CommunityThemesModalProps> = ({ onClose, ...props }) => {
-  const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation('modals');
   const dispatch = useAppDispatch();
   const { AVAILABLE_CUSTOM_THEMES } = getConfig();
 
@@ -57,9 +57,9 @@ export const CommunityThemesModal: FC<CommunityThemesModalProps> = ({ onClose, .
   const [selectedTab, setSelectedTab] = useState('community');
 
   return (
-    <StyledCommunityThemesModal header={t('themes.gallery.title')} onClose={onClose} {...props}>
+    <StyledCommunityThemesModal header={t('theme-gallery.title')} onClose={onClose} {...props}>
       <StyledTabs value={selectedTab} onChange={setSelectedTab}>
-        <Tab value="community">{t('themes.gallery.community')}</Tab>
+        <Tab value="community">{t('theme-gallery.community')}</Tab>
         {/* <Tab value="favorites" disabled>
           Favorites
         </Tab> */}

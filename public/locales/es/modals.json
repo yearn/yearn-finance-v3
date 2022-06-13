@@ -2,5 +2,10 @@
   "coming-soon": {
     "text": "Próximamente"
   },
+  "theme-gallery": {
+    "custom": "Personalizado",
+    "title": "Galería de Temas Personalizados",
+    "community": "Comunidad"
+  },
   "exit": "Cerrar"
 }
