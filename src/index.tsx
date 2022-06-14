@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import App from '@client';
 
 import reportWebVitals from './reportWebVitals';
-import '@yearn/web-lib/dist/build.css';
+import '@yearn-finance/web-lib/dist/build.css';
 
 ReactDOM.render(
   <React.StrictMode>
