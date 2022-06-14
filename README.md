@@ -34,15 +34,6 @@ Code style follows prettier conventions (`yarn prettier`). Commit messages follo
   - `REACT_APP_INFURA_PROJECT_ID` should remain blank because we are currently using Alchemy as our provider
   - `REACT_APP_ALCHEMY_API_KEY` alchemy api key should be provided by the contributor if he hits api limits
 
-### @yearn/web-lib access
-
-You will need to generate a [Github Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) with the `read:packages` permission set to on, and create or update your ~/.npmrc file with the following content:
-
-```
-...
-//npm.pkg.github.com/:_authToken=YOUR_ACCESS_TOKEN
-```
-
 ### Making Changes
 
 - Create a new local branch from upstream/develop for each PR that you will submit
@@ -79,7 +70,9 @@ You will need to generate a [Github Personal Access Token](https://docs.github.c
 ```
 yarn dev
 ```
+
 or for Windows:
+
 ```
 yarn dev-win
 ```
