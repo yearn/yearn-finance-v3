@@ -42,7 +42,7 @@
     "@types/redux-logger": "3.0.9",
     "@types/styled-components": "5.1.12",
     "@types/styled-system": "5.1.13",
-    "@yearn-finance/web-lib": "0.8.8",
+    "@yearn-finance/web-lib": "0.8.14",
     "@yfi/sdk": "2.1.0",
     "awilix": "7.0.2",
     "axios": "0.21.2",
@@ -54,6 +54,7 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.0.0",
     "ethers": "5.4.5",
+    "framer-motion": "4.1.17",
     "husky": "5.2.0",
     "i18next": "21.6.16",
     "i18next-browser-languagedetector": "6.1.4",
@@ -81,6 +82,9 @@
   "devDependencies": {
     "babel-plugin-styled-components": "2.0.7",
     "locize-cli": "7.10.1"
+  },
+  "resolutions": {
+    "framer-motion": "4.1.17"
   },
   "eslintConfig": {
     "extends": [
