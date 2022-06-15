@@ -20,8 +20,7 @@ const setSelectedVotingEscrowAddress = createAction<{ votingEscrowAddress?: stri
 
 const clearVotingEscrowsData = createAction<void>('votingEscrows/clearVotingEscrowsData');
 const clearUserData = createAction<void>('votingEscrows/clearUserData');
-const clearSelectedVotingEscrowAndStatus = createAction<void>('votingEscrows/clearSelectedVotingEscrowAndStatus');
-const clearVotingEscrowStatus = createAction<{ votingEscrowAddress: string }>('votingEscrows/clearVotingEscrowStatus');
+const clearSelectedVotingEscrow = createAction<void>('votingEscrows/clearSelectedVotingEscrow');
 
 /* -------------------------------------------------------------------------- */
 /*                                 Fetch Data                                 */
@@ -58,24 +57,23 @@ const getVotingEscrowsDynamic = createAsyncThunk<
   return { votingEscrowsDynamic };
 });
 
-const getUserVotingEscrowsPositions = createAsyncThunk<
-  { userVotingEscrowsPositions: Position[] },
-  { addresses?: string[] },
-  ThunkAPI
->('votingEscrows/getUserVaultsPositions', async ({ addresses }, { extra, getState }) => {
-  const { network, wallet } = getState();
-  const { votingEscrowService } = extra.services;
+const getUserVotingEscrowsPositions = createAsyncThunk<{ positions: Position[] }, { addresses?: string[] }, ThunkAPI>(
+  'votingEscrows/getUserVaultsPositions',
+  async ({ addresses }, { extra, getState }) => {
+    const { network, wallet } = getState();
+    const { votingEscrowService } = extra.services;
 
-  const accountAddress = wallet.selectedAddress;
-  if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
-  const userVotingEscrowsPositions = await votingEscrowService.getUserVotingEscrowsPositions({
-    network: network.current,
-    accountAddress,
-    addresses,
-  });
-  return { userVotingEscrowsPositions };
-});
+    const positions = await votingEscrowService.getUserVotingEscrowsPositions({
+      network: network.current,
+      accountAddress,
+      addresses,
+    });
+    return { positions };
+  }
+);
 
 const getLockAllowance = createAsyncThunk<
   TokenAllowance,
@@ -362,8 +360,7 @@ export const VotingEscrowsActions = {
   setSelectedVotingEscrowAddress,
   clearVotingEscrowsData,
   clearUserData,
-  clearSelectedVotingEscrowAndStatus,
-  clearVotingEscrowStatus,
+  clearSelectedVotingEscrow,
   initiateVotingEscrows,
   getVotingEscrows,
   getVotingEscrowsDynamic,

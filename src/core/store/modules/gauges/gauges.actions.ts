@@ -18,8 +18,7 @@ const setSelectedGaugeAddress = createAction<{ gaugeAddress?: string }>('gauges/
 
 const clearGaugesData = createAction<void>('gauges/clearGaugesData');
 const clearUserData = createAction<void>('gauges/clearUserData');
-const clearSelectedGaugeAndStatus = createAction<void>('gauges/clearSelectedGaugeAndStatus');
-const clearGaugeStatus = createAction<{ gaugeAddress: string }>('gauges/clearGaugeStatus');
+const clearSelectedGauge = createAction<void>('gauges/clearSelectedGauge');
 
 /* -------------------------------------------------------------------------- */
 /*                                 Fetch Data                                 */
@@ -52,24 +51,23 @@ const getGaugesDynamic = createAsyncThunk<{ gaugesDynamic: GaugeDynamic[] }, { a
   }
 );
 
-const getUserGaugesPositions = createAsyncThunk<
-  { userGaugesPositions: Position[] },
-  { addresses?: string[] },
-  ThunkAPI
->('gauges/getUserVaultsPositions', async ({ addresses }, { extra, getState }) => {
-  const { network, wallet } = getState();
-  const { gaugeService } = extra.services;
+const getUserGaugesPositions = createAsyncThunk<{ positions: Position[] }, { addresses?: string[] }, ThunkAPI>(
+  'gauges/getUserVaultsPositions',
+  async ({ addresses }, { extra, getState }) => {
+    const { network, wallet } = getState();
+    const { gaugeService } = extra.services;
 
-  const accountAddress = wallet.selectedAddress;
-  if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
-  const userGaugesPositions = await gaugeService.getUserGaugesPositions({
-    network: network.current,
-    accountAddress,
-    addresses,
-  });
-  return { userGaugesPositions };
-});
+    const positions = await gaugeService.getUserGaugesPositions({
+      network: network.current,
+      accountAddress,
+      addresses,
+    });
+    return { positions };
+  }
+);
 
 const getStakeAllowance = createAsyncThunk<
   TokenAllowance,
@@ -267,8 +265,7 @@ export const GaugesActions = {
   setSelectedGaugeAddress,
   clearGaugesData,
   clearUserData,
-  clearSelectedGaugeAndStatus,
-  clearGaugeStatus,
+  clearSelectedGauge,
   initiateGauges,
   getGauges,
   getGaugesDynamic,

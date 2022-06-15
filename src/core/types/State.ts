@@ -261,10 +261,10 @@ export interface VotingEscrowPositionsMap {
 
 export interface VotingEscrowsState {
   votingEscrowsAddresses: Address[];
-  votingEscrowsMap: { [address: string]: VotingEscrow };
+  votingEscrowsMap: Record<Address, VotingEscrow>;
   selectedvotingEscrowAddress: Address | undefined;
   user: {
-    userVotingEscrowsPositionsMap: { [address: string]: VotingEscrowPositionsMap };
+    userVotingEscrowsPositionsMap: Record<Address, VotingEscrowPositionsMap>;
   };
   statusMap: {
     initiateVotingEscrows: Status;
@@ -282,10 +282,10 @@ export interface GaugePositionsMap {
 
 export interface GaugesState {
   gaugesAddresses: Address[];
-  gaugesMap: { [address: string]: Gauge };
+  gaugesMap: Record<Address, Gauge>;
   selectedGaugeAddress: Address | undefined;
   user: {
-    userGaugesPositionsMap: { [address: string]: GaugePositionsMap };
+    userGaugesPositionsMap: Record<Address, GaugePositionsMap>;
   };
   statusMap: {
     initiateGauges: Status;
