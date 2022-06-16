@@ -88,7 +88,12 @@ const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean }>`
   padding-bottom: ${(props) => props.useTabbar && `calc(${props.theme.tabbar.height} + ${contentSeparation})`};
 `;
 
-export const Layout: FC = ({ children }) => {
+interface LayoutProps {
+  hideNavigation?: boolean;
+  hideFooter?: boolean;
+}
+
+export const Layout: FC<LayoutProps> = ({ children, hideNavigation, hideFooter }) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -188,9 +193,9 @@ export const Layout: FC = ({ children }) => {
     <StyledLayout>
       <Alerts />
       <Modals />
-      <Navigation hideOptionalLinks={hideOptionalLinks} />
+      {!hideNavigation && <Navigation hideOptionalLinks={hideOptionalLinks} />}
 
-      <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
+      <Content collapsedSidebar={collapsedSidebar || hideNavigation} useTabbar={isMobile || hideNavigation}>
         <Navbar
           title={t(`navigation.${path}`)}
           titleLink={titleLink}
@@ -208,7 +213,7 @@ export const Layout: FC = ({ children }) => {
 
         {children}
 
-        <Footer />
+        {!hideFooter && <Footer />}
       </Content>
     </StyledLayout>
   );
