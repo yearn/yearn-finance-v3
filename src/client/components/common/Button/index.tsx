@@ -1,15 +1,17 @@
 import { FC } from 'react';
 import styled from 'styled-components';
+import { layout, space, LayoutProps, SpaceProps } from 'styled-system';
 
-export interface ButtonProps {
+export interface ButtonProps extends LayoutProps, SpaceProps {
   className?: string;
   disabled?: boolean;
   color?: string;
   outline?: boolean;
+  filled?: boolean;
   onClick?: (e?: any) => void;
 }
 
-const StyledButton = styled.button<{ outline?: boolean }>`
+const StyledButton = styled.button<{ outline?: boolean; filled?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -46,10 +48,39 @@ const StyledButton = styled.button<{ outline?: boolean }>`
     background: transparent;
     color: ${props.color || props.theme.colors.primary};
   `}
+
+  ${({ filled, theme }) =>
+    filled &&
+    `
+    background-color: ${theme.colors.primary};
+    color: ${theme.colors.surface};
+    border: none;
+    border-width: 0px;
+    font-weight: 700;
+  `}
+  ${layout}
+  ${space}
 `;
 
-export const Button: FC<ButtonProps> = ({ className, disabled, color, outline, onClick, children, ...props }) => (
-  <StyledButton className={className} disabled={disabled} color={color} outline={outline} onClick={onClick} {...props}>
+export const Button: FC<ButtonProps> = ({
+  className,
+  disabled,
+  color,
+  outline,
+  filled,
+  onClick,
+  children,
+  ...props
+}) => (
+  <StyledButton
+    className={className}
+    disabled={disabled}
+    color={color}
+    outline={outline}
+    filled={filled}
+    onClick={onClick}
+    {...props}
+  >
     {children}
   </StyledButton>
 );
