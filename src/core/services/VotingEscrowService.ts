@@ -44,14 +44,122 @@ export class VotingEscrowServiceImpl implements VotingEscrowService {
     this.config = config;
   }
 
-  getSupportedVotingEscrows!: (props: GetSupportedVotingEscrowsProps) => Promise<VotingEscrow[]>;
-  getVotingEscrowsDynamicData!: (props: GetVotingEscrowsDynamicDataProps) => Promise<VotingEscrowDynamic[]>;
-  getUserVotingEscrowsPositions!: (props: GetUserVotingEscrowsPositionsProps) => Promise<Position[]>;
-  getLockAllowance!: (props: GetLockAllowanceProps) => Promise<TokenAllowance>;
-  approveLock!: (props: ApproveLockProps) => Promise<TransactionResponse>;
-  lock!: (props: VotingEscrowLockProps) => Promise<TransactionResponse>;
-  increaseLockAmount!: (props: IncreaseLockAmountProps) => Promise<TransactionResponse>;
-  extendLockTime!: (props: ExtendLockTimeProps) => Promise<TransactionResponse>;
-  withdrawLocked!: (props: WithdrawLocked) => Promise<TransactionResponse>;
-  withdrawUnlocked!: (props: WithdrawUnlocked) => Promise<TransactionResponse>;
+  public async getSupportedVotingEscrows({
+    network,
+    addresses,
+  }: GetSupportedVotingEscrowsProps): Promise<VotingEscrow[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.get({ addresses });
+  }
+
+  public async getVotingEscrowsDynamicData({
+    network,
+    addresses,
+  }: GetVotingEscrowsDynamicDataProps): Promise<VotingEscrowDynamic[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.getDynamic({ addresses });
+  }
+
+  public async getUserVotingEscrowsPositions({
+    network,
+    accountAddress,
+    addresses,
+  }: GetUserVotingEscrowsPositionsProps): Promise<Position[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.positionsOf({ accountAddress, addresses });
+  }
+
+  public async getLockAllowance({
+    network,
+    accountAddress,
+    tokenAddress,
+    votingEscrowAddress,
+  }: GetLockAllowanceProps): Promise<TokenAllowance> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.getLockAllowance({ accountAddress, tokenAddress, votingEscrowAddress });
+  }
+
+  public async approveLock({
+    network,
+    accountAddress,
+    tokenAddress,
+    votingEscrowAddress,
+  }: ApproveLockProps): Promise<TransactionResponse> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.approveLock({
+      accountAddress,
+      tokenAddress,
+      votingEscrowAddress,
+    });
+  }
+
+  public async lock({
+    network,
+    accountAddress,
+    tokenAddress,
+    votingEscrowAddress,
+    amount,
+    time,
+  }: VotingEscrowLockProps): Promise<TransactionResponse> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.lock({
+      accountAddress,
+      tokenAddress,
+      votingEscrowAddress,
+      amount,
+      time,
+    });
+  }
+
+  public async increaseLockAmount({
+    network,
+    accountAddress,
+    votingEscrowAddress,
+    amount,
+  }: IncreaseLockAmountProps): Promise<TransactionResponse> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.increaseLockAmount({
+      accountAddress,
+      votingEscrowAddress,
+      amount,
+    });
+  }
+
+  public async extendLockTime({
+    network,
+    accountAddress,
+    votingEscrowAddress,
+    time,
+  }: ExtendLockTimeProps): Promise<TransactionResponse> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.extendLockTime({
+      accountAddress,
+      votingEscrowAddress,
+      time,
+    });
+  }
+
+  public async withdrawLocked({
+    network,
+    accountAddress,
+    votingEscrowAddress,
+  }: WithdrawLocked): Promise<TransactionResponse> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.withdrawLocked({
+      accountAddress,
+      votingEscrowAddress,
+    });
+  }
+
+  public async withdrawUnlocked({
+    network,
+    accountAddress,
+    votingEscrowAddress,
+  }: WithdrawUnlocked): Promise<TransactionResponse> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.withdrawUnlocked({
+      accountAddress,
+      votingEscrowAddress,
+    });
+  }
 }

@@ -311,7 +311,6 @@ export interface VotingEscrowLockProps {
 export interface IncreaseLockAmountProps {
   network: Network;
   accountAddress: Address;
-  tokenAddress: Address;
   votingEscrowAddress: Address;
   amount: Wei;
 }
@@ -319,7 +318,6 @@ export interface IncreaseLockAmountProps {
 export interface ExtendLockTimeProps {
   network: Network;
   accountAddress: Address;
-  tokenAddress: Address;
   votingEscrowAddress: Address;
   time: Week;
 }
