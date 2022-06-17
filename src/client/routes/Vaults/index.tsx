@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation, usePrevious } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation } from '@hooks';
 import {
   ModalsActions,
   ModalSelectors,
@@ -167,7 +167,6 @@ export const Vaults = () => {
   const deprecated = useAppSelector(VaultsSelectors.selectDeprecatedVaults);
   const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOpportunities);
-  const previousOpportunities = usePrevious(opportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
@@ -178,12 +177,6 @@ export const Vaults = () => {
     (appStatus.loading || vaultsStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
   const opportunitiesLoading = generalLoading && !filteredVaults.length;
   const depositsLoading = generalLoading && !deposits.length;
-
-  useEffect(() => {
-    if (previousOpportunities?.length !== opportunities.length) {
-      setFilteredVaults(opportunities);
-    }
-  }, [opportunities, previousOpportunities]);
 
   const depositHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
