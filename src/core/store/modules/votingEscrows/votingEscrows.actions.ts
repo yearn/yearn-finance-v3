@@ -226,7 +226,6 @@ const increaseLockAmount = createAsyncThunk<
     const tx = await votingEscrowService.increaseLockAmount({
       network: network.current,
       accountAddress,
-      tokenAddress,
       votingEscrowAddress,
       amount: toWei(amount, parseInt(token.decimals)),
     });
@@ -269,7 +268,6 @@ const extendLockTime = createAsyncThunk<
     const tx = await votingEscrowService.extendLockTime({
       network: network.current,
       accountAddress,
-      tokenAddress,
       votingEscrowAddress,
       time,
     });
