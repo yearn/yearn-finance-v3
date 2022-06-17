@@ -469,7 +469,7 @@ const getWithdrawAllowance = createAsyncThunk<
 
   await dispatch(
     TokensActions.setTokenAllowance({
-      tokenAddress,
+      tokenAddress: tokenAllowance.token,
       spenderAddress: tokenAllowance.spender,
       allowance: tokenAllowance.amount,
     })
