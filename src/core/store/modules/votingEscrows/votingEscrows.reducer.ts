@@ -11,12 +11,14 @@ export const votingEscrowsInitialState: VotingEscrowsState = {
   selectedvotingEscrowAddress: undefined,
   user: {
     userVotingEscrowsPositionsMap: {},
+    userVotingEscrowsMetadataMap: {},
   },
   statusMap: {
     initiateVotingEscrows: initialStatus,
     getVotingEscrows: initialStatus,
     user: {
       getUserVotingEscrowsPositions: initialStatus,
+      getUserVotingEscrowsMetadata: initialStatus,
     },
   },
 };
@@ -30,6 +32,7 @@ const {
   getVotingEscrows,
   getVotingEscrowsDynamic,
   getUserVotingEscrowsPositions,
+  getUserVotingEscrowsMetadata,
 } = VotingEscrowsActions;
 
 const votingEscrowsReducer = createReducer(votingEscrowsInitialState, (builder) => {
@@ -113,6 +116,22 @@ const votingEscrowsReducer = createReducer(votingEscrowsInitialState, (builder) 
     })
     .addCase(getUserVotingEscrowsPositions.rejected, (state, { error }) => {
       state.statusMap.user.getUserVotingEscrowsPositions = { error: error.message };
+    })
+
+    /* ---------------------- getUserVotingEscrowsMetadata ---------------------- */
+    .addCase(getUserVotingEscrowsMetadata.pending, (state) => {
+      state.statusMap.user.getUserVotingEscrowsMetadata = { loading: true };
+    })
+    .addCase(getUserVotingEscrowsMetadata.fulfilled, (state, { payload: { userVotingEscrowsMetadata } }) => {
+      const userVotingEscrowsMetadataMap = keyBy(userVotingEscrowsMetadata, 'assetAddress');
+      state.user.userVotingEscrowsMetadataMap = {
+        ...state.user.userVotingEscrowsMetadataMap,
+        ...userVotingEscrowsMetadataMap,
+      };
+      state.statusMap.user.getUserVotingEscrowsMetadata = {};
+    })
+    .addCase(getUserVotingEscrowsMetadata.rejected, (state, { error }) => {
+      state.statusMap.user.getUserVotingEscrowsMetadata = { error: error.message };
     });
 });
 

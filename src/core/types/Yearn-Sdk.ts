@@ -22,6 +22,7 @@ import {
   TokenAllowance,
   VotingEscrow,
   VotingEscrowDynamic,
+  VotingEscrowUserMetadata,
   Gauge,
   GaugeDynamic,
 } from '@yfi/sdk';
@@ -105,6 +106,7 @@ export type {
   ZapOutType,
   VotingEscrow,
   VotingEscrowDynamic,
+  VotingEscrowUserMetadata,
   Gauge,
   GaugeDynamic,
 };

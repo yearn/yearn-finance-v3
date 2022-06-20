@@ -52,7 +52,7 @@ const getGaugesDynamic = createAsyncThunk<{ gaugesDynamic: GaugeDynamic[] }, { a
 );
 
 const getUserGaugesPositions = createAsyncThunk<{ positions: Position[] }, { addresses?: string[] }, ThunkAPI>(
-  'gauges/getUserVaultsPositions',
+  'gauges/getUserGaugesPositions',
   async ({ addresses }, { extra, getState }) => {
     const { network, wallet } = getState();
     const { gaugeService } = extra.services;

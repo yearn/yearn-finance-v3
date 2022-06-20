@@ -1,7 +1,16 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { Address, Position, TokenAllowance, Unit, VotingEscrow, VotingEscrowDynamic, Week } from '@types';
+import {
+  Address,
+  Position,
+  TokenAllowance,
+  Unit,
+  VotingEscrow,
+  VotingEscrowDynamic,
+  VotingEscrowUserMetadata,
+  Week,
+} from '@types';
 import { getNetwork, validateNetwork, parseError, toWei } from '@utils';
 
 import { TokensActions } from '../tokens/tokens.actions';
@@ -58,7 +67,7 @@ const getVotingEscrowsDynamic = createAsyncThunk<
 });
 
 const getUserVotingEscrowsPositions = createAsyncThunk<{ positions: Position[] }, { addresses?: string[] }, ThunkAPI>(
-  'votingEscrows/getUserVaultsPositions',
+  'votingEscrows/getUserVotingEscrowsPositions',
   async ({ addresses }, { extra, getState }) => {
     const { network, wallet } = getState();
     const { votingEscrowService } = extra.services;
@@ -74,6 +83,26 @@ const getUserVotingEscrowsPositions = createAsyncThunk<{ positions: Position[] }
     return { positions };
   }
 );
+
+const getUserVotingEscrowsMetadata = createAsyncThunk<
+  { userVotingEscrowsMetadata: VotingEscrowUserMetadata[] },
+  { addresses?: string[] },
+  ThunkAPI
+>('votingEscrows/getUserVotingEscrowsMetadata', async ({ addresses }, { extra, getState }) => {
+  const { network, wallet } = getState();
+  const { votingEscrowService } = extra.services;
+
+  const accountAddress = wallet.selectedAddress;
+  if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+  const userVotingEscrowsMetadata = await votingEscrowService.getUserVotingEscrowsMetadata({
+    network: network.current,
+    accountAddress,
+    addresses,
+  });
+
+  return { userVotingEscrowsMetadata };
+});
 
 const getLockAllowance = createAsyncThunk<
   TokenAllowance,
@@ -363,6 +392,7 @@ export const VotingEscrowsActions = {
   getVotingEscrows,
   getVotingEscrowsDynamic,
   getUserVotingEscrowsPositions,
+  getUserVotingEscrowsMetadata,
   getLockAllowance,
   approveLock,
   lock,

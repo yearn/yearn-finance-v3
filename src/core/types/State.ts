@@ -14,6 +14,7 @@ import {
   VaultsUserSummary,
   VaultUserMetadata,
   VotingEscrow,
+  VotingEscrowUserMetadata,
   Gauge,
   TransactionOutcome,
 } from './Yearn-Sdk';
@@ -265,12 +266,14 @@ export interface VotingEscrowsState {
   selectedvotingEscrowAddress: Address | undefined;
   user: {
     userVotingEscrowsPositionsMap: Record<Address, VotingEscrowPositionsMap>;
+    userVotingEscrowsMetadataMap: Record<Address, VotingEscrowUserMetadata>;
   };
   statusMap: {
     initiateVotingEscrows: Status;
     getVotingEscrows: Status;
     user: {
       getUserVotingEscrowsPositions: Status;
+      getUserVotingEscrowsMetadata: Status;
     };
   };
 }

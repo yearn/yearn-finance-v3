@@ -5,6 +5,7 @@ import {
   GetSupportedVotingEscrowsProps,
   GetUserVotingEscrowsPositionsProps,
   GetVotingEscrowsDynamicDataProps,
+  GetUserVotingEscrowsMetadataProps,
   IncreaseLockAmountProps,
   Position,
   TokenAllowance,
@@ -13,6 +14,7 @@ import {
   VotingEscrowDynamic,
   VotingEscrowLockProps,
   VotingEscrowService,
+  VotingEscrowUserMetadata,
   WithdrawLocked,
   WithdrawUnlocked,
   YearnSdk,
@@ -67,6 +69,15 @@ export class VotingEscrowServiceImpl implements VotingEscrowService {
   }: GetUserVotingEscrowsPositionsProps): Promise<Position[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.votingEscrows.positionsOf({ accountAddress, addresses });
+  }
+
+  public async getUserVotingEscrowsMetadata({
+    network,
+    accountAddress,
+    addresses,
+  }: GetUserVotingEscrowsMetadataProps): Promise<VotingEscrowUserMetadata[]> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.metadataOf({ accountAddress, addresses });
   }
 
   public async getLockAllowance({
