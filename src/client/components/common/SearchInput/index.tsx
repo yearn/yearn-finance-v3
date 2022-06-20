@@ -35,7 +35,7 @@ export const SearchInput = <T,>({
       return !!matches;
     });
     onSearch(filteredData);
-  }, [searchText]);
+  }, [searchText, searchableData]);
 
   return (
     <StyledSearchInput

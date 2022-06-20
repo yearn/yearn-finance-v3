@@ -3,8 +3,6 @@ import { union } from 'lodash';
 
 import { TokensState, UserTokenActionsMap, initialStatus } from '@types';
 
-import { VaultsActions } from '../vaults/vaults.actions';
-
 import { TokensActions } from './tokens.actions';
 
 export const initialUserTokenActionsMap: UserTokenActionsMap = {
@@ -42,8 +40,6 @@ const {
   clearTokensData,
   clearUserTokenState,
 } = TokensActions;
-
-const { approveDeposit } = VaultsActions;
 
 const tokensReducer = createReducer(tokensInitialState, (builder) => {
   builder
@@ -166,13 +162,6 @@ const tokensReducer = createReducer(tokensInitialState, (builder) => {
     // Note: approve pending/rejected statuses are handled on each asset (vault/ironbank/...) approve action.
     .addCase(approve.fulfilled, (state, { meta, payload: { amount } }) => {
       const { tokenAddress, spenderAddress } = meta.arg;
-      state.user.userTokensAllowancesMap[tokenAddress] = {
-        ...state.user.userTokensAllowancesMap[tokenAddress],
-        [spenderAddress]: amount,
-      };
-    })
-    .addCase(approveDeposit.fulfilled, (state, { meta, payload: { amount, spenderAddress } }) => {
-      const { tokenAddress } = meta.arg;
       state.user.userTokensAllowancesMap[tokenAddress] = {
         ...state.user.userTokensAllowancesMap[tokenAddress],
         [spenderAddress]: amount,

@@ -28,16 +28,8 @@ interface ValidateVaultWithdrawAllowanceProps {
   underlyingTokenAddress: string;
   targetTokenAddress: string;
   yvTokenAllowancesMap: AllowancesMap;
+  spenderAddress: string;
   signature?: string;
-}
-
-export interface ValidateVaultAllowanceProps {
-  amount: BigNumber;
-  vaultAddress: string;
-  vaultUnderlyingTokenAddress: string;
-  sellTokenAddress: string;
-  sellTokenDecimals: string;
-  sellTokenAllowancesMap: AllowancesMap;
 }
 
 export interface ValidateMigrateVaultAllowanceProps {
@@ -80,28 +72,6 @@ export function validateVaultDeposit(props: ValidateVaultDepositProps): Validati
   return basicValidateAmount({ sellTokenAmount, sellTokenDecimals, totalAmountAvailable: userTokenBalance });
 }
 
-export function validateVaultAllowance(props: ValidateVaultAllowanceProps): ValidationResponse {
-  const ZAP_IN_CONTRACT = getConfig().CONTRACT_ADDRESSES.zapIn;
-  const {
-    amount,
-    vaultAddress,
-    vaultUnderlyingTokenAddress,
-    sellTokenAddress,
-    sellTokenDecimals,
-    sellTokenAllowancesMap,
-  } = props;
-
-  const isZapin = vaultUnderlyingTokenAddress !== sellTokenAddress;
-
-  return validateAllowance({
-    tokenAddress: sellTokenAddress,
-    tokenAmount: amount,
-    tokenDecimals: sellTokenDecimals,
-    tokenAllowancesMap: sellTokenAllowancesMap,
-    spenderAddress: isZapin ? ZAP_IN_CONTRACT : vaultAddress,
-  });
-}
-
 export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): ValidationResponse {
   let { yvTokenAmount, yvTokenDecimals, userYvTokenBalance } = props;
   userYvTokenBalance = userYvTokenBalance ?? '0';
@@ -122,14 +92,14 @@ export function validateVaultWithdraw(props: ValidateVaultWithdrawProps): Valida
 }
 
 export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllowanceProps): ValidationResponse {
-  const ZAP_OUT_CONTRACT = getConfig().CONTRACT_ADDRESSES.zapOut;
-  let {
+  const {
     yvTokenAddress,
     yvTokenAmount,
     yvTokenDecimals,
     underlyingTokenAddress,
     targetTokenAddress,
     yvTokenAllowancesMap,
+    spenderAddress,
     signature,
   } = props;
   const isZapOut = targetTokenAddress !== underlyingTokenAddress;
@@ -141,7 +111,7 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
     tokenAmount: yvTokenAmount,
     tokenDecimals: yvTokenDecimals,
     tokenAllowancesMap: yvTokenAllowancesMap,
-    spenderAddress: ZAP_OUT_CONTRACT,
+    spenderAddress,
   });
 }
 

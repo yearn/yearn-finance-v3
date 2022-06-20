@@ -7,10 +7,8 @@ import {
   toBN,
   getNetwork,
   validateNetwork,
-  validateVaultAllowance,
   validateVaultDeposit,
   validateVaultWithdraw,
-  validateVaultWithdrawAllowance,
   validateYvBoostEthActionsAllowance,
   getZapInContractAddress,
   validateYveCrvActionsAllowance,
@@ -132,10 +130,6 @@ interface DepositProps {
   slippageTolerance?: number;
 }
 
-interface ApproveWithdrawProps {
-  labAddress: string;
-}
-
 interface WithdrawProps {
   labAddress: string;
   tokenAddress: string;
@@ -143,11 +137,10 @@ interface WithdrawProps {
   slippageTolerance?: number;
 }
 
-const approveDeposit = createAsyncThunk<{ amount: string; spenderAddress: string }, ApproveDepositProps, ThunkAPI>(
+const approveDeposit = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
   'labs/approveDeposit',
-  async ({ labAddress, tokenAddress }, { getState, extra }) => {
-    const { labs, wallet, network } = getState();
-    const labData = labs.labsMap[labAddress];
+  async ({ labAddress, tokenAddress }, { getState, dispatch, extra }) => {
+    const { wallet, network } = getState();
     const { vaultService, transactionService } = extra.services;
     const amount = extra.config.MAX_UINT256;
 
@@ -158,20 +151,13 @@ const approveDeposit = createAsyncThunk<{ amount: string; spenderAddress: string
       network: network.current,
       accountAddress,
       tokenAddress,
+      vaultAddress: labAddress,
       amount,
-      vaultAddress: labData.address,
     });
 
     await transactionService.handleTransaction({ tx, network: network.current });
 
-    const { spender } = await vaultService.getDepositAllowance({
-      network: network.current,
-      vaultAddress: labAddress,
-      tokenAddress,
-      accountAddress,
-    });
-
-    return { amount, spenderAddress: spender };
+    await dispatch(getDepositAllowance({ tokenAddress, labAddress }));
   },
   {
     serializeError: parseError,
@@ -190,15 +176,15 @@ const getDepositAllowance = createAsyncThunk<
     services: { vaultService },
   } = extra;
   const { network, wallet } = getState();
-  const userAddress = wallet.selectedAddress;
+  const accountAddress = wallet.selectedAddress;
 
-  if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+  if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
   const tokenAllowance = await vaultService.getDepositAllowance({
     network: network.current,
     vaultAddress: labAddress,
     tokenAddress,
-    accountAddress: userAddress,
+    accountAddress,
   });
 
   await dispatch(
@@ -234,19 +220,9 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const labData = labs.labsMap[labAddress];
     const tokenData = tokens.tokensMap[tokenAddress];
     const userTokenData = tokens.user.userTokensMap[tokenAddress];
-    const tokenAllowancesMap = tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
     const amountInWei = amount.multipliedBy(ONE_UNIT);
-
-    const { error: allowanceError } = validateVaultAllowance({
-      amount,
-      vaultAddress: labAddress,
-      vaultUnderlyingTokenAddress: labData.tokenId,
-      sellTokenAddress: tokenAddress,
-      sellTokenDecimals: tokenData.decimals,
-      sellTokenAllowancesMap: tokenAllowancesMap,
-    });
 
     const { error: depositError } = validateVaultDeposit({
       sellTokenAmount: amount,
@@ -258,7 +234,7 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       targetUnderlyingTokenAmount,
     });
 
-    const error = allowanceError || depositError;
+    const error = depositError;
     if (error) throw new Error(error);
 
     const tx = await labService.deposit({
@@ -278,27 +254,73 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
   }
 );
 
-const approveWithdraw = createAsyncThunk<void, ApproveWithdrawProps, ThunkAPI>(
+const approveWithdraw = createAsyncThunk<void, { labAddress: string; tokenAddress: string }, ThunkAPI>(
   'labs/approveWithdraw',
-  async ({ labAddress }, { dispatch }) => {
-    try {
-      const ZAP_OUT_CONTRACT_ADDRESS = getConfig().CONTRACT_ADDRESSES.zapOut;
-      const result = await dispatch(
-        TokensActions.approve({ tokenAddress: labAddress, spenderAddress: ZAP_OUT_CONTRACT_ADDRESS })
-      );
-      unwrapResult(result);
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+  async ({ labAddress, tokenAddress }, { getState, dispatch, extra }) => {
+    const { wallet, network } = getState();
+    const { vaultService, transactionService } = extra.services;
+    const amount = extra.config.MAX_UINT256;
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const tx = await vaultService.approveZapOut({
+      network: network.current,
+      accountAddress,
+      amount,
+      vaultAddress: labAddress,
+      tokenAddress,
+    });
+
+    await transactionService.handleTransaction({ tx, network: network.current });
+
+    await dispatch(getWithdrawAllowance({ tokenAddress, labAddress }));
+  },
+  {
+    serializeError: parseError,
   }
 );
+
+const getWithdrawAllowance = createAsyncThunk<
+  TokenAllowance,
+  {
+    tokenAddress: string;
+    labAddress: string;
+  },
+  ThunkAPI
+>('labs/getWithdrawAllowance', async ({ labAddress, tokenAddress }, { extra, getState, dispatch }) => {
+  const {
+    services: { vaultService },
+  } = extra;
+  const { network, wallet } = getState();
+  const accountAddress = wallet.selectedAddress;
+
+  if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+  const tokenAllowance = await vaultService.getWithdrawAllowance({
+    network: network.current,
+    vaultAddress: labAddress,
+    tokenAddress,
+    accountAddress,
+  });
+
+  await dispatch(
+    TokensActions.setTokenAllowance({
+      tokenAddress: tokenAllowance.token,
+      spenderAddress: tokenAllowance.spender,
+      allowance: tokenAllowance.amount,
+    })
+  );
+
+  return tokenAllowance;
+});
 
 const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
   'labs/withdraw',
   async ({ labAddress, amount, tokenAddress, slippageTolerance }, { dispatch, extra, getState }) => {
     const { services } = extra;
     const { labService, transactionService } = services;
-    const { wallet, labs, tokens, network, app } = getState();
+    const { wallet, labs, network, app } = getState();
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
@@ -310,7 +332,6 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
     if (networkError) throw networkError;
 
     const labData = labs.labsMap[labAddress];
-    const labAllowancesMap = tokens.user.userTokensAllowancesMap[labAddress];
     const userLabData = labs.user.userLabsPositionsMap[labAddress]?.DEPOSIT;
 
     // NOTE: We contemplate that in labs withdraw user always will be using yvToken instead of
@@ -318,22 +339,13 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
     // to calculate shares amount.
     const amountOfShares = toWei(amount.toString(), parseInt(labData.decimals));
 
-    const { error: allowanceError } = validateVaultWithdrawAllowance({
-      yvTokenAddress: labAddress,
-      yvTokenAmount: amount, // normalized
-      targetTokenAddress: tokenAddress,
-      underlyingTokenAddress: labData.tokenId ?? '',
-      yvTokenDecimals: labData.decimals ?? '0',
-      yvTokenAllowancesMap: labAllowancesMap ?? {},
-    });
-
     const { error: withdrawError } = validateVaultWithdraw({
       yvTokenAmount: amount, // normalized
       userYvTokenBalance: userLabData.balance ?? '0',
       yvTokenDecimals: labData.decimals ?? '0',
     });
 
-    const error = withdrawError || allowanceError;
+    const error = withdrawError;
     if (error) throw new Error(error);
 
     const tx = await labService.withdraw({
@@ -381,16 +393,6 @@ const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
     const labData = getState().labs.labsMap[labAddress];
     const tokenData = getState().tokens.tokensMap[tokenAddress];
     const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
-    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
-
-    const { error: allowanceError } = validateVaultAllowance({
-      amount,
-      vaultAddress: labAddress,
-      vaultUnderlyingTokenAddress: labData.tokenId,
-      sellTokenAddress: tokenAddress,
-      sellTokenDecimals: tokenData.decimals,
-      sellTokenAllowancesMap: tokenAllowancesMap,
-    });
 
     const { error: depositError } = validateVaultDeposit({
       sellTokenAmount: amount,
@@ -401,7 +403,8 @@ const yvBoostDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultUnderlyingBalance: labData?.underlyingTokenBalance.amount ?? '0',
       targetUnderlyingTokenAmount,
     });
-    const error = allowanceError || depositError;
+
+    const error = depositError;
     if (error) throw new Error(error);
 
     // const amountInWei = amount.multipliedBy(ONE_UNIT);
@@ -445,7 +448,6 @@ const yvBoostWithdraw = createAsyncThunk<
     throw new Error('WALLET NOT CONNECTED');
   }
   const labData = getState().labs.labsMap[labAddress];
-  const labAllowancesMap = getState().tokens.user.userTokensAllowancesMap[labAddress];
   const userLabData = getState().labs.user.userLabsPositionsMap[labAddress]?.DEPOSIT;
 
   // NOTE: We contemplate that in yvBoost withdraw user always will be using yvToken instead of
@@ -453,22 +455,13 @@ const yvBoostWithdraw = createAsyncThunk<
   // to calculate shares amount.
   // const amountOfShares = toWei(amount.toString(), parseInt(labData.decimals));
 
-  const { error: allowanceError } = validateVaultWithdrawAllowance({
-    yvTokenAddress: labAddress,
-    yvTokenAmount: amount, // normalized
-    targetTokenAddress: targetTokenAddress,
-    underlyingTokenAddress: labData.tokenId ?? '',
-    yvTokenDecimals: labData.decimals ?? '0',
-    yvTokenAllowancesMap: labAllowancesMap ?? {},
-  });
-
   const { error: withdrawError } = validateVaultWithdraw({
     yvTokenAmount: amount, // normalized
     userYvTokenBalance: userLabData.balance ?? '0',
     yvTokenDecimals: labData.decimals ?? '0', // check if its ok to use underlyingToken decimals as vault decimals
   });
 
-  const error = withdrawError || allowanceError;
+  const error = withdrawError;
   if (error) throw new Error(error);
 
   // const { labService } = services;
@@ -789,6 +782,7 @@ export const LabsActions = {
   clearLabStatus,
   clearUserData,
   getDepositAllowance,
+  getWithdrawAllowance,
   yvBoost: {
     yvBoostApproveDeposit,
     yvBoostDeposit,
