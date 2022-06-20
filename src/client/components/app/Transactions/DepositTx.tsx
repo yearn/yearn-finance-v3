@@ -27,7 +27,7 @@ import {
   validateSlippage,
   validateNetwork,
   formatApy,
-  validateVaultAllowance,
+  validateAllowance,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -54,6 +54,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const [spenderAddress, setSpenderAddress] = useState('');
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
   const simulationsEnabled = servicesEnabled.tenderly;
@@ -123,12 +124,14 @@ export const DepositTx: FC<DepositTxProps> = ({
     if (!selectedVault || !selectedSellTokenAddress || !isWalletConnected) return;
     const fetchAllowance = async () => {
       setIsFetchingAllowance(true);
-      await dispatch(
+      setSpenderAddress('');
+      const allowance = await dispatchAndUnwrap(
         VaultsActions.getDepositAllowance({
           vaultAddress: selectedVault.address,
           tokenAddress: selectedSellTokenAddress,
         })
       );
+      setSpenderAddress(allowance.spender);
       setIsFetchingAllowance(false);
     };
     fetchAllowance();
@@ -167,13 +170,12 @@ export const DepositTx: FC<DepositTxProps> = ({
     return null;
   }
 
-  const { approved: isApproved, error: allowanceError } = validateVaultAllowance({
-    amount: toBN(debouncedAmount),
-    vaultAddress: selectedVault.address,
-    vaultUnderlyingTokenAddress: selectedVault.token.address,
-    sellTokenAddress: selectedSellTokenAddress,
-    sellTokenDecimals: selectedSellToken.decimals.toString(),
-    sellTokenAllowancesMap: selectedSellToken.allowancesMap,
+  const { approved: isApproved, error: allowanceError } = validateAllowance({
+    tokenAmount: toBN(debouncedAmount),
+    tokenAddress: selectedSellTokenAddress,
+    tokenDecimals: selectedSellToken.decimals.toString(),
+    tokenAllowancesMap: selectedSellToken.allowancesMap,
+    spenderAddress,
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultDeposit({

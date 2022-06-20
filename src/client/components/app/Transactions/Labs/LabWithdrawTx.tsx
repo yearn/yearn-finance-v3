@@ -38,10 +38,12 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConfig();
+  const { NETWORK_SETTINGS } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const [spenderAddress, setSpenderAddress] = useState('');
+  const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
   const simulationsEnabled = servicesEnabled.tenderly;
   const zapperEnabled = servicesEnabled.zapper;
@@ -91,13 +93,19 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
 
   useEffect(() => {
     if (!selectedLab || !walletIsConnected) return;
-
-    dispatch(
-      TokensActions.getTokenAllowance({
-        tokenAddress: selectedLab.address,
-        spenderAddress: CONTRACT_ADDRESSES.zapOut,
-      })
-    );
+    const fetchAllowance = async () => {
+      setIsFetchingAllowance(true);
+      setSpenderAddress('');
+      const allowance = await dispatchAndUnwrap(
+        LabsActions.getWithdrawAllowance({
+          labAddress: selectedLab.address,
+          tokenAddress: selectedTargetTokenAddress,
+        })
+      );
+      setSpenderAddress(allowance.spender);
+      setIsFetchingAllowance(false);
+    };
+    fetchAllowance();
   }, [selectedTargetTokenAddress, selectedLab?.address, walletIsConnected]);
 
   useEffect(() => {
@@ -132,6 +140,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     underlyingTokenAddress: selectedLab.token.address,
     targetTokenAddress: selectedTargetTokenAddress,
     yvTokenAllowancesMap: selectedLab.allowancesMap,
+    spenderAddress,
   });
 
   const { approved: isValidAmount, error: inputError } = validateVaultWithdraw({
@@ -203,7 +212,9 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   };
 
   const approve = async () => {
-    await dispatch(LabsActions.approveWithdraw({ labAddress: selectedLab.address }));
+    await dispatch(
+      LabsActions.approveWithdraw({ labAddress: selectedLab.address, tokenAddress: selectedTargetTokenAddress })
+    );
   };
 
   const withdraw = async () => {
@@ -225,7 +236,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       label: t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveWithdraw,
-      disabled: isApproved,
+      disabled: isApproved || isFetchingAllowance,
     },
     {
       label: t('components.transaction.withdraw'),

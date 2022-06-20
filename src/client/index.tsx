@@ -17,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     height: 100%;
     width: 100%;
+    scroll-behavior: unset;
   }
 
   html {

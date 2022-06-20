@@ -38,11 +38,13 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { CONTRACT_ADDRESSES, NETWORK_SETTINGS, MAX_UINT256 } = getConfig();
+  const { NETWORK_SETTINGS, MAX_UINT256 } = getConfig();
   const [signature, setSignature] = useState<string | undefined>();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
+  const [spenderAddress, setSpenderAddress] = useState('');
+  const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
   const simulationsEnabled = servicesEnabled.tenderly;
   const zapperEnabled = servicesEnabled.zapper;
@@ -96,14 +98,20 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   useEffect(() => {
     if (!selectedVault || !walletIsConnected) return;
-
-    dispatch(
-      TokensActions.getTokenAllowance({
-        tokenAddress: selectedVault.address,
-        spenderAddress: CONTRACT_ADDRESSES.zapOut,
-      })
-    );
-  }, [selectedVault?.address, CONTRACT_ADDRESSES?.zapOut, walletIsConnected]);
+    const fetchAllowance = async () => {
+      setIsFetchingAllowance(true);
+      setSpenderAddress('');
+      const allowance = await dispatchAndUnwrap(
+        VaultsActions.getWithdrawAllowance({
+          vaultAddress: selectedVault.address,
+          tokenAddress: selectedTargetTokenAddress,
+        })
+      );
+      setSpenderAddress(allowance.spender);
+      setIsFetchingAllowance(false);
+    };
+    fetchAllowance();
+  }, [selectedVault?.address, selectedTargetTokenAddress, walletIsConnected]);
 
   useEffect(() => {
     if (!selectedVault) return;
@@ -136,6 +144,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     underlyingTokenAddress: selectedVault.token.address,
     targetTokenAddress: selectedTargetTokenAddress,
     yvTokenAllowancesMap: selectedVault.allowancesMap,
+    spenderAddress,
     signature,
   });
 
@@ -249,7 +258,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       label: signedApprovalsEnabled ? t('components.transaction.sign') : t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveZapOut,
-      disabled: isApproved,
+      disabled: isApproved || isFetchingAllowance,
     },
     {
       label: t('components.transaction.withdraw'),
