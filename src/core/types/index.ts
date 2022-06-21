@@ -13,6 +13,7 @@ export * from './State';
 export * from './Status';
 export * from './Token';
 export * from './Vault';
+export * from './VotingEscrow';
 export * from './Wallet';
 export * from './Web3Provider';
 export * from './Yearn-Sdk';

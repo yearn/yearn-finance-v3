@@ -6,7 +6,7 @@ export type FormattedAmount = string;
 
 export type DataType = 'amount' | 'percent' | 'usd';
 
-export type Route = 'portfolio' | 'vaults' | 'vault' | 'labs';
+export type Route = 'portfolio' | 'vaults' | 'vault' | 'labs' | 'veyfi';
 
 export type ExternalServiceId = 'zapper' | 'tenderly' | 'notify';
 
