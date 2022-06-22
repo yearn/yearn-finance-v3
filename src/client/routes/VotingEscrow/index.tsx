@@ -14,7 +14,6 @@ export const VotingEscrowPage = () => {
           { header: 'Total Locked YFI', Component: <Amount value="0" decimals={8} /> },
           { header: 'Your Locked YFI', Component: <Amount value="0" decimals={8} /> },
           { header: 'Expiration for the lock', Component: <Amount value="0" showDecimals={false} /> },
-          { header: 'Current weeks', Component: <Amount value="0" showDecimals={false} /> },
         ]}
         cardSize="small"
       />

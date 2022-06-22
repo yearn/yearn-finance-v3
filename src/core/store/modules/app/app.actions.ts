@@ -9,6 +9,7 @@ import { WalletActions } from '../wallet/wallet.actions';
 import { TokensActions } from '../tokens/tokens.actions';
 import { VaultsActions } from '../vaults/vaults.actions';
 import { LabsActions } from '../labs/labs.actions';
+import { VotingEscrowsActions } from '../votingEscrows/votingEscrows.actions';
 import { AlertsActions } from '../alerts/alerts.actions';
 import { NetworkActions } from '../network/network.actions';
 import { PartnerActions } from '../partner/partner.actions';
@@ -88,6 +89,9 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
       case 'labs':
         await dispatch(LabsActions.initiateLabs());
         break;
+      case 'veyfi':
+        await dispatch(VotingEscrowsActions.initiateVotingEscrows());
+        break;
     }
   },
   {
@@ -118,6 +122,10 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
         break;
       case 'labs':
         dispatch(LabsActions.getUserLabsPositions({}));
+        break;
+      case 'veyfi':
+        await dispatch(VotingEscrowsActions.getUserVotingEscrowsPositions({ addresses }));
+        await dispatch(VotingEscrowsActions.getUserVotingEscrowsMetadata({ addresses }));
         break;
     }
   },
