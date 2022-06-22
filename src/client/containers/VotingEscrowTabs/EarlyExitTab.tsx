@@ -12,9 +12,12 @@ export const EarlyExitTab = () => {
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
+  const hasLockedAmount = !!votingEscrow?.earlyExitPenaltyRatio && toBN(votingEscrow?.DEPOSIT.userDeposited).gt(0);
   const weeksToUnlock = votingEscrow?.unlockDate ? weeksBetween(new Date(), votingEscrow.unlockDate).toString() : '0';
-  const expectedTokens = votingEscrow?.earlyExitPenaltyRatio
-    ? toBN(votingEscrow?.DEPOSIT.userDeposited).times(votingEscrow?.earlyExitPenaltyRatio).toString()
+  const expectedTokens = hasLockedAmount
+    ? toBN(votingEscrow?.DEPOSIT.userDeposited)
+        .times(votingEscrow?.earlyExitPenaltyRatio ?? 0)
+        .toString()
     : '0';
 
   const earlyExit = async () => {
@@ -33,7 +36,7 @@ export const EarlyExitTab = () => {
     label: 'Exit',
     onAction: earlyExit,
     status: isExiting,
-    disabled: false,
+    disabled: !hasLockedAmount,
   };
 
   return (
