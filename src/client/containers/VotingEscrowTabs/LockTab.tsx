@@ -14,7 +14,7 @@ export const LockTab = () => {
   const [lockAmount, setLockAmount] = useState('');
   const [debouncedLockAmount, isDebounceLockAmountPending] = useDebounce(lockAmount, 500);
   const [lockTime, setLockTime] = useState('');
-  const [debouncedLockTime, isDebounceLockTimePending] = useDebounce(lockAmount, 500);
+  const [debouncedLockTime, isDebounceLockTimePending] = useDebounce(lockTime, 500);
   const [spenderAddress, setSpenderAddress] = useState('');
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
@@ -49,6 +49,7 @@ export const LockTab = () => {
           tokenAddress: votingEscrow.token.address,
           votingEscrowAddress: votingEscrow.address,
           amount: debouncedLockAmount,
+          time: toBN(debouncedLockTime).toNumber(),
         })
       );
       setResultAmount(toUnit(transactionOutcome.targetTokenAmount, votingEscrow.decimals));
