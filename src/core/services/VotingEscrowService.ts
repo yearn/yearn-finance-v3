@@ -4,6 +4,7 @@ import {
   GetLockAllowanceProps,
   GetSupportedVotingEscrowsProps,
   GetUserVotingEscrowsPositionsProps,
+  GetVotingEscrowExpectedTransactionOutcomeProps,
   GetVotingEscrowsDynamicDataProps,
   GetUserVotingEscrowsMetadataProps,
   IncreaseLockAmountProps,
@@ -21,6 +22,7 @@ import {
   Web3Provider,
   TransactionService,
   Config,
+  TransactionOutcome,
 } from '@types';
 
 export class VotingEscrowServiceImpl implements VotingEscrowService {
@@ -69,6 +71,26 @@ export class VotingEscrowServiceImpl implements VotingEscrowService {
   }: GetUserVotingEscrowsPositionsProps): Promise<Position[]> {
     const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.votingEscrows.positionsOf({ accountAddress, addresses });
+  }
+
+  public async getExpectedTransactionOutcome({
+    network,
+    accountAddress,
+    transactionType,
+    tokenAddress,
+    votingEscrowAddress,
+    amount,
+    time,
+  }: GetVotingEscrowExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.votingEscrows.getExpectedTransactionOutcome({
+      accountAddress,
+      votingEscrowTransactionType: transactionType,
+      tokenAddress,
+      votingEscrowAddress,
+      amount,
+      time,
+    });
   }
 
   public async getUserVotingEscrowsMetadata({

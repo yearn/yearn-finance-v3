@@ -23,6 +23,7 @@ import {
   VotingEscrow,
   VotingEscrowDynamic,
   VotingEscrowUserMetadata,
+  VotingEscrowTransactionType,
   Gauge,
   GaugeDynamic,
 } from '@yfi/sdk';
@@ -107,6 +108,7 @@ export type {
   VotingEscrow,
   VotingEscrowDynamic,
   VotingEscrowUserMetadata,
+  VotingEscrowTransactionType,
   Gauge,
   GaugeDynamic,
 };

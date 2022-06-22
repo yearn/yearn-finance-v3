@@ -1,13 +1,15 @@
-import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
 import {
   Address,
   Position,
   TokenAllowance,
+  TransactionOutcome,
   Unit,
   VotingEscrow,
   VotingEscrowDynamic,
+  VotingEscrowTransactionType,
   VotingEscrowUserMetadata,
   Week,
 } from '@types';
@@ -38,7 +40,9 @@ const clearSelectedVotingEscrow = createAction<void>('votingEscrows/clearSelecte
 const initiateVotingEscrows = createAsyncThunk<void, void, ThunkAPI>(
   'votingEscrows/initiateVotingEscrows',
   async (_arg, { dispatch }) => {
-    await dispatch(getVotingEscrows({}));
+    const result = await dispatch(getVotingEscrows({}));
+    const { votingEscrows } = unwrapResult(result);
+    await dispatch(setSelectedVotingEscrowAddress({ votingEscrowAddress: votingEscrows[0]?.address }));
   }
 );
 
@@ -103,6 +107,40 @@ const getUserVotingEscrowsMetadata = createAsyncThunk<
 
   return { userVotingEscrowsMetadata };
 });
+
+const getExpectedTransactionOutcome = createAsyncThunk<
+  TransactionOutcome,
+  {
+    transactionType: VotingEscrowTransactionType;
+    tokenAddress: Address;
+    votingEscrowAddress: Address;
+    amount?: Unit;
+    time?: Week;
+  },
+  ThunkAPI
+>(
+  'votingEscrows/getExpectedTransactionOutcome',
+  async ({ transactionType, tokenAddress, votingEscrowAddress, amount, time }, { extra, getState }) => {
+    const { network, wallet, tokens } = getState();
+    const { votingEscrowService } = extra.services;
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const token = tokens.tokensMap[tokenAddress];
+    const transactionOutcome = await votingEscrowService.getExpectedTransactionOutcome({
+      network: network.current,
+      accountAddress,
+      transactionType,
+      tokenAddress,
+      votingEscrowAddress,
+      amount: amount ? toWei(amount, parseInt(token.decimals)) : undefined,
+      time,
+    });
+
+    return transactionOutcome;
+  }
+);
 
 const getLockAllowance = createAsyncThunk<
   TokenAllowance,
@@ -393,6 +431,7 @@ export const VotingEscrowsActions = {
   getVotingEscrowsDynamic,
   getUserVotingEscrowsPositions,
   getUserVotingEscrowsMetadata,
+  getExpectedTransactionOutcome,
   getLockAllowance,
   approveLock,
   lock,

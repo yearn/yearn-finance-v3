@@ -23,6 +23,7 @@ import {
   VotingEscrow,
   VotingEscrowDynamic,
   VotingEscrowUserMetadata,
+  VotingEscrowTransactionType,
   Gauge,
   GaugeDynamic,
   Week,
@@ -269,6 +270,7 @@ export interface VotingEscrowService {
   getVotingEscrowsDynamicData: (props: GetVotingEscrowsDynamicDataProps) => Promise<VotingEscrowDynamic[]>;
   getUserVotingEscrowsPositions: (props: GetUserVotingEscrowsPositionsProps) => Promise<Position[]>;
   getUserVotingEscrowsMetadata: (props: GetUserVotingEscrowsMetadataProps) => Promise<VotingEscrowUserMetadata[]>;
+  getExpectedTransactionOutcome: (props: GetVotingEscrowExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
   getLockAllowance: (props: GetLockAllowanceProps) => Promise<TokenAllowance>;
   approveLock: (props: ApproveLockProps) => Promise<TransactionResponse>;
   lock: (props: VotingEscrowLockProps) => Promise<TransactionResponse>;
@@ -298,6 +300,16 @@ export interface GetUserVotingEscrowsMetadataProps {
   network: Network;
   accountAddress: Address;
   addresses?: Address[];
+}
+
+export interface GetVotingEscrowExpectedTransactionOutcomeProps {
+  network: Network;
+  accountAddress: Address;
+  transactionType: VotingEscrowTransactionType;
+  tokenAddress: Address;
+  votingEscrowAddress: Address;
+  amount?: Wei;
+  time?: Week;
 }
 
 export interface GetLockAllowanceProps {
