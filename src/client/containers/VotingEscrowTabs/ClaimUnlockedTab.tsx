@@ -1,36 +1,29 @@
-import { useState } from 'react';
-
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useExecuteThunk } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { humanize, toBN } from '@utils';
 
 export const ClaimUnlockedTab = () => {
-  const dispatch = useAppDispatch();
-  const [isExiting, setIsExiting] = useState(false);
+  const [withdrawUnlocked, withdrawUnlockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawUnlocked);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const hasLockedAmount = !!votingEscrow?.earlyExitPenaltyRatio && toBN(votingEscrow?.DEPOSIT.userDeposited).gt(0);
   const unlockedAmount = !votingEscrow?.unlockDate ? votingEscrow?.DEPOSIT.userBalance : '0';
 
-  const claim = async () => {
+  const executeWithdrawUnlocked = async () => {
     if (!votingEscrow) return;
-    setIsExiting(true);
-    await dispatch(
-      VotingEscrowsActions.withdrawUnlocked({
-        tokenAddress: votingEscrow.token.address,
-        votingEscrowAddress: votingEscrow.address,
-      })
-    );
-    setIsExiting(false);
+    withdrawUnlocked({
+      tokenAddress: votingEscrow.token.address,
+      votingEscrowAddress: votingEscrow.address,
+    });
   };
 
   const txAction = {
     label: 'Claim',
-    onAction: claim,
-    status: isExiting,
+    onAction: executeWithdrawUnlocked,
+    status: withdrawUnlockedStatus.loading,
     disabled: hasLockedAmount,
   };
 

@@ -1,14 +1,11 @@
-import { useState } from 'react';
-
-import { useAppSelector, useAppDispatch } from '@hooks';
+import { useAppSelector, useExecuteThunk } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { humanize, toBN, weeksBetween } from '@utils';
 
 export const EarlyExitTab = () => {
-  const dispatch = useAppDispatch();
-  const [isExiting, setIsExiting] = useState(false);
+  const [withdrawLocked, withdrawLockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawLocked);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
@@ -20,22 +17,18 @@ export const EarlyExitTab = () => {
         .toString()
     : '0';
 
-  const earlyExit = async () => {
+  const executeWithdrawLocked = async () => {
     if (!votingEscrow) return;
-    setIsExiting(true);
-    await dispatch(
-      VotingEscrowsActions.withdrawLocked({
-        tokenAddress: votingEscrow.token.address,
-        votingEscrowAddress: votingEscrow.address,
-      })
-    );
-    setIsExiting(false);
+    withdrawLocked({
+      tokenAddress: votingEscrow.token.address,
+      votingEscrowAddress: votingEscrow.address,
+    });
   };
 
   const txAction = {
     label: 'Exit',
-    onAction: earlyExit,
-    status: isExiting,
+    onAction: executeWithdrawLocked,
+    status: withdrawLockedStatus.loading,
     disabled: !hasLockedAmount,
   };
 

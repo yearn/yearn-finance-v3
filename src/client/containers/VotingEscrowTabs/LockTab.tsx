@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch, useAppDispatchAndUnwrap, useDebounce } from '@hooks';
+import { useAppSelector, useDebounce, useExecuteThunk } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button, ToggleButton } from '@components/common';
@@ -9,52 +9,39 @@ import { humanize, toBN, toUnit, toWei, validateAllowance, validateAmount } from
 const MAX_LOCK_TIME = '208'; // Weeks
 
 export const LockTab = () => {
-  const dispatch = useAppDispatch();
-  const dispatchAndUnwrap = useAppDispatchAndUnwrap();
   const [lockAmount, setLockAmount] = useState('');
   const [debouncedLockAmount, isDebounceLockAmountPending] = useDebounce(lockAmount, 500);
   const [lockTime, setLockTime] = useState('');
   const [debouncedLockTime, isDebounceLockTimePending] = useDebounce(lockTime, 500);
-  const [spenderAddress, setSpenderAddress] = useState('');
-  const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
-  const [isApproving, setIsApproving] = useState(false);
-  const [isLocking, setIsLocking] = useState(false);
-  const [resultAmount, setResultAmount] = useState('');
+  const [getLockAllowance, getLockAllowanceStatus, allowance] = useExecuteThunk(VotingEscrowsActions.getLockAllowance);
+  const [getExpectedTransactionOutcome, getExpectedTransactionOutcomeStatus, transactionOutcome] = useExecuteThunk(
+    VotingEscrowsActions.getExpectedTransactionOutcome
+  );
+  const [approveLock, approveLockStatus] = useExecuteThunk(VotingEscrowsActions.approveLock);
+  const [lock, lockStatus] = useExecuteThunk(VotingEscrowsActions.lock);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
+  const resultAmount =
+    transactionOutcome && votingEscrow ? toUnit(transactionOutcome.targetTokenAmount, votingEscrow.decimals) : '';
+
   useEffect(() => {
     if (!votingEscrow || !isWalletConnected) return;
-    const fetchAllowance = async () => {
-      setIsFetchingAllowance(true);
-      setSpenderAddress('');
-      const allowance = await dispatchAndUnwrap(
-        VotingEscrowsActions.getLockAllowance({
-          tokenAddress: votingEscrow.token.address,
-          votingEscrowAddress: votingEscrow.address,
-        })
-      );
-      setSpenderAddress(allowance.spender);
-      setIsFetchingAllowance(false);
-    };
-    fetchAllowance();
+    getLockAllowance({
+      tokenAddress: votingEscrow.token.address,
+      votingEscrowAddress: votingEscrow.address,
+    });
   }, [votingEscrow?.address, isWalletConnected]);
 
   useEffect(() => {
     if (!votingEscrow || toBN(debouncedLockAmount).lte(0) || toBN(debouncedLockTime).lte(0) || inputError) return;
-    const getExpectedTransactionOutcome = async () => {
-      const transactionOutcome = await dispatchAndUnwrap(
-        VotingEscrowsActions.getExpectedTransactionOutcome({
-          transactionType: 'LOCK',
-          tokenAddress: votingEscrow.token.address,
-          votingEscrowAddress: votingEscrow.address,
-          amount: debouncedLockAmount,
-          time: toBN(debouncedLockTime).toNumber(),
-        })
-      );
-      setResultAmount(toUnit(transactionOutcome.targetTokenAmount, votingEscrow.decimals));
-    };
-    getExpectedTransactionOutcome();
+    getExpectedTransactionOutcome({
+      transactionType: 'LOCK',
+      tokenAddress: votingEscrow.token.address,
+      votingEscrowAddress: votingEscrow.address,
+      amount: debouncedLockAmount,
+      time: toBN(debouncedLockTime).toNumber(),
+    });
   }, [debouncedLockAmount, debouncedLockTime]);
 
   const { approved: isApproved, error: allowanceError } = validateAllowance({
@@ -62,7 +49,7 @@ export const LockTab = () => {
     tokenAddress: votingEscrow?.token.address ?? '',
     tokenDecimals: votingEscrow?.token.decimals.toString() ?? '',
     tokenAllowancesMap: votingEscrow?.token.allowancesMap ?? {},
-    spenderAddress,
+    spenderAddress: allowance?.spender ?? '',
   });
 
   const { approved: isValidLockAmount, error: lockAmountError } = validateAmount({
@@ -77,43 +64,35 @@ export const LockTab = () => {
 
   const inputError = lockAmountError || lockTimeError;
 
-  const approve = async () => {
+  const executeApprove = () => {
     if (!votingEscrow) return;
-    setIsApproving(true);
-    await dispatch(
-      VotingEscrowsActions.approveLock({
-        tokenAddress: votingEscrow.token.address,
-        votingEscrowAddress: votingEscrow.address,
-      })
-    );
-    setIsApproving(false);
+    approveLock({
+      tokenAddress: votingEscrow.token.address,
+      votingEscrowAddress: votingEscrow.address,
+    });
   };
 
-  const lock = async () => {
+  const executeLock = () => {
     if (!votingEscrow) return;
-    setIsLocking(true);
-    await dispatch(
-      VotingEscrowsActions.lock({
-        tokenAddress: votingEscrow.token.address,
-        votingEscrowAddress: votingEscrow.address,
-        amount: lockAmount,
-        time: parseInt(lockTime),
-      })
-    );
-    setIsLocking(false);
+    lock({
+      tokenAddress: votingEscrow.token.address,
+      votingEscrowAddress: votingEscrow.address,
+      amount: lockAmount,
+      time: parseInt(lockTime),
+    });
   };
 
   const txAction = !isApproved
     ? {
         label: 'Approve',
-        onAction: approve,
-        status: isApproving,
-        disabled: isApproved || isFetchingAllowance,
+        onAction: executeApprove,
+        status: approveLockStatus.loading,
+        disabled: isApproved || getLockAllowanceStatus.loading,
       }
     : {
         label: 'Lock',
-        onAction: lock,
-        status: isLocking,
+        onAction: executeLock,
+        status: lockStatus.loading,
         disabled:
           !isApproved ||
           !isValidLockAmount ||
