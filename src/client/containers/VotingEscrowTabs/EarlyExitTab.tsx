@@ -25,13 +25,6 @@ export const EarlyExitTab = () => {
     });
   };
 
-  const txAction = {
-    label: 'Exit',
-    onAction: executeWithdrawLocked,
-    status: withdrawLockedStatus.loading,
-    disabled: !hasLockedAmount,
-  };
-
   return (
     <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))">
       <Box>
@@ -60,14 +53,14 @@ export const EarlyExitTab = () => {
               disabled
             />
             <Button
-              onClick={txAction.onAction}
-              disabled={txAction.disabled}
+              onClick={executeWithdrawLocked}
+              disabled={!hasLockedAmount}
               filled
               width={1 / 2}
               height="5.6rem"
               mt="1.6rem"
             >
-              {txAction.label}
+              Exit
             </Button>
           </Box>
         </Box>

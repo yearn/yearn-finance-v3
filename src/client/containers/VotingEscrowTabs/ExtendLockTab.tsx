@@ -48,13 +48,6 @@ export const ExtendLockTab = () => {
     });
   };
 
-  const txAction = {
-    label: 'Extend',
-    onAction: executeExtendLockTime,
-    status: extendLockTimeStatus.loading,
-    disabled: !isValidLockTime || isDebounceLockTimePending,
-  };
-
   return (
     <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))">
       <Box>
@@ -78,14 +71,14 @@ export const ExtendLockTab = () => {
           <Box display="flex" alignItems="center" gap="1.6rem">
             <AmountInput label="Total veYFI" amount={resultAmount} mt="1.6rem" width={1 / 2} disabled />
             <Button
-              onClick={txAction.onAction}
-              disabled={txAction.disabled}
+              onClick={executeExtendLockTime}
+              disabled={!isValidLockTime || isDebounceLockTimePending}
               filled
               width={1 / 2}
               height="5.6rem"
               mt="4rem"
             >
-              {txAction.label}
+              Extend
             </Button>
           </Box>
         </Box>

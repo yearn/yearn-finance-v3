@@ -20,13 +20,6 @@ export const ClaimUnlockedTab = () => {
     });
   };
 
-  const txAction = {
-    label: 'Claim',
-    onAction: executeWithdrawUnlocked,
-    status: withdrawUnlockedStatus.loading,
-    disabled: hasLockedAmount,
-  };
-
   return (
     <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))">
       <Box>
@@ -45,14 +38,14 @@ export const ClaimUnlockedTab = () => {
               disabled
             />
             <Button
-              onClick={txAction.onAction}
-              disabled={txAction.disabled}
+              onClick={executeWithdrawUnlocked}
+              disabled={hasLockedAmount}
               filled
               width={1 / 2}
               height="5.6rem"
               mt="4rem"
             >
-              {txAction.label}
+              Claim
             </Button>
           </Box>
         </Box>
