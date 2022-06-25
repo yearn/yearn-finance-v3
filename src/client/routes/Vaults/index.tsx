@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation, useDebounce } from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation, useQueryParams } from '@hooks';
 import {
   ModalsActions,
   ModalSelectors,
@@ -152,15 +152,15 @@ const ApyTooltip = ({
   );
 };
 
-// interface VaultsQueryParams {
-//   search: string;
-// }
+interface VaultsQueryParams {
+  search: string;
+}
 
 export const Vaults = () => {
   const { t } = useAppTranslation(['common', 'vaults']);
 
   const history = useHistory();
-  // const queryParams = useQueryParams<VaultsQueryParams>();
+  const queryParams = useQueryParams<VaultsQueryParams>();
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   // const { isTablet, isMobile, width: DWidth } = useWindowDimensions();
@@ -175,7 +175,6 @@ export const Vaults = () => {
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOpportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
   const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebounce(search, 200);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
@@ -186,15 +185,16 @@ export const Vaults = () => {
   const opportunitiesLoading = generalLoading && !filteredVaults.length;
   const depositsLoading = generalLoading && !deposits.length;
 
-  // useEffect(() => {
-  //   setSearch(queryParams.search ?? '');
-  // }, [queryParams.search]);
+  useEffect(() => {
+    setSearch(queryParams.search ?? '');
+  }, [queryParams.search]);
 
   useEffect(() => {
     const searchableKeys = ['name', 'displayName', 'token.symbol', 'token.name'];
-    const filteredVaults = filterData(opportunities, searchableKeys, debouncedSearch);
+    const filteredVaults = filterData(opportunities, searchableKeys, search);
     setFilteredVaults(filteredVaults);
-  }, [opportunities, debouncedSearch]);
+    window.history.replaceState(null, '', `vaults${search ? `?search=${search}` : ''}`);
+  }, [opportunities, search]);
 
   const depositHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
