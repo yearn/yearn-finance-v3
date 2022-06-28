@@ -12,10 +12,19 @@ export const Img = ({ alt, src, ...props }: ImgProps) => {
   const [loaded, setLoaded] = useState(true);
 
   useEffect(() => {
-    const image = new Image();
+    let isMounted = true;
+    let image: HTMLImageElement | null = new Image();
     image.src = src ?? '';
-    if (!image.complete) setLoaded(false);
-    image.onload = () => setLoaded(true);
+    if (!image.complete && isMounted) setLoaded(false);
+    image.onload = () => {
+      if (isMounted) setLoaded(true);
+      image = null;
+    };
+
+    return () => {
+      isMounted = false;
+      image = null;
+    };
   }, [src]);
 
   return <StyledImg src={src} alt={alt} loaded={loaded} {...props} />;

@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { keyBy, merge, values, orderBy, toNumber, isString } from 'lodash';
+import { keyBy, merge, values, orderBy, toNumber, isString, get } from 'lodash';
 
 export const isValidAddress = (address: string): boolean => {
   try {
@@ -37,6 +37,18 @@ export const sort = <T>(data: T[], by: Extract<keyof T, string>, order?: 'asc' |
   );
   return sortedData;
 };
+
+export const filterData = <T>(data: T[], keys: Array<keyof T | string>, filter: string): T[] =>
+  data.filter((item) => {
+    const matches = keys.find((key) => {
+      const text = get(item, key);
+      if (typeof text === 'string') {
+        return text.toLowerCase().includes(filter.toLowerCase());
+      }
+      return false;
+    });
+    return !!matches;
+  });
 
 export const orderApy = (apyData: string, apyType: string) => {
   if (apyType === 'new') return Number.MAX_SAFE_INTEGER;
