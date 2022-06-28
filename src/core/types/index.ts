@@ -2,6 +2,7 @@ export * from './Alerts';
 export * from './Blockchain';
 export * from './Config';
 export * from './Container';
+export * from './Gauge';
 export * from './General';
 export * from './Lab';
 export * from './Modals';
