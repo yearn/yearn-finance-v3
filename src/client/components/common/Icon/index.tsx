@@ -25,6 +25,7 @@ import { ReactComponent as SearchIcon } from '@assets/icons/search.svg';
 import { ReactComponent as SettingsIcon } from '@assets/icons/settings.svg';
 import { ReactComponent as TwitterIcon } from '@assets/icons/twitter.svg';
 import { ReactComponent as VaultIcon } from '@assets/icons/vault.svg';
+import { ReactComponent as VeYfiIcon } from '@assets/icons/veyfi.svg';
 import { ReactComponent as WalletMissingIcon } from '@assets/icons/wallet-missing.svg';
 import { ReactComponent as WalletIcon } from '@assets/icons/wallet.svg';
 import { ReactComponent as WarningFilledIcon } from '@assets/icons/warning-filled.svg';
@@ -102,4 +103,5 @@ export {
   ArbiscanIcon,
   DefaultscanIcon,
   ZapIcon,
+  VeYfiIcon,
 };

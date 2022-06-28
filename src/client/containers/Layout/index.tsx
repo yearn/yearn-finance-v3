@@ -24,6 +24,7 @@ import { getConfig } from '@config';
 import { Network, Route } from '@types';
 import { device } from '@themes/default';
 import { isInIframe, isCoinbaseApp } from '@utils';
+import { Logo, VeYfiIcon } from '@src/client/components/common';
 
 const contentSeparation = '1.6rem';
 
@@ -197,6 +198,7 @@ export const Layout: FC<LayoutProps> = ({ children, hideNavigation, hideFooter }
 
       <Content collapsedSidebar={collapsedSidebar || hideNavigation} useTabbar={isMobile || hideNavigation}>
         <Navbar
+          logo={<VeYfiIcon />}
           title={t(`navigation.${path}`)}
           titleLink={titleLink}
           subTitle={vaultName}
