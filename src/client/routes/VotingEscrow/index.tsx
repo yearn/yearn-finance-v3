@@ -3,7 +3,7 @@ import { Card } from '@yearn-finance/web-lib';
 
 import { Box } from '@components/common';
 import { ViewContainer, SummaryCard, Amount } from '@components/app';
-import { LockTab, ExtendLockTab, EarlyExitTab, ClaimUnlockedTab } from '@containers';
+import { LockTab, ExtendLockTab, EarlyExitTab, ClaimUnlockedTab, ClaimRewardsTab } from '@containers';
 
 export const VotingEscrowPage = () => {
   return (
@@ -25,7 +25,7 @@ export const VotingEscrowPage = () => {
             { label: 'Extend lock', children: <ExtendLockTab /> },
             { label: 'Early exit', children: <EarlyExitTab /> },
             { label: 'Claim YFI', children: <ClaimUnlockedTab /> },
-            // { label: 'Claim rewards', children: <p>{'ClaimRewards'}</p> },
+            { label: 'Claim rewards', children: <ClaimRewardsTab /> },
             // { label: 'Stake / Unstake', children: <p>{'Stake'}</p> },
             // { label: 'Vote for gauge', children: <p>{'Vote'}</p> },
           ]}
