@@ -1,6 +1,7 @@
 import {
   ApproveStakeProps,
   ClaimRewardsProps,
+  ClaimAllRewardsProps,
   Gauge,
   GaugeDynamic,
   GaugeService,
@@ -50,4 +51,5 @@ export class GaugeServiceImpl implements GaugeService {
   stake!: (props: GaugeStakeProps) => Promise<TransactionResponse>;
   unstake!: (props: GaugeUnstakeProps) => Promise<TransactionResponse>;
   claimRewards!: (props: ClaimRewardsProps) => Promise<TransactionResponse>;
+  claimAllRewards!: (props: ClaimAllRewardsProps) => Promise<TransactionResponse>;
 }

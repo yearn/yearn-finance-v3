@@ -372,6 +372,7 @@ export interface GaugeService {
   stake: (props: GaugeStakeProps) => Promise<TransactionResponse>;
   unstake: (props: GaugeUnstakeProps) => Promise<TransactionResponse>;
   claimRewards: (props: ClaimRewardsProps) => Promise<TransactionResponse>;
+  claimAllRewards: (props: ClaimAllRewardsProps) => Promise<TransactionResponse>;
 }
 
 export interface GetSupportedGaugesProps {
@@ -423,6 +424,11 @@ export interface ClaimRewardsProps {
   network: Network;
   accountAddress: Address;
   gaugeAddress: Address;
+}
+
+export interface ClaimAllRewardsProps {
+  network: Network;
+  accountAddress: Address;
 }
 
 // *************** TRANSACTION ***************

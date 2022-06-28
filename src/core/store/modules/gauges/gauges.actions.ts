@@ -257,6 +257,38 @@ const claimRewards = createAsyncThunk<void, { tokenAddress: Address; gaugeAddres
   }
 );
 
+const claimAllRewards = createAsyncThunk<void, { tokenAddress: Address }, ThunkAPI>(
+  'gauges/claimAllRewards',
+  async ({ tokenAddress }, { extra, getState, dispatch }) => {
+    const { gaugeService, transactionService } = extra.services;
+    const { network, wallet, app, gauges } = getState();
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
+    const tx = await gaugeService.claimAllRewards({
+      network: network.current,
+      accountAddress,
+    });
+
+    const notifyEnabled = app.servicesEnabled.notify;
+    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+
+    dispatch(getGaugesDynamic({ addresses: gauges.gaugesAddresses }));
+    dispatch(getUserGaugesPositions({ addresses: gauges.gaugesAddresses }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, ...gauges.gaugesAddresses] }));
+  },
+  {
+    serializeError: parseError,
+  }
+);
+
 /* -------------------------------------------------------------------------- */
 /*                                   Exports                                  */
 /* -------------------------------------------------------------------------- */
@@ -275,4 +307,5 @@ export const GaugesActions = {
   stake,
   unstake,
   claimRewards,
+  claimAllRewards,
 };
