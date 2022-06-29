@@ -26,7 +26,7 @@ const StyledNavbarActions = styled.div`
 `;
 
 const StyledLogo = styled.div`
-  margin-right: 1.5rem;
+  margin-right: 1.6rem;
 `;
 
 const StyledText = styled.h1<{ toneDown?: boolean }>`
