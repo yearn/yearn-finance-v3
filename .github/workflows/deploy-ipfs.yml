@@ -1,0 +1,112 @@
+name: Publish to IPFS
+
+on:
+  # push:
+  #   branches:
+  #     - master
+  #     - develop
+  pull_request:
+    branches:
+      # - master
+      - develop
+
+env:
+  NODE_VERSION: '14.x'
+  IPFS_GATEWAY: 'www.cloudflare-ipfs.com.'
+  # neeeds to be set, as build currently fails because of warnings
+  CI: false
+  AWS_HOSTED_ZONE_ID: 'Z02908602B6KLAQBRUBST'
+  AWS_DEFAULT_REGION: 'us-east-1'
+  DOMAIN_NAME: "${{ endsWith(github.ref, '/master') && 'yearn.finance' || 'b3tools.xyz' }}"
+  REACT_APP_ETHERSCAN_API_KEY: 'GEQXZDY67RZ4QHNU1A57QVPNDV3RP1RYH4'
+  REACT_APP_ALCHEMY_API_KEY: 'euSwyu6Yf-VQ3NJ32KHxDhHmTta7OvIe'
+  REACT_APP_BLOCKNATIVE_KEY: '5e6298d7-6c07-4571-87a1-e11b2fb6d6ce'
+  REACT_APP_FORTMATIC_KEY: 'pk_test_886ADCAB855632AA'
+  REACT_APP_PORTIS_KEY: 'b2b7586f-2b1e-4c30-a7fb-c2d1533b153b'
+  REACT_APP_ZAPPER_API_KEY: '96e0cc51-a62e-42ca-acee-910ea7d2a241'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set environment variables for PRs
+        if: github.event_name == 'pull_request'
+        run: |
+          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo "DOMAIN_NAME=pr-$PR_NUMBER.$DOMAIN_NAME" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Set yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Restore yarn cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build the IPFS bundle
+        run: yarn build
+
+      - name: Deploy to Pinata Cloud
+        id: upload
+        # release 1.6.3
+        uses: anantaramdas/ipfs-pinata-deploy-action@ecfe39bffc614d6458f59258e5f0076afae70b6f
+        with:
+          pin-name: yearn-finance-${{ env.DOMAIN_NAME }}
+          path: './build'
+          pinata-api-key: ${{ secrets.PINATA_API_KEY }}
+          pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
+          remove-old: true
+
+      - name: Update Route 53 records
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          CHANGE_SET_CNAME='{"HostedZoneId":"${{ env.AWS_HOSTED_ZONE_ID }}","ChangeBatch":{"Comment":"Updating ${{ env.DOMAIN_NAME }} CNAME to ${{ env.IPFS_GATEWAY }}","Changes":[{"Action":"UPSERT","ResourceRecordSet":{"Name":"${{ env.DOMAIN_NAME }}","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"${{ env.IPFS_GATEWAY }}"}]}}]}}'
+          CHANGE_SET_DNSLINK='{"HostedZoneId":"${{ env.AWS_HOSTED_ZONE_ID }}","ChangeBatch":{"Comment":"Updating DNSLink TXT Record for ${{ steps.upload.outputs.hash }}","Changes":[{"Action":"UPSERT","ResourceRecordSet":{"Name":"_dnslink.${{ env.DOMAIN_NAME }}","Type":"TXT","TTL":30,"ResourceRecords":[{"Value":"\"dnslink=/ipfs/${{ steps.upload.outputs.hash }}\""}]}}]}}'
+          aws route53 change-resource-record-sets --cli-input-json "$CHANGE_SET_CNAME"
+          aws route53 change-resource-record-sets --cli-input-json "$CHANGE_SET_DNSLINK"
+
+      - name: Get Cloudflare SSL
+        run: |
+          while [ CERT_OUTPUT -ne "" ]
+          do
+            sleep 5s
+            CERT_OUTPUT=$(curl 'https://cloudflare-ipfs.com/add_host' -H 'content-type: application/x-www-form-urlencoded' --data "hostname=${{ env.DOMAIN_NAME }}" -sS | jq .err)
+          done
+
+      - name: Post details to PR
+        uses: actions/github-script@v5
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `🐇 Build available from: https://${{ env.DOMAIN_NAME }}/
+
+            Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`
+            CIDv0: \`${{ steps.upload.outputs.hash }}\``;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
