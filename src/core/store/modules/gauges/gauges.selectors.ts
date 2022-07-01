@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { RootState, TokenView, Gauge, GaugePositionsMap, GaugeView } from '@types';
+import { RootState, TokenView, Gauge, GaugePositionsMap, GaugeUserMetadata, GaugeView } from '@types';
 import { toBN } from '@utils';
 
 import { TokensSelectors, createToken } from '../tokens/tokens.selectors';
@@ -11,6 +11,7 @@ const selectGaugesAddresses = (state: RootState) => state.gauges.gaugesAddresses
 const selectGaugesMap = (state: RootState) => state.gauges.gaugesMap;
 const selectSelectedGaugeAddress = (state: RootState) => state.gauges.selectedGaugeAddress;
 const selectUserGaugesPositionsMap = (state: RootState) => state.gauges.user.userGaugesPositionsMap;
+const selectUserGaugesMetadataMap = (state: RootState) => state.gauges.user.userGaugesMetadataMap;
 const selectGaugesStatusMap = (state: RootState) => state.gauges.statusMap;
 
 /* ----------------------------- Main Selectors ----------------------------- */
@@ -19,6 +20,7 @@ const selectGauges = createSelector(
     selectGaugesAddresses,
     selectGaugesMap,
     selectUserGaugesPositionsMap,
+    selectUserGaugesMetadataMap,
     TokensSelectors.selectTokensMap,
     TokensSelectors.selectUserTokensMap,
     TokensSelectors.selectUserTokensAllowancesMap,
@@ -27,6 +29,7 @@ const selectGauges = createSelector(
     gaugesAddresses,
     gaugesMap,
     userGaugesPositionsMap,
+    userGaugesMetadataMap,
     tokensMap,
     userTokensMap,
     userTokensAllowancesMap
@@ -34,6 +37,7 @@ const selectGauges = createSelector(
     const gaugesViews = gaugesAddresses.map((address) => {
       const gauge = gaugesMap[address];
       const userGaugePositionsMap = userGaugesPositionsMap[address];
+      const userGaugeMetadata = userGaugesMetadataMap[address];
       const token = tokensMap[gauge.token];
       const userToken = userTokensMap[gauge.token];
       const tokenAllowancesMap = userTokensAllowancesMap[gauge.token];
@@ -42,6 +46,7 @@ const selectGauges = createSelector(
         gauge,
         tokenView,
         userGaugePositionsMap,
+        userGaugeMetadata,
       });
     });
 
@@ -81,9 +86,10 @@ interface CreateGaugeProps {
   gauge: Gauge;
   tokenView: TokenView;
   userGaugePositionsMap: GaugePositionsMap;
+  userGaugeMetadata: GaugeUserMetadata;
 }
 
-function createGaugeView({ gauge, tokenView, userGaugePositionsMap }: CreateGaugeProps): GaugeView {
+function createGaugeView({ gauge, tokenView, userGaugePositionsMap, userGaugeMetadata }: CreateGaugeProps): GaugeView {
   return {
     address: gauge.address,
     name: gauge.name,
@@ -91,6 +97,7 @@ function createGaugeView({ gauge, tokenView, userGaugePositionsMap }: CreateGaug
     decimals: parseInt(gauge.decimals),
     balance: gauge.underlyingTokenBalance.amount,
     balanceUsdc: gauge.underlyingTokenBalance.amountUsdc,
+    boost: userGaugeMetadata.boost,
     token: tokenView,
     DEPOSIT: {
       userBalance: userGaugePositionsMap?.DEPOSIT?.balance ?? '0',

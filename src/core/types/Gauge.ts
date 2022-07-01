@@ -9,6 +9,7 @@ export interface GaugeView {
   decimals: number;
   balance: string;
   balanceUsdc: string;
+  boost: number;
   token: TokenView;
   DEPOSIT: PositionView;
   YIELD: PositionView;

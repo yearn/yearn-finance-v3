@@ -26,6 +26,7 @@ import {
   VotingEscrowTransactionType,
   Gauge,
   GaugeDynamic,
+  GaugeUserMetadata,
   Week,
 } from '@types';
 
@@ -367,6 +368,7 @@ export interface GaugeService {
   getSupportedGauges: (props: GetSupportedGaugesProps) => Promise<Gauge[]>;
   getGaugesDynamicData: (props: GetGaugesDynamicDataProps) => Promise<GaugeDynamic[]>;
   getUserGaugesPositions: (props: GetUserGaugesPositionsProps) => Promise<Position[]>;
+  getUserGaugesMetadata: (props: GetUserGaugesMetadataProps) => Promise<GaugeUserMetadata[]>;
   getStakeAllowance: (props: GetStakeAllowanceProps) => Promise<TokenAllowance>;
   approveStake: (props: ApproveStakeProps) => Promise<TransactionResponse>;
   stake: (props: GaugeStakeProps) => Promise<TransactionResponse>;
@@ -386,6 +388,12 @@ export interface GetGaugesDynamicDataProps {
 }
 
 export interface GetUserGaugesPositionsProps {
+  network: Network;
+  accountAddress: Address;
+  addresses?: Address[];
+}
+
+export interface GetUserGaugesMetadataProps {
   network: Network;
   accountAddress: Address;
   addresses?: Address[];

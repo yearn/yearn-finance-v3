@@ -11,12 +11,14 @@ export const gaugesInitialState: GaugesState = {
   selectedGaugeAddress: undefined,
   user: {
     userGaugesPositionsMap: {},
+    userGaugesMetadataMap: {},
   },
   statusMap: {
     initiateGauges: initialStatus,
     getGauges: initialStatus,
     user: {
       getUserGaugesPositions: initialStatus,
+      getUserGaugesMetadata: initialStatus,
     },
   },
 };
@@ -30,6 +32,7 @@ const {
   getGauges,
   getGaugesDynamic,
   getUserGaugesPositions,
+  getUserGaugesMetadata,
 } = GaugesActions;
 
 const gaugesReducer = createReducer(gaugesInitialState, (builder) => {
@@ -113,6 +116,22 @@ const gaugesReducer = createReducer(gaugesInitialState, (builder) => {
     })
     .addCase(getUserGaugesPositions.rejected, (state, { error }) => {
       state.statusMap.user.getUserGaugesPositions = { error: error.message };
+    })
+
+    /* -------------------------- getUserGaugesMetadata ------------------------- */
+    .addCase(getUserGaugesMetadata.pending, (state) => {
+      state.statusMap.user.getUserGaugesMetadata = { loading: true };
+    })
+    .addCase(getUserGaugesMetadata.fulfilled, (state, { payload: { userGaugesMetadata } }) => {
+      const userGaugesMetadataMap = keyBy(userGaugesMetadata, 'assetAddress');
+      state.user.userGaugesMetadataMap = {
+        ...state.user.userGaugesMetadataMap,
+        ...userGaugesMetadataMap,
+      };
+      state.statusMap.user.getUserGaugesMetadata = {};
+    })
+    .addCase(getUserGaugesMetadata.rejected, (state, { error }) => {
+      state.statusMap.user.getUserGaugesMetadata = { error: error.message };
     });
 });
 

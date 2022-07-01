@@ -7,10 +7,12 @@ import {
   GaugeService,
   GaugeStakeProps,
   GaugeUnstakeProps,
+  GaugeUserMetadata,
   GetGaugesDynamicDataProps,
   GetStakeAllowanceProps,
   GetSupportedGaugesProps,
   GetUserGaugesPositionsProps,
+  GetUserGaugesMetadataProps,
   Position,
   TokenAllowance,
   TransactionResponse,
@@ -46,6 +48,7 @@ export class GaugeServiceImpl implements GaugeService {
   getSupportedGauges!: (props: GetSupportedGaugesProps) => Promise<Gauge[]>;
   getGaugesDynamicData!: (props: GetGaugesDynamicDataProps) => Promise<GaugeDynamic[]>;
   getUserGaugesPositions!: (props: GetUserGaugesPositionsProps) => Promise<Position[]>;
+  getUserGaugesMetadata!: (props: GetUserGaugesMetadataProps) => Promise<GaugeUserMetadata[]>;
   getStakeAllowance!: (props: GetStakeAllowanceProps) => Promise<TokenAllowance>;
   approveStake!: (props: ApproveStakeProps) => Promise<TransactionResponse>;
   stake!: (props: GaugeStakeProps) => Promise<TransactionResponse>;

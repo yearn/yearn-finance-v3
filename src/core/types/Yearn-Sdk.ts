@@ -26,6 +26,7 @@ import {
   VotingEscrowTransactionType,
   Gauge,
   GaugeDynamic,
+  GaugeUserMetadata,
 } from '@yfi/sdk';
 
 import { Network } from './Blockchain';
@@ -111,4 +112,5 @@ export type {
   VotingEscrowTransactionType,
   Gauge,
   GaugeDynamic,
+  GaugeUserMetadata,
 };

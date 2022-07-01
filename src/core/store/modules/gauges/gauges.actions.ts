@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { Address, Position, TokenAllowance, Unit, Gauge, GaugeDynamic } from '@types';
+import { Address, Position, TokenAllowance, Unit, Gauge, GaugeDynamic, GaugeUserMetadata } from '@types';
 import { getNetwork, validateNetwork, parseError, toWei } from '@utils';
 
 import { TokensActions } from '../tokens/tokens.actions';
@@ -68,6 +68,26 @@ const getUserGaugesPositions = createAsyncThunk<{ positions: Position[] }, { add
     return { positions };
   }
 );
+
+const getUserGaugesMetadata = createAsyncThunk<
+  { userGaugesMetadata: GaugeUserMetadata[] },
+  { addresses?: string[] },
+  ThunkAPI
+>('gauges/getUserGaugesMetadata', async ({ addresses }, { extra, getState }) => {
+  const { network, wallet } = getState();
+  const { gaugeService } = extra.services;
+
+  const accountAddress = wallet.selectedAddress;
+  if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+  const userGaugesMetadata = await gaugeService.getUserGaugesMetadata({
+    network: network.current,
+    accountAddress,
+    addresses,
+  });
+
+  return { userGaugesMetadata };
+});
 
 const getStakeAllowance = createAsyncThunk<
   TokenAllowance,
@@ -302,6 +322,7 @@ export const GaugesActions = {
   getGauges,
   getGaugesDynamic,
   getUserGaugesPositions,
+  getUserGaugesMetadata,
   getStakeAllowance,
   approveStake,
   stake,

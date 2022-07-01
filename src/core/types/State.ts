@@ -16,6 +16,7 @@ import {
   VotingEscrow,
   VotingEscrowUserMetadata,
   Gauge,
+  GaugeUserMetadata,
   TransactionOutcome,
 } from './Yearn-Sdk';
 
@@ -289,12 +290,14 @@ export interface GaugesState {
   selectedGaugeAddress: Address | undefined;
   user: {
     userGaugesPositionsMap: Record<Address, GaugePositionsMap>;
+    userGaugesMetadataMap: Record<Address, GaugeUserMetadata>;
   };
   statusMap: {
     initiateGauges: Status;
     getGauges: Status;
     user: {
       getUserGaugesPositions: Status;
+      getUserGaugesMetadata: Status;
     };
   };
 }
