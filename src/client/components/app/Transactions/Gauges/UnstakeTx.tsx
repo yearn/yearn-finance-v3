@@ -62,6 +62,7 @@ export const UnstakeTx: FC<UnstakeTxProps> = ({ header, onClose }) => {
     await unstake({
       tokenAddress: gauge.token.address,
       gaugeAddress: gauge.address,
+      amount,
     });
   };
 
@@ -86,7 +87,7 @@ export const UnstakeTx: FC<UnstakeTxProps> = ({ header, onClose }) => {
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
       sourceStatus={{ error: sourceError }}
-      targetHeader={t('components.transaction.to-vault')}
+      targetHeader={t('components.transaction.to-wallet')}
       targetAssetOptions={[gauge.token]}
       selectedTargetAsset={gauge.token}
       targetAmountDisabled={false}

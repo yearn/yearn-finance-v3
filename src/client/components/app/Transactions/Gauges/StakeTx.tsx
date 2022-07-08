@@ -96,7 +96,7 @@ export const StakeTx: FC<StakeTxProps> = ({ header, onClose }) => {
     await stake({
       tokenAddress: gauge.token.address,
       gaugeAddress: gauge.address,
-      amount: amount,
+      amount,
     });
   };
 

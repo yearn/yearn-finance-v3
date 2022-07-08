@@ -426,6 +426,7 @@ export interface GaugeUnstakeProps {
   network: Network;
   accountAddress: Address;
   gaugeAddress: Address;
+  amount: Wei;
 }
 
 export interface ClaimRewardsProps {

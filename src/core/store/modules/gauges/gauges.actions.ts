@@ -211,11 +211,11 @@ const stake = createAsyncThunk<
   }
 );
 
-const unstake = createAsyncThunk<void, { tokenAddress: Address; gaugeAddress: Address }, ThunkAPI>(
+const unstake = createAsyncThunk<void, { tokenAddress: Address; gaugeAddress: Address; amount: Unit }, ThunkAPI>(
   'gauges/unstake',
-  async ({ tokenAddress, gaugeAddress }, { extra, getState, dispatch }) => {
+  async ({ tokenAddress, gaugeAddress, amount }, { extra, getState, dispatch }) => {
     const { gaugeService, transactionService } = extra.services;
-    const { network, wallet, app } = getState();
+    const { network, wallet, tokens, app } = getState();
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
@@ -226,10 +226,12 @@ const unstake = createAsyncThunk<void, { tokenAddress: Address; gaugeAddress: Ad
     });
     if (networkError) throw networkError;
 
+    const token = tokens.tokensMap[tokenAddress];
     const tx = await gaugeService.unstake({
       network: network.current,
       accountAddress,
       gaugeAddress,
+      amount: toWei(amount, parseInt(token.decimals)),
     });
 
     const notifyEnabled = app.servicesEnabled.notify;
