@@ -42,7 +42,12 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
     }
   `}
 
-  ${({ error, theme }) => error && `color: ${theme.colors.txModalColors.error};`}
+  ${({ error, theme }) =>
+    error &&
+    `
+    color: ${theme.colors.txModalColors.error};
+    border: 1px solid red;
+  `}
 
   ${() => `
     ::-webkit-outer-spin-button,
