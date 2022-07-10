@@ -32,13 +32,13 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   ${({ readOnly, theme }) =>
     readOnly &&
     `
-    border: 1px solid ${theme.colors.textsVariant};
-    color: ${theme.colors.textsVariant};
+    border: 1px solid ${theme.colors.txModalColors.onBackgroundVariantColor};
+    color: ${theme.colors.txModalColors.onBackgroundVariantColor};
     cursor: default;
     background: transparent;
 
     &::placeholder {
-      color: ${theme.colors.textsVariant};
+      color: ${theme.colors.txModalColors.onBackgroundVariantColor};
     }
   `}
 
@@ -62,8 +62,10 @@ const MaxButton = styled(Button)`
   position: absolute;
   right: 1.6rem;
   border-radius: ${({ theme }) => theme.globalRadius};
-  width: min-content;
+  border-width: 1px;
   margin-left: 0.5rem;
+  height: 2.4rem;
+  font-size: 1.2rem;
 `;
 
 export interface AmountInputProps extends BoxProps {
@@ -104,7 +106,7 @@ export const AmountInput = ({
           aria-label={label}
         />
         {maxAmount && (
-          <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+          <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined} disabled={disabled}>
             {maxLabel}
           </MaxButton>
         )}
