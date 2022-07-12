@@ -26,7 +26,7 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   width: 100%;
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.input?.placeholder || theme.colors.textsVariant};
+    color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   }
 
   ${({ readOnly, theme }) =>
@@ -38,7 +38,7 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
     background: transparent;
 
     &::placeholder {
-      color: ${theme.colors.txModalColors.onBackgroundVariantColor};
+      color: ${theme.colors.input?.placeholder || theme.colors.textsVariant};
     }
   `}
 
