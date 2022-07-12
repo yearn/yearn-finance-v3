@@ -10,6 +10,7 @@ export interface Env {
   CUSTOM_PROVIDER_HTTPS: string;
   USE_MAINNET_FORK: boolean;
   USE_SDK_MOCK: boolean;
+  USE_VEYFI_ROUTES: boolean;
   ALLOW_DEV_MODE: boolean;
   INFURA_PROJECT_ID: string | undefined;
   ETHERSCAN_API_KEY: string | undefined;
