@@ -130,6 +130,14 @@ const lightTheme: DefaultTheme = {
       text: light.colors.icons.variant,
       textContrast: light.colors.titles,
     },
+
+    button: {
+      disabled: {
+        borderColor: '#CED5E3',
+        backgroundColor: '#FFFFFF',
+        color: '#CED5E3',
+      },
+    },
   },
 };
 

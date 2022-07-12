@@ -50,9 +50,10 @@ const StyledButton = styled.button<{ outline?: boolean; filled?: boolean }>`
 
   ${(props) =>
     `&:disabled {
-      border-color: ${props.theme.colors.txModalColors.onBackgroundVariantColor};
-      background-color: ${props.theme.colors.txModalColors.backgroundVariant};
-      color: ${props.theme.colors.txModalColors.onBackgroundVariantColor};
+      border-width: 1px;
+      border-color: ${props.theme.colors.button.disabled.borderColor};
+      background-color: ${props.theme.colors.button.disabled.backgroundColor};
+      color: ${props.theme.colors.button.disabled.color};
     }
   `}
 

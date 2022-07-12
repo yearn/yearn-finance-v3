@@ -126,6 +126,14 @@ const darkTheme: DefaultTheme = {
       text: '#888888',
       textContrast: '#FFFFFF',
     },
+
+    button: {
+      disabled: {
+        borderColor: '#555555',
+        backgroundColor: '#1C1C1C',
+        color: '#555555',
+      },
+    },
   },
 };
 

@@ -164,6 +164,14 @@ declare module 'styled-components' {
         text: string;
         textContrast: string;
       };
+
+      button: {
+        disabled: {
+          borderColor: string;
+          backgroundColor: string;
+          color: string;
+        };
+      };
     };
   }
 
