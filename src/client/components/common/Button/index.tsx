@@ -2,14 +2,21 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { layout, space, LayoutProps, SpaceProps } from 'styled-system';
 
+import { SpinnerLoading } from '../SpinnerLoading';
+
 export interface ButtonProps extends LayoutProps, SpaceProps {
   className?: string;
   disabled?: boolean;
+  isLoading?: boolean;
   color?: string;
   outline?: boolean;
   filled?: boolean;
   onClick?: (e?: any) => void;
 }
+
+const ButtonSpinnerLoading = styled(SpinnerLoading)`
+  font-size: 0.8rem;
+`;
 
 const StyledButton = styled.button<{ outline?: boolean; filled?: boolean }>`
   display: flex;
@@ -41,6 +48,16 @@ const StyledButton = styled.button<{ outline?: boolean; filled?: boolean }>`
     filter: contrast(90%);
   }
 
+  ${({ theme: { colors } }) =>
+    colors.button?.disabled &&
+    `&:disabled {
+      border-width: 1px;
+      border-color: ${colors.button.disabled.borderColor};
+      background-color: ${colors.button.disabled.backgroundColor};
+      color: ${colors.button.disabled.color};
+    }
+  `}
+
   ${(props) =>
     props.outline &&
     `
@@ -70,6 +87,7 @@ export const Button: FC<ButtonProps> = ({
   filled,
   onClick,
   children,
+  isLoading,
   ...props
 }) => (
   <StyledButton
@@ -81,6 +99,6 @@ export const Button: FC<ButtonProps> = ({
     onClick={onClick}
     {...props}
   >
-    {children}
+    {isLoading ? <ButtonSpinnerLoading /> : children}
   </StyledButton>
 );
