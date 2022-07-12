@@ -48,12 +48,13 @@ const StyledButton = styled.button<{ outline?: boolean; filled?: boolean }>`
     filter: contrast(90%);
   }
 
-  ${(props) =>
+  ${({ theme: { colors } }) =>
+    colors.button?.disabled &&
     `&:disabled {
       border-width: 1px;
-      border-color: ${props.theme.colors.button.disabled.borderColor};
-      background-color: ${props.theme.colors.button.disabled.backgroundColor};
-      color: ${props.theme.colors.button.disabled.color};
+      border-color: ${colors.button.disabled.borderColor};
+      background-color: ${colors.button.disabled.backgroundColor};
+      color: ${colors.button.disabled.color};
     }
   `}
 

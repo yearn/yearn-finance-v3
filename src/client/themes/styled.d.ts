@@ -165,7 +165,7 @@ declare module 'styled-components' {
         textContrast: string;
       };
 
-      button: {
+      button?: {
         disabled: {
           borderColor: string;
           backgroundColor: string;

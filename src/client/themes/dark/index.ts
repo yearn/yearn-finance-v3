@@ -129,9 +129,9 @@ const darkTheme: DefaultTheme = {
 
     button: {
       disabled: {
-        borderColor: '#555555',
-        backgroundColor: '#1C1C1C',
-        color: '#555555',
+        borderColor: dark.colors.disabled,
+        backgroundColor: dark.colors.surface,
+        color: dark.colors.button.disabled.text,
       },
     },
   },
