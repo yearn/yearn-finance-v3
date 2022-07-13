@@ -134,6 +134,10 @@ const darkTheme: DefaultTheme = {
         color: dark.colors.button.disabled.text,
       },
     },
+
+    input: {
+      placeholder: '#555555',
+    },
   },
 };
 

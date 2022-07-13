@@ -172,6 +172,10 @@ declare module 'styled-components' {
           color: string;
         };
       };
+
+      input?: {
+        placeholder: string;
+      };
     };
   }
 

@@ -138,6 +138,10 @@ const lightTheme: DefaultTheme = {
         color: light.colors.button.disabled.text,
       },
     },
+
+    input: {
+      placeholder: '#7F8DA9',
+    },
   },
 };
 

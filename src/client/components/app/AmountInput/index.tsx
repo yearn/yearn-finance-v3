@@ -32,17 +32,24 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   ${({ readOnly, theme }) =>
     readOnly &&
     `
-    border: 1px solid ${theme.colors.textsVariant};
-    color: ${theme.colors.textsVariant};
+    border: 1px solid ${theme.colors.input?.placeholder || theme.colors.textsVariant};
+    color: ${theme.colors.input?.placeholder || theme.colors.textsVariant};
     cursor: default;
     background: transparent;
 
     &::placeholder {
-      color: ${theme.colors.textsVariant};
+      color: ${theme.colors.input?.placeholder || theme.colors.textsVariant};
     }
+
+    cursor: not-allowed;
   `}
 
-  ${({ error, theme }) => error && `color: ${theme.colors.txModalColors.error};`}
+  ${({ error, theme }) =>
+    error &&
+    `
+    color: ${theme.colors.txModalColors.error};
+    border: 1px solid red;
+  `}
 
   ${() => `
     ::-webkit-outer-spin-button,
@@ -57,8 +64,17 @@ const MaxButton = styled(Button)`
   position: absolute;
   right: 1.6rem;
   border-radius: ${({ theme }) => theme.globalRadius};
-  width: min-content;
+  border-width: 1px;
   margin-left: 0.5rem;
+  height: 2.4rem;
+  font-size: 1.2rem;
+`;
+
+const StyledCaption = styled(Text)`
+  color: ${({ theme }) => theme.colors.input?.placeholder || theme.colors.textsVariant};
+  font-size: 1.2rem;
+  line-height: 1.6rem;
+  margin-top: 0.4rem;
 `;
 
 export interface AmountInputProps extends BoxProps {
@@ -98,17 +114,13 @@ export const AmountInput = ({
           type="number"
           aria-label={label}
         />
-        {maxAmount && (
+        {maxAmount && !disabled && (
           <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
             {maxLabel}
           </MaxButton>
         )}
       </InputContainer>
-      {message && (
-        <Text fontSize="1.2rem" lineHeight="1.6rem">
-          {message}
-        </Text>
-      )}
+      {message && <StyledCaption>{message}</StyledCaption>}
     </Box>
   );
 };
