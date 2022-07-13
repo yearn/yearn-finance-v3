@@ -105,7 +105,7 @@ export const AmountInput = ({
           type="number"
           aria-label={label}
         />
-        {maxAmount && (
+        {maxAmount && !disabled && (
           <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined} disabled={disabled}>
             {maxLabel}
           </MaxButton>
