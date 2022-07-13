@@ -72,6 +72,9 @@ const MaxButton = styled(Button)`
 
 const StyledCaption = styled(Text)`
   color: ${({ theme }) => theme.colors.input?.placeholder || theme.colors.textsVariant};
+  font-size: 1.2rem;
+  line-height: 1.6rem;
+  margin-top: 0.4rem;
 `;
 
 export interface AmountInputProps extends BoxProps {
@@ -117,11 +120,7 @@ export const AmountInput = ({
           </MaxButton>
         )}
       </InputContainer>
-      {message && (
-        <StyledCaption fontSize="1.2rem" lineHeight="1.6rem" marginTop="0.4rem">
-          {message}
-        </StyledCaption>
-      )}
+      {message && <StyledCaption>{message}</StyledCaption>}
     </Box>
   );
 };
