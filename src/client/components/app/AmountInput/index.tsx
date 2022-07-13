@@ -112,7 +112,7 @@ export const AmountInput = ({
         )}
       </InputContainer>
       {message && (
-        <Text fontSize="1.2rem" lineHeight="1.6rem">
+        <Text fontSize="1.2rem" lineHeight="1.6rem" marginTop="0.4rem">
           {message}
         </Text>
       )}
