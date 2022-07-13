@@ -66,12 +66,12 @@ const StyledButton = styled.button<{ outline?: boolean; filled?: boolean }>`
     color: ${props.color || props.theme.colors.primary};
   `}
 
-  ${({ filled, theme }) =>
+  ${({ filled, disabled, theme }) =>
     filled &&
     `
     background-color: ${theme.colors.primary};
     color: ${theme.colors.surface};
-    border: none;
+    border: ${disabled ? undefined : 'none'};
     border-width: 0px;
     font-weight: 700;
   `}

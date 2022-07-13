@@ -53,7 +53,7 @@ export const ClaimRewardsTab = () => {
               width={1 / 2}
               disabled
             />
-            <Button onClick={executeClaimAllRewards} filled width={1 / 2} height="5.6rem" mt="1.6rem">
+            <Button onClick={executeClaimAllRewards} filled width={1 / 2} height="5.6rem" mt="2.4rem">
               Claim all
             </Button>
           </Box>
@@ -82,7 +82,7 @@ export const ClaimRewardsTab = () => {
             <Button
               onClick={executeClaimRewards}
               disabled={!selectedGaugeAddress}
-              filled
+              // filled
               width={1 / 2}
               height="5.6rem"
               mt="2.4rem"

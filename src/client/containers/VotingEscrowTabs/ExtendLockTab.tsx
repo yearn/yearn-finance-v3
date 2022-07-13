@@ -76,7 +76,7 @@ export const ExtendLockTab = () => {
               filled
               width={1 / 2}
               height="5.6rem"
-              mt="4rem"
+              mt="4.4rem"
             >
               Extend
             </Button>

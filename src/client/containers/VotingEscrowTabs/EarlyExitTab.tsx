@@ -58,7 +58,7 @@ export const EarlyExitTab = () => {
               filled
               width={1 / 2}
               height="5.6rem"
-              mt="1.6rem"
+              mt="2.4rem"
             >
               Exit
             </Button>
