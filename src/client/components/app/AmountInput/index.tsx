@@ -40,6 +40,8 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
     &::placeholder {
       color: ${theme.colors.input?.placeholder || theme.colors.textsVariant};
     }
+
+    cursor: not-allowed;
   `}
 
   ${({ error, theme }) =>
