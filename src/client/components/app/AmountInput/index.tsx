@@ -70,6 +70,10 @@ const MaxButton = styled(Button)`
   font-size: 1.2rem;
 `;
 
+const StyledCaption = styled(Text)`
+  color: ${({ theme }) => theme.colors.input?.placeholder || theme.colors.textsVariant};
+`;
+
 export interface AmountInputProps extends BoxProps {
   amount?: string;
   onAmountChange?: (amount: string) => void;
@@ -114,9 +118,9 @@ export const AmountInput = ({
         )}
       </InputContainer>
       {message && (
-        <Text fontSize="1.2rem" lineHeight="1.6rem" marginTop="0.4rem">
+        <StyledCaption fontSize="1.2rem" lineHeight="1.6rem" marginTop="0.4rem">
           {message}
-        </Text>
+        </StyledCaption>
       )}
     </Box>
   );
