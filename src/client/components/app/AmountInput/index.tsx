@@ -32,8 +32,8 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   ${({ readOnly, theme }) =>
     readOnly &&
     `
-    border: 1px solid ${theme.colors.txModalColors.onBackgroundVariantColor};
-    color: ${theme.colors.txModalColors.onBackgroundVariantColor};
+    border: 1px solid ${theme.colors.input?.placeholder || theme.colors.textsVariant};
+    color: ${theme.colors.input?.placeholder || theme.colors.textsVariant};
     cursor: default;
     background: transparent;
 
