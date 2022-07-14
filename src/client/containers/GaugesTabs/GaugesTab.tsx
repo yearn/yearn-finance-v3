@@ -33,7 +33,7 @@ export const GaugesTab = () => {
   };
 
   return (
-    <Box>
+    <Box minHeight="35rem">
       <DetailCard
         header="Stake / Unstake"
         metadata={[

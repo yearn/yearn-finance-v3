@@ -102,7 +102,7 @@ export const LockTab = () => {
       };
 
   return (
-    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))">
+    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))" minHeight="35rem">
       <Box>
         <Text heading="h2">Lock YFI into veYFI</Text>
         <Text>Description goes here</Text>

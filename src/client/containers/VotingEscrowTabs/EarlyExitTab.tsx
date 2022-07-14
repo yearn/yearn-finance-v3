@@ -26,7 +26,7 @@ export const EarlyExitTab = () => {
   };
 
   return (
-    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))">
+    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))" minHeight="35rem">
       <Box>
         <Text heading="h2">Early exit</Text>
         <Text>Description goes here</Text>
