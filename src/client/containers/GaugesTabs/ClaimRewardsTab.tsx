@@ -4,7 +4,7 @@ import { keyBy } from 'lodash';
 import { useAppSelector, useExecuteThunk } from '@hooks';
 import { GaugesActions, GaugesSelectors, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput } from '@components/app';
-import { Box, Text, Button, OptionList } from '@components/common';
+import { Box, Text, Button, Dropdown } from '@components/common';
 import { humanize } from '@utils';
 
 export const ClaimRewardsTab = () => {
@@ -18,7 +18,40 @@ export const ClaimRewardsTab = () => {
   const gaugesWithRewardsMap = keyBy(gaugesWithRewards, 'address');
   const selectedGauge = gaugesWithRewardsMap[selectedGaugeAddress];
 
-  const gaugeOptions = gaugesWithRewards.map(({ address, name }) => ({ value: address, label: name }));
+  // const gaugeOptions = gaugesWithRewards.map(({ address, name, token }) => ({
+  //   key: address,
+  //   value: name,
+  //   icon: token.icon,
+  // }));
+
+  // TODO: Remove when data available
+  const gaugeOptions = [
+    {
+      key: '0x1',
+      value: 'yvDAI',
+      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png',
+    },
+    {
+      key: '0x2',
+      value: 'yvWBTC',
+      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png',
+    },
+    {
+      key: '0x3',
+      value: 'yvUSDC',
+      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png',
+    },
+    {
+      key: '0x4',
+      value: 'yvYFI',
+      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png',
+    },
+    {
+      key: '0x5',
+      value: 'yvWETH',
+      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo-128.png',
+    },
+  ];
 
   const executeClaimAllRewards = async () => {
     if (!votingEscrow) return;
@@ -58,14 +91,15 @@ export const ClaimRewardsTab = () => {
             </Button>
           </Box>
           <Box display="flex" alignItems="center" gap="2.4rem">
-            <Box display="flex" alignItems="center" mt="1.6rem" width={1 / 2}>
-              <OptionList
+            <Box display="flex" alignItems="center" mt="2.4rem" width={1 / 2}>
+              <Dropdown
                 selected={{
-                  value: selectedGaugeAddress,
-                  label: selectedGauge?.name ?? '',
+                  key: selectedGaugeAddress,
+                  value: selectedGauge?.name ?? '',
                 }}
-                setSelected={({ value }) => setSelectedGaugeAddress(value)}
-                options={gaugeOptions}
+                onChange={({ key }) => setSelectedGaugeAddress(key)}
+                items={gaugeOptions}
+                fullWidth
               />
             </Box>
             <AmountInput
@@ -82,7 +116,7 @@ export const ClaimRewardsTab = () => {
             <Button
               onClick={executeClaimRewards}
               disabled={!selectedGaugeAddress}
-              // filled
+              filled
               width={1 / 2}
               height="5.6rem"
               mt="2.4rem"

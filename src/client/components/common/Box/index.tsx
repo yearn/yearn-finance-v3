@@ -6,6 +6,7 @@ import { styledSystem, StyledSystemProps } from '../styledSystem';
 export interface BoxProps extends StyledSystemProps {
   center?: boolean;
   gap?: string;
+  onBlur?: () => void;
 }
 
 const StyledDiv = styled.div<BoxProps>`
@@ -13,13 +14,14 @@ const StyledDiv = styled.div<BoxProps>`
   ${styledSystem};
 `;
 
-export const Box: FC<BoxProps> = ({ center, gap, ...props }) => (
+export const Box: FC<BoxProps> = ({ center, gap, onBlur, ...props }) => (
   <StyledDiv
     display={center ? 'flex' : null}
     flexDirection={center ? 'column' : null}
     justifyContent={center ? 'center' : null}
     alignItems={center ? 'center' : null}
     gap={gap}
+    onBlur={onBlur}
     {...props}
   />
 );
