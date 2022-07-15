@@ -16,6 +16,7 @@ export * from './SeparatorLine';
 export * from './Sidemenu';
 export * from './SimpleDropdown_old';
 export * from './SpinnerLoading';
+export * from './Table';
 export * from './Text';
 export * from './Toggle';
 export * from './Tooltip';

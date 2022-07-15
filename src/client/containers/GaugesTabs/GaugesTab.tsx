@@ -10,7 +10,7 @@ import {
   ModalsActions,
 } from '@store';
 import { DetailCard, ActionButtons } from '@components/app';
-import { Box, Text } from '@components/common';
+import { Box, Text, Table } from '@components/common';
 import { humanize } from '@utils';
 
 export const GaugesTab = () => {
@@ -34,32 +34,38 @@ export const GaugesTab = () => {
 
   return (
     <Box minHeight="35rem">
-      <DetailCard
+      <Table
         header="Stake / Unstake"
         metadata={[
           {
             key: 'name',
             header: 'Asset',
+            sortable: true,
           },
           {
             key: 'vaultApy',
             header: 'Vault APY',
+            sortable: true,
           },
           {
             key: 'vaultDeposited',
             header: 'Deposited in Vault',
+            sortable: true,
           },
           {
             key: 'gaugeApy',
             header: 'Gauge APY',
+            sortable: true,
           },
           {
             key: 'boost',
             header: 'Boost',
+            sortable: true,
           },
           {
             key: 'gaugeStaked',
             header: 'Staked in Gauge',
+            sortable: true,
           },
           {
             key: 'actions',
@@ -71,9 +77,6 @@ export const GaugesTab = () => {
                 ]}
               />
             ),
-            align: 'flex-end',
-            width: 'auto',
-            grow: '1',
           },
         ]}
         data={[
@@ -87,7 +90,18 @@ export const GaugesTab = () => {
             gaugeStaked: '0',
             actions: null,
           },
+          {
+            address: '0x01...',
+            name: 'yvDAI',
+            vaultApy: '42%',
+            vaultDeposited: '0',
+            gaugeApy: '42%',
+            boost: 'x10',
+            gaugeStaked: '0',
+            actions: null,
+          },
         ]}
+        initialSortBy="gaugeApy"
       />
     </Box>
   );
