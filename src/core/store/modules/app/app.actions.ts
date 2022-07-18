@@ -55,6 +55,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   } else if (isGnosisApp()) {
     const walletName = 'Gnosis Safe';
     if (network.current !== 'mainnet') await dispatch(NetworkActions.changeNetwork({ network: 'mainnet' }));
+    if (settings.signedApprovalsEnabled) await dispatch(SettingsActions.toggleSignedApprovals());
     await dispatch(WalletActions.walletSelect({ walletName, network: 'mainnet' }));
   } else if (isCoinbaseApp()) {
     const walletName = 'Coinbase Wallet';
