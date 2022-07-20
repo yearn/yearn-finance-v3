@@ -10,7 +10,11 @@ customHeaders:
       - key: X-Content-Type-Options
         value: nosniff
       - key: Content-Security-Policy
-        value: 'frame-ancestors https://*.ledger.com https://gnosis-safe.io;'
+        value: script-src 'self'; style-src 'self'; frame-ancestors https://*.ledger.com https://gnosis-safe.io;
+      - key: Referrer-Policy
+        value: same-origin
+      - key: Feature-Policy
+        value: camera 'none'; microphone 'none'; geolocation 'none'; autoplay 'none'; display-capture 'none'; payment 'none'
   - pattern: '**/manifest.json'
     headers:
       - key: Access-Control-Allow-Origin
