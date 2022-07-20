@@ -76,7 +76,8 @@
     "redux-logger": "3.0.6",
     "styled-components": "5.3.5",
     "styled-system": "5.1.5",
-    "typescript": "4.3.5"
+    "typescript": "4.3.5",
+    "webpack-subresource-integrity": "1.5.2"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "2.0.7",
