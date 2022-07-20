@@ -10,7 +10,7 @@ customHeaders:
       - key: X-Content-Type-Options
         value: nosniff
       - key: Content-Security-Policy
-        value: script-src 'self'; frame-ancestors https://*.ledger.com https://gnosis-safe.io;
+        value: script-src 'self' https://*.yearn.finance; frame-ancestors https://*.ledger.com https://gnosis-safe.io;
       - key: Referrer-Policy
         value: same-origin
       - key: Feature-Policy
