@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import {
-  LabsSelectors,
   TokensSelectors,
   VaultsSelectors,
   WalletSelectors,
@@ -98,7 +97,7 @@ export const Portfolio = () => {
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const vaultsSummary = useAppSelector(VaultsSelectors.selectSummaryData);
-  const labsSummary = useAppSelector(LabsSelectors.selectSummaryData);
+  // const labsSummary = useAppSelector(LabsSelectors.selectSummaryData);
   const walletSummary = useAppSelector(TokensSelectors.selectSummaryData);
 
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
@@ -114,7 +113,7 @@ export const Portfolio = () => {
 
   const netWorth = toBN(vaultsSummary.totalDeposits)
     .plus(walletSummary.totalBalance)
-    .plus(labsSummary.totalDeposits)
+    // .plus(labsSummary.totalDeposits)
     .toString();
 
   const summaryCardItems = [
@@ -192,7 +191,7 @@ export const Portfolio = () => {
               cardSize="small"
             />
 
-            {currentNetworkSettings.labsEnabled && (
+            {/*  {currentNetworkSettings.labsEnabled && (
               <StyledSummaryCard
                 header={t('navigation.labs')}
                 items={[
@@ -208,7 +207,7 @@ export const Portfolio = () => {
                 redirectTo="labs"
                 cardSize="small"
               />
-            )}
+            )} */}
           </Row>
         </>
       )}
@@ -260,7 +259,7 @@ export const Portfolio = () => {
             },
             {
               key: 'invest',
-              transform: ({ address, isZapable }) => <ActionButtons actions={[...investButton(address, isZapable)]} />,
+              transform: ({ address }) => <ActionButtons actions={[...investButton(address, false)]} />,
               align: 'flex-end',
               width: 'auto',
               grow: '1',

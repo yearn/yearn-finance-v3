@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { ReactComponent as LogoSimple } from '@assets/images/yearn-logo.svg';
-import { ReactComponent as LogoFull } from '@assets/images/yearn-logo-full.svg';
+import { ReactComponent as LogoSimple } from '@assets/images/debt-dao-logo.svg';
+import { ReactComponent as LogoFull } from '@assets/images/debt-dao-logo-full.svg';
 
 export interface LogoProps {
   className?: string;
@@ -15,7 +15,7 @@ const StyledLogo = styled.div`
   align-items: center;
   justify-content: center;
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
-  height: 2.4rem;
+  height: 12rem;
   fill: ${({ theme, color }) => color ?? theme.colors.secondaryVariantA};
 `;
 

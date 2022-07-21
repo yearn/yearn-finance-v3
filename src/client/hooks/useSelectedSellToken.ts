@@ -20,7 +20,7 @@ export const useSelectedSellToken = ({
   selectedVaultOrLab,
   allowTokenSelect,
 }: SelectedSellTokenProps): SelectedSellToken => {
-  const depositTokenOptionsByAsset = useAppSelector(selectDepositTokenOptionsByAsset);
+  const depositTokenOptionsByAsset = useAppSelector(selectDepositTokenOptionsByAsset) as Function;
   const sellTokensOptions = depositTokenOptionsByAsset(selectedVaultOrLab?.address);
   const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   let selectedSellToken: TokenView | undefined = selectedSellTokenAddress

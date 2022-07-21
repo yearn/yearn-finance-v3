@@ -5,7 +5,6 @@ import {
   UserService,
   VaultService,
   TokenService,
-  LabService,
   GasService,
   TransactionService,
   SubscriptionService,
@@ -27,10 +26,8 @@ export interface ServiceContainer {
   userService: UserService;
   vaultService: VaultService;
   tokenService: TokenService;
-  labService: LabService;
   gasService: GasService;
   transactionService: TransactionService;
-  subscriptionService: SubscriptionService;
 }
 
 export interface ConfigContainer extends Config {}

@@ -38,17 +38,17 @@ import tokensReducer, { tokensInitialState } from './tokens/tokens.reducer';
 import { TokensActions } from './tokens/tokens.actions';
 import { TokensSelectors } from './tokens/tokens.selectors';
 // Labs State
-import labsReducer, { labsInitialState } from './labs/labs.reducer';
-import { LabsActions } from './labs/labs.actions';
-import { LabsSelectors } from './labs/labs.selectors';
+// import labsReducer, { labsInitialState } from './labs/labs.reducer';
+// import { LabsActions } from './labs/labs.actions';
+// import { LabsSelectors } from './labs/labs.selectors';
 // Settings State
 import settingsReducer, { settingsInitialState } from './settings/settings.reducer';
 import { SettingsActions } from './settings/settings.actions';
 import { SettingsSelectors } from './settings/settings.selectors';
 // User State
-import userReducer, { userInitialState } from './user/user.reducer';
-import { UserActions } from './user/user.actions';
-import { UserSelectors } from './user/user.selectors';
+// import userReducer, { userInitialState } from './user/user.reducer';
+// import { UserActions } from './user/user.actions';
+// import { UserSelectors } from './user/user.selectors';
 // Partner State
 import partnerReducer, { partnerInitialState } from './partner/partner.reducer';
 import { PartnerActions } from './partner/partner.actions';
@@ -64,9 +64,9 @@ const rootReducer: Reducer<RootState> = combineReducers({
   vaults: vaultsReducer,
   wallet: walletReducer,
   tokens: tokensReducer,
-  labs: labsReducer,
+  // labs: labsReducer,
   settings: settingsReducer,
-  user: userReducer,
+  // user: userReducer,
   partner: partnerReducer,
 });
 
@@ -83,9 +83,9 @@ export {
   ThemeActions,
   WalletActions,
   TokensActions,
-  LabsActions,
+  // LabsActions,
   SettingsActions,
-  UserActions,
+  // UserActions,
   PartnerActions,
 };
 
@@ -100,8 +100,8 @@ export {
   WalletSelectors,
   TokensSelectors,
   SettingsSelectors,
-  LabsSelectors,
-  UserSelectors,
+  // LabsSelectors,
+  // UserSelectors,
   PartnerSelectors,
 };
 
@@ -116,8 +116,8 @@ export {
   vaultsInitialState,
   walletInitialState,
   tokensInitialState,
-  labsInitialState,
+  // labsInitialState,
   settingsInitialState,
-  userInitialState,
+  // userInitialState,
   partnerInitialState,
 };

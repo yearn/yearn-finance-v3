@@ -1,4 +1,4 @@
-# yearn.finance
+# debtdao.finance
 
 <img src="https://img.shields.io/badge/dynamic/json.svg?style=plastic&color=2096F3&label=locize&query=%24.translatedPercentage&url=https://api.locize.app/badgedata/1c6d6900-5989-49fe-b221-0001423041d2&suffix=%+translated&link=https://www.locize.com" />
 

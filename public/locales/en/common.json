@@ -34,8 +34,11 @@
       "wallet": "Wallet"
     },
     "no-wallet": "Wallet not connected",
-    "recommendations": {
-      "header": "Highest APY"
+    "recent-recommendations": {
+      "header": "Recent Offers"
+    },
+    "popular-recommendations": {
+      "header": "Hot Offers"
     },
     "search-input": {
       "search": "Search"
@@ -148,12 +151,13 @@
   },
   "navigation": {
     "copyright": {
-      "big": "© Yearn 2021",
+      "big": "© Debt DAO 2021",
       "small": "©"
     },
     "disclaimer": "Disclaimer",
-    "ironbank": "Iron Bank",
-    "labs": "Labs",
+    "dicsord": "Discord",
+    "docs": "Docs",
+    "market": "Debt DAO Market",
     "portfolio": "Portfolio",
     "settings": "Settings",
     "vault": "Vaults",

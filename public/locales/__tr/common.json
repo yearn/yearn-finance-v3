@@ -1,0 +1,167 @@
+{
+  "components": {
+    "back-button": {
+      "label": "Önceki sayfaya geri dön"
+    },
+    "connect-button": {
+      "connect": "Cüzdanı Bağla"
+    },
+    "empty-list": {
+      "searching-text": "Lütfen başka bir varlık için arama yapın",
+      "text": "Gösterilecek herhangi bir varlık yok"
+    },
+    "list-card": {
+      "apy": "YFG",
+      "asset": "Varlık",
+      "available-deposit": "Yatırım yapılabilir",
+      "available-stake": "Stake yapılabilir",
+      "available-supply": "Arz edilebilir",
+      "balance": "Bakiye",
+      "borrow-apy": "Borçlanma YFG",
+      "borrowing": "Borçlanma",
+      "collateral": "Teminat",
+      "deposits": "Mevduat",
+      "deprecated": "Artık  kullanılmayan",
+      "earned": "Kazanç",
+      "lend-apy": "Borç verme YFG",
+      "market-liquidity": "Piyasa likiditesi",
+      "opportunities": "Olanaklar",
+      "price": "Fiyat",
+      "supplying": "Tedarik",
+      "tokens": "token'ler",
+      "total-assets": "Toplam varlıkları",
+      "value": "Bedel",
+      "wallet": "Cüzdan"
+    },
+    "no-wallet": "Cüzdan bağlanamadı",
+    "recent-recommendations": {
+      "header": "En yüksek YFG"
+    },
+    "search-input": {
+      "search": "Ara"
+    },
+    "tooltips": {
+      "base-apr": "Taban CRV APR",
+      "boost": "Arttır",
+      "convex-apr": "Convex APR",
+      "gross-apr": "Brüt APR",
+      "inception-apy": "Başlangıç ​​YFG",
+      "monthly-apy": "Aylık YFG",
+      "net-apy": "Net YFG",
+      "pool-apy": "Havuz YFG",
+      "rewards-apr": "Ek Ödül YFG",
+      "vecrv-apy": "veCRV YFG",
+      "weekly-apy": "Haftalık YFG"
+    },
+    "transaction": {
+      "approve": "Onayla",
+      "available-borrow": "Borç alınabilir",
+      "borrow": "Borçlan",
+      "borrow-limit": {
+        "borrow-apy": "Borçlanma YFG",
+        "borrowing": "Borçlanma",
+        "supply-apy": "Arz YFG",
+        "total-borrow-limit": "Toplam borçlanma limiti",
+        "total-borrow-limit-used": "Kullanılan toplam borçlanma limti"
+      },
+      "claim": "İstihkak",
+      "deposit": "Mevduat",
+      "from-iron-bank": "Iron Bank'dan",
+      "from-vault": "Vault'dan",
+      "from-wallet": "Cüzdandan",
+      "lock": "Kilitleyin",
+      "max": "MAX",
+      "migrate": "Taşıyın",
+      "reinvest": "Geri yatır",
+      "repay": "Geri öde",
+      "reward": "Ödül",
+      "sign": "İmzala",
+      "stake": "Stake",
+      "status": {
+        "calculating": "Hesaplanıyor...",
+        "done": "Bitti",
+        "exit": "Çıkış",
+        "simulating": "Simüle ediliyor...",
+        "transaction-completed": "İşlem tamamlandı"
+      },
+      "supply": "Yatırın",
+      "to-gauge": "Ölçmek için",
+      "to-iron-bank": "Iron Bank'e",
+      "to-vault": "Vault'a",
+      "to-wallet": "Cüzdana",
+      "token-input": {
+        "search-select-token": "Bir Token Seç",
+        "search-select-vault": "Bir Vault seç",
+        "yield": "Verim",
+        "you-have": "Var"
+      },
+      "wallet-balance": "Cüzdan Bakiyesi",
+      "withdraw": "Çek"
+    }
+  },
+  "dashboard": {
+    "apy": "YFG",
+    "available": "Mevcut",
+    "available-deposit": "Yatırılabilir",
+    "borrow-limit-total": "Borç alma toplam limiti",
+    "borrow-limit-used": "kullanılan borçlanma limiti",
+    "borrowed": "Borç alınan",
+    "earnings": "kazançlar",
+    "est-yearly-earnings": "Takribi yıllık gelir",
+    "est-yearly-yield": "Tahmini yıllık gelir",
+    "holdings": "Varlıklar",
+    "supplied": "Yatırılan",
+    "total-net-worth": "Toplam net değer",
+    "vaults-earnings": "Vault'lar getirileri",
+    "vaults-est-yearly-yield": "yıllık tahmini vault'lar getirisi"
+  },
+  "errors": {
+    "default": "Beklenmedik hata oluştu",
+    "unknown": "Bilinmeyen hata"
+  },
+  "footer": {
+    "links": {
+      "blog": "Blog",
+      "buyback": "YFI Geri alımı",
+      "disclaimer": "Feragat",
+      "docs": "dokümanlar",
+      "gov": "Yönetim",
+      "security": "Güvenlik"
+    }
+  },
+  "languages": {
+    "de": "Deutsch",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "it": "Italiano",
+    "ja": "日本語",
+    "pt": "Português",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "zh": "中文"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Debt DAO 2021",
+      "small": "©"
+    },
+    "disclaimer": "Feragat",
+    "ironbank": "Iron Bank",
+    "labs": "Lablar",
+    "portfolio": "Portfolyo",
+    "settings": "Ayarlar",
+    "vault": "Vault detayları",
+    "vaults": "Vault'lar",
+    "wallet": "Cüzdan"
+  },
+  "themes": {
+    "classic": "Klasik v2",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "explorer": "Explorer",
+    "light": "Mono Light",
+    "system-prefs": "sistem"
+  }
+}

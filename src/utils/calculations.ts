@@ -32,22 +32,3 @@ export function calculateUnderlyingAmount(props: CalculateUnderlyingAmountProps)
   const ONE_UNIT = toBN('10').pow(underlyingTokenDecimals);
   return amount.times(sharePrice).times(ONE_UNIT).toFixed(0);
 }
-
-export function computeSummaryData(labs: Pick<GeneralLabView, 'apyData' | 'DEPOSIT'>[]): SummaryData {
-  const { totalDeposits, totalEarnings } = labs.reduce(
-    ({ totalDeposits, totalEarnings }, { DEPOSIT: { userDepositedUsdc }, apyData }) => ({
-      totalDeposits: totalDeposits.plus(userDepositedUsdc),
-      totalEarnings: totalEarnings.plus(toBN(userDepositedUsdc).times(apyData)),
-    }),
-    {
-      totalDeposits: toBN(0),
-      totalEarnings: toBN(0),
-    }
-  );
-
-  return {
-    totalDeposits: totalDeposits.toString(),
-    totalEarnings: totalEarnings.toString(),
-    estYearlyYield: totalDeposits.isZero() ? '0' : totalEarnings.div(totalDeposits).toString(),
-  };
-}

@@ -30,10 +30,7 @@ import {
   TokenAllowance,
 } from '@types';
 
-import v2VaultAbi from './contracts/v2Vault.json';
 import eip2612Abi from './contracts/eip2612.json';
-import trustedVaultMigratorAbi from './contracts/trustedVaultMigrator.json';
-import triCryptoVaultMigratorAbi from './contracts/triCryptoVaultMigrator.json';
 
 export class VaultServiceImpl implements VaultService {
   private yearnSdk: YearnSdk;
@@ -111,11 +108,11 @@ export class VaultServiceImpl implements VaultService {
       if (transactionType === 'WITHDRAW') {
         const providerType = getProviderType(network);
         const provider = this.web3Provider.getInstanceOf(providerType);
-        const vaultContract = getContract(sourceTokenAddress, v2VaultAbi, provider);
-        const pricePerShare = await vaultContract.pricePerShare();
-        underlyingTokenAmount = toBN(sourceTokenAmount)
-          .times(normalizeAmount(pricePerShare.toString(), toBN(decimals).toNumber()))
-          .toFixed(0);
+        // const vaultContract = getContract(sourceTokenAddress, v2VaultAbi, provider);
+        // const pricePerShare = await vaultContract.pricePerShare();
+        // underlyingTokenAmount = toBN(sourceTokenAmount)
+        //   .times(normalizeAmount(pricePerShare.toString(), toBN(decimals).toNumber()))
+        //   .toFixed(0);
       }
 
       const targetTokenAmountUsdc = toBN(normalizeAmount(underlyingTokenAmount, toBN(decimals).toNumber()))
@@ -174,14 +171,15 @@ export class VaultServiceImpl implements VaultService {
     const currentNetworkSettings = NETWORK_SETTINGS[network];
 
     const signer = this.web3Provider.getSigner();
-    const vaultContract = getContract(vaultAddress, v2VaultAbi, signer);
-    const apiVersion = await vaultContract.apiVersion();
+    // const vaultContract = getContract(vaultAddress, v2VaultAbi, signer);
+    // const apiVersion = await vaultContract.apiVersion();
     const eip2612Contract = getContract(vaultAddress, eip2612Abi, signer);
     const nonce = await eip2612Contract.nonces(accountAddress);
 
     const domain = {
-      name: 'Yearn Vault',
-      version: apiVersion.toString(),
+      name: 'DebtDAOVault',
+      // version: apiVersion.toString(),
+      version: '0',
       chainId: currentNetworkSettings.networkId,
       verifyingContract: vaultAddress,
     };
@@ -238,30 +236,6 @@ export class VaultServiceImpl implements VaultService {
       slippage: slippageTolerance,
       signature,
     });
-  }
-
-  public async migrate(props: MigrateProps): Promise<TransactionResponse> {
-    const { network, vaultFromAddress, vaultToAddress, migrationContractAddress } = props;
-    const { triCryptoVaultMigrator } = this.config.CONTRACT_ADDRESSES;
-
-    switch (migrationContractAddress) {
-      case triCryptoVaultMigrator:
-        return await this.transactionService.execute({
-          network,
-          methodName: 'migrate_to_new_vault',
-          contractAddress: migrationContractAddress,
-          abi: triCryptoVaultMigratorAbi,
-        });
-
-      default:
-        return await this.transactionService.execute({
-          network,
-          methodName: 'migrateAll',
-          args: [vaultFromAddress, vaultToAddress],
-          contractAddress: migrationContractAddress,
-          abi: trustedVaultMigratorAbi,
-        });
-    }
   }
 
   public async approveDeposit(props: ApproveDepositProps): Promise<TransactionResponse> {

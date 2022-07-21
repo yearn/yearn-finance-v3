@@ -121,18 +121,18 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
     );
   };
 
-  const migrate = async () => {
-    try {
-      await dispatchAndUnwrap(
-        VaultsActions.migrateVault({
-          vaultFromAddress: selectedVault.address,
-          vaultToAddress: selectedVault.migrationTargetVault!,
-          migrationContractAddress: selectedVault.migrationContract!,
-        })
-      );
-      setTxCompleted(true);
-    } catch (error) {}
-  };
+  // const migrate = async () => {
+  //   try {
+  //     await dispatchAndUnwrap(
+  //       VaultsActions.migrateVault({
+  //         vaultFromAddress: selectedVault.address,
+  //         vaultToAddress: selectedVault.migrationTargetVault!,
+  //         migrationContractAddress: selectedVault.migrationContract!,
+  //       })
+  //     );
+  //     setTxCompleted(true);
+  //   } catch (error) {}
+  // };
 
   const txActions = [
     {
@@ -141,12 +141,12 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
       status: actionsStatus.approveMigrate,
       disabled: isApproved,
     },
-    {
-      label: t('components.transaction.migrate'),
-      onAction: migrate,
-      status: actionsStatus.migrate,
-      disabled: !isApproved,
-    },
+    // {
+    //   label: t('components.transaction.migrate'),
+    //   onAction: migrate,
+    //   status: actionsStatus.migrate,
+    //   disabled: !isApproved,
+    // },
   ];
 
   return (

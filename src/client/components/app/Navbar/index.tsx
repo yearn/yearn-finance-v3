@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
-import { OptionList, EthereumIcon, FantomIcon, ArbitrumIcon, Link } from '@components/common';
+import { OptionList, EthereumIcon, ArbitrumIcon, Link } from '@components/common';
 import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';
@@ -72,8 +72,6 @@ const getNetworkIcon = (network: Network) => {
   switch (network) {
     case 'mainnet':
       return EthereumIcon;
-    case 'fantom':
-      return FantomIcon;
     case 'arbitrum':
       return ArbitrumIcon;
     default:
@@ -143,6 +141,7 @@ export const Navbar = ({
 
       <StyledNavbarActions>
         {!hideDisabledControls && (
+          /* turn this into not a list because we only support mainnet right now */
           <StyledOptionList
             selected={dropdownSelectedNetwork}
             setSelected={(option) => onNetworkChange(option.value)}

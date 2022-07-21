@@ -65,7 +65,7 @@ const {
   signZapOut,
   withdrawVault,
   approveMigrate,
-  migrateVault,
+  // migrateVault,
   getVaults,
   initiateSaveVaults,
   setSelectedVaultAddress,
@@ -370,20 +370,6 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(approveMigrate.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultFromAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].approveMigrate = { error: error.message };
-    })
-
-    /* ------------------------------ migrateVault ------------------------------ */
-    .addCase(migrateVault.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultFromAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { loading: true };
-    })
-    .addCase(migrateVault.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultFromAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = {};
-    })
-    .addCase(migrateVault.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultFromAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { error: error.message };
     });
 });
 

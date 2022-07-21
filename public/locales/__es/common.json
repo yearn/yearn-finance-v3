@@ -1,0 +1,166 @@
+{
+  "components": {
+    "back-button": {
+      "label": "Volver a la última página"
+    },
+    "connect-button": {
+      "connect": "Conectar Billetera"
+    },
+    "empty-list": {
+      "searching-text": "Por favor busca otro activo",
+      "text": "Ningún activo para mostrar"
+    },
+    "list-card": {
+      "apy": "APY",
+      "asset": "Activos",
+      "available-deposit": "Disp. para depositar",
+      "available-stake": "Disponible para stake",
+      "available-supply": "Disp. para suministrar",
+      "balance": "Balance",
+      "borrow-apy": "APY préstamo",
+      "borrowing": "Tomar prestado",
+      "collateral": "Colateral",
+      "deposits": "Depósitos",
+      "deprecated": "Obsoleto",
+      "earned": "Ganado",
+      "lend-apy": "APY préstamo",
+      "market-liquidity": "Liquidez de mercado",
+      "opportunities": "Oportunidades",
+      "price": "Precio",
+      "supplying": "Suministrando",
+      "tokens": "Tokens",
+      "total-assets": "Activos totales",
+      "value": "Valor",
+      "wallet": "Billetera"
+    },
+    "no-wallet": "Billetera no conectada",
+    "recent-recommendations": {
+      "header": "Mayor APY"
+    },
+    "search-input": {
+      "search": "Buscar"
+    },
+    "tooltips": {
+      "base-apr": "APR base CRV",
+      "boost": "Impulso",
+      "convex-apr": "APR Convex",
+      "gross-apr": "APR bruto",
+      "inception-apy": "APY origen",
+      "monthly-apy": "APY mensual",
+      "net-apy": "APY neto",
+      "pool-apy": "APY grupo",
+      "rewards-apr": "APR recompensa bonificada",
+      "vecrv-apy": "APY veCRV",
+      "weekly-apy": "APY semanal"
+    },
+    "transaction": {
+      "approve": "Aprobar",
+      "available-borrow": "Disponible tomar prestado",
+      "borrow": "Préstamo",
+      "borrow-limit": {
+        "borrow-apy": "APY préstamo",
+        "borrowing": "Tomar préstamo",
+        "supply-apy": "APY suministro",
+        "total-borrow-limit": "Límite total préstamo",
+        "total-borrow-limit-used": "Límite total préstamo utilizado"
+      },
+      "claim": "Reclamar",
+      "deposit": "Depositar",
+      "from-iron-bank": "Desde Iron Bank",
+      "from-vault": "Desde vault",
+      "from-wallet": "Desde billetera",
+      "lock": "Bloqueo",
+      "max": "MAX",
+      "migrate": "Migrar",
+      "reinvest": "Reinvertir",
+      "repay": "\nReembolsar",
+      "reward": "Recompensa",
+      "sign": "Firmar",
+      "stake": "Hacer staking",
+      "status": {
+        "calculating": "Calculando...",
+        "done": "OK",
+        "exit": "Cerrar",
+        "simulating": "Simulando...",
+        "transaction-completed": "Transacción completada"
+      },
+      "supply": "Suministrar",
+      "to-gauge": "Calibrar",
+      "to-iron-bank": "A Iron Bank",
+      "to-vault": "A vault",
+      "to-wallet": "A billetera",
+      "token-input": {
+        "search-select-token": "Selecciona un Token",
+        "search-select-vault": "Selecciona una Vault",
+        "yield": "Rendimiento",
+        "you-have": "Tú tienes"
+      },
+      "wallet-balance": "Balance Billetera",
+      "withdraw": "Retirar"
+    }
+  },
+  "dashboard": {
+    "apy": "APY",
+    "available": "Disponible",
+    "available-deposit": "Disponible para depositar",
+    "borrow-limit-total": "Límite de préstamo total",
+    "borrow-limit-used": "Límite de préstamo utilizado",
+    "borrowed": "Prestado",
+    "earnings": "Ganancias",
+    "est-yearly-earnings": "Ganancias anuales est.",
+    "est-yearly-yield": "Rendimiento anual est.",
+    "holdings": "Activos",
+    "supplied": "Suministrado",
+    "total-net-worth": "Valor total neto",
+    "vaults-earnings": "Ganancias de Vaults",
+    "vaults-est-yearly-yield": "Rendimiento anual est. de Vaults"
+  },
+  "errors": {
+    "default": "Hubo un error inesperado",
+    "unknown": "Error desconocido"
+  },
+  "footer": {
+    "links": {
+      "blog": "Blog",
+      "disclaimer": "Disclaimer",
+      "docs": "Docs",
+      "gov": "Gov",
+      "security": "Seguridad"
+    }
+  },
+  "languages": {
+    "de": "Deutsch",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिंदी",
+    "it": "Italiano",
+    "ja": "日本語",
+    "pt": "Português",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "zh": "中文"
+  },
+  "navigation": {
+    "copyright": {
+      "big": "© Debt DAO 2021",
+      "small": "©"
+    },
+    "disclaimer": "Disclaimer",
+    "ironbank": "Iron Bank",
+    "labs": "Laboratorios",
+    "portfolio": "Portfolio",
+    "settings": "Ajustes",
+    "vault": "Detalle de vault",
+    "vaults": "Vaults",
+    "wallet": "Billetera"
+  },
+  "themes": {
+    "classic": "Classic v2",
+    "cyberpunk": "Cyberpunk",
+    "dark": "Mono Dark",
+    "explorer": "Explorer",
+    "light": "Mono Light",
+    "system-prefs": "Sistema"
+  }
+}

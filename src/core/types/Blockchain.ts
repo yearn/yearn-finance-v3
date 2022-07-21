@@ -1,4 +1,4 @@
-export type Network = 'mainnet' | 'morden' | 'ropsten' | 'rinkeby' | 'kovan' | 'fantom' | 'arbitrum' | 'other';
+export type Network = 'mainnet' | 'ropsten' | 'rinkeby' | 'kovan' | 'arbitrum' | 'other';
 
 export type Symbol = string;
 
@@ -14,4 +14,12 @@ export interface GasFees {
   gasPrice?: Wei;
   maxFeePerGas?: Wei;
   maxPriorityFeePerGas?: Wei;
+}
+
+// based off our standard event data in subgraph
+export interface Event {
+  type: string;
+  address: Address;
+  block: number;
+  timestamp: string;
 }

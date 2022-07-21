@@ -17,21 +17,20 @@ export interface Env {
   BLOCKNATIVE_KEY: string | undefined;
   FORTMATIC_KEY: string | undefined;
   PORTIS_KEY: string | undefined;
-  ZAPPER_API_KEY: string | undefined;
-  YEARN_SUBGRAPH_KEY: string | undefined;
+  // ZAPPER_API_KEY: string | undefined;
+  DEBT_DAO_SUBGRAPH_KEY: string | undefined;
 }
 
 export interface Constants {
   STATE_VERSION: number;
   ETHEREUM_ADDRESS: Address;
   MAX_UINT256: Wei;
-  YEARN_API: string;
-  YEARN_ALERTS_API: string;
+  DEBT_DAO_API: string;
+  DEBT_DAO_ALERTS_API: string;
   SUPPORTED_NETWORKS: Network[];
   NETWORK_SETTINGS: NetworkSettings;
   WEB3_PROVIDER_HTTPS: string;
   WEB3_PROVIDER_WSS: string;
-  FANTOM_PROVIDER_HTTPS: string;
   ARBITRUM_PROVIDER_HTTPS: string;
   CONTRACT_ADDRESSES: {
     [KEY: string]: string;
@@ -47,7 +46,7 @@ export interface Constants {
   DEFAULT_LANG: Language;
   SUPPORTED_LANGS: Language[];
   DUST_AMOUNT_USD: string;
-  YEARN_SUBGRAPH_ID: string;
+  DEBT_DAO_SUBGRAPH_ID: string;
   ASSETS_ICON_URL: string;
-  ZAPPER_AUTH_TOKEN: string;
+  // ZAPPER_AUTH_TOKEN: string;
 }

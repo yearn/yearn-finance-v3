@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
-import { WalletIcon, VaultIcon, LabsIcon, SettingsIcon, IronBankIcon } from '@components/common';
+import { WalletIcon, VaultIcon, LabsIcon, SettingsIcon, SearchIcon, DiscordIcon } from '@components/common';
 
 import { NavSidebar } from './NavSidebar';
 import { NavTabbar } from './NavTabbar';
@@ -26,20 +26,21 @@ const navLinks: NavigationLink[] = [
     icon: WalletIcon,
   },
   {
-    to: '/vaults',
-    text: 'navigation.vaults',
+    to: '/market',
+    text: 'navigation.market',
     icon: VaultIcon,
   },
   {
-    to: '/labs',
-    text: 'navigation.labs',
-    icon: LabsIcon,
+    to: 'https://docs.debtdao.finance',
+    text: 'navigation.docs',
+    icon: SearchIcon,
+    external: true,
     optional: true,
   },
   {
-    to: 'https://app.ib.xyz',
-    text: 'navigation.ironbank',
-    icon: IronBankIcon,
+    to: 'https://discord.gg/debtdao',
+    text: 'navigation.discord',
+    icon: DiscordIcon,
     external: true,
     optional: true,
   },

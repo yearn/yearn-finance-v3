@@ -16,9 +16,6 @@ export interface NetworkSettings {
       decimals: number;
     };
     simulationsEnabled?: boolean;
-    zapsEnabled?: boolean;
-    labsEnabled?: boolean;
-    ironBankEnabled?: boolean;
     earningsEnabled?: boolean;
     notifyEnabled?: boolean;
     blockExplorerUrl?: string;

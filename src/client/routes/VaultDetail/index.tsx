@@ -15,11 +15,11 @@ import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from
 import { VaultDetailPanels, ViewContainer, SliderCard } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
 import {
-  parseHistoricalEarningsUnderlying,
-  parseHistoricalEarningsUsd,
+  // parseHistoricalEarningsUnderlying,
+  // parseHistoricalEarningsUsd,
   isValidAddress,
-  parseLastEarningsUsd,
-  parseLastEarningsUnderlying,
+  // parseLastEarningsUsd,
+  // parseLastEarningsUnderlying,
 } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
@@ -102,14 +102,14 @@ export const VaultDetail = () => {
 
   const chartData = currentNetworkSettings.earningsEnabled
     ? {
-        underlying: parseHistoricalEarningsUnderlying(selectedVault?.historicalEarnings, selectedVault?.token.decimals),
-        usd: parseHistoricalEarningsUsd(selectedVault?.historicalEarnings),
+        // underlying: parseHistoricalEarningsUnderlying(selectedVault?.historicalEarnings, selectedVault?.token.decimals),
+        // usd: parseHistoricalEarningsUsd(selectedVault?.historicalEarnings),
       }
     : {};
   const chartValue = currentNetworkSettings.earningsEnabled
     ? {
-        usd: parseLastEarningsUsd(selectedVault?.historicalEarnings),
-        underlying: parseLastEarningsUnderlying(selectedVault?.historicalEarnings, selectedVault?.token.decimals),
+        // usd: parseLastEarningsUsd(selectedVault?.historicalEarnings),
+        // underlying: parseLastEarningsUnderlying(selectedVault?.historicalEarnings, selectedVault?.token.decimals),
       }
     : {};
 

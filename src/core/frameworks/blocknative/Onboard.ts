@@ -49,7 +49,7 @@ export class BlocknativeWalletImpl implements Wallet {
     const { BLOCKNATIVE_KEY, FORTMATIC_KEY, PORTIS_KEY } = getConfig();
 
     const rpcUrl = getNetworkRpc(network);
-    const appName = 'Yearn Finance';
+    const appName = 'Debt DAO';
 
     const wallets = [
       { walletName: 'metamask' },

@@ -6,6 +6,7 @@ BigNumber.set({ EXPONENTIAL_AT: 50 });
 
 export const USDC_DECIMALS = 6;
 export const COLLATERAL_FACTOR_DECIMALS = 18;
+export const USD_PRICE_DECIMALS = 8;
 export const GWEI = 9;
 
 const FORMAT = {

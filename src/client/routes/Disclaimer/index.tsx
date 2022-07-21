@@ -120,16 +120,16 @@ export const Disclaimer = () => {
         </p>
         <Header>Risk</Header>
         <p>
-          Thus, the transactions you can effect through the Iron Bank, Vaults and other Yearn decentralized finance
+          Thus, the transactions you can effect through the Iron Bank, Vaults and other Debt DAO decentralized finance
           systems, while superficially similar to traditional financial transactions in some ways, are in fact very
           different. DeFi and TradFi each have unique costs and benefits, risks and protection mechanisms.{' '}
           <u>
-            Please bear this fact in mind when using this website, and do not use Yearn, the Yearn vaults, the Iron Bank
-            or any other system described on this website without a sufficient understanding of their unique risks and
-            how they differ from traditional financial transactions.
+            Please bear this fact in mind when using this website, and do not use DebtDAO, the Debt DAO vaults, the Iron
+            Bank or any other system described on this website without a sufficient understanding of their unique risks
+            and how they differ from traditional financial transactions.
           </u>{' '}
           The only way to fully understand such risks is to have a strong understanding of the relevant technical
-          systems and the incentive design mechanisms they embody--we strongly encourage you to review Yearn’s{' '}
+          systems and the incentive design mechanisms they embody--we strongly encourage you to review DebtDAO’s{' '}
           <StyledLink href="https://docs.yearn.finance" target="_blank">
             technical documentation
           </StyledLink>{' '}

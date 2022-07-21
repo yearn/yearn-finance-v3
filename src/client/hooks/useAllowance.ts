@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import isEqual from 'lodash/isEqual';
 import { unwrapResult } from '@reduxjs/toolkit';
 
-import { VaultsActions, LabsActions } from '@store';
+import { VaultsActions } from '@store';
 import { TokenAllowance } from '@types';
 import { useAppDispatch } from '@hooks';
 
@@ -43,22 +43,12 @@ export function useAllowance({
     async function callPromise() {
       if (vaultAddress && tokenAddress) {
         try {
-          let promiseResult;
-          if (isLab) {
-            promiseResult = await dispatch(
-              LabsActions.getDepositAllowance({
-                labAddress: vaultAddress,
-                tokenAddress,
-              })
-            );
-          } else {
-            promiseResult = await dispatch(
-              VaultsActions.getDepositAllowance({
-                vaultAddress,
-                tokenAddress,
-              })
-            );
-          }
+          let promiseResult = await dispatch(
+            VaultsActions.getDepositAllowance({
+              vaultAddress,
+              tokenAddress,
+            })
+          );
           const result = unwrapResult(promiseResult);
           setResult(result);
           setError(undefined);

@@ -11,10 +11,6 @@ import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
 import { MigrateTxModal } from './MigrateTxModal';
-import { BackscratcherLockTxModal, BackscratcherClaimTxModal, BackscratcherReinvestTxModal } from './Backscratcher';
-import { LabDepositTxModal } from './LabDepositTxModal';
-import { LabWithdrawTxModal } from './LabWithdrawTxModal';
-import { LabStakeTxModal } from './LabStakeTxModal';
 
 const modalTimeout = 300;
 
@@ -140,42 +136,6 @@ export const Modals = () => {
       {activeModal === 'migrateTx' && (
         <CSSTransition key={'migrateTx'} timeout={modalTimeout} classNames="slideBottom">
           <MigrateTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'backscratcherLockTx' && (
-        <CSSTransition key={'backscratcherLockTx'} timeout={modalTimeout} classNames="slideBottom">
-          <BackscratcherLockTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'backscratcherClaimTx' && (
-        <CSSTransition key={'backscratcherClaimTx'} timeout={modalTimeout} classNames="slideBottom">
-          <BackscratcherClaimTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'backscratcherReinvestTx' && (
-        <CSSTransition key={'backscratcherReinvestTx'} timeout={modalTimeout} classNames="slideBottom">
-          <BackscratcherReinvestTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'labDepositTx' && (
-        <CSSTransition key={'labDepositTx'} timeout={modalTimeout} classNames="slideBottom">
-          <LabDepositTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'labWithdrawTx' && (
-        <CSSTransition key={'labWithdrawTx'} timeout={modalTimeout} classNames="slideBottom">
-          <LabWithdrawTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'labStakeTx' && (
-        <CSSTransition key={'labStakeTx'} timeout={modalTimeout} classNames="slideBottom">
-          <LabStakeTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

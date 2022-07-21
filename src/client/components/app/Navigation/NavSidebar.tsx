@@ -24,7 +24,7 @@ const SidebarContent = styled.nav`
 
 const StyledLogo = styled(Logo)`
   justify-content: flex-start;
-  height: 3.1rem;
+  height: 12rem;
   fill: ${({ theme }) => theme.colors.logo};
   cursor: pointer;
 `;
@@ -176,7 +176,7 @@ export const NavSidebar = ({ navLinks, ...props }: NavSidebarProps) => {
   return (
     <StyledSidebar collapsed={collapsedSidebar}>
       <SidebarHeader>
-        <StyledLogo full={!collapsedSidebar} onClick={() => history.push('/portfolio')} />
+        <StyledLogo full={false} onClick={() => history.push('/portfolio')} />
         {/* {!isMobile && <ToggleSidebarButton Component={CollapseIcon} onClick={toggleSidebar} />} */}
       </SidebarHeader>
 

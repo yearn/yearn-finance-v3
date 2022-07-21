@@ -54,21 +54,12 @@ export class TokenServiceImpl implements TokenService {
 
     const supportedTokens = await yearn.tokens.supported();
 
-    // We separated this because request is broken outside of this repo so we need to handle it separated
-    // so we get the rest of the tokens.
-    let labsTokens: Token[] = [];
-    try {
-      labsTokens = await this.getLabsTokens({ network });
-    } catch (error) {
-      console.log({ error });
-    }
-
     // TODO: remove fixedSupportedTokens when WETH symbol is fixed on sdk
     const fixedSupportedTokens = supportedTokens.map((token) => ({
       ...token,
       symbol: token.address === WETH ? 'WETH' : token.symbol,
     }));
-    return getUniqueAndCombine(fixedSupportedTokens, labsTokens, 'address');
+    return getUniqueAndCombine(fixedSupportedTokens, [], 'address');
   }
 
   public async getTokensDynamicData({ network, addresses }: GetTokensDynamicDataProps): Promise<TokenDynamicData[]> {
@@ -106,12 +97,6 @@ export class TokenServiceImpl implements TokenService {
     return allowance.toString();
   }
 
-  public async getLabsTokens({ network }: { network: Network }): Promise<Token[]> {
-    const { NETWORK_SETTINGS } = this.config;
-    if (!NETWORK_SETTINGS[network].labsEnabled) return [];
-    return await Promise.all([this.getYvBoostToken(), this.getPSLPyvBoostEthToken()]);
-  }
-
   private async getYvBoostToken(): Promise<Token> {
     const { YVBOOST } = this.config.CONTRACT_ADDRESSES;
     const { ASSETS_ICON_URL } = getConstants();
@@ -130,32 +115,6 @@ export class TokenServiceImpl implements TokenService {
       },
       symbol: 'yvBOOST',
       icon: `${ASSETS_ICON_URL}${YVBOOST}/logo-128.png`,
-    };
-  }
-
-  private async getPSLPyvBoostEthToken(): Promise<Token> {
-    const { ZAPPER_AUTH_TOKEN } = this.config;
-    const { PSLPYVBOOSTETH } = this.config.CONTRACT_ADDRESSES;
-    const { ASSETS_ICON_URL } = getConstants();
-    const pricesResponse = await get(`https://api.zapper.fi/v2/apps/pickle/tokens?groupId=jar`, {
-      headers: { Authorization: `Basic ${ZAPPER_AUTH_TOKEN}` },
-    });
-    const pJarPricePerToken = pricesResponse.data.find(
-      ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
-    )?.price;
-    return {
-      address: PSLPYVBOOSTETH,
-      decimals: '18',
-      name: 'pSLPyvBOOST-ETH',
-      priceUsdc: toBN(pJarPricePerToken)
-        .multipliedBy(10 ** USDC_DECIMALS)
-        .toString(),
-      dataSource: 'labs',
-      supported: {
-        zapper: false,
-      },
-      symbol: 'pSLPyvBOOST-ETH',
-      icon: `${ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
     };
   }
 

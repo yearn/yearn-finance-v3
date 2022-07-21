@@ -4,9 +4,6 @@ import {
   Token,
   TokenDynamicData,
   Position,
-  Lab,
-  LabDynamic,
-  LabUserMetadata,
   TransactionResponse,
   Address,
   Integer,
@@ -26,18 +23,10 @@ import {
 
 export interface UserService {
   getAddressEnsName: (props: GetAddressEnsNameProps) => Promise<string>;
-  getBluePillNftBalance: (address: string) => Promise<number>;
-  getWoofyNftBalance: (address: string) => Promise<number>;
-  getNftBalance: (address: string) => Promise<NftBalances>;
 }
 
 export interface GetAddressEnsNameProps {
   address: string;
-}
-
-export interface NftBalances {
-  bluePillNftBalance: number;
-  woofyNftBalance: number;
 }
 
 // *************** VAULT ***************
@@ -51,7 +40,6 @@ export interface VaultService {
   signPermit: (props: SignPermitProps) => Promise<string>;
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
-  migrate: (props: MigrateProps) => Promise<TransactionResponse>;
   approveDeposit: (props: ApproveDepositProps) => Promise<TransactionResponse>;
   approveZapOut: (props: ApproveZapOutProps) => Promise<TransactionResponse>;
   getDepositAllowance: (props: GetDepositAllowanceProps) => Promise<TokenAllowance>;
@@ -198,63 +186,6 @@ export interface ApproveProps {
   tokenAddress: Address;
   spenderAddress: Address;
   amount: Wei;
-}
-
-// *************** LABS ***************
-export interface LabService {
-  getSupportedLabs: (props: GetSupportedLabsProps) => Promise<{ labsData: Lab[]; errors: string[] }>;
-  getLabsDynamicData: (props: GetLabsDynamicDataProps) => Promise<LabDynamic[]>;
-  getUserLabsPositions: (props: GetUserLabsPositionsProps) => Promise<{ positions: Position[]; errors: string[] }>;
-  getUserLabsMetadata: (props: GetUserLabsMetadataProps) => Promise<LabUserMetadata[]>;
-  deposit: (props: DepositProps) => Promise<TransactionResponse>;
-  withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
-  stake: (props: StakeProps) => Promise<TransactionResponse>;
-  lock: (props: LockProps) => Promise<TransactionResponse>;
-  claim: (props: ClaimProps) => Promise<TransactionResponse>;
-  reinvest: (props: ReinvestProps) => Promise<TransactionResponse>;
-}
-
-export interface GetSupportedLabsProps {
-  network: Network;
-}
-
-export interface GetLabsDynamicDataProps {
-  network: Network;
-}
-
-export interface GetUserLabsPositionsProps {
-  network: Network;
-  userAddress: Address;
-}
-
-export interface GetUserLabsMetadataProps {
-  userAddress: Address;
-}
-
-export interface StakeProps {
-  network: Network;
-  accountAddress: Address;
-  tokenAddress: Address;
-  vaultAddress: Address;
-  amount: Wei;
-}
-
-export interface LockProps {
-  network: Network;
-  accountAddress: Address;
-  tokenAddress: Address;
-  vaultAddress: Address;
-  amount: Wei;
-}
-
-export interface ClaimProps {
-  network: Network;
-  accountAddress: Address;
-}
-
-export interface ReinvestProps {
-  network: Network;
-  accountAddress: Address;
 }
 
 // *************** TRANSACTION ***************

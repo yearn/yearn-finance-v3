@@ -1,6 +1,6 @@
 import { Apy, PositionView } from '@types';
 
-import { AllowancesMap, LabsPositionsTypes } from './State';
+import { AllowancesMap } from './State';
 import { TokenView } from './Token';
 import { ZapInType, ZapOutType } from './Yearn-Sdk';
 
@@ -22,7 +22,7 @@ export interface GeneralLabView {
   allowZapOut: boolean;
   zapInWith?: ZapInType;
   zapOutWith?: ZapOutType;
-  mainPositionKey: LabsPositionsTypes;
+  // mainPositionKey: LabsPositionsTypes;
   DEPOSIT: PositionView;
   YIELD: PositionView;
   STAKE: PositionView;

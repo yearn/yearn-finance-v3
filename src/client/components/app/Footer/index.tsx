@@ -13,49 +13,49 @@ const footerLinks = [
     link: '/disclaimer',
     name: 'disclaimer',
   },
+  // {
+  //   link: 'https://buyback.yearn.finance',
+  //   name: 'buyback',
+  // },
   {
-    link: 'https://buyback.yearn.finance',
-    name: 'buyback',
-  },
-  {
-    link: 'https://docs.yearn.finance',
+    link: 'https://docs.debtdao.financee',
     name: 'docs',
   },
-  {
-    link: 'https://gov.yearn.finance',
-    name: 'gov',
-  },
-  {
-    link: 'https://blog.yearn.finance/',
-    name: 'blog',
-  },
-  {
-    link: 'https://github.com/yearn/yearn-security/blob/master/SECURITY.md',
-    name: 'security',
-  },
+  // {
+  //   link: 'https://gov.yearn.finance',
+  //   name: 'gov',
+  // },
+  // {
+  //   link: 'https://blog.yearn.finance/',
+  //   name: 'blog',
+  // },
+  // {
+  //   link: 'https://github.com/yearn/yearn-security/blob/master/SECURITY.md',
+  //   name: 'security',
+  // },
 ];
 
 const socialLinks = [
   {
-    link: 'https://twitter.com/iearnfinance',
+    link: 'https://twitter.com/debtdao',
     icon: TwitterIcon,
-    ariaLabel: 'Visit Yearn Twitter',
+    ariaLabel: 'Visit Debt DAO Twitter',
   },
+  // {
+  //   link: 'https://reddit.com/r/yearn_finance',
+  //   icon: RedditIcon,
+  //   ariaLabel: 'Visit Debt DAO Reddit',
+  // },
   {
-    link: 'https://reddit.com/r/yearn_finance',
-    icon: RedditIcon,
-    ariaLabel: 'Visit Yearn Reddit',
-  },
-  {
-    link: 'https://discord.yearn.finance',
+    link: 'https://discord.gg/debtdao',
     icon: DiscordIcon,
-    ariaLabel: 'Join Yearn Discord',
+    ariaLabel: 'Join Debt DAO Discord',
   },
-  {
-    link: 'https://medium.com/iearn',
-    icon: MediumIcon,
-    ariaLabel: 'Visit Yearn Medium',
-  },
+  // {
+  //   link: 'https://medium.com/iearn',
+  //   icon: MediumIcon,
+  //   ariaLabel: 'Visit Debt DAO Medium',
+  // },
 ];
 
 const SocialSectionIconSize = '2.4rem';

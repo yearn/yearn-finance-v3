@@ -2,7 +2,7 @@ import { memoize } from 'lodash';
 
 import { Constants, NetworkSettings } from '@types';
 import { getEnv } from '@config/env';
-import { encode } from '@src/utils';
+// import { encode } from '@src/utils';
 
 const ADDRESSES = {
   ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
@@ -42,32 +42,10 @@ const NETWORK_SETTINGS: NetworkSettings = {
       decimals: 18,
     },
     simulationsEnabled: true,
-    zapsEnabled: true,
-    labsEnabled: true,
-    ironBankEnabled: false,
     earningsEnabled: true,
     notifyEnabled: true,
     blockExplorerUrl: 'https://etherscan.io',
     txConfirmations: 2,
-  },
-  fantom: {
-    id: 'fantom',
-    name: 'Fantom',
-    networkId: 250,
-    rpcUrl: 'https://rpc.ftm.tools',
-    nativeCurrency: {
-      name: 'Fantom',
-      symbol: 'FTM',
-      decimals: 18,
-    },
-    simulationsEnabled: false,
-    zapsEnabled: false,
-    labsEnabled: false,
-    ironBankEnabled: false,
-    earningsEnabled: false,
-    notifyEnabled: false,
-    blockExplorerUrl: 'https://ftmscan.com',
-    txConfirmations: 10,
   },
   arbitrum: {
     id: 'arbitrum',
@@ -80,9 +58,6 @@ const NETWORK_SETTINGS: NetworkSettings = {
       decimals: 18,
     },
     simulationsEnabled: false,
-    zapsEnabled: false,
-    labsEnabled: false,
-    ironBankEnabled: false,
     earningsEnabled: false,
     notifyEnabled: false,
     blockExplorerUrl: 'https://arbiscan.io',
@@ -91,18 +66,17 @@ const NETWORK_SETTINGS: NetworkSettings = {
 };
 
 export const getConstants = memoize((): Constants => {
-  const { ALCHEMY_API_KEY, ZAPPER_API_KEY } = getEnv();
+  const { ALCHEMY_API_KEY } = getEnv();
   return {
     STATE_VERSION: 1,
     ETHEREUM_ADDRESS: ADDRESSES.ETH,
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
-    YEARN_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
-    YEARN_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
-    SUPPORTED_NETWORKS: ['mainnet', 'fantom', 'arbitrum'],
+    DEBT_DAO_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
+    DEBT_DAO_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
+    SUPPORTED_NETWORKS: ['mainnet', 'arbitrum'],
     NETWORK_SETTINGS,
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-    FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
     ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
     CONTRACT_ADDRESSES: {
       zapIn: '0x8E52522E6a77578904ddd7f528A22521DC4154F5',
@@ -125,8 +99,8 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_LANG: 'en',
     SUPPORTED_LANGS: ['en', 'es', 'ja', 'zh'],
     DUST_AMOUNT_USD: '10000000',
-    YEARN_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
+    DEBT_DAO_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
     ASSETS_ICON_URL: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/',
-    ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
+    // ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
   };
 });

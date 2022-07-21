@@ -1,0 +1,11 @@
+{
+  "no-labs-card": {
+    "header": "Pas encore de Labs sur {{network}}",
+    "text": "Revenez plus tard pour de nouvelles expériences."
+  },
+  "risks-card": {
+    "desc-1": "Les stratégies que vous trouverez ici sont les plus récentes et les moins conventionnelles. Assurez-vous de lire attentivement les sections À propos et assurez-vous de bien comprendre le verrouillage des jetons, \" l'mpermanent loss\", et les autres risques avant de continuer. ",
+    "desc-2": "Comme pour tous les produits Debt DAO, vous êtes responsable et devez vous renseigner sur les détails et gérer activement vos avoirs.",
+    "desc-3": "Bienvenue au Lab, mais procédez avec prudence, anon."
+  }
+}

@@ -26,9 +26,8 @@ export interface RootState {
   vaults: VaultsState;
   wallet: WalletState;
   tokens: TokensState;
-  labs: LabsState;
   settings: SettingsState;
-  user: UserState;
+  // user: UserState;
   partner: PartnerState;
 }
 
