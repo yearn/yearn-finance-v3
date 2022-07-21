@@ -1,12 +1,12 @@
 {
   "name": "yearn-finance-v3",
-  "version": "1.3.17",
+  "version": "1.3.18",
   "private": true,
   "scripts": {
     "start": "craco start",
     "dev": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco start",
     "dev-win": "cross-env REACT_APP_VERSION=x && craco start",
-    "build": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco build",
+    "build": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 GENERATE_SOURCEMAP=false craco build",
     "lint": "eslint  --ignore-path .gitignore --ext .js,.ts .",
     "test": "craco test",
     "prettier": "prettier --write --ignore-unknown './src/**/*.{js,jsx,ts,tsx,css,scss,md}'",
@@ -76,7 +76,8 @@
     "redux-logger": "3.0.6",
     "styled-components": "5.3.5",
     "styled-system": "5.1.5",
-    "typescript": "4.3.5"
+    "typescript": "4.3.5",
+    "webpack-subresource-integrity": "1.5.2"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "2.0.7",
