@@ -87,6 +87,7 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
             dispatch(VaultsActions.getVaults({ addresses: [vault.metadata.migrationTargetVault] }));
         });
         break;
+      default:
         // case 'vaults': TODO: our new routets - e.g. market
         break;
     }
@@ -117,7 +118,8 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
         dispatch(VaultsActions.getUserVaultsPositions({ vaultAddresses: addresses }));
         dispatch(VaultsActions.getUserVaultsMetadata({ vaultsAddresses: addresses }));
         break;
-        // case 'vaults': TODO: our new routets - e.g. market
+      // case 'vaults': TODO: our new routets - e.g. market
+      default:
         break;
     }
   },

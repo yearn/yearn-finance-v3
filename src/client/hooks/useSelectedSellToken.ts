@@ -6,7 +6,7 @@ import { GeneralLabView, GeneralVaultView, TokenView } from '@types';
 
 interface SelectedSellTokenProps {
   selectedSellTokenAddress?: string;
-  selectedVaultOrLab?: GeneralVaultView | GeneralLabView;
+  selectedVaultOrLab?: GeneralVaultView | GeneralLabView; // TODO: types
   allowTokenSelect?: boolean;
 }
 

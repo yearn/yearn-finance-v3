@@ -5,6 +5,7 @@ import { Layout } from '@containers';
 import { Portfolio } from './Portfolio';
 import { VaultDetail } from './VaultDetail';
 import { Vaults } from './Vaults';
+import { Market } from './Market';
 import { Settings } from './Settings';
 import { Disclaimer } from './Disclaimer';
 import { Health } from './Health';
@@ -16,7 +17,7 @@ const routesMap = [
   },
   {
     path: '/market',
-    component: Vaults,
+    component: Market,
   },
   {
     path: '/vaults',

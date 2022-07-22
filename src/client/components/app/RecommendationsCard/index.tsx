@@ -24,7 +24,8 @@ const StyledCardContent = styled(CardContent)`
 const ItemCard = styled(Card)<{ onClick: any }>`
   display: flex;
   align-items: center;
-  min-width: 24rem;
+  min-height: 30rem;
+  min-width: 33%;
   flex: 1;
   padding: ${({ theme }) => theme.layoutPadding};
   padding-right: calc(${({ theme }) => theme.card.padding} + ${TokenListIconSize} * 2.5);
@@ -67,7 +68,7 @@ const ItemInfoLabel = styled(Text)`
 
 const ItemName = styled(Text)`
   color: ${({ theme }) => theme.colors.icons.variant};
-  font-size: 1.6rem;
+  font-size: 3rem;
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -85,8 +86,50 @@ const TokenListIcon = styled(Icon)`
 
 const CenterIcon = styled.div`
   display: flex;
+  margin-right: 3rem;
+  user-select: none;
+`;
+
+const TopIcon = styled.div`
+  margin-bottom: 10rem;
+  margin-right: 3rem;
+  user-select: none;
+`;
+
+const Divider = styled.div`
+  height: 3rem;
+`;
+
+const ItemTag = styled.span`
+  background-color: black;
+  border-radius: 10%;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem;
   margin-right: ${({ theme }) => theme.layoutPadding};
   user-select: none;
+`;
+
+const TagContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  height: 3rem;
+`;
+
+const MetricsTextContainer = styled.div`
+  display: flex;
+  flex-direction: space-between;
+`;
+
+const Metric = styled.span`
+  font-weight: bold;
+  font-size: 3rem;
+`;
+
+const MetricsText = styled.span`
+  font-size: 1.6rem;
 `;
 
 interface Item {
@@ -119,15 +162,24 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
           <ItemCard key={`${i}-${item.name}`} variant="primary" onClick={item.onAction ? item.onAction : undefined}>
             {item.header && <ItemHeader>{item.header}</ItemHeader>}
 
-            <CenterIcon>
-              <TokenIcon symbol={item.name} icon={item.icon} size="xBig" />
-            </CenterIcon>
+            <TopIcon>
+              <TokenIcon symbol={item.name} icon={item.icon} size="xxBig" />
+            </TopIcon>
 
             <ItemInfo>
               <ItemName>{item.name}</ItemName>
               <ItemInfoLabel>{item.info}</ItemInfoLabel>
+              <TagContainer>
+                {['escrow', 'spigot', 'DAI', 'DeFi'].map((t) => (
+                  <ItemTag> {t} </ItemTag>
+                ))}
+              </TagContainer>
+              <Divider />
+              <Metric>300000 / 32313131</Metric>
+              <MetricsTextContainer>
+                <MetricsText>collateral value / outstanding debt </MetricsText>
+              </MetricsTextContainer>
             </ItemInfo>
-
             {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}
           </ItemCard>
         ))}

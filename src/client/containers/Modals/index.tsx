@@ -9,6 +9,7 @@ import { ComingSoonModal } from './ComingSoonModal';
 import { CommunityThemesModal } from './CommunityThemesModal';
 import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
+import { AddDebtPositionTxModal } from './AddDebtPositionTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
 import { MigrateTxModal } from './MigrateTxModal';
 
@@ -142,6 +143,12 @@ export const Modals = () => {
       {activeModal === 'communityThemes' && (
         <CSSTransition key={'communityThemes'} timeout={modalTimeout} classNames="slideBottom">
           <CommunityThemesModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'addPosition' && (
+        <CSSTransition key={'addPosition'} timeout={modalTimeout} classNames="slideBottom">
+          <AddDebtPositionTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

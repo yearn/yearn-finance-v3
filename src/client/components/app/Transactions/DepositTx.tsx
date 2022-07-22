@@ -46,6 +46,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   allowTokenSelect = true,
   allowVaultSelect = false,
 }) => {
+  // TODO strip
   const { t } = useAppTranslation('common');
 
   const dispatch = useAppDispatch();

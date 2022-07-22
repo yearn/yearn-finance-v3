@@ -251,96 +251,40 @@ const amountToNumber = (amount: string) => {
   return parseInt(parsedAmount);
 };
 
-interface Token {
-  address: string;
-  symbol: string;
-  icon?: string;
-  balance: string;
-  balanceUsdc: string;
-  decimals: number;
-  yield?: string;
-}
-
-export interface TxTokenInputProps {
-  headerText?: string;
-  inputText?: string;
-  inputError?: boolean;
+export interface TxRateInputProps {
+  frate?: string;
+  drate?: string;
+  headerText: string;
+  inputText: string;
   amount: string;
-  onAmountChange?: (amount: string) => void;
-  amountValue?: string;
   maxAmount?: string;
-  maxLabel?: string;
-  selectedToken: Token;
-  onSelectedTokenChange?: (address: string) => void;
-  yieldPercent?: string;
-  tokenOptions?: Token[];
+  onAmountChange?: (type: string, amount: string) => void;
   readOnly?: boolean;
   hideAmount?: boolean;
-  loading?: boolean;
-  loadingText?: string;
-  displayGuidance?: boolean;
+  inputError?: boolean;
 }
 
-export const TxTokenInput: FC<TxTokenInputProps> = ({
+export const TxRateInput: FC<TxRateInputProps> = ({
+  frate,
+  drate,
   headerText,
   inputText,
   inputError,
   amount,
   onAmountChange,
-  amountValue,
   maxAmount,
-  maxLabel = 'Max',
-  selectedToken,
-  onSelectedTokenChange,
-  yieldPercent,
-  tokenOptions,
   readOnly,
   hideAmount,
-  loading,
-  loadingText,
-  displayGuidance,
   children,
   ...props
 }) => {
   const { t } = useAppTranslation('common');
 
-  let listItems: SearchListItem[] = [];
-  let zappableItems: SearchListItem[] = [];
-  let selectedItem: SearchListItem = {
-    id: selectedToken.address,
-    icon: selectedToken.icon,
-    label: selectedToken.symbol,
-    value: selectedToken.yield ?? humanize('usd', selectedToken.balanceUsdc),
-  };
-
-  if (tokenOptions && tokenOptions.length > 1) {
-    listItems = tokenOptions
-      .map((item) => {
-        return {
-          id: item.address,
-          icon: item.icon,
-          label: item.symbol,
-          value: item.yield ?? humanize('usd', item.balanceUsdc),
-        };
-      })
-      .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));
-    zappableItems = listItems.slice(0, 4);
-    listItems.sort((a, b) => (a.id === selectedItem.id ? -1 : 1));
-  }
-
-  const openSearchList = () => {
-    setOpenedSearch(true);
-  };
-
-  const [openedSearch, setOpenedSearch] = useState(false);
-  const searchListHeader = selectedToken.yield
-    ? t('components.transaction.token-input.search-select-vault')
-    : t('components.transaction.token-input.search-select-token');
-
   return (
     <StyledTxTokenInput {...props}>
       <>{headerText && <Header>{headerText}</Header>}</>
-      {openedSearch && (
+      {/* TODO: put in common rates e.g. LIBOR (avg. COMP,AAVE,etc.) or personal algo
+       {openedSearch && (
         <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
           <StyledSearchList
             list={listItems}
@@ -350,42 +294,39 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
             onCloseList={() => setOpenedSearch(false)}
           />
         </CSSTransition>
-      )}
+      )} */}
 
       {/* NOTE Using fragments here because: https://github.com/yearn/yearn-finance-v3/pull/565 */}
       <>
-        <TokenInfo center={hideAmount}>
-          <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined} center={hideAmount}>
-            <TokenIconContainer>
-              <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
-              {listItems?.length > 1 && <TokenListIcon Component={ZapIcon} />}
-            </TokenIconContainer>
-            <TokenName>{selectedItem.label}</TokenName>
-          </TokenSelector>
+        <TokenData>
+          <AmountTitle ellipsis>{inputText || t('components.transaction.deposit.rates-title')}</AmountTitle>
 
-          {!hideAmount && (
-            <TokenData>
-              <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
-
-              <AmountInputContainer>
-                <StyledAmountInput
-                  value={amount}
-                  onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-                  placeholder={loading ? loadingText : '0.00000000'}
-                  readOnly={readOnly}
-                  error={inputError}
-                  type="number"
-                  aria-label={headerText}
-                />
-                {maxAmount && (
-                  <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
-                    {maxLabel}
-                  </MaxButton>
-                )}
-              </AmountInputContainer>
-            </TokenData>
-          )}
-        </TokenInfo>
+          <AmountInputContainer>
+            <StyledAmountInput
+              value={frate}
+              onChange={onAmountChange ? (e) => onAmountChange('f', e.target.value) : undefined}
+              placeholder={'15.00%'}
+              readOnly={readOnly}
+              error={inputError}
+              type="number"
+              aria-label={headerText}
+            />
+            <StyledAmountInput
+              value={drate}
+              onChange={onAmountChange ? (e) => onAmountChange('d', e.target.value) : undefined}
+              placeholder={'25.00%'}
+              readOnly={readOnly}
+              error={inputError}
+              type="number"
+              aria-label={headerText}
+            />
+            {maxAmount && (
+              <MaxButton outline onClick={onAmountChange ? () => onAmountChange('all', maxAmount) : undefined}>
+                {t('common.transaction.max-input')}
+              </MaxButton>
+            )}
+          </AmountInputContainer>
+        </TokenData>
       </>
     </StyledTxTokenInput>
   );

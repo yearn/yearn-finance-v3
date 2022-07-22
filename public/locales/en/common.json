@@ -31,7 +31,10 @@
       "tokens": "Tokens",
       "total-assets": "Total assets",
       "value": "Value",
-      "wallet": "Wallet"
+      "wallet": "Wallet",
+      "borrower": "Borrower",
+      "lender": "Lender",
+      "arbiter": "arbiter"
     },
     "no-wallet": "Wallet not connected",
     "recent-recommendations": {
@@ -57,6 +60,7 @@
       "weekly-apy": "Weekly APY"
     },
     "transaction": {
+      "max-input": "Max",
       "approve": "Approve",
       "available-borrow": "Available to borrow",
       "borrow": "Borrow",
@@ -155,9 +159,9 @@
       "small": "©"
     },
     "disclaimer": "Disclaimer",
-    "dicsord": "Discord",
+    "discord": "Discord",
     "docs": "Docs",
-    "market": "Debt DAO Market",
+    "market": "Market",
     "portfolio": "Portfolio",
     "settings": "Settings",
     "vault": "Vaults",
