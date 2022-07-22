@@ -6,6 +6,7 @@ export type ModalName =
   | 'withdraw'
   | 'testTx'
   | 'depositTx'
+  | 'addPosition'
   | 'withdrawTx'
   | 'migrateTx'
   | 'backscratcherLockTx'

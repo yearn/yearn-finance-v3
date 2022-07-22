@@ -88,6 +88,7 @@ export const getConstants = memoize((): Constants => {
       ...ADDRESSES,
       ...PARTNERS,
     },
+    MAX_INTEREST_RATE: 20000, // 200% APR
     SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
     DEFAULT_SLIPPAGE: 0.01,
     IRON_BANK_MAX_RATIO: 0.8,

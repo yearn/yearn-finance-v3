@@ -3,6 +3,7 @@ import {
   Config,
   Web3Provider,
   UserService,
+  LoanService,
   VaultService,
   TokenService,
   GasService,
@@ -26,6 +27,7 @@ export interface ServiceContainer {
   userService: UserService;
   vaultService: VaultService;
   tokenService: TokenService;
+  loanService: LoanService;
   gasService: GasService;
   transactionService: TransactionService;
 }

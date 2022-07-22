@@ -35,6 +35,7 @@ export interface Constants {
   CONTRACT_ADDRESSES: {
     [KEY: string]: string;
   };
+  MAX_INTEREST_RATE: number;
   SLIPPAGE_OPTIONS: number[];
   DEFAULT_SLIPPAGE: number;
   IRON_BANK_MAX_RATIO: number;

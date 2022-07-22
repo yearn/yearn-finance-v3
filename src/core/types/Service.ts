@@ -3,6 +3,7 @@ import {
   VaultDynamic,
   Token,
   TokenDynamicData,
+  Loan,
   Position,
   TransactionResponse,
   Address,
@@ -117,6 +118,17 @@ export interface MigrateProps {
   vaultFromAddress: Address;
   vaultToAddress: Address;
   migrationContractAddress: Address;
+}
+
+// *************** LOAN ***************
+export interface LoanService {
+  getLoans: (props: GetLoansProps) => Promise<Loan[]>;
+}
+
+export interface GetLoansProps {
+  query: string;
+  params?: object;
+  network: Network;
 }
 
 // *************** TOKEN ***************

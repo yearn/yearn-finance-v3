@@ -53,6 +53,10 @@ import { SettingsSelectors } from './settings/settings.selectors';
 import partnerReducer, { partnerInitialState } from './partner/partner.reducer';
 import { PartnerActions } from './partner/partner.actions';
 import { PartnerSelectors } from './partner/partner.selectors';
+// Loans State
+import loansReducer, { loansInitialState } from './loans/loans.reducer';
+import { LoansActions } from './loans/loans.actions';
+import { LoansSelectors } from './loans/loans.selectors';
 
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
@@ -68,6 +72,7 @@ const rootReducer: Reducer<RootState> = combineReducers({
   settings: settingsReducer,
   // user: userReducer,
   partner: partnerReducer,
+  loans: loansReducer,
 });
 
 export default rootReducer;
@@ -87,6 +92,7 @@ export {
   SettingsActions,
   // UserActions,
   PartnerActions,
+  LoansActions,
 };
 
 // Selectors
@@ -103,6 +109,7 @@ export {
   // LabsSelectors,
   // UserSelectors,
   PartnerSelectors,
+  LoansSelectors,
 };
 
 // initialState
@@ -120,4 +127,5 @@ export {
   settingsInitialState,
   // userInitialState,
   partnerInitialState,
+  loansInitialState,
 };
