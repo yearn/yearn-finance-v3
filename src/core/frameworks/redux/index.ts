@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 import { save, load, clear } from 'redux-localstorage-simple';
 import { merge, cloneDeep, get } from 'lodash';
 
@@ -17,7 +17,7 @@ export const getStore = (extraArgument?: any) => {
     namespace: 'yearn',
     states: ['theme', 'wallet.name', 'settings', 'network'],
   };
-  const logger = createLogger({ collapsed: true });
+  // const logger = createLogger({ collapsed: true });
   const middlewareOptions = {
     thunk: {
       extraArgument,
@@ -42,7 +42,7 @@ export const getStore = (extraArgument?: any) => {
       let middleware = getDefaultMiddleware(middlewareOptions);
       middleware.push(save(persistConfig));
       if (enableDevTools()) {
-        middleware.push(logger);
+        // middleware.push(logger);
       }
       return middleware;
     },

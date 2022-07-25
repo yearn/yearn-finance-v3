@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-import { isDev } from '@utils';
+// import { isDev } from '@utils';
 import { getConfig } from '@config';
 
 i18n
@@ -19,7 +19,7 @@ i18n
     defaultNS: 'common',
     ns: ['common', 'home', 'labs', 'modals', 'settings', 'vaultdetails', 'vaults', 'wallet'],
     lowerCaseLng: true,
-    debug: isDev(),
+    debug: false,
     interpolation: {
       escapeValue: false,
     },

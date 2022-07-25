@@ -1,6 +1,7 @@
 import { FC, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { ConsoleLog } from 'react-console-log';
 
 import {
   AppActions,
@@ -205,7 +206,7 @@ export const Layout: FC = ({ children }) => {
           disableNetworkChange={hideControls}
           hideDisabledControls={hideControls}
         />
-
+        <ConsoleLog />
         {children}
 
         <Footer />
