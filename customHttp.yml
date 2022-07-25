@@ -10,7 +10,7 @@ customHeaders:
       - key: X-Content-Type-Options
         value: nosniff
       - key: Content-Security-Policy
-        value: script-src 'self' https://*.yearn.finance https://metamask.app.link; child-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors https://*.ledger.com https://*.ledger-sbx.com https://*.ledger-stg.com https://*.ledger-ppr.com https://*.ledger-test.com https://gnosis-safe.io;
+        value: script-src 'self' https://*.yearn.finance https://*.amplifyapp.com https://metamask.app.link https://*.metamask.io; child-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors https://*.ledger.com https://*.ledger-sbx.com https://*.ledger-stg.com https://*.ledger-ppr.com https://*.ledger-test.com https://gnosis-safe.io;
       - key: Referrer-Policy
         value: same-origin
       - key: Feature-Policy
