@@ -184,6 +184,8 @@ export const Layout: FC = ({ children }) => {
     );
   }
 
+  const userAgent = navigator?.userAgent ?? 'no user agent';
+
   return (
     <StyledLayout>
       <Alerts />
@@ -205,7 +207,7 @@ export const Layout: FC = ({ children }) => {
           disableNetworkChange={hideControls}
           hideDisabledControls={hideControls}
         />
-
+        <div>{userAgent}</div>
         {children}
 
         <Footer />
