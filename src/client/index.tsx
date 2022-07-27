@@ -1,6 +1,9 @@
 import { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
+import { Duplex } from 'stream';
+import { WindowPostMessageStream } from '@metamask/post-message-stream';
+import { initializeProvider } from '@metamask/providers';
 import '@i18n';
 
 import { Container } from '@container';
@@ -74,10 +77,27 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const injectMetamaskProvider = () => {
+  if (window.ethereum) {
+    return;
+  }
+  if (navigator.userAgent.includes('Firefox')) {
+    const metamaskStream = new WindowPostMessageStream({
+      name: 'metamask-inpage',
+      target: 'metamask-contentscript',
+    }) as unknown as Duplex;
+    initializeProvider({
+      connectionStream: metamaskStream,
+      shouldShimWeb3: true,
+    });
+  }
+};
+
 const container = new Container();
 const store = getStore(container);
 
 export const App = () => {
+  injectMetamaskProvider();
   return (
     <Provider store={store}>
       <AppContextProvider context={container.context}>
