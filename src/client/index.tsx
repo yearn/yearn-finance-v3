@@ -1,7 +1,8 @@
+import { Duplex } from 'stream';
+
 import { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
-import { Duplex } from 'stream';
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
 import { initializeProvider } from '@metamask/providers';
 import '@i18n';
