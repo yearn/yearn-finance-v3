@@ -222,7 +222,7 @@ export const Layout: FC = ({ children }) => {
           hideDisabledControls={hideControls}
         />
         <div>{userAgent}</div>
-        <div>In metamask: {loadedInMetamask}</div>
+        <div>In metamask: {loadedInMetamask ? 'Yes' : 'No'}</div>
         {children}
 
         <Footer />
