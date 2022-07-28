@@ -6,13 +6,14 @@ import { createGlobalStyle } from 'styled-components';
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
 import { initializeProvider } from '@metamask/providers';
 import '@i18n';
+import '@metamask/mobile-provider';
 
 import { Container } from '@container';
 import { getStore } from '@frameworks/redux';
 import { AppContextProvider, NavSideMenuContextProvider } from '@context';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
-import { MobilePostMessageStream } from '@frameworks/metamask';
+// import { MobilePostMessageStream } from '@frameworks/metamask';
 
 import '@assets/fonts/RobotoFont.css';
 
