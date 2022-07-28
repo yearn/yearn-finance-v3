@@ -115,15 +115,17 @@ const injectMetamaskProvider = () => {
       shouldShimWeb3: true,
     });
   } else if (isMetamaskMobileBrowser()) {
-    const metamaskStream = new MobilePostMessageStream({
-      name: 'metamask-inpage',
-      target: 'metamask-contentscript',
-    }) as unknown as Duplex;
+    // const metamaskStream = new MobilePostMessageStream({
+    //   name: 'metamask-inpage',
+    //   target: 'metamask-contentscript',
+    // }) as unknown as Duplex;
 
-    initializeProvider({
-      connectionStream: metamaskStream,
-      shouldSendMetadata: false,
-    });
+    // initializeProvider({
+    //   connectionStream: metamaskStream,
+    //   shouldSendMetadata: false,
+    // });
+
+    import('@metamask/mobile-provider');
   }
 };
 
