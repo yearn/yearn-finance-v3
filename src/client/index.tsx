@@ -122,6 +122,7 @@ const injectMetamaskProvider = () => {
 
     initializeProvider({
       connectionStream: metamaskStream,
+      shouldShimWeb3: true,
       shouldSendMetadata: false,
     });
   }
