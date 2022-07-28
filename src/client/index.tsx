@@ -12,6 +12,7 @@ import { getStore } from '@frameworks/redux';
 import { AppContextProvider, NavSideMenuContextProvider } from '@context';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
+import { MobilePostMessageStream } from '@frameworks/metamask';
 
 import '@assets/fonts/RobotoFont.css';
 
@@ -81,9 +82,10 @@ const GlobalStyle = createGlobalStyle`
 const isFirefoxDesktopBrowser = () => {
   const userAgent = navigator?.userAgent ?? '';
   const isMobile = /Mobile/i.test(userAgent);
+  const isTablet = /Tablet/i.test(userAgent);
   const isFirefox = /Firefox/i.test(userAgent);
 
-  return isFirefox && !isMobile;
+  return isFirefox && !isMobile && !isTablet;
 };
 
 const isMetamaskMobileBrowser = () => {
@@ -100,14 +102,27 @@ const isMetamaskMobileBrowser = () => {
 };
 
 const injectMetamaskProvider = () => {
-  if (!window.ethereum && (isFirefoxDesktopBrowser() || isMetamaskMobileBrowser())) {
+  if (window.ethereum) return;
+
+  if (isFirefoxDesktopBrowser()) {
     const metamaskStream = new WindowPostMessageStream({
       name: 'metamask-inpage',
       target: 'metamask-contentscript',
     }) as unknown as Duplex;
+
     initializeProvider({
       connectionStream: metamaskStream,
       shouldShimWeb3: true,
+    });
+  } else if (isMetamaskMobileBrowser()) {
+    const metamaskStream = new MobilePostMessageStream({
+      name: 'metamask-inpage',
+      target: 'metamask-contentscript',
+    }) as unknown as Duplex;
+
+    initializeProvider({
+      connectionStream: metamaskStream,
+      shouldSendMetadata: false,
     });
   }
 };
