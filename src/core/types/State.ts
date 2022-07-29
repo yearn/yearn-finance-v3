@@ -1,7 +1,7 @@
 import { Alert } from './Alerts';
 import { Address, Network } from './Blockchain';
 import { ExternalServiceId } from './General';
-import { Loan } from './Loan';
+import { CreditLine } from './CreditLine';
 import { PartnerId } from './Partner';
 import { Theme } from './Settings';
 import { Status } from './Status';
@@ -27,7 +27,7 @@ export interface RootState {
   vaults: VaultsState;
   wallet: WalletState;
   tokens: TokensState;
-  loans: LoanState;
+  creditLines: CreditLineState;
   settings: SettingsState;
   // user: UserState;
   partner: PartnerState;
@@ -96,13 +96,13 @@ export interface VaultTransaction {
   expectedOutcome: TransactionOutcome | undefined;
 }
 
-export interface LoanState {
-  loansAddresses: string[];
-  loansMap: { [address: string]: Loan };
-  selectedLoanAddress: string | undefined;
-  loan: Loan | undefined;
+export interface CreditLineState {
+  creditLinesAddresses: string[];
+  creditLinesMap: { [address: string]: CreditLine };
+  selectedCreditLineAddress: string | undefined;
+  creditLine: CreditLine | undefined;
   statusMap: {
-    getLoans: Status;
+    getCreditLines: Status;
   };
 }
 

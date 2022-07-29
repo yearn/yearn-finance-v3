@@ -251,7 +251,7 @@ export const Market = () => {
               name: displayName,
               info: formatApy(apyData, apyType),
               infoDetail: 'EYY',
-              onAction: () => history.push(`/loan/${address}`),
+              onAction: () => history.push(`/creditLine/${address}`),
             }))}
           />
 
@@ -262,7 +262,7 @@ export const Market = () => {
               name: displayName,
               info: formatApy(apyData, apyType),
               infoDetail: 'EYY',
-              onAction: () => history.push(`/loan/${address}`),
+              onAction: () => history.push(`/creditLine/${address}`),
             }))}
           />
 
@@ -332,7 +332,7 @@ export const Market = () => {
               balance: normalizeAmount(vault.userDeposited, vault.token.decimals),
               actions: null,
             }))}
-            onAction={({ address }) => history.push(`/loan/${address}`)}
+            onAction={({ address }) => history.push(`/creditLine/${address}`)}
             initialSortBy="userDepositedUsdc"
             wrap
           />
@@ -410,7 +410,7 @@ export const Market = () => {
                 balance: normalizeAmount(vault.userDeposited, vault.token.decimals),
                 actions: null,
               }))}
-              onAction={({ address }) => history.push(`/loan/${address}`)}
+              onAction={({ address }) => history.push(`/creditLine/${address}`)}
               initialSortBy="userDepositedUsdc"
               wrap
             />
@@ -498,7 +498,7 @@ export const Market = () => {
               searching={opportunities.length > filteredVaults.length}
               filterLabel="Show 0% APY"
               filterBy={filterVaults}
-              onAction={({ address }) => history.push(`/loan/${address}`)}
+              onAction={({ address }) => history.push(`/creditLine/${address}`)}
               initialSortBy="apy"
               wrap
             />

@@ -1,44 +1,44 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { useAppTranslation, useSelectedLoan } from '@hooks';
+import { useAppTranslation, useSelectedCreditLine } from '@hooks';
 import { ModalTx } from '@components/common';
-import { AddDebtPositionTx } from '@components/app';
+import { AddCreditPositionTx } from '@components/app';
 
-const StyledAddDebtPositionTxModal = styled(ModalTx)``;
-export interface AddDebtPositionTxModalProps {
+const StyledAddCreditPositionTxModal = styled(ModalTx)``;
+export interface AddCreditPositionTxModalProps {
   onClose: () => void;
   modalProps?: {
     allowVaultSelect: boolean;
   };
 }
 
-export const AddDebtPositionTxModal: FC<AddDebtPositionTxModalProps> = ({
+export const AddCreditPositionTxModal: FC<AddCreditPositionTxModalProps> = ({
   onClose,
   modalProps = { allowVaultSelect: false },
   ...props
 }) => {
   console.log('deposit modal', props);
   const { t } = useAppTranslation('common');
-  const [loan] = useSelectedLoan();
-  // if (!loan) return; // TODO error or loan selector input
-  const onLoanChange = () => {
-    // new loan selected to invest in
+  const [creditLine] = useSelectedCreditLine();
+  // if (!creditLine) return; // TODO error or creditLine selector input
+  const onCreditLineChange = () => {
+    // new creditLine selected to invest in
   };
   const onPositionChange = () => {
     // update deposit params
   };
 
   return (
-    <StyledAddDebtPositionTxModal {...props}>
-      <AddDebtPositionTx
+    <StyledAddCreditPositionTxModal {...props}>
+      <AddCreditPositionTx
         header={t('components.transaction.add-position.header')} // TODO
         acceptingOffer={false}
         allowVaultSelect={modalProps.allowVaultSelect}
         onClose={onClose}
-        onLoanChange={onLoanChange}
+        onCreditLineChange={onCreditLineChange}
         onPositionChange={onPositionChange}
       />
-    </StyledAddDebtPositionTxModal>
+    </StyledAddCreditPositionTxModal>
   );
 };

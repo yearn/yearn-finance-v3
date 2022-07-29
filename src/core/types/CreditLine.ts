@@ -1,16 +1,16 @@
 import { Address, Event } from './Blockchain';
 import { TokenView } from './Token';
 
-export interface BasicLoan {
+export interface BasicCreditLineData {
   id: string;
-  loanStatus: number;
+  creditLineStatus: number;
   borrower: Address;
   principal: number;
 }
 
-export interface Loan extends BasicLoan {
+export interface CreditLine extends BasicCreditLineData {
   id: string;
-  loanStatus: number;
+  creditLineStatus: number;
   borrower: Address;
   oracle: Address;
   spigot: Address;
@@ -18,11 +18,11 @@ export interface Loan extends BasicLoan {
 
   principal: number;
   interest: number;
-  positions?: DebtPosition[];
+  positions?: CreditPosition[];
   collateral?: Collateral[];
 }
 
-export interface DebtPosition {
+export interface CreditPosition {
   lender: Address;
   token: Address;
   principal: number;

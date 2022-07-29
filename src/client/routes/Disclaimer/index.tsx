@@ -68,7 +68,7 @@ export const Disclaimer = () => {
           without courts of law.{' '}
           <u>
             By contrast, with the Iron Bank, there are no legal agreements, promises of payment or courts of law, and
-            therefore there are no debts, loans or other traditional finance transactions involved.
+            therefore there are no debts, creditLines or other traditional finance transactions involved.
           </u>
         </p>
         <p>

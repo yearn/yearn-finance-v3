@@ -9,7 +9,7 @@ import { ComingSoonModal } from './ComingSoonModal';
 import { CommunityThemesModal } from './CommunityThemesModal';
 import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
-import { AddDebtPositionTxModal } from './AddDebtPositionTxModal';
+import { AddCreditPositionTxModal } from './AddCreditPositionTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
 import { MigrateTxModal } from './MigrateTxModal';
 
@@ -148,7 +148,7 @@ export const Modals = () => {
 
       {activeModal === 'addPosition' && (
         <CSSTransition key={'addPosition'} timeout={modalTimeout} classNames="slideBottom">
-          <AddDebtPositionTxModal onClose={closeModal} />
+          <AddCreditPositionTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

@@ -16,7 +16,7 @@ import { AppSelectors } from '../app/app.selectors';
 // const selectUserTokensStatusMap = (state: RootState) => state.tokens.statusMap;
 // const selectGetTokensStatus = (state: RootState) => state.tokens.statusMap.getTokens;
 // const selectGetUserTokensStatus = (state: RootState) => state.tokens.statusMap.user.getUserTokens;
-const selectSelectedLoanAddress = (state: RootState) => state.loans.loan?.id;
+const selectSelectedCreditLineAddress = (state: RootState) => state.creditLines.creditLine?.id;
 
 /* ----------------------------- Main Selectors ----------------------------- */
 // const selectUserTokens = createSelector(
@@ -92,6 +92,6 @@ const selectSelectedLoanAddress = (state: RootState) => state.loans.loan?.id;
 // }
 
 /* --------------------------------- Exports -------------------------------- */
-export const LoansSelectors = {
-  selectSelectedLoanAddress,
+export const CreditLinesSelectors = {
+  selectSelectedCreditLineAddress,
 };

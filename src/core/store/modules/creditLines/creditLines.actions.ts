@@ -1,32 +1,34 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { TokenDynamicData, Loan, Balance, Integer, GetLoansProps, Address } from '@types';
+import { TokenDynamicData, CreditLine, Balance, Integer, GetCreditLinesProps, Address } from '@types';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Setters                                  */
 /* -------------------------------------------------------------------------- */
 
-const setSelectedLoanAddress = createAction<{ loanAddress?: string }>('loans/setSelectedLoanAddress');
+const setSelectedCreditLineAddress = createAction<{ creditLineAddress?: string }>(
+  'creditLines/setSelectedCreditLineAddress'
+);
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
 /* -------------------------------------------------------------------------- */
 
-const clearSelectedLoan = createAction<void>('loans/clearSelectedLoans');
-const clearLoansData = createAction<void>('loans/clearLoansData');
+const clearSelectedCreditLine = createAction<void>('creditLines/clearSelectedCreditLines');
+const clearCreditLinesData = createAction<void>('creditLines/clearCreditLinesData');
 
 /* -------------------------------------------------------------------------- */
 /*                                 Fetch Data                                 */
 /* -------------------------------------------------------------------------- */
 
-const getLoans = createAsyncThunk<{ loansData: Loan[] }, { params: GetLoansProps }, ThunkAPI>(
-  'tokens/getLoans',
+const getCreditLines = createAsyncThunk<{ creditLinesData: CreditLine[] }, { params: GetCreditLinesProps }, ThunkAPI>(
+  'creditLines/getCreditLines',
   async ({ params }, { getState, extra }) => {
     const { network } = getState();
-    const { loanService } = extra.services;
-    const loansData: Loan[] = await loanService.getLoans(params);
-    return { loansData };
+    const { creditLineService } = extra.services;
+    const creditLinesData: CreditLine[] = await creditLineService.getCreditLines(params);
+    return { creditLinesData };
   }
 );
 
@@ -106,10 +108,10 @@ const getLoans = createAsyncThunk<{ loansData: Loan[] }, { params: GetLoansProps
 /*                                   Exports                                  */
 /* -------------------------------------------------------------------------- */
 
-export const LoansActions = {
-  setSelectedLoanAddress,
-  getLoans,
-  clearSelectedLoan,
-  clearLoansData,
+export const CreditLinesActions = {
+  setSelectedCreditLineAddress,
+  getCreditLines,
+  clearSelectedCreditLine,
+  clearCreditLinesData,
   // initSubscriptions,
 };

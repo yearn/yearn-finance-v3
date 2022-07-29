@@ -3,7 +3,7 @@ import {
   VaultDynamic,
   Token,
   TokenDynamicData,
-  Loan,
+  CreditLine,
   Position,
   TransactionResponse,
   Address,
@@ -121,11 +121,11 @@ export interface MigrateProps {
 }
 
 // *************** LOAN ***************
-export interface LoanService {
-  getLoans: (props: GetLoansProps) => Promise<Loan[]>;
+export interface CreditLineService {
+  getCreditLines: (props: GetCreditLinesProps) => Promise<CreditLine[]>;
 }
 
-export interface GetLoansProps {
+export interface GetCreditLinesProps {
   query: string;
   params?: object;
   network: Network;

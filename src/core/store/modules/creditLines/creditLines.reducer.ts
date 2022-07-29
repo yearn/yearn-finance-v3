@@ -1,41 +1,42 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { union } from 'lodash';
 
-import { LoanState, initialStatus } from '@types';
+import { CreditLineState, initialStatus } from '@types';
 
-import { LoansActions } from './loans.actions';
+import { CreditLinesActions } from './creditLines.actions';
 
-export const loansInitialState: LoanState = {
-  loansAddresses: [],
-  loansMap: {},
-  selectedLoanAddress: undefined,
-  loan: undefined,
+export const creditLinesInitialState: CreditLineState = {
+  creditLinesAddresses: [],
+  creditLinesMap: {},
+  selectedCreditLineAddress: undefined,
+  creditLine: undefined,
   statusMap: {
-    getLoans: { ...initialStatus },
+    getCreditLines: { ...initialStatus },
   },
 };
 
-const { setSelectedLoanAddress, getLoans, clearSelectedLoan, clearLoansData } = LoansActions;
+const { setSelectedCreditLineAddress, getCreditLines, clearSelectedCreditLine, clearCreditLinesData } =
+  CreditLinesActions;
 
-const loansReducer = createReducer(loansInitialState, (builder) => {
+const creditLinesReducer = createReducer(creditLinesInitialState, (builder) => {
   builder
 
     /* -------------------------------------------------------------------------- */
     /*                                   Setters                                  */
     /* -------------------------------------------------------------------------- */
-    .addCase(setSelectedLoanAddress, (state, { payload: { loanAddress } }) => {
-      state.selectedLoanAddress = loanAddress;
+    .addCase(setSelectedCreditLineAddress, (state, { payload: { creditLineAddress } }) => {
+      state.selectedCreditLineAddress = creditLineAddress;
     })
 
     /* -------------------------------------------------------------------------- */
     /*                                 Clear State                                */
     /* -------------------------------------------------------------------------- */
-    .addCase(clearLoansData, (state) => {
-      state.loansMap = {};
-      state.loansAddresses = [];
+    .addCase(clearCreditLinesData, (state) => {
+      state.creditLinesMap = {};
+      state.creditLinesAddresses = [];
     })
-    .addCase(clearSelectedLoan, (state) => {
-      state.loan = undefined;
+    .addCase(clearSelectedCreditLine, (state) => {
+      state.creditLine = undefined;
     })
 
     /* -------------------------------------------------------------------------- */
@@ -43,17 +44,17 @@ const loansReducer = createReducer(loansInitialState, (builder) => {
     /* -------------------------------------------------------------------------- */
 
     /* -------------------------------- getTokens ------------------------------- */
-    .addCase(getLoans.pending, (state) => {
-      state.statusMap.getLoans = { loading: true };
+    .addCase(getCreditLines.pending, (state) => {
+      state.statusMap.getCreditLines = { loading: true };
     })
-    .addCase(getLoans.fulfilled, (state, { payload: { loansData } }) => {
+    .addCase(getCreditLines.fulfilled, (state, { payload: { creditLinesData } }) => {
       const tokenAddresses: string[] = [];
-      loansData.forEach((loan) => {
-        state.loansMap[loan.id] = loan;
-        tokenAddresses.push(loan.id);
+      creditLinesData.forEach((creditLine) => {
+        state.creditLinesMap[creditLine.id] = creditLine;
+        tokenAddresses.push(creditLine.id);
       });
-      state.loansAddresses = union(state.loansAddresses, tokenAddresses);
-      state.statusMap.getLoans = {};
+      state.creditLinesAddresses = union(state.creditLinesAddresses, tokenAddresses);
+      state.statusMap.getCreditLines = {};
     });
 
   /* -------------------------------------------------------------------------- */
@@ -71,4 +72,4 @@ const loansReducer = createReducer(loansInitialState, (builder) => {
   // });
 });
 
-export default loansReducer;
+export default creditLinesReducer;

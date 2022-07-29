@@ -1,8 +1,8 @@
 import {
-  LoanService,
+  CreditLineService,
   YearnSdk,
   TokenDynamicData,
-  Loan,
+  CreditLine,
   ApproveProps,
   TransactionService,
   Web3Provider,
@@ -11,23 +11,22 @@ import {
   Integer,
   Config,
   Network,
-  GetLoansProps,
+  GetCreditLinesProps,
 } from '@types';
+import { getConfig } from '@config';
 
-export class LoanServiceImpl implements LoanService {
-  private graphURL: string;
+export class CreditLineServiceImpl implements CreditLineService {
+  private graphUrl: string;
   private web3Provider: Web3Provider;
   private transactionService: TransactionService;
   private config: Config;
 
   constructor({
-    graphURL,
     transactionService,
     yearnSdk,
     web3Provider,
     config,
   }: {
-    graphURL: string;
     transactionService: TransactionService;
     web3Provider: Web3Provider;
     yearnSdk: YearnSdk;
@@ -36,10 +35,11 @@ export class LoanServiceImpl implements LoanService {
     this.transactionService = transactionService;
     this.web3Provider = web3Provider;
     this.config = config;
-    this.graphURL = graphURL;
+    const { GRAPH_API_URL } = getConfig();
+    this.graphUrl = GRAPH_API_URL || 'https://api.thegraph.com';
   }
 
-  public async getLoans(params: GetLoansProps): Promise<Loan[]> {
+  public async getCreditLines(params: GetCreditLinesProps): Promise<CreditLine[]> {
     // graphURL
     return [];
   }

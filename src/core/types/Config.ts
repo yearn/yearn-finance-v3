@@ -19,6 +19,7 @@ export interface Env {
   PORTIS_KEY: string | undefined;
   // ZAPPER_API_KEY: string | undefined;
   DEBT_DAO_SUBGRAPH_KEY: string | undefined;
+  GRAPH_API_URL: string | undefined;
 }
 
 export interface Constants {

@@ -230,6 +230,7 @@ export const Vaults = () => {
     );
   };
 
+  console.log('vaults page. items', opportunities);
   return (
     <ViewContainer>
       <StyledSliderCard

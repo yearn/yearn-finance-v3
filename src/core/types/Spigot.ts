@@ -2,7 +2,7 @@ import { Address, Event } from './Blockchain';
 
 export interface Spigot {
   id: Address;
-  loan: Address;
+  creditLine: Address;
   settings: SpigotSetting[];
   events: Event[];
 }

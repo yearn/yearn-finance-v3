@@ -14,15 +14,6 @@ const MaxButton = styled(Button)`
   text-transform: capitalize;
 `;
 
-const RatesContainer = styled.div``;
-
-const InterestRateInputContainer = styled.div`
-  flex: 1;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-`;
-
 const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   font-size: 2.4rem;
   font-weight: 700;
@@ -33,7 +24,7 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   padding: 0;
   font-family: inherit;
   appearance: textfield;
-  width: 80%;
+  width: 100%;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.txModalColors.textContrast};
@@ -59,10 +50,6 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
       margin: 0;
     };
   `}
-`;
-
-const InputPercent = styled.span`
-  font-size: 2.4rem;
 `;
 
 const ContrastText = styled.span`
@@ -93,7 +80,6 @@ const AmountInputContainer = styled.div`
   align-items: center;
   width: 100%;
   margin-top: 0.8rem;
-  column-gap: 5rem;
 `;
 
 const AmountTitle = styled(Text)`
@@ -101,7 +87,7 @@ const AmountTitle = styled(Text)`
   text-overflow: ellipsis;
 `;
 
-const PositionData = styled.div`
+const TokenData = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -265,111 +251,142 @@ const amountToNumber = (amount: string) => {
   return parseInt(parsedAmount);
 };
 
-export interface TxRateInputProps {
-  frate?: string;
-  drate?: string;
-  headerText: string;
-  amount: string;
-  maxAmount?: string;
-  setRateChange?: (type: string, amount: string) => void;
-  // openedTokenSearch: boolean;
-  // setOpenedTokenSearch: (x: bool) => void;
-  // setSelectedToken: (x: string) => void;
-  // selectedToken: TokenView;
-  // List: TokenView[];
-  // openedCreditSearch: boolean;
-  // setOpenedCreditSearch: (x: bool) => void;
-  // setSelectedCredit: (x: string) => void;
-  // selectedCredit: TokenView;
-  // List: TokenView[];
-  readOnly?: boolean;
-  hideAmount?: boolean;
-  inputError?: boolean;
+interface Credit {
+  address: string;
+  symbol: string;
+  icon?: string;
+  balance: string;
+  balanceUsdc: string;
+  decimals: number;
+  yield?: string;
 }
 
-export const TxRateInput: FC<TxRateInputProps> = ({
-  frate,
-  drate,
+export interface TxCreditInputProps {
+  headerText?: string;
+  inputText?: string;
+  inputError?: boolean;
+  amount: string;
+  onAmountChange?: (amount: string) => void;
+  amountValue?: string;
+  maxAmount?: string;
+  maxLabel?: string;
+  selectedCredit: Credit;
+  onSelectedCreditChange?: (address: string) => void;
+  yieldPercent?: string;
+  CreditOptions?: Credit[];
+  readOnly?: boolean;
+  hideAmount?: boolean;
+  loading?: boolean;
+  loadingText?: string;
+  displayGuidance?: boolean;
+}
+
+export const TxCreditInput: FC<TxCreditInputProps> = ({
   headerText,
+  inputText,
   inputError,
   amount,
-  setRateChange,
-  // openedTokenSearch,
-  // setOpenedTokenSearch,
-  // selectedToken,
-  // setSelectedToken,
-  // tokenList,
-  // openedCreditSearch,
-  // setOpenedCreditSearch,
-  // selectedCredit,
-  // setSelectedCredit,
-  // creditList,
+  onAmountChange,
+  amountValue,
   maxAmount,
+  maxLabel = 'Max',
+  selectedCredit,
+  onSelectedCreditChange,
+  yieldPercent,
+  CreditOptions,
   readOnly,
   hideAmount,
+  loading,
+  loadingText,
+  displayGuidance,
   children,
   ...props
 }) => {
   const { t } = useAppTranslation('common');
 
+  let listItems: SearchListItem[] = [];
+  let zappableItems: SearchListItem[] = [];
+  let selectedItem: SearchListItem = {
+    id: selectedCredit.address,
+    icon: selectedCredit.icon,
+    label: selectedCredit.symbol,
+    value: selectedCredit.yield ?? humanize('usd', selectedCredit.balanceUsdc),
+  };
+
+  if (tokenOptions && tokenOptions.length > 1) {
+    listItems = tokenOptions
+      .map((item) => {
+        return {
+          id: item.address,
+          icon: item.icon,
+          label: item.symbol,
+          value: item.yield ?? humanize('usd', item.balanceUsdc),
+        };
+      })
+      .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));
+    zappableItems = listItems.slice(0, 4);
+    listItems.sort((a, b) => (a.id === selectedItem.id ? -1 : 1));
+  }
+
+  const openSearchList = () => {
+    setOpenedSearch(true);
+  };
+
+  const [openedSearch, setOpenedSearch] = useState(false);
+  const searchListHeader = selectedToken.yield
+    ? t('components.transaction.token-input.search-select-vault')
+    : t('components.transaction.token-input.search-select-token');
+
   return (
-    <>
-      <StyledTxTokenInput {...props}>
-        <>{headerText && <Header>{headerText}</Header>}</>
+    <StyledTxTokenInput {...props}>
+      <>{headerText && <Header>{headerText}</Header>}</>
+      {openedSearch && (
+        <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
+          <StyledSearchList
+            list={listItems}
+            headerText={searchListHeader}
+            selected={selectedItem}
+            setSelected={(item) => (onSelectedTokenChange ? onSelectedTokenChange(item.id) : undefined)}
+            onCloseList={() => setOpenedSearch(false)}
+          />
+        </CSSTransition>
+      )}
 
-        {/* TODO: put in common rates e.g. LIBOR (avg. COMP,AAVE,etc.) or personal algo */}
-        {/* {openedSearch && (
-          <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
-            <StyledSearchList
-              list={listItems}
-              headerText={searchListHeader}
-              selected={selectedItem}
-              setSelected={(item) => (onSelectedTokenChange ? onSelectedTokenChange(item.id) : undefined)}
-              onCloseList={() => setOpenedSearch(false)}
-            />
-          </CSSTransition>
-        )} */}
+      {/* NOTE Using fragments here because: https://github.com/yearn/yearn-finance-v3/pull/565 */}
+      <>
+        <TokenInfo center={hideAmount}>
+          <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined} center={hideAmount}>
+            <TokenIconContainer>
+              <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
+              {listItems?.length > 1 && <TokenListIcon Component={ZapIcon} />}
+            </TokenIconContainer>
+            <TokenName>{selectedItem.label}</TokenName>
+          </TokenSelector>
 
-        {/* NOTE Using fragments here because: https://github.com/yearn/yearn-finance-v3/pull/565 */}
-        <>
-          <PositionData>
-            <AmountInputContainer>
-              <RatesContainer>
-                <AmountTitle ellipsis>
-                  {'Drawn Down Rate' || t('components.transaction.deposit.rates-title')}
-                </AmountTitle>
-                <InterestRateInputContainer>
-                  <StyledAmountInput
-                    value={frate}
-                    onChange={setRateChange ? (e) => setRateChange('f', e.target.value) : undefined}
-                    placeholder={'15.00'}
-                    readOnly={readOnly}
-                    error={inputError}
-                    type="number"
-                    aria-label={headerText}
-                  />
-                  <InputPercent>%</InputPercent>
-                </InterestRateInputContainer>
-              </RatesContainer>
-              <RatesContainer>
-                <AmountTitle ellipsis>{'Facility Rate' || t('components.transaction.deposit.rates-title')}</AmountTitle>
-                <InterestRateInputContainer>
-                  <StyledAmountInput
-                    value={drate}
-                    onChange={setRateChange ? (e) => setRateChange('d', e.target.value) : undefined}
-                    placeholder={'25.00'}
-                    readOnly={readOnly}
-                    error={inputError}
-                    type="number"
-                    aria-label={headerText}
-                  />
-                  <InputPercent>%</InputPercent>
-                </InterestRateInputContainer>
-              </RatesContainer>
-            </AmountInputContainer>
-          </PositionData>
-        </>
-      </StyledTxTokenInput>
-    </>
+          {!hideAmount && (
+            <TokenData>
+              <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
+
+              <AmountInputContainer>
+                <StyledAmountInput
+                  value={amount}
+                  onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
+                  placeholder={loading ? loadingText : '0.00000000'}
+                  readOnly={readOnly}
+                  error={inputError}
+                  type="number"
+                  aria-label={headerText}
+                />
+                {maxAmount && (
+                  <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+                    {maxLabel}
+                  </MaxButton>
+                )}
+              </AmountInputContainer>
+            </TokenData>
+          )}
+        </TokenInfo>
+      </>
+    </StyledTxTokenInput>
   );
 };

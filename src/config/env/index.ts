@@ -18,6 +18,7 @@ export const getEnv = memoize((): Env => {
     REACT_APP_FORTMATIC_KEY,
     REACT_APP_PORTIS_KEY,
     REACT_APP_DEBT_DAO_SUBGRAPH_KEY,
+    REACT_APP_GRAPH_API_URL,
   } = process.env;
 
   return {
@@ -35,5 +36,6 @@ export const getEnv = memoize((): Env => {
     FORTMATIC_KEY: REACT_APP_FORTMATIC_KEY,
     PORTIS_KEY: REACT_APP_PORTIS_KEY,
     DEBT_DAO_SUBGRAPH_KEY: REACT_APP_DEBT_DAO_SUBGRAPH_KEY,
+    GRAPH_API_URL: REACT_APP_GRAPH_API_URL,
   };
 });

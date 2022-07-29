@@ -88,7 +88,8 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
         });
         break;
       default:
-        // case 'vaults': TODO: our new routets - e.g. market
+      case 'market': // TODO: our new routets - e.g. market
+        await dispatch(VaultsActions.initiateSaveVaults());
         break;
     }
   },
