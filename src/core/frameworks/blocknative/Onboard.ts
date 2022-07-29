@@ -6,6 +6,8 @@ import { getConfig } from '@config';
 import { getNetworkId, getNetworkRpc } from '@utils';
 import { Wallet, Subscriptions, Network, Theme } from '@types';
 
+import { injectMetamaskProvider } from '../metamask';
+
 import ledgerIframeWallet from './IframeWallet';
 
 export class BlocknativeWalletImpl implements Wallet {
@@ -103,6 +105,8 @@ export class BlocknativeWalletImpl implements Wallet {
     ];
 
     const walletCheck = [{ checkName: 'derivationPath' }, { checkName: 'connect' }, { checkName: 'accounts' }];
+
+    injectMetamaskProvider();
 
     this.onboard = Onboard({
       networkId,

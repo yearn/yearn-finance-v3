@@ -1,19 +1,13 @@
-import { Duplex } from 'stream';
-
 import { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
-import { WindowPostMessageStream } from '@metamask/post-message-stream';
-import { initializeProvider } from '@metamask/providers';
 import '@i18n';
-import '@metamask/mobile-provider';
 
 import { Container } from '@container';
 import { getStore } from '@frameworks/redux';
 import { AppContextProvider, NavSideMenuContextProvider } from '@context';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
-// import { MobilePostMessageStream } from '@frameworks/metamask';
 
 import '@assets/fonts/RobotoFont.css';
 
@@ -80,61 +74,10 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const isFirefoxDesktopBrowser = () => {
-  const userAgent = navigator?.userAgent ?? '';
-  const isMobile = /Mobile/i.test(userAgent);
-  const isTablet = /Tablet/i.test(userAgent);
-  const isFirefox = /Firefox/i.test(userAgent);
-
-  return isFirefox && !isMobile && !isTablet;
-};
-
-const isMetamaskMobileBrowser = () => {
-  // Metamask hardcodes user agent used on their mobile app browser
-  // https://github.com/MetaMask/metamask-mobile/blob/bcc22b37381fe59200fc560c42c4712b89106309/app/core/AppConstants.js#L35
-  const METAMASK_ANDROID_USER_AGENT =
-    'Mozilla/5.0 (Linux; Android 10; Android SDK built for x86 Build/OSM1.180201.023) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.92 Mobile Safari/537.36';
-  const METAMASK_IOS_USER_AGENT =
-    'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/76.0.3809.123 Mobile/15E148 Safari/605.1';
-
-  const userAgent = navigator?.userAgent ?? '';
-
-  return userAgent === METAMASK_ANDROID_USER_AGENT || userAgent === METAMASK_IOS_USER_AGENT;
-};
-
-const injectMetamaskProvider = () => {
-  if (window.ethereum) return;
-
-  if (isFirefoxDesktopBrowser()) {
-    const metamaskStream = new WindowPostMessageStream({
-      name: 'metamask-inpage',
-      target: 'metamask-contentscript',
-    }) as unknown as Duplex;
-
-    initializeProvider({
-      connectionStream: metamaskStream,
-      shouldShimWeb3: true,
-    });
-  } else if (isMetamaskMobileBrowser()) {
-    // const metamaskStream = new MobilePostMessageStream({
-    //   name: 'metamask-inpage',
-    //   target: 'metamask-contentscript',
-    // }) as unknown as Duplex;
-
-    // initializeProvider({
-    //   connectionStream: metamaskStream,
-    //   shouldSendMetadata: false,
-    // });
-
-    import('@metamask/mobile-provider');
-  }
-};
-
 const container = new Container();
 const store = getStore(container);
 
 export const App = () => {
-  injectMetamaskProvider();
   return (
     <Provider store={store}>
       <AppContextProvider context={container.context}>
