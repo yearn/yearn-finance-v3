@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Img } from '@components/common';
+import { Img, LogoIcon } from '@components/common';
 
 const fallbackIcon = '';
 
@@ -14,11 +14,12 @@ type TokenIconSize = 'default' | 'big' | 'xBig' | 'xxBig';
 
 interface TokenIconProps {
   icon?: string;
+  SVG?: React.FC;
   symbol?: string;
   size?: TokenIconSize;
 }
 
-export const TokenIcon = ({ icon, symbol, size }: TokenIconProps) => {
+export const TokenIcon = ({ SVG, icon, symbol, size }: TokenIconProps) => {
   const src = icon === '' || !icon ? fallbackIcon : icon;
   let height;
   switch (size) {
@@ -43,5 +44,7 @@ export const TokenIcon = ({ icon, symbol, size }: TokenIconProps) => {
     height: height,
   };
 
-  return <StyledTokenIcon>{src && <Img alt={symbol ?? 'n/a'} style={style} src={src} />}</StyledTokenIcon>;
+  return (
+    <StyledTokenIcon>{SVG ? <SVG /> : src && <Img alt={symbol ?? 'n/a'} style={style} src={src} />}</StyledTokenIcon>
+  );
 };

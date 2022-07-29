@@ -4,8 +4,8 @@ import { CreditLine } from '@src/core/types';
 
 import { useCreditLines } from './useCreditLines';
 
-export const useSelectedCreditLine = () => {
-  const [creditLine, setCreditLine] = useState<CreditLine | null>(null);
+export const useSelectedCreditLine = (): [CreditLine | undefined, Function] => {
+  const [creditLine, setCreditLine] = useState<CreditLine | undefined>();
 
   useEffect(() => {
     // if(!creditLine && )

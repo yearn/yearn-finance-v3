@@ -25,6 +25,9 @@ export interface Env {
 export interface Constants {
   STATE_VERSION: number;
   ETHEREUM_ADDRESS: Address;
+  TOKEN_ADDRESSES: {
+    [KEY: string]: string;
+  };
   MAX_UINT256: Wei;
   DEBT_DAO_API: string;
   DEBT_DAO_ALERTS_API: string;

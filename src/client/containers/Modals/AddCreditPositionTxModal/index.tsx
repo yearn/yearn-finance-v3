@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useAppTranslation, useSelectedCreditLine } from '@hooks';
 import { ModalTx } from '@components/common';
 import { AddCreditPositionTx } from '@components/app';
+import { TokenView } from '@core/types';
 
 const StyledAddCreditPositionTxModal = styled(ModalTx)``;
 export interface AddCreditPositionTxModalProps {
@@ -20,11 +21,14 @@ export const AddCreditPositionTxModal: FC<AddCreditPositionTxModalProps> = ({
 }) => {
   console.log('deposit modal', props);
   const { t } = useAppTranslation('common');
-  const [creditLine] = useSelectedCreditLine();
+  const [creditLine, setSelected] = useSelectedCreditLine();
   // if (!creditLine) return; // TODO error or creditLine selector input
-  const onCreditLineChange = () => {
+
+  const onSelectedCreditLineChange = () => {
     // new creditLine selected to invest in
+    // setSelected()
   };
+
   const onPositionChange = () => {
     // update deposit params
   };
@@ -32,11 +36,11 @@ export const AddCreditPositionTxModal: FC<AddCreditPositionTxModalProps> = ({
   return (
     <StyledAddCreditPositionTxModal {...props}>
       <AddCreditPositionTx
-        header={t('components.transaction.add-position.header')} // TODO
+        header={t('components.transaction.add-credit.header')} // TODO
         acceptingOffer={false}
         allowVaultSelect={modalProps.allowVaultSelect}
         onClose={onClose}
-        onCreditLineChange={onCreditLineChange}
+        onSelectedCreditLineChange={onSelectedCreditLineChange}
         onPositionChange={onPositionChange}
       />
     </StyledAddCreditPositionTxModal>

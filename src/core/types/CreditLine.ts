@@ -3,21 +3,21 @@ import { TokenView } from './Token';
 
 export interface BasicCreditLineData {
   id: string;
-  creditLineStatus: number;
+  status: string;
   borrower: Address;
-  principal: number;
+  principal: string;
 }
 
 export interface CreditLine extends BasicCreditLineData {
   id: string;
-  creditLineStatus: number;
+  status: string;
   borrower: Address;
   oracle: Address;
   spigot: Address;
   escrow: Address;
 
-  principal: number;
-  interest: number;
+  principal: string;
+  interest: string;
   positions?: CreditPosition[];
   collateral?: Collateral[];
 }
@@ -25,14 +25,14 @@ export interface CreditLine extends BasicCreditLineData {
 export interface CreditPosition {
   lender: Address;
   token: Address;
-  principal: number;
-  interest: number;
-  interestClaimable: number;
+  principal: string;
+  interest: string;
+  interestClaimable: string;
   events?: Event[];
 }
 
 export interface Collateral {
   token: Address;
-  amount: number; // figure out which BigNumber they use
-  value: number;
+  amount: string; // figure out which BigNumber they use
+  value: string;
 }

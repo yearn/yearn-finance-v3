@@ -4,8 +4,9 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
-import { Text, Icon, Button, SearchList, ZapIcon, SearchListItem } from '@components/common';
+import { Text, Icon, Button, SearchList, LogoIcon, ZapIcon, SearchListItem } from '@components/common';
 import { formatUsd, humanize } from '@utils';
+import { CreditLine } from '@src/core/types';
 
 const MaxButton = styled(Button)`
   border-radius: ${({ theme }) => theme.globalRadius};
@@ -61,7 +62,7 @@ const StyledText = styled(Text)`
   max-width: 11rem;
 `;
 
-const TokenExtras = styled.div`
+const CreditLineExtras = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -87,7 +88,7 @@ const AmountTitle = styled(Text)`
   text-overflow: ellipsis;
 `;
 
-const TokenData = styled.div`
+const CreditLineData = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -98,7 +99,7 @@ const TokenData = styled.div`
   flex: 1;
 `;
 
-const TokenName = styled.div`
+const CreditLineName = styled.div`
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -108,21 +109,21 @@ const TokenName = styled.div`
   max-height: 3rem;
 `;
 
-const TokenListIcon = styled(Icon)`
+const CreditLineListIcon = styled(Icon)`
   position: absolute;
   top: 0.8rem;
   right: 0.4rem;
   color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
 `;
 
-const TokenIconContainer = styled.div`
+const CreditLineIconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
 `;
 
-const ZappableTokenButton = styled(Button)<{ selected?: boolean; viewAll?: boolean }>`
+const ZappableCreditLineButton = styled(Button)<{ selected?: boolean; viewAll?: boolean }>`
   display: block;
   font-size: 1.2rem;
   height: 2.4rem;
@@ -148,7 +149,7 @@ const ZappableTokenButton = styled(Button)<{ selected?: boolean; viewAll?: boole
     `}
 `;
 
-const ZappableTokensList = styled.div`
+const ZappableCreditLinesList = styled.div`
   display: flex;
   // NOTE This will make the list with css grid, an alternative to flexbox wrapping.
   // We should leave this piece of code here because I think we will need to change the style.
@@ -173,7 +174,7 @@ const ZapMessageContainer = styled.div`
   overflow: hidden;
 `;
 
-const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
+const CreditLineSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -192,7 +193,7 @@ const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
   ${({ onClick }) => onClick && 'cursor: pointer;'}
 `;
 
-const TokenInfo = styled.div<{ center?: boolean }>`
+const CreditLineInfo = styled.div<{ center?: boolean }>`
   display: flex;
   justify-content: ${({ center }) => (center ? 'center' : 'flex-start')};
   gap: ${({ theme }) => theme.txModal.gap};
@@ -216,12 +217,13 @@ const Header = styled.div`
 
 const scaleTransitionTime = 300;
 
-const StyledTxTokenInput = styled(TransitionGroup)`
+const StyledTxCreditLineInput = styled(TransitionGroup)`
   display: grid;
   // min-height: 15.6rem;
   width: 100%;
   border-radius: ${({ theme }) => theme.globalRadius};
   grid-gap: 0.8rem;
+  cursor: pointer;
 
   .scale-enter {
     opacity: 0;
@@ -251,51 +253,27 @@ const amountToNumber = (amount: string) => {
   return parseInt(parsedAmount);
 };
 
-interface Credit {
-  address: string;
-  symbol: string;
-  icon?: string;
-  balance: string;
-  balanceUsdc: string;
-  decimals: number;
-  yield?: string;
-}
-
-export interface TxCreditInputProps {
+export interface TxCreditLineInputProps {
   headerText?: string;
   inputText?: string;
   inputError?: boolean;
-  amount: string;
-  onAmountChange?: (amount: string) => void;
-  amountValue?: string;
-  maxAmount?: string;
-  maxLabel?: string;
-  selectedCredit: Credit;
-  onSelectedCreditChange?: (address: string) => void;
-  yieldPercent?: string;
-  CreditOptions?: Credit[];
+  selectedCredit: CreditLine;
+  onSelectedCreditLineChange?: (address: string) => void;
+  creditOptions?: CreditLine[];
   readOnly?: boolean;
-  hideAmount?: boolean;
   loading?: boolean;
   loadingText?: string;
   displayGuidance?: boolean;
 }
 
-export const TxCreditInput: FC<TxCreditInputProps> = ({
+export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
   headerText,
   inputText,
   inputError,
-  amount,
-  onAmountChange,
-  amountValue,
-  maxAmount,
-  maxLabel = 'Max',
   selectedCredit,
-  onSelectedCreditChange,
-  yieldPercent,
-  CreditOptions,
+  onSelectedCreditLineChange,
+  creditOptions,
   readOnly,
-  hideAmount,
   loading,
   loadingText,
   displayGuidance,
@@ -307,23 +285,24 @@ export const TxCreditInput: FC<TxCreditInputProps> = ({
   let listItems: SearchListItem[] = [];
   let zappableItems: SearchListItem[] = [];
   let selectedItem: SearchListItem = {
-    id: selectedCredit.address,
-    icon: selectedCredit.icon,
-    label: selectedCredit.symbol,
-    value: selectedCredit.yield ?? humanize('usd', selectedCredit.balanceUsdc),
+    id: selectedCredit?.id || '',
+    // icon: selectedCredit?.icon,
+    label: selectedCredit?.status,
+    value: selectedCredit?.principal,
   };
 
-  if (tokenOptions && tokenOptions.length > 1) {
-    listItems = tokenOptions
+  if (creditOptions && creditOptions.length > 1) {
+    listItems = creditOptions
+      .filter((s) => !!s)
       .map((item) => {
         return {
-          id: item.address,
-          icon: item.icon,
-          label: item.symbol,
-          value: item.yield ?? humanize('usd', item.balanceUsdc),
+          id: item!.id,
+          // icon: '',
+          label: item!.status,
+          value: selectedCredit?.principal,
         };
       })
-      .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));
+      .sort((a, b) => amountToNumber(b.value || '0') - amountToNumber(a.value || '0'));
     zappableItems = listItems.slice(0, 4);
     listItems.sort((a, b) => (a.id === selectedItem.id ? -1 : 1));
   }
@@ -333,12 +312,12 @@ export const TxCreditInput: FC<TxCreditInputProps> = ({
   };
 
   const [openedSearch, setOpenedSearch] = useState(false);
-  const searchListHeader = selectedToken.yield
-    ? t('components.transaction.token-input.search-select-vault')
-    : t('components.transaction.token-input.search-select-token');
+  const searchListHeader = readOnly
+    ? t('components.transaction.add-credit-input.search-accept-credit')
+    : t('components.transaction.add-credit-input.search-select-credit');
 
   return (
-    <StyledTxTokenInput {...props}>
+    <StyledTxCreditLineInput {...props}>
       <>{headerText && <Header>{headerText}</Header>}</>
       {openedSearch && (
         <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
@@ -346,7 +325,7 @@ export const TxCreditInput: FC<TxCreditInputProps> = ({
             list={listItems}
             headerText={searchListHeader}
             selected={selectedItem}
-            setSelected={(item) => (onSelectedTokenChange ? onSelectedTokenChange(item.id) : undefined)}
+            setSelected={(item) => (onSelectedCreditLineChange ? onSelectedCreditLineChange(item.id) : undefined)}
             onCloseList={() => setOpenedSearch(false)}
           />
         </CSSTransition>
@@ -354,39 +333,20 @@ export const TxCreditInput: FC<TxCreditInputProps> = ({
 
       {/* NOTE Using fragments here because: https://github.com/yearn/yearn-finance-v3/pull/565 */}
       <>
-        <TokenInfo center={hideAmount}>
-          <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined} center={hideAmount}>
-            <TokenIconContainer>
-              <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
-              {listItems?.length > 1 && <TokenListIcon Component={ZapIcon} />}
-            </TokenIconContainer>
-            <TokenName>{selectedItem.label}</TokenName>
-          </TokenSelector>
-
-          {!hideAmount && (
-            <TokenData>
-              <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
-
-              <AmountInputContainer>
-                <StyledAmountInput
-                  value={amount}
-                  onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-                  placeholder={loading ? loadingText : '0.00000000'}
-                  readOnly={readOnly}
-                  error={inputError}
-                  type="number"
-                  aria-label={headerText}
-                />
-                {maxAmount && (
-                  <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
-                    {maxLabel}
-                  </MaxButton>
-                )}
-              </AmountInputContainer>
-            </TokenData>
-          )}
-        </TokenInfo>
+        <CreditLineInfo center={false} onClick={openSearchList}>
+          <CreditLineSelector onClick={listItems?.length > 1 ? openSearchList : undefined} center={false}>
+            <CreditLineIconContainer onClick={openSearchList}>
+              <TokenIcon SVG={LogoIcon} symbol={selectedItem.label} size="xxBig" />
+              {listItems?.length > 1 && <CreditLineListIcon Component={ZapIcon} />}
+            </CreditLineIconContainer>
+            <CreditLineName>{selectedItem.label}</CreditLineName>
+          </CreditLineSelector>
+          <CreditLineData>
+            <AmountTitle> Borrower Name / ENS </AmountTitle>
+            <AmountTitle> {selectedCredit?.borrower || `0xDebf...1dao`}</AmountTitle>
+          </CreditLineData>
+        </CreditLineInfo>
       </>
-    </StyledTxTokenInput>
+    </StyledTxCreditLineInput>
   );
 };

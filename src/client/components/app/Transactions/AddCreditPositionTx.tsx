@@ -13,12 +13,12 @@ import {
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { Address, Token, Asset } from '@src/core/types';
+import { Address, Token, Asset, TokenView, CreditLine } from '@src/core/types';
 import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
-import { TxCreditInput } from './components/TxCreditInput';
+import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxRateInput } from './components/TxRateInput';
 
 const {
@@ -31,7 +31,7 @@ interface AddCreditPositionProps {
   header: string;
   onClose: () => void;
   acceptingOffer: boolean;
-  onCreditLineChange: Function;
+  onSelectedCreditLineChange: Function;
   allowVaultSelect: boolean;
   onPositionChange: (data: {
     credit?: string;
@@ -51,16 +51,14 @@ const RatesContainer = styled.div`
 export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  console.log('add position tx', dispatch, props);
   const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
-  const [targetTokenAmount, setTargetTokenAmount] = useState('0');
-  const [selectedCredit, setSelectedCredit] = useState<string | undefined>(undefined);
-  const [drate, setDrate] = useState('10.00');
-  const [frate, setFrate] = useState('10.00');
-  const [selectedCreditLine] = useSelectedCreditLine();
+
+  const [targetTokenAmount, setTargetTokenAmount] = useState('10000000');
+  const [drate, setDrate] = useState('0.00');
+  const [frate, setFrate] = useState('0.00');
+  const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
-  console.log('initial token', initialToken, selectedSellTokenAddress, DAI);
   const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
     selectedSellTokenAddress: initialToken,
     selectedVaultOrLab: useAppSelector(VaultsSelectors.selectRecommendations)[0],
@@ -68,67 +66,80 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   });
 
   useEffect(() => {
-    console.log(
-      'add position tx useEffect token/creditLine',
-      selectedSellTokenAddress,
-      initialToken,
-      selectedCreditLine
-    );
-    if (!selectedSellToken && sourceAssetOptions) {
+    console.log('add position tx useEffect token/creditLine', selectedSellTokenAddress, initialToken, selectedCredit);
+
+    if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
-          tokenAddress: sourceAssetOptions[0].address, // default to DAI and they can update with pick
+          tokenAddress: sourceAssetOptions[0].address,
         })
       );
     }
-  }, [initialToken, selectedCreditLine]);
 
-  console.log('deposit x tokens', selectedSellToken, targetTokenAmount, drate, frate);
+    if (
+      !selectedCredit ||
+      !selectedSellToken
+      // toBN(targetTokenAmount).lte(0) ||
+      // inputError ||
+    ) {
+      return;
+    }
+
+    dispatch(TokensActions.getTokensDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
+    // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
+  }, [selectedSellToken, selectedCredit]);
 
   const _updatePosition = () =>
     onPositionChange({
-      credit: selectedCredit,
+      credit: selectedCredit?.id,
       token: selectedSellToken?.address,
       amount: targetTokenAmount,
       drate: drate,
       frate: frate,
     });
 
+  // Event Handlers
+
   const onAmountChange = (amount: string): void => {
     setTargetTokenAmount(amount);
     _updatePosition();
   };
+
   const onRateChange = (type: string, amount: string): void => {
     if (type === 'd') setDrate(amount);
     if (type === 'f') setFrate(amount);
 
     _updatePosition();
   };
-  const onCreditChange = (addr: string): void => {
+
+  const onSelectedCreditLineChange = (addr: string): void => {
+    console.log('select new loc', addr);
     setSelectedCredit(addr);
     _updatePosition();
   };
 
+  const onSelectedSellTokenChange = (tokenAddress: string) => {
+    setTargetTokenAmount('');
+    onRateChange('f', '0.00');
+    onRateChange('d', '0.00');
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
+  };
+
   if (!selectedSellToken) return null;
 
-  // const targetBalance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
-  const targetBalance = '100000';
-  const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(
-    targetBalance,
-    4
-  )} ${'DEBT'}`;
+  const targetBalance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
+  const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
+    selectedSellToken.symbol
+  }`;
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
-      <TxCreditInput
+      <TxCreditLineInput
         key={'credit-input'}
-        headerText={tokenHeaderText}
-        inputText={t('components.transaction.add-debt.drawn-rate')}
-        amount={targetTokenAmount}
-        onCreditChange={onCreditChange}
-        amountValue={String(10000000 * Number(targetTokenAmount))}
-        selectedToken={selectedSellToken}
-        selectedCredit={selectedCredit}
+        headerText={t('components.transaction.add-credit.select-credit')}
+        inputText={t('components.transaction.add-credit.select-credit')}
+        onSelectedCreditLineChange={onSelectedCreditLineChange}
+        selectedCredit={selectedCredit as CreditLine}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={false}
@@ -136,21 +147,22 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
       />
       <TxTokenInput
         key={'token-input'}
-        headerText={tokenHeaderText}
-        inputText={t('components.transaction.add-debt.drawn-rate')}
+        headerText={t('components.transaction.add-credit.select-token')}
+        inputText={tokenHeaderText}
         amount={targetTokenAmount}
         onAmountChange={onAmountChange}
         amountValue={String(10000000 * Number(targetTokenAmount))}
         maxAmount={targetBalance}
         selectedToken={selectedSellToken}
-        // tokenOptions={sourceAssetOptions}
+        onSelectedTokenChange={onSelectedSellTokenChange}
+        tokenOptions={sourceAssetOptions}
         // inputError={!!sourceStatus.error}
         readOnly={acceptingOffer}
         // displayGuidance={displaySourceGuidance}
       />
       <TxRateInput
         key={'frate'}
-        headerText={t('components.transaction.add-debt.facility-rate')}
+        headerText={t('components.transaction.add-credit.select-rates')}
         frate={frate}
         drate={drate}
         amount={frate}

@@ -107,6 +107,16 @@
       "zap-guidance": {
         "desc": "⚡ Or select a token from your wallet to Zap",
         "view-all": "View all"
+      },
+      "add-credit-input": {
+        "search-accept-credit": "Accepting Deal",
+        "search-select-credit": "Find Deal"
+      },
+      "add-credit": {
+        "header": "Setup deal terms",
+        "select-credit": "1. Select a borrower to lend to",
+        "select-token": "2. Select token and amount",
+        "select-rates": "3. Set interest rates"
       }
     }
   },

@@ -85,6 +85,7 @@ const StyledSearchList = styled.div`
   z-index: 1;
 `;
 
+// Token search list
 export type SearchListItem = {
   id: string;
   icon?: string;
