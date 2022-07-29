@@ -106,6 +106,7 @@ export class BlocknativeWalletImpl implements Wallet {
 
     const walletCheck = [{ checkName: 'derivationPath' }, { checkName: 'connect' }, { checkName: 'accounts' }];
 
+    // NOTE: needed because of https://github.com/MetaMask/metamask-extension/issues/3133
     injectMetamaskProvider();
 
     this.onboard = Onboard({
