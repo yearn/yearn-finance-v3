@@ -184,22 +184,6 @@ export const Layout: FC = ({ children }) => {
     );
   }
 
-  const isMetamaskMobileBrowser = () => {
-    // Metamask hardcodes user agent used on their mobile app browser
-    // https://github.com/MetaMask/metamask-mobile/blob/bcc22b37381fe59200fc560c42c4712b89106309/app/core/AppConstants.js#L35
-    const METAMASK_ANDROID_USER_AGENT =
-      'Mozilla/5.0 (Linux; Android 10; Android SDK built for x86 Build/OSM1.180201.023) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.92 Mobile Safari/537.36';
-    const METAMASK_IOS_USER_AGENT =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/76.0.3809.123 Mobile/15E148 Safari/605.1';
-
-    const userAgent = navigator?.userAgent ?? '';
-
-    return userAgent === METAMASK_ANDROID_USER_AGENT || userAgent === METAMASK_IOS_USER_AGENT;
-  };
-
-  const userAgent = navigator?.userAgent ?? 'no user agent';
-  const loadedInMetamask = isMetamaskMobileBrowser();
-
   return (
     <StyledLayout>
       <Alerts />
@@ -221,8 +205,7 @@ export const Layout: FC = ({ children }) => {
           disableNetworkChange={hideControls}
           hideDisabledControls={hideControls}
         />
-        <div>{userAgent}</div>
-        <div>In metamask: {loadedInMetamask ? 'Yes' : 'No'}</div>
+
         {children}
 
         <Footer />
