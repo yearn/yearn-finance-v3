@@ -93,7 +93,7 @@
         "search-select-token": "Selecciona un Token",
         "search-select-vault": "Selecciona una Vault",
         "yield": "Rendimiento",
-        "you-have": "Tú tienes"
+        "you-have": "Tienes"
       },
       "wallet-balance": "Balance Billetera",
       "withdraw": "Retirar"
@@ -122,6 +122,7 @@
   "footer": {
     "links": {
       "blog": "Blog",
+      "buyback": "Recompra de YFI",
       "disclaimer": "Disclaimer",
       "docs": "Docs",
       "gov": "Gov",

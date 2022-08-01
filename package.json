@@ -1,6 +1,6 @@
 {
   "name": "yearn-finance-v3",
-  "version": "1.3.18",
+  "version": "1.3.19",
   "private": true,
   "scripts": {
     "start": "craco start",
@@ -24,6 +24,8 @@
     "@ethersproject/contracts": "5.4.1",
     "@ethersproject/providers": "5.4.4",
     "@ledgerhq/iframe-provider": "0.4.2",
+    "@metamask/post-message-stream": "6.0.0",
+    "@metamask/providers": "9.0.0",
     "@nivo/core": "0.79.0",
     "@nivo/line": "0.79.1",
     "@popperjs/core": "2.11.5",
