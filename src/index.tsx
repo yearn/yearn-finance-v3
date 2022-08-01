@@ -7,7 +7,7 @@ import '@yearn-finance/web-lib/dist/build.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App /> //test
   </React.StrictMode>,
   document.getElementById('root')
 );
