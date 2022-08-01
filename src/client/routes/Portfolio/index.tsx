@@ -266,13 +266,15 @@ export const Portfolio = () => {
               grow: '1',
             },
           ]}
-          data={userTokens.map((token) => ({
-            ...token,
-            displayName: token.symbol,
-            displayIcon: token.icon ?? '',
-            tokenBalance: normalizeAmount(token.balance, token.decimals),
-            invest: null,
-          }))}
+          data={userTokens
+            .filter((token) => token.isZapable)
+            .map((token) => ({
+              ...token,
+              displayName: token.symbol,
+              displayIcon: token.icon ?? '',
+              tokenBalance: normalizeAmount(token.balance, token.decimals),
+              invest: null,
+            }))}
           initialSortBy="balanceUsdc"
           wrap
           filterBy={filterDustTokens}
