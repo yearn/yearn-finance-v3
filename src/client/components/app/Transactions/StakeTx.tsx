@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { t } from 'i18next';
 
 import { Box, Button, Dropdown } from '@components/common';
 import { formatAmount } from '@utils';
+import { useAppTranslation } from '@src/client/hooks';
 
 import { AmountInput } from '../AmountInput';
 
@@ -13,6 +13,7 @@ interface StakeTxProps {
 }
 
 export const StakeTx: FC<StakeTxProps> = (props) => {
+  const { t } = useAppTranslation('common');
   const { onClose } = props;
 
   const DUMMY_TOKEN = {
