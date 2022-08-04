@@ -1,9 +1,10 @@
 import { FC } from 'react';
 import { t } from 'i18next';
 
-import { AmountInput } from '@components/app';
 import { Box, Button, Dropdown } from '@components/common';
 import { formatAmount } from '@utils';
+
+import { AmountInput } from '../AmountInput';
 
 import { TxContainer } from './components/TxContainer';
 
