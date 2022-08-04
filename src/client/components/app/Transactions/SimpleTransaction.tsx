@@ -8,11 +8,11 @@ import { AmountInput } from '../AmountInput';
 
 import { TxContainer } from './components/TxContainer';
 
-interface StakeTxProps {
+interface SimpleTransactionProps {
   onClose?: () => void;
 }
 
-export const StakeTx: FC<StakeTxProps> = (props) => {
+export const SimpleTransaction: FC<SimpleTransactionProps> = (props) => {
   const { t } = useAppTranslation('common');
   const { onClose } = props;
 
