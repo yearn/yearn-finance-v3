@@ -121,6 +121,7 @@ export interface DropdownProps extends BoxProps {
   hideIcons?: boolean;
   fullWidth?: boolean;
   listPosition?: 'top' | 'bottom';
+  label?: string;
 }
 
 export const Dropdown: FC<DropdownProps> = ({
@@ -132,6 +133,7 @@ export const Dropdown: FC<DropdownProps> = ({
   hideIcons,
   fullWidth,
   listPosition = 'bottom',
+  label,
   ...props
 }) => {
   const [open, setOpen] = useState(false);
@@ -149,35 +151,31 @@ export const Dropdown: FC<DropdownProps> = ({
   };
 
   return (
-    <Container
-      tabIndex={0}
-      disabled={disabled}
-      selectable={!isSingleItem}
-      onBlur={() => setOpen(false)}
-      fullWidth
-      {...props}
-    >
-      <StyledItem onClick={() => (!isSingleItem && !disabled ? setOpen(!open) : null)}>
-        {!hideIcons && selected?.icon && <StyledIcon src={selected.icon} />}
-        {!isLoading && (
-          <Text flex={1} ellipsis>
-            {selectedText}
-          </Text>
-        )}
-        {isLoading && <StyledSpinnerLoading />}
-        <ArrowIcon Component={ChevronDownIcon} open={open} />
-      </StyledItem>
-
-      <StyledItemList open={open} listPosition={listPosition}>
-        {items.map((item) => (
-          <StyledItem key={item.key} onClick={() => selectItem(item)} selected={item.key === selected.key}>
-            {!hideIcons && item?.icon && <StyledIcon src={item.icon} />}
+    <Box {...props}>
+      {label && <Text mb="0.4rem">{label}</Text>}
+      <Container tabIndex={0} disabled={disabled} selectable={!isSingleItem} onBlur={() => setOpen(false)} fullWidth>
+        <StyledItem onClick={() => (!isSingleItem && !disabled ? setOpen(!open) : null)}>
+          {!hideIcons && selected?.icon && <StyledIcon src={selected.icon} />}
+          {!isLoading && (
             <Text flex={1} ellipsis>
-              {item.value}
+              {selectedText}
             </Text>
-          </StyledItem>
-        ))}
-      </StyledItemList>
-    </Container>
+          )}
+          {isLoading && <StyledSpinnerLoading />}
+          <ArrowIcon Component={ChevronDownIcon} open={open} visibility={isSingleItem ? 'hidden' : 'visible'} />
+        </StyledItem>
+
+        <StyledItemList open={open} listPosition={listPosition}>
+          {items.map((item) => (
+            <StyledItem key={item.key} onClick={() => selectItem(item)} selected={item.key === selected.key}>
+              {!hideIcons && item?.icon && <StyledIcon src={item.icon} />}
+              <Text flex={1} ellipsis>
+                {item.value}
+              </Text>
+            </StyledItem>
+          ))}
+        </StyledItemList>
+      </Container>
+    </Box>
   );
 };
