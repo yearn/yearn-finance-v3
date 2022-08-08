@@ -73,11 +73,12 @@ export const UnstakeTx: FC<UnstakeTxProps> = ({ header, onClose }) => {
   return (
     <SimpleTransaction
       actions={txActions}
-      onClose={onClose}
+      amount={amount}
+      header={t('components.transaction.unstake')}
       onAmountChange={setAmount}
+      onClose={onClose}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       selectedAsset={gaugeOption}
-      amount={amount}
       status={{ error: sourceError }}
       transactionCompleted={!!unstakeStatus.executed}
     />

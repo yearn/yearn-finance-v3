@@ -14,6 +14,7 @@ import { TxError } from './components/TxError';
 interface SimpleTransactionProps {
   actions: Action[];
   amount: string;
+  header: string;
   selectedAsset: Asset;
   status: Status;
   transactionCompleted: boolean;
@@ -30,6 +31,7 @@ export const SimpleTransaction: FC<SimpleTransactionProps> = (props) => {
   const {
     actions,
     amount,
+    header,
     selectedAsset,
     status,
     transactionCompleted,
@@ -55,7 +57,7 @@ export const SimpleTransaction: FC<SimpleTransactionProps> = (props) => {
   }`;
 
   return (
-    <TxContainer onClose={onClose} header={t('components.transaction.stake')}>
+    <TxContainer onClose={onClose} header={header}>
       <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gridColumnGap={'2.4rem'}>
         <Dropdown
           label={'Choose token'} // TODO: Add translation

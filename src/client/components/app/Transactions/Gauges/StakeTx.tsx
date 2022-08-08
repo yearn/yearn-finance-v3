@@ -93,11 +93,12 @@ export const StakeTx: FC<StakeTxProps> = ({ header, onClose }) => {
   return (
     <SimpleTransaction
       actions={txActions}
-      onClose={onClose}
+      amount={amount}
+      header={t('components.transaction.stake')}
       onAmountChange={setAmount}
+      onClose={onClose}
       onTransactionCompletedDismissed={onTransactionCompletedDismissed}
       selectedAsset={gauge.token}
-      amount={amount}
       status={{ error }}
       transactionCompleted={!!stakeStatus.executed}
     />
