@@ -1,33 +1,57 @@
 import { FC } from 'react';
 
 import { Box, Button, Dropdown } from '@components/common';
-import { formatAmount } from '@utils';
+import { formatAmount, normalizeAmount } from '@utils';
 import { useAppTranslation } from '@src/client/hooks';
 
 import { AmountInput } from '../AmountInput';
 
 import { TxContainer } from './components/TxContainer';
+import { Action, Asset, Status } from './Transaction';
+import { TxStatus } from './components/TxStatus';
+import { TxError } from './components/TxError';
 
 interface SimpleTransactionProps {
+  actions: Action[];
+  amount: string;
+  selectedAsset: Asset;
+  status: Status;
+  transactionCompleted: boolean;
+  transactionCompletedLabel?: string;
+  transactionLabel?: string;
+  onAmountChange?: (amount: string) => void;
   onClose?: () => void;
+  onSelectedAssetChange?: (assetAddress: string) => void;
+  onTransactionCompletedDismissed: () => void;
 }
 
 export const SimpleTransaction: FC<SimpleTransactionProps> = (props) => {
   const { t } = useAppTranslation('common');
-  const { onClose } = props;
+  const {
+    actions,
+    amount,
+    selectedAsset,
+    status,
+    transactionCompleted,
+    transactionCompletedLabel,
+    transactionLabel,
+    onAmountChange,
+    onTransactionCompletedDismissed,
+    onClose,
+  } = props;
 
-  const DUMMY_TOKEN = {
-    amount: '69.42424242',
-    symbol: 'YFI',
-  };
+  if (transactionCompleted) {
+    return (
+      <TxContainer onClose={onClose} header={transactionLabel}>
+        <TxStatus transactionCompletedLabel={transactionCompletedLabel} exit={onTransactionCompletedDismissed} />
+      </TxContainer>
+    );
+  }
 
-  const DUMMY_ITEM = {
-    key: 'yvDAI',
-    value: 'yvDAI',
-  };
+  const balance = normalizeAmount(selectedAsset.balance, selectedAsset.decimals);
 
-  const amountInputMessage = `${t('dashboard.available')}: ${formatAmount(DUMMY_TOKEN.amount, 8)} ${
-    DUMMY_TOKEN.symbol
+  const amountInputMessage = `${t('dashboard.available')}: ${formatAmount(onAmountChange ? balance : '0', 8)} ${
+    selectedAsset.symbol
   }`;
 
   return (
@@ -35,29 +59,37 @@ export const SimpleTransaction: FC<SimpleTransactionProps> = (props) => {
       <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gridColumnGap={'2.4rem'}>
         <Dropdown
           label={'Choose token'} // TODO: Add translation
-          selected={DUMMY_ITEM}
-          items={[DUMMY_ITEM]}
+          selected={{ key: selectedAsset.symbol, value: selectedAsset.symbol }}
+          items={[{ key: selectedAsset.symbol, value: selectedAsset.symbol }]}
           mt={'2.4rem'}
           fullWidth
         />
 
         <AmountInput
           label={'Amount'} // TODO: Add translation
-          amount={'0'}
-          onAmountChange={() => {}}
-          maxAmount={DUMMY_TOKEN.amount}
+          amount={amount}
+          onAmountChange={onAmountChange}
+          maxAmount={onAmountChange ? balance : undefined}
           message={amountInputMessage}
           mt={'2.4rem'}
         />
 
-        <Button onClick={() => {}} disabled={false} filled height={'5.6rem'} mt={'2.4rem'}>
-          Approve
-        </Button>
-
-        <Button onClick={() => {}} disabled={true} filled height={'5.6rem'} mt={'2.4rem'}>
-          Stake
-        </Button>
+        {actions.map(({ label, onAction, status, disabled }) => (
+          <Button
+            key={label}
+            data-testid={`modal-action-${label.toLowerCase()}`}
+            onClick={!status.loading ? onAction : undefined}
+            disabled={disabled}
+            isLoading={status.loading}
+            height={'5.6rem'}
+            mt={'2.4rem'}
+            filled
+          >
+            {label}
+          </Button>
+        ))}
       </Box>
+      {status.error && <TxError errorType="warning" errorTitle={status.error} />}
     </TxContainer>
   );
 };
