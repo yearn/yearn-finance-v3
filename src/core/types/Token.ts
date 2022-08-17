@@ -19,11 +19,12 @@ export interface TokenView {
   description: string;
   website: string;
   isZapable: boolean;
-  sourceIsZapper: boolean;
   allowancesMap: { [tokenAddress: string]: string };
   supported: {
     zapperZapIn?: boolean;
     zapperZapOut?: boolean;
+    portalsZapIn?: boolean;
+    portalsZapOut?: boolean;
     ftmApeZap?: boolean;
   };
 }

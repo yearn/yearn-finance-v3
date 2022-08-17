@@ -87,9 +87,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       dispatch(
         TokensActions.setSelectedTokenAddress({
           tokenAddress:
-            !zapperEnabled && selectedVault.zapInWith === 'zapperZapIn'
-              ? selectedVault.token.address
-              : selectedVault.defaultDisplayToken,
+            !zapperEnabled && selectedVault.zapInWith ? selectedVault.token.address : selectedVault.defaultDisplayToken,
         })
       );
     }

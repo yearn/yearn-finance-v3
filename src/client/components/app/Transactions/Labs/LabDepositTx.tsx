@@ -87,9 +87,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       dispatch(
         TokensActions.setSelectedTokenAddress({
           tokenAddress:
-            !zapperEnabled && selectedLab.zapInWith === 'zapperZapIn'
-              ? selectedLab.token.address
-              : selectedLab.defaultDisplayToken,
+            !zapperEnabled && selectedLab.zapInWith ? selectedLab.token.address : selectedLab.defaultDisplayToken,
         })
       );
     }

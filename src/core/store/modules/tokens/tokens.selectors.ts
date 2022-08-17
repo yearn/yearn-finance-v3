@@ -30,7 +30,7 @@ const selectUserTokens = createSelector(
         const allowancesMap = userTokensAllowancesMap[address] ?? {};
         return createToken({ tokenData, userTokenData, allowancesMap });
       });
-    return tokens.filter((token) => toBN(token.balance).gt(0) && (!token.sourceIsZapper || servicesEnabled.zapper));
+    return tokens.filter((token) => toBN(token.balance).gt(0));
   }
 );
 
@@ -86,8 +86,7 @@ export function createToken(props: CreateTokenProps): TokenView {
     categories: tokenData?.metadata?.categories ?? [],
     description: tokenData?.metadata?.description ?? '',
     website: tokenData?.metadata?.website ?? '',
-    isZapable: tokenData?.supported.zapper ?? false,
-    sourceIsZapper: tokenData?.dataSource === 'zapper',
+    isZapable: tokenData?.supported.portalsZapIn ?? false,
     allowancesMap: allowancesMap ?? {},
     supported: tokenData?.supported,
   };
