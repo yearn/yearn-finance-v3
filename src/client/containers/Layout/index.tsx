@@ -13,7 +13,6 @@ import {
   ModalsActions,
   ModalSelectors,
   NetworkActions,
-  AlertsActions,
   VaultsSelectors,
   PartnerSelectors,
 } from '@store';
@@ -121,25 +120,8 @@ export const Layout: FC = ({ children }) => {
   // TODO This is only assetAddress on the vault page
   const assetAddress: string | undefined = location.pathname.split('/')[2];
 
-  // Used to check zapper api
-  const { ZAPPER_AUTH_TOKEN } = getConfig();
-
   useEffect(() => {
     dispatch(AppActions.initApp());
-
-    // NOTE Test zapper API
-    fetch('https://api.zapper.fi/v2/prices', {
-      headers: { Authorization: `Basic ${ZAPPER_AUTH_TOKEN}` },
-    }).catch((_error) => {
-      dispatch(
-        AlertsActions.openAlert({
-          message:
-            'Zapper is currently experiencing technical issues and this might impact your experience at Yearn. We are sorry for the inconveniences and the problems should be resolved soon.',
-          type: 'warning',
-          persistent: true,
-        })
-      );
-    });
   }, []);
 
   useEffect(() => {
