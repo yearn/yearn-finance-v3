@@ -45,7 +45,7 @@
     "@types/styled-components": "5.1.12",
     "@types/styled-system": "5.1.13",
     "@yearn-finance/web-lib": "0.8.14",
-    "@yfi/sdk": "2.1.0",
+    "@yfi/sdk": "3.0.0-alpha",
     "awilix": "7.0.2",
     "axios": "0.21.2",
     "bignumber.js": "9.0.2",
