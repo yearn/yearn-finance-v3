@@ -84,9 +84,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   useEffect(() => {
     if (!selectedTargetTokenAddress && selectedLab) {
       setSelectedTargetTokenAddress(
-        !zapsEnabled && selectedLab.zapOutWith === 'zapperZapOut'
-          ? selectedLab.token.address
-          : selectedLab.defaultDisplayToken
+        !zapsEnabled && selectedLab.zapOutWith ? selectedLab.token.address : selectedLab.defaultDisplayToken
       );
     }
   }, [selectedTargetTokenAddress, selectedLab]);

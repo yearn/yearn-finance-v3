@@ -89,9 +89,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   useEffect(() => {
     if (!selectedTargetTokenAddress && selectedVault) {
       setSelectedTargetTokenAddress(
-        !zapsEnabled && selectedVault.zapOutWith === 'zapperZapOut'
-          ? selectedVault.token.address
-          : selectedVault.defaultDisplayToken
+        !zapsEnabled && selectedVault.zapOutWith ? selectedVault.token.address : selectedVault.defaultDisplayToken
       );
     }
   }, [selectedTargetTokenAddress, selectedVault]);
