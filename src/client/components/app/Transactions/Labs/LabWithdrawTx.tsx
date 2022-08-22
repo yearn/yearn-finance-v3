@@ -45,8 +45,8 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const [spenderAddress, setSpenderAddress] = useState('');
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
-  const simulationsEnabled = servicesEnabled.tenderly;
-  const zapperEnabled = servicesEnabled.zapper;
+  const simulationsEnabled = servicesEnabled.simulations;
+  const zapsEnabled = servicesEnabled.zaps;
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -84,7 +84,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   useEffect(() => {
     if (!selectedTargetTokenAddress && selectedLab) {
       setSelectedTargetTokenAddress(
-        !zapperEnabled && selectedLab.zapOutWith === 'zapperZapOut'
+        !zapsEnabled && selectedLab.zapOutWith === 'zapperZapOut'
           ? selectedLab.token.address
           : selectedLab.defaultDisplayToken
       );

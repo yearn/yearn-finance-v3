@@ -46,8 +46,8 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const [spenderAddress, setSpenderAddress] = useState('');
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
-  const simulationsEnabled = servicesEnabled.tenderly;
-  const zapperEnabled = servicesEnabled.zapper;
+  const simulationsEnabled = servicesEnabled.simulations;
+  const zapsEnabled = servicesEnabled.zaps;
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -89,7 +89,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   useEffect(() => {
     if (!selectedTargetTokenAddress && selectedVault) {
       setSelectedTargetTokenAddress(
-        !zapperEnabled && selectedVault.zapOutWith === 'zapperZapOut'
+        !zapsEnabled && selectedVault.zapOutWith === 'zapperZapOut'
           ? selectedVault.token.address
           : selectedVault.defaultDisplayToken
       );

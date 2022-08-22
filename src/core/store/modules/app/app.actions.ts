@@ -145,15 +145,15 @@ const checkExternalServicesStatus = createAsyncThunk<void, void, ThunkAPI>(
       const errorMessageTemplate =
         'service is currently experiencing technical issues and have been temporarily disabled. We apologize for any inconvenience this may cause, we are actively working on resolving these issues';
       const downgradedServicesMessages = [];
-      const { zapper, simulations } = data;
-      if (!zapper) {
-        dispatch(disableService({ service: 'zapper' }));
-        downgradedServicesMessages.push(`Zapper ${errorMessageTemplate}`);
+      const { zaps, simulations } = data;
+      if (!zaps) {
+        dispatch(disableService({ service: 'zaps' }));
+        downgradedServicesMessages.push(`Zap ${errorMessageTemplate}`);
       }
 
       if (!simulations) {
-        dispatch(disableService({ service: 'tenderly' }));
-        downgradedServicesMessages.push(`Simulations ${errorMessageTemplate}`);
+        dispatch(disableService({ service: 'simulations' }));
+        downgradedServicesMessages.push(`Simulation ${errorMessageTemplate}`);
       }
 
       downgradedServicesMessages.forEach(async (message) => {

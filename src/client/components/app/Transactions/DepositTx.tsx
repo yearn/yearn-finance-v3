@@ -57,8 +57,8 @@ export const DepositTx: FC<DepositTxProps> = ({
   const [spenderAddress, setSpenderAddress] = useState('');
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
-  const simulationsEnabled = servicesEnabled.tenderly;
-  const zapperEnabled = servicesEnabled.zapper;
+  const simulationsEnabled = servicesEnabled.simulations;
+  const zapsEnabled = servicesEnabled.zaps;
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -87,7 +87,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       dispatch(
         TokensActions.setSelectedTokenAddress({
           tokenAddress:
-            !zapperEnabled && selectedVault.zapInWith ? selectedVault.token.address : selectedVault.defaultDisplayToken,
+            !zapsEnabled && selectedVault.zapInWith ? selectedVault.token.address : selectedVault.defaultDisplayToken,
         })
       );
     }
