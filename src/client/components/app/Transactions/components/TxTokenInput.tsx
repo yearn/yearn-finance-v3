@@ -2,10 +2,12 @@ import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
 import { Text, Icon, Button, SearchList, ZapIcon, SearchListItem } from '@components/common';
 import { formatUsd, humanize } from '@utils';
+
+import { TokenIcon } from '../../TokenIcon';
+import { ZapTransactionControls } from '../../ZapTransactionControls';
 
 const MaxButton = styled(Button)`
   border-radius: ${({ theme }) => theme.globalRadius};
@@ -120,57 +122,6 @@ const TokenIconContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-`;
-
-const ZappableTokenButton = styled(Button)<{ selected?: boolean; viewAll?: boolean }>`
-  display: block;
-  font-size: 1.2rem;
-  height: 2.4rem;
-  padding: 0 0.8rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  width: -webkit-fill-available;
-  // NOTE - hack fallback if fill-available is not supported
-  max-width: 6.6rem;
-  max-width: max-content;
-
-  ${({ selected, theme }) =>
-    selected &&
-    `
-      background-color: ${theme.colors.secondary};
-      color: ${theme.colors.titlesVariant};
-    `}
-  ${({ viewAll }) =>
-    viewAll &&
-    `
-      flex-shrink: 0;
-    `}
-`;
-
-const ZappableTokensList = styled.div`
-  display: flex;
-  // NOTE This will make the list with css grid, an alternative to flexbox wrapping.
-  // We should leave this piece of code here because I think we will need to change the style.
-  // grid-template-columns: repeat(auto-fit, minmax(3rem, max-content));
-  // grid-auto-flow: column;
-  // flex-wrap: wrap;
-  overflow: hidden;
-  margin-top: 0.8rem;
-  grid-gap: 0.8rem;
-  width: 100%;
-`;
-
-const ZapMessageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  border-radius: ${({ theme }) => theme.globalRadius};
-  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
-  padding: 0.8rem;
-  font-size: 1.2rem;
-  width: 100%;
-  overflow: hidden;
 `;
 
 const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
@@ -398,25 +349,12 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         </TokenInfo>
 
         {zappableItems?.length > 1 && displayGuidance && (
-          <ZapMessageContainer>
-            {t('components.transaction.zap-guidance.desc')}
-            <ZappableTokensList>
-              {zappableItems.map((item) => (
-                <ZappableTokenButton
-                  key={item.id}
-                  outline
-                  selected={item.id === selectedItem.id}
-                  onClick={() => (onSelectedTokenChange ? onSelectedTokenChange(item.id) : undefined)}
-                >
-                  {item.label}
-                </ZappableTokenButton>
-              ))}
-
-              <ZappableTokenButton viewAll outline onClick={openSearchList}>
-                {t('components.transaction.zap-guidance.view-all')}
-              </ZappableTokenButton>
-            </ZappableTokensList>
-          </ZapMessageContainer>
+          <ZapTransactionControls
+            zapTokens={zappableItems}
+            selectedToken={selectedItem}
+            onSelectedTokenChange={onSelectedTokenChange}
+            onViewAll={openSearchList}
+          />
         )}
       </>
     </StyledTxTokenInput>
