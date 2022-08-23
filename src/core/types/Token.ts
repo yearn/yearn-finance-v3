@@ -21,8 +21,6 @@ export interface TokenView {
   isZapable: boolean;
   allowancesMap: { [tokenAddress: string]: string };
   supported: {
-    zapperZapIn?: boolean;
-    zapperZapOut?: boolean;
     portalsZapIn?: boolean;
     portalsZapOut?: boolean;
     ftmApeZap?: boolean;

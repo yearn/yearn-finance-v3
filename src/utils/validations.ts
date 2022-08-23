@@ -151,34 +151,6 @@ export function validateMigrateVaultAllowance(props: ValidateMigrateVaultAllowan
 //   return {};
 // }
 
-interface ValidateYvBoostEthActionsAllowanceProps {
-  sellTokenAddress: string;
-  sellTokenAmount: BigNumber;
-  sellTokenDecimals: string;
-  sellTokenAllowancesMap: AllowancesMap;
-  action: 'INVEST' | 'STAKE';
-}
-
-export function validateYvBoostEthActionsAllowance(props: ValidateYvBoostEthActionsAllowanceProps): ValidationResponse {
-  const { PSLPYVBOOSTETH_GAUGE, pickleZapIn: PICKLE_ZAP_IN, PSLPYVBOOSTETH } = getConfig().CONTRACT_ADDRESSES;
-  const { sellTokenAddress, sellTokenAmount, sellTokenDecimals, sellTokenAllowancesMap, action } = props;
-  let spenderAddress: string = '';
-
-  if (action === 'INVEST') spenderAddress = PICKLE_ZAP_IN;
-  if (action === 'STAKE') {
-    spenderAddress = PSLPYVBOOSTETH_GAUGE;
-    if (sellTokenAddress !== PSLPYVBOOSTETH) throw new Error('Only PSLPYVBOOSTETH token is supported for STAKE action');
-  }
-
-  return validateAllowance({
-    tokenAddress: sellTokenAddress,
-    tokenAmount: sellTokenAmount,
-    tokenDecimals: sellTokenDecimals,
-    tokenAllowancesMap: sellTokenAllowancesMap,
-    spenderAddress,
-  });
-}
-
 interface ValidateYveCrvActionsAllowanceProps {
   labAddress: string;
   sellTokenAddress: string;

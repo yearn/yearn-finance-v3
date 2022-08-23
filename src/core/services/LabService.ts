@@ -18,14 +18,12 @@ import {
   YearnSdk,
   GetSupportedLabsProps,
 } from '@types';
-import { get, toBN, normalizeAmount, USDC_DECIMALS, getStakingContractAddress, getProviderType } from '@utils';
+import { get, toBN, normalizeAmount, USDC_DECIMALS, getProviderType } from '@utils';
 import { getConstants } from '@config/constants';
 
 import backscratcherAbi from './contracts/backscratcher.json';
 import y3CrvBackZapperAbi from './contracts/y3CrvBackZapper.json';
 import yvBoostAbi from './contracts/yvBoost.json';
-import pickleJarAbi from './contracts/pickleJar.json';
-import pickleGaugeAbi from './contracts/pickleGauge.json';
 
 /**
  * Annual Percentage Yield composite of a particular backscratcher vault coming from api.yearn.finance.
@@ -64,7 +62,7 @@ export class LabServiceImpl implements LabService {
   public async getSupportedLabs({ network }: GetSupportedLabsProps) {
     const errors: string[] = [];
     const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
-    const { ETH, YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+    const { YVECRV, CRV, YVBOOST } = CONTRACT_ADDRESSES;
     const { ASSETS_ICON_URL } = getConstants();
     const yearn = this.yearnSdk.getInstanceOf(network);
     const providerType = getProviderType(network);
@@ -171,78 +169,17 @@ export class LabServiceImpl implements LabService {
         metadata: {
           ...yvBoostVaultDynamic.metadata,
           displayIcon: `${ASSETS_ICON_URL}${address}/logo-128.png`,
-          zapInWith: 'zapperZapIn', // TODO: should not be hardcoded. Update once SDK is updated
-          zapOutWith: 'zapperZapOut', // TODO: should not be hardcoded. Update once SDK is updated
+          zapInWith: 'portalsZapIn', // TODO: should not be hardcoded. Update once SDK is updated
+          zapOutWith: 'portalsZapOut', // TODO: should not be hardcoded. Update once SDK is updated
         },
       };
     } catch (error) {
       errors.push(`YvBoost Lab Error ${JSON.stringify(error)}`);
     }
 
-    // **************** YVBOOST-ETH ****************
-    let pSLPyvBoostEthLab: Lab | undefined;
-    try {
-      const pSLPyvBoostEthContract = getContract(PSLPYVBOOSTETH, pickleJarAbi, provider);
-      const pJarTotalSupplyPromise = pSLPyvBoostEthContract.totalSupply();
-      const pJarRatioPromise = pSLPyvBoostEthContract.getRatio();
-      const pickleApiUrl = 'https://api.pickle.finance/prod/protocol/pools';
-      const pickleApiBackupUrl = 'https://f8wgg18t1h.execute-api.us-west-1.amazonaws.com/prod/protocol/pools';
-
-      // NOTE Temporal fix for pickle api
-      const picklePoolsPromise = get(pickleApiUrl).catch(() => {
-        return get(pickleApiBackupUrl);
-      });
-      const [pJarTotalSupply, pJarRatio, picklePoolsResponse] = await Promise.all([
-        pJarTotalSupplyPromise,
-        pJarRatioPromise,
-        picklePoolsPromise,
-      ]);
-      const pJarPool = picklePoolsResponse.data.find(
-        ({ identifier }: { identifier: string }) => identifier === 'yvboost-eth'
-      );
-      const liquidityLocked = pJarPool?.liquidity_locked;
-      const performance = pJarPool?.apy;
-
-      // USE YVBOOST DATA AS BASE DATA SOURCE
-      const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-      if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-      pSLPyvBoostEthLab = {
-        address: PSLPYVBOOSTETH,
-        typeId: 'LAB',
-        token: YVBOOST,
-        name: 'pSLPyvBOOST-ETH',
-        version: pJarData.version,
-        symbol: 'pSLPyvBOOST-ETH',
-        decimals: pJarData.decimals.toString(),
-        tokenId: YVBOOST,
-        underlyingTokenBalance: {
-          // TODO: FIX, AMOUNT IS IN SLPYVBOOSTETH, NOT YVBOOST
-          amount: toBN(normalizeAmount(pJarTotalSupply.toString(), pJarData.decimals.toString()))
-            .times(pJarRatio.toString())
-            .toFixed(0),
-          amountUsdc: toBN(liquidityLocked.toString())
-            .times(10 ** USDC_DECIMALS)
-            .toFixed(0),
-        },
-        metadata: {
-          depositLimit: '0', // yvboost-eth doestn have
-          emergencyShutdown: false, // yvboost-eth doestn have
-          pricePerShare: pJarRatio.toString(),
-          apy: { ...pJarData.apy, net_apy: toBN(performance.toString()).dividedBy(100).toNumber() },
-          displayName: 'pSLPyvBOOST-ETH',
-          displayIcon: `${ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
-          defaultDisplayToken: ETH,
-          zapInWith: 'zapperZapIn',
-          zapOutWith: 'zapperZapOut',
-        },
-      };
-    } catch (error) {
-      errors.push('YvBoost-Eth Lab Error');
-    }
-
     // ********************************
     const labsData: Lab[] = [];
-    [backscratcherLab, yvBoostLab, pSLPyvBoostEthLab].forEach((lab) => {
+    [backscratcherLab, yvBoostLab].forEach((lab) => {
       if (lab) labsData.push(lab);
     });
     return { labsData, errors };
@@ -254,8 +191,8 @@ export class LabServiceImpl implements LabService {
 
   public async getUserLabsPositions(props: GetUserLabsPositionsProps) {
     const { userAddress, network } = props;
-    const { YEARN_API, ZAPPER_AUTH_TOKEN, CONTRACT_ADDRESSES } = this.config;
-    const { YVECRV, CRV, THREECRV, YVBOOST, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = CONTRACT_ADDRESSES;
+    const { YEARN_API, CONTRACT_ADDRESSES } = this.config;
+    const { YVECRV, CRV, THREECRV, YVBOOST } = CONTRACT_ADDRESSES;
     const THREECRV_DECIMALS = 18;
     const providerType = getProviderType(network);
     const provider = this.web3Provider.getInstanceOf(providerType);
@@ -372,70 +309,9 @@ export class LabServiceImpl implements LabService {
       errors.push('YvBoost positions error');
     }
 
-    // **************** YVBOOST-ETH ****************
-    let yvBoostEthPositions: Position[] | undefined;
-    try {
-      const pSLPyvBoostEthContract = getContract(PSLPYVBOOSTETH, pickleJarAbi, provider);
-      const pickleGaugeContract = getContract(PSLPYVBOOSTETH_GAUGE, pickleGaugeAbi, provider);
-      const pJarBalanceOfPromise = pSLPyvBoostEthContract.balanceOf(userAddress);
-      const pGaugeBalanceOfPromise = pickleGaugeContract.balanceOf(userAddress);
-      const pJarPricePerTokenPromise = get(`https://api.zapper.fi/v2/apps/pickle/tokens?groupId=jar`, {
-        headers: { Authorization: `Basic ${ZAPPER_AUTH_TOKEN}` },
-      });
-      const [pJarBalanceOf, pGaugeBalanceOf, pJarPricePerTokenResponse] = await Promise.all([
-        pJarBalanceOfPromise,
-        pGaugeBalanceOfPromise,
-        pJarPricePerTokenPromise,
-      ]);
-
-      // USE YVBOOST DATA AS BASE DATA SOURCE
-      const pJarData = vaultsResponse.data.find(({ address }: { address: string }) => address === YVBOOST);
-      if (!pJarData) throw new Error(`yvBoost vault not found on ${YEARN_API} response`);
-      const pJarPricePerToken = pJarPricePerTokenResponse.data.find(
-        ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
-      )?.price;
-
-      const yvBoostEthDepositPosition: Position = {
-        assetAddress: PSLPYVBOOSTETH,
-        tokenAddress: YVBOOST,
-        typeId: 'DEPOSIT',
-        balance: pJarBalanceOf.toString(),
-        underlyingTokenBalance: {
-          // TBD. CONVERSION RATE FOR YVBOOST:PSLPYVBOOSTETH
-          amount: '0',
-          amountUsdc: toBN(normalizeAmount(pJarBalanceOf.toString(), pJarData.decimals))
-            .times(pJarPricePerToken)
-            .times(10 ** USDC_DECIMALS)
-            .toFixed(0),
-        },
-        assetAllowances: [],
-        tokenAllowances: [],
-      };
-
-      const yvBoostEthStakePosition: Position = {
-        assetAddress: PSLPYVBOOSTETH,
-        tokenAddress: PSLPYVBOOSTETH_GAUGE,
-        typeId: 'STAKE',
-        balance: pGaugeBalanceOf.toString(),
-        underlyingTokenBalance: {
-          amount: pGaugeBalanceOf.toString(), // TODO user true uderlying balance
-          amountUsdc: toBN(normalizeAmount(pGaugeBalanceOf.toString(), pJarData.decimals))
-            .times(pJarPricePerToken)
-            .times(10 ** USDC_DECIMALS)
-            .toFixed(0),
-        },
-        assetAllowances: [],
-        tokenAllowances: [],
-      };
-
-      yvBoostEthPositions = [yvBoostEthDepositPosition, yvBoostEthStakePosition];
-    } catch (error) {
-      errors.push('YvBoost-Eth positions error');
-    }
-
     // ********************************
     const positions: Position[] = [];
-    [backscratcherPositions, yvBoostPositions, yvBoostEthPositions].forEach((assetPositions) => {
+    [backscratcherPositions, yvBoostPositions].forEach((assetPositions) => {
       if (!assetPositions) return;
       positions.push(...assetPositions);
     });
@@ -461,18 +337,6 @@ export class LabServiceImpl implements LabService {
     const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.vaults.withdraw(vaultAddress, tokenAddress, amountOfShares, accountAddress, {
       slippage: slippageTolerance,
-    });
-  }
-
-  public async stake(props: StakeProps): Promise<TransactionResponse> {
-    const { network, vaultAddress, amount } = props;
-
-    return await this.transactionService.execute({
-      network,
-      methodName: 'deposit',
-      contractAddress: getStakingContractAddress(vaultAddress),
-      abi: this.getStakingContractAbi(vaultAddress),
-      args: [amount],
     });
   }
 
@@ -512,10 +376,5 @@ export class LabServiceImpl implements LabService {
       contractAddress: y3CrvBackZapper,
       abi: y3CrvBackZapperAbi,
     });
-  }
-
-  private getStakingContractAbi(address: string) {
-    // TODO: CREATE UTIL IF MORE STAKING CONTRACTS (MOVE TO SDK)
-    return pickleGaugeAbi;
   }
 }

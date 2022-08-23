@@ -208,7 +208,6 @@ export interface LabService {
   getUserLabsMetadata: (props: GetUserLabsMetadataProps) => Promise<LabUserMetadata[]>;
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
-  stake: (props: StakeProps) => Promise<TransactionResponse>;
   lock: (props: LockProps) => Promise<TransactionResponse>;
   claim: (props: ClaimProps) => Promise<TransactionResponse>;
   reinvest: (props: ReinvestProps) => Promise<TransactionResponse>;
