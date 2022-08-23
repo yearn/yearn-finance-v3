@@ -169,6 +169,8 @@ export class LabServiceImpl implements LabService {
         metadata: {
           ...yvBoostVaultDynamic.metadata,
           displayIcon: `${ASSETS_ICON_URL}${address}/logo-128.png`,
+          allowZapIn: true,
+          allowZapOut: true,
           zapInWith: 'portalsZapIn', // TODO: should not be hardcoded. Update once SDK is updated
           zapOutWith: 'portalsZapOut', // TODO: should not be hardcoded. Update once SDK is updated
         },
