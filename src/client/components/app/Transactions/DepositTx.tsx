@@ -235,6 +235,9 @@ export const DepositTx: FC<DepositTxProps> = ({
     ? t('components.transaction.status.simulating')
     : t('components.transaction.status.calculating');
 
+  const isZap = selectedVault.token.address !== selectedSellTokenAddress;
+  const zapService = isZap ? selectedVault.zapInWith : undefined;
+
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
@@ -320,6 +323,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
       displaySourceGuidance={allowTokenSelect}
+      sourceStatus={{ error: sourceError }}
       targetHeader={t('components.transaction.to-vault')}
       targetAssetOptions={vaultsOptions}
       selectedTargetAsset={selectedVaultOption}
@@ -329,7 +333,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}
       actions={txActions}
-      sourceStatus={{ error: sourceError }}
+      zapService={zapService}
       loadingText={loadingText}
       onClose={onClose}
     />

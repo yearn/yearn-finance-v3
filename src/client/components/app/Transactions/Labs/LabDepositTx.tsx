@@ -199,6 +199,9 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     ? t('components.transaction.status.simulating')
     : t('components.transaction.status.calculating');
 
+  const isZap = selectedLab.token.address !== selectedSellTokenAddress;
+  const zapService = isZap ? selectedLab.zapInWith : undefined;
+
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
@@ -278,6 +281,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
+      sourceStatus={{ error: sourceError }}
       targetHeader={t('components.transaction.to-vault')}
       targetAssetOptions={[selectedLabOption]}
       selectedTargetAsset={selectedLabOption}
@@ -287,7 +291,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}
       actions={txActions}
-      sourceStatus={{ error: sourceError }}
+      zapService={zapService}
       loadingText={loadingText}
       onClose={onClose}
     />
