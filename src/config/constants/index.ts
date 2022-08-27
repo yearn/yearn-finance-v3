@@ -103,8 +103,8 @@ export const getConstants = memoize((): Constants => {
     FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
     ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
     CONTRACT_ADDRESSES: {
-      zapIn: '0x8E52522E6a77578904ddd7f528A22521DC4154F5',
-      zapOut: '0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c',
+      zapIn: '0x169242aD32592d4A9f9395C80a882491E4edaf60',
+      zapOut: '0x70ed999E2849A3C85EB4a6288B90c7ecA7b807F4',
       y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
       trustedVaultMigrator: '0x1824df8D751704FA10FA371d62A37f9B8772ab90',
       triCryptoVaultMigrator: '0xC306a5ef4B990A7F2b3bC2680E022E6a84D75fC1',

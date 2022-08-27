@@ -229,7 +229,12 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const approve = async () => {
     try {
       if (signedApprovalsEnabled) {
-        const signResult = await dispatchAndUnwrap(VaultsActions.signZapOut({ vaultAddress: selectedVault.address }));
+        const signResult = await dispatchAndUnwrap(
+          VaultsActions.signZapOut({
+            vaultAddress: selectedVault.address,
+            amount: willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount),
+          })
+        );
         setSignature(signResult.signature);
       } else {
         await dispatch(

@@ -65,9 +65,6 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   }
   dispatch(checkExternalServicesStatus());
 
-  // NOTE: Disable signed approvals until zap provider supports permit
-  if (settings.signedApprovalsEnabled) await dispatch(SettingsActions.toggleSignedApprovals());
-
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
 });
