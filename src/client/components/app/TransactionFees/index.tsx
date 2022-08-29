@@ -19,6 +19,7 @@ const Row = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const StyledIcon = styled(Icon)`
@@ -42,7 +43,7 @@ export const TransactionFees = ({ zapService }: TransactionFeesProps) => {
   return (
     <Container>
       <Row>
-        <Text>
+        <Text display="flex" justifyContent="center" alignItems="center">
           {t('components.transaction.fees.zaps')}
           <Tooltip
             placement="bottom"
