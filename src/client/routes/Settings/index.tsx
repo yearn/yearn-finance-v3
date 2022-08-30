@@ -129,8 +129,7 @@ export const Settings = () => {
   const signedApprovalsEnabled = useAppSelector(SettingsSelectors.selectSignedApprovalsEnabled);
   const partner = useAppSelector(PartnerSelectors.selectPartnerState);
 
-  // NOTE: Disable signed approvals until zap provider supports it
-  const hideControls = partner.id === 'ledger' || true;
+  const hideControls = partner.id === 'ledger';
   const availableSlippages = getConfig().SLIPPAGE_OPTIONS;
   const { ALLOW_DEV_MODE, AVAILABLE_THEMES, AVAILABLE_CUSTOM_THEMES, SUPPORTED_LANGS } = getConfig();
 
