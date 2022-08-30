@@ -109,7 +109,8 @@ export class TokenServiceImpl implements TokenService {
   public async getLabsTokens({ network }: { network: Network }): Promise<Token[]> {
     const { NETWORK_SETTINGS } = this.config;
     if (!NETWORK_SETTINGS[network].labsEnabled) return [];
-    return await Promise.all([this.getYvBoostToken(), this.getPSLPyvBoostEthToken()]);
+    const yvBoostToken = await this.getYvBoostToken();
+    return [yvBoostToken];
   }
 
   private async getYvBoostToken(): Promise<Token> {
@@ -125,37 +126,9 @@ export class TokenServiceImpl implements TokenService {
         .multipliedBy(10 ** USDC_DECIMALS)
         .toString(),
       dataSource: 'labs',
-      supported: {
-        zapper: false,
-      },
+      supported: {},
       symbol: 'yvBOOST',
       icon: `${ASSETS_ICON_URL}${YVBOOST}/logo-128.png`,
-    };
-  }
-
-  private async getPSLPyvBoostEthToken(): Promise<Token> {
-    const { ZAPPER_AUTH_TOKEN } = this.config;
-    const { PSLPYVBOOSTETH } = this.config.CONTRACT_ADDRESSES;
-    const { ASSETS_ICON_URL } = getConstants();
-    const pricesResponse = await get(`https://api.zapper.fi/v2/apps/pickle/tokens?groupId=jar`, {
-      headers: { Authorization: `Basic ${ZAPPER_AUTH_TOKEN}` },
-    });
-    const pJarPricePerToken = pricesResponse.data.find(
-      ({ address }: { address: string }) => address === PSLPYVBOOSTETH.toLowerCase()
-    )?.price;
-    return {
-      address: PSLPYVBOOSTETH,
-      decimals: '18',
-      name: 'pSLPyvBOOST-ETH',
-      priceUsdc: toBN(pJarPricePerToken)
-        .multipliedBy(10 ** USDC_DECIMALS)
-        .toString(),
-      dataSource: 'labs',
-      supported: {
-        zapper: false,
-      },
-      symbol: 'pSLPyvBOOST-ETH',
-      icon: `${ASSETS_ICON_URL}${PSLPYVBOOSTETH}/logo-128.png`,
     };
   }
 

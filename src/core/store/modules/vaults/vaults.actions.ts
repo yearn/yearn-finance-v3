@@ -153,7 +153,7 @@ const getExpectedTransactionOutcome = createAsyncThunk<
     const accountAddress = getState().wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const simulationsEnabled = app.servicesEnabled.tenderly;
+    const simulationsEnabled = app.servicesEnabled.simulations;
     if (!simulationsEnabled) throw new Error('SIMULATIONS DISABLED');
 
     const txOutcome = await vaultService.getExpectedTransactionOutcome({
@@ -230,26 +230,43 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string; tokenAddres
   }
 );
 
-const signZapOut = createAsyncThunk<{ signature: string }, { vaultAddress: string }, ThunkAPI>(
+const signZapOut = createAsyncThunk<{ signature: string }, { vaultAddress: string; amount: BigNumber }, ThunkAPI>(
   'vaults/signZapOut',
-  async ({ vaultAddress }, { getState, extra }) => {
-    const { network, wallet } = getState();
+  async ({ vaultAddress, amount }, { getState, extra }) => {
+    const { network, wallet, vaults, tokens } = getState();
     const { vaultService } = extra.services;
-    const { CONTRACT_ADDRESSES } = extra.config;
+    const { CONTRACT_ADDRESSES, MAX_UINT256 } = extra.config;
 
-    // NOTE: this values are hardcoded on zappers zapOut contract
-    const amount = '79228162514260000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L83
-    const deadline = '0xf000000000000000000000000000000000000000000000000000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L80
+    const deadline = '0';
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
+    const vaultData = vaults.vaultsMap[vaultAddress];
+    const tokenData = tokens.tokensMap[vaultData.tokenId];
+    const userVaultData = vaults.user.userVaultsPositionsMap[vaultAddress]?.DEPOSIT;
+
+    const withdrawAll = amount.eq(MAX_UINT256);
+    const amountOfShares = withdrawAll
+      ? userVaultData.balance
+      : calculateSharesAmount({
+          amount,
+          decimals: tokenData.decimals,
+          pricePerShare: vaultData.metadata.pricePerShare,
+        });
 
     const signature = await vaultService.signPermit({
       network: network.current,
       accountAddress,
       vaultAddress,
       spenderAddress: CONTRACT_ADDRESSES.zapOut,
-      amount,
+      amount: amountOfShares,
       deadline,
     });
 
@@ -317,8 +334,12 @@ const depositVault = createAsyncThunk<
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
@@ -387,8 +408,12 @@ const withdrawVault = createAsyncThunk<
       slippageTolerance,
       signature,
     });
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
     dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
@@ -525,8 +550,12 @@ const migrateVault = createAsyncThunk<
       migrationContractAddress: migrationContractAddressToUse,
     });
 
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
     dispatch(getVaultsDynamic({ addresses: [vaultFromAddress, vaultToAddress] }));
     dispatch(getUserVaultsSummary());
     dispatch(getUserVaultsPositions({ vaultAddresses: [vaultFromAddress, vaultToAddress] }));

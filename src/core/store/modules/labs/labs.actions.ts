@@ -9,8 +9,6 @@ import {
   validateNetwork,
   validateVaultDeposit,
   validateVaultWithdraw,
-  validateYvBoostEthActionsAllowance,
-  getZapInContractAddress,
   validateYveCrvActionsAllowance,
   toWei,
   parseError,
@@ -21,7 +19,7 @@ import { VaultsActions } from '../vaults/vaults.actions';
 import { AlertsActions } from '../alerts/alerts.actions';
 import { TokensActions } from '../tokens/tokens.actions';
 
-const { THREECRV, YVECRV, PSLPYVBOOSTETH, PSLPYVBOOSTETH_GAUGE } = getConfig().CONTRACT_ADDRESSES;
+const { THREECRV, YVECRV } = getConfig().CONTRACT_ADDRESSES;
 
 const setSelectedLabAddress = createAction<{ labAddress?: string }>('labs/setSelectedLabAddress');
 const clearLabsData = createAction<void>('labs/clearLabsData');
@@ -245,8 +243,12 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       amount: amountInWei.toString(),
       slippageTolerance,
     });
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -356,8 +358,12 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
       amountOfShares,
       slippageTolerance,
     });
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -522,8 +528,12 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       vaultAddress: labAddress,
       amount: amountInWei.toString(),
     });
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getLabsDynamic({ addresses: [labAddress] }));
     dispatch(getUserLabsPositions({ labsAddresses: [labAddress] }));
@@ -552,8 +562,12 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
       network: network.current,
       accountAddress: userAddress,
     });
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
@@ -609,157 +623,18 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
       network: network.current,
       accountAddress: userAddress,
     });
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getLabsDynamic({ addresses: [YVECRV] }));
     dispatch(getUserLabsPositions({ labsAddresses: [YVECRV] }));
     dispatch(TokensActions.getUserTokens({ addresses: [THREECRV] }));
     dispatch(getYveCrvExtraData({ fetchDynamicData: true }));
     dispatch(getUserYveCrvExtraData());
-  }
-);
-
-// -------------------- YVBOOST-ETH --------------------
-
-const yvBoostEthApproveInvest = createAsyncThunk<void, ApproveDepositProps, ThunkAPI>(
-  'labs/yvBoostEth/yvBoostEthApproveInvest',
-  async ({ tokenAddress }, { dispatch }) => {
-    // tokenAddress is anyToken.
-    try {
-      const result = await dispatch(
-        TokensActions.approve({ tokenAddress, spenderAddress: getZapInContractAddress(PSLPYVBOOSTETH) })
-      );
-      unwrapResult(result);
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
-  }
-);
-
-const yvBoostEthInvest = createAsyncThunk<void, DepositProps, ThunkAPI>(
-  'labs/yvBoostEth/yvBoostEthInvest',
-  async ({ labAddress, tokenAddress, amount, targetUnderlyingTokenAmount }, { dispatch, getState }) => {
-    // labAddress is PSLPYVBOOSTETH
-    const { wallet } = getState();
-    const userAddress = wallet.selectedAddress;
-    if (!userAddress) {
-      throw new Error('WALLET NOT CONNECTED');
-    }
-
-    const labData = getState().labs.labsMap[labAddress];
-    const tokenData = getState().tokens.tokensMap[tokenAddress];
-    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
-    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
-
-    const { error: allowanceError } = validateYvBoostEthActionsAllowance({
-      action: 'INVEST',
-      sellTokenAddress: tokenAddress,
-      sellTokenAmount: amount,
-      sellTokenDecimals: tokenData.decimals,
-      sellTokenAllowancesMap: tokenAllowancesMap,
-    });
-
-    const { error: depositError } = validateVaultDeposit({
-      sellTokenAmount: amount,
-      sellTokenDecimals: tokenData?.decimals ?? '0',
-      userTokenBalance: userTokenData?.balance ?? '0',
-      vaultUnderlyingBalance: labData?.underlyingTokenBalance.amount ?? '0',
-      depositLimit: labData?.metadata.depositLimit ?? '0',
-      emergencyShutdown: labData?.metadata.emergencyShutdown || false,
-      targetUnderlyingTokenAmount,
-    });
-
-    const error = allowanceError || depositError;
-    if (error) throw new Error(error);
-
-    // const { labService } = services;
-    // const tx = await labService.yvBoostEthInvest({
-    //   accountAddress: userAddress,
-    //   tokenAddress: tokenData.address,
-    //   amount: amountInWei.toString(),
-    // });
-    // await transactionService.handleTransaction(tx, network.current);
-
-    dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
-    dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, PSLPYVBOOSTETH] }));
-  }
-);
-
-const yvBoostEthApproveStake = createAsyncThunk<void, { labAddress: string }, ThunkAPI>(
-  'labs/yveCrv/yvBoostEthApproveStake',
-  async (args, { dispatch }) => {
-    try {
-      const result = await dispatch(
-        TokensActions.approve({ tokenAddress: PSLPYVBOOSTETH, spenderAddress: PSLPYVBOOSTETH_GAUGE })
-      );
-      unwrapResult(result);
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
-  }
-);
-
-const yvBoostEthStake = createAsyncThunk<void, DepositProps, ThunkAPI>(
-  'labs/yvBoostEth/yvBoostEthStake',
-  async ({ labAddress, amount, targetUnderlyingTokenAmount }, { dispatch, extra, getState }) => {
-    const { network, wallet, app } = getState();
-    const { services } = extra;
-
-    const userAddress = wallet.selectedAddress;
-    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
-
-    const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
-      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
-    });
-    if (networkError) throw networkError;
-
-    const tokenAddress = PSLPYVBOOSTETH;
-    const labData = getState().labs.labsMap[labAddress];
-    const tokenData = getState().tokens.tokensMap[tokenAddress];
-    const userTokenData = getState().tokens.user.userTokensMap[tokenAddress];
-    const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[tokenAddress] ?? {};
-    const decimals = toBN(tokenData.decimals);
-    const ONE_UNIT = toBN('10').pow(decimals);
-    const amountInWei = amount.multipliedBy(ONE_UNIT);
-
-    const { error: allowanceError } = validateYvBoostEthActionsAllowance({
-      action: 'STAKE',
-      sellTokenAddress: tokenAddress,
-      sellTokenAmount: amount,
-      sellTokenDecimals: tokenData.decimals,
-      sellTokenAllowancesMap: tokenAllowancesMap,
-    });
-
-    const { error: depositError } = validateVaultDeposit({
-      sellTokenAmount: amount,
-      sellTokenDecimals: tokenData?.decimals ?? '0',
-      userTokenBalance: userTokenData?.balance ?? '0',
-      vaultUnderlyingBalance: labData?.underlyingTokenBalance.amount ?? '0',
-      depositLimit: labData?.metadata.depositLimit ?? '0',
-      emergencyShutdown: labData?.metadata.emergencyShutdown || false,
-      targetUnderlyingTokenAmount,
-    });
-
-    const error = allowanceError || depositError;
-    if (error) throw new Error(error);
-
-    const { labService, transactionService } = services;
-    const tx = await labService.stake({
-      network: network.current,
-      accountAddress: userAddress,
-      tokenAddress: tokenData.address,
-      vaultAddress: labAddress,
-      amount: amountInWei.toString(),
-    });
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
-
-    dispatch(getLabsDynamic({ addresses: [PSLPYVBOOSTETH] }));
-    dispatch(getUserLabsPositions({ labsAddresses: [PSLPYVBOOSTETH] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [PSLPYVBOOSTETH] }));
   }
 );
 
@@ -795,11 +670,5 @@ export const LabsActions = {
     yveCrvClaimReward,
     yveCrvApproveReinvest,
     yveCrvReinvest,
-  },
-  yvBoostEth: {
-    yvBoostEthApproveInvest,
-    yvBoostEthInvest,
-    yvBoostEthApproveStake,
-    yvBoostEthStake,
   },
 };

@@ -25,7 +25,7 @@ import {
   ApyTooltipData,
 } from '@components/app';
 import { SpinnerLoading, SearchInput, Text, Tooltip } from '@components/common';
-import { formatApy, formatPercent, halfWidthCss, humanize, normalizeAmount, toBN, USDC_DECIMALS } from '@utils';
+import { formatApy, formatPercent, halfWidthCss, humanize, normalizeAmount, USDC_DECIMALS } from '@utils';
 import { getConstants } from '@config/constants';
 import { device } from '@themes/default';
 import { GeneralLabView } from '@types';
@@ -109,7 +109,7 @@ export const Labs = () => {
   const { t } = useAppTranslation(['common', 'labs']);
 
   const { CONTRACT_ADDRESSES, NETWORK_SETTINGS } = getConstants();
-  const { YVECRV, YVBOOST, PSLPYVBOOSTETH } = CONTRACT_ADDRESSES;
+  const { YVECRV, YVBOOST } = CONTRACT_ADDRESSES;
   const dispatch = useAppDispatch();
   const isMounting = useIsMounting();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -139,7 +139,7 @@ export const Labs = () => {
     setFilteredOpportunities(opportunities);
   }, [opportunities]);
 
-  const LabHoldingsActions = ({ labAddress, alert }: { labAddress: string; alert?: string }) => {
+  const LabHoldingsActions = ({ labAddress }: { labAddress: string }) => {
     switch (labAddress) {
       case YVECRV:
         return (
@@ -195,30 +195,6 @@ export const Labs = () => {
             ]}
           />
         );
-      case PSLPYVBOOSTETH:
-        return (
-          <ActionButtons
-            alert={alert}
-            actions={[
-              {
-                name: t('components.transaction.deposit'),
-                handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
-                },
-                disabled: !walletIsConnected,
-              },
-              {
-                name: t('components.transaction.stake'),
-                handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'labStakeTx' }));
-                },
-                disabled: !walletIsConnected,
-              },
-            ]}
-          />
-        );
       default:
         return null;
     }
@@ -242,7 +218,6 @@ export const Labs = () => {
           />
         );
       case YVBOOST:
-      case PSLPYVBOOSTETH:
         return (
           <ActionButtons
             actions={[
@@ -259,19 +234,6 @@ export const Labs = () => {
         );
       default:
         return null;
-    }
-  };
-
-  const labsHoldingsAlerts = (lab: GeneralLabView): string | undefined => {
-    switch (lab.address) {
-      case PSLPYVBOOSTETH:
-        if (toBN(lab.DEPOSIT.userBalance).gt(0)) {
-          return t('components.list-card.available-stake');
-        }
-        break;
-
-      default:
-        break;
     }
   };
 
@@ -376,7 +338,7 @@ export const Labs = () => {
                 },
                 {
                   key: 'actions',
-                  transform: ({ address, alert }) => <LabHoldingsActions labAddress={address} alert={alert} />,
+                  transform: ({ address }) => <LabHoldingsActions labAddress={address} />,
                   align: 'flex-end',
                   width: 'auto',
                   grow: '1',
@@ -386,7 +348,6 @@ export const Labs = () => {
                 ...lab,
                 balance: normalizeAmount(lab[lab.mainPositionKey].userDeposited, lab.token.decimals),
                 value: lab[lab.mainPositionKey].userDepositedUsdc,
-                alert: labsHoldingsAlerts(lab) ?? '',
                 actions: null,
               }))}
               // TODO Redirect address is wrong
