@@ -1,5 +1,5 @@
 import { SerializedError } from '@reduxjs/toolkit';
-import { EthersError, PriceFetchingError, SdkError, SimulationError, TenderlyError, ZapperError } from '@yfi/sdk';
+import { EthersError, PriceFetchingError, SdkError, SimulationError, TenderlyError, ZapError } from '@yfi/sdk';
 
 const ETHERS_ERRORS = {
   [EthersError.FAIL_TOKEN_FETCH]: 'Error fetching token',
@@ -22,13 +22,13 @@ const SIMULATION_ERRORS = {
 const TENDERLY_ERRORS = {
   [TenderlyError.SIMULATION_CALL]: 'Simulation call to Tenderly failed',
 };
-const ZAPPER_ERRORS = {
-  [ZapperError.ZAP_IN]: 'Error Zapping in token',
-  [ZapperError.ZAP_IN_APPROVAL_STATE]: 'Error getting approval Zap in state of token',
-  [ZapperError.ZAP_IN_APPROVAL]: 'Error approving Zap in of token',
-  [ZapperError.ZAP_OUT]: 'Error Zapping out token',
-  [ZapperError.ZAP_OUT_APPROVAL_STATE]: 'Error getting approval Zap out state of token',
-  [ZapperError.ZAP_OUT_APPROVAL]: 'Error approving Zap out of token',
+const ZAP_ERRORS = {
+  [ZapError.ZAP_IN]: 'Error Zapping in token',
+  [ZapError.ZAP_IN_APPROVAL_STATE]: 'Error getting approval Zap in state of token',
+  [ZapError.ZAP_IN_APPROVAL]: 'Error approving Zap in of token',
+  [ZapError.ZAP_OUT]: 'Error Zapping out token',
+  [ZapError.ZAP_OUT_APPROVAL_STATE]: 'Error getting approval Zap out state of token',
+  [ZapError.ZAP_OUT_APPROVAL]: 'Error approving Zap out of token',
 };
 
 export const parseError = (e: any): SerializedError => {
@@ -56,9 +56,9 @@ export const parseError = (e: any): SerializedError => {
     };
   }
 
-  if (e instanceof ZapperError) {
+  if (e instanceof ZapError) {
     return {
-      message: ZAPPER_ERRORS[e.error_code] || e.message,
+      message: ZAP_ERRORS[e.error_code] || e.message,
       name: e.error_type,
       code: e.error_code,
     };

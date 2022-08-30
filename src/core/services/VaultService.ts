@@ -138,20 +138,20 @@ export class VaultServiceImpl implements VaultService {
     let expectedOutcome: TransactionOutcome;
     switch (transactionType) {
       case 'DEPOSIT':
-        expectedOutcome = await yearn.simulation.deposit(
-          accountAddress,
+        expectedOutcome = await yearn.simulation._deposit(
+          targetTokenAddress,
           sourceTokenAddress,
           sourceTokenAmount,
-          targetTokenAddress,
+          accountAddress,
           { slippage: DEFAULT_SLIPPAGE_SIMULATION }
         );
         break;
       case 'WITHDRAW':
-        expectedOutcome = await yearn.simulation.withdraw(
-          accountAddress,
+        expectedOutcome = await yearn.simulation._withdraw(
           sourceTokenAddress,
-          sourceTokenAmount,
           targetTokenAddress,
+          sourceTokenAmount,
+          accountAddress,
           { slippage: DEFAULT_SLIPPAGE_SIMULATION }
         );
         break;

@@ -62,6 +62,8 @@ interface LabMetadata {
   displayName: string;
   displayIcon: string;
   defaultDisplayToken: Address;
+  allowZapIn?: boolean;
+  allowZapOut?: boolean;
   zapInWith?: ZapInType;
   zapOutWith?: ZapOutType;
 }

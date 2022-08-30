@@ -45,8 +45,8 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   const [spenderAddress, setSpenderAddress] = useState('');
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
-  const simulationsEnabled = servicesEnabled.tenderly;
-  const zapperEnabled = servicesEnabled.zapper;
+  const simulationsEnabled = servicesEnabled.simulations;
+  const zapsEnabled = servicesEnabled.zaps;
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -84,9 +84,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
   useEffect(() => {
     if (!selectedTargetTokenAddress && selectedLab) {
       setSelectedTargetTokenAddress(
-        !zapperEnabled && selectedLab.zapOutWith === 'zapperZapOut'
-          ? selectedLab.token.address
-          : selectedLab.defaultDisplayToken
+        !zapsEnabled && selectedLab.zapOutWith ? selectedLab.token.address : selectedLab.defaultDisplayToken
       );
     }
   }, [selectedTargetTokenAddress, selectedLab]);
@@ -190,6 +188,9 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
     ? t('components.transaction.status.simulating')
     : t('components.transaction.status.calculating');
 
+  const isZap = selectedLab.token.address !== selectedTargetTokenAddress;
+  const zapService = isZap ? selectedLab.zapOutWith : undefined;
+
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
     setSelectedTargetTokenAddress(tokenAddress);
@@ -258,6 +259,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
+      sourceStatus={{ error: sourceError }}
       targetHeader={t('components.transaction.to-wallet')}
       targetAssetOptions={targetTokensOptions}
       selectedTargetAsset={selectedTargetToken}
@@ -267,7 +269,7 @@ export const LabWithdrawTx: FC<LabWithdrawTxProps> = ({ onClose, children, ...pr
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}
       actions={txActions}
-      sourceStatus={{ error: sourceError }}
+      zapService={zapService}
       loadingText={loadingText}
       onClose={onClose}
     />
