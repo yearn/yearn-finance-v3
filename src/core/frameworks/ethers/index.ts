@@ -79,9 +79,10 @@ export const signTypedData = async (
   // const signature = await signer._signTypedData(domain, types, value);
   const signature = await _signTypedData(signer, domain, types, value);
   const { r, s, v } = ethers.utils.splitSignature(signature);
+  const reconstructedSignature = ethers.utils.joinSignature({ r, s, v });
   console.log({ signature, r, s, v });
-  console.log(ethers.utils.joinSignature({ r, s, v }));
-  return signature;
+  console.log(reconstructedSignature);
+  return reconstructedSignature;
 };
 
 export const getContract = (
