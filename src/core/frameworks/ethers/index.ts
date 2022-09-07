@@ -78,9 +78,9 @@ export const signTypedData = async (
   // NOTE: Use Ethers signTypedData once it gets a stable release
   // const signature = await signer._signTypedData(domain, types, value);
   const signature = await _signTypedData(signer, domain, types, value);
-  const { r, s, v } = ethers.utils.splitSignature(signature);
-  const reconstructedSignature = ethers.utils.joinSignature({ r, s, v });
-  console.log({ signature, r, s, v });
+  const { r, s, v, recoveryParam } = ethers.utils.splitSignature(signature);
+  const reconstructedSignature = ethers.utils.joinSignature({ r, s, v, recoveryParam });
+  console.log({ signature, r, s, v, recoveryParam });
   console.log(reconstructedSignature);
   return reconstructedSignature;
 };
