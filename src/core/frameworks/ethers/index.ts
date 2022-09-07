@@ -36,7 +36,7 @@ const _signTypedData = async (
   domain: TypedDataDomain,
   types: Record<string, TypedDataField[]>,
   value: Record<string, any>
-) => {
+): Promise<string> => {
   const typedData = JSON.stringify({
     types: {
       EIP712Domain: [
@@ -78,11 +78,16 @@ export const signTypedData = async (
   // NOTE: Use Ethers signTypedData once it gets a stable release
   // const signature = await signer._signTypedData(domain, types, value);
   const signature = await _signTypedData(signer, domain, types, value);
+
+  // NOTE: Invalid Ledger + Metamask signatures need to be reconstructed until issue is solved and released
+  // https://github.com/MetaMask/eth-ledger-bridge-keyring/pull/152
+  // https://github.com/MetaMask/metamask-extension/issues/10240
+  const isInvalidLedgerSignature = signature.endsWith('00') || signature.endsWith('01');
+
+  if (!isInvalidLedgerSignature) return signature;
+
   const { r, s, v, recoveryParam } = ethers.utils.splitSignature(signature);
-  const reconstructedSignature = ethers.utils.joinSignature({ r, s, v, recoveryParam });
-  console.log({ signature, r, s, v, recoveryParam });
-  console.log(reconstructedSignature);
-  return reconstructedSignature;
+  return ethers.utils.joinSignature({ r, s, v, recoveryParam });
 };
 
 export const getContract = (
