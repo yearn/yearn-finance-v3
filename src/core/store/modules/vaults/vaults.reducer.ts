@@ -15,7 +15,7 @@ import { VaultsActions } from './vaults.actions';
 
 export const initialVaultActionsStatusMap: VaultActionsStatusMap = {
   get: initialStatus,
-  approve: initialStatus,
+  approveDeposit: initialStatus,
   deposit: initialStatus,
   approveWithdraw: initialStatus,
   signZapOut: initialStatus,
@@ -301,15 +301,15 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     /* ----------------------------- approveDeposit ----------------------------- */
     .addCase(approveDeposit.pending, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { loading: true };
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveDeposit = { loading: true };
     })
     .addCase(approveDeposit.fulfilled, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = {};
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveDeposit = {};
     })
     .addCase(approveDeposit.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { error: error.message };
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveDeposit = { error: error.message };
     })
 
     /* ----------------------------- approveWithdraw ---------------------------- */

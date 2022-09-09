@@ -69,7 +69,7 @@ export interface ThemeState {
 
 export interface VaultActionsStatusMap {
   get: Status;
-  approve: Status;
+  approveDeposit: Status;
   deposit: Status;
   approveWithdraw: Status;
   signZapOut: Status;
