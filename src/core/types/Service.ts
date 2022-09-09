@@ -51,9 +51,11 @@ export interface VaultService {
   signPermit: (props: SignPermitProps) => Promise<string>;
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
+  gaslessDeposit: (props: GaslessDepositProps) => Promise<string>;
+  gaslessWithdraw: (props: GaslessWithdrawProps) => Promise<string>;
   migrate: (props: MigrateProps) => Promise<TransactionResponse>;
   approveDeposit: (props: ApproveDepositProps) => Promise<TransactionResponse>;
-  approveZapOut: (props: ApproveZapOutProps) => Promise<TransactionResponse>;
+  approveWithdraw: (props: ApproveWithdrawProps) => Promise<TransactionResponse>;
   getDepositAllowance: (props: GetDepositAllowanceProps) => Promise<TokenAllowance>;
   getWithdrawAllowance: (props: GetWithdrawAllowanceProps) => Promise<TokenAllowance>;
 }
@@ -123,6 +125,22 @@ export interface WithdrawProps {
   signature?: string;
 }
 
+export interface GaslessDepositProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  vaultAddress: Address;
+  minTargetAmount: Wei;
+}
+
+export interface GaslessWithdrawProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  vaultAddress: Address;
+  minTargetAmount: Wei;
+}
+
 export interface MigrateProps {
   network: Network;
   accountAddress: Address;
@@ -168,14 +186,16 @@ export interface ApproveDepositProps {
   tokenAddress: Address;
   amount: Wei;
   vaultAddress: string;
+  gasless?: boolean;
 }
 
-export interface ApproveZapOutProps {
+export interface ApproveWithdrawProps {
   network: Network;
   amount: Wei;
   accountAddress: string;
   tokenAddress: string;
   vaultAddress: string;
+  gasless?: boolean;
 }
 
 export interface GetDepositAllowanceProps {
@@ -183,6 +203,7 @@ export interface GetDepositAllowanceProps {
   accountAddress: string;
   tokenAddress: string;
   vaultAddress: string;
+  gasless?: boolean;
 }
 
 export interface GetWithdrawAllowanceProps {
@@ -190,6 +211,7 @@ export interface GetWithdrawAllowanceProps {
   accountAddress: string;
   tokenAddress: string;
   vaultAddress: string;
+  gasless?: boolean;
 }
 
 export interface ApproveProps {

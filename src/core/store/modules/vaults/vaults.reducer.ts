@@ -1,4 +1,4 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer, isPending, isFulfilled, isRejected } from '@reduxjs/toolkit';
 import { difference, groupBy, keyBy, union } from 'lodash';
 
 import {
@@ -64,6 +64,8 @@ const {
   approveZapOut,
   signZapOut,
   withdrawVault,
+  gaslessDeposit,
+  gaslessWithdraw,
   approveMigrate,
   migrateVault,
   getVaults,
@@ -80,6 +82,14 @@ const {
   clearSelectedVaultAndStatus,
   clearVaultStatus,
 } = VaultsActions;
+
+const isPendingDeposit = isPending(depositVault, gaslessDeposit);
+const isFulfilledDeposit = isFulfilled(depositVault, gaslessDeposit);
+const isRejectedDeposit = isRejected(depositVault, gaslessDeposit);
+
+const isPendingWithdraw = isPending(withdrawVault, gaslessWithdraw);
+const isFulfilledWithdraw = isFulfilled(withdrawVault, gaslessWithdraw);
+const isRejectedWithdraw = isRejected(withdrawVault, gaslessWithdraw);
 
 const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
   builder
@@ -302,20 +312,6 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { error: error.message };
     })
 
-    /* ------------------------------ depositVault ------------------------------ */
-    .addCase(depositVault.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { loading: true };
-    })
-    .addCase(depositVault.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = {};
-    })
-    .addCase(depositVault.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { error: error.message };
-    })
-
     /* ------------------------------ approveZapOut ----------------------------- */
     .addCase(approveZapOut.pending, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
@@ -344,20 +340,6 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.statusMap.vaultsActionsStatusMap[vaultAddress].signZapOut = { error: error.message };
     })
 
-    /* ------------------------------ withdrawVault ----------------------------- */
-    .addCase(withdrawVault.pending, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { loading: true };
-    })
-    .addCase(withdrawVault.fulfilled, (state, { meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = {};
-    })
-    .addCase(withdrawVault.rejected, (state, { error, meta }) => {
-      const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { error: error.message };
-    })
-
     /* ----------------------------- approveMigrate ----------------------------- */
     .addCase(approveMigrate.pending, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultFromAddress;
@@ -384,6 +366,34 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
     .addCase(migrateVault.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultFromAddress;
       state.statusMap.vaultsActionsStatusMap[vaultAddress].migrate = { error: error.message };
+    })
+
+    /* -------------------------------- deposits -------------------------------- */
+    .addMatcher(isPendingDeposit, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { loading: true };
+    })
+    .addMatcher(isFulfilledDeposit, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = {};
+    })
+    .addMatcher(isRejectedDeposit, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].deposit = { error: error.message };
+    })
+
+    /* -------------------------------- withdraws ------------------------------- */
+    .addMatcher(isPendingWithdraw, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { loading: true };
+    })
+    .addMatcher(isFulfilledWithdraw, (state, { meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = {};
+    })
+    .addMatcher(isRejectedWithdraw, (state, { error, meta }) => {
+      const vaultAddress = meta.arg.vaultAddress;
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].withdraw = { error: error.message };
     });
 });
 

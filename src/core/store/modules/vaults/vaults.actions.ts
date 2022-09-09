@@ -176,9 +176,13 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 /*                             Transaction Methods                            */
 /* -------------------------------------------------------------------------- */
 
-const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
+const approveDeposit = createAsyncThunk<
+  void,
+  { vaultAddress: string; tokenAddress: string; gasless?: boolean },
+  ThunkAPI
+>(
   'vaults/approveDeposit',
-  async ({ vaultAddress, tokenAddress }, { getState, dispatch, extra }) => {
+  async ({ vaultAddress, tokenAddress, gasless }, { getState, dispatch, extra }) => {
     const { wallet, network } = getState();
     const { vaultService, transactionService } = extra.services;
     const amount = extra.config.MAX_UINT256;
@@ -192,6 +196,7 @@ const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddre
       tokenAddress,
       vaultAddress,
       amount,
+      gasless,
     });
 
     await transactionService.handleTransaction({ tx, network: network.current });
@@ -203,9 +208,13 @@ const approveDeposit = createAsyncThunk<void, { vaultAddress: string; tokenAddre
   }
 );
 
-const approveZapOut = createAsyncThunk<void, { vaultAddress: string; tokenAddress: string }, ThunkAPI>(
+const approveZapOut = createAsyncThunk<
+  void,
+  { vaultAddress: string; tokenAddress: string; gasless?: boolean },
+  ThunkAPI
+>(
   'vaults/approveZapOut',
-  async ({ vaultAddress, tokenAddress }, { getState, dispatch, extra }) => {
+  async ({ vaultAddress, tokenAddress, gasless }, { getState, dispatch, extra }) => {
     const { wallet, network } = getState();
     const { vaultService, transactionService } = extra.services;
     const amount = extra.config.MAX_UINT256;
@@ -213,12 +222,13 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string; tokenAddres
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const tx = await vaultService.approveZapOut({
+    const tx = await vaultService.approveWithdraw({
       network: network.current,
       accountAddress,
       amount,
       vaultAddress,
       tokenAddress,
+      gasless,
     });
 
     await transactionService.handleTransaction({ tx, network: network.current });
@@ -425,6 +435,92 @@ const withdrawVault = createAsyncThunk<
   }
 );
 
+const gaslessDeposit = createAsyncThunk<
+  void,
+  {
+    vaultAddress: string;
+    tokenAddress: string;
+    minTargetAmount: Wei;
+  },
+  ThunkAPI
+>(
+  'vaults/gaslessDeposit',
+  async ({ vaultAddress, tokenAddress, minTargetAmount }, { extra, getState, dispatch }) => {
+    const { network, wallet } = getState();
+    const { services } = extra;
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
+    const { vaultService } = services;
+    const tx = await vaultService.gaslessDeposit({
+      network: network.current,
+      accountAddress,
+      vaultAddress,
+      tokenAddress,
+      minTargetAmount,
+    });
+
+    // dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+    // dispatch(getUserVaultsSummary());
+    // dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+    // dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
+    // dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
+  },
+  {
+    serializeError: parseError,
+  }
+);
+
+const gaslessWithdraw = createAsyncThunk<
+  void,
+  {
+    vaultAddress: string;
+    tokenAddress: string;
+    minTargetAmount: Wei;
+  },
+  ThunkAPI
+>(
+  'vaults/gaslessWithdraw',
+  async ({ vaultAddress, tokenAddress, minTargetAmount }, { extra, getState, dispatch }) => {
+    const { network, wallet } = getState();
+    const { services } = extra;
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: network.current,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
+    const { vaultService } = services;
+    const tx = await vaultService.gaslessWithdraw({
+      network: network.current,
+      accountAddress,
+      vaultAddress,
+      tokenAddress,
+      minTargetAmount,
+    });
+
+    // dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+    // dispatch(getUserVaultsSummary());
+    // dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+    // dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
+    // dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
+  },
+  {
+    serializeError: parseError,
+  }
+);
+
 const approveMigrate = createAsyncThunk<
   void,
   { vaultFromAddress: string; migrationContractAddress?: string },
@@ -440,9 +536,10 @@ const getDepositAllowance = createAsyncThunk<
   {
     tokenAddress: string;
     vaultAddress: string;
+    gasless?: boolean;
   },
   ThunkAPI
->('vaults/getDepositAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState, dispatch }) => {
+>('vaults/getDepositAllowance', async ({ vaultAddress, tokenAddress, gasless }, { extra, getState, dispatch }) => {
   const {
     services: { vaultService },
   } = extra;
@@ -456,6 +553,7 @@ const getDepositAllowance = createAsyncThunk<
     vaultAddress,
     tokenAddress,
     accountAddress,
+    gasless,
   });
 
   await dispatch(
@@ -474,9 +572,10 @@ const getWithdrawAllowance = createAsyncThunk<
   {
     tokenAddress: string;
     vaultAddress: string;
+    gasless?: boolean;
   },
   ThunkAPI
->('vaults/getWithdrawAllowance', async ({ vaultAddress, tokenAddress }, { extra, getState, dispatch }) => {
+>('vaults/getWithdrawAllowance', async ({ vaultAddress, tokenAddress, gasless }, { extra, getState, dispatch }) => {
   const {
     services: { vaultService },
   } = extra;
@@ -490,6 +589,7 @@ const getWithdrawAllowance = createAsyncThunk<
     vaultAddress,
     tokenAddress,
     accountAddress,
+    gasless,
   });
 
   await dispatch(
@@ -607,6 +707,8 @@ export const VaultsActions = {
   approveZapOut,
   signZapOut,
   withdrawVault,
+  gaslessDeposit,
+  gaslessWithdraw,
   approveMigrate,
   migrateVault,
   getVaultsDynamic,
