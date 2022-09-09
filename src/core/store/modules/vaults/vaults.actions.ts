@@ -208,12 +208,12 @@ const approveDeposit = createAsyncThunk<
   }
 );
 
-const approveZapOut = createAsyncThunk<
+const approveWithdraw = createAsyncThunk<
   void,
   { vaultAddress: string; tokenAddress: string; gasless?: boolean },
   ThunkAPI
 >(
-  'vaults/approveZapOut',
+  'vaults/approveWithdraw',
   async ({ vaultAddress, tokenAddress, gasless }, { getState, dispatch, extra }) => {
     const { wallet, network } = getState();
     const { vaultService, transactionService } = extra.services;
@@ -704,7 +704,7 @@ export const VaultsActions = {
   getVaults,
   approveDeposit,
   depositVault,
-  approveZapOut,
+  approveWithdraw,
   signZapOut,
   withdrawVault,
   gaslessDeposit,

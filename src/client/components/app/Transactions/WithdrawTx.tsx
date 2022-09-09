@@ -196,7 +196,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const targetStatus = {
     error:
       expectedTxOutcomeStatus.error ||
-      actionsStatus.approveZapOut.error ||
+      actionsStatus.approveWithdraw.error ||
       actionsStatus.withdraw.error ||
       slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
@@ -241,7 +241,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
         setSignature(signResult.signature);
       } else {
         await dispatch(
-          VaultsActions.approveZapOut({
+          VaultsActions.approveWithdraw({
             vaultAddress: selectedVault.address,
             tokenAddress: selectedTargetTokenAddress,
             gasless: allowGasless && isGasless,
@@ -283,7 +283,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
           ? t('components.transaction.sign')
           : t('components.transaction.approve'),
       onAction: approve,
-      status: actionsStatus.approveZapOut,
+      status: actionsStatus.approveWithdraw,
       disabled: isApproved || isFetchingAllowance,
     },
     {

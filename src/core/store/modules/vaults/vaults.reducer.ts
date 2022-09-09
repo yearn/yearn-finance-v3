@@ -17,7 +17,7 @@ export const initialVaultActionsStatusMap: VaultActionsStatusMap = {
   get: initialStatus,
   approve: initialStatus,
   deposit: initialStatus,
-  approveZapOut: initialStatus,
+  approveWithdraw: initialStatus,
   signZapOut: initialStatus,
   withdraw: initialStatus,
   approveMigrate: initialStatus,
@@ -61,7 +61,7 @@ export const vaultsInitialState: VaultsState = {
 const {
   approveDeposit,
   depositVault,
-  approveZapOut,
+  approveWithdraw,
   signZapOut,
   withdrawVault,
   gaslessDeposit,
@@ -312,18 +312,18 @@ const vaultsReducer = createReducer(vaultsInitialState, (builder) => {
       state.statusMap.vaultsActionsStatusMap[vaultAddress].approve = { error: error.message };
     })
 
-    /* ------------------------------ approveZapOut ----------------------------- */
-    .addCase(approveZapOut.pending, (state, { meta }) => {
+    /* ----------------------------- approveWithdraw ---------------------------- */
+    .addCase(approveWithdraw.pending, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = { loading: true };
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveWithdraw = { loading: true };
     })
-    .addCase(approveZapOut.fulfilled, (state, { meta }) => {
+    .addCase(approveWithdraw.fulfilled, (state, { meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = {};
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveWithdraw = {};
     })
-    .addCase(approveZapOut.rejected, (state, { error, meta }) => {
+    .addCase(approveWithdraw.rejected, (state, { error, meta }) => {
       const vaultAddress = meta.arg.vaultAddress;
-      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveZapOut = { error: error.message };
+      state.statusMap.vaultsActionsStatusMap[vaultAddress].approveWithdraw = { error: error.message };
     })
 
     /* ------------------------------ signZapOut ----------------------------- */

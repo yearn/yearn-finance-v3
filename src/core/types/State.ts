@@ -71,7 +71,7 @@ export interface VaultActionsStatusMap {
   get: Status;
   approve: Status;
   deposit: Status;
-  approveZapOut: Status;
+  approveWithdraw: Status;
   signZapOut: Status;
   withdraw: Status;
   approveMigrate: Status;
