@@ -65,6 +65,10 @@
         "total-borrow-limit-used": "Total borrow limit used"
       },
       "claim": "Claim",
+      "controls": {
+        "gasless": "Gasless by signature",
+        "gasless-info": "Powered by CowSwap"
+      },
       "deposit": "Deposit",
       "fees": {
         "powered-by": "Zaps powered by Portals.fi",
