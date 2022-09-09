@@ -56,6 +56,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   const [txCompleted, setTxCompleted] = useState(false);
   const [spenderAddress, setSpenderAddress] = useState('');
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
+  const [isGasless, setIsGasless] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
   const simulationsEnabled = servicesEnabled.simulations;
   const zapsEnabled = servicesEnabled.zaps;
@@ -75,6 +76,7 @@ export const DepositTx: FC<DepositTxProps> = ({
     selectedVaultOrLab: selectedVault,
     allowTokenSelect,
   });
+  const allowGasless = selectedVault?.token.address === selectedSellTokenAddress && currentNetwork === 'mainnet';
 
   const onExit = () => {
     dispatch(VaultsActions.clearSelectedVaultAndStatus());
@@ -127,13 +129,14 @@ export const DepositTx: FC<DepositTxProps> = ({
         VaultsActions.getDepositAllowance({
           vaultAddress: selectedVault.address,
           tokenAddress: selectedSellTokenAddress,
+          gasless: allowGasless && isGasless,
         })
       );
       setSpenderAddress(allowance.spender);
       setIsFetchingAllowance(false);
     };
     fetchAllowance();
-  }, [selectedSellTokenAddress, selectedVault?.address, isWalletConnected]);
+  }, [selectedSellTokenAddress, selectedVault?.address, isWalletConnected, isGasless]);
 
   useEffect(() => {
     if (!selectedVault) return;
@@ -268,7 +271,11 @@ export const DepositTx: FC<DepositTxProps> = ({
     if (!selectedSellToken) return;
 
     await dispatch(
-      VaultsActions.approveDeposit({ vaultAddress: selectedVault.address, tokenAddress: selectedSellToken.address })
+      VaultsActions.approveDeposit({
+        vaultAddress: selectedVault.address,
+        tokenAddress: selectedSellToken.address,
+        gasless: allowGasless && isGasless,
+      })
     );
   };
 
@@ -276,15 +283,26 @@ export const DepositTx: FC<DepositTxProps> = ({
     try {
       if (!selectedSellToken) return;
 
-      await dispatchAndUnwrap(
-        VaultsActions.depositVault({
-          vaultAddress: selectedVault.address,
-          tokenAddress: selectedSellToken.address,
-          amount: toBN(amount),
-          slippageTolerance: selectedSlippage,
-          targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
-        })
-      );
+      if (allowGasless && isGasless) {
+        await dispatchAndUnwrap(
+          VaultsActions.gaslessDeposit({
+            vaultAddress: selectedVault.address,
+            tokenAddress: selectedSellToken.address,
+            minTargetAmount: expectedTxOutcome?.targetTokenAmount ?? '',
+          })
+        );
+      } else {
+        await dispatchAndUnwrap(
+          VaultsActions.depositVault({
+            vaultAddress: selectedVault.address,
+            tokenAddress: selectedSellToken.address,
+            amount: toBN(amount),
+            slippageTolerance: selectedSlippage,
+            targetUnderlyingTokenAmount: expectedTxOutcome?.targetUnderlyingTokenAmount,
+          })
+        );
+      }
+
       setTxCompleted(true);
     } catch (error) {}
   };
@@ -334,6 +352,9 @@ export const DepositTx: FC<DepositTxProps> = ({
       targetStatus={targetStatus}
       actions={txActions}
       zapService={zapService}
+      allowGasless={allowGasless}
+      isGasless={isGasless}
+      onToggleGasless={setIsGasless}
       loadingText={loadingText}
       onClose={onClose}
     />

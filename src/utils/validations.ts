@@ -30,6 +30,7 @@ interface ValidateVaultWithdrawAllowanceProps {
   yvTokenAllowancesMap: AllowancesMap;
   spenderAddress: string;
   signature?: string;
+  gasless?: boolean;
 }
 
 export interface ValidateMigrateVaultAllowanceProps {
@@ -101,10 +102,11 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
     yvTokenAllowancesMap,
     spenderAddress,
     signature,
+    gasless,
   } = props;
   const isZapOut = targetTokenAddress !== underlyingTokenAddress;
 
-  if (!isZapOut || signature) return { approved: true };
+  if ((isZapOut && !gasless) || signature) return { approved: true };
 
   return validateAllowance({
     tokenAddress: yvTokenAddress,
