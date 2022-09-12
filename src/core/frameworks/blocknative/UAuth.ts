@@ -1,10 +1,14 @@
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces';
 import UAuthBncOnboard from '@uauth/bnc-onboard';
 
+import { getConfig } from '@config';
+
+const { UNSTOPPABLE_DOMAINS_ID, INFURA_PROJECT_ID, HOST } = getConfig();
+
 const uauthOnboard = new UAuthBncOnboard({
-  clientID: process.env.REACT_APP_CLIENT_ID!,
-  redirectUri: process.env.REACT_APP_REDIRECT_URI!,
-  postLogoutRedirectUri: process.env.REACT_APP_POST_LOGOUT_REDIRECT_URI!,
+  clientID: UNSTOPPABLE_DOMAINS_ID,
+  redirectUri: HOST,
+  postLogoutRedirectUri: HOST,
   scope: 'openid wallet',
 });
 
@@ -16,7 +20,7 @@ const uauthWallet: WalletModule = uauthOnboard.module({
   // configuration to the @walletconnect/web3-provider instance.
   // See here: https://docs.walletconnect.com/1.0/quick-start/dapps/web3-provider
   walletconnect: {
-    infuraId: process.env.REACT_APP_INFURA_ID!,
+    infuraId: INFURA_PROJECT_ID,
   },
 });
 
