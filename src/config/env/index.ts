@@ -23,10 +23,12 @@ export const getEnv = memoize((): Env => {
     REACT_APP_YEARN_SUBGRAPH_KEY,
   } = process.env;
 
+  const isProd = NODE_ENV === 'production';
+
   return {
     ENV: NODE_ENV,
     VERSION: REACT_APP_VERSION ?? 'unknown',
-    HOST: REACT_APP_HOST ?? 'https://yearn.finance',
+    HOST: REACT_APP_HOST ?? isProd ? 'https://yearn.finance' : 'http://127.0.0.1:3000',
     NETWORK: (REACT_APP_NETWORK ?? 'mainnet') as Network,
     CUSTOM_PROVIDER_HTTPS: REACT_APP_CUSTOM_PROVIDER_HTTPS ?? 'http://127.0.0.1:8545/',
     USE_MAINNET_FORK: REACT_APP_USE_MAINNET_FORK === 'true',
