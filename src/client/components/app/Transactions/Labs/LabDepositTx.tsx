@@ -51,8 +51,8 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
   const [spenderAddress, setSpenderAddress] = useState('');
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
-  const simulationsEnabled = servicesEnabled.tenderly;
-  const zapperEnabled = servicesEnabled.zapper;
+  const simulationsEnabled = servicesEnabled.simulations;
+  const zapsEnabled = servicesEnabled.zaps;
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -87,9 +87,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       dispatch(
         TokensActions.setSelectedTokenAddress({
           tokenAddress:
-            !zapperEnabled && selectedLab.zapInWith === 'zapperZapIn'
-              ? selectedLab.token.address
-              : selectedLab.defaultDisplayToken,
+            !zapsEnabled && selectedLab.zapInWith ? selectedLab.token.address : selectedLab.defaultDisplayToken,
         })
       );
     }
@@ -201,6 +199,9 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
     ? t('components.transaction.status.simulating')
     : t('components.transaction.status.calculating');
 
+  const isZap = selectedLab.token.address !== selectedSellTokenAddress;
+  const zapService = isZap ? selectedLab.zapInWith : undefined;
+
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
@@ -280,6 +281,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
+      sourceStatus={{ error: sourceError }}
       targetHeader={t('components.transaction.to-vault')}
       targetAssetOptions={[selectedLabOption]}
       selectedTargetAsset={selectedLabOption}
@@ -289,7 +291,7 @@ export const LabDepositTx: FC<LabDepositTxProps> = ({ onClose }) => {
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}
       actions={txActions}
-      sourceStatus={{ error: sourceError }}
+      zapService={zapService}
       loadingText={loadingText}
       onClose={onClose}
     />

@@ -66,6 +66,10 @@
       },
       "claim": "Claim",
       "deposit": "Deposit",
+      "fees": {
+        "powered-by": "Zaps powered by Portals.fi",
+        "zaps": "Zap fee"
+      },
       "from-iron-bank": "From Iron Bank",
       "from-vault": "From vault",
       "from-wallet": "From wallet",
