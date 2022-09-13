@@ -26,4 +26,5 @@ export interface Subscriptions {
   network?: (networkId: number) => void;
   balance?: (balance: string) => void;
   wallet?: (wallet: any) => void;
+  ens?: (ens: any) => void;
 }
