@@ -44,6 +44,7 @@
     "@types/redux-logger": "3.0.9",
     "@types/styled-components": "5.1.12",
     "@types/styled-system": "5.1.13",
+    "@uauth/bnc-onboard": "^2.2.0",
     "@yearn-finance/web-lib": "0.8.14",
     "@yfi/sdk": "3.0.0-alpha.1",
     "awilix": "7.0.2",

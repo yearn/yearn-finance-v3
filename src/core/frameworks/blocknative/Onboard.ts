@@ -8,6 +8,7 @@ import { Wallet, Subscriptions, Network, Theme } from '@types';
 
 import { injectMetamaskProvider } from '../metamask';
 
+import uauthWallet from './UAuth';
 import ledgerIframeWallet from './IframeWallet';
 
 export class BlocknativeWalletImpl implements Wallet {
@@ -115,7 +116,7 @@ export class BlocknativeWalletImpl implements Wallet {
       darkMode: theme !== 'light',
       subscriptions,
       walletSelect: {
-        wallets: [...wallets, ledgerIframeWallet],
+        wallets: [...wallets, uauthWallet, ledgerIframeWallet],
       },
       walletCheck,
     });
