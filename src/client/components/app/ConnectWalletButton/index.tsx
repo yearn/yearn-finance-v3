@@ -24,19 +24,10 @@ export const ConnectWalletButton = ({ address, ensName, disabled, onClick }: Wal
   const { t } = useAppTranslation('common');
   let buttonMessage;
 
-  const ens: any = localStorage.getItem('username');
-  const ensNme = JSON.parse(ens);
-  let walletName: any = localStorage.getItem('yearn_wallet.name');
-  walletName = walletName?.substring(1, walletName.length - 1);
   if (!address) {
     buttonMessage = t('components.connect-button.connect');
   } else {
-    if (walletName === 'Unstoppable') {
-      buttonMessage = ensNme && ensNme !== null && ensNme.value ? ensNme.value : '';
-    } else {
-      buttonMessage =
-        ensName ?? address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length);
-    }
+    buttonMessage = ensName ?? address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length);
   }
 
   return (
