@@ -2,9 +2,9 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppTranslation, useExecuteThunk } from '@hooks';
 import { NetworkSelectors, WalletSelectors, GaugesActions, GaugesSelectors } from '@store';
-import { toBN, normalizeAmount, toWei, USDC_DECIMALS, validateNetwork, validateAmount } from '@utils';
+import { toWei, validateNetwork, validateAmount } from '@utils';
 
-import { Transaction } from '../Transaction';
+import { SimpleTransaction } from '../SimpleTransaction';
 
 export interface UnstakeTxProps {
   header?: string;
@@ -47,12 +47,7 @@ export const UnstakeTx: FC<UnstakeTxProps> = ({ header, onClose }) => {
     decimals: gauge.token.decimals,
   };
 
-  const amountValue = toBN(amount).times(normalizeAmount(gauge.token.priceUsdc, USDC_DECIMALS)).toString();
-  const expectedAmount = amount;
-  const expectedAmountValue = amountValue;
-
   const sourceError = networkError || inputError;
-  const targetError = unstakeStatus.error;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -76,26 +71,16 @@ export const UnstakeTx: FC<UnstakeTxProps> = ({ header, onClose }) => {
   ];
 
   return (
-    <Transaction
-      transactionLabel={header}
-      transactionCompleted={!!unstakeStatus.executed}
-      onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader={t('components.transaction.from-gauge')}
-      sourceAssetOptions={[gaugeOption]}
-      selectedSourceAsset={gaugeOption}
-      sourceAmount={amount}
-      sourceAmountValue={amountValue}
-      onSourceAmountChange={setAmount}
-      sourceStatus={{ error: sourceError }}
-      targetHeader={t('components.transaction.to-wallet')}
-      targetAssetOptions={[gauge.token]}
-      selectedTargetAsset={gauge.token}
-      targetAmountDisabled={false}
-      targetAmount={expectedAmount}
-      targetAmountValue={expectedAmountValue}
-      targetStatus={{ error: targetError }}
+    <SimpleTransaction
       actions={txActions}
+      amount={amount}
+      header={t('components.transaction.unstake')}
+      onAmountChange={setAmount}
       onClose={onClose}
+      onTransactionCompletedDismissed={onTransactionCompletedDismissed}
+      selectedAsset={gaugeOption}
+      status={{ error: sourceError }}
+      transactionCompleted={!!unstakeStatus.executed}
     />
   );
 };

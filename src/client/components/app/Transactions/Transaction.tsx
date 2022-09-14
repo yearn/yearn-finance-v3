@@ -10,12 +10,12 @@ import { TxTokenInput } from './components/TxTokenInput';
 import { TxError } from './components/TxError';
 import { TxStatus } from './components/TxStatus';
 
-interface Status {
+export interface Status {
   loading?: boolean;
   error?: string | null;
 }
 
-interface Action {
+export interface Action {
   label: string;
   onAction: () => void;
   status: Status;
@@ -23,7 +23,7 @@ interface Action {
   contrast?: boolean;
 }
 
-interface Asset {
+export interface Asset {
   address: string;
   symbol: string;
   icon?: string;

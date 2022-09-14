@@ -2,17 +2,9 @@ import { FC, useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch, useAppTranslation, useExecuteThunk } from '@hooks';
 import { NetworkSelectors, WalletSelectors, GaugesActions, GaugesSelectors } from '@store';
-import {
-  toBN,
-  toWei,
-  normalizeAmount,
-  USDC_DECIMALS,
-  validateNetwork,
-  validateAllowance,
-  validateAmount,
-} from '@utils';
+import { toBN, toWei, validateNetwork, validateAllowance, validateAmount } from '@utils';
 
-import { Transaction } from '../Transaction';
+import { SimpleTransaction } from '../SimpleTransaction';
 
 export interface StakeTxProps {
   header?: string;
@@ -65,24 +57,7 @@ export const StakeTx: FC<StakeTxProps> = ({ header, onClose }) => {
     walletNetwork,
   });
 
-  const gaugeOption = {
-    address: gauge.address,
-    symbol: gauge.token.symbol,
-    icon: '',
-    balance: gauge.DEPOSIT.userDeposited,
-    balanceUsdc: gauge.DEPOSIT.userDepositedUsdc,
-    decimals: gauge.token.decimals,
-  };
-
-  const amountValue = toBN(amount).times(normalizeAmount(gauge.token.priceUsdc, USDC_DECIMALS)).toString();
-  const expectedAmount = amount;
-  const expectedAmountValue = amountValue;
-
-  const sourceError = networkError || allowanceError || inputError;
-
-  const targetStatus = {
-    error: approveStakeStatus.error || stakeStatus.error,
-  };
+  const error = networkError || allowanceError || inputError;
 
   const onTransactionCompletedDismissed = () => {
     if (onClose) onClose();
@@ -116,26 +91,16 @@ export const StakeTx: FC<StakeTxProps> = ({ header, onClose }) => {
   ];
 
   return (
-    <Transaction
-      transactionLabel={header}
-      transactionCompleted={!!stakeStatus.executed}
-      onTransactionCompletedDismissed={onTransactionCompletedDismissed}
-      sourceHeader={t('components.transaction.from-wallet')}
-      sourceAssetOptions={[gauge.token]}
-      selectedSourceAsset={gauge.token}
-      sourceAmount={amount}
-      sourceAmountValue={amountValue}
-      onSourceAmountChange={setAmount}
-      sourceStatus={{ error: sourceError }}
-      targetHeader={t('components.transaction.to-gauge')}
-      targetAssetOptions={[gaugeOption]}
-      selectedTargetAsset={gaugeOption}
-      targetAmountDisabled={false}
-      targetAmount={expectedAmount}
-      targetAmountValue={expectedAmountValue}
-      targetStatus={targetStatus}
+    <SimpleTransaction
       actions={txActions}
+      amount={amount}
+      header={t('components.transaction.stake')}
+      onAmountChange={setAmount}
       onClose={onClose}
+      onTransactionCompletedDismissed={onTransactionCompletedDismissed}
+      selectedAsset={gauge.token}
+      status={{ error }}
+      transactionCompleted={!!stakeStatus.executed}
     />
   );
 };
