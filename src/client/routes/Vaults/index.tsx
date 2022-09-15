@@ -17,7 +17,7 @@ import { device } from '@themes/default';
 import {
   SummaryCard,
   DetailCard,
-  RecommendationsCard,
+  LineCard,
   ActionButtons,
   TokenIcon,
   SliderCard,
@@ -27,6 +27,7 @@ import {
   ApyTooltipData,
 } from '@components/app';
 import { SpinnerLoading, Text, Tooltip, Input, SearchIcon } from '@components/common';
+import { ThreeColumnLayout } from '@containers/Columns';
 import {
   humanize,
   USDC_DECIMALS,
@@ -46,7 +47,7 @@ const StyledHelperCursor = styled.span`
   cursor: help;
 `;
 
-const StyledRecommendationsCard = styled(RecommendationsCard)``;
+const StyledRecommendationsCard = styled(LineCard)``;
 
 const StyledSliderCard = styled(SliderCard)`
   width: 100%;
@@ -269,7 +270,6 @@ export const Vaults = () => {
               onAction: () => history.push(`/vault/${address}`),
             }))}
           />
-
           {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 
           <DeprecatedCard

@@ -60,6 +60,31 @@ declare module 'styled-components' {
       };
     };
 
+    spacing: {
+      xs: string;
+      sm: string;
+      md: string;
+      lg: string;
+      xl: string;
+    };
+
+    fonts: {
+      sizes: {
+        xs: string;
+        sm: string;
+        md: string;
+        lg: string;
+        xl: string;
+      };
+      styles: {
+        body: string; // large bodies of text
+        label: string; // tiny info blurbs
+        header: string; // h1
+        subheader: string; // h2
+        cardHeader: string; // h2 w/ different spacing
+      };
+    };
+
     txModal: {
       width: string;
       gap: string;

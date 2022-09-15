@@ -9,6 +9,7 @@ export * from './Navbar';
 export * from './Navigation';
 export * from './NoWalletCard';
 export * from './RecommendationsCard';
+export * from './LineCard';
 export * from './Settings';
 export * from './ScanNetworkIcon';
 export * from './SummaryCard';

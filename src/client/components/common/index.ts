@@ -6,6 +6,7 @@ export * from './Icon';
 export * from './Img';
 export * from './Input';
 export * from './Link';
+export * from './FlatCard';
 export * from './List';
 export * from './Logo';
 export * from './Markdown';

@@ -10,7 +10,7 @@ const light = {
     backgroundVariant: '#E0EAFF',
     surface: '#FFFFFF',
     surfaceVariant: '#F9FBFD',
-    primary: '#0657F9',
+    primary: '#000000',
     primaryVariant: '#004ADF',
     secondary: '#E0EAFF',
     titles: '#001746',

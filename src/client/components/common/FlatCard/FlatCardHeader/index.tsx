@@ -1,0 +1,45 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  width: 100%;
+  padding: 0 ${({ theme }) => theme.card.padding};
+`;
+
+const BigHeader = styled.h2`
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+`;
+
+const Header = styled.h2`
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+`;
+
+const SubHeader = styled.h3`
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+`;
+
+interface FlatCardElementProps {
+  bigHeader?: string;
+  header?: string;
+  subHeader?: string;
+}
+
+export const FlatCardHeader: FC<FlatCardElementProps> = ({ children, bigHeader, header, subHeader, ...props }) => {
+  return (
+    <Container {...props}>
+      {bigHeader && <BigHeader>{bigHeader}</BigHeader>}
+      {header && <Header>{header}</Header>}
+      {subHeader && <SubHeader>{subHeader}</SubHeader>}
+      {children}
+    </Container>
+  );
+};

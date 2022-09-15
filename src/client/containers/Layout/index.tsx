@@ -37,7 +37,7 @@ const contentSeparation = '1.6rem';
 */
 const StyledLayout = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   flex: 1;
   padding: ${({ theme }) => theme.card.padding};
 
@@ -69,7 +69,6 @@ const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean }>`
   grid-gap: ${({ theme }) => theme.layoutPadding};
   grid-template-rows: auto 1fr auto;
   width: 100%;
-  max-width: ${({ theme }) => theme.globalMaxWidth};
   min-height: 100%;
   transition: padding-left ${({ theme }) => theme.sideBar.animation};
 
