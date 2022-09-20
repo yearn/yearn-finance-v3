@@ -20,6 +20,8 @@ import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxRateInput } from './components/TxRateInput';
+import { TxActionButton } from './components/TxActions';
+import { TxActions } from './components/TxActions';
 
 const {
   CONTRACT_ADDRESSES: { DAI },
@@ -125,6 +127,27 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
   };
 
+  const alertHi = () => {
+    console.log('Hi');
+  };
+
+  const txActions = [
+    {
+      label: t('components.transaction.approve'),
+      onAction: true,
+      status: true,
+      disabled: true,
+      contrast: true,
+    },
+    {
+      label: t('components.transaction.deposit'),
+      onAction: alertHi,
+      status: true,
+      disabled: false,
+      contrast: true,
+    },
+  ];
+
   if (!selectedSellToken) return null;
 
   const targetBalance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
@@ -171,6 +194,20 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         setRateChange={onRateChange}
         readOnly={acceptingOffer}
       />
+      <TxActions>
+        {txActions.map(({ label, onAction, status, disabled, contrast }) => (
+          <TxActionButton
+            key={label}
+            data-testid={`modal-action-${label.toLowerCase()}`}
+            onClick={alertHi}
+            disabled={disabled}
+            contrast={contrast}
+            isLoading={false}
+          >
+            {label}
+          </TxActionButton>
+        ))}
+      </TxActions>
     </StyledTransaction>
   );
 };
