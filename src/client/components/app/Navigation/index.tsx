@@ -38,7 +38,7 @@ const navLinks: NavigationLink[] = [
     optional: true,
   },
   {
-    to: 'https://discord.gg/debtdao',
+    to: 'https://discord.gg/F83xx67fyQ',
     text: 'navigation.discord',
     icon: DiscordIcon,
     external: true,
