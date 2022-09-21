@@ -18,7 +18,7 @@ const footerLinks = [
   //   name: 'buyback',
   // },
   {
-    link: 'https://docs.debtdao.financee',
+    link: 'https://docs.debtdao.finance',
     name: 'docs',
   },
   // {
@@ -47,7 +47,7 @@ const socialLinks = [
   //   ariaLabel: 'Visit Debt DAO Reddit',
   // },
   {
-    link: 'https://discord.gg/debtdao',
+    link: 'https://discord.gg/F83xx67fyQ',
     icon: DiscordIcon,
     ariaLabel: 'Join Debt DAO Discord',
   },
