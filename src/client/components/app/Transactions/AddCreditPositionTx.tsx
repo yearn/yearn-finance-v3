@@ -22,6 +22,7 @@ import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxRateInput } from './components/TxRateInput';
 import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
+import { TxStatus } from './components/TxStatus';
 
 const {
   CONTRACT_ADDRESSES: { DAI },
@@ -54,7 +55,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
-
+  const [transactionCompleted, setTransactionCompleted] = useState(false);
   const [targetTokenAmount, setTargetTokenAmount] = useState('10000000');
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');
@@ -128,7 +129,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   };
 
   const alertHi = () => {
-    console.log('Hi');
+    setTransactionCompleted(true);
   };
 
   const txActions = [
@@ -136,14 +137,14 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
       label: t('components.transaction.approve'),
       onAction: true,
       status: true,
-      disabled: true,
-      contrast: true,
+      disabled: false,
+      contrast: false,
     },
     {
       label: t('components.transaction.deposit'),
       onAction: alertHi,
       status: true,
-      disabled: false,
+      disabled: true,
       contrast: true,
     },
   ];
@@ -154,6 +155,14 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
     selectedSellToken.symbol
   }`;
+
+  if (transactionCompleted) {
+    return (
+      <StyledTransaction onClose={onClose} header={'transaction'}>
+        <TxStatus transactionCompletedLabel={'completed'} exit={() => console.log('hey')} />
+      </StyledTransaction>
+    );
+  }
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
