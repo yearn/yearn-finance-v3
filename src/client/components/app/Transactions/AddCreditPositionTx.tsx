@@ -56,6 +56,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const dispatch = useAppDispatch();
   const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(false);
+  const [transactionApproved, setTransactionApproved] = useState(true);
   const [targetTokenAmount, setTargetTokenAmount] = useState('10000000');
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');
@@ -128,23 +129,27 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
   };
 
-  const alertHi = () => {
+  const approveCreditPosition = () => {
+    setTransactionApproved(!transactionApproved);
+  };
+
+  const addCreditPosition = () => {
     setTransactionCompleted(true);
   };
 
   const txActions = [
     {
       label: t('components.transaction.approve'),
-      onAction: true,
+      onAction: approveCreditPosition,
       status: true,
-      disabled: false,
+      disabled: !transactionApproved,
       contrast: false,
     },
     {
       label: t('components.transaction.deposit'),
-      onAction: alertHi,
+      onAction: addCreditPosition,
       status: true,
-      disabled: true,
+      disabled: transactionApproved,
       contrast: true,
     },
   ];
@@ -208,7 +213,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
           <TxActionButton
             key={label}
             data-testid={`modal-action-${label.toLowerCase()}`}
-            onClick={alertHi}
+            onClick={onAction}
             disabled={disabled}
             contrast={contrast}
             isLoading={false}
