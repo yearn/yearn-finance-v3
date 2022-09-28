@@ -25,7 +25,6 @@ export interface Env {
 
 export interface Constants {
   STATE_VERSION: number;
-  ETHEREUM_ADDRESS: Address;
   MAX_UINT256: Wei;
   YEARN_API: string;
   YEARN_ALERTS_API: string;
