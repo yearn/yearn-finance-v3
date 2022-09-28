@@ -2,7 +2,14 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation, useQueryParams } from '@hooks';
+import {
+  useAppSelector,
+  useAppDispatch,
+  useIsMounting,
+  useAppTranslation,
+  useQueryParams,
+  useCreditLines,
+} from '@hooks';
 import {
   ModalsActions,
   ModalSelectors,
@@ -12,6 +19,8 @@ import {
   WalletSelectors,
   AppSelectors,
   NetworkSelectors,
+  LinesActions,
+  LinesSelectors,
 } from '@store';
 import { device } from '@themes/default';
 import {
@@ -26,7 +35,7 @@ import {
   Amount,
   ApyTooltipData,
 } from '@components/app';
-import { SpinnerLoading, Text, Tooltip, Input, SearchIcon } from '@components/common';
+import { SpinnerLoading, Text, Tooltip, Input, SearchIcon, Button } from '@components/common';
 import {
   humanize,
   USDC_DECIMALS,
@@ -39,7 +48,7 @@ import {
   filterData,
 } from '@utils';
 import { getConfig } from '@config';
-import { VaultView } from '@src/core/types';
+import { CreditLine, VaultView, UseCreditLinesParams, GetLinesArgs } from '@src/core/types';
 import { GoblinTown } from '@assets/images';
 
 const StyledHelperCursor = styled.span`
@@ -184,6 +193,28 @@ export const Market = () => {
     (appStatus.loading || vaultsStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
   const opportunitiesLoading = generalLoading && !filteredVaults.length;
   const depositsLoading = generalLoading && !deposits.length;
+  // TODO not neeed here
+  const addCreditStatus = useAppSelector(LinesSelectors.selectLinesActionsStatusMap);
+
+  const defaultLineCategories: UseCreditLinesParams = {
+    // using i18m translation as keys for easy display
+    'pages.market.highest-credit': {
+      first: 5,
+      orderBy: 'deposit', // NOTE: might also want to specify that queue index == 1 or something
+      orderDirection: 'desc',
+    },
+    'pages.market.highest-spigot': {
+      first: 5,
+      orderBy: 'totalVolumeUsd', // NOTE: gets individual revenue contracts, not entire SpigotController
+      orderDirection: 'desc',
+    },
+    'pages.market.newest': {
+      first: 5,
+      orderBy: 'start', // NOTE: theoretically gets lines that start in the future, will have to refine query
+      orderDirection: 'desc',
+    },
+  };
+  const [lineCategoriesForDisplay /* setArgs */, , areLinesLoading] = useCreditLines(defaultLineCategories);
 
   useEffect(() => {
     setSearch(queryParams.search ?? '');
@@ -195,6 +226,18 @@ export const Market = () => {
     setFilteredVaults(filteredVaults);
     window.history.replaceState(null, '', `market${search ? `?search=${search}` : ''}`);
   }, [opportunities, search]);
+
+  const dispatchAddCredit = () => {
+    const params = {
+      drate: 0,
+      frate: 0,
+      amount: 0,
+      token: '',
+      lender: '',
+      line: '',
+    };
+    dispatch(LinesActions.addCredit({ ...params }));
+  };
 
   const depositHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
@@ -227,6 +270,17 @@ export const Market = () => {
 
   return (
     <ViewContainer>
+      <Button onClick={dispatchAddCredit}>Add Credit</Button>
+      {/* {addCreditStatus.loading === true && (
+        <div>
+          <p>.... loading......</p>
+        </div>
+      )} */}
+      {addCreditStatus.error && (
+        <div>
+          <p>.... ERROR: {addCreditStatus.error}</p>
+        </div>
+      )}
       <StyledSliderCard
         header={t('vaults:banner.header')}
         Component={
@@ -242,16 +296,33 @@ export const Market = () => {
 
       {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 
+      {areLinesLoading || !lineCategoriesForDisplay ? (
+        <SpinnerLoading flex="1" width="100%" />
+      ) : (
+        Object.entries(lineCategoriesForDisplay!).map(([key, val]: [string, CreditLine[]]) => (
+          <StyledRecommendationsCard
+            header={t(key)}
+            items={lineCategoriesForDisplay[key].map(({ borrower, spigot, escrow }) => ({
+              icon: '',
+              name: borrower,
+              info: `spigot: ${spigot?.id} & escrow: ${escrow?.id} `,
+              infoDetail: 'EYY',
+              onAction: () => history.push(`/lines/${borrower}`),
+            }))}
+          />
+        ))
+      )}
+
       {!opportunitiesLoading && (
         <>
-          {/* <StyledRecommendationsCard
+          <StyledRecommendationsCard
             header={t('components.recent-recommendations.header')}
             items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
               icon: displayIcon,
               name: displayName,
               info: formatApy(apyData, apyType),
               infoDetail: 'EYY',
-              onAction: () => history.push(`/creditLine/${address}`),
+              onAction: () => history.push(`/vaults/${address}`),
             }))}
           />
 
@@ -262,9 +333,9 @@ export const Market = () => {
               name: displayName,
               info: formatApy(apyData, apyType),
               infoDetail: 'EYY',
-              onAction: () => history.push(`/creditLine/${address}`),
+              onAction: () => history.push(`/vaults/${address}`),
             }))}
-          /> */}
+          />
 
           {!opportunitiesLoading && (
             <OpportunitiesCard

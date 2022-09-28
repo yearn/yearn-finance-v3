@@ -1,40 +1,61 @@
-import axios from 'axios';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { isEqual } from 'lodash';
 
 import { getEnv } from '@src/config/env';
-import { Address, CreditLine } from '@src/core/types';
+import { getLines } from '@core/frameworks/gql';
+import { CreditLine, GetLinesArgs, UseCreditLinesParams } from '@src/core/types';
 
 import { useSelectedCreditLine } from './useSelectedCreditLine';
 
-export const useCreditLines = (query?: string, params?: object) => {
-  const [creditLines, setCreditLines] = useState<CreditLine[]>([]);
-  if (!query) return creditLines;
-  const { DEBT_DAO_SUBGRAPH_KEY } = getEnv();
+/**
+ * @function
+ * @name useCreditLines
+ * @param params - object with keys as title of line category
+ *                 and value are query variables for `getLinesArgs`
+ * @returns [CreditLine[], setArgs, isLoading]
+ *  0. object of categories with filled in lines based off each categories variables
+ *  1. function to reset params and update categories and their variables
+ *  2. boolean if we are still waiiting for responss on any category
+ */
+export const useCreditLines = (
+  params: UseCreditLinesParams
+): [{ [key: string]: CreditLine[] } | undefined, Function, Boolean] => {
+  const [creditLines, setCreditLines] = useState<{ [key: string]: CreditLine[] }>();
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [args, setArgs] = useState<UseCreditLinesParams>(params);
+  const { GRAPH_API_URL } = getEnv();
 
-  // memo used conditionally. should not use in react hook.
-  // memoize normally outside react (gql client?)
-  // useMemo(() => {
-  //   // TODO turn into gql utils file
-  //   axios
-  //     .post(
-  //       '', // subgraph endpoint
-  //       {
-  //         data: {
-  //           query, // import query
-  //           variables: params,
-  //         },
-  //       }
-  //     )
-  //     .then((res) => {
-  //       console.log('CreditLine from subgraph', res);
-  //       if (!res?.data) return;
-  //       else {
-  //         // format creditLine data to type
-  //         setCreditLines(res.data.creditLines);
-  //       }
-  //     })
-  //     .catch((error) => null);
-  // }, [query, params]);
+  useEffect(() => {
+    if (isEqual(params, args)) return;
+    setLoading(true);
 
-  return;
+    const categoryRequests: Promise<object>[] = Object.entries(args).map(
+      ([key, val]: [string, GetLinesArgs]): Promise<object> =>
+        new Promise((resolve, reject) => {
+          const { loading, error, data } = getLines(val);
+          while (loading) {}
+          if (error) {
+            return reject(error);
+          }
+          if (!loading && !error) {
+            return resolve({ [key]: data });
+          }
+        })
+    );
+
+    Promise.all(categoryRequests)
+      .then((res) => {
+        console.log('all getLines reses', res);
+        const categories = categoryRequests.reduce((lines: any, l: any) => ({ ...lines, ...l }), {});
+        setCreditLines(categories);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log('err useCreditLines all', err);
+        setLoading(false);
+        return;
+      });
+  }, [args]);
+
+  return [creditLines, setArgs, isLoading];
 };
