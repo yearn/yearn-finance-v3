@@ -28,7 +28,7 @@ export const DeployLineTxModal: FC<DeployLineTxModalProps> = ({
   return (
     <StyledDeployLineTxModal {...props}>
       <DeployLineTx
-        header={t('components.transaction.add-credit.header')} // TODO
+        header={t('components.transaction.deploy-line.header')} // TODO
         allowVaultSelect={modalProps.allowVaultSelect}
         onClose={onClose}
         onPositionChange={onPositionChange}

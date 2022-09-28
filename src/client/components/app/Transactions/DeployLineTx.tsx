@@ -49,8 +49,8 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
       <TxCreditLineInput
         key={'credit-input'}
-        headerText={t('components.transaction.add-credit.select-credit')}
-        inputText={t('components.transaction.add-credit.select-credit')}
+        headerText={t('components.transaction.deploy-line.select-borrower')}
+        inputText={t('components.transaction.deploy-line.select-borrower')}
         onSelectedCreditLineChange={() => {}}
         selectedCredit={selectedCredit as CreditLine}
         // creditOptions={sourceCreditOptions}
