@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
@@ -195,7 +196,6 @@ export const Market = () => {
   const depositsLoading = generalLoading && !deposits.length;
   // TODO not neeed here
   const addCreditStatus = useAppSelector(LinesSelectors.selectLinesActionsStatusMap);
-
   const defaultLineCategories: UseCreditLinesParams = {
     // using i18m translation as keys for easy display
     'pages.market.highest-credit': {
@@ -214,11 +214,24 @@ export const Market = () => {
       orderDirection: 'desc',
     },
   };
-  const [lineCategoriesForDisplay /* setArgs */, , areLinesLoading] = useCreditLines(defaultLineCategories);
+  const fetchMarketData = () => dispatch(LinesActions.getLines(defaultLineCategories));
+  const lineCategoriesForDisplay = useAppSelector(LinesSelectors.selectLinesForCategories);
+  const areLinesLoading = useAppSelector(LinesSelectors.selectLinesStatusMap).getLines;
+  // const [lineCategoriesForDisplay /* setArgs */, , areLinesLoading] = useCreditLines(defaultLineCategories);
 
   useEffect(() => {
     setSearch(queryParams.search ?? '');
-  }, [queryParams.search]);
+
+    const expectedCategories = _.keys(defaultLineCategories);
+    const cuirrentCategories = _.keys(lineCategoriesForDisplay);
+
+    // const shouldFetch = expectedCategories.reduce((bool, cat) => bool && cuirrentCategories.includes(cat), true);
+    let shouldFetch: boolean = false;
+    expectedCategories.forEach((cat) => (shouldFetch = shouldFetch || !cuirrentCategories.includes(cat)));
+
+    console.log('should fetch', shouldFetch, cuirrentCategories);
+    if (shouldFetch) fetchMarketData();
+  }, [queryParams.search, lineCategoriesForDisplay]);
 
   useEffect(() => {
     const searchableKeys = ['name', 'displayName', 'token.symbol', 'token.name'];

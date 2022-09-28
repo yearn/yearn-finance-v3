@@ -99,6 +99,7 @@ export interface VaultTransaction {
 export interface CreditLineState {
   selectedLineAddress: string | undefined;
   linesMap: { [lineAddress: string]: CreditLine };
+  categories: { [category: string]: string[] };
   user: {
     linePositions: { [positionId: string]: PositionSummary };
     lineAllowances: { [line: string]: { [token: string]: Integer } };

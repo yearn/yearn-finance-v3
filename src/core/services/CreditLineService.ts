@@ -225,7 +225,15 @@ export class CreditLineServiceImpl implements CreditLineService {
   }
 
   public async getLines(prop: GetLinesProps): Promise<CreditLine[] | undefined> {
-    return [];
+    const response = getLines(prop.params)
+      .then((data) => {
+          return data;
+      })
+      .catch((err) => {
+        console.log('CreditLineService: error fetching lines', err);
+        return undefined;
+      });
+    return response;
   }
   public async getLinePage(prop: GetLinePageProps): Promise<CreditLinePage | undefined> {
     return;

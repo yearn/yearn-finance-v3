@@ -43,8 +43,14 @@ const createClient = (): typeof ApolloClient => {
  */
 export const createQuery =
   (query: DocumentNode): Function =>
-  <A, R>(variables: A): QueryResponse<R> =>
-    useQuery(query, { variables });
+  <A, R>(variables: A): Promise<QueryResponse<R>> =>
+    new Promise(async (resolve, reject) => {
+      // use observable so can await instead of using `loading` everywhere
+      const { observable } = useQuery(query, { variables });
+      const { data, error } = await observable.result();
+      if(error) reject(error);
+      else resolve(data);
+    });
 
 const getLineQuery = createQuery(GET_LINE_QUERY);
 

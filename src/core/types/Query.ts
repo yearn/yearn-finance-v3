@@ -6,7 +6,7 @@ export interface QueryCreator<ArgType, ResponseType> {
   (args: ArgType): QueryResponse<ResponseType>;
 }
 
-export interface QueryResponse<ResponseType> {
+export interface QueryResponse<ResponseType> extends Promise<ResponseType> {
   loading: boolean;
   error?: string | object;
   data?: ResponseType;

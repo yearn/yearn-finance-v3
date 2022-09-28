@@ -17,6 +17,7 @@ import {
   GetLinePageArgs,
   PositionSummary,
   AddCreditProps,
+  UseCreditLinesParams,
 } from '@types';
 import {
   calculateSharesAmount,
@@ -70,17 +71,26 @@ const getLine = createAsyncThunk<{ lineData: CreditLine | undefined }, GetLineAr
   }
 );
 
-const getLines = createAsyncThunk<{ linesData: (CreditLine[] | undefined)[] }, GetLinesArgs[], ThunkAPI>(
-  'lines/getLines',
-  async (categories, { getState, extra }) => {
-    const { network } = getState();
-    const { creditLineService } = extra.services;
-    const linesData = await Promise.all(
-      categories.map((params) => creditLineService.getLines({ network: network.current, params }))
-    );
-    return { linesData };
-  }
-);
+const getLines = createAsyncThunk<
+  { linesData: { [category: string]: CreditLine[] | undefined } },
+  UseCreditLinesParams,
+  ThunkAPI
+>('lines/getLines', async (categories, { getState, extra }) => {
+  const { network } = getState();
+  const { creditLineService } = extra.services;
+  const promises = await Promise.all(
+    Object.values(categories).map((params) => creditLineService.getLines({ network: network.current, params }))
+  );
+  const linesData = Object.keys(categories).reduce(
+    (all, category, i) => ({
+      ...all,
+      // @dev assumes promises is same order as categories
+      [category]: promises[i],
+    }),
+    {}
+  );
+  return { linesData };
+});
 
 const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined }, GetLinePageArgs, ThunkAPI>(
   'lines/getLinePage',

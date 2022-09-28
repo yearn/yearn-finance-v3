@@ -28,6 +28,7 @@ export const initialUserMetadataStatusMap: UserLineMetadataStatusMap = {
 export const linesInitialState: CreditLineState = {
   selectedLineAddress: undefined,
   linesMap: {},
+  categories: {},
   user: {
     linePositions: {},
     lineAllowances: {},
@@ -128,27 +129,31 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
     })
     /* -------------------------------- getLines ------------------------------- */
     .addCase(getLines.pending, (state) => {
+      // either need to make linesData in .fullfilled be a map like request
       state.statusMap.getLines = { loading: true };
     })
     .addCase(getLines.fulfilled, (state, { payload: { linesData } }) => {
-      const linesAddresses: string[] = [];
-      const processLines = (cat: { [key: string]: CreditLine }, line: CreditLine) => {
-        // init new line with actions
-        state.statusMap.user.linesActionsStatusMap[line.id] = initialLineActionsStatusMap;
-        // merge array into obj
-        return { ...cat, [line.id]: line };
-      };
-      // NOTE: does not save data to state in expected expectedx for actual getLines() use of {key: CreditLines[[}
-      const allNewLines = linesData.reduce(
-        (all, category) => ({
-          ...all,
-          ...category?.reduce(processLines, {}),
-        }),
-        {}
-      );
-
-      state.linesMap = { ...state.linesMap, ...allNewLines };
+      // reset status
       state.statusMap.getLines = {};
+
+      const categories: { [key: string]: string[] } = {};
+      const lines: { [key: string]: CreditLine } = {};
+
+      Object.entries(linesData).map(([category, ls]) => {
+        if (ls) {
+          ls.map((l) => {
+            lines[l.id] = l;
+            state.statusMap.user.linesActionsStatusMap[l.id] = initialLineActionsStatusMap;
+            // change once we pass in category title in linesData
+            categories[category] = [...categories[category], l.id];
+          });
+        }
+      });
+
+      // merge new lines with old
+      state.linesMap = { ...state.linesMap, ...lines };
+      // merge new categories with old
+      state.categories = { ...state.categories, ...categories };
     })
     .addCase(getLines.rejected, (state, { error }) => {
       state.statusMap.getLines = { error: error.message };

@@ -37,6 +37,7 @@ const selectLinesState = (state: RootState) => state.lines;
 const selectUserLinesPositionsMap = (state: RootState) => state.lines.user.linePositions;
 // const selectUserLinesMetadataMap = (state: RootState) => state.lines.user.userLinesMetadataMap;
 const selectLinesMap = (state: RootState) => state.lines.linesMap;
+const selectLineCategories = (state: RootState) => state.lines.categories;
 const selectLinesAddresses = (state: RootState) => Object.keys(state.lines.linesMap);
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
 const selectUserTokensAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap;
@@ -87,6 +88,19 @@ const selectSelectedLineActionsStatusMap = createSelector(
   [selectLinesActionsStatusMap, selectSelectedLineAddress],
   (linesActionsStatusMap, selectedLineAddress): LineActionsStatusMap => {
     return selectedLineAddress ? linesActionsStatusMap[selectedLineAddress] : initialLineActionsStatusMap;
+  }
+);
+
+const selectLinesForCategories = createSelector(
+  [selectLinesMap, selectLineCategories],
+  (linesMap, categories): { [key: string]: CreditLine[] } => {
+    return Object.entries(categories).reduce(
+      (obj: object, [category, lines]: [string, string[]]) => ({
+        ...obj,
+        [category]: lines.map((l: string): CreditLine => linesMap[l]),
+      }),
+      {}
+    );
   }
 );
 
@@ -306,6 +320,7 @@ export const LinesSelectors = {
   selectLinesMap,
   selectLines,
   selectLiveLines,
+  selectLinesForCategories,
   // selectDeprecatedLines,
   selectUserLinesPositionsMap,
   selectUserTokensMap,
