@@ -79,7 +79,7 @@ export function createToken(props: CreateTokenProps): TokenView {
     categories: tokenData?.metadata?.categories ?? [],
     description: tokenData?.metadata?.description ?? '',
     website: tokenData?.metadata?.website ?? '',
-    isZapable: tokenData?.supported.portalsZapIn ?? false,
+    isZapable: (tokenData?.supported.portalsZapIn || tokenData?.supported.widoZapIn) ?? false,
     allowancesMap: allowancesMap ?? {},
     supported: tokenData?.supported,
   };

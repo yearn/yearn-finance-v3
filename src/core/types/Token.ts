@@ -23,6 +23,8 @@ export interface TokenView {
   supported: {
     portalsZapIn?: boolean;
     portalsZapOut?: boolean;
+    widoZapIn?: boolean;
+    widoZapOut?: boolean;
     ftmApeZap?: boolean;
   };
 }

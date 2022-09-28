@@ -49,7 +49,8 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       return tokens.filter(
         (token) =>
           (token.supported[assetData.metadata.zapInWith as keyof TokenView['supported']] &&
-            toBN(token.balance).gt(0)) ||
+            toBN(token.balance).gt(0) &&
+            token.address !== assetData.address) ||
           token.address === mainVaultTokenAddress
       );
     })

@@ -67,7 +67,8 @@
       "claim": "Claim",
       "deposit": "Deposit",
       "fees": {
-        "powered-by": "Zaps powered by Portals.fi",
+        "powered-by-portals": "Zaps powered by Portals.fi",
+        "powered-by-wido": "Zaps powered by joinwido.com",
         "zaps": "Zap fee"
       },
       "from-iron-bank": "From Iron Bank",
