@@ -201,12 +201,14 @@ export const Market = () => {
     // using i18m translation as keys for easy display
     'pages.market.highest-credit': {
       first: 5,
-      orderBy: 'deposit', // NOTE: might also want to specify that queue index == 1 or something
-      orderDirection: 'desc',
+      // NOTE: terrible proxy for total credit (oldest = most). Currently getLines only allows filtering by line metadata not modules'
+      orderBy: 'start',
+      orderDirection: 'asc',
     },
     'pages.market.highest-spigot': {
       first: 5,
-      orderBy: 'totalVolumeUsd', // NOTE: gets individual revenue contracts, not entire SpigotController
+      // NOTE: terrible proxy for total revenue earned (highest % = highest notional). Currently getLines only allows filtering by line metadata not modules'
+      orderBy: 'defaultSplit',
       orderDirection: 'desc',
     },
     'pages.market.newest': {

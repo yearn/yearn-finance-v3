@@ -139,16 +139,15 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
       const categories: { [key: string]: string[] } = {};
       const lines: { [key: string]: CreditLine } = {};
 
-      Object.entries(linesData).map(([category, ls]) => {
-        if (ls) {
-          ls.map((l) => {
-            lines[l.id] = l;
-            state.statusMap.user.linesActionsStatusMap[l.id] = initialLineActionsStatusMap;
-            // change once we pass in category title in linesData
-            categories[category] = [...categories[category], l.id];
-          });
-        }
-      });
+      // loop over nested structure of new Lines and update state
+      Object.entries(linesData).map(([category, ls]) =>
+        ls?.map((l) => {
+          lines[l.id] = l;
+          state.statusMap.user.linesActionsStatusMap[l.id] = initialLineActionsStatusMap;
+          // save line id to category for reference
+          categories[category] = [...(categories[category] || []), l.id];
+        })
+      );
 
       // merge new lines with old
       state.linesMap = { ...state.linesMap, ...lines };

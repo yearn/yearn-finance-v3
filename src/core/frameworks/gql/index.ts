@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache, gql, useQuery, DocumentNode, QueryResult } from '@apollo/client';
+import { at } from 'lodash';
 
 import { getEnv } from '@config/env';
 import { GET_LINE_QUERY, GET_LINE_PAGE_QUERY, GET_LINES_QUERY } from '@config/constants/queries';
@@ -42,14 +43,23 @@ const createClient = (): typeof ApolloClient => {
  *        1. for creating curried func and 2. for defining arg/return types of that func
  */
 export const createQuery =
-  (query: DocumentNode): Function =>
+  (query: DocumentNode, path: string = ''): Function =>
   <A, R>(variables: A): Promise<QueryResponse<R>> =>
     new Promise(async (resolve, reject) => {
-      // use observable so can await instead of using `loading` everywhere
-      const { observable } = useQuery(query, { variables });
-      const { data, error } = await observable.result();
-      if (error) reject(error);
-      else resolve(data);
+      getClient()
+        .query({ query, variables })
+        .then((result: QueryResult) => {
+          const { data, error } = result;
+          const requestedData = at(data, [path])[0];
+          console.log('gql request success', path, result, requestedData);
+
+          if (error) return reject(error);
+          else return resolve(requestedData);
+        })
+        .catch((error: any) => {
+          console.log('gql request error', error);
+          reject(error);
+        });
     });
 
 const getLineQuery = createQuery(GET_LINE_QUERY);
@@ -63,7 +73,7 @@ export const getLinePage: QueryCreator<GetLinePageArgs, CreditLinePage[]> = <Get
   arg: GetLinePageArgs
 ): QueryResponse<CreditLinePage[]> => getLinePageQuery(arg);
 
-const getLinesQuery = createQuery(GET_LINES_QUERY);
+const getLinesQuery = createQuery(GET_LINES_QUERY, 'lineOfCredits');
 export const getLines: QueryCreator<GetLinesArgs, CreditLine[]> = <GetLinesArgs, CreditLine>(
   arg: GetLinesArgs
 ): QueryResponse<CreditLine[]> => getLinesQuery(arg);

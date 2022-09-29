@@ -17,13 +17,15 @@ const TOKEN_FRAGMENT = gql`
 // Line of Credit Frags
 
 const BASE_LINE_FRAGMENT = gql`
-  fragment BaseLineFrag on Line {
+  fragment BaseLineFrag on LineOfCredit {
     id
     end
     type
     start
     status
-    borrower
+    borrower {
+      id
+    }
   }
 `;
 
@@ -148,13 +150,13 @@ const ESCROW_EVENT_FRAGMENT = gql`
 export const GET_LINE_QUERY = gql`
   ${BASE_LINE_FRAGMENT}
   query getLine($id: ID!) {
-    lines(id: $id) {
+    lineOfCredits(id: $id) {
       ...BaseLineFrag
       escrow {
         id
         collateralValue
       }
-      spigot {
+      spigotController {
         id
       }
     }
@@ -189,7 +191,7 @@ export const GET_LINE_PAGE_QUERY = gql`
   ${LINE_PAGE_CREDIT_FRAGMENT}
 
   query getLinePage($id: ID!) {
-    lines(id: $id) {
+    lineOfCredits(id: $id) {
       ...BaseLineFrag
 
       credits {
@@ -214,7 +216,7 @@ export const GET_LINE_PAGE_QUERY = gql`
         }
       }
 
-      spigot {
+      spigotController {
         spigots {
           ...BaseSpigotFrag
           events(first: 3) {
@@ -229,8 +231,8 @@ export const GET_LINE_PAGE_QUERY = gql`
 export const GET_LINES_QUERY = gql`
   ${BASE_LINE_FRAGMENT}
 
-  query getLines($first: Int, $orderBy: string, $orderDirection: string) {
-    lines(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
+  query getLines($first: Int, $orderBy: String, $orderDirection: String) {
+    lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
       ...BaseLineFrag
       escrow {
         id
