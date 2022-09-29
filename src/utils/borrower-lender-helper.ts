@@ -97,6 +97,7 @@ export function borrowerLenderHelper(
     // line of credit to be the msg.sender. We should probably update that modifier since
     // it only does the calculation and doesn't change state.
     const calcAccrue = await interestRateCreditService.accrueInterest({
+      contractAddress: await creditLineService.getInterestRateContract(props.lineAddress),
       id,
       drawnBalance: credit.principal,
       facilityBalance: credit.deposit,
@@ -127,25 +128,33 @@ export function borrowerLenderHelper(
 
   // SpigotedLineService
 
-  const claimAndTrade = async (claimToken: Address, zeroExTradeData: Bytes): Promise<string> => {
-    if (!(await spigotedLineService.isBorrowing())) {
+  const claimAndTrade = async (lineAddress: string, claimToken: Address, zeroExTradeData: Bytes): Promise<string> => {
+    if (!(await spigotedLineService.isBorrowing(lineAddress))) {
       throw new Error('Claim and trade is not possible because not borrowing');
     }
-    if (!(await spigotedLineService.isBorrower())) {
+    if (!(await spigotedLineService.isBorrower(lineAddress))) {
       throw new Error('Claim and trade is not possible because signer is not borrower');
     }
-    return (<TransactionResponse>await spigotedLineService.claimAndTrade(claimToken, zeroExTradeData, false)).hash;
+    return (<TransactionResponse>(
+      await spigotedLineService.claimAndTrade(lineAddress, claimToken, zeroExTradeData, false)
+    )).hash;
   };
 
-  const claimAndRepay = async (claimToken: Address, calldata: BytesLike): Promise<string> => {
-    if (!(await spigotedLineService.isBorrowing())) {
+  const claimAndRepay = async (lineAddress: string, claimToken: Address, calldata: BytesLike): Promise<string> => {
+    if (!(await spigotedLineService.isBorrowing(lineAddress))) {
       throw new Error('Claim and repay is not possible because not borrowing');
     }
 
-    if (!(await spigotedLineService.isSignerBorrowerOrLender(await spigotedLineService.getFirstID()))) {
+    if (
+      !(await spigotedLineService.isSignerBorrowerOrLender(
+        lineAddress,
+        await spigotedLineService.getFirstID(lineAddress)
+      ))
+    ) {
       throw new Error('Claim and repay is not possible because signer is not borrower or lender');
     }
-    return (<TransactionResponse>await spigotedLineService.claimAndRepay(claimToken, calldata, false)).hash;
+    return (<TransactionResponse>await spigotedLineService.claimAndRepay(lineAddress, claimToken, calldata, false))
+      .hash;
   };
 
   const addSpigot = async (
@@ -153,7 +162,7 @@ export function borrowerLenderHelper(
     revenueContract: Address,
     setting: ISpigotSetting
   ): Promise<string> => {
-    if (!(await spigotedLineService.isOwner())) {
+    if (!(await spigotedLineService.isOwner(lineAddress))) {
       throw new Error('Cannot add spigot. Signer is not owner.');
     }
 
@@ -163,34 +172,40 @@ export function borrowerLenderHelper(
 
     if (
       setting.transferOwnerFunction.length === 0 ||
-      setting.ownerSplit.gt(await spigotedLineService.maxSplit()) ||
+      setting.ownerSplit.gt(await spigotedLineService.maxSplit(lineAddress)) ||
       setting.token === ethers.constants.AddressZero
     ) {
       throw new Error('Bad setting');
     }
 
-    return ((await spigotedLineService.addSpigot(revenueContract, setting, false)) as TransactionResponse).hash;
+    return ((await spigotedLineService.addSpigot(lineAddress, revenueContract, setting, false)) as TransactionResponse)
+      .hash;
   };
 
   // EscrowService
 
-  const addCollateral = async (amount: BigNumber, token: Address): Promise<string> => {
+  const addCollateral = async (contractAddress: string, amount: BigNumber, token: Address): Promise<string> => {
     if (amount.lte(0)) {
       throw new Error('Cannot add collateral. Amount is 0 or less');
     }
-    return (<TransactionResponse>await escrowService.addCollateral(amount, token, false)).hash;
+    return (<TransactionResponse>await escrowService.addCollateral(contractAddress, amount, token, false)).hash;
   };
 
-  const releaseCollateral = async (amount: BigNumber, token: Address, to: Address): Promise<string> => {
+  const releaseCollateral = async (
+    contractAddress: string,
+    amount: BigNumber,
+    token: Address,
+    to: Address
+  ): Promise<string> => {
     if (amount.lte(0)) {
       throw new Error('Cannot release collateral. Amount is 0 or less');
     }
 
-    if (!(await escrowService.isBorrower())) {
+    if (!(await escrowService.isBorrower(contractAddress))) {
       throw new Error('Release collateral is not possible because signer is not borrower');
     }
 
-    return (<TransactionResponse>await escrowService.releaseCollateral(amount, token, to, false)).hash;
+    return (<TransactionResponse>await escrowService.releaseCollateral(contractAddress, amount, token, to, false)).hash;
   };
 
   return {

@@ -163,6 +163,7 @@ export interface CreditLineService {
   getFirstID: (contractAddress: string) => Promise<BytesLike>;
   getCredit: (contractAddress: string, id: BytesLike) => Promise<Credit>;
   getLenderByCreditID: (contractAddress: string, id: BytesLike) => Promise<Address>;
+  getInterestRateContract: (contractAddress: string) => Promise<Address>;
   borrower: (contractAddress: string) => Promise<Address>;
   isActive: (contractAddress: string) => Promise<boolean>;
   isBorrowing: (contractAddress: string) => Promise<boolean>;
@@ -253,6 +254,7 @@ export interface GetLineWithdrawAllowanceProps {
 }
 
 export interface InterestRateAccrueInterestProps {
+  contractAddress: Address;
   id: BytesLike;
   drawnBalance: BigNumberish;
   facilityBalance: BigNumberish;
@@ -273,27 +275,30 @@ export interface GetLinePageProps extends GetLinePageArgs {
 
 export interface SpigotedLineService {
   claimAndTrade(
+    lineAddress: string,
     claimToken: Address,
     zeroExTradeData: BytesLike,
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction>;
   claimAndRepay(
+    lineAddress: string,
     claimToken: Address,
     calldata: BytesLike,
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction>;
   addSpigot(
+    lineAddress: string,
     revenueContract: Address,
     setting: ISpigotSetting,
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction>;
-  isOwner(): Promise<boolean>;
-  maxSplit(): Promise<BigNumber>;
-  isBorrowing: () => Promise<boolean>;
-  isBorrower: () => Promise<boolean>;
-  borrower(): Promise<Address>;
-  getFirstID(): Promise<BytesLike>;
-  isSignerBorrowerOrLender(id: BytesLike): Promise<boolean>;
+  isOwner(lineAddress: string): Promise<boolean>;
+  maxSplit(lineAddress: string): Promise<BigNumber>;
+  isBorrowing: (lineAddress: string) => Promise<boolean>;
+  isBorrower: (lineAddress: string) => Promise<boolean>;
+  borrower(lineAddress: string): Promise<Address>;
+  getFirstID(lineAddress: string): Promise<BytesLike>;
+  isSignerBorrowerOrLender(lineAddress: string, id: BytesLike): Promise<boolean>;
 }
 
 export interface ISpigotSetting {
@@ -305,17 +310,19 @@ export interface ISpigotSetting {
 
 export interface EscrowService {
   addCollateral(
+    contractAddress: string,
     amount: BigNumber,
     token: Address,
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction>;
   releaseCollateral(
+    contractAddress: string,
     amount: BigNumber,
     token: Address,
     to: Address,
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction>;
-  isBorrower(): Promise<boolean>;
+  isBorrower(contractAddress: string): Promise<boolean>;
 }
 
 // *************** TOKEN ***************

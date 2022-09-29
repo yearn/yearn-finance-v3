@@ -185,6 +185,10 @@ export class CreditLineServiceImpl implements CreditLineService {
     return (await this._getContract(contractAddress).credits(id)).lender;
   }
 
+  public async getInterestRateContract(contractAddress: string): Promise<Address> {
+    return await this._getContract(contractAddress).interestRate();
+  }
+
   public async getFirstID(contractAddress: string): Promise<BytesLike> {
     return await this._getContract(contractAddress).ids(0);
   }
