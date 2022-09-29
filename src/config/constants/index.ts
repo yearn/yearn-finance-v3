@@ -100,6 +100,6 @@ export const getConstants = memoize((): Constants => {
   };
 });
 
-export const ArbiterGoerli = '0xde8f0f6769284e41bf0f82d0545141c15a3e4ad1';
-export const OracleGoerli = "0x7233038e589913dca4b6d15ff8bba263a433aed2";
-export const SwapTargetGoerli = "0xcb7b9188ada88cb0c991c807acc6b44097059dec";
+export const ArbiterGoerli: string = '0xde8f0f6769284e41bf0f82d0545141c15a3e4ad1';
+export const OracleGoerli: string = '0x7233038e589913dca4b6d15ff8bba263a433aed2';
+export const SwapTargetGoerli: string = '0xcb7b9188ada88cb0c991c807acc6b44097059dec';

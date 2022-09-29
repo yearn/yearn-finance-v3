@@ -1,5 +1,3 @@
-import React from "react";
-
 import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -175,7 +173,7 @@ const ZapMessageContainer = styled.div`
   overflow: hidden;
 `;
 
-const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
+const TimeToLiveSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -194,7 +192,7 @@ const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
   ${({ onClick }) => onClick && 'cursor: pointer;'}
 `;
 
-const TokenInfo = styled.div<{ center?: boolean }>`
+const TimeToLiveInfo = styled.div<{ center?: boolean }>`
   display: flex;
   justify-content: ${({ center }) => (center ? 'center' : 'flex-start')};
   gap: ${({ theme }) => theme.txModal.gap};
@@ -269,38 +267,25 @@ export interface TxTokenInputProps {
   inputError?: boolean;
   amount: string;
   onAmountChange?: (amount: string) => void;
-  amountValue?: string;
   maxAmount?: string;
   maxLabel?: string;
-  selectedToken: Token;
-  onSelectedTokenChange?: (address: string) => void;
-  yieldPercent?: string;
-  tokenOptions?: Token[];
   readOnly?: boolean;
   hideAmount?: boolean;
   loading?: boolean;
   loadingText?: string;
-  displayGuidance?: boolean;
 }
 
-export const TxTokenInput: FC<TxTokenInputProps> = ({
+export const TxTTLInput: FC<TxTokenInputProps> = ({
   headerText,
   inputText,
   inputError,
   amount,
   onAmountChange,
-  amountValue,
   maxAmount,
   maxLabel = 'Max',
-  selectedToken,
-  onSelectedTokenChange,
-  yieldPercent,
-  tokenOptions,
   readOnly,
-  hideAmount,
   loading,
   loadingText,
-  displayGuidance,
   children,
   ...props
 }) => {
@@ -308,63 +293,38 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
 
   let listItems: SearchListItem[] = [];
   let zappableItems: SearchListItem[] = [];
-  let selectedItem: SearchListItem = {
-    id: selectedToken.address,
-    icon: selectedToken.icon,
-    label: selectedToken.symbol,
-    value: selectedToken.yield ?? humanize('usd', selectedToken.balanceUsdc),
-  };
-
-  if (tokenOptions && tokenOptions.length > 1) {
-    listItems = tokenOptions
-      .map((item) => {
-        return {
-          id: item.address,
-          icon: item.icon,
-          label: item.symbol,
-          value: item.yield ?? humanize('usd', item.balanceUsdc),
-        };
-      })
-      .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));
-    zappableItems = listItems.slice(0, 4);
-    listItems.sort((a, b) => (a.id === selectedItem.id ? -1 : 1));
-  }
 
   const openSearchList = () => {
     setOpenedSearch(true);
   };
 
   const [openedSearch, setOpenedSearch] = useState(false);
-  const searchListHeader = selectedToken.yield
-    ? t('components.transaction.token-input.search-select-vault')
-    : t('components.transaction.token-input.search-select-token');
 
   return (
     <StyledTxTokenInput {...props}>
       <>{headerText && <Header>{headerText}</Header>}</>
- 
+
       {/* NOTE Using fragments here because: https://github.com/yearn/yearn-finance-v3/pull/565 */}
       <>
-  
-        <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
-
-        <AmountInputContainer>
-          <StyledAmountInput
-            value={amount}
-            onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-            placeholder={loading ? loadingText : '0.00000000'}
-            readOnly={readOnly}
-            error={inputError}
-            type="number"
-            aria-label={headerText}
-          />
-          {maxAmount && (
-            <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
-              {maxLabel}
-            </MaxButton>
-          )}
-        </AmountInputContainer>
-
+        <TokenData>
+          <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
+          <AmountInputContainer>
+            <StyledAmountInput
+              value={amount}
+              onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
+              placeholder={loading ? loadingText : '0 days'}
+              readOnly={readOnly}
+              error={inputError}
+              type="number"
+              aria-label={headerText}
+            />
+            {maxAmount && (
+              <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+                {maxLabel}
+              </MaxButton>
+            )}
+          </AmountInputContainer>
+        </TokenData>
       </>
     </StyledTxTokenInput>
   );

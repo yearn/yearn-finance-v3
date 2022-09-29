@@ -18,7 +18,10 @@ import { Address, Token, Asset, TokenView, CreditLine } from '@src/core/types';
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
+import { TxTTLInput } from './components/TxTTLInput';
 import { TxRateInput } from './components/TxRateInput';
+import { TxActions } from './components/TxActions';
+import { TxActionButton } from './components/TxActions';
 
 const {
   CONTRACT_ADDRESSES: { DAI },
@@ -45,6 +48,8 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
   const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
   const { allowVaultSelect, header, onClose, onPositionChange } = props;
 
+  const onAmountChange = () => {};
+
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
       <TxCreditLineInput
@@ -58,6 +63,24 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
         readOnly={false}
         // displayGuidance={displaySourceGuidance}
       />
+      <TxTTLInput
+        headerText={t('components.transaction.deploy-line.select-ttl')}
+        inputText={t('components.transaction.deploy-line.time-to-live')}
+        inputError={false}
+        amount={''}
+        onAmountChange={onAmountChange}
+        maxAmount={''}
+        maxLabel={''}
+        readOnly={false}
+        hideAmount={false}
+        loading={false}
+        loadingText={''}
+      />
+      <TxActions>
+        <TxActionButton key={''} onClick={() => {}} disabled={false} contrast={false} isLoading={false}>
+          {'Deploy Line'}
+        </TxActionButton>
+      </TxActions>
     </StyledTransaction>
   );
 };
