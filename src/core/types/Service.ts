@@ -151,45 +151,105 @@ export interface CreditLineService {
   getUserLinePositions: (...args: any) => Promise<any | undefined>;
   getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;
 
-  addCredit: (props: AddCreditProps, dryRun: boolean) => Promise<TransactionResponse | PopulatedTransaction>;
-  close: (id: BytesLike) => Promise<TransactionResponse>;
-  withdraw: (id: BytesLike, amount: BigNumber) => Promise<TransactionResponse>;
-  setRates: (
-    id: BytesLike,
-    drate: BigNumberish,
-    frate: BigNumberish,
-    dryRun: boolean
-  ) => Promise<TransactionResponse | PopulatedTransaction>;
-  increaseCredit: (
-    id: BytesLike,
-    amount: BigNumberish,
-    dryRun: boolean
-  ) => Promise<TransactionResponse | PopulatedTransaction>;
-  depositAndRepay: (
-    id: BytesLike,
-    amount: BigNumber,
-    dryRun: boolean
-  ) => Promise<TransactionResponse | PopulatedTransaction>;
-  depositAndClose: (id: BytesLike, dryRun: boolean) => Promise<TransactionResponse | PopulatedTransaction>;
+  addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  close: (props: CloseProps) => Promise<TransactionResponse>;
+  withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse>;
+  setRates: (props: SetRatesProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  increaseCredit: (props: IncreaseCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  depositAndRepay: (props: DepositAndRepayProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  depositAndClose: (props: DepositAndCloseProps) => Promise<TransactionResponse | PopulatedTransaction>;
 
   // helpers
-  getFirstID(): Promise<BytesLike>;
-  getCredit(id: BytesLike): Promise<Credit>;
-  getLenderByCreditID(id: BytesLike): Promise<Address>;
-  borrower: () => Promise<Address>;
-  isActive: () => Promise<boolean>;
-  isBorrowing: () => Promise<boolean>;
-  isBorrower: () => Promise<boolean>;
-  isLender: (id: Bytes) => Promise<boolean>;
-  isMutualConsent: (trxData: string | undefined, signerOne: Address, signerTwo: Address) => Promise<boolean>;
+  getFirstID: (contractAddress: string) => Promise<BytesLike>;
+  getCredit: (contractAddress: string, id: BytesLike) => Promise<Credit>;
+  getLenderByCreditID: (contractAddress: string, id: BytesLike) => Promise<Address>;
+  borrower: (contractAddress: string) => Promise<Address>;
+  isActive: (contractAddress: string) => Promise<boolean>;
+  isBorrowing: (contractAddress: string) => Promise<boolean>;
+  isBorrower: (contractAddress: string) => Promise<boolean>;
+  isLender: (contractAddress: string, id: BytesLike) => Promise<boolean>;
+  isMutualConsent: (
+    contractAddress: string,
+    trxData: string | undefined,
+    signerOne: Address,
+    signerTwo: Address
+  ) => Promise<boolean>;
   isSignerBorrowerOrLender: (contractAddress: Address, id: BytesLike) => Promise<boolean>;
 
   // utils
-  approveDeposit: (...args: any) => Promise<any | undefined>;
+  approveDeposit: (props: ApproveLineDepositProps) => Promise<any | undefined>;
   // approveZapOut: (...args: any) => Promise<any | undefined>;
   // signPermit: (...args: any) => Promise<any | undefined>;
-  getDepositAllowance: (...args: any) => Promise<any | undefined>;
-  getWithdrawAllowance: (...args: any) => Promise<any | undefined>;
+  getDepositAllowance: (props: GetLineDepositAllowanceProps) => Promise<any | undefined>;
+  getWithdrawAllowance: (props: GetLineWithdrawAllowanceProps) => Promise<any | undefined>;
+}
+
+export interface AddCreditProps {
+  dryRun: boolean;
+  lineAddress: string;
+  token: Address;
+  lender: Address;
+  drate: BigNumberish;
+  frate: BigNumberish;
+  amount: BigNumber;
+}
+
+export interface CloseProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+}
+export interface WithdrawLineProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+  amount: BigNumber;
+}
+export interface SetRatesProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+  frate: BigNumber;
+  drate: BigNumber;
+}
+export interface IncreaseCreditProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+  amount: BigNumber;
+}
+export interface DepositAndRepayProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+  amount: BigNumber;
+}
+export interface DepositAndCloseProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+}
+
+export interface ApproveLineDepositProps {
+  network: Network;
+  lineAddress: string;
+  tokenAddress: string;
+  accountAddress: string;
+  amount: BigNumber;
+}
+
+export interface GetLineDepositAllowanceProps {
+  network: Network;
+  lineAddress: string;
+  tokenAddress: string;
+  accountAddress: string;
+}
+
+export interface GetLineWithdrawAllowanceProps {
+  network: Network;
+  lineAddress: string;
+  accountAddress: string;
+  id: string;
 }
 
 export interface InterestRateAccrueInterestProps {
@@ -197,27 +257,18 @@ export interface InterestRateAccrueInterestProps {
   drawnBalance: BigNumberish;
   facilityBalance: BigNumberish;
 }
-export interface GetLineProps {
-  params: GetLineArgs;
+export interface GetLineProps extends GetLineArgs {
+  id: string;
   network: Network;
 }
 
-export interface GetLinesProps {
-  params: GetLinesArgs;
+export interface GetLinesProps extends GetLinesArgs {
   network: Network;
 }
 
-export interface GetLinePageProps {
-  params: GetLinePageArgs;
+export interface GetLinePageProps extends GetLinePageArgs {
+  id: string;
   network: Network;
-}
-export interface AddCreditProps {
-  drate: BigNumberish;
-  frate: BigNumberish;
-  amount: BigNumberish;
-  token: Address;
-  lender: Address;
-  line: Address;
 }
 
 export interface SpigotedLineService {

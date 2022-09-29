@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
+import { BigNumber } from 'ethers';
 
 import {
   useAppSelector,
@@ -49,7 +50,7 @@ import {
   filterData,
 } from '@utils';
 import { getConfig } from '@config';
-import { CreditLine, VaultView, UseCreditLinesParams, GetLinesArgs } from '@src/core/types';
+import { CreditLine, VaultView, UseCreditLinesParams, GetLinesArgs, AddCreditProps } from '@src/core/types';
 import { GoblinTown } from '@assets/images';
 
 const StyledHelperCursor = styled.span`
@@ -241,13 +242,14 @@ export const Market = () => {
   }, [opportunities, search]);
 
   const dispatchAddCredit = () => {
-    const params = {
+    const params: AddCreditProps = {
       drate: 0,
       frate: 0,
-      amount: 0,
+      amount: BigNumber.from(0),
       token: '',
       lender: '',
-      line: '',
+      lineAddress: '',
+      dryRun: true,
     };
     dispatch(LinesActions.addCredit({ ...params }));
   };

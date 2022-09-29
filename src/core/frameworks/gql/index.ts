@@ -48,7 +48,7 @@ export const createQuery =
       // use observable so can await instead of using `loading` everywhere
       const { observable } = useQuery(query, { variables });
       const { data, error } = await observable.result();
-      if(error) reject(error);
+      if (error) reject(error);
       else resolve(data);
     });
 
