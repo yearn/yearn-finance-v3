@@ -230,6 +230,7 @@ export class CreditLineServiceImpl implements CreditLineService {
   }
 
   public async getLines(prop: GetLinesProps): Promise<CreditLine[] | undefined> {
+    console.log('here is a prop ', prop);
     const response = getLines(prop)
       .then((data) => this.formatGetLinesData(data))
       .catch((err) => {

@@ -73,6 +73,7 @@
       },
       "claim": "Claim",
       "deposit": "Deposit",
+      "liquidate": "Liquidate",
       "from-iron-bank": "From Iron Bank",
       "from-vault": "From vault",
       "from-wallet": "From wallet",
@@ -117,6 +118,11 @@
         "select-credit": "1. Select a borrower to lend to",
         "select-token": "2. Select token and amount",
         "select-rates": "3. Set interest rates"
+      },
+      "arbiter-liquidate": {
+        "header": "Liquidate Borrowers",
+        "select-credit": "1. Select a borrower to liquidate",
+        "select-token": "2. Select token and amount"
       }
     }
   },

@@ -226,15 +226,15 @@ export const Market = () => {
     setSearch(queryParams.search ?? '');
 
     const expectedCategories = _.keys(defaultLineCategories);
-    const cuirrentCategories = _.keys(lineCategoriesForDisplay);
+    const currentCategories = _.keys(lineCategoriesForDisplay);
 
     // const shouldFetch = expectedCategories.reduce((bool, cat) => bool && cuirrentCategories.includes(cat), true);
     let shouldFetch: boolean = false;
-    expectedCategories.forEach((cat) => (shouldFetch = shouldFetch || !cuirrentCategories.includes(cat)));
+    expectedCategories.forEach((cat) => (shouldFetch = shouldFetch || !currentCategories.includes(cat)));
 
-    console.log('should fetch', shouldFetch, cuirrentCategories);
+    console.log('should fetch', shouldFetch, currentCategories);
     if (shouldFetch) fetchMarketData();
-  }, [queryParams.search, lineCategoriesForDisplay]);
+  }, []);
 
   useEffect(() => {
     const searchableKeys = ['name', 'displayName', 'token.symbol', 'token.name'];
@@ -254,6 +254,11 @@ export const Market = () => {
       dryRun: true,
     };
     dispatch(LinesActions.addCredit({ ...params }));
+  };
+
+  const liquidateBorrowerHandler = (vaultAddress: string) => {
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+    dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
   };
 
   const depositHandler = (vaultAddress: string) => {
@@ -407,8 +412,8 @@ export const Market = () => {
                     <ActionButtons
                       actions={[
                         {
-                          name: t('components.transaction.deposit'),
-                          handler: () => depositHandler(address),
+                          name: t('components.transaction.liquidate'),
+                          handler: () => liquidateBorrowerHandler(address),
                           disabled: !walletIsConnected,
                         },
                       ]}
