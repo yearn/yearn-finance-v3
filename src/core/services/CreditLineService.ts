@@ -31,6 +31,7 @@ import { getConfig } from '@config';
 import { LineOfCreditABI } from '@services/contracts';
 import { getContract } from '@frameworks/ethers';
 import { getLine, getLinePage, getLines, getUserLinePositions } from '@frameworks/gql';
+import { mapStatusToString } from '@src/utils';
 
 export class CreditLineServiceImpl implements CreditLineService {
   private graphUrl: string;
@@ -65,26 +66,6 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   private async getSignerAddress(): Promise<Address> {
     return await this.web3Provider.getSigner().getAddress();
-  }
-
-  public async getLine(props: GetLineProps): Promise<CreditLine | undefined> {
-    const result = await fetch(`${this.graphUrl}/subgraphs/`, {
-      // todo: URL
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: `
-          query {
-            Borrower {
-              id          
-            }
-            Lender {
-              id          
-            }
-        }`,
-      }),
-    });
-    return await result.json();
   }
 
   public async addCredit(props: AddCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
@@ -244,15 +225,38 @@ export class CreditLineServiceImpl implements CreditLineService {
     return signer === credit.lender || signer === (await this.contract.borrower());
   }
 
+  public async getLine(props: GetLineProps): Promise<CreditLine | undefined> {
+    return;
+  }
+
   public async getLines(prop: GetLinesProps): Promise<CreditLine[] | undefined> {
     const response = getLines(prop)
-      .then((data) => data)
+      .then((data) => this.formatGetLinesData(data))
       .catch((err) => {
         console.log('CreditLineService: error fetching lines', err);
         return undefined;
       });
     return response;
   }
+
+  /** Formatting functions. from GQL structured response to flat data for redux state  */
+  private formatGetLinesData(response: any): CreditLine[] {
+    return response.map((data: any) => {
+      const {
+        borrower: { id: borrower },
+        status,
+        // escrow: { id: escrow },
+        // spigot: { id: spigot },
+        ...rest
+      } = data;
+      return {
+        ...rest,
+        status: mapStatusToString(status),
+        borrower,
+      };
+    });
+  }
+
   public async getLinePage(prop: GetLinePageProps): Promise<CreditLinePage | undefined> {
     return;
   }

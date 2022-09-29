@@ -219,8 +219,8 @@ export const Market = () => {
   };
   const fetchMarketData = () => dispatch(LinesActions.getLines(defaultLineCategories));
   const lineCategoriesForDisplay = useAppSelector(LinesSelectors.selectLinesForCategories);
-  const areLinesLoading = useAppSelector(LinesSelectors.selectLinesStatusMap).getLines;
-  // const [lineCategoriesForDisplay /* setArgs */, , areLinesLoading] = useCreditLines(defaultLineCategories);
+  const getLinesStatus = useAppSelector(LinesSelectors.selectLinesStatusMap).getLines;
+  console.log('ready', getLinesStatus || _.isEmpty(lineCategoriesForDisplay));
 
   useEffect(() => {
     setSearch(queryParams.search ?? '');
@@ -313,12 +313,13 @@ export const Market = () => {
 
       {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
 
-      {areLinesLoading || !lineCategoriesForDisplay ? (
+      {getLinesStatus.loading || _.isEmpty(lineCategoriesForDisplay) ? (
         <SpinnerLoading flex="1" width="100%" />
       ) : (
         Object.entries(lineCategoriesForDisplay!).map(([key, val]: [string, CreditLine[]]) => (
           <StyledRecommendationsCard
             header={t(key)}
+            key={key}
             items={lineCategoriesForDisplay[key].map(({ borrower, spigot, escrow }) => ({
               icon: '',
               name: borrower,
