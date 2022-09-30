@@ -25,6 +25,10 @@ const routesMap = [
     component: LineDetail,
   },
   {
+    path: '/vaults',
+    component: Vaults,
+  },
+  {
     path: '/settings',
     component: Settings,
   },

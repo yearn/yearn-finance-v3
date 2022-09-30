@@ -36,6 +36,12 @@
       "lender": "Lender",
       "arbiter": "arbiter"
     },
+    "line-card": {
+      "borrower": "Borrower",
+      "secured-by": "Secured By",
+      "total-debt": "Outstanding Debt",
+      "total-credit": "Total Credit"
+    },
     "no-wallet": "Wallet not connected",
     "recent-recommendations": {
       "header": "Recent Offers"
@@ -172,7 +178,17 @@
     "discord": "Discord",
     "docs": "Docs",
     "market": "Market",
+    "lines": "Line Of Credit",
     "portfolio": "Portfolio",
+    "settings": "Settings",
+    "vault": "Vaults",
+    "vaults": "Vaults",
+    "wallet": "Wallet"
+  },
+  "pages": {
+    "market": "Debt DAO Credit Market",
+    "lines": "Line Of Credit",
+    "portfolio": "Credit Investment Portfolio",
     "settings": "Settings",
     "vault": "Vaults",
     "vaults": "Vaults",

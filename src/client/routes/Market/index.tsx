@@ -199,19 +199,19 @@ export const Market = () => {
   const addCreditStatus = useAppSelector(LinesSelectors.selectLinesActionsStatusMap);
   const defaultLineCategories: UseCreditLinesParams = {
     // using i18m translation as keys for easy display
-    'pages.market.highest-credit': {
+    'market:featured.highest-credit': {
       first: 5,
       // NOTE: terrible proxy for total credit (oldest = most). Currently getLines only allows filtering by line metadata not modules'
       orderBy: 'start',
       orderDirection: 'asc',
     },
-    'pages.market.highest-spigot': {
+    'market:featured.highest-revenue': {
       first: 5,
       // NOTE: terrible proxy for total revenue earned (highest % = highest notional). Currently getLines only allows filtering by line metadata not modules'
       orderBy: 'defaultSplit',
       orderDirection: 'desc',
     },
-    'pages.market.newest': {
+    'market:featured.newest': {
       first: 5,
       orderBy: 'start', // NOTE: theoretically gets lines that start in the future, will have to refine query
       orderDirection: 'desc',
@@ -287,18 +287,7 @@ export const Market = () => {
 
   return (
     <ViewContainer>
-      <Button onClick={dispatchAddCredit}>Add Credit</Button>
-      {/* {addCreditStatus.loading === true && (
-        <div>
-          <p>.... loading......</p>
-        </div>
-      )} */}
-      {addCreditStatus.error && (
-        <div>
-          <p>.... ERROR: {addCreditStatus.error}</p>
-        </div>
-      )}
-      <StyledSliderCard
+      {/* <StyledSliderCard
         header={t('vaults:banner.header')}
         Component={
           <Text>
@@ -306,7 +295,7 @@ export const Market = () => {
           </Text>
         }
         background={<img src={GoblinTown} alt={'Goblin town or the Citadel?'} />}
-      />
+      /> */}
 
       <SummaryCard items={summaryCardItems} cardSize="small" />
       {opportunitiesLoading && <SpinnerLoading flex="1" width="100%" />}

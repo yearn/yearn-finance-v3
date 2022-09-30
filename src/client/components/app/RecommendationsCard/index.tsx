@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import _ from 'lodash';
-import { BytesLike } from 'ethers';
 
 import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon, Link } from '@components/common';
 import { TokenIcon } from '@components/app';
+import { useAppTranslation } from '@hooks';
 
 const TokenListIconSize = '1rem';
 
@@ -107,7 +107,6 @@ const ItemTag = styled.span`
   height: 2rem;
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem;
   margin-right: ${({ theme }) => theme.layoutPadding};
   user-select: none;
 `;
@@ -153,12 +152,12 @@ interface RecommendationsProps {
 }
 
 export const RecommendationsCard = ({ header, subHeader, items, ...props }: RecommendationsProps) => {
+  const { t } = useAppTranslation(['common']);
+
   if (items.length === 0) {
     return null;
   }
-
   // todo handle loading of principal/deposit vals with spinner or something
-
   return (
     <ContainerCard {...props}>
       <CardHeader header={header} subHeader={subHeader} />
@@ -173,19 +172,25 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
             </TopIcon>
 
             <ItemInfo>
-              <ItemName> Borrower: {item.name}</ItemName>
-              <ItemInfoLabel>Secured By:</ItemInfoLabel>
+              <ItemName>
+                {' '}
+                {t('components.line-card.borrower')}: {item.name}
+              </ItemName>
+              <ItemInfoLabel>{t('components.line-card.secured-by')}:</ItemInfoLabel>
               <TagContainer>
-                {item.modules?.map((name: string) => (
+                {item.modules?.map((name: string, i: number) => (
                   <ItemTag> {name} </ItemTag>
                 ))}
               </TagContainer>
               <Divider />
               <Metric>
-                {item.principal} / {item.deposit}
+                ${item.principal} / ${item.deposit}
               </Metric>
               <MetricsTextContainer>
-                <MetricsText> outstanding debt / total credit </MetricsText>
+                <MetricsText>
+                  {' '}
+                  {t('components.line-card.total-debt')} / {t('components.line-card.total-credit')}{' '}
+                </MetricsText>
               </MetricsTextContainer>
             </ItemInfo>
             {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}
