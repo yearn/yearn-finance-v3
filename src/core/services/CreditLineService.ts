@@ -1,6 +1,6 @@
-import { BigNumber, BigNumberish, ContractFunction, ethers, PopulatedTransaction } from 'ethers';
+import { ContractFunction, ethers, PopulatedTransaction } from 'ethers';
 import { BytesLike } from '@ethersproject/bytes/src.ts';
-import { Bytes, keccak256 } from 'ethers/lib/utils';
+import { keccak256 } from 'ethers/lib/utils';
 
 import {
   CreditLineService,
@@ -146,8 +146,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         return await this.transactionService.populateTransaction(props);
       }
 
-      let tx;
-      tx = await this.transactionService.execute(props);
+      const tx = await this.transactionService.execute(props);
       await tx.wait();
       return tx;
     } catch (e) {

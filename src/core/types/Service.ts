@@ -1,4 +1,4 @@
-import { BigNumberish, BigNumber } from 'ethers';
+import { BigNumber } from 'ethers';
 import { Bytes, BytesLike } from '@ethersproject/bytes/src.ts';
 import { PopulatedTransaction } from '@ethersproject/contracts/src.ts';
 
@@ -190,8 +190,8 @@ export interface AddCreditProps {
   lineAddress: string;
   token: Address;
   lender: Address;
-  drate: BigNumberish;
-  frate: BigNumberish;
+  drate: BigNumber;
+  frate: BigNumber;
   amount: BigNumber;
 }
 
@@ -256,9 +256,10 @@ export interface GetLineWithdrawAllowanceProps {
 export interface InterestRateAccrueInterestProps {
   contractAddress: Address;
   id: BytesLike;
-  drawnBalance: BigNumberish;
-  facilityBalance: BigNumberish;
+  drawnBalance: BigNumber;
+  facilityBalance: BigNumber;
 }
+
 export interface GetLineProps extends GetLineArgs {
   id: string;
   network: Network;

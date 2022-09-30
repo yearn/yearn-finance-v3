@@ -245,8 +245,8 @@ export const Market = () => {
 
   const dispatchAddCredit = () => {
     const params: AddCreditProps = {
-      drate: 0,
-      frate: 0,
+      drate: BigNumber.from(0),
+      frate: BigNumber.from(0),
       amount: BigNumber.from(0),
       token: '',
       lender: '',

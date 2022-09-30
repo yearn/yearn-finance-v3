@@ -1,5 +1,5 @@
 ﻿import { BytesLike } from '@ethersproject/bytes/src.ts';
-import { ContractFunction, BigNumber, PopulatedTransaction } from 'ethers';
+import { BigNumber, PopulatedTransaction } from 'ethers';
 
 import {
   YearnSdk,
@@ -161,8 +161,7 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
         return await this.transactionService.populateTransaction(props);
       }
 
-      let tx;
-      tx = await this.transactionService.execute(props);
+      const tx = await this.transactionService.execute(props);
       await tx.wait();
       return tx;
     } catch (e) {
