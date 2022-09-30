@@ -20,6 +20,7 @@ export interface Env {
   // ZAPPER_API_KEY: string | undefined;
   GRAPH_API_URL: string | undefined;
   GRAPH_TEST_API_URL: string | undefined;
+  GOERLI_PROVIDER_HTTPS: string;
 }
 
 export interface Constants {
@@ -39,6 +40,7 @@ export interface Constants {
   CONTRACT_ADDRESSES: {
     [KEY: string]: string;
   };
+  GOERLI_PROVIDER_HTTPS: string;
   MAX_INTEREST_RATE: number;
   SLIPPAGE_OPTIONS: number[];
   DEFAULT_SLIPPAGE: number;

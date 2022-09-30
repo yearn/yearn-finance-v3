@@ -53,7 +53,7 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
       if (!assetData) return [];
 
       const zapperDisabled =
-        (!servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut') || currentNetwork !== 'mainnet';
+        (!servicesEnabled.zapper && assetData.metadata.zapOutWith === 'zapperZapOut') || currentNetwork !== 'goerli';
       const mainVaultTokenAddress = zapperDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const withdrawTokenAddresses = [mainVaultTokenAddress];
       if (!zapperDisabled) {

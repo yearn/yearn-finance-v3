@@ -151,7 +151,7 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
     let props: ExecuteTransactionProps | undefined = undefined;
     try {
       props = {
-        network: 'mainnet',
+        network: 'goerli',
         args: params,
         methodName: methodName,
         abi: this.abi,

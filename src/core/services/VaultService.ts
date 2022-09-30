@@ -99,7 +99,7 @@ export class VaultServiceImpl implements VaultService {
     const DEFAULT_SLIPPAGE_SIMULATION = 0.99;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
-    if (network !== 'mainnet') {
+    if (network !== 'goerli') {
       const tokenAddress = transactionType === 'DEPOSIT' ? sourceTokenAddress : targetTokenAddress;
       const priceUsdc = await yearn.tokens.priceUsdc(tokenAddress);
       const tokens = await yearn.vaults.tokens();

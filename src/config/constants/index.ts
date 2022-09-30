@@ -22,6 +22,22 @@ const PARTNERS = {
 };
 
 const NETWORK_SETTINGS: NetworkSettings = {
+  goerli: {
+    id: 'goerli',
+    name: 'Ethereum',
+    networkId: 5,
+    rpcUrl: 'https://goerli.infura.io/v3/',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    simulationsEnabled: true,
+    earningsEnabled: true,
+    notifyEnabled: true,
+    blockExplorerUrl: 'https://goerli.etherscan.io/',
+    txConfirmations: 2,
+  },
   mainnet: {
     id: 'mainnet',
     name: 'Ethereum',
@@ -65,11 +81,12 @@ export const getConstants = memoize((): Constants => {
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
     DEBT_DAO_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
     DEBT_DAO_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
-    SUPPORTED_NETWORKS: ['mainnet', 'arbitrum'],
+    SUPPORTED_NETWORKS: ['mainnet', 'arbitrum', 'goerli'],
     NETWORK_SETTINGS,
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
+    GOERLI_PROVIDER_HTTPS: 'https://goerli.infura.io/v3/',
     CONTRACT_ADDRESSES: {
       zapIn: '0x8E52522E6a77578904ddd7f528A22521DC4154F5',
       zapOut: '0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c',
@@ -106,8 +123,3 @@ export const getConstants = memoize((): Constants => {
     // ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
   };
 });
-
-export const ArbiterGoerli: string = '0xde8f0f6769284e41bf0f82d0545141c15a3e4ad1';
-export const OracleGoerli: string = '0x7233038e589913dca4b6d15ff8bba263a433aed2';
-export const SwapTargetGoerli: string = '0xcb7b9188ada88cb0c991c807acc6b44097059dec';
-export const LineFactoryGoerli: string = '0x43158693dba386562f0581cd48e68df027a5a877';

@@ -11,15 +11,13 @@ import {
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions } from '@store';
 import { useSelectedCreditLine } from '@hooks';
-import { Address, Token, Asset, TokenView, CreditLine } from '@src/core/types';
+import { CreditLine } from '@src/core/types';
+import { LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
-import { TxTokenInput } from './components/TxTokenInput';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxTTLInput } from './components/TxTTLInput';
-import { TxRateInput } from './components/TxRateInput';
 import { TxActions } from './components/TxActions';
 import { TxActionButton } from './components/TxActions';
 
@@ -47,8 +45,23 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
   const dispatch = useAppDispatch();
   const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
   const { allowVaultSelect, header, onClose, onPositionChange } = props;
+  const [borrower, setBorrower] = useState('0x1A6784925814a13334190Fd249ae0333B90b6443');
 
-  const onAmountChange = () => {};
+  const [timeToLive, setTimeToLive] = useState('86400');
+
+  const onAmountChange = (ttl: string) => {
+    setTimeToLive(ttl);
+  };
+
+  const deploySecuredLineNoConfig = () => {
+    console.log('working');
+    try {
+      dispatch(LinesActions.deploySecuredLine({ borrower, ttl: timeToLive }));
+      console.log('success');
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
@@ -67,17 +80,23 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
         headerText={t('components.transaction.deploy-line.select-ttl')}
         inputText={t('components.transaction.deploy-line.time-to-live')}
         inputError={false}
-        amount={''}
+        amount={timeToLive}
         onAmountChange={onAmountChange}
-        maxAmount={''}
-        maxLabel={''}
+        maxAmount={'360'}
+        maxLabel={'Max TTL'}
         readOnly={false}
         hideAmount={false}
         loading={false}
         loadingText={''}
       />
       <TxActions>
-        <TxActionButton key={''} onClick={() => {}} disabled={false} contrast={false} isLoading={false}>
+        <TxActionButton
+          key={''}
+          onClick={deploySecuredLineNoConfig}
+          disabled={false}
+          contrast={false}
+          isLoading={false}
+        >
           {'Deploy Line'}
         </TxActionButton>
       </TxActions>

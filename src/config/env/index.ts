@@ -37,5 +37,6 @@ export const getEnv = memoize((): Env => {
     PORTIS_KEY: REACT_APP_PORTIS_KEY,
     GRAPH_API_URL: REACT_APP_GRAPH_API_URL,
     GRAPH_TEST_API_URL: REACT_APP_GRAPH_TEST_API_URL,
+    GOERLI_PROVIDER_HTTPS: '',
   };
 });
