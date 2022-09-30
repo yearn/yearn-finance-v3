@@ -320,10 +320,13 @@ export const Market = () => {
           <StyledRecommendationsCard
             header={t(key)}
             key={key}
-            items={lineCategoriesForDisplay[key].map(({ borrower, spigot, escrow }) => ({
+            items={val.map(({ borrower, type, spigot, escrow, principal, deposit }) => ({
               icon: '',
               name: borrower,
-              info: `spigot: ${spigot?.id} & escrow: ${escrow?.id} `,
+              principal,
+              deposit,
+              modules: [spigot ? 'revenue' : '', escrow ? 'collateral' : ''].filter((x) => !!x),
+              info: type || 'DAO Line of Credit',
               infoDetail: 'EYY',
               onAction: () => history.push(`/lines/${borrower}`),
             }))}
@@ -331,30 +334,9 @@ export const Market = () => {
         ))
       )}
 
+      {/* TODO keep this UI but populate with state.lines.linesMap */}
       {!opportunitiesLoading && (
         <>
-          <StyledRecommendationsCard
-            header={t('components.recent-recommendations.header')}
-            items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
-              icon: displayIcon,
-              name: displayName,
-              info: formatApy(apyData, apyType),
-              infoDetail: 'EYY',
-              onAction: () => history.push(`/vaults/${address}`),
-            }))}
-          />
-
-          <StyledRecommendationsCard
-            header={t('components.popular-recommendations.header')}
-            items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
-              icon: displayIcon,
-              name: displayName,
-              info: formatApy(apyData, apyType),
-              infoDetail: 'EYY',
-              onAction: () => history.push(`/vaults/${address}`),
-            }))}
-          />
-
           {!opportunitiesLoading && (
             <OpportunitiesCard
               header={t('components.list-card.borrower')}

@@ -221,6 +221,7 @@ function createLinePage(props: CreateLinePageProps): CreditLinePage {
   // aggregated revenue in USD by token across all spigots
   const tokenRevenue: { [key: string]: number } = {};
   const principal = 0;
+  const deposit = 0;
   const interest = 0;
   //  all recent Spigot and Escrow events
   let collateralEvents: CollateralEvent[] = [];
@@ -229,12 +230,12 @@ function createLinePage(props: CreateLinePageProps): CreditLinePage {
 
   const formattedCredits = credits?.reduce((obj: any, c: any) => {
     const {
-      deposit,
       drawnRate,
       id,
       lender,
       events: graphEvents,
       principal,
+      deposit,
       interestAccrued,
       interestRepaid,
       token,
@@ -298,6 +299,7 @@ function createLinePage(props: CreateLinePageProps): CreditLinePage {
     borrower,
     // debt data
     principal,
+    deposit,
     interest,
     highestApy,
     tokenRevenue,

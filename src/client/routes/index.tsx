@@ -4,6 +4,7 @@ import { Layout } from '@containers';
 
 import { Portfolio } from './Portfolio';
 import { VaultDetail } from './VaultDetail';
+import { LineDetail } from './LineDetail';
 import { Vaults } from './Vaults';
 import { Market } from './Market';
 import { Settings } from './Settings';
@@ -20,8 +21,8 @@ const routesMap = [
     component: Market,
   },
   {
-    path: '/vaults',
-    component: Vaults,
+    path: '/lines/:lineAddress',
+    component: LineDetail,
   },
   {
     path: '/settings',
@@ -30,10 +31,6 @@ const routesMap = [
   {
     path: '/disclaimer',
     component: Disclaimer,
-  },
-  {
-    path: '/vault/:vaultAddress',
-    component: VaultDetail,
   },
 ];
 
@@ -50,7 +47,7 @@ export const Routes = () => {
                 <Route key={index} exact path={route.path} component={route.component} />
               ))}
               <Route path="*">
-                <Redirect to="/portfolio" />
+                <Redirect to="/market" />
               </Route>
             </Switch>
           </Layout>

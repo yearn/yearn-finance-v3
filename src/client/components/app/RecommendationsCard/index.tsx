@@ -1,6 +1,8 @@
 import styled from 'styled-components';
+import _ from 'lodash';
+import { BytesLike } from 'ethers';
 
-import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@components/common';
+import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon, Link } from '@components/common';
 import { TokenIcon } from '@components/app';
 
 const TokenListIconSize = '1rem';
@@ -101,7 +103,6 @@ const Divider = styled.div`
 `;
 
 const ItemTag = styled.span`
-  background-color: black;
   border-radius: 10%;
   height: 2rem;
   display: inline-flex;
@@ -137,6 +138,9 @@ interface Item {
   icon: string;
   name: string;
   info: string;
+  principal: string | number | Promise<number>;
+  deposit: string | number | Promise<number>;
+  modules?: string[];
   infoDetail?: string;
   action?: string;
   onAction?: () => void;
@@ -153,6 +157,8 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
     return null;
   }
 
+  // todo handle loading of principal/deposit vals with spinner or something
+
   return (
     <ContainerCard {...props}>
       <CardHeader header={header} subHeader={subHeader} />
@@ -167,17 +173,19 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
             </TopIcon>
 
             <ItemInfo>
-              <ItemName>{item.name}</ItemName>
-              <ItemInfoLabel>{item.info}</ItemInfoLabel>
+              <ItemName> Borrower: {item.name}</ItemName>
+              <ItemInfoLabel>Secured By:</ItemInfoLabel>
               <TagContainer>
-                {['escrow', 'spigot', 'DAI', 'DeFi'].map((t) => (
-                  <ItemTag> {t} </ItemTag>
+                {item.modules?.map((name: string) => (
+                  <ItemTag> {name} </ItemTag>
                 ))}
               </TagContainer>
               <Divider />
-              <Metric>300000 / 32313131</Metric>
+              <Metric>
+                {item.principal} / {item.deposit}
+              </Metric>
               <MetricsTextContainer>
-                <MetricsText>collateral value / outstanding debt </MetricsText>
+                <MetricsText> outstanding debt / total credit </MetricsText>
               </MetricsTextContainer>
             </ItemInfo>
             {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}

@@ -30,7 +30,8 @@ export interface BaseCreditLine {
   status: LineStatusTypes;
   borrower: Address;
 
-  principal?: number;
+  principal: number | Promise<number>;
+  deposit: number | Promise<number>;
   activeIds: string[]; // ids for all open positions
 }
 
@@ -44,7 +45,8 @@ export interface CreditLine extends BaseCreditLine {
   status: LineStatusTypes;
   borrower: Address;
 
-  principal?: number;
+  principal: number | Promise<number>; // single largest debt
+  deposit: number | Promise<number>; // single largest deposit
   activeIds: string[];
 
   escrow?: { id: Address };
@@ -59,12 +61,14 @@ export interface CreditLinePage extends BaseCreditLine {
   status: LineStatusTypes;
   borrower: Address;
 
-  // real-time aggregate usd value across all credits
-  principal?: number;
-  interest?: number;
-  // id, symbol, APY (4 decimals
+  // real-time aggregate usd value across all positions
+  principal: number | Promise<number>;
+  deposit: number | Promise<number>;
+  interest: number | Promise<number>;
+
+  // id, symbol, APR (4 decimals)
   highestApy: [string, string, number];
-  // aggregated revenue in USD by token across all spigots
+  // total aggregated revenue in USD by token across all spigots
   tokenRevenue: { [key: string]: number };
 
   // subgraph id -> depsoit/spigot
@@ -123,9 +127,9 @@ export const ARBITER_POSITION_ROLE: ArbiterRole = 'arbiter';
 type PositionRole = LenderRole | BorrowerRole | ArbiterRole;
 
 export interface UserPositionMetadata {
-  role: PositionRole;
-  amount: number; // principal/deposit
-  available: number; // borrowerable/withdrawable
+  role: PositionRole; // borrower/lender/arbiter
+  amount: number; // principal/deposit/collateral
+  available: number; // borrowable/withdrawable/liquidatable
 }
 
 export interface PositionSummary {

@@ -246,10 +246,15 @@ export class CreditLineServiceImpl implements CreditLineService {
         status,
         // escrow: { id: escrow },
         // spigot: { id: spigot },
+        biggestCredit,
+        biggestDebt,
         ...rest
       } = data;
+
       return {
         ...rest,
+        principal: 0, //  getCurrentValue(biggestDebt.token.symbol, biggestDebt.principal),
+        deposit: 0, // getCurrentValue(biggestCredit.token.symbol,  biggestCredit.deposit),
         status: mapStatusToString(status),
         borrower,
       };

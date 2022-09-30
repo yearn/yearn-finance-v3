@@ -29,8 +29,22 @@ const BASE_LINE_FRAGMENT = gql`
   }
 `;
 
+const BASE_CREDIT_FRAGMENT = gql`
+  fragment BaseCreditFrag on Credit {
+    id
+    principal
+    deposit
+    token {
+      id
+      symbol
+      decimals
+    }
+  }
+`;
+
 const LINE_PAGE_CREDIT_FRAGMENT = gql`
   fragment LinePageCreditFrag on Credit {
+    id
     lender
     deposit
     principal
@@ -230,10 +244,19 @@ export const GET_LINE_PAGE_QUERY = gql`
 
 export const GET_LINES_QUERY = gql`
   ${BASE_LINE_FRAGMENT}
+  ${BASE_CREDIT_FRAGMENT}
 
   query getLines($first: Int, $orderBy: String, $orderDirection: String) {
     lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
       ...BaseLineFrag
+
+      biggestCredit: lines(first: 1, orderBy: deposit, orderDirection: desc) {
+        ...BaseCreditFrag
+      }
+      biggestDebt: lines(first: 1, orderBy: principal, orderDirection: desc) {
+        ...BaseCreditFrag
+      }
+
       escrow {
         id
         collateralValue
