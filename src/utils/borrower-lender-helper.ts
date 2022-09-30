@@ -18,9 +18,6 @@ import {
   DepositAndCloseProps,
   WithdrawLineProps,
 } from '@types';
-
-const { Arbiter_GOERLI, Oracle_GOERLI, SwapTarget_GOERLI, LineFactory_GOERLI } = getConfig();
-
 export function borrowerLenderHelper(
   creditLineService: CreditLineService,
   interestRateCreditService: InterestRateCreditService,
@@ -66,19 +63,6 @@ export function borrowerLenderHelper(
     }
 
     return (<TransactionResponse>await creditLineService.setRates(props)).hash;
-  };
-
-  const deployLineWithNoConfig = async (props: any): Promise<string> => {
-    const { borrower, ttl } = props;
-    const data = {
-      borrower,
-      ttl,
-      arbiter: Arbiter_GOERLI,
-      oracle: Oracle_GOERLI,
-      factory: LineFactory_GOERLI,
-      swapTarget: SwapTarget_GOERLI,
-    };
-    return (<TransactionResponse>await creditLineService.deployLineWithNoConfig(data)).hash;
   };
 
   const increaseCredit = async (props: IncreaseCreditProps): Promise<string> => {
@@ -239,7 +223,5 @@ export function borrowerLenderHelper(
     // escrow
     addCollateral,
     releaseCollateral,
-    // factory
-    deployLineWithNoConfig,
   };
 }

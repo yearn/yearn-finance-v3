@@ -33,6 +33,8 @@ import { getContract } from '@frameworks/ethers';
 import { getLine, getLinePage, getLines, getUserLinePositions } from '@frameworks/gql';
 import { mapStatusToString } from '@src/utils';
 
+const { GRAPH_API_URL, Arbiter_GOERLI, Oracle_GOERLI, SwapTarget_GOERLI, LineFactory_GOERLI } = getConfig();
+
 export class CreditLineServiceImpl implements CreditLineService {
   private graphUrl: string;
   private web3Provider: Web3Provider;
@@ -55,7 +57,7 @@ export class CreditLineServiceImpl implements CreditLineService {
     this.transactionService = transactionService;
     this.web3Provider = web3Provider;
     this.config = config;
-    const { GRAPH_API_URL } = getConfig();
+
     this.graphUrl = GRAPH_API_URL || 'https://api.thegraph.com';
     this.abi = LineOfCreditABI;
   }
@@ -106,14 +108,24 @@ export class CreditLineServiceImpl implements CreditLineService {
     );
   }
 
-  public async deployLineWithNoConfig(
-    props: any
-  ): Promise<ethers.providers.TransactionResponse | PopulatedTransaction> {
+  public async deploySecuredLine(props: {
+    borrower: string;
+    ttl: number;
+  }): Promise<ethers.providers.TransactionResponse | PopulatedTransaction> {
+    const { borrower, ttl } = props;
+    const data = {
+      borrower,
+      ttl,
+      arbiter: Arbiter_GOERLI,
+      oracle: Oracle_GOERLI,
+      factoryAddress: LineFactory_GOERLI,
+      swapTarget: SwapTarget_GOERLI,
+    };
     return <TransactionResponse>(
       await this.executeContractMethod(
-        props.factoryAddress,
+        data.factoryAddress,
         'deploySecuredLine',
-        [props.oracle, props.arbiter, props.borrower, props.ttl, props.swapTarget],
+        [data.oracle, data.arbiter, data.borrower, data.ttl, data.swapTarget],
         false
       )
     );

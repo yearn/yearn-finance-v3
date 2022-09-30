@@ -170,6 +170,18 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 /*                             Transaction Methods                            */
 /* -------------------------------------------------------------------------- */
 
+const deploySecuredLine = createAsyncThunk<void, any, ThunkAPI>(
+  'lines/getLinePage',
+  async (deployData, { getState, extra }) => {
+    const { network } = getState();
+    const { creditLineService } = extra.services;
+    const deployedLineData = await creditLineService.deploySecuredLine({
+      network: network.current,
+      ...deployData,
+    });
+  }
+);
+
 const approveDeposit = createAsyncThunk<void, { lineAddress: string; tokenAddress: string }, ThunkAPI>(
   'lines/approveDeposit',
   async ({ lineAddress, tokenAddress }, { getState, dispatch, extra }) => {
@@ -541,6 +553,7 @@ export const LinesActions = {
   approveDeposit,
   addCredit,
   depositAndRepay,
+  deploySecuredLine,
   // approveZapOut,
   // signZapOut,
   withdrawLine,
