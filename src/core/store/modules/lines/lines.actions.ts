@@ -170,20 +170,28 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 /*                             Transaction Methods                            */
 /* -------------------------------------------------------------------------- */
 
-const deploySecuredLine = createAsyncThunk<void, any, ThunkAPI>(
-  'lines/getLinePage',
-  async (deployData, { getState, extra }) => {
-    const { network } = getState();
-    const { creditLineService } = extra.services;
-    const deployedLineData = await creditLineService.deploySecuredLine({
-      network: network.current,
-      ...deployData,
-    });
+const deploySecuredLine = createAsyncThunk<
+  void,
+  {
+    oracle: Address;
+    arbiter: Address;
+    factoryAddress: Address;
+    borrower: Address;
+    swapTarget: Address;
+    ttl: number;
+  },
+  ThunkAPI
+>('lines/deploySecredLine', async (deployData, { getState, extra }) => {
+  const { network } = getState();
+  const { creditLineService } = extra.services;
+  const deployedLineData = await creditLineService.deploySecuredLine({
+    network: network.current,
+    ...deployData,
+  });
 
-    console.log('new secured line deployed. tx response', deployedLineData);
-    // await dispatch(getLine(deployedLineData.))
-  }
-);
+  console.log('new secured line deployed. tx response', deployedLineData);
+  // await dispatch(getLine(deployedLineData.))
+});
 
 const approveDeposit = createAsyncThunk<void, { lineAddress: string; tokenAddress: string }, ThunkAPI>(
   'lines/approveDeposit',
