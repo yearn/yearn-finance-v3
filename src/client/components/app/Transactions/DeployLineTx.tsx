@@ -20,6 +20,7 @@ import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxTTLInput } from './components/TxTTLInput';
 import { TxActions } from './components/TxActions';
 import { TxActionButton } from './components/TxActions';
+import { TxStatus } from './components/TxStatus';
 
 const {
   CONTRACT_ADDRESSES: { DAI },
@@ -44,24 +45,35 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
+  const [transactionCompleted, setTransactionCompleted] = useState(false);
   const { allowVaultSelect, header, onClose, onPositionChange } = props;
   const [borrower, setBorrower] = useState('0x1A6784925814a13334190Fd249ae0333B90b6443');
 
-  const [timeToLive, setTimeToLive] = useState('86400');
+  const [timeToLive, setTimeToLive] = useState('0');
 
   const onAmountChange = (ttl: string) => {
-    setTimeToLive(ttl);
+    let timeToLive = +ttl * 24 * 60 * 60;
+    setTimeToLive(timeToLive.toString());
   };
 
   const deploySecuredLineNoConfig = () => {
-    console.log('working');
     try {
-      dispatch(LinesActions.deploySecuredLine({ borrower, ttl: timeToLive }));
-      console.log('success');
+      dispatch(LinesActions.deploySecuredLine({ borrower, ttl: timeToLive })).then((res) => {
+        console.log('working ', res);
+        setTransactionCompleted(true);
+      });
     } catch (e) {
       console.log(e);
     }
   };
+
+  if (transactionCompleted) {
+    return (
+      <StyledTransaction onClose={onClose} header={''}>
+        <TxStatus transactionCompletedLabel={''} exit={() => {}} />
+      </StyledTransaction>
+    );
+  }
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
@@ -83,7 +95,7 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
         amount={timeToLive}
         onAmountChange={onAmountChange}
         maxAmount={'360'}
-        maxLabel={'Max TTL'}
+        maxLabel={'Max'}
         readOnly={false}
         hideAmount={false}
         loading={false}

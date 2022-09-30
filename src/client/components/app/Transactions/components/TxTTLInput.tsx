@@ -310,7 +310,7 @@ export const TxTTLInput: FC<TxTokenInputProps> = ({
           <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
           <AmountInputContainer>
             <StyledAmountInput
-              value={amount}
+              value={+amount / 60 / 60 / 24}
               onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
               placeholder={loading ? loadingText : '0 days'}
               readOnly={readOnly}

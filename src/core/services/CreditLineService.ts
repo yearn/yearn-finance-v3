@@ -121,6 +121,7 @@ export class CreditLineServiceImpl implements CreditLineService {
       factoryAddress: LineFactory_GOERLI,
       swapTarget: SwapTarget_GOERLI,
     };
+    console.log(data);
     return <TransactionResponse>(
       await this.executeContractMethod(
         data.factoryAddress,
@@ -176,9 +177,7 @@ export class CreditLineServiceImpl implements CreditLineService {
       return tx;
     } catch (e) {
       console.log(
-        `An error occured while ${methodName} with params [${params}] on CreditLine [${
-          props?.contractAddress
-        }], error = [${JSON.stringify(e)}] `
+        `An error occured while ${methodName} with params [${params}] on CreditLine [${props?.contractAddress}], error = ${e} `
       );
       return Promise.reject(e);
     }
