@@ -56,13 +56,35 @@ export const LineDetail = () => {
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
   const linesStatus = useAppSelector(LinesSelectors.selectLinesStatus);
+  // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const selectedLinePage = useAppSelector(LinesSelectors.selectSelectedLinePage);
   const walletName = useAppSelector(WalletSelectors.selectWallet);
 
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const blockExplorerUrl = currentNetworkSettings.blockExplorerUrl;
+
+  // 1. get line address from url parms
+  // 2. set selected line as current line
+  // 3. fetch line page
+  // 4.
+
+  useEffect(() => {
+    const lineAddress: string | undefined = location.pathname.split('/')[2];
+    if (!lineAddress || !isValidAddress(lineAddress)) {
+      dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
+      history.push('/market');
+      return;
+    }
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: lineAddress }));
+    dispatch(LinesActions.getLinePage({ id: lineAddress }));
+
+    return () => {
+      dispatch(LinesActions.clearSelectedLineAndStatus());
+    };
+  }, []);
 
   const [firstTokensFetch, setFirstTokensFetch] = useState(false);
   const [tokensInitialized, setTokensInitialized] = useState(false);
@@ -113,6 +135,7 @@ export const LineDetail = () => {
       }
     : {};
 
+  // TODO: 0xframe also supports this
   const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';
 
   return (

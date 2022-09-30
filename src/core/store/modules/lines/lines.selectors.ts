@@ -37,6 +37,7 @@ const selectLinesState = (state: RootState) => state.lines;
 const selectUserLinesPositionsMap = (state: RootState) => state.lines.user.linePositions;
 // const selectUserLinesMetadataMap = (state: RootState) => state.lines.user.userLinesMetadataMap;
 const selectLinesMap = (state: RootState) => state.lines.linesMap;
+const selectLinePagesMap = (state: RootState) => state.lines.pagesMap;
 const selectLineCategories = (state: RootState) => state.lines.categories;
 const selectLinesAddresses = (state: RootState) => Object.keys(state.lines.linesMap);
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
@@ -170,6 +171,13 @@ const selectLinesStatus = createSelector(
   }
 );
 
+const selectSelectedLinePage = createSelector(
+  [selectLinePagesMap, selectSelectedLineAddress],
+  (pages, line): CreditLinePage | undefined => {
+    return line ? pages[line] : undefined;
+  }
+);
+
 /* --------------------------------- Helper --------------------------------- */
 // interface CreateLineProps {
 //   lineData: BaseCreditLine;
@@ -192,137 +200,13 @@ const selectLinesStatus = createSelector(
 //   };
 // }
 
-interface CreateLinePageProps {
-  lineData: GetLinePageResponse;
-  tokenAllowancesMap: AllowancesMap;
-  positions: { [key: string]: PositionSummary };
-  // userLinesMetadataMap: UserPositionMetadata;
-  lineAllowancesMap: AllowancesMap;
-}
-function createLinePage(props: CreateLinePageProps): CreditLinePage {
-  const {
-    tokenAllowancesMap,
-    lineData,
-    lineAllowancesMap,
-    positions,
-    // userLinesMetadataMap,
-  } = props;
-  const lineAddress = lineData.id;
-  const currentAllowance = tokenAllowancesMap[lineAddress] ?? '0';
-
-  console.log('get lines category res: ', lineAddress, lineData);
-  const { start, end, status, borrower, credits, spigot, escrow } = lineData;
-
-  // derivative or aggregated data we need to compute and store while mapping position data
-
-  // position id and APY
-  const highestApy: [string, string, number] = ['', '', 0];
-  const activeIds: string[] = [];
-  // aggregated revenue in USD by token across all spigots
-  const tokenRevenue: { [key: string]: number } = {};
-  const principal = 0;
-  const deposit = 0;
-  const interest = 0;
-  //  all recent Spigot and Escrow events
-  let collateralEvents: CollateralEvent[] = [];
-  //  all recent borrow/lend events
-  let creditEvents: CreditLineEvents[] = [];
-
-  const formattedCredits = credits?.reduce((obj: any, c: any) => {
-    const {
-      drawnRate,
-      id,
-      lender,
-      events: graphEvents,
-      principal,
-      deposit,
-      interestAccrued,
-      interestRepaid,
-      token,
-    } = c;
-    activeIds.push(id);
-    // const currentPrice = await fetchTokenPrice(symbol, Date.now())
-    const currentPrice = 1e8;
-    const events = formatCreditEvents(c.token.symbol, currentPrice, graphEvents);
-    creditEvents.concat(events);
-    return {
-      ...obj,
-      [id]: {
-        id,
-        lender,
-        deposit,
-        drawnRate,
-        principal,
-        interestAccrued,
-        interestRepaid,
-        token: { symbol: token.symbol, lastPriceUSD: currentPrice },
-        events,
-      },
-    };
-  }, {});
-  const formattedSpigotsData = spigot?.spigots?.reduce((obj: any, s: any): { [key: string]: Spigot } => {
-    const {
-      id,
-      token: { symbol, lastPriceUSD },
-      active,
-      contract,
-      startTime,
-      events,
-    } = s;
-    collateralEvents = [
-      ...collateralEvents,
-      ...formatCollateralEvents(SPIGOT_MODULE_NAME, symbol, lastPriceUSD, events, tokenRevenue)[1],
-    ];
-    return { ...obj, [id]: { active, contract, symbol, startTime, lastPriceUSD } };
-  }, {});
-  const formattedEscrowData = escrow?.deposits?.reduce((obj: any, d: any) => {
-    const {
-      id,
-      amount,
-      enabled,
-      token: { symbol },
-      events,
-    } = d;
-    // TODO promise.all token price fetching for better performance
-    // const currentUsdPrice = await fetchTokenPrice(symbol, Datre.now());
-    const currentUsdPrice = 1e8;
-    formatCollateralEvents(ESCROW_MODULE_NAME, symbol, currentUsdPrice, events); // normalize and save events
-    return { ...obj, [id]: { symbol, currentUsdPrice, amount, enabled } };
-  }, {});
-
-  const pageData: CreditLinePage = {
-    // metadata
-    id: lineAddress,
-    start,
-    end,
-    status: mapStatusToString(status),
-    borrower,
-    // debt data
-    principal,
-    deposit,
-    interest,
-    highestApy,
-    tokenRevenue,
-    activeIds,
-    // all recent events
-    collateralEvents,
-    creditEvents,
-
-    credits: formattedCredits,
-    // collateral data
-    spigot: !spigot?.active ? undefined : { spigots: formattedSpigotsData },
-    escrow: !escrow?.deposits?.length ? undefined : { deposits: formattedEscrowData },
-  };
-
-  return pageData;
-}
-
 export const LinesSelectors = {
   selectLinesState,
   selectLinesMap,
   selectLines,
   selectLiveLines,
   selectLinesForCategories,
+  selectSelectedLinePage,
   // selectDeprecatedLines,
   selectUserLinesPositionsMap,
   selectUserTokensMap,

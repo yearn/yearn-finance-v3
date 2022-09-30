@@ -138,9 +138,7 @@ const SPIGOT_EVENT_FRAGMENT = gql`
 
 const ESCROW_FRAGMENT = gql`
   fragment EscrowFrag on Escrow {
-    cratio
     minCRatio
-    collateralValue
   }
 `;
 
@@ -208,34 +206,30 @@ export const GET_LINE_PAGE_QUERY = gql`
     lineOfCredits(id: $id) {
       ...BaseLineFrag
 
-      credits {
+      lines {
         ...LinePageCreditFrag
-        events(first: 5) {
-          ...LineEventFrag
-        }
+      }
+      events(first: 5) {
+        ...LineEventFrag
       }
 
       escrow {
         ...EscrowFrag
         deposits {
-          timestamp
           amount
           enabled
           token {
             ...TokenFrag
           }
         }
-        events(first: 3) {
-          ...EscrowEventFrag
-        }
       }
 
-      spigotController {
+      spigot {
         spigots {
           ...BaseSpigotFrag
-          events(first: 3) {
-            ...SpigotEventFrag
-          }
+        }
+        events(first: 3) {
+          ...SpigotEventFrag
         }
       }
     }

@@ -4,7 +4,13 @@ import { ExternalServiceId } from './General';
 import { PartnerId } from './Partner';
 import { Theme } from './Settings';
 import { Status } from './Status';
-import { LineActionsStatusMap, UserLineMetadataStatusMap, CreditLine, PositionSummary } from './CreditLine';
+import {
+  LineActionsStatusMap,
+  CreditLinePage,
+  UserLineMetadataStatusMap,
+  CreditLine,
+  PositionSummary,
+} from './CreditLine';
 import {
   Position,
   Token,
@@ -99,6 +105,8 @@ export interface VaultTransaction {
 export interface CreditLineState {
   selectedLineAddress: string | undefined;
   linesMap: { [lineAddress: string]: CreditLine };
+  // probs can just consolidate line/linePage since we need a lot of derived data in linePage for basic functionality
+  pagesMap: { [lineAddress: string]: CreditLinePage };
   categories: { [category: string]: string[] };
   user: {
     linePositions: { [positionId: string]: PositionSummary };

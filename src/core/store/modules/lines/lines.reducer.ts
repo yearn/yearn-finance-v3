@@ -28,6 +28,7 @@ export const initialUserMetadataStatusMap: UserLineMetadataStatusMap = {
 export const linesInitialState: CreditLineState = {
   selectedLineAddress: undefined,
   linesMap: {},
+  pagesMap: {},
   categories: {},
   user: {
     linePositions: {},
@@ -163,6 +164,7 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
     })
     .addCase(getLinePage.fulfilled, (state, { payload: { linePageData } }) => {
       if (linePageData) {
+        state.pagesMap = { ...state.pagesMap, [linePageData.id]: linePageData };
         state.linesMap = { ...state.linesMap, [linePageData.id]: linePageData as CreditLine };
       }
 

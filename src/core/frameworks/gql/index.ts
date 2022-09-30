@@ -13,7 +13,7 @@ import {
   QueryResponse,
   QueryCreator,
   QueryArgOption,
-  CreditLinePage,
+  GetLinePageResponse,
   PositionSummary,
 } from '@src/core/types';
 
@@ -69,9 +69,9 @@ export const getLine: QueryCreator<GetLineArgs, CreditLine> = <GetLineArgs, Cred
 ): QueryResponse<CreditLine> => getLineQuery(arg);
 
 const getLinePageQuery = createQuery(GET_LINE_PAGE_QUERY);
-export const getLinePage: QueryCreator<GetLinePageArgs, CreditLinePage[]> = <GetLinePageArgs, CreditLinePage>(
+export const getLinePage: QueryCreator<GetLinePageArgs, GetLinePageResponse> = <GetLinePageArgs, GetLinePageResponse>(
   arg: GetLinePageArgs
-): QueryResponse<CreditLinePage[]> => getLinePageQuery(arg);
+): QueryResponse<GetLinePageResponse> => getLinePageQuery(arg);
 
 const getLinesQuery = createQuery(GET_LINES_QUERY, 'lineOfCredits');
 export const getLines: QueryCreator<GetLinesArgs, CreditLine[]> = <GetLinesArgs, CreditLine>(

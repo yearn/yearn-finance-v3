@@ -31,7 +31,7 @@ import { getConfig } from '@config';
 import { LineOfCreditABI } from '@services/contracts';
 import { getContract } from '@frameworks/ethers';
 import { getLine, getLinePage, getLines, getUserLinePositions } from '@frameworks/gql';
-import { mapStatusToString } from '@src/utils';
+import { formatGetLinesData, formatLinePageData } from '@src/utils';
 
 export class CreditLineServiceImpl implements CreditLineService {
   private graphUrl: string;
@@ -230,7 +230,7 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   public async getLines(prop: GetLinesProps): Promise<CreditLine[] | undefined> {
     const response = getLines(prop)
-      .then((data) => this.formatGetLinesData(data))
+      .then((data) => formatGetLinesData(data))
       .catch((err) => {
         console.log('CreditLineService: error fetching lines', err);
         return undefined;
@@ -238,32 +238,16 @@ export class CreditLineServiceImpl implements CreditLineService {
     return response;
   }
 
-  /** Formatting functions. from GQL structured response to flat data for redux state  */
-  private formatGetLinesData(response: any): CreditLine[] {
-    return response.map((data: any) => {
-      const {
-        borrower: { id: borrower },
-        status,
-        // escrow: { id: escrow },
-        // spigot: { id: spigot },
-        biggestCredit,
-        biggestDebt,
-        ...rest
-      } = data;
-
-      return {
-        ...rest,
-        principal: 0, //  getCurrentValue(biggestDebt.token.symbol, biggestDebt.principal),
-        deposit: 0, // getCurrentValue(biggestCredit.token.symbol,  biggestCredit.deposit),
-        status: mapStatusToString(status),
-        borrower,
-      };
-    });
-  }
-
   public async getLinePage(prop: GetLinePageProps): Promise<CreditLinePage | undefined> {
-    return;
+    const response = getLinePage(prop)
+      .then((data) => formatLinePageData(data))
+      .catch((err) => {
+        console.log('CreditLineService: error fetching lines', err);
+        return undefined;
+      });
+    return response;
   }
+
   public async getUserLinePositions(): Promise<any | undefined> {
     return;
   }
