@@ -179,6 +179,9 @@ const deploySecuredLine = createAsyncThunk<void, any, ThunkAPI>(
       network: network.current,
       ...deployData,
     });
+
+    console.log('new secured line deployed. tx response', deployedLineData);
+    // await dispatch(getLine(deployedLineData.))
   }
 );
 

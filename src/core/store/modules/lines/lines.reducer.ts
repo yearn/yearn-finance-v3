@@ -38,6 +38,7 @@ export const linesInitialState: CreditLineState = {
     getLine: initialStatus,
     getLinePage: initialStatus,
     getAllowances: initialStatus,
+    deploySecuredLine: initialStatus,
     user: initialUserMetadataStatusMap,
   },
 };
@@ -176,10 +177,8 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
     .addCase(deploySecuredLine.pending, (state) => {
       state.statusMap.deploySecuredLine = { loading: true };
     })
-    .addCase(deploySecuredLine.fulfilled, (state, { payload: { deployedLineData } }) => {
-      if (deployedLineData) {
-        state.linesMap = { ...state.linesMap, [deployedLineData.id]: deployedLineData as CreditLine };
-      }
+    .addCase(deploySecuredLine.fulfilled, (state, { payload }) => {
+      // deployLine action emits a getLine action if tx is successful
 
       state.statusMap.deploySecuredLine = {};
     })
