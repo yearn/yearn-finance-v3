@@ -70,9 +70,15 @@ export function borrowerLenderHelper(
 
   const deployLineWithNoConfig = async (props: any): Promise<string> => {
     const { borrower, ttl } = props;
-    const data = {};
-
-    return (<TransactionResponse>await creditLineService.deployLineWithNoConfig(props)).hash;
+    const data = {
+      borrower,
+      ttl,
+      arbiter: Arbiter_GOERLI,
+      oracle: Oracle_GOERLI,
+      factory: LineFactory_GOERLI,
+      swapTarget: SwapTarget_GOERLI,
+    };
+    return (<TransactionResponse>await creditLineService.deployLineWithNoConfig(data)).hash;
   };
 
   const increaseCredit = async (props: IncreaseCreditProps): Promise<string> => {
@@ -226,10 +232,14 @@ export function borrowerLenderHelper(
     increaseCredit,
     depositAndRepay,
     depositAndClose,
+    //spigoted line
     claimAndTrade,
     claimAndRepay,
     addSpigot,
+    // escrow
     addCollateral,
     releaseCollateral,
+    // factory
+    deployLineWithNoConfig,
   };
 }
