@@ -29,6 +29,7 @@ import {
   SummaryCard,
   DetailCard,
   RecommendationsCard,
+  LineCard,
   ActionButtons,
   TokenIcon,
   SliderCard,
@@ -305,22 +306,25 @@ export const Market = () => {
       {getLinesStatus.loading || _.isEmpty(lineCategoriesForDisplay) ? (
         <SpinnerLoading flex="1" width="100%" />
       ) : (
-        Object.entries(lineCategoriesForDisplay!).map(([key, val]: [string, CreditLine[]]) => (
-          <StyledRecommendationsCard
-            header={t(key)}
-            key={key}
-            items={val.map(({ borrower, type, spigot, escrow, principal, deposit }) => ({
-              icon: '',
-              name: borrower,
-              principal,
-              deposit,
-              modules: [spigot ? 'revenue' : '', escrow ? 'collateral' : ''].filter((x) => !!x),
-              info: type || 'DAO Line of Credit',
-              infoDetail: 'EYY',
-              onAction: () => history.push(`/lines/${borrower}`),
-            }))}
-          />
-        ))
+        Object.entries(lineCategoriesForDisplay!).map(([key, val]: [string, CreditLine[]], i: number) => {
+          const CardStyle = i % 2 === 0 ? StyledRecommendationsCard : LineCard;
+          return (
+            <CardStyle
+              header={t(key)}
+              key={key}
+              items={val.map(({ borrower, type, spigot, escrow, principal, deposit }) => ({
+                icon: '',
+                name: borrower,
+                principal,
+                deposit,
+                tags: [spigot ? 'revenue' : '', escrow ? 'collateral' : ''].filter((x) => !!x),
+                info: type || 'DAO Line of Credit',
+                infoDetail: 'EYY',
+                onAction: () => history.push(`/lines/${borrower}`),
+              }))}
+            />
+          );
+        })
       )}
 
       {/* TODO keep this UI but populate with state.lines.linesMap */}

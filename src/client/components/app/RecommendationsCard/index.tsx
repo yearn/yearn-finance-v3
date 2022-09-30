@@ -139,7 +139,7 @@ interface Item {
   info: string;
   principal: string | number | Promise<number>;
   deposit: string | number | Promise<number>;
-  modules?: string[];
+  tags?: string[];
   infoDetail?: string;
   action?: string;
   onAction?: () => void;
@@ -178,7 +178,7 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
               </ItemName>
               <ItemInfoLabel>{t('components.line-card.secured-by')}:</ItemInfoLabel>
               <TagContainer>
-                {item.modules?.map((name: string, i: number) => (
+                {item.tags?.map((name: string, i: number) => (
                   <ItemTag> {name} </ItemTag>
                 ))}
               </TagContainer>

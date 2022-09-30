@@ -255,6 +255,9 @@ export const Vaults = () => {
               icon: displayIcon,
               name: displayName,
               info: formatApy(apyData, apyType),
+              deposit: 0,
+              principal: 0,
+              tags: [],
               infoDetail: 'EYY',
               onAction: () => history.push(`/vault/${address}`),
             }))}
@@ -266,6 +269,9 @@ export const Vaults = () => {
               icon: displayIcon,
               name: displayName,
               info: formatApy(apyData, apyType),
+              deposit: 0,
+              principal: 0,
+              tags: [],
               infoDetail: 'EYY',
               onAction: () => history.push(`/vault/${address}`),
             }))}
