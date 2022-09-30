@@ -1,9 +1,12 @@
+import { BigNumber } from 'ethers';
+import { Bytes, BytesLike } from '@ethersproject/bytes/src.ts';
+import { PopulatedTransaction } from '@ethersproject/contracts/src.ts';
+
 import {
   Vault,
   VaultDynamic,
   Token,
   TokenDynamicData,
-  CreditLine,
   Position,
   TransactionResponse,
   Address,
@@ -18,6 +21,13 @@ import {
   Overrides,
   Network,
   TokenAllowance,
+  Credit,
+  CreditLine,
+  CreditLinePage,
+  PositionSummary,
+  GetLineArgs,
+  GetLinesArgs,
+  GetLinePageArgs,
 } from '@types';
 
 // *************** USER ***************
@@ -120,15 +130,200 @@ export interface MigrateProps {
   migrationContractAddress: Address;
 }
 
-// *************** LOAN ***************
-export interface CreditLineService {
-  getCreditLines: (props: GetCreditLinesProps) => Promise<CreditLine[]>;
+// *************** LINE ***************
+export enum STATUS {
+  UNINITIALIZED,
+  ACTIVE,
+  LIQUIDATABLE,
+  REPAID,
+  INSOLVENT,
 }
 
-export interface GetCreditLinesProps {
-  query: string;
-  params?: object;
+export interface InterestRateCreditService {
+  accrueInterest: (props: InterestRateAccrueInterestProps) => Promise<BigNumber>;
+}
+
+export interface CreditLineService {
+  // getters
+  getLine: (props: GetLineProps) => Promise<CreditLine | undefined>;
+  getLines: (props: GetLinesProps) => Promise<CreditLine[] | undefined>;
+  getLinePage: (props: GetLinePageProps) => Promise<CreditLinePage | undefined>;
+  getUserLinePositions: (...args: any) => Promise<any | undefined>;
+  getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;
+
+  addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  close: (props: CloseProps) => Promise<TransactionResponse>;
+  withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse>;
+  setRates: (props: SetRatesProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  increaseCredit: (props: IncreaseCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  depositAndRepay: (props: DepositAndRepayProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  depositAndClose: (props: DepositAndCloseProps) => Promise<TransactionResponse | PopulatedTransaction>;
+
+  // helpers
+  getFirstID: (contractAddress: string) => Promise<BytesLike>;
+  getCredit: (contractAddress: string, id: BytesLike) => Promise<Credit>;
+  getLenderByCreditID: (contractAddress: string, id: BytesLike) => Promise<Address>;
+  getInterestRateContract: (contractAddress: string) => Promise<Address>;
+  borrower: (contractAddress: string) => Promise<Address>;
+  isActive: (contractAddress: string) => Promise<boolean>;
+  isBorrowing: (contractAddress: string) => Promise<boolean>;
+  isBorrower: (contractAddress: string) => Promise<boolean>;
+  isLender: (contractAddress: string, id: BytesLike) => Promise<boolean>;
+  isMutualConsent: (
+    contractAddress: string,
+    trxData: string | undefined,
+    signerOne: Address,
+    signerTwo: Address
+  ) => Promise<boolean>;
+  isSignerBorrowerOrLender: (contractAddress: Address, id: BytesLike) => Promise<boolean>;
+
+  // utils
+  approveDeposit: (props: ApproveLineDepositProps) => Promise<any | undefined>;
+  // approveZapOut: (...args: any) => Promise<any | undefined>;
+  // signPermit: (...args: any) => Promise<any | undefined>;
+  getDepositAllowance: (props: GetLineDepositAllowanceProps) => Promise<any | undefined>;
+  getWithdrawAllowance: (props: GetLineWithdrawAllowanceProps) => Promise<any | undefined>;
+}
+
+export interface AddCreditProps {
+  dryRun: boolean;
+  lineAddress: string;
+  token: Address;
+  lender: Address;
+  drate: BigNumber;
+  frate: BigNumber;
+  amount: BigNumber;
+}
+
+export interface CloseProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+}
+export interface WithdrawLineProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+  amount: BigNumber;
+}
+export interface SetRatesProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+  frate: BigNumber;
+  drate: BigNumber;
+}
+export interface IncreaseCreditProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+  amount: BigNumber;
+}
+export interface DepositAndRepayProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+  amount: BigNumber;
+}
+export interface DepositAndCloseProps {
+  dryRun: boolean;
+  lineAddress: string;
+  id: string;
+}
+
+export interface ApproveLineDepositProps {
   network: Network;
+  lineAddress: string;
+  tokenAddress: string;
+  accountAddress: string;
+  amount: BigNumber;
+}
+
+export interface GetLineDepositAllowanceProps {
+  network: Network;
+  lineAddress: string;
+  tokenAddress: string;
+  accountAddress: string;
+}
+
+export interface GetLineWithdrawAllowanceProps {
+  network: Network;
+  lineAddress: string;
+  accountAddress: string;
+  id: string;
+}
+
+export interface InterestRateAccrueInterestProps {
+  contractAddress: Address;
+  id: BytesLike;
+  drawnBalance: BigNumber;
+  facilityBalance: BigNumber;
+}
+
+export interface GetLineProps extends GetLineArgs {
+  id: string;
+  network: Network;
+}
+
+export interface GetLinesProps extends GetLinesArgs {
+  network: Network;
+}
+
+export interface GetLinePageProps extends GetLinePageArgs {
+  id: string;
+  network: Network;
+}
+
+export interface SpigotedLineService {
+  claimAndTrade(
+    lineAddress: string,
+    claimToken: Address,
+    zeroExTradeData: BytesLike,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+  claimAndRepay(
+    lineAddress: string,
+    claimToken: Address,
+    calldata: BytesLike,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+  addSpigot(
+    lineAddress: string,
+    revenueContract: Address,
+    setting: ISpigotSetting,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+  isOwner(lineAddress: string): Promise<boolean>;
+  maxSplit(lineAddress: string): Promise<BigNumber>;
+  isBorrowing: (lineAddress: string) => Promise<boolean>;
+  isBorrower: (lineAddress: string) => Promise<boolean>;
+  borrower(lineAddress: string): Promise<Address>;
+  getFirstID(lineAddress: string): Promise<BytesLike>;
+  isSignerBorrowerOrLender(lineAddress: string, id: BytesLike): Promise<boolean>;
+}
+
+export interface ISpigotSetting {
+  token: Address; // token to claim as revenue from contract
+  ownerSplit: BigNumber; // x/100 % to Owner, rest to Treasury
+  claimFunction: Bytes; // function signature on contract to call and claim revenue
+  transferOwnerFunction: Bytes; // function signature on conract to call and transfer ownership
+}
+
+export interface EscrowService {
+  addCollateral(
+    contractAddress: string,
+    amount: BigNumber,
+    token: Address,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+  releaseCollateral(
+    contractAddress: string,
+    amount: BigNumber,
+    token: Address,
+    to: Address,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+  isBorrower(contractAddress: string): Promise<boolean>;
 }
 
 // *************** TOKEN ***************
@@ -204,6 +399,9 @@ export interface ApproveProps {
 
 export interface TransactionService {
   execute: (props: ExecuteTransactionProps) => Promise<TransactionResponse>;
+
+  populateTransaction(props: ExecuteTransactionProps): Promise<PopulatedTransaction>;
+
   handleTransaction: (props: HandleTransactionProps) => Promise<TransactionReceipt>;
 }
 
@@ -215,6 +413,7 @@ export interface ExecuteTransactionProps {
   abi: any;
   contractAddress: Address;
 }
+
 export interface HandleTransactionProps {
   tx: TransactionResponse;
   network: Network;

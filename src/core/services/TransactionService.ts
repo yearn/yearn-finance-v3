@@ -1,3 +1,5 @@
+import { PopulatedTransaction } from '@ethersproject/contracts/src.ts';
+
 import { notify, UpdateNotification } from '@frameworks/blocknative';
 import { getConfig } from '@config';
 import {
@@ -95,6 +97,36 @@ export class TransactionServiceImpl implements TransactionService {
       }
 
       throw error;
+    }
+  }
+
+  public async populateTransaction(props: ExecuteTransactionProps): Promise<PopulatedTransaction> {
+    const { network, methodName, abi, contractAddress, args, overrides } = props;
+
+    let gasFees: GasFees = {};
+    try {
+      if (network === 'mainnet') {
+        // TODO: Analyze if gas service required
+        // gasFees = await this.gasService.getGasFees();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      const txOverrides = {
+        maxFeePerGas: gasFees.maxFeePerGas,
+        maxPriorityFeePerGas: gasFees.maxPriorityFeePerGas,
+        ...overrides,
+      };
+      const txArgs = args ? [...args, txOverrides] : [txOverrides];
+
+      const contract = getContract(contractAddress, abi, this.web3Provider.getInstanceOf('ethereum'));
+
+      return await contract.populateTransaction[methodName](...txArgs);
+    } catch (error: any) {
+      console.log(error);
+      return Promise.reject(error);
     }
   }
 

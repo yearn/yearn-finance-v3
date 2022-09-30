@@ -1,11 +1,13 @@
 import { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
+import { ApolloProvider } from '@apollo/client';
 import '@i18n';
 
 import { Container } from '@container';
 import { getStore } from '@frameworks/redux';
 import { AppContextProvider, NavSideMenuContextProvider } from '@context';
+import { getClient } from '@core/frameworks/gql';
 import { Routes } from '@routes';
 import { Themable } from '@containers';
 
@@ -81,14 +83,16 @@ export const App = () => {
   return (
     <Provider store={store}>
       <AppContextProvider context={container.context}>
-        <NavSideMenuContextProvider>
-          <Themable>
-            <GlobalStyle />
-            <Suspense fallback={null}>
-              <Routes />
-            </Suspense>
-          </Themable>
-        </NavSideMenuContextProvider>
+        <ApolloProvider client={getClient()}>
+          <NavSideMenuContextProvider>
+            <Themable>
+              <GlobalStyle />
+              <Suspense fallback={null}>
+                <Routes />
+              </Suspense>
+            </Themable>
+          </NavSideMenuContextProvider>
+        </ApolloProvider>
       </AppContextProvider>
     </Provider>
   );
