@@ -158,6 +158,7 @@ export interface CreditLineService {
   increaseCredit: (props: IncreaseCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
   depositAndRepay: (props: DepositAndRepayProps) => Promise<TransactionResponse | PopulatedTransaction>;
   depositAndClose: (props: DepositAndCloseProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  deployLineWithNoConfig: (props: any) => Promise<TransactionResponse | PopulatedTransaction>;
 
   // helpers
   getFirstID: (contractAddress: string) => Promise<BytesLike>;

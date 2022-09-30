@@ -1,6 +1,7 @@
 ﻿import { BigNumber, ethers } from 'ethers';
 import { BytesLike, Bytes } from '@ethersproject/bytes/src.ts';
 
+import { getConfig } from '@config';
 import {
   Address,
   CreditLineService,
@@ -17,6 +18,8 @@ import {
   DepositAndCloseProps,
   WithdrawLineProps,
 } from '@types';
+
+const { Arbiter_GOERLI, Oracle_GOERLI, SwapTarget_GOERLI, LineFactory_GOERLI } = getConfig();
 
 export function borrowerLenderHelper(
   creditLineService: CreditLineService,
@@ -63,6 +66,13 @@ export function borrowerLenderHelper(
     }
 
     return (<TransactionResponse>await creditLineService.setRates(props)).hash;
+  };
+
+  const deployLineWithNoConfig = async (props: any): Promise<string> => {
+    const { borrower, ttl } = props;
+    const data = {};
+
+    return (<TransactionResponse>await creditLineService.deployLineWithNoConfig(props)).hash;
   };
 
   const increaseCredit = async (props: IncreaseCreditProps): Promise<string> => {

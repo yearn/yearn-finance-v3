@@ -106,6 +106,19 @@ export class CreditLineServiceImpl implements CreditLineService {
     );
   }
 
+  public async deployLineWithNoConfig(
+    props: any
+  ): Promise<ethers.providers.TransactionResponse | PopulatedTransaction> {
+    return <TransactionResponse>(
+      await this.executeContractMethod(
+        props.factoryAddress,
+        'deploySecuredLine',
+        [props.oracle, props.arbiter, props.borrower, props.ttl, props.swapTarget],
+        false
+      )
+    );
+  }
+
   public async setRates(props: SetRatesProps): Promise<TransactionResponse | PopulatedTransaction> {
     return await this.executeContractMethod(
       props.lineAddress,
