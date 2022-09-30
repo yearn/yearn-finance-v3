@@ -40,7 +40,7 @@ export class TransactionServiceImpl implements TransactionService {
 
     let gasFees: GasFees = {};
     try {
-      if (network === 'goerli') {
+      if (network === 'mainnet') {
         // TODO: Analyze if gas service required
         // gasFees = await this.gasService.getGasFees();
       }
@@ -105,7 +105,7 @@ export class TransactionServiceImpl implements TransactionService {
 
     let gasFees: GasFees = {};
     try {
-      if (network === 'goerli') {
+      if (network === 'mainnet') {
         // TODO: Analyze if gas service required
         // gasFees = await this.gasService.getGasFees();
       }

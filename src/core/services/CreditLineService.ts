@@ -74,7 +74,7 @@ export class CreditLineServiceImpl implements CreditLineService {
     try {
       if (props.dryRun) {
         return await this.transactionService.populateTransaction({
-          network: 'goerli',
+          network: 'mainnet',
           args: [props.drate, props.frate, props.amount, props.token, props.lender],
           methodName: 'addCredit',
           abi: this.abi,
@@ -84,7 +84,7 @@ export class CreditLineServiceImpl implements CreditLineService {
 
       let tx;
       tx = await this.transactionService.execute({
-        network: 'goerli',
+        network: 'mainnet',
         args: [props.drate, props.frate, props.amount, props.token, props.lender],
         methodName: 'addCredit',
         abi: this.abi,
@@ -161,7 +161,7 @@ export class CreditLineServiceImpl implements CreditLineService {
     let props: ExecuteTransactionProps | undefined = undefined;
     try {
       props = {
-        network: 'goerli',
+        network: 'mainnet',
         args: params,
         methodName: methodName,
         abi: this.abi,

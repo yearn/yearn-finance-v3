@@ -72,8 +72,6 @@ const getNetworkIcon = (network: Network) => {
   switch (network) {
     case 'mainnet':
       return EthereumIcon;
-    case 'goerli':
-      return EthereumIcon;
     case 'arbitrum':
       return ArbitrumIcon;
     default:

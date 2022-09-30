@@ -48,7 +48,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   const { CONTRACT_ADDRESSES } = extra.config;
   const { wallet, network, settings } = getState();
   if (isLedgerLive()) {
-    if (network.current !== 'goerli') await dispatch(NetworkActions.changeNetwork({ network: 'goerli' }));
+    if (network.current !== 'mainnet') await dispatch(NetworkActions.changeNetwork({ network: 'mainnet' }));
     if (settings.signedApprovalsEnabled) await dispatch(SettingsActions.toggleSignedApprovals());
     await dispatch(WalletActions.walletSelect({ walletName: 'Iframe', network: 'mainnet' }));
     await dispatch(PartnerActions.changePartner({ id: 'ledger', address: CONTRACT_ADDRESSES.LEDGER }));

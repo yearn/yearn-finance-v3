@@ -22,14 +22,14 @@ const PARTNERS = {
 };
 
 const NETWORK_SETTINGS: NetworkSettings = {
-  goerli: {
+  /*goerli: {
     id: 'goerli',
-    name: 'Ethereum',
+    name: 'Goerli Test Network',
     networkId: 5,
     rpcUrl: 'https://goerli.infura.io/v3/',
     nativeCurrency: {
-      name: 'Ethereum',
-      symbol: 'ETH',
+      name: 'ETH',
+      symbol: 'GoerliETH',
       decimals: 18,
     },
     simulationsEnabled: true,
@@ -37,7 +37,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     notifyEnabled: true,
     blockExplorerUrl: 'https://goerli.etherscan.io/',
     txConfirmations: 2,
-  },
+  },*/
   mainnet: {
     id: 'mainnet',
     name: 'Ethereum',
@@ -81,12 +81,11 @@ export const getConstants = memoize((): Constants => {
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
     DEBT_DAO_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
     DEBT_DAO_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
-    SUPPORTED_NETWORKS: ['mainnet', 'arbitrum', 'goerli'],
+    SUPPORTED_NETWORKS: ['mainnet', 'arbitrum'],
     NETWORK_SETTINGS,
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
-    GOERLI_PROVIDER_HTTPS: 'https://goerli.infura.io/v3/',
     CONTRACT_ADDRESSES: {
       zapIn: '0x8E52522E6a77578904ddd7f528A22521DC4154F5',
       zapOut: '0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c',

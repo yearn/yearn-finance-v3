@@ -32,7 +32,6 @@ describe('Network', () => {
         ${'1'}     | ${'mainnet'}
         ${'2'}     | ${'morden'}
         ${'3'}     | ${'ropsten'}
-        ${'5'}     | ${'goerli'}
         ${'4'}     | ${'rinkeby'}
         ${'42'}    | ${'kovan'}
         ${'250'}   | ${'fantom'}
@@ -49,7 +48,6 @@ describe('Network', () => {
         ${2}      | ${'morden'}
         ${3}      | ${'ropsten'}
         ${4}      | ${'rinkeby'}
-        ${5}     | ${'goerli'}
         ${42}     | ${'kovan'}
         ${250}    | ${'fantom'}
         ${42161}  | ${'arbitrum'}

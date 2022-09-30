@@ -27,8 +27,6 @@ export const ScanNetworkIcon = ({ currentNetwork, blockExplorerUrl, address }: S
     switch (currentNetwork) {
       case 'mainnet':
         return EtherscanIcon;
-      case 'goerli':
-        return EtherscanIcon;
       case 'arbitrum':
         return ArbiscanIcon;
       default:
