@@ -288,7 +288,7 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
     id: selectedCredit?.id || '',
     // icon: selectedCredit?.icon,
     label: selectedCredit?.status,
-    value: selectedCredit?.principal,
+    value: selectedCredit?.principal?.toString(),
   };
 
   if (creditOptions && creditOptions.length > 1) {
@@ -299,7 +299,7 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
           id: item!.id,
           // icon: '',
           label: item!.status,
-          value: selectedCredit?.principal,
+          value: selectedCredit?.principal?.toString(),
         };
       })
       .sort((a, b) => amountToNumber(b.value || '0') - amountToNumber(a.value || '0'));

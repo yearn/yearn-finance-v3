@@ -9,6 +9,10 @@ export const TOKEN_ADDRESSES = {
   WETH: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
   DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
   USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  SUSD: '0x57ab1ec28d129707052df4df418d58a2d46d5f51',
+  LUSD: '0x5f98805a4e8be255a32880fdec7f6728c6568ba0',
+  ALUSD: '0xbc6da0fe9ad5f3b0d58160288917aa56653660e9',
+  RAI: '0x03ab458634910aad20ef5f1c8ee96f1d6ac54919',
   USDT: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
   WBTC: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
 };
@@ -94,7 +98,6 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_LANG: 'en',
     SUPPORTED_LANGS: ['en', 'es', 'ja', 'zh'],
     DUST_AMOUNT_USD: '10000000',
-    DEBT_DAO_SUBGRAPH_ID: '5xMSe3wTNLgFQqsAc5SCVVwT4MiRb5AogJCuSN9PjzXF',
     ASSETS_ICON_URL: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/',
     // ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
   };

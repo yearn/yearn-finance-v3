@@ -18,8 +18,8 @@ export interface Env {
   FORTMATIC_KEY: string | undefined;
   PORTIS_KEY: string | undefined;
   // ZAPPER_API_KEY: string | undefined;
-  DEBT_DAO_SUBGRAPH_KEY: string | undefined;
   GRAPH_API_URL: string | undefined;
+  GRAPH_TEST_API_URL: string | undefined;
 }
 
 export interface Constants {
@@ -51,7 +51,6 @@ export interface Constants {
   DEFAULT_LANG: Language;
   SUPPORTED_LANGS: Language[];
   DUST_AMOUNT_USD: string;
-  DEBT_DAO_SUBGRAPH_ID: string;
   ASSETS_ICON_URL: string;
   // ZAPPER_AUTH_TOKEN: string;
 }

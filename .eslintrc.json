@@ -1,6 +1,6 @@
 {
   "extends": ["react-app", "prettier"],
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "import"],
   "settings": {
     "import/internal-regex": "^@(src|client|assets|components|containers|context|hooks|i18n|routes|themes|config|core|container|services|store|types|scripts|utils|frameworks)"
   },
