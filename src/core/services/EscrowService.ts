@@ -50,9 +50,16 @@ export class EscrowServiceImpl implements EscrowService {
     contractAddress: string,
     amount: BigNumber,
     token: Address,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction> {
-    return await this.executeContractMethod(contractAddress, 'addCollateral', [amount, token], dryRun);
+  ): Promise<string> {
+    if (amount.lte(0)) {
+      throw new Error('Cannot add collateral. Amount is 0 or less');
+    }
+
+    return (<TransactionResponse>await this.executeContractMethod(
+      contractAddress,
+      'addCollateral',
+      [amount, token]
+    )).hash;
   }
 
   public async enableCollateral(
@@ -79,9 +86,20 @@ export class EscrowServiceImpl implements EscrowService {
     amount: BigNumber,
     token: Address,
     to: Address,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction> {
-    return await this.executeContractMethod(contractAddress, 'releaseCollateral', [amount, token, to], dryRun);
+  ): Promise<string> {
+    if (amount.lte(0)) {
+      throw new Error('Cannot release collateral. Amount is 0 or less');
+    }
+
+    if (!(await this.isBorrower(contractAddress))) {
+      throw new Error('Release collateral is not possible because signer is not borrower');
+    }
+
+    return (<TransactionResponse>await this.executeContractMethod(
+        contractAddress,
+        'releaseCollateral',
+        [amount, token, to])
+    ).hash;
   }
 
   private async getSignerAddress(contractAddress: string): Promise<Address> {
@@ -92,7 +110,7 @@ export class EscrowServiceImpl implements EscrowService {
     return (await this.getSignerAddress(contractAddress)) === (await this._getContract(contractAddress).borrower());
   }
 
-  private async executeContractMethod(contractAddress: string, methodName: string, params: any[], dryRun: boolean) {
+  private async executeContractMethod(contractAddress: string, methodName: string, params: any[], dryRun: boolean = false) {
     let props: ExecuteTransactionProps | undefined = undefined;
     try {
       props = {
