@@ -38,6 +38,12 @@ const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
 const StyledSliderCard = styled(SliderCard)``;
 
+const MigrationWarningCard = styled(SliderCard)`
+  background: ${({ theme }) => theme.alerts.warning.background};
+  color: ${({ theme }) => theme.alerts.warning.color};
+  border: 2px solid ${({ theme }) => theme.alerts.warning.background};
+`;
+
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
@@ -161,6 +167,7 @@ export const Labs = () => {
                 external: true,
               },
             ]}
+            alert={t('labs:migrate-warning')}
           />
         );
       case YVBOOST:
@@ -183,6 +190,7 @@ export const Labs = () => {
                 external: true,
               },
             ]}
+            alert={t('labs:migrate-warning')}
           />
         );
       default:
@@ -237,6 +245,17 @@ export const Labs = () => {
               <p>{t('labs:risks-card.desc-1')}</p>
               <p>{t('labs:risks-card.desc-2')}</p>
               <p>{t('labs:risks-card.desc-3')}</p>
+            </Text>
+          }
+        />
+      )}
+
+      {!opportunitiesLoading && currentNetworkSettings.labsEnabled && holdings.length > 0 && (
+        <MigrationWarningCard
+          header={t('labs:migrate-card.header')}
+          Component={
+            <Text>
+              <p>{t('labs:migrate-card.desc-1')}</p>
             </Text>
           }
         />
