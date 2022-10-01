@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Button, Icon, WarningFilledIcon } from '@components/common';
+import { Button, Icon, WarningFilledIcon, RedirectIcon, Text } from '@components/common';
 
 const ActionButtonsContainer = styled.div<{ actions: number }>`
   display: flex;
@@ -40,12 +40,21 @@ const ActionButton = styled(Button)<{ hide?: boolean }>`
   }
 `;
 
+const LinkRedirectIcon = styled(Icon)`
+  display: inline-block;
+  fill: ${({ theme }) => theme.colors.vaultActionButton.color};
+  width: 1rem;
+  margin-left: 0.4rem;
+  padding-bottom: 0.2rem;
+`;
+
 interface ActionButtonsProps {
   actions: Array<{
     name: string;
     handler: () => void;
     disabled?: boolean;
     hide?: boolean;
+    external?: boolean;
   }>;
   alert?: string;
 }
@@ -63,7 +72,7 @@ export const ActionButtons = ({ actions, alert }: ActionButtonsProps) => (
       </AlertButton>
     )}
 
-    {actions.map(({ name, handler, disabled, hide, ...props }) => (
+    {actions.map(({ name, handler, disabled, hide, external, ...props }) => (
       <ActionButton
         className="action-button"
         data-testid={`action-${name.toLowerCase()}`}
@@ -76,7 +85,10 @@ export const ActionButtons = ({ actions, alert }: ActionButtonsProps) => (
         hide={hide}
         {...props}
       >
-        {name}
+        <Text>
+          {name}
+          {external && <LinkRedirectIcon Component={RedirectIcon} />}
+        </Text>
       </ActionButton>
     ))}
   </ActionButtonsContainer>

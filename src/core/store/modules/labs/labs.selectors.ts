@@ -111,12 +111,15 @@ const selectDepositedLabs = createSelector([selectLabs], (labs) => {
 });
 
 const selectLabsOpportunities = createSelector([selectLabs], (labs) => {
-  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).plus(lab?.STAKE.userBalance).lte(0));
+  const opportunities = labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).plus(lab?.STAKE.userBalance).lte(0));
+  // NOTE: current lab opportunities deprecated
+  return opportunities.filter(() => false);
 });
 
 const selectRecommendations = createSelector([selectLabs], (labs) => {
-  // TODO criteria
-  return labs.slice(0, 3).sort((a, b) => Number(b.apyData) - Number(a.apyData));
+  const recommendations = labs.slice(0, 3).sort((a, b) => Number(b.apyData) - Number(a.apyData));
+  // NOTE: current lab opportunities deprecated
+  return recommendations.filter(() => false);
 });
 
 const selectSelectedLab = createSelector([selectLabs, selectSelectedLabAddress], (labs, selectedLabAddress) => {
