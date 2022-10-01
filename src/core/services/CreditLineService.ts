@@ -90,11 +90,15 @@ export class CreditLineServiceImpl implements CreditLineService {
         );
       }
 
-      return (<TransactionResponse>(await this.executeContractMethod(
-        props.lineAddress,
-        'addCredit',
-        [props.drate, props.frate, props.amount, props.token, props.lender],
-      ))).hash;
+      return (<TransactionResponse>(
+        await this.executeContractMethod(props.lineAddress, 'addCredit', [
+          props.drate,
+          props.frate,
+          props.amount,
+          props.token,
+          props.lender,
+        ])
+      )).hash;
     } catch (e) {
       console.log(`An error occured while adding credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);
@@ -119,10 +123,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         throw new Error('Cannot withdraw. Signer is not lender');
       }
       return (<TransactionResponse>(
-        await this.executeContractMethod(
-          props.lineAddress,
-          'withdraw',
-          [props.id, props.amount])
+        await this.executeContractMethod(props.lineAddress, 'withdraw', [props.id, props.amount])
       )).hash;
     } catch (e) {
       console.log(`An error occured while withdrawing credit, error = [${JSON.stringify(e)}]`);
@@ -148,10 +149,8 @@ export class CreditLineServiceImpl implements CreditLineService {
         );
       }
 
-      return (<TransactionResponse>await this.executeContractMethod(
-        props.lineAddress,
-        'setRates',
-        [props.id, props.drate, props.frate],
+      return (<TransactionResponse>(
+        await this.executeContractMethod(props.lineAddress, 'setRates', [props.id, props.drate, props.frate])
       )).hash;
     } catch (e) {
       console.log(`An error occured while setting rate, error = [${JSON.stringify(e)}]`);
@@ -182,10 +181,8 @@ export class CreditLineServiceImpl implements CreditLineService {
         );
       }
 
-      return (<TransactionResponse>await this.executeContractMethod(
-        props.lineAddress,
-        'increaseCredit',
-        [props.id, props.amount],
+      return (<TransactionResponse>(
+        await this.executeContractMethod(props.lineAddress, 'increaseCredit', [props.id, props.amount])
       )).hash;
     } catch (e) {
       console.log(`An error occured while increasing credit, error = [${JSON.stringify(e)}]`);
@@ -193,7 +190,10 @@ export class CreditLineServiceImpl implements CreditLineService {
     }
   }
 
-  public async depositAndRepay(props: DepositAndRepayProps, interestRateCreditService: InterestRateCreditService): Promise<string> {
+  public async depositAndRepay(
+    props: DepositAndRepayProps,
+    interestRateCreditService: InterestRateCreditService
+  ): Promise<string> {
     try {
       if (!(await this.isBorrowing(props.lineAddress))) {
         throw new Error('Deposit and repay is not possible because not borrowing');
@@ -217,12 +217,9 @@ export class CreditLineServiceImpl implements CreditLineService {
         throw new Error('Amount is greater than (principal + interest to be accrued). Enter lower amount.');
       }
 
-
-      return (<TransactionResponse>await this.executeContractMethod(
-          props.lineAddress,
-          'depositAndRepay',
-          [props.amount])
-      ).hash;
+      return (<TransactionResponse>(
+        await this.executeContractMethod(props.lineAddress, 'depositAndRepay', [props.amount])
+      )).hash;
     } catch (e) {
       console.log(`An error occured while depositAndRepay credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);
@@ -237,18 +234,19 @@ export class CreditLineServiceImpl implements CreditLineService {
       if (!(await this.isBorrower(props.lineAddress))) {
         throw new Error('Deposit and close is not possible because signer is not borrower');
       }
-      return (<TransactionResponse>await this.executeContractMethod(
-          props.lineAddress,
-          'depositAndClose',
-          [])
-      ).hash;
+      return (<TransactionResponse>await this.executeContractMethod(props.lineAddress, 'depositAndClose', [])).hash;
     } catch (e) {
       console.log(`An error occured while depositAndClose credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);
     }
   }
 
-  private async executeContractMethod(contractAddress: string, methodName: string, params: any[], dryRun: boolean = false): Promise<TransactionResponse | PopulatedTransaction> {
+  private async executeContractMethod(
+    contractAddress: string,
+    methodName: string,
+    params: any[],
+    dryRun: boolean = false
+  ): Promise<TransactionResponse | PopulatedTransaction> {
     let props: ExecuteTransactionProps | undefined = undefined;
     try {
       props = {

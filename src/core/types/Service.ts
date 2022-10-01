@@ -156,7 +156,10 @@ export interface CreditLineService {
   withdraw: (props: WithdrawLineProps) => Promise<string>;
   setRates: (props: SetRatesProps) => Promise<string>;
   increaseCredit: (props: IncreaseCreditProps) => Promise<string>;
-  depositAndRepay: (props: DepositAndRepayProps, interestRateCreditService: InterestRateCreditService) => Promise<string>;
+  depositAndRepay: (
+    props: DepositAndRepayProps,
+    interestRateCreditService: InterestRateCreditService
+  ) => Promise<string>;
   depositAndClose: (props: DepositAndCloseProps) => Promise<string>;
 
   // helpers
@@ -192,6 +195,7 @@ export interface AddCreditProps {
   drate: BigNumber;
   frate: BigNumber;
   amount: BigNumber;
+  dryRun: boolean;
 }
 
 export interface CloseProps {
@@ -270,24 +274,9 @@ export interface GetLinePageProps extends GetLinePageArgs {
 }
 
 export interface SpigotedLineService {
-  claimAndTrade(
-    lineAddress: string,
-    claimToken: Address,
-    zeroExTradeData: BytesLike,
-    dryRun: boolean
-  ): Promise<string>;
-  claimAndRepay(
-    lineAddress: string,
-    claimToken: Address,
-    calldata: BytesLike,
-    dryRun: boolean
-  ): Promise<string>;
-  addSpigot(
-    lineAddress: string,
-    revenueContract: Address,
-    setting: ISpigotSetting,
-    dryRun: boolean
-  ): Promise<string>;
+  claimAndTrade(lineAddress: string, claimToken: Address, zeroExTradeData: BytesLike, dryRun: boolean): Promise<string>;
+  claimAndRepay(lineAddress: string, claimToken: Address, calldata: BytesLike, dryRun: boolean): Promise<string>;
+  addSpigot(lineAddress: string, revenueContract: Address, setting: ISpigotSetting, dryRun: boolean): Promise<string>;
   isOwner(lineAddress: string): Promise<boolean>;
   maxSplit(lineAddress: string): Promise<BigNumber>;
   isBorrowing: (lineAddress: string) => Promise<boolean>;
@@ -305,12 +294,7 @@ export interface ISpigotSetting {
 }
 
 export interface EscrowService {
-  addCollateral(
-    contractAddress: string,
-    amount: BigNumber,
-    token: Address,
-    dryRun: boolean
-  ): Promise<string>;
+  addCollateral(contractAddress: string, amount: BigNumber, token: Address, dryRun: boolean): Promise<string>;
   releaseCollateral(
     contractAddress: string,
     amount: BigNumber,

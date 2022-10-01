@@ -53,11 +53,7 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
     return getContract(contractAddress.toString(), SpigotedLineABI, this.web3Provider.getSigner().provider);
   }
 
-  public async claimAndTrade(
-    lineAddress: Address,
-    claimToken: Address,
-    zeroExTradeData: BytesLike,
-  ): Promise<string> {
+  public async claimAndTrade(lineAddress: Address, claimToken: Address, zeroExTradeData: BytesLike): Promise<string> {
     if (!(await this.isBorrowing(lineAddress))) {
       throw new Error('Claim and trade is not possible because not borrowing');
     }
@@ -65,43 +61,25 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
       throw new Error('Claim and trade is not possible because signer is not borrower');
     }
 
-    return (<TransactionResponse>await this.executeContractMethod(
-        lineAddress,
-        'claimAndTrade',
-        [claimToken, zeroExTradeData])
-    ).hash;
+    return (<TransactionResponse>(
+      await this.executeContractMethod(lineAddress, 'claimAndTrade', [claimToken, zeroExTradeData])
+    )).hash;
   }
 
-  public async claimAndRepay(
-    lineAddress: Address,
-    claimToken: Address,
-    calldata: BytesLike,
-  ): Promise<string> {
+  public async claimAndRepay(lineAddress: Address, claimToken: Address, calldata: BytesLike): Promise<string> {
     if (!(await this.isBorrowing(lineAddress))) {
       throw new Error('Claim and repay is not possible because not borrowing');
     }
 
-    if (
-      !(await this.isSignerBorrowerOrLender(
-        lineAddress,
-        await this.getFirstID(lineAddress)
-      ))
-    ) {
+    if (!(await this.isSignerBorrowerOrLender(lineAddress, await this.getFirstID(lineAddress)))) {
       throw new Error('Claim and repay is not possible because signer is not borrower or lender');
     }
 
-    return (<TransactionResponse>await this.executeContractMethod(
-        lineAddress,
-        'claimAndRepay',
-        [claimToken, calldata])
-    ).hash;
+    return (<TransactionResponse>await this.executeContractMethod(lineAddress, 'claimAndRepay', [claimToken, calldata]))
+      .hash;
   }
 
-  public async addSpigot(
-    lineAddress: Address,
-    revenueContract: Address,
-    setting: ISpigotSetting,
-  ): Promise<string> {
+  public async addSpigot(lineAddress: Address, revenueContract: Address, setting: ISpigotSetting): Promise<string> {
     if (!(await this.isOwner(lineAddress))) {
       throw new Error('Cannot add spigot. Signer is not owner.');
     }
@@ -118,11 +96,8 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
       throw new Error('Bad setting');
     }
 
-    return (<TransactionResponse>await this.executeContractMethod(
-        lineAddress,
-        'addSpigot',
-        [revenueContract, setting])
-    ).hash;
+    return (<TransactionResponse>await this.executeContractMethod(lineAddress, 'addSpigot', [revenueContract, setting]))
+      .hash;
   }
 
   public async releaseSpigot(
