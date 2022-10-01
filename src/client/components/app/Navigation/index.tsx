@@ -36,13 +36,14 @@ const navLinks: NavigationLink[] = [
     icon: LabsIcon,
     optional: true,
   },
-  {
-    to: 'https://y.finance',
-    text: 'navigation.ycrv',
-    icon: LabsIcon, // TODO: Replace once handed out
-    external: true,
-    optional: true,
-  },
+  // TODO: Add once logo is handed out
+  // {
+  //   to: 'https://y.finance',
+  //   text: 'navigation.ycrv',
+  //   icon: LabsIcon,
+  //   external: true,
+  //   optional: true,
+  // },
   {
     to: 'https://app.ib.xyz',
     text: 'navigation.ironbank',
