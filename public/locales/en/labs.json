@@ -1,7 +1,7 @@
 {
   "migrate-card": {
-    "desc-1": "yveCRV and yvBOOST tokens are no longer supported and will not continue generating yield, but you can easily migrate them to our new and improved tokens and start earning that sweet sweet yield.",
-    "header": "Supercharge your yield with yCRV"
+    "desc-1": "yveCRV and yvBOOST are no longer support and do not earn yield. But there's good news, you can easily migrate to our new and improved tokens for the best CRV yields in DeFi.",
+    "header": "Attn: Migrate to supercharge your yield with yCRV"
   },
   "no-labs-card": {
     "header": "No Labs yet on {{network}}",
