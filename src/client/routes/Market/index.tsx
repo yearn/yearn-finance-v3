@@ -234,7 +234,7 @@ export const Market = () => {
 
     console.log('should fetch', shouldFetch, cuirrentCategories);
     if (shouldFetch) fetchMarketData();
-  }, [queryParams.search, lineCategoriesForDisplay]);
+  }, []);
 
   useEffect(() => {
     const searchableKeys = ['name', 'displayName', 'token.symbol', 'token.name'];

@@ -151,13 +151,16 @@ export interface CreditLineService {
   getUserLinePositions: (...args: any) => Promise<any | undefined>;
   getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;
 
-  addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
-  close: (props: CloseProps) => Promise<TransactionResponse>;
-  withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse>;
-  setRates: (props: SetRatesProps) => Promise<TransactionResponse | PopulatedTransaction>;
-  increaseCredit: (props: IncreaseCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
-  depositAndRepay: (props: DepositAndRepayProps) => Promise<TransactionResponse | PopulatedTransaction>;
-  depositAndClose: (props: DepositAndCloseProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  addCredit: (props: AddCreditProps) => Promise<string>;
+  close: (props: CloseProps) => Promise<string>;
+  withdraw: (props: WithdrawLineProps) => Promise<string>;
+  setRates: (props: SetRatesProps) => Promise<string>;
+  increaseCredit: (props: IncreaseCreditProps) => Promise<string>;
+  depositAndRepay: (
+    props: DepositAndRepayProps,
+    interestRateCreditService: InterestRateCreditService
+  ) => Promise<string>;
+  depositAndClose: (props: DepositAndCloseProps) => Promise<string>;
 
   // helpers
   getFirstID: (contractAddress: string) => Promise<BytesLike>;
@@ -186,17 +189,16 @@ export interface CreditLineService {
 }
 
 export interface AddCreditProps {
-  dryRun: boolean;
   lineAddress: string;
   token: Address;
   lender: Address;
   drate: BigNumber;
   frate: BigNumber;
   amount: BigNumber;
+  dryRun: boolean;
 }
 
 export interface CloseProps {
-  dryRun: boolean;
   lineAddress: string;
   id: string;
 }
@@ -214,19 +216,16 @@ export interface SetRatesProps {
   drate: BigNumber;
 }
 export interface IncreaseCreditProps {
-  dryRun: boolean;
   lineAddress: string;
   id: string;
   amount: BigNumber;
 }
 export interface DepositAndRepayProps {
-  dryRun: boolean;
   lineAddress: string;
   id: string;
   amount: BigNumber;
 }
 export interface DepositAndCloseProps {
-  dryRun: boolean;
   lineAddress: string;
   id: string;
 }
@@ -275,24 +274,9 @@ export interface GetLinePageProps extends GetLinePageArgs {
 }
 
 export interface SpigotedLineService {
-  claimAndTrade(
-    lineAddress: string,
-    claimToken: Address,
-    zeroExTradeData: BytesLike,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
-  claimAndRepay(
-    lineAddress: string,
-    claimToken: Address,
-    calldata: BytesLike,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
-  addSpigot(
-    lineAddress: string,
-    revenueContract: Address,
-    setting: ISpigotSetting,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  claimAndTrade(lineAddress: string, claimToken: Address, zeroExTradeData: BytesLike, dryRun: boolean): Promise<string>;
+  claimAndRepay(lineAddress: string, claimToken: Address, calldata: BytesLike, dryRun: boolean): Promise<string>;
+  addSpigot(lineAddress: string, revenueContract: Address, setting: ISpigotSetting, dryRun: boolean): Promise<string>;
   isOwner(lineAddress: string): Promise<boolean>;
   maxSplit(lineAddress: string): Promise<BigNumber>;
   isBorrowing: (lineAddress: string) => Promise<boolean>;
@@ -310,19 +294,14 @@ export interface ISpigotSetting {
 }
 
 export interface EscrowService {
-  addCollateral(
-    contractAddress: string,
-    amount: BigNumber,
-    token: Address,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  addCollateral(contractAddress: string, amount: BigNumber, token: Address, dryRun: boolean): Promise<string>;
   releaseCollateral(
     contractAddress: string,
     amount: BigNumber,
     token: Address,
     to: Address,
     dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  ): Promise<string>;
   isBorrower(contractAddress: string): Promise<boolean>;
 }
 
