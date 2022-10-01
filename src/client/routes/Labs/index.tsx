@@ -146,14 +146,6 @@ export const Labs = () => {
           <ActionButtons
             actions={[
               {
-                name: t('components.transaction.lock'),
-                handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' }));
-                },
-                disabled: !walletIsConnected,
-              },
-              {
                 name: t('components.transaction.claim'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
@@ -162,12 +154,11 @@ export const Labs = () => {
                 disabled: !walletIsConnected,
               },
               {
-                name: t('components.transaction.reinvest'),
+                name: t('components.transaction.migrate'),
                 handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherReinvestTx' }));
+                  window.location.href = 'https://y.finance';
                 },
-                disabled: !walletIsConnected,
+                external: true,
               },
             ]}
           />
@@ -177,20 +168,19 @@ export const Labs = () => {
           <ActionButtons
             actions={[
               {
-                name: t('components.transaction.deposit'),
-                handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
-                },
-                disabled: !walletIsConnected,
-              },
-              {
                 name: t('components.transaction.withdraw'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
                   dispatch(ModalsActions.openModal({ modalName: 'labWithdrawTx' }));
                 },
                 disabled: !walletIsConnected,
+              },
+              {
+                name: t('components.transaction.migrate'),
+                handler: () => {
+                  window.location.href = 'https://y.finance';
+                },
+                external: true,
               },
             ]}
           />
