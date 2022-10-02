@@ -58,6 +58,9 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [transactionCompleted, setTransactionCompleted] = useState(false);
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [targetTokenAmount, setTargetTokenAmount] = useState('10000000');
+  const [creditLineAddressExample, setCreditlineAddressExample] = useState(
+    '0x3eb4ede48e3e808677d1b4f751ebb4042112a070'
+  );
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');
   const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
@@ -130,6 +133,12 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   };
 
   const approveCreditPosition = () => {
+    if (selectedSellTokenAddress === undefined) {
+      return;
+    }
+    dispatch(
+      LinesActions.approveDeposit({ lineAddress: creditLineAddressExample, tokenAddress: selectedSellTokenAddress })
+    );
     setTransactionApproved(!transactionApproved);
   };
 
@@ -137,14 +146,25 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     let bigNumDRate = toBN(drate);
     let bigNumFRate = toBN(frate);
 
-    dispatch(LinesActions.addCredit({ 
-      '',
-      bigNumDRate,
-      bigNumFRate,
-      targetTokenAmount,
-      selectedSellToken,
-      '0xc0163E58648b247c143023CFB26C2BAA42C9d9A9'
-    })).then((res) => {
+    console.log(bigNumDRate, bigNumFRate);
+
+    if (!creditLineAddressExample || !selectedSellTokenAddress || !targetTokenAmount) {
+      return;
+    }
+
+    dispatch(
+      LinesActions.addCredit({
+        lineAddress: creditLineAddressExample,
+        //@ts-ignore
+        drate: bigNumDRate,
+        //@ts-ignore
+        frate: bigNumFRate,
+        //@ts-ignore
+        amount: targetTokenAmount,
+        token: selectedSellTokenAddress,
+        lender: '0xc0163E58648b247c143023CFB26C2BAA42C9d9A9',
+      })
+    ).then((res) => {
       console.log('working ', res);
       setTransactionCompleted(true);
     });
