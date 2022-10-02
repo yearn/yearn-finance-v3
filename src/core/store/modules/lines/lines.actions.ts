@@ -202,7 +202,7 @@ const addCredit = createAsyncThunk<void, AddCreditProps, ThunkAPI>(
   async ({ lineAddress, drate, frate, amount, token, lender }, { extra, getState, dispatch }) => {
     const { network, wallet, lines, tokens, app } = getState();
     const { services } = extra;
-
+    console.log('look here', network, wallet, lineAddress, drate, frate, amount, token, lender);
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 

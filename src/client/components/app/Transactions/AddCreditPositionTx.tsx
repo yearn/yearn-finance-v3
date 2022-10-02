@@ -14,7 +14,7 @@ import {
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
 import { Address, Token, Asset, TokenView, CreditLine } from '@src/core/types';
-import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions } from '@store';
+import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -134,7 +134,20 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   };
 
   const addCreditPosition = () => {
-    setTransactionCompleted(true);
+    let bigNumDRate = toBN(drate);
+    let bigNumFRate = toBN(frate);
+
+    dispatch(LinesActions.addCredit({ 
+      '',
+      bigNumDRate,
+      bigNumFRate,
+      targetTokenAmount,
+      selectedSellToken,
+      '0xc0163E58648b247c143023CFB26C2BAA42C9d9A9'
+    })).then((res) => {
+      console.log('working ', res);
+      setTransactionCompleted(true);
+    });
   };
 
   const txActions = [
