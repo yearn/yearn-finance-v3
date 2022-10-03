@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
-import { WalletIcon, VaultIcon, LabsIcon, SettingsIcon, IronBankIcon } from '@components/common';
+import { WalletIcon, VaultIcon, LabsIcon, SettingsIcon, IronBankIcon, YcrvIcon } from '@components/common';
 
 import { NavSidebar } from './NavSidebar';
 import { NavTabbar } from './NavTabbar';
@@ -36,14 +36,13 @@ const navLinks: NavigationLink[] = [
     icon: LabsIcon,
     optional: true,
   },
-  // TODO: Add once logo is handed out
-  // {
-  //   to: 'https://y.finance',
-  //   text: 'navigation.ycrv',
-  //   icon: LabsIcon,
-  //   external: true,
-  //   optional: true,
-  // },
+  {
+    to: 'https://y.finance',
+    text: 'navigation.ycrv',
+    icon: YcrvIcon,
+    external: true,
+    optional: true,
+  },
   {
     to: 'https://app.ib.xyz',
     text: 'navigation.ironbank',
