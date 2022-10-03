@@ -49,12 +49,12 @@ const navLinks: NavigationLink[] = [
     icon: IronBankIcon,
     external: true,
     optional: true,
+    hideMobile: true,
   },
   {
     to: '/settings',
     text: 'navigation.settings',
     icon: SettingsIcon,
-    // hideMobile: true,
   },
 ];
 
