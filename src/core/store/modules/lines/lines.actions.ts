@@ -181,7 +181,7 @@ const deploySecuredLine = createAsyncThunk<
   const { network } = getState();
   const { creditLineService } = extra.services;
   const deployedLineData = await creditLineService.deploySecuredLine({
-    network: network.current,
+    network: 'goerli',
     ...deployData,
   });
 

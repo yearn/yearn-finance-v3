@@ -127,7 +127,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         data.factoryAddress,
         'deploySecuredLine',
         [data.oracle, data.arbiter, data.borrower, data.ttl, data.swapTarget],
-        false
+        true
       )
     );
   }
@@ -162,15 +162,12 @@ export class CreditLineServiceImpl implements CreditLineService {
     let props: ExecuteTransactionProps | undefined = undefined;
     try {
       props = {
-        network: 'mainnet',
+        network: 'goerli',
         args: params,
         methodName: methodName,
         abi: this.abi,
         contractAddress: contractAddress,
       };
-      if (dryRun) {
-        return await this.transactionService.populateTransaction(props);
-      }
 
       const tx = await this.transactionService.execute(props);
       await tx.wait();
