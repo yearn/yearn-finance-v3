@@ -226,9 +226,11 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     }
   };
 
+  const shouldSign = signedApprovalsEnabled && zapService !== 'widoZapOut';
+
   const approve = async () => {
     try {
-      if (signedApprovalsEnabled) {
+      if (shouldSign) {
         const signResult = await dispatchAndUnwrap(
           VaultsActions.signZapOut({
             vaultAddress: selectedVault.address,
@@ -262,7 +264,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const txActions = [
     {
-      label: signedApprovalsEnabled ? t('components.transaction.sign') : t('components.transaction.approve'),
+      label: shouldSign ? t('components.transaction.sign') : t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveZapOut,
       disabled: isApproved || isFetchingAllowance,
