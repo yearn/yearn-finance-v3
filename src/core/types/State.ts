@@ -8,7 +8,7 @@ import {
   LineActionsStatusMap,
   CreditLinePage,
   UserLineMetadataStatusMap,
-  CreditLine,
+  AggregatedCreditLine,
   PositionSummary,
 } from './CreditLine';
 import {
@@ -104,7 +104,7 @@ export interface VaultTransaction {
 
 export interface CreditLineState {
   selectedLineAddress: string | undefined;
-  linesMap: { [lineAddress: string]: CreditLine };
+  linesMap: { [lineAddress: string]: AggregatedCreditLine };
   // probs can just consolidate line/linePage since we need a lot of derived data in linePage for basic functionality
   pagesMap: { [lineAddress: string]: CreditLinePage };
   categories: { [category: string]: string[] };

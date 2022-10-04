@@ -7,10 +7,8 @@ import { gql } from '@apollo/client';
 const TOKEN_FRAGMENT = gql`
   fragment TokenFrag on Token {
     id
-    name
     symbol
     decimals
-    lastPriceUSD
   }
 `;
 

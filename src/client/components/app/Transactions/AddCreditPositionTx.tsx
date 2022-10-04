@@ -13,7 +13,7 @@ import {
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { Address, Token, Asset, TokenView, CreditLine } from '@src/core/types';
+import { Address, Token, Asset, TokenView, AggregatedCreditLine } from '@src/core/types';
 import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
@@ -139,7 +139,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         headerText={t('components.transaction.add-credit.select-credit')}
         inputText={t('components.transaction.add-credit.select-credit')}
         onSelectedCreditLineChange={onSelectedCreditLineChange}
-        selectedCredit={selectedCredit as CreditLine}
+        selectedCredit={selectedCredit as AggregatedCreditLine}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={false}

@@ -4,7 +4,7 @@ import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { ThunkAPI } from '@frameworks/redux';
 import {
   Position,
-  CreditLine,
+  AggregatedCreditLine,
   CreditLinePage,
   TransactionOutcome,
   // LinesUserSummary,
@@ -61,7 +61,7 @@ const clearLineStatus = createAction<{ lineAddress: string }>('lines/clearLineSt
 //   }
 // );
 
-const getLine = createAsyncThunk<{ lineData: CreditLine | undefined }, GetLineArgs, ThunkAPI>(
+const getLine = createAsyncThunk<{ lineData: AggregatedCreditLine | undefined }, GetLineArgs, ThunkAPI>(
   'lines/getLine',
   async (params, { getState, extra }) => {
     const { network } = getState();
@@ -72,7 +72,7 @@ const getLine = createAsyncThunk<{ lineData: CreditLine | undefined }, GetLineAr
 );
 
 const getLines = createAsyncThunk<
-  { linesData: { [category: string]: CreditLine[] | undefined } },
+  { linesData: { [category: string]: AggregatedCreditLine[] | undefined } },
   UseCreditLinesParams,
   ThunkAPI
 >('lines/getLines', async (categories, { getState, extra }) => {
@@ -402,7 +402,7 @@ const withdrawLine = createAsyncThunk<
     const lineData = lines.linesMap[lineAddress];
     const userLineData = lines.user.linePositions[lineAddress];
     // selector for UserPositionMetadata to get available liquidity
-    const available = userLineData.deposit - userLineData.principal;
+    const available = userLineData.deposit.sub(userLineData.principal);
     // if requesting more than available or max available
     const withdrawAll = amount.eq(config.MAX_UINT256) || amount.gte(available);
     const amountOfShares = withdrawAll ? available : amount;

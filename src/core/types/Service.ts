@@ -21,9 +21,9 @@ import {
   Overrides,
   Network,
   TokenAllowance,
-  Credit,
-  CreditLine,
+  AggregatedCreditLine,
   CreditLinePage,
+  Credit,
   PositionSummary,
   GetLineArgs,
   GetLinesArgs,
@@ -144,9 +144,8 @@ export interface InterestRateCreditService {
 }
 
 export interface CreditLineService {
-  // getters
-  getLine: (props: GetLineProps) => Promise<CreditLine | undefined>;
-  getLines: (props: GetLinesProps) => Promise<CreditLine[] | undefined>;
+  getLine: (props: GetLineProps) => Promise<AggregatedCreditLine | undefined>;
+  getLines: (props: GetLinesProps) => Promise<AggregatedCreditLine[] | undefined>;
   getLinePage: (props: GetLinePageProps) => Promise<CreditLinePage | undefined>;
   getUserLinePositions: (...args: any) => Promise<any | undefined>;
   getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;

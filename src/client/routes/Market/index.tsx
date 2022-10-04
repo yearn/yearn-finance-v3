@@ -4,14 +4,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 
-import {
-  useAppSelector,
-  useAppDispatch,
-  useIsMounting,
-  useAppTranslation,
-  useQueryParams,
-  useCreditLines,
-} from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation, useQueryParams } from '@hooks';
 import {
   ModalsActions,
   ModalSelectors,
@@ -51,7 +44,7 @@ import {
   filterData,
 } from '@utils';
 import { getConfig } from '@config';
-import { CreditLine, VaultView, UseCreditLinesParams, GetLinesArgs, AddCreditProps } from '@src/core/types';
+import { AggregatedCreditLine, VaultView, UseCreditLinesParams, GetLinesArgs, AddCreditProps } from '@src/core/types';
 import { GoblinTown } from '@assets/images';
 
 const StyledHelperCursor = styled.span`
@@ -306,7 +299,7 @@ export const Market = () => {
       {getLinesStatus.loading || _.isEmpty(lineCategoriesForDisplay) ? (
         <SpinnerLoading flex="1" width="100%" />
       ) : (
-        Object.entries(lineCategoriesForDisplay!).map(([key, val]: [string, CreditLine[]], i: number) => {
+        Object.entries(lineCategoriesForDisplay!).map(([key, val]: [string, AggregatedCreditLine[]], i: number) => {
           const CardStyle = i % 2 === 0 ? StyledRecommendationsCard : LineCard;
           return (
             <CardStyle

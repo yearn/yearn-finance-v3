@@ -5,7 +5,7 @@ import { getEnv } from '@config/env';
 import { GET_LINE_QUERY, GET_LINE_PAGE_QUERY, GET_LINES_QUERY } from '@config/constants/queries';
 import {
   BaseCreditLine,
-  CreditLine,
+  AggregatedCreditLine,
   GetLineArgs,
   GetLinePageArgs,
   GetLinesArgs,
@@ -64,9 +64,9 @@ export const createQuery =
 
 const getLineQuery = createQuery(GET_LINE_QUERY);
 
-export const getLine: QueryCreator<GetLineArgs, CreditLine> = <GetLineArgs, CreditLine>(
+export const getLine: QueryCreator<GetLineArgs, AggregatedCreditLine> = <GetLineArgs, AggregatedCreditLine>(
   arg: GetLineArgs
-): QueryResponse<CreditLine> => getLineQuery(arg);
+): QueryResponse<AggregatedCreditLine> => getLineQuery(arg);
 
 const getLinePageQuery = createQuery(GET_LINE_PAGE_QUERY);
 export const getLinePage: QueryCreator<GetLinePageArgs, GetLinePageResponse> = <GetLinePageArgs, GetLinePageResponse>(
@@ -74,9 +74,9 @@ export const getLinePage: QueryCreator<GetLinePageArgs, GetLinePageResponse> = <
 ): QueryResponse<GetLinePageResponse> => getLinePageQuery(arg);
 
 const getLinesQuery = createQuery(GET_LINES_QUERY, 'lineOfCredits');
-export const getLines: QueryCreator<GetLinesArgs, CreditLine[]> = <GetLinesArgs, CreditLine>(
+export const getLines: QueryCreator<GetLinesArgs, AggregatedCreditLine[]> = <GetLinesArgs, AggregatedCreditLine>(
   arg: GetLinesArgs
-): QueryResponse<CreditLine[]> => getLinesQuery(arg);
+): QueryResponse<AggregatedCreditLine[]> => getLinesQuery(arg);
 
 const getUserLinePositionsQuery = createQuery(GET_LINES_QUERY);
 export const getUserLinePositions: QueryCreator<GetUserLinePositionsArgs, PositionSummary[]> = <

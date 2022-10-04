@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { BigNumber } from 'ethers';
 
 import { FlatCard, FlatCardHeader, FlatCardContent, Text, Icon, ChevronRightIcon } from '@components/common';
 import { TokenIcon } from '@components/app';
@@ -135,8 +136,8 @@ interface Item {
   icon: string;
   name: string;
   info: string;
-  principal: string | number | Promise<number>;
-  deposit: string | number | Promise<number>;
+  principal: any; // TODO BigNumber
+  deposit: any; // TODO BigNumber
   tags?: string[];
   infoDetail?: string;
   action?: string;

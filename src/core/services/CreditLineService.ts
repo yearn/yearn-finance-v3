@@ -5,7 +5,7 @@ import { keccak256 } from 'ethers/lib/utils';
 import {
   CreditLineService,
   YearnSdk,
-  CreditLine,
+  AggregatedCreditLine,
   TransactionService,
   Web3Provider,
   Config,
@@ -224,11 +224,11 @@ export class CreditLineServiceImpl implements CreditLineService {
     return signer === credit.lender || signer === (await this.contract.borrower());
   }
 
-  public async getLine(props: GetLineProps): Promise<CreditLine | undefined> {
+  public async getLine(props: GetLineProps): Promise<AggregatedCreditLine | undefined> {
     return;
   }
 
-  public async getLines(prop: GetLinesProps): Promise<CreditLine[] | undefined> {
+  public async getLines(prop: GetLinesProps): Promise<AggregatedCreditLine[] | undefined> {
     const response = getLines(prop)
       .then((data) => formatGetLinesData(data))
       .catch((err) => {

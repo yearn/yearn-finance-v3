@@ -1,7 +1,11 @@
+import { isEmpty } from 'lodash';
+import { BigNumber } from 'ethers';
+
 import {
   GetLinePageResponse,
   CreditLinePage,
-  CreditLine,
+  RevenueContract,
+  AggregatedCreditLine,
   Spigot,
   CreditLineEvents,
   CollateralEvent,
@@ -102,7 +106,7 @@ export const formatCollateralEvents = (
 };
 /** Formatting functions. from GQL structured response to flat data for redux state  */
 
-export function formatGetLinesData(response: any[]): CreditLine[] {
+export function formatGetLinesData(response: any[]): AggregatedCreditLine[] {
   return response.map((data: any) => {
     const {
       borrower: { id: borrower },
@@ -140,13 +144,14 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
   // derivative or aggregated data we need to compute and store while mapping position data
 
   // position id and APY
-  const highestApy: [string, string, number] = ['', '', 0];
+  const highestApy: [string, string, BigNumber] = ['', '', BigNumber.from(0)];
   const activeIds: string[] = [];
   // aggregated revenue in USD by token across all spigots
-  const tokenRevenue: { [key: string]: number } = {};
-  const principal = 0;
-  const deposit = 0;
-  const interest = 0;
+  const tokenRevenue: { [key: string]: BigNumber } = {};
+  const principal = BigNumber.from(0);
+  const deposit = BigNumber.from(0);
+  const interest = BigNumber.from(0);
+  const totalInterestRepaid = BigNumber.from(0);
   //  all recent Spigot and Escrow events
   let collateralEvents: CollateralEvent[] = [];
   //  all recent borrow/lend events
@@ -184,22 +189,26 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
       },
     };
   }, {});
-  const formattedSpigotsData = spigot?.spigots?.reduce((obj: any, s: any): { [key: string]: Spigot } => {
-    const {
-      id,
-      token: { symbol, lastPriceUSD },
-      active,
-      contract,
-      startTime,
-      events,
-    } = s;
-    collateralEvents = [
-      ...collateralEvents,
-      ...formatCollateralEvents(SPIGOT_MODULE_NAME, symbol, lastPriceUSD, events, tokenRevenue)[1],
-    ];
-    return { ...obj, [id]: { active, contract, symbol, startTime, lastPriceUSD } };
-  }, {});
-  const formattedEscrowData = escrow?.deposits?.reduce((obj: any, d: any) => {
+  const formattedSpigotsData = Object.values(spigot?.spigots ?? {}).reduce(
+    (obj: any, s: any): { [key: string]: RevenueContract } => {
+      const {
+        id,
+        token: { symbol, lastPriceUSD },
+        active,
+        contract,
+        startTime,
+        ownerSplit,
+        events,
+      } = s;
+      collateralEvents = [
+        ...collateralEvents,
+        ...formatCollateralEvents(SPIGOT_MODULE_NAME, symbol, lastPriceUSD, events, tokenRevenue)[1],
+      ];
+      return { ...obj, [id]: s };
+    },
+    {}
+  );
+  const formattedEscrowData = Object.values(escrow?.deposits ?? {}).reduce((obj: any, d: any) => {
     const {
       id,
       amount,
@@ -214,6 +223,13 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
     return { ...obj, [id]: { symbol, currentUsdPrice, amount, enabled } };
   }, {});
 
+  const spigotData = isEmpty(spigot?.spigots)
+    ? undefined
+    : {
+        ...spigot!,
+        tokenRevenue,
+        spigots: formattedSpigotsData,
+      };
   const pageData: CreditLinePage = {
     // metadata
     ...metadata,
@@ -223,8 +239,8 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
     principal,
     deposit,
     interest,
+    totalInterestRepaid,
     highestApy,
-    tokenRevenue,
     activeIds,
     // all recent events
     collateralEvents,
@@ -232,8 +248,8 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
 
     credits: formattedCredits,
     // collateral data
-    spigot: !spigot?.spigots?.length ? undefined : { spigots: formattedSpigotsData },
-    escrow: !escrow?.deposits?.length ? undefined : { deposits: formattedEscrowData },
+    spigot: spigotData,
+    escrow: isEmpty(escrow?.deposits) ? undefined : { ...escrow!, deposits: formattedEscrowData },
   };
 
   return pageData;

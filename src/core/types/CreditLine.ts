@@ -27,57 +27,36 @@ export type LineStatusTypes =
 export interface BaseCreditLine {
   id: Address;
   type?: string;
-  status: LineStatusTypes;
-  borrower: Address;
-
-  principal: number | Promise<number>;
-  deposit: number | Promise<number>;
-  activeIds: string[]; // ids for all open positions
-}
-
-export interface CreditLine extends BaseCreditLine {
-  // TODO: beef up this type so it has everything we need for homepage cards
-  // TODO: replace BaseCreditLine with CreditLine in State.CreditLine and actinos/selectors
-  id: Address;
-  end: number;
   start: number;
-  type?: string;
+  end: number;
   status: LineStatusTypes;
   borrower: Address;
-
-  principal: number | Promise<number>; // single largest debt
-  deposit: number | Promise<number>; // single largest deposit
-  activeIds: string[];
-
+  credits?: { [key: string]: BaseCreditPosition };
   escrow?: { id: Address };
   spigot?: { id: Address };
 }
 
-export interface CreditLinePage extends BaseCreditLine {
-  id: Address;
-  end: number;
-  start: number;
-  type?: string;
-  status: LineStatusTypes;
-  borrower: Address;
+export interface AggregatedCreditLine extends BaseCreditLine {
+  // real-time aggregate usd value across all credits
+  principal?: BigNumber | Promise<BigNumber>;
+  deposit: BigNumber | Promise<BigNumber>;
+  interest?: BigNumber | Promise<BigNumber>;
+  // id, symbol, APY (4 decimals)
+  highestApy: [string, string, BigNumber];
 
-  // real-time aggregate usd value across all positions
-  principal: number | Promise<number>;
-  deposit: number | Promise<number>;
-  interest: number | Promise<number>;
-
-  // id, symbol, APR (4 decimals)
-  highestApy: [string, string, number];
-  // total aggregated revenue in USD by token across all spigots
-  tokenRevenue: { [key: string]: number };
-
-  // subgraph id -> depsoit/spigot
   activeIds: string[];
+
+  credits?: { [key: string]: BaseCreditPosition };
+
+  escrow?: AggregatedEscrow;
+  spigot?: AggregatedSpigot;
+}
+
+export interface CreditLinePage extends AggregatedCreditLine {
+  // total value of asssets repaid *AT TIME OF REPAYMENT*
+  totalInterestRepaid: BigNumber | Promise<BigNumber>;
+
   credits?: { [key: string]: LinePageCreditPosition };
-  escrow?: { [key: string]: Escrow };
-  spigot?: {
-    spigots?: { [key: string]: Spigot };
-  };
 
   collateralEvents: CollateralEvent[];
   creditEvents: CreditLineEvents[];
@@ -87,11 +66,12 @@ export interface CreditLinePage extends BaseCreditLine {
 export interface BaseCreditPosition {
   id: string;
   lender: Address;
-  principal: number;
-  interestAccrued: number;
-  interestRepaid: number;
-  events?: CreditLineEvents[];
+  token: { id: Address };
+  principal: BigNumber;
+  interestAccrued: BigNumber;
+  interestRepaid: BigNumber;
 }
+
 export interface Credit {
   deposit: BigNumber;
   principal: BigNumber;
@@ -105,15 +85,18 @@ export interface Credit {
 export interface LinePageCreditPosition extends BaseCreditPosition {
   id: string;
   lender: Address;
-  deposit: number;
-  principal: number;
-  interestAccrued: number;
-  interestRepaid: number;
-  drawnRate: number;
+  deposit: BigNumber;
+  principal: BigNumber;
+  interestAccrued: BigNumber;
+  interestRepaid: BigNumber;
+  totalInterestRepaid: BigNumber;
+  drawnRate: BigNumber;
   token: {
+    id: Address;
     symbol: string;
-    lastPriceUSD?: number; // Can be live data or from subgraph
+    lastPriceUSD?: BigNumber; // Can be live data or from subgraph
   };
+  events?: CreditLineEvents[];
 }
 
 // bare minimum to display about a user on a position
@@ -128,8 +111,8 @@ type PositionRole = LenderRole | BorrowerRole | ArbiterRole;
 
 export interface UserPositionMetadata {
   role: PositionRole; // borrower/lender/arbiter
-  amount: number; // principal/deposit/collateral
-  available: number; // borrowable/withdrawable/liquidatable
+  amount: BigNumber; // principal/deposit/collateral
+  available: BigNumber; // borrowable/withdrawable/liquidatable
 }
 
 export interface PositionSummary {
@@ -138,10 +121,10 @@ export interface PositionSummary {
   lender: Address;
   token: Address;
   line: Address;
-  deposit: number;
-  principal: number;
-  drate: number;
-  frate: number;
+  deposit: BigNumber;
+  principal: BigNumber;
+  drate: BigNumber;
+  frate: BigNumber;
 }
 
 export interface UserPositionSummary extends PositionSummary, UserPositionMetadata {
@@ -150,58 +133,50 @@ export interface UserPositionSummary extends PositionSummary, UserPositionMetada
   lender: Address;
   line: Address;
   token: Address;
-  drate: number;
-  frate: number;
+  drate: BigNumber;
+  frate: BigNumber;
   // if connected wallet is lender/borrower
   role: PositionRole;
-  amount: number; // principal/deposit
-  available: number; // borrowerable/withdrawable
+  amount: BigNumber; // principal/deposit
+  available: BigNumber; // borrowerable/withdrawable
 }
 
 // Collateral Module Types
 export interface Collateral {
   token: Address;
-  amount: number;
-  value: number;
+  amount: BigNumber;
+  value: BigNumber;
 }
 
 export interface BaseEscrow {
   id: Address;
-  cratio: number;
-  minCRatio: number;
-  collateralValue: number;
+  cratio: BigNumber;
+  minCRatio: BigNumber;
+  collateralValue: BigNumber;
 }
 
-export interface Escrow extends BaseEscrow {
+export interface AggregatedEscrow extends BaseEscrow {
   id: Address;
-  cratio: number;
-  minCRatio: number;
-  collateralValue: number;
+  cratio: BigNumber;
+  minCRatio: BigNumber;
+  collateralValue: BigNumber;
   deposits?: {
-    amount: number;
-    enabled: boolean;
-    token: BaseToken;
-  }[];
-  events?: {
-    __typename: string;
-    timestamp: number;
-    amount?: number;
-    value?: number;
-  }[];
+    [token: string]: {
+      amount: BigNumber;
+      enabled: boolean;
+      token: BaseToken;
+    };
+  };
 }
 
 export interface Spigot {
-  startTime: string;
-  active: boolean;
-  token: BaseToken;
-  spigots?: RevenueContract[];
+  id: Address;
+  spigots?: { [address: string]: RevenueContract };
 }
 
-export interface LinePageSpigot {
-  startTime: string;
-  active: boolean;
-  // aggregate token revenue accross all spigots
-  spigots?: RevenueContract[];
+export interface AggregatedSpigot extends Spigot {
+  // aggregated revenue in USD by token across all spigots
+  tokenRevenue: { [key: string]: BigNumber };
 }
 
 export interface RevenueContract {
@@ -216,10 +191,8 @@ export interface RevenueContract {
 
 export interface BaseToken {
   id: Address;
-  name: string;
   symbol: string;
   decimals: number;
-  lastPriceUSD?: number;
 }
 
 type SPIGOT_NAME = 'spigot';

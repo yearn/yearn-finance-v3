@@ -5,11 +5,10 @@ import {
   RootState,
   Status,
   LineActionsStatusMap,
-  CreditLine,
+  AggregatedCreditLine,
   Token,
   Balance,
   AllowancesMap,
-  BaseCreditLine,
   GetLinePageResponse,
   UserPositionMetadata,
   Address,
@@ -59,8 +58,8 @@ const selectLines = createSelector([selectLinesMap], (linesMap) => {
   return Object.values(linesMap);
 });
 
-const selectLiveLines = createSelector([selectLines], (lines): CreditLine[] => {
-  return lines.filter((line: CreditLine) => line.end < Date.now() / 1000);
+const selectLiveLines = createSelector([selectLines], (lines): AggregatedCreditLine[] => {
+  return lines.filter((line: AggregatedCreditLine) => line.end < Date.now() / 1000);
 });
 
 // Not needed yet. TODO: Select all past-term lines
@@ -71,19 +70,19 @@ const selectLiveLines = createSelector([selectLines], (lines): CreditLine[] => {
 //   return deprecatedLines.filter((line) => toBN(line.userDeposited).gt(0));
 // });
 
-const selectDepositedLines = createSelector(
-  [selectUserLinesPositionsMap, selectUserWallet],
-  (positions, wallet): UserPositionSummary[] => {
-    return Object.values(positions)
-      .filter((p) => p.lender === wallet)
-      .map((p) => ({
-        ...p,
-        role: LENDER_POSITION_ROLE,
-        available: p.deposit - p.principal,
-        amount: p.deposit,
-      }));
-  }
-);
+// const selectDepositedLines = createSelector(
+//   [selectUserLinesPositionsMap, selectUserWallet],
+//   (positions, wallet): UserPositionSummary[] => {
+//     return Object.values(positions)
+//       .filter((p) => p.lender === wallet)
+//       .map((p) => ({
+//         ...p,
+//         role: LENDER_POSITION_ROLE,
+//         available: p.deposit - p.principal,
+//         amount: p.deposit,
+//       }));
+//   }
+// );
 
 const selectSelectedLineActionsStatusMap = createSelector(
   [selectLinesActionsStatusMap, selectSelectedLineAddress],
@@ -94,11 +93,11 @@ const selectSelectedLineActionsStatusMap = createSelector(
 
 const selectLinesForCategories = createSelector(
   [selectLinesMap, selectLineCategories],
-  (linesMap, categories): { [key: string]: CreditLine[] } => {
+  (linesMap, categories): { [key: string]: AggregatedCreditLine[] } => {
     return Object.entries(categories).reduce(
       (obj: object, [category, lines]: [string, string[]]) => ({
         ...obj,
-        [category]: lines.map((l: string): CreditLine => linesMap[l]),
+        [category]: lines.map((l: string): AggregatedCreditLine => linesMap[l]),
       }),
       {}
     );
@@ -180,13 +179,13 @@ const selectSelectedLinePage = createSelector(
 
 /* --------------------------------- Helper --------------------------------- */
 // interface CreateLineProps {
-//   lineData: BaseCreditLine;
+//   lineData: AggregatedCreditLine;
 //   // tokenAllowancesMap: AllowancesMap;
 //   positions: { [key: string]: PositionSummary };
 //   // userLinesMetadataMap: UserPositionMetadata;
 //   lineAllowancesMap: AllowancesMap;
 // }
-// function createLine(props: CreateLineProps): CreditLine {
+// function createLine(props: CreateLineProps):AggregatedCreditLine{
 //   const {
 //     lineData,
 //     // tokenAllowancesMap,
@@ -217,7 +216,7 @@ export const LinesSelectors = {
   selectLinesGeneralStatus,
   selectSelectedLine,
   selectSelectedLineActionsStatusMap,
-  selectDepositedLines,
+  // selectDepositedLines,
   selectSummaryData,
   selectRecommendations,
   selectLinesStatus,

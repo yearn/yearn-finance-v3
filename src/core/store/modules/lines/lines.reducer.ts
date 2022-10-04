@@ -8,7 +8,7 @@ import {
   UserLineMetadataStatusMap,
   LineActionsStatusMap,
   PositionSummary,
-  CreditLine,
+  AggregatedCreditLine,
 } from '@types';
 
 import { LinesActions } from './lines.actions';
@@ -138,7 +138,7 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
       state.statusMap.getLines = {};
 
       const categories: { [key: string]: string[] } = {};
-      const lines: { [key: string]: CreditLine } = {};
+      const lines: { [key: string]: AggregatedCreditLine } = {};
 
       // loop over nested structure of new Lines and update state
       Object.entries(linesData).map(([category, ls]) =>
@@ -165,7 +165,7 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
     .addCase(getLinePage.fulfilled, (state, { payload: { linePageData } }) => {
       if (linePageData) {
         state.pagesMap = { ...state.pagesMap, [linePageData.id]: linePageData };
-        state.linesMap = { ...state.linesMap, [linePageData.id]: linePageData as CreditLine };
+        state.linesMap = { ...state.linesMap, [linePageData.id]: linePageData as AggregatedCreditLine };
       }
 
       state.statusMap.getLinePage = {};

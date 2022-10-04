@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { BigNumber } from 'ethers';
 import _ from 'lodash';
 
 import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon, Link } from '@components/common';
@@ -137,8 +138,8 @@ interface Item {
   icon: string;
   name: string;
   info: string;
-  principal: string | number | Promise<number>;
-  deposit: string | number | Promise<number>;
+  principal: any; // TODO BigNumber
+  deposit: any; // TODO BigNumber
   tags?: string[];
   infoDetail?: string;
   action?: string;

@@ -1,4 +1,6 @@
-import { BaseCreditLine, CreditLinePage, BaseToken, Escrow, LinePageSpigot, LinePageCreditPosition } from '@types';
+import { BigNumber } from 'ethers';
+
+import { AggregatedCreditLine, CreditLinePage, BaseToken } from '@types';
 
 import { Address } from './Blockchain';
 
@@ -77,7 +79,7 @@ export interface UseCreditLineParams {
 /*
   Query Responses Types
 */
-type QueryResponseTypes = BaseCreditLine | BaseCreditLine[] | CreditLinePage;
+type QueryResponseTypes = AggregatedCreditLine | AggregatedCreditLine[] | CreditLinePage;
 
 export interface LineFrag {
   id: string;
@@ -112,9 +114,22 @@ export interface GetLinePageResponse {
   start: number;
   status: number;
   borrower: Address;
-
-  credits?: LinePageCreditPosition &
-    {
+  credits?: {
+    id: string;
+    lender: Address;
+    deposit: BigNumber;
+    principal: BigNumber;
+    interestAccrued: BigNumber;
+    interestRepaid: BigNumber;
+    // TODO add to subgraph
+    // totalInterestRepaid: BigNumber;
+    drawnRate: BigNumber;
+    token: {
+      id: Address;
+      symbol: string;
+      lastPriceUSD?: BigNumber; // Can be live data or from subgraph
+    };
+    events?: {
       // merge custom format w/ subgraph structure
       events?: {
         // cant use our type because we flatten structure for easier use
@@ -125,7 +140,44 @@ export interface GetLinePageResponse {
         };
       }[];
     }[];
+  }[];
 
-  escrow?: Escrow;
-  spigot?: LinePageSpigot;
+  escrow?: {
+    id: Address;
+    cratio: BigNumber;
+    minCRatio: BigNumber;
+    collateralValue: BigNumber;
+    deposits: {
+      id: Address;
+      token: BaseToken;
+      amount: BigNumber;
+      enabled: boolean;
+      events: {
+        __typename: string;
+        timestamp: number;
+        // only on add/remove collateral
+        amount?: BigNumber;
+        value?: BigNumber;
+      };
+    };
+  };
+  spigot?: {
+    id: Address;
+    spigots: {
+      active: boolean;
+      contract: Address;
+      startTime: number;
+      events?: {
+        __typename: string;
+        timestamp: number;
+        revenueToken: {
+          decimals: number;
+          symbol: string;
+        };
+        escrowed: BigNumber;
+        netIncome: BigNumber;
+        value: BigNumber;
+      }[];
+    };
+  };
 }
