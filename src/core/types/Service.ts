@@ -151,13 +151,13 @@ export interface CreditLineService {
   getUserLinePositions: (...args: any) => Promise<any | undefined>;
   getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;
 
-  addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
-  close: (props: CloseProps) => Promise<TransactionResponse>;
-  withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse>;
-  setRates: (props: SetRatesProps) => Promise<TransactionResponse | PopulatedTransaction>;
-  increaseCredit: (props: IncreaseCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
-  depositAndRepay: (props: DepositAndRepayProps) => Promise<TransactionResponse | PopulatedTransaction>;
-  depositAndClose: (props: DepositAndCloseProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  // addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  // close: (props: CloseProps) => Promise<TransactionResponse>;
+  // withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse>;
+  // setRates: (props: SetRatesProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  // increaseCredit: (props: IncreaseCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  // depositAndRepay: (props: DepositAndRepayProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  // depositAndClose: (props: DepositAndCloseProps) => Promise<TransactionResponse | PopulatedTransaction>;
   //deploySecuredLine: (props: any) => Promise<TransactionResponse | PopulatedTransaction>;
 
   // helpers
