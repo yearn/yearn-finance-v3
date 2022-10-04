@@ -13,6 +13,7 @@ import {
   SpigotedLineServiceImpl,
   EscrowServiceImpl,
   InterestRateCreditServiceImpl,
+  LineFactoryServiceImpl,
 } from '@services';
 import { getConfig } from '@config';
 import { DIContainer, ContextContainer, ServiceContainer, ConfigContainer } from '@types';
@@ -49,6 +50,7 @@ export class Container implements DIContainer {
       gasService: awilix.asClass(GasServiceImpl),
       transactionService: awilix.asClass(TransactionServiceImpl),
       interestRateCreditService: awilix.asClass(InterestRateCreditServiceImpl),
+      lineServices: awilix.asClass(LineFactoryServiceImpl),
     });
   }
 
@@ -77,6 +79,7 @@ export class Container implements DIContainer {
       spigotedLineService: this.container.cradle.spigotedLineService,
       escrowService: this.container.cradle.escrowService,
       interestRateCreditService: this.container.cradle.interestRateCreditService,
+      lineServices: this.container.cradle.lineServices,
     };
   }
 

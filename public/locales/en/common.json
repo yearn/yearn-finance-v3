@@ -117,6 +117,12 @@
         "select-credit": "1. Select a borrower to lend to",
         "select-token": "2. Select token and amount",
         "select-rates": "3. Set interest rates"
+      },
+      "deploy-line": {
+        "header": "Deploy Credit Line",
+        "select-borrower": "1. Select a borrower for the line",
+        "select-ttl": "2. Select a deadline for the line",
+        "time-to-live": "Time this line will remain active for (in days):"
       }
     }
   },

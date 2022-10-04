@@ -38,6 +38,7 @@ export const linesInitialState: CreditLineState = {
     getLine: initialStatus,
     getLinePage: initialStatus,
     getAllowances: initialStatus,
+    deploySecuredLine: initialStatus,
     user: initialUserMetadataStatusMap,
   },
 };
@@ -52,6 +53,7 @@ const {
   getLine,
   getLinePage,
   getLines,
+  deploySecuredLine,
   // initiateSaveLines,
   setSelectedLineAddress,
   getUserLinePositions,
@@ -170,6 +172,18 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
     })
     .addCase(getLinePage.rejected, (state, { error }) => {
       state.statusMap.getLinePage = { error: error.message };
+    })
+    /* -------------------------------- deploySecuredLine ------------------------------- */
+    .addCase(deploySecuredLine.pending, (state) => {
+      state.statusMap.deploySecuredLine = { loading: true };
+    })
+    .addCase(deploySecuredLine.fulfilled, (state) => {
+      // deployLine action emits a getLine action if tx is successful
+
+      state.statusMap.deploySecuredLine = {};
+    })
+    .addCase(deploySecuredLine.rejected, (state, { error }) => {
+      state.statusMap.deploySecuredLine = { error: error.message };
     })
     /* ------------------------- getUserLinePositions ------------------------- */
     .addCase(getUserLinePositions.pending, (state, { meta }) => {

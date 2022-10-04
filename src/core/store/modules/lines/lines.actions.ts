@@ -141,7 +141,7 @@ const getExpectedTransactionOutcome = createAsyncThunk<
   async (getExpectedTxOutcomeProps, { getState, extra }) => {
     const { network, app } = getState();
     const { services } = extra;
-    const { creditLineService } = services;
+    const { creditLineService, lineServices } = services;
     const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
 
     const accountAddress = getState().wallet.selectedAddress;
@@ -169,6 +169,25 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 /* -------------------------------------------------------------------------- */
 /*                             Transaction Methods                            */
 /* -------------------------------------------------------------------------- */
+
+const deploySecuredLine = createAsyncThunk<
+  void,
+  {
+    borrower: Address;
+    ttl: string;
+  },
+  ThunkAPI
+>('lines/deploySecredLine', async (deployData, { getState, extra }) => {
+  const { network } = getState();
+  const { creditLineService, lineServices } = extra.services;
+  const deployedLineData = await lineServices.deploySecuredLine({
+    network: 'goerli',
+    ...deployData,
+  });
+
+  console.log('new secured line deployed. tx response', deployedLineData);
+  // await dispatch(getLine(deployedLineData.))
+});
 
 const approveDeposit = createAsyncThunk<void, { lineAddress: string; tokenAddress: string }, ThunkAPI>(
   'lines/approveDeposit',
@@ -541,6 +560,7 @@ export const LinesActions = {
   approveDeposit,
   addCredit,
   depositAndRepay,
+  deploySecuredLine,
   // approveZapOut,
   // signZapOut,
   withdrawLine,
