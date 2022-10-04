@@ -58,7 +58,7 @@ export class TransactionServiceImpl implements TransactionService {
 
       const signer = this.web3Provider.getSigner();
       const contract = getContract(contractAddress, abi, signer);
-
+      console.log(contract, 'jackpot');
       const unsignedTx = await contract.populateTransaction[methodName](...txArgs);
 
       // const contractIface = new Interface(abi);
@@ -105,9 +105,9 @@ export class TransactionServiceImpl implements TransactionService {
 
     let gasFees: GasFees = {};
     try {
-      if (network === 'mainnet') {
+      if (network === 'goerli') {
         // TODO: Analyze if gas service required
-        // gasFees = await this.gasService.getGasFees();
+        gasFees = await this.gasService.getGasFees();
       }
     } catch (error) {
       console.error(error);
@@ -121,8 +121,8 @@ export class TransactionServiceImpl implements TransactionService {
       };
       const txArgs = args ? [...args, txOverrides] : [txOverrides];
 
-      const contract = getContract(contractAddress, abi, this.web3Provider.getInstanceOf('ethereum'));
-
+      const contract = getContract(contractAddress, abi, this.web3Provider.getInstanceOf('goerli'));
+      console.log(contract, 'jackpot');
       return await contract.populateTransaction[methodName](...txArgs);
     } catch (error: any) {
       console.log(error);

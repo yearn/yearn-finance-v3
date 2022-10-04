@@ -122,7 +122,7 @@
         "header": "Deploy Credit Line",
         "select-borrower": "1. Select a borrower for the line",
         "select-ttl": "2. Select a deadline for the line",
-        "time-to-live": "Time this line will remain active for:"
+        "time-to-live": "Time this line will remain active for (in days):"
       }
     }
   },

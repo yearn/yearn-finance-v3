@@ -121,12 +121,13 @@ export class CreditLineServiceImpl implements CreditLineService {
       factoryAddress: LineFactory_GOERLI,
       swapTarget: SwapTarget_GOERLI,
     };
+    console.log(data);
     return <TransactionResponse>(
       await this.executeContractMethod(
         data.factoryAddress,
         'deploySecuredLine',
         [data.oracle, data.arbiter, data.borrower, data.ttl, data.swapTarget],
-        false
+        true
       )
     );
   }
@@ -166,24 +167,19 @@ export class CreditLineServiceImpl implements CreditLineService {
 
     try {
       props = {
-        network: 'mainnet',
+        network: 'goerli',
         args: params,
         methodName: methodName,
         abi: this.abi,
         contractAddress: contractAddress,
       };
-      if (dryRun) {
-        return await this.transactionService.populateTransaction(props);
-      }
 
       const tx = await this.transactionService.execute(props);
       await tx.wait();
       return tx;
     } catch (e) {
       console.log(
-        `An error occured while ${methodName} with params [${params}] on CreditLine [${
-          props?.contractAddress
-        }], error = [${JSON.stringify(e)}] `
+        `An error occured while ${methodName} with params [${params}] on CreditLine [${props?.contractAddress}], error = ${e} `
       );
       return Promise.reject(e);
     }

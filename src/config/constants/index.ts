@@ -22,6 +22,22 @@ const PARTNERS = {
 };
 
 const NETWORK_SETTINGS: NetworkSettings = {
+  /*goerli: {
+    id: 'goerli',
+    name: 'Goerli Test Network',
+    networkId: 5,
+    rpcUrl: 'https://goerli.infura.io/v3/',
+    nativeCurrency: {
+      name: 'ETH',
+      symbol: 'GoerliETH',
+      decimals: 18,
+    },
+    simulationsEnabled: true,
+    earningsEnabled: true,
+    notifyEnabled: true,
+    blockExplorerUrl: 'https://goerli.etherscan.io/',
+    txConfirmations: 2,
+  },*/
   mainnet: {
     id: 'mainnet',
     name: 'Ethereum',
@@ -106,8 +122,3 @@ export const getConstants = memoize((): Constants => {
     // ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
   };
 });
-
-export const ArbiterGoerli: string = '0xde8f0f6769284e41bf0f82d0545141c15a3e4ad1';
-export const OracleGoerli: string = '0x7233038e589913dca4b6d15ff8bba263a433aed2';
-export const SwapTargetGoerli: string = '0xcb7b9188ada88cb0c991c807acc6b44097059dec';
-export const LineFactoryGoerli: string = '0x43158693dba386562f0581cd48e68df027a5a877';
