@@ -59,11 +59,11 @@ export class CreditLineServiceImpl implements CreditLineService {
     this.config = config;
 
     this.graphUrl = GRAPH_API_URL || 'https://api.thegraph.com';
-    this.abi = LineFactoryABI;
+    this.abi = LineOfCreditABI;
   }
 
   private _getContract(contractAddress: string) {
-    return getContract(contractAddress.toString(), LineFactoryABI, this.web3Provider.getSigner().provider);
+    return getContract(contractAddress.toString(), LineOfCreditABI, this.web3Provider.getSigner().provider);
   }
 
   private async getSignerAddress(): Promise<Address> {
@@ -105,30 +105,6 @@ export class CreditLineServiceImpl implements CreditLineService {
   public async withdraw(props: WithdrawLineProps): Promise<TransactionResponse> {
     return <TransactionResponse>(
       await this.executeContractMethod(props.lineAddress, 'withdraw', [props.id, props.amount], false)
-    );
-  }
-
-  public async deploySecuredLine(props: {
-    borrower: string;
-    ttl: number;
-  }): Promise<ethers.providers.TransactionResponse | PopulatedTransaction> {
-    const { borrower, ttl } = props;
-    const data = {
-      borrower,
-      ttl,
-      arbiter: Arbiter_GOERLI,
-      oracle: Oracle_GOERLI,
-      factoryAddress: LineFactory_GOERLI,
-      swapTarget: SwapTarget_GOERLI,
-    };
-    console.log(data);
-    return <TransactionResponse>(
-      await this.executeContractMethod(
-        data.factoryAddress,
-        'deploySecuredLine',
-        [data.oracle, data.arbiter, data.borrower, data.ttl, data.swapTarget],
-        true
-      )
     );
   }
 

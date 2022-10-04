@@ -141,7 +141,7 @@ const getExpectedTransactionOutcome = createAsyncThunk<
   async (getExpectedTxOutcomeProps, { getState, extra }) => {
     const { network, app } = getState();
     const { services } = extra;
-    const { creditLineService } = services;
+    const { creditLineService, lineServices } = services;
     const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
 
     const accountAddress = getState().wallet.selectedAddress;
@@ -179,8 +179,8 @@ const deploySecuredLine = createAsyncThunk<
   ThunkAPI
 >('lines/deploySecredLine', async (deployData, { getState, extra }) => {
   const { network } = getState();
-  const { creditLineService } = extra.services;
-  const deployedLineData = await creditLineService.deploySecuredLine({
+  const { creditLineService, lineServices } = extra.services;
+  const deployedLineData = await lineServices.deploySecuredLine({
     network: 'goerli',
     ...deployData,
   });

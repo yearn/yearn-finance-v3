@@ -11,6 +11,7 @@ import {
   SubscriptionService,
   SpigotedLineService,
   EscrowService,
+  LineServices,
   InterestRateCreditService,
   YearnSdk,
 } from '@types';
@@ -36,6 +37,7 @@ export interface ServiceContainer {
   spigotedLineService: SpigotedLineService;
   escrowService: EscrowService;
   interestRateCreditService: InterestRateCreditService;
+  lineServices: LineServices;
 }
 
 export interface ConfigContainer extends Config {}

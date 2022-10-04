@@ -7,3 +7,4 @@ export * from './CreditLineService';
 export * from './SpigotedLineService';
 export * from './EscrowService';
 export * from './InterestRateCreditService';
+export * from './LineFactoryService';
