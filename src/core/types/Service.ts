@@ -187,17 +187,16 @@ export interface CreditLineService {
 }
 
 export interface AddCreditProps {
-  dryRun: boolean;
   lineAddress: string;
   token: Address;
   lender: Address;
   drate: BigNumber;
   frate: BigNumber;
   amount: BigNumber;
+  dryRun: boolean;
 }
 
 export interface CloseProps {
-  dryRun: boolean;
   lineAddress: string;
   id: string;
 }
@@ -215,19 +214,16 @@ export interface SetRatesProps {
   drate: BigNumber;
 }
 export interface IncreaseCreditProps {
-  dryRun: boolean;
   lineAddress: string;
   id: string;
   amount: BigNumber;
 }
 export interface DepositAndRepayProps {
-  dryRun: boolean;
   lineAddress: string;
   id: string;
   amount: BigNumber;
 }
 export interface DepositAndCloseProps {
-  dryRun: boolean;
   lineAddress: string;
   id: string;
 }
@@ -276,24 +272,9 @@ export interface GetLinePageProps extends GetLinePageArgs {
 }
 
 export interface SpigotedLineService {
-  claimAndTrade(
-    lineAddress: string,
-    claimToken: Address,
-    zeroExTradeData: BytesLike,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
-  claimAndRepay(
-    lineAddress: string,
-    claimToken: Address,
-    calldata: BytesLike,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
-  addSpigot(
-    lineAddress: string,
-    revenueContract: Address,
-    setting: ISpigotSetting,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  claimAndTrade(lineAddress: string, claimToken: Address, zeroExTradeData: BytesLike, dryRun: boolean): Promise<string>;
+  claimAndRepay(lineAddress: string, claimToken: Address, calldata: BytesLike, dryRun: boolean): Promise<string>;
+  addSpigot(lineAddress: string, revenueContract: Address, setting: ISpigotSetting, dryRun: boolean): Promise<string>;
   isOwner(lineAddress: string): Promise<boolean>;
   maxSplit(lineAddress: string): Promise<BigNumber>;
   isBorrowing: (lineAddress: string) => Promise<boolean>;
@@ -311,19 +292,14 @@ export interface ISpigotSetting {
 }
 
 export interface EscrowService {
-  addCollateral(
-    contractAddress: string,
-    amount: BigNumber,
-    token: Address,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  addCollateral(contractAddress: string, amount: BigNumber, token: Address, dryRun: boolean): Promise<string>;
   releaseCollateral(
     contractAddress: string,
     amount: BigNumber,
     token: Address,
     to: Address,
     dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  ): Promise<string>;
   isBorrower(contractAddress: string): Promise<boolean>;
 }
 
