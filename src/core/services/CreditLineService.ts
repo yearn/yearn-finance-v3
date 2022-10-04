@@ -160,6 +160,11 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   private async executeContractMethod(contractAddress: string, methodName: string, params: any[], dryRun: boolean) {
     let props: ExecuteTransactionProps | undefined = undefined;
+
+    // TODO. pass network as param all the way down from actions
+    // const { getSigner } = this.web3Provider;
+    // const user = getSigner();
+
     try {
       props = {
         network: 'goerli',
