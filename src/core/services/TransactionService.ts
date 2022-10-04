@@ -58,7 +58,7 @@ export class TransactionServiceImpl implements TransactionService {
 
       const signer = this.web3Provider.getSigner();
       const contract = getContract(contractAddress, abi, signer);
-      console.log(contract, 'jackpot');
+      console.log(contract, contractAddress, abi, 'jackpot');
       const unsignedTx = await contract.populateTransaction[methodName](...txArgs);
 
       // const contractIface = new Interface(abi);
