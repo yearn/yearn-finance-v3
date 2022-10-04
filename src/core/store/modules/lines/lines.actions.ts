@@ -173,12 +173,8 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 const deploySecuredLine = createAsyncThunk<
   void,
   {
-    oracle: Address;
-    arbiter: Address;
-    factoryAddress: Address;
     borrower: Address;
-    swapTarget: Address;
-    ttl: number;
+    ttl: string;
   },
   ThunkAPI
 >('lines/deploySecredLine', async (deployData, { getState, extra }) => {

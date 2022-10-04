@@ -173,7 +173,18 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
     .addCase(getLinePage.rejected, (state, { error }) => {
       state.statusMap.getLinePage = { error: error.message };
     })
+    /* -------------------------------- deploySecuredLine ------------------------------- */
+    .addCase(deploySecuredLine.pending, (state) => {
+      state.statusMap.deploySecuredLine = { loading: true };
+    })
+    .addCase(deploySecuredLine.fulfilled, (state) => {
+      // deployLine action emits a getLine action if tx is successful
 
+      state.statusMap.deploySecuredLine = {};
+    })
+    .addCase(deploySecuredLine.rejected, (state, { error }) => {
+      state.statusMap.deploySecuredLine = { error: error.message };
+    })
     /* ------------------------- getUserLinePositions ------------------------- */
     .addCase(getUserLinePositions.pending, (state, { meta }) => {
       const lineAddresses = meta.arg.lineAddresses || [];
@@ -266,20 +277,6 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
     .addCase(withdrawLine.rejected, (state, { error, meta }) => {
       const lineAddress = meta.arg.lineAddress;
       state.statusMap.user.linesActionsStatusMap[lineAddress].withdraw = { error: error.message };
-    });
-
-  builder
-    /* -------------------------------- deploySecuredLine ------------------------------- */
-    .addCase(deploySecuredLine.pending, (state) => {
-      state.statusMap.deploySecuredLine = { loading: true };
-    })
-    .addCase(deploySecuredLine.fulfilled, (state) => {
-      // deployLine action emits a getLine action if tx is successful
-
-      state.statusMap.deploySecuredLine = {};
-    })
-    .addCase(deploySecuredLine.rejected, (state, { error }) => {
-      state.statusMap.deploySecuredLine = { error: error.message };
     });
 });
 
