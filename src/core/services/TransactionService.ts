@@ -17,21 +17,11 @@ import { getProviderType } from '@utils';
 import { getContract } from '@frameworks/ethers';
 
 export class TransactionServiceImpl implements TransactionService {
-  private yearnSdk: YearnSdk;
   private gasService: GasService;
   private web3Provider: Web3Provider;
 
-  constructor({
-    gasService,
-    yearnSdk,
-    web3Provider,
-  }: {
-    gasService: GasService;
-    yearnSdk: YearnSdk;
-    web3Provider: Web3Provider;
-  }) {
+  constructor({ gasService, web3Provider }: { gasService: GasService; web3Provider: Web3Provider }) {
     this.gasService = gasService;
-    this.yearnSdk = yearnSdk;
     this.web3Provider = web3Provider;
   }
 
@@ -64,18 +54,6 @@ export class TransactionServiceImpl implements TransactionService {
       // const contractIface = new Interface(abi);
       // const decodedData = contractIface.decodeFunctionData(methodName, unsignedTx.data!.toString());
       // console.log({ decodedData });
-
-      const yearn = this.yearnSdk.getInstanceOf(network);
-      if (yearn.services.allowList) {
-        const { success: isValid, error } = await yearn.services.allowList.validateCalldata(
-          contractAddress,
-          unsignedTx.data
-        );
-        if (!isValid) {
-          if (!error) throw new Error('Unexpected Error on Allow List');
-          throw new Error(error);
-        }
-      }
 
       const tx = await signer.sendTransaction(unsignedTx);
       return tx;

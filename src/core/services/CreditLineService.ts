@@ -28,7 +28,7 @@ import {
   DepositAndCloseProps,
 } from '@types';
 import { getConfig } from '@config';
-import { LineOfCreditABI } from '@services/contracts';
+import { LineOfCreditABI, LineFactoryABI } from '@services/contracts';
 import { getContract } from '@frameworks/ethers';
 import { getLine, getLinePage, getLines, getUserLinePositions } from '@frameworks/gql';
 import { mapStatusToString } from '@src/utils';
@@ -59,11 +59,11 @@ export class CreditLineServiceImpl implements CreditLineService {
     this.config = config;
 
     this.graphUrl = GRAPH_API_URL || 'https://api.thegraph.com';
-    this.abi = LineOfCreditABI;
+    this.abi = LineFactoryABI;
   }
 
   private _getContract(contractAddress: string) {
-    return getContract(contractAddress.toString(), LineOfCreditABI, this.web3Provider.getSigner().provider);
+    return getContract(contractAddress.toString(), LineFactoryABI, this.web3Provider.getSigner().provider);
   }
 
   private async getSignerAddress(): Promise<Address> {
