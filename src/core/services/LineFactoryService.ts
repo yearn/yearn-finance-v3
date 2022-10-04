@@ -1,6 +1,6 @@
 import { BigNumberish, BigNumber, ContractFunction, PopulatedTransaction, ethers } from 'ethers';
 
-import { TransactionService, Web3Provider, Config, ExecuteTransactionProps, Address } from '@types';
+import { TransactionService, Web3Provider, Config, ExecuteTransactionProps, Address, YearnSdk } from '@types';
 import { getConfig } from '@config';
 import { getContract } from '@frameworks/ethers';
 
@@ -25,6 +25,7 @@ export class LineFactoryServiceImpl {
   }: {
     transactionService: TransactionService;
     web3Provider: Web3Provider;
+    yearnSdk: YearnSdk;
     config: Config;
     contractAddress: Address;
   }) {
@@ -132,9 +133,6 @@ export class LineFactoryServiceImpl {
         abi: this.abi,
         contractAddress: contractAddress,
       };
-      if (dryRun) {
-        return await this.transactionService.populateTransaction(props);
-      }
 
       let tx;
       tx = await this.transactionService.execute(props);
@@ -142,9 +140,7 @@ export class LineFactoryServiceImpl {
       return tx;
     } catch (e) {
       console.log(
-        `An error occured while ${methodName} with params [${params}] on FactoryLine [${
-          props?.contractAddress
-        }], error = [${JSON.stringify(e)}]`
+        `An error occured while ${methodName} with params [${params}] on FactoryLine [${props?.contractAddress}], error = [${e}]`
       );
       return Promise.reject(e);
     }
