@@ -48,7 +48,8 @@ const LINE_PAGE_CREDIT_FRAGMENT = gql`
     principal
     interestRepaid
     interestAccrued
-    drawnRate
+    dRate
+    fRate
     token {
       symbol
     }
@@ -98,20 +99,21 @@ const CREDIT_EVENT_FRAGMENT = gql`
       ...lewv
     }
     ... on SetRatesEvent {
-      drawnRate
-      facilityRate
+      dRate
+      fRate
     }
   }
 `;
 
 // Spigot Frags
 const BASE_SPIGOT_FRAGMENT = gql`
+  ${TOKEN_FRAGMENT}
   fragment BaseSpigotFrag on Spigot {
     active
     contract
     startTime
     token {
-      symbol
+      ...TokenFrag
     }
   }
 `;
@@ -135,8 +137,17 @@ const SPIGOT_EVENT_FRAGMENT = gql`
 // Escrow Frags
 
 const ESCROW_FRAGMENT = gql`
+  ${TOKEN_FRAGMENT}
   fragment EscrowFrag on Escrow {
+    id
     minCRatio
+    deposits {
+      amount
+      enabled
+      token {
+        ...TokenFrag
+      }
+    }
   }
 `;
 
@@ -213,16 +224,10 @@ export const GET_LINE_PAGE_QUERY = gql`
 
       escrow {
         ...EscrowFrag
-        deposits {
-          amount
-          enabled
-          token {
-            ...TokenFrag
-          }
-        }
       }
 
       spigot {
+        id
         spigots {
           ...BaseSpigotFrag
         }
@@ -239,31 +244,44 @@ export const GET_LINES_QUERY = gql`
   ${BASE_CREDIT_FRAGMENT}
 
   query getLines($first: Int, $orderBy: String, $orderDirection: String) {
-    lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
+    lines: lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
       ...BaseLineFrag
-
-      biggestCredit: lines(first: 1, orderBy: deposit, orderDirection: desc) {
+      credits: lines {
         ...BaseCreditFrag
       }
-      biggestDebt: lines(first: 1, orderBy: principal, orderDirection: desc) {
-        ...BaseCreditFrag
-      }
-
       escrow {
-        id
-        collateralValue
+        ...EscrowFrag
       }
       spigot {
         id
+        summmaries {
+          totalVolumeUsd
+          timeOfFirstIncome
+          timeOfLastIncome
+        }
       }
     }
   }
 `;
 
+// TODO
+// export const GET_HOMEPAGE_LINES_QUERY = gql`
+//   ${BASE_LINE_FRAGMENT}
+//   ${BASE_CREDIT_FRAGMENT}
+
+//   query getHomepageLines() {
+//     newest: lineOfCredits(first: 5, orderBy: start, orderDirection: desc) {
+//       ...BaseLineFrag
+//     }
+//   }
+// `;
+
 export const GET_SPIGOT_QUERY = gql`
   ${BASE_SPIGOT_FRAGMENT}
 
   query getSpigot($id: ID!) {
-    ...BaseSpigotFrag
+    spigotController(id: $id) {
+      ...BaseSpigotFrag
+    }
   }
 `;

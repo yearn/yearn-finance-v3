@@ -2,7 +2,6 @@ import { ApolloClient, InMemoryCache, gql, useQuery, DocumentNode, QueryResult }
 import { at } from 'lodash';
 
 import { getEnv } from '@config/env';
-import { GET_LINE_QUERY, GET_LINE_PAGE_QUERY, GET_LINES_QUERY } from '@config/constants/queries';
 import {
   BaseCreditLine,
   AggregatedCreditLine,
@@ -15,7 +14,10 @@ import {
   QueryArgOption,
   GetLinePageResponse,
   PositionSummary,
+  GetLinesResponse,
 } from '@src/core/types';
+
+import { GET_LINE_QUERY, GET_LINE_PAGE_QUERY, GET_LINES_QUERY } from './queries';
 
 const { GRAPH_API_URL, GRAPH_TEST_API_URL } = getEnv();
 
