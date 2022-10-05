@@ -87,6 +87,25 @@ const NETWORK_SETTINGS: NetworkSettings = {
     blockExplorerUrl: 'https://arbiscan.io',
     txConfirmations: 2,
   },
+  optimism: {
+    id: 'optimism',
+    name: 'Optimism',
+    networkId: 10,
+    rpcUrl: 'https://mainnet.optimism.io',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    simulationsEnabled: false,
+    zapsEnabled: false,
+    labsEnabled: false,
+    ironBankEnabled: false,
+    earningsEnabled: true,
+    notifyEnabled: false,
+    blockExplorerUrl: 'https://optimistic.etherscan.io',
+    txConfirmations: 2,
+  },
 };
 
 export const getConstants = memoize((): Constants => {
@@ -96,12 +115,13 @@ export const getConstants = memoize((): Constants => {
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
     YEARN_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
     YEARN_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
-    SUPPORTED_NETWORKS: ['mainnet', 'fantom', 'arbitrum'],
+    SUPPORTED_NETWORKS: ['mainnet', 'fantom', 'arbitrum', 'optimism'],
     NETWORK_SETTINGS,
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
     ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
+    OPTIMISM_PROVIDER_HTTPS: 'https://mainnet.optimism.io',
     CONTRACT_ADDRESSES: {
       zapIn: '0xc2C171bD6FC3B5885b589ed8b4d135F31085e973',
       zapOut: '0x70ed999E2849A3C85EB4a6288B90c7ecA7b807F4',

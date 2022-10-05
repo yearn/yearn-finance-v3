@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { Address, Network } from '@types';
-import { DefaultscanIcon, EtherscanIcon, FtmscanIcon, ArbiscanIcon, Icon } from '@components/common';
+import { DefaultscanIcon, EtherscanIcon, FtmscanIcon, ArbiscanIcon, OptimismIcon, Icon } from '@components/common';
 
 interface ScanNetworkIconProps {
   currentNetwork?: Network;
@@ -31,6 +31,8 @@ export const ScanNetworkIcon = ({ currentNetwork, blockExplorerUrl, address }: S
         return FtmscanIcon;
       case 'arbitrum':
         return ArbiscanIcon;
+      case 'optimism':
+        return OptimismIcon;
       default:
         return DefaultscanIcon;
     }
