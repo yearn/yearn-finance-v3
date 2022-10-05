@@ -6,7 +6,7 @@
     "start": "craco start",
     "dev": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) craco start",
     "dev-win": "cross-env REACT_APP_VERSION=x && craco start",
-    "build": "cross-env REACT_APP_VERSION=$(git rev-parse HEAD) INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 GENERATE_SOURCEMAP=false craco build",
+    "build": "cross-env REACT_APP_VERSION=17.0.2 INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 GENERATE_SOURCEMAP=false craco build",
     "lint": "eslint  --ignore-path .gitignore --ext .js,.ts .",
     "test": "craco test",
     "prettier": "prettier --write --ignore-unknown './src/**/*.{js,jsx,ts,tsx,css,scss,md}'",

@@ -415,3 +415,54 @@ export interface SubscriptionService {
   subscribe: (props: SubscriptionProps) => void;
   unsubscribe: (props: SubscriptionProps) => void;
 }
+
+export interface LineFactoryService {
+  deploySpigot(
+    contractAddress: string,
+    owner: Address,
+    borrower: Address,
+    operator: Address,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  deployEscrow(
+    contractAddress: string,
+    minCRatio: BigNumber,
+    oracle: Address,
+    owner: Address,
+    borrower: Address,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  deploySecuredLine(
+    contractAddress: string,
+    oracle: Address,
+    arbiter: Address,
+    borrower: Address,
+    ttl: BigNumber,
+    swapTarget: Address,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  deploySecuredLineWtihConfig(
+    contractAddress: string,
+    oracle: Address,
+    arbiter: Address,
+    borrower: Address,
+    ttl: BigNumber,
+    revenueSplit: BigNumber,
+    cratio: BigNumber,
+    swapTarget: Address,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  rolloverSecuredLine(
+    contractAddress: string,
+    oldLine: Address,
+    borrower: Address,
+    oracle: Address,
+    arbiter: Address,
+    ttl: BigNumber,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+}

@@ -14,7 +14,6 @@ import {
   STATUS,
   ExecuteTransactionProps,
   Credit,
-  Network,
   CreditLinePage,
   GetLineProps,
   GetLinesProps,
@@ -34,7 +33,7 @@ import { getContract } from '@frameworks/ethers';
 import { getLine, getLinePage, getLines, getUserLinePositions } from '@frameworks/gql';
 import { mapStatusToString } from '@src/utils';
 
-const { GRAPH_API_URL, Arbiter_GOERLI, Oracle_GOERLI, SwapTarget_GOERLI, LineFactory_GOERLI } = getConfig();
+const { GRAPH_API_URL } = getConfig();
 
 export class CreditLineServiceImpl implements CreditLineService {
   private graphUrl: string;
