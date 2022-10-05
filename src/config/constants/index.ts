@@ -5,6 +5,7 @@ import { getEnv } from '@config/env';
 import { encode } from '@src/utils';
 
 const ADDRESSES = {
+  NATIVE: '0x0000000000000000000000000000000000000000',
   ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
   WETH: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
   DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
@@ -58,8 +59,8 @@ const NETWORK_SETTINGS: NetworkSettings = {
       symbol: 'FTM',
       decimals: 18,
     },
-    simulationsEnabled: false,
-    zapsEnabled: false,
+    simulationsEnabled: true,
+    zapsEnabled: true,
     labsEnabled: false,
     ironBankEnabled: false,
     earningsEnabled: false,
@@ -92,7 +93,6 @@ export const getConstants = memoize((): Constants => {
   const { ALCHEMY_API_KEY, ZAPPER_API_KEY } = getEnv();
   return {
     STATE_VERSION: 1,
-    ETHEREUM_ADDRESS: ADDRESSES.ETH,
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
     YEARN_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
     YEARN_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
@@ -114,7 +114,6 @@ export const getConstants = memoize((): Constants => {
     SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
     DEFAULT_SLIPPAGE: 0.01,
     IRON_BANK_MAX_RATIO: 0.8,
-    ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
     DEFAULT_THEME: 'system-prefs',
     AVAILABLE_THEMES: ['system-prefs', 'light', 'dark', 'cyberpunk', 'classic'],
     AVAILABLE_CUSTOM_THEMES: ['explorer'],

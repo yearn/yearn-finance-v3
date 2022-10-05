@@ -1,7 +1,7 @@
 import { getConfig } from '@config';
 
-export const getZapInContractAddress = (vaultAddress: string) => {
-  const { zapIn } = getConfig().CONTRACT_ADDRESSES;
+export const isNativeToken = (address: string) => {
+  const { NATIVE, ETH } = getConfig().CONTRACT_ADDRESSES;
 
-  return zapIn;
+  return address === NATIVE || address === ETH;
 };

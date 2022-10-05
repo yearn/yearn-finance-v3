@@ -230,12 +230,16 @@ const approveZapOut = createAsyncThunk<void, { vaultAddress: string; tokenAddres
   }
 );
 
-const signZapOut = createAsyncThunk<{ signature: string }, { vaultAddress: string; amount: BigNumber }, ThunkAPI>(
+const signZapOut = createAsyncThunk<
+  { signature: string },
+  { vaultAddress: string; tokenAddress: string; amount: BigNumber },
+  ThunkAPI
+>(
   'vaults/signZapOut',
-  async ({ vaultAddress, amount }, { getState, extra }) => {
+  async ({ vaultAddress, tokenAddress, amount }, { getState, extra }) => {
     const { network, wallet, vaults, tokens } = getState();
     const { vaultService } = extra.services;
-    const { CONTRACT_ADDRESSES, MAX_UINT256 } = extra.config;
+    const { MAX_UINT256 } = extra.config;
 
     const deadline = '0';
 
@@ -261,11 +265,18 @@ const signZapOut = createAsyncThunk<{ signature: string }, { vaultAddress: strin
           pricePerShare: vaultData.metadata.pricePerShare,
         });
 
+    const tokenAllowance = await vaultService.getWithdrawAllowance({
+      network: network.current,
+      vaultAddress,
+      tokenAddress,
+      accountAddress,
+    });
+
     const signature = await vaultService.signPermit({
       network: network.current,
       accountAddress,
       vaultAddress,
-      spenderAddress: CONTRACT_ADDRESSES.zapOut,
+      spenderAddress: tokenAllowance.spender,
       amount: amountOfShares,
       deadline,
     });

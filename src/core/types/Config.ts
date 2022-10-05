@@ -1,4 +1,4 @@
-import { Network, Address, Wei } from './Blockchain';
+import { Network, Wei } from './Blockchain';
 import { NetworkSettings, Theme, Language } from './Settings';
 
 export interface Config extends Env, Constants {}
@@ -25,7 +25,6 @@ export interface Env {
 
 export interface Constants {
   STATE_VERSION: number;
-  ETHEREUM_ADDRESS: Address;
   MAX_UINT256: Wei;
   YEARN_API: string;
   YEARN_ALERTS_API: string;
@@ -41,7 +40,6 @@ export interface Constants {
   SLIPPAGE_OPTIONS: number[];
   DEFAULT_SLIPPAGE: number;
   IRON_BANK_MAX_RATIO: number;
-  ZAP_OUT_TOKENS: string[];
   DEFAULT_THEME: Theme;
   AVAILABLE_THEMES: Theme[];
   AVAILABLE_CUSTOM_THEMES: Theme[];
