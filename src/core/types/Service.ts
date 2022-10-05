@@ -229,7 +229,6 @@ export interface DepositAndCloseProps {
 }
 
 export interface ApproveLineDepositProps {
-  network: Network;
   lineAddress: string;
   tokenAddress: string;
   accountAddress: string;

@@ -199,20 +199,14 @@ const approveDeposit = createAsyncThunk<void, { lineAddress: string; tokenAddres
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const tx = await creditLineService.approveDeposit({
-      network: network.current,
+    const approveDepositTx = await creditLineService.approveDeposit({
       accountAddress,
       tokenAddress,
       lineAddress,
       amount: BigNumber.from(amount),
     });
 
-    await transactionService.handleTransaction({ tx, network: network.current });
-
-    await dispatch(getDepositAllowance({ tokenAddress, lineAddress }));
-  },
-  {
-    // serializeError: parseError,
+    console.log('this is approval', approveDepositTx);
   }
 );
 
