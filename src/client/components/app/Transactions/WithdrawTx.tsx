@@ -232,6 +232,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
         const signResult = await dispatchAndUnwrap(
           VaultsActions.signZapOut({
             vaultAddress: selectedVault.address,
+            tokenAddress: selectedTargetTokenAddress,
             amount: willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount),
           })
         );

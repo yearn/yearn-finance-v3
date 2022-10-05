@@ -37,6 +37,7 @@ import { ReactComponent as RedirectIcon } from '@assets/icons/redirect.svg';
 import { ReactComponent as EthereumIcon } from '@assets/icons/networks/ethereum.svg';
 import { ReactComponent as FantomIcon } from '@assets/icons/networks/fantom.svg';
 import { ReactComponent as ArbitrumIcon } from '@assets/icons/networks/arbitrum.svg';
+import { ReactComponent as OptimismIcon } from '@assets/icons/networks/optimism.svg';
 import { ReactComponent as EtherscanIcon } from '@assets/icons/etherscan.svg';
 import { ReactComponent as FtmscanIcon } from '@assets/icons/ftmscan.svg';
 import { ReactComponent as ArbiscanIcon } from '@assets/icons/arbiscan.svg';
@@ -96,6 +97,7 @@ export {
   EthereumIcon,
   FantomIcon,
   ArbitrumIcon,
+  OptimismIcon,
   AddCircleIcon,
   AddIcon,
   EtherscanIcon,

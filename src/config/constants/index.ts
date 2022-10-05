@@ -5,6 +5,7 @@ import { getEnv } from '@config/env';
 import { encode } from '@src/utils';
 
 const ADDRESSES = {
+  NATIVE: '0x0000000000000000000000000000000000000000',
   ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
   WETH: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
   DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
@@ -58,8 +59,8 @@ const NETWORK_SETTINGS: NetworkSettings = {
       symbol: 'FTM',
       decimals: 18,
     },
-    simulationsEnabled: false,
-    zapsEnabled: false,
+    simulationsEnabled: true,
+    zapsEnabled: true,
     labsEnabled: false,
     ironBankEnabled: false,
     earningsEnabled: false,
@@ -86,22 +87,41 @@ const NETWORK_SETTINGS: NetworkSettings = {
     blockExplorerUrl: 'https://arbiscan.io',
     txConfirmations: 2,
   },
+  optimism: {
+    id: 'optimism',
+    name: 'Optimism',
+    networkId: 10,
+    rpcUrl: 'https://mainnet.optimism.io',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    simulationsEnabled: false,
+    zapsEnabled: false,
+    labsEnabled: false,
+    ironBankEnabled: false,
+    earningsEnabled: true,
+    notifyEnabled: false,
+    blockExplorerUrl: 'https://optimistic.etherscan.io',
+    txConfirmations: 2,
+  },
 };
 
 export const getConstants = memoize((): Constants => {
   const { ALCHEMY_API_KEY, ZAPPER_API_KEY } = getEnv();
   return {
     STATE_VERSION: 1,
-    ETHEREUM_ADDRESS: ADDRESSES.ETH,
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
     YEARN_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
     YEARN_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
-    SUPPORTED_NETWORKS: ['mainnet', 'fantom', 'arbitrum'],
+    SUPPORTED_NETWORKS: ['mainnet', 'fantom', 'arbitrum', 'optimism'],
     NETWORK_SETTINGS,
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
     ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
+    OPTIMISM_PROVIDER_HTTPS: 'https://mainnet.optimism.io',
     CONTRACT_ADDRESSES: {
       zapIn: '0xc2C171bD6FC3B5885b589ed8b4d135F31085e973',
       zapOut: '0x70ed999E2849A3C85EB4a6288B90c7ecA7b807F4',
@@ -114,7 +134,6 @@ export const getConstants = memoize((): Constants => {
     SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
     DEFAULT_SLIPPAGE: 0.01,
     IRON_BANK_MAX_RATIO: 0.8,
-    ZAP_OUT_TOKENS: [ADDRESSES.ETH, ADDRESSES.DAI, ADDRESSES.USDC, ADDRESSES.USDT, ADDRESSES.WBTC],
     DEFAULT_THEME: 'system-prefs',
     AVAILABLE_THEMES: ['system-prefs', 'light', 'dark', 'cyberpunk', 'classic'],
     AVAILABLE_CUSTOM_THEMES: ['explorer'],

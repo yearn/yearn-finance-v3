@@ -16,7 +16,6 @@ const StyledOptionList = styled.div<{ disabled?: boolean; tabIndex: number; sele
   background: var(--dropdown-background);
   color: var(--dropdown-color);
   fill: currentColor;
-  stroke: currentColor;
   user-select: none;
   border-radius: ${({ theme }) => theme.globalRadius};
   position: relative;

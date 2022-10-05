@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
-import { OptionList, EthereumIcon, FantomIcon, ArbitrumIcon, Link } from '@components/common';
+import { OptionList, EthereumIcon, FantomIcon, ArbitrumIcon, OptimismIcon, Link } from '@components/common';
 import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';
@@ -76,6 +76,8 @@ const getNetworkIcon = (network: Network) => {
       return FantomIcon;
     case 'arbitrum':
       return ArbitrumIcon;
+    case 'optimism':
+      return OptimismIcon;
     default:
       return;
   }
