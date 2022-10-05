@@ -261,6 +261,11 @@ export const Market = () => {
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
+  const createLineHandler = (vaultAddress: string) => {
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+    dispatch(ModalsActions.openModal({ modalName: 'createLine' }));
+  };
+
   const withdrawHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
     dispatch(ModalsActions.openModal({ modalName: 'withdrawTx' }));
@@ -408,7 +413,7 @@ export const Market = () => {
                       actions={[
                         {
                           name: t('components.transaction.deposit'),
-                          handler: () => depositHandler(address),
+                          handler: () => createLineHandler(address),
                           disabled: !walletIsConnected,
                         },
                       ]}

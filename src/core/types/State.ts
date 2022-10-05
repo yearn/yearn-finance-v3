@@ -109,6 +109,7 @@ export interface CreditLineState {
     getLine: Status;
     getLinePage: Status;
     getAllowances: Status;
+    deploySecuredLine: Status;
     user: UserLineMetadataStatusMap;
   };
 }
