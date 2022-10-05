@@ -189,26 +189,30 @@ const deploySecuredLine = createAsyncThunk<
   // await dispatch(getLine(deployedLineData.))
 });
 
-const approveDeposit = createAsyncThunk<void, { lineAddress: string; tokenAddress: string }, ThunkAPI>(
-  'lines/approveDeposit',
-  async ({ lineAddress, tokenAddress }, { getState, dispatch, extra }) => {
-    const { wallet, network } = getState();
-    const { creditLineService, transactionService } = extra.services;
-    const amount = extra.config.MAX_UINT256;
+const approveDeposit = createAsyncThunk<
+  void,
+  {
+    tokenAddress: string;
+    amount: string;
+    lineAddress: string;
+  },
+  ThunkAPI
+>('lines/approveDeposit', async ({ amount, tokenAddress }, { getState, dispatch, extra }) => {
+  const { wallet, network } = getState();
+  const { creditLineService, tokenService } = extra.services;
 
-    const accountAddress = wallet.selectedAddress;
-    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+  const accountAddress = wallet.selectedAddress;
+  if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const approveDepositTx = await creditLineService.approveDeposit({
-      accountAddress,
-      tokenAddress,
-      lineAddress,
-      amount: BigNumber.from(amount),
-    });
-
-    console.log('this is approval', approveDepositTx);
-  }
-);
+  const approveDepositTx = await tokenService.approve({
+    network: 'goerli',
+    tokenAddress,
+    accountAddress,
+    spenderAddress: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
+    amount: amount,
+  });
+  console.log('this is approval', approveDepositTx);
+});
 
 const addCredit = createAsyncThunk<void, AddCreditProps, ThunkAPI>(
   'lines/addCredit',

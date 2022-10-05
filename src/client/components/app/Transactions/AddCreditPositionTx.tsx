@@ -57,7 +57,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(false);
   const [transactionApproved, setTransactionApproved] = useState(true);
-  const [targetTokenAmount, setTargetTokenAmount] = useState('10000000');
+  const [targetTokenAmount, setTargetTokenAmount] = useState('1');
   const [creditLineAddressExample, setCreditlineAddressExample] = useState(
     '0x3eb4ede48e3e808677d1b4f751ebb4042112a070'
   );
@@ -133,11 +133,14 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   };
 
   const approveCreditPosition = () => {
+    let bigNumAmount = toBN(+targetTokenAmount);
+    console.log('example ', selectedSellTokenAddress, bigNumAmount);
     if (selectedSellTokenAddress === undefined) {
       return;
     }
     dispatch(
-      LinesActions.approveDeposit({ lineAddress: creditLineAddressExample, tokenAddress: selectedSellTokenAddress })
+      //@ts-ignore
+      LinesActions.approveDeposit({ tokenAddress: selectedSellTokenAddress, amount: 100000 })
     );
     setTransactionApproved(!transactionApproved);
   };

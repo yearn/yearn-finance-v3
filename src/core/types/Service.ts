@@ -368,7 +368,7 @@ export interface ApproveProps {
   accountAddress: Address;
   tokenAddress: Address;
   spenderAddress: Address;
-  amount: Wei;
+  amount: string;
 }
 
 // *************** TRANSACTION ***************
