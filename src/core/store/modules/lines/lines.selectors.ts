@@ -6,23 +6,8 @@ import {
   Status,
   LineActionsStatusMap,
   AggregatedCreditLine,
-  Token,
-  Balance,
-  AllowancesMap,
-  GetLinePageResponse,
-  UserPositionMetadata,
   Address,
   CreditLinePage, // prev. GeneralVaultView, Super indepth data, CreditLinePage is most similar atm
-  PositionSummary,
-  UserPositionSummary,
-  Spigot,
-  CollateralEvent,
-  CreditLineEvents,
-  ModuleNames,
-  SPIGOT_MODULE_NAME,
-  ESCROW_MODULE_NAME,
-  LENDER_POSITION_ROLE,
-  LinePageCreditPosition,
 } from '@types';
 import { toBN, mapStatusToString, formatCreditEvents, formatCollateralEvents } from '@utils';
 

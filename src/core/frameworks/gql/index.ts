@@ -76,9 +76,9 @@ export const getLinePage: QueryCreator<GetLinePageArgs, GetLinePageResponse> = <
 ): QueryResponse<GetLinePageResponse> => getLinePageQuery(arg);
 
 const getLinesQuery = createQuery(GET_LINES_QUERY, 'lineOfCredits');
-export const getLines: QueryCreator<GetLinesArgs, AggregatedCreditLine[]> = <GetLinesArgs, AggregatedCreditLine>(
+export const getLines: QueryCreator<GetLinesArgs, GetLinesResponse[]> = <GetLinesArgs, GetLinesResponse>(
   arg: GetLinesArgs
-): QueryResponse<AggregatedCreditLine[]> => getLinesQuery(arg);
+): QueryResponse<GetLinesResponse[]> => getLinesQuery(arg);
 
 const getUserLinePositionsQuery = createQuery(GET_LINES_QUERY);
 export const getUserLinePositions: QueryCreator<GetUserLinePositionsArgs, PositionSummary[]> = <

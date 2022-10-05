@@ -2,11 +2,9 @@ import { isEmpty } from 'lodash';
 import { BigNumber } from 'ethers';
 
 import {
-  GetLinePageResponse,
   CreditLinePage,
   RevenueContract,
   AggregatedCreditLine,
-  Spigot,
   CreditLineEvents,
   CollateralEvent,
   ModuleNames,
@@ -19,6 +17,12 @@ import {
   REPAID_STATUS,
   INSOLVENT_STATUS,
   NO_STATUS,
+  GetLinePageResponse,
+  GetLinesResponse,
+  BaseCreditFragResponse,
+  BaseEscrowDepositFragResponse,
+  SpigotRevenueSummaryFragresponse,
+  Address,
 } from '@types';
 
 export const mapStatusToString = (status: number): LineStatusTypes => {
@@ -106,34 +110,105 @@ export const formatCollateralEvents = (
 };
 /** Formatting functions. from GQL structured response to flat data for redux state  */
 
-export function formatGetLinesData(response: any[]): AggregatedCreditLine[] {
+export function formatGetLinesData(
+  response: GetLinesResponse[],
+  tokenPrices: { [token: string]: BigNumber }
+): AggregatedCreditLine[] {
   return response.map((data: any) => {
     const {
       borrower: { id: borrower },
-      status,
-      // escrow: { id: escrow },
-      // spigot: { id: spigot },
-      biggestCredit,
-      biggestDebt,
+      credits,
+      escrow: { deposits, ...baseEscrow },
+      spigot: { summaries: revenues, ...baseSpigot },
       ...rest
     } = data;
+    const { credit, spigot, escrow } = formatAggregatedCreditLineData(credits, deposits, revenues, tokenPrices);
+
+    // formatAggData (credits, deposits, summaries);
 
     return {
       ...rest,
-      principal: 0, //  getCurrentValue(biggestDebt.token.symbol, biggestDebt.principal),
-      deposit: 0, // getCurrentValue(biggestCredit.token.symbol,  biggestCredit.deposit),
-      status: mapStatusToString(status),
+      ...credit,
       borrower,
+      spigot: {
+        ...baseSpigot,
+        ...spigot,
+      },
+      escrow: {
+        ...baseEscrow,
+        ...escrow,
+      },
     };
   });
 }
 
+export const formatAggregatedCreditLineData = (
+  credits: BaseCreditFragResponse[],
+  collaterals: BaseEscrowDepositFragResponse[],
+  revenues: SpigotRevenueSummaryFragresponse[],
+  tokenPrices: { [token: string]: BigNumber }
+): {
+  credit: {
+    highestApy: [string, string, BigNumber];
+    principal: BigNumber;
+    deposit: BigNumber;
+  };
+  spigot: { tokenRevenue: { [key: string]: BigNumber } };
+  escrow: {
+    collateralValue: BigNumber;
+    cratio: BigNumber;
+  };
+} => {
+  // derivative or aggregated data we need to compute and store while mapping position data
+
+  // position id, token address, APY
+  const highestApy: [string, string, BigNumber] = ['', '', BigNumber.from(0)];
+
+  const principal = BigNumber.from(0);
+  const deposit = BigNumber.from(0);
+
+  const credit = credits.reduce(
+    (agg: any, c) => {
+      const price = tokenPrices[c.token.id] || BigNumber.from(0);
+      const highestApy = c.drate > agg.highestApy[2] ? [c.id, c.token.id, c.drate] : agg.highestApy;
+      return {
+        principal: agg.principal.add(price.times(c.principal)),
+        deposit: agg.deposit.add(price.times(c.deposit)),
+        highestApy,
+      };
+    },
+    { principal, deposit, highestApy }
+  );
+
+  const collateralValue = collaterals.reduce((agg, c) => {
+    const price = tokenPrices[c.token.id];
+    return !c.enabled ? agg : agg.add(c.amount.times(price));
+  }, BigNumber.from(0));
+
+  const escrow = {
+    collateralValue,
+    cratio: collateralValue.div(credit.principal),
+  };
+
+  // aggregated revenue in USD by token across all spigots
+  const tokenRevenue: { [key: string]: BigNumber } = revenues.reduce((ggg, r) => {
+    return { ...r, [r.token]: r.totalVolumeUsd };
+  }, {});
+
+  return {
+    credit,
+    escrow,
+    spigot: { tokenRevenue },
+  };
+};
+
+// TODO rename formatAggregatedCreditLineData and use in CreditService.getLines() + .getLinePage()
 export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePage => {
   const {
     spigot,
     escrow,
     credits,
-    status,
+    borrower: { id: borrower },
     ...metadata
     // userLinesMetadataMap,
   } = lineData;
@@ -194,10 +269,6 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
       const {
         id,
         token: { symbol, lastPriceUSD },
-        active,
-        contract,
-        startTime,
-        ownerSplit,
         events,
       } = s;
       collateralEvents = [
@@ -230,18 +301,18 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
         tokenRevenue,
         spigots: formattedSpigotsData,
       };
+
   const pageData: CreditLinePage = {
     // metadata
     ...metadata,
+    borrower,
     // todo add UsePositionMetada,
-    status: mapStatusToString(status),
     // debt data
     principal,
     deposit,
     interest,
     totalInterestRepaid,
     highestApy,
-    activeIds,
     // all recent events
     collateralEvents,
     creditEvents,

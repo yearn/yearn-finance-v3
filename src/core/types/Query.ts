@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
 
-import { AggregatedCreditLine, CreditLinePage, BaseToken } from '@types';
+import { LineStatusTypes, AggregatedCreditLine, CreditLinePage, BaseToken } from '@types';
 
 import { Address } from './Blockchain';
 
@@ -81,16 +81,34 @@ export interface UseCreditLineParams {
 */
 type QueryResponseTypes = AggregatedCreditLine | AggregatedCreditLine[] | CreditLinePage;
 
-export interface LineFrag {
-  id: string;
-  __typename: string;
-  timestamp: number;
-  // events with value
-  value?: number;
-  amount?: number;
-  // events with rates
-  drawnRate?: number;
-  facilityRate?: number;
+export interface BaseLineFragResponse {
+  id: Address;
+  end: number;
+  type: string;
+  start: number;
+  status: LineStatusTypes;
+  borrower: {
+    id: Address;
+  };
+}
+
+export interface BaseCreditFragResponse {
+  id: Address;
+  principal: BigNumber;
+  deposit: BigNumber;
+  drate: BigNumber;
+  token: {
+    id: Address;
+    symbol: string;
+    decimals: number;
+  };
+}
+
+export interface LinePageCreditFragResponse extends BaseCreditFragResponse {
+  interestRepaid: BigNumber;
+  interestAccrued: BigNumber;
+  dRate: BigNumber;
+  fRate: BigNumber;
 }
 
 export interface LineEventFrag {
@@ -100,47 +118,53 @@ export interface LineEventFrag {
     id: string;
   };
   // events with value
-  value?: number;
-  amount?: number;
+  value?: BigNumber;
+  amount?: BigNumber;
   // events with rates
-  drawnRate?: number;
-  facilityRate?: number;
+  dRate?: BigNumber;
+  fRate?: BigNumber;
 }
 
-export interface GetLinePageResponse {
-  id: string;
-  end: number;
-  type: string;
-  start: number;
-  status: number;
-  borrower: Address;
-  credits?: {
-    id: string;
-    lender: Address;
-    deposit: BigNumber;
-    principal: BigNumber;
-    interestAccrued: BigNumber;
-    interestRepaid: BigNumber;
-    // TODO add to subgraph
-    // totalInterestRepaid: BigNumber;
-    drawnRate: BigNumber;
-    token: {
+export interface SpigotRevenueSummaryFragresponse {
+  token: Address;
+  totalVolumeUsd: BigNumber;
+  timeOfFirstIncome: number;
+  timeOfLastIncome: number;
+}
+
+export interface BaseEscrowDepositFragResponse {
+  enabled: boolean;
+  amount: BigInt;
+  token: {
+    id: Address;
+    symbol: string;
+    decimals: number;
+  };
+}
+
+export interface BaseEscrowFragResponse {
+  id: Address;
+  minCRatio: BigNumber;
+  deposits: BaseEscrowDepositFragResponse[];
+}
+
+export interface GetLinesResponse {
+  lines: BaseLineFragResponse & {
+    credits: BaseCreditFragResponse;
+    escrow: BaseEscrowFragResponse;
+    spigot: {
       id: Address;
-      symbol: string;
-      lastPriceUSD?: BigNumber; // Can be live data or from subgraph
+      summaries: {
+        totalVolumeUsd: BigNumber;
+        timeOfFirstIncome: number;
+        timeOfLastIncome: number;
+      };
     };
-    events?: {
-      // merge custom format w/ subgraph structure
-      events?: {
-        // cant use our type because we flatten structure for easier use
-        __typename: string;
-        timestamp: number;
-        credit: {
-          id: string;
-        };
-      }[];
-    }[];
-  }[];
+  };
+}
+
+export interface GetLinePageResponse extends BaseLineFragResponse {
+  credits?: LinePageCreditFragResponse & { events?: LineEventFrag[] }[];
 
   escrow?: {
     id: Address;
@@ -164,20 +188,21 @@ export interface GetLinePageResponse {
   spigot?: {
     id: Address;
     spigots: {
-      active: boolean;
       contract: Address;
+      active: boolean;
       startTime: number;
-      events?: {
-        __typename: string;
-        timestamp: number;
-        revenueToken: {
-          decimals: number;
-          symbol: string;
-        };
-        escrowed: BigNumber;
-        netIncome: BigNumber;
-        value: BigNumber;
-      }[];
     };
+    events?: {
+      __typename: 'ClaimRevenueEvent'; //only ever need revenue
+      revenueToken: {
+        id: Address;
+        decimals: number;
+        symbol: string;
+      };
+      timestamp: number;
+      escrowed: BigNumber;
+      netIncome: BigNumber;
+      value: BigNumber;
+    }[];
   };
 }

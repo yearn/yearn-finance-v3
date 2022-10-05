@@ -32,6 +32,7 @@ const BASE_CREDIT_FRAGMENT = gql`
     id
     principal
     deposit
+    drate
     token {
       id
       symbol
@@ -255,6 +256,7 @@ export const GET_LINES_QUERY = gql`
       spigot {
         id
         summmaries {
+          token
           totalVolumeUsd
           timeOfFirstIncome
           timeOfLastIncome
