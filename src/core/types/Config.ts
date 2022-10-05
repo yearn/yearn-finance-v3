@@ -6,6 +6,7 @@ export interface Config extends Env, Constants {}
 export interface Env {
   ENV: string;
   VERSION: string;
+  HOST: string;
   NETWORK: Network;
   CUSTOM_PROVIDER_HTTPS: string;
   USE_MAINNET_FORK: boolean;
@@ -17,6 +18,7 @@ export interface Env {
   BLOCKNATIVE_KEY: string | undefined;
   FORTMATIC_KEY: string | undefined;
   PORTIS_KEY: string | undefined;
+  UNSTOPPABLE_DOMAINS_ID: string | undefined;
   ZAPPER_API_KEY: string | undefined;
   YEARN_SUBGRAPH_KEY: string | undefined;
 }

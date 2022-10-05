@@ -66,6 +66,10 @@
       },
       "claim": "Claim",
       "deposit": "Deposit",
+      "fees": {
+        "powered-by": "Zaps powered by Portals.fi",
+        "zaps": "Zap fee"
+      },
       "from-iron-bank": "From Iron Bank",
       "from-vault": "From vault",
       "from-wallet": "From wallet",
@@ -158,7 +162,8 @@
     "settings": "Settings",
     "vault": "Vaults",
     "vaults": "Vaults",
-    "wallet": "Wallet"
+    "wallet": "Wallet",
+    "ycrv": "yCRV"
   },
   "themes": {
     "classic": "Classic v2",

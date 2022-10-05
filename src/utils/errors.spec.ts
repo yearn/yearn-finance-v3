@@ -1,4 +1,4 @@
-import { EthersError, PriceFetchingError, SdkError, SimulationError, TenderlyError, ZapperError } from '@yfi/sdk';
+import { EthersError, PriceFetchingError, SdkError, SimulationError, TenderlyError, ZapError } from '@yfi/sdk';
 
 import { parseError } from './errors';
 
@@ -16,13 +16,13 @@ describe('Errors', () => {
       ${'PriceFetchingError: error code'}            | ${new PriceFetchingError('error message', 'error code')}                             | ${{ code: 'error code', message: 'error message', name: 'price_fetching' }}
       ${'TenderlyError: SIMULATION_CALL'}            | ${new TenderlyError('error message', TenderlyError.SIMULATION_CALL)}                 | ${{ code: TenderlyError.SIMULATION_CALL, message: 'Simulation call to Tenderly failed', name: 'tenderly' }}
       ${'TenderlyError: error code'}                 | ${new TenderlyError('error message', 'error code')}                                  | ${{ code: 'error code', message: 'error message', name: 'tenderly' }}
-      ${'ZapperError: ZAP_IN'}                       | ${new ZapperError('error message', ZapperError.ZAP_IN)}                              | ${{ code: ZapperError.ZAP_IN, message: 'Error Zapping in token', name: 'zapper' }}
-      ${'ZapperError: ZAP_IN_APPROVAL_STATE'}        | ${new ZapperError('error message', ZapperError.ZAP_IN_APPROVAL_STATE)}               | ${{ code: ZapperError.ZAP_IN_APPROVAL_STATE, message: 'Error getting approval Zap in state of token', name: 'zapper' }}
-      ${'ZapperError: ZAP_IN_APPROVAL'}              | ${new ZapperError('error message', ZapperError.ZAP_IN_APPROVAL)}                     | ${{ code: ZapperError.ZAP_IN_APPROVAL, message: 'Error approving Zap in of token', name: 'zapper' }}
-      ${'ZapperError: ZAP_OUT'}                      | ${new ZapperError('error message', ZapperError.ZAP_OUT)}                             | ${{ code: ZapperError.ZAP_OUT, message: 'Error Zapping out token', name: 'zapper' }}
-      ${'ZapperError: ZAP_OUT_APPROVAL_STATE'}       | ${new ZapperError('error message', ZapperError.ZAP_OUT_APPROVAL_STATE)}              | ${{ code: ZapperError.ZAP_OUT_APPROVAL_STATE, message: 'Error getting approval Zap out state of token', name: 'zapper' }}
-      ${'ZapperError: ZAP_OUT_APPROVAL'}             | ${new ZapperError('error message', ZapperError.ZAP_OUT_APPROVAL)}                    | ${{ code: ZapperError.ZAP_OUT_APPROVAL, message: 'Error approving Zap out of token', name: 'zapper' }}
-      ${'ZapperError: error code'}                   | ${new ZapperError('error message', 'error code')}                                    | ${{ code: 'error code', message: 'error message', name: 'zapper' }}
+      ${'ZapError: ZAP_IN'}                          | ${new ZapError('error message', ZapError.ZAP_IN)}                                    | ${{ code: ZapError.ZAP_IN, message: 'Error Zapping in token', name: 'zap' }}
+      ${'ZapError: ZAP_IN_APPROVAL_STATE'}           | ${new ZapError('error message', ZapError.ZAP_IN_APPROVAL_STATE)}                     | ${{ code: ZapError.ZAP_IN_APPROVAL_STATE, message: 'Error getting approval Zap in state of token', name: 'zap' }}
+      ${'ZapError: ZAP_IN_APPROVAL'}                 | ${new ZapError('error message', ZapError.ZAP_IN_APPROVAL)}                           | ${{ code: ZapError.ZAP_IN_APPROVAL, message: 'Error approving Zap in of token', name: 'zap' }}
+      ${'ZapError: ZAP_OUT'}                         | ${new ZapError('error message', ZapError.ZAP_OUT)}                                   | ${{ code: ZapError.ZAP_OUT, message: 'Error Zapping out token', name: 'zap' }}
+      ${'ZapError: ZAP_OUT_APPROVAL_STATE'}          | ${new ZapError('error message', ZapError.ZAP_OUT_APPROVAL_STATE)}                    | ${{ code: ZapError.ZAP_OUT_APPROVAL_STATE, message: 'Error getting approval Zap out state of token', name: 'zap' }}
+      ${'ZapError: ZAP_OUT_APPROVAL'}                | ${new ZapError('error message', ZapError.ZAP_OUT_APPROVAL)}                          | ${{ code: ZapError.ZAP_OUT_APPROVAL, message: 'Error approving Zap out of token', name: 'zap' }}
+      ${'ZapError: error code'}                      | ${new ZapError('error message', 'error code')}                                       | ${{ code: 'error code', message: 'error message', name: 'zap' }}
       ${'SimulationError: NO_LOG'}                   | ${new SimulationError('error message', SimulationError.NO_LOG)}                      | ${{ code: SimulationError.NO_LOG, message: 'No log of transfering token', name: 'simulation' }}
       ${'SimulationError: PARTIAL_REVERT'}           | ${new SimulationError('error message', SimulationError.PARTIAL_REVERT)}              | ${{ code: SimulationError.PARTIAL_REVERT, message: 'Partial revert simulating call', name: 'simulation' }}
       ${'SimulationError: TENDERLY_RESPONSE_ERROR'}  | ${new SimulationError('error message', SimulationError.TENDERLY_RESPONSE_ERROR)}     | ${{ code: SimulationError.TENDERLY_RESPONSE_ERROR, message: 'Error on Tenderly response', name: 'simulation' }}

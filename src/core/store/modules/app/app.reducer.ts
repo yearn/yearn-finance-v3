@@ -7,9 +7,9 @@ import { AppActions } from './app.actions';
 export const appInitialState: AppState = {
   isInitialized: false,
   servicesEnabled: {
-    zapper: true,
-    tenderly: true,
-    notify: true,
+    zaps: true,
+    simulations: true,
+    notifications: true,
   },
   statusMap: {
     initApp: initialStatus,

@@ -16,3 +16,4 @@ export * from './TokenIcon';
 export * from './Transactions';
 export * from './VaultDetail';
 export * from './ViewContainer';
+export * from './ZapTransactionControls';

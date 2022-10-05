@@ -46,8 +46,8 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const [spenderAddress, setSpenderAddress] = useState('');
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
-  const simulationsEnabled = servicesEnabled.tenderly;
-  const zapperEnabled = servicesEnabled.zapper;
+  const simulationsEnabled = servicesEnabled.simulations;
+  const zapsEnabled = servicesEnabled.zaps;
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
@@ -89,9 +89,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   useEffect(() => {
     if (!selectedTargetTokenAddress && selectedVault) {
       setSelectedTargetTokenAddress(
-        !zapperEnabled && selectedVault.zapOutWith === 'zapperZapOut'
-          ? selectedVault.token.address
-          : selectedVault.defaultDisplayToken
+        !zapsEnabled && selectedVault.zapOutWith ? selectedVault.token.address : selectedVault.defaultDisplayToken
       );
     }
   }, [selectedTargetTokenAddress, selectedVault]);
@@ -205,6 +203,9 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     ? t('components.transaction.status.simulating')
     : t('components.transaction.status.calculating');
 
+  const isZap = selectedVault.token.address !== selectedTargetTokenAddress;
+  const zapService = isZap ? selectedVault.zapOutWith : undefined;
+
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
     setSelectedTargetTokenAddress(tokenAddress);
@@ -228,7 +229,12 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const approve = async () => {
     try {
       if (signedApprovalsEnabled) {
-        const signResult = await dispatchAndUnwrap(VaultsActions.signZapOut({ vaultAddress: selectedVault.address }));
+        const signResult = await dispatchAndUnwrap(
+          VaultsActions.signZapOut({
+            vaultAddress: selectedVault.address,
+            amount: willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount),
+          })
+        );
         setSignature(signResult.signature);
       } else {
         await dispatch(
@@ -280,6 +286,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       sourceAmount={amount}
       sourceAmountValue={amountValue}
       onSourceAmountChange={setAmount}
+      sourceStatus={{ error: sourceError }}
       targetHeader={t('components.transaction.to-wallet')}
       targetAssetOptions={targetTokensOptions}
       selectedTargetAsset={selectedTargetToken}
@@ -289,7 +296,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       targetAmountValue={expectedAmountValue}
       targetStatus={targetStatus}
       actions={txActions}
-      sourceStatus={{ error: sourceError }}
+      zapService={zapService}
       loadingText={loadingText}
       onClose={onClose}
     />

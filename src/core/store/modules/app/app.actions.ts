@@ -52,6 +52,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
     if (settings.signedApprovalsEnabled) await dispatch(SettingsActions.toggleSignedApprovals());
     await dispatch(WalletActions.walletSelect({ walletName: 'Iframe', network: 'mainnet' }));
     await dispatch(PartnerActions.changePartner({ id: 'ledger', address: CONTRACT_ADDRESSES.LEDGER }));
+    dispatch(disableService({ service: 'zaps' }));
   } else if (isGnosisApp()) {
     const walletName = 'Gnosis Safe';
     if (network.current !== 'mainnet') await dispatch(NetworkActions.changeNetwork({ network: 'mainnet' }));
@@ -64,6 +65,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
   dispatch(checkExternalServicesStatus());
+
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
 });
@@ -145,15 +147,15 @@ const checkExternalServicesStatus = createAsyncThunk<void, void, ThunkAPI>(
       const errorMessageTemplate =
         'service is currently experiencing technical issues and have been temporarily disabled. We apologize for any inconvenience this may cause, we are actively working on resolving these issues';
       const downgradedServicesMessages = [];
-      const { zapper, simulations } = data;
-      if (!zapper) {
-        dispatch(disableService({ service: 'zapper' }));
-        downgradedServicesMessages.push(`Zapper ${errorMessageTemplate}`);
+      const { zaps, simulations } = data;
+      if (!zaps) {
+        dispatch(disableService({ service: 'zaps' }));
+        downgradedServicesMessages.push(`Zap ${errorMessageTemplate}`);
       }
 
       if (!simulations) {
-        dispatch(disableService({ service: 'tenderly' }));
-        downgradedServicesMessages.push(`Simulations ${errorMessageTemplate}`);
+        dispatch(disableService({ service: 'simulations' }));
+        downgradedServicesMessages.push(`Simulation ${errorMessageTemplate}`);
       }
 
       downgradedServicesMessages.forEach(async (message) => {
