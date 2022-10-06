@@ -61,7 +61,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [transactionLoading, setLoading] = useState(false);
   const [targetTokenAmount, setTargetTokenAmount] = useState('1');
   const [creditLineAddressExample, setCreditlineAddressExample] = useState(
-    '0x3eb4ede48e3e808677d1b4f751ebb4042112a070'
+    '0xb71de8f02215fb0128cc31db0bb738c87ebec5f9'
   );
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');

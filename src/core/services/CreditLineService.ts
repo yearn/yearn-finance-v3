@@ -232,7 +232,7 @@ export class CreditLineServiceImpl implements CreditLineService {
 
       return <TransactionResponse>(
         await this.executeContractMethod(
-          SecuredLine_GOERLI,
+          line,
           'addCredit',
           [data.drate, data.frate, data.amount, data.token, data.lender],
           true
