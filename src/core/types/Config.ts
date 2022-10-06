@@ -57,4 +57,5 @@ export interface Constants {
   Oracle_GOERLI: Address;
   SwapTarget_GOERLI: Address;
   LineFactory_GOERLI: Address;
+  SecuredLine_GOERLI: Address;
 }

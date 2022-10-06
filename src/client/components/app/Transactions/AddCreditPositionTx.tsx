@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { TokenCard } from '@yearn-finance/web-lib';
+import { ethers } from 'ethers';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
 import {
@@ -151,7 +152,8 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
     console.log(bigNumDRate, bigNumFRate);
 
-    if (!creditLineAddressExample || !selectedSellTokenAddress || !targetTokenAmount) {
+    if (!selectedSellTokenAddress) {
+      console.log('error');
       return;
     }
 
@@ -159,11 +161,11 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
       LinesActions.addCredit({
         lineAddress: creditLineAddressExample,
         //@ts-ignore
-        drate: bigNumDRate,
+        drate: ethers.utils.parseEther('2'),
         //@ts-ignore
-        frate: bigNumFRate,
+        frate: ethers.utils.parseEther('2'),
         //@ts-ignore
-        amount: targetTokenAmount,
+        amount: 100000,
         token: selectedSellTokenAddress,
         lender: '0xc0163E58648b247c143023CFB26C2BAA42C9d9A9',
       })

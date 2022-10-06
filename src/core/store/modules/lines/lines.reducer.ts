@@ -44,6 +44,7 @@ export const linesInitialState: CreditLineState = {
 };
 
 const {
+  addCredit,
   approveDeposit,
   depositAndRepay,
   // approveZapOut,
@@ -247,6 +248,17 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
       state.statusMap.getAllowances = {};
     })
     .addCase(approveDeposit.rejected, (state, { error }) => {
+      state.statusMap.getAllowances = { error: error.message };
+    })
+
+    .addCase(addCredit.pending, (state) => {
+      state.statusMap.getAllowances = { loading: true };
+    })
+    .addCase(addCredit.fulfilled, (state) => {
+      // deployLine action emits a getLine action if tx is successful
+      state.statusMap.getAllowances = {};
+    })
+    .addCase(addCredit.rejected, (state, { error }) => {
       state.statusMap.getAllowances = { error: error.message };
     })
 

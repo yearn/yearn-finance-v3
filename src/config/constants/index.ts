@@ -119,6 +119,7 @@ export const getConstants = memoize((): Constants => {
     Oracle_GOERLI: '0x7233038e589913dca4b6d15ff8bba263a433aed2',
     SwapTarget_GOERLI: '0xcb7b9188ada88cb0c991c807acc6b44097059dec',
     LineFactory_GOERLI: '0x43158693dba386562f0581cd48e68df027a5a877',
+    SecuredLine_GOERLI: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
     // ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
   };
 });
