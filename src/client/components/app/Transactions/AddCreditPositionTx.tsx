@@ -168,7 +168,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         frate: ethers.utils.parseEther(frate),
         amount: ethers.utils.parseEther(targetTokenAmount),
         token: selectedSellTokenAddress,
-        lender: '0xc0163E58648b247c143023CFB26C2BAA42C9d9A9',
+        lender: '',
         dryRun: true,
       })
     ).then((res) => {

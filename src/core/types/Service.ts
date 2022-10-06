@@ -189,10 +189,10 @@ export interface CreditLineService {
 export interface AddCreditProps {
   lineAddress: string;
   token: Address;
-  lender: Address;
   drate: BigNumber;
   frate: BigNumber;
   amount: BigNumber;
+  lender: Address;
   dryRun: boolean;
 }
 
