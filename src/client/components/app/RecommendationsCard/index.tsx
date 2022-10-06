@@ -140,6 +140,8 @@ interface Item {
   info: string;
   principal: any; // TODO BigNumber
   deposit: any; // TODO BigNumber
+  collateral: BigNumber;
+  revenue: BigNumber;
   tags?: string[];
   infoDetail?: string;
   action?: string;
@@ -191,6 +193,16 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
                 <MetricsText>
                   {' '}
                   {t('components.line-card.total-debt')} / {t('components.line-card.total-credit')}{' '}
+                </MetricsText>
+              </MetricsTextContainer>
+
+              <Metric>
+                ${item.collateral} / ${item.revenue}
+              </Metric>
+              <MetricsTextContainer>
+                <MetricsText>
+                  {' '}
+                  {t('components.line-card.collateral')} / {t('components.line-card.revenue')}{' '}
                 </MetricsText>
               </MetricsTextContainer>
             </ItemInfo>

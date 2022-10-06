@@ -11,8 +11,6 @@ import {
 } from '@types';
 import { toBN, mapStatusToString, formatCreditEvents, formatCollateralEvents } from '@utils';
 
-import { createToken } from '../tokens/tokens.selectors';
-
 import { initialLineActionsStatusMap } from './lines.reducer';
 
 /* ---------------------------------- State --------------------------------- */

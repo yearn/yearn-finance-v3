@@ -26,6 +26,7 @@ import {
   IncreaseCreditProps,
   DepositAndRepayProps,
   DepositAndCloseProps,
+  GetLinesResponse,
 } from '@types';
 import { getConfig } from '@config';
 import { LineOfCreditABI } from '@services/contracts';
@@ -228,11 +229,11 @@ export class CreditLineServiceImpl implements CreditLineService {
     return;
   }
 
-  public async getLines(prop: GetLinesProps): Promise<AggregatedCreditLine[] | undefined> {
+  public async getLines(prop: GetLinesProps): Promise<GetLinesResponse[] | undefined> {
     // todo get all token prices from yearn add update store with values
     const tokenPrices = {};
     const response = getLines(prop)
-      .then((data) => formatGetLinesData(data, tokenPrices))
+      .then((data) => data)
       .catch((err) => {
         console.log('CreditLineService: error fetching lines', err);
         return undefined;

@@ -55,12 +55,12 @@ export const LineDetail = () => {
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
+  // const selectedLineCreditEvents = useAppSelector(LinesSelectors.selectSelectedLineCreditEvents);
   const linesStatus = useAppSelector(LinesSelectors.selectLinesStatus);
   // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
-  const selectedLinePage = useAppSelector(LinesSelectors.selectSelectedLinePage);
   const walletName = useAppSelector(WalletSelectors.selectWallet);
 
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];

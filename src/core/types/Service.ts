@@ -28,6 +28,7 @@ import {
   GetLineArgs,
   GetLinesArgs,
   GetLinePageArgs,
+  GetLinesResponse,
 } from '@types';
 
 // *************** USER ***************
@@ -145,7 +146,7 @@ export interface InterestRateCreditService {
 
 export interface CreditLineService {
   getLine: (props: GetLineProps) => Promise<AggregatedCreditLine | undefined>;
-  getLines: (props: GetLinesProps) => Promise<AggregatedCreditLine[] | undefined>;
+  getLines: (props: GetLinesProps) => Promise<GetLinesResponse[] | undefined>;
   getLinePage: (props: GetLinePageProps) => Promise<CreditLinePage | undefined>;
   getUserLinePositions: (...args: any) => Promise<any | undefined>;
   getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;

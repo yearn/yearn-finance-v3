@@ -191,6 +191,7 @@ export const Market = () => {
   const depositsLoading = generalLoading && !deposits.length;
   // TODO not neeed here
   const addCreditStatus = useAppSelector(LinesSelectors.selectLinesActionsStatusMap);
+
   const defaultLineCategories: UseCreditLinesParams = {
     // using i18m translation as keys for easy display
     'market:featured.highest-credit': {
@@ -214,21 +215,17 @@ export const Market = () => {
   const fetchMarketData = () => dispatch(LinesActions.getLines(defaultLineCategories));
   const lineCategoriesForDisplay = useAppSelector(LinesSelectors.selectLinesForCategories);
   const getLinesStatus = useAppSelector(LinesSelectors.selectLinesStatusMap).getLines;
+  const [didFetchLines, setLinesFetched] = useState(false);
   console.log('ready', getLinesStatus || _.isEmpty(lineCategoriesForDisplay));
 
   useEffect(() => {
     setSearch(queryParams.search ?? '');
 
-    const expectedCategories = _.keys(defaultLineCategories);
-    const cuirrentCategories = _.keys(lineCategoriesForDisplay);
-
-    // const shouldFetch = expectedCategories.reduce((bool, cat) => bool && cuirrentCategories.includes(cat), true);
-    let shouldFetch: boolean = false;
-    expectedCategories.forEach((cat) => (shouldFetch = shouldFetch || !cuirrentCategories.includes(cat)));
-
-    console.log('should fetch', shouldFetch, cuirrentCategories);
-    if (shouldFetch) fetchMarketData();
-  }, [queryParams.search, lineCategoriesForDisplay]);
+    if (!didFetchLines) {
+      setLinesFetched(true);
+      fetchMarketData();
+    }
+  }, [queryParams.search, didFetchLines]);
 
   useEffect(() => {
     const searchableKeys = ['name', 'displayName', 'token.symbol', 'token.name'];
@@ -305,15 +302,23 @@ export const Market = () => {
             <CardStyle
               header={t(key)}
               key={key}
-              items={val.map(({ borrower, type, spigot, escrow, principal, deposit }) => ({
+              items={val.map(({ id, borrower, type, spigot, escrow, principal, deposit }) => ({
                 icon: '',
                 name: borrower,
                 principal,
                 deposit,
+                collateral: Object.entries(escrow?.deposits || {}).reduce(
+                  (sum, [_, val]) => sum.add(val.amount),
+                  BigNumber.from(0)
+                ),
+                revenue: Object.values(spigot?.tokenRevenue || {}).reduce(
+                  (sum, val) => sum.add(val),
+                  BigNumber.from(0)
+                ),
                 tags: [spigot ? 'revenue' : '', escrow ? 'collateral' : ''].filter((x) => !!x),
                 info: type || 'DAO Line of Credit',
                 infoDetail: 'EYY',
-                onAction: () => history.push(`/lines/${borrower}`),
+                onAction: () => history.push(`/lines/${id}`),
               }))}
             />
           );

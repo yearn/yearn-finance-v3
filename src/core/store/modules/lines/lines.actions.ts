@@ -25,6 +25,7 @@ import {
   toBN,
   getNetwork,
   validateNetwork,
+  formatGetLinesData,
   // validateLineDeposit,
   // validateLineWithdraw,
   // validateMigrateLineAllowance,
@@ -72,25 +73,36 @@ const getLine = createAsyncThunk<{ lineData: AggregatedCreditLine | undefined },
 );
 
 const getLines = createAsyncThunk<
-  { linesData: { [category: string]: AggregatedCreditLine[] | undefined } },
+  { linesData: { [category: string]: AggregatedCreditLine[] } },
   UseCreditLinesParams,
   ThunkAPI
 >('lines/getLines', async (categories, { getState, extra }) => {
-  const { network } = getState();
-  const { creditLineService } = extra.services;
-  const promises = await Promise.all(
-    Object.values(categories).map((params: GetLinesArgs) =>
-      creditLineService.getLines({ network: network.current, ...params })
-    )
-  );
-  const linesData = Object.keys(categories).reduce(
-    (all, category, i) => ({
-      ...all,
-      // @dev assumes promises is same order as categories
-      [category]: promises[i],
-    }),
+  const {
+    network,
+    tokens: { tokensMap },
+  } = getState();
+
+  // @dev tokens will probs be empty if we're not using yearnSDK
+  const tokenPrices = Object.entries(tokensMap).reduce(
+    (prices, [addy, { priceUsdc }]) => ({ ...prices, [addy]: priceUsdc }),
     {}
   );
+
+  const { creditLineService } = extra.services;
+  const categoryKeys = Object.keys(categories);
+  const promises = await Promise.all(
+    categoryKeys
+      .map((k) => categories[k])
+      .map((params: GetLinesArgs) => creditLineService.getLines({ network: network.current, ...params }))
+  );
+
+  const linesData = categoryKeys.reduce(
+    (all, category, i) =>
+      // @dev assumes `promises` is same order as `categories`
+      !promises[i] ? all : { ...all, [category]: formatGetLinesData(promises[i]!, tokenPrices) },
+    {}
+  );
+
   return { linesData };
 });
 
@@ -99,6 +111,9 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
   async ({ id }, { getState, extra }) => {
     const { network } = getState();
     const { creditLineService } = extra.services;
+    // check if AggLine data is already in store
+    // if no^ then send full getLinePage req
+    // else just get credit events
     const linePageData = await creditLineService.getLinePage({
       network: network.current,
       id,
