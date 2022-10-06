@@ -60,7 +60,13 @@ export const TransactionFees = ({ zapService }: TransactionFeesProps) => {
             <StyledIcon Component={InfoIcon} size="1.5rem" />
           </Tooltip>
         </Text>
-        <Text>0.3%</Text>
+        <Text>
+          {t(
+            zapService?.includes('portals')
+              ? 'components.transaction.fees.portals-zap-fee'
+              : 'components.transaction.fees.wido-zap-fee'
+          )}
+        </Text>
       </Row>
     </Container>
   );
