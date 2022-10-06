@@ -160,14 +160,12 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     dispatch(
       LinesActions.addCredit({
         lineAddress: creditLineAddressExample,
-        //@ts-ignore
         drate: ethers.utils.parseEther('2'),
-        //@ts-ignore
         frate: ethers.utils.parseEther('2'),
-        //@ts-ignore
-        amount: 100000,
+        amount: ethers.utils.parseEther('10'),
         token: selectedSellTokenAddress,
         lender: '0xc0163E58648b247c143023CFB26C2BAA42C9d9A9',
+        dryRun: true,
       })
     ).then((res) => {
       console.log('working ', res);
