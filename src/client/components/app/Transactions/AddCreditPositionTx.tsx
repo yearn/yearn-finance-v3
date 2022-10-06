@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { TokenCard } from '@yearn-finance/web-lib';
+import { ethers } from 'ethers';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
 import {
@@ -14,12 +15,15 @@ import {
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
 import { Address, Token, Asset, TokenView, CreditLine } from '@src/core/types';
-import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions } from '@store';
+import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxRateInput } from './components/TxRateInput';
+import { TxActionButton } from './components/TxActions';
+import { TxActions } from './components/TxActions';
+import { TxStatus } from './components/TxStatus';
 
 const {
   CONTRACT_ADDRESSES: { DAI },
@@ -52,8 +56,13 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
-
-  const [targetTokenAmount, setTargetTokenAmount] = useState('10000000');
+  const [transactionCompleted, setTransactionCompleted] = useState(false);
+  const [transactionApproved, setTransactionApproved] = useState(true);
+  const [transactionLoading, setLoading] = useState(false);
+  const [targetTokenAmount, setTargetTokenAmount] = useState('1');
+  const [creditLineAddressExample, setCreditlineAddressExample] = useState(
+    '0xb71de8f02215fb0128cc31db0bb738c87ebec5f9'
+  );
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');
   const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
@@ -67,7 +76,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
   useEffect(() => {
     console.log('add position tx useEffect token/creditLine', selectedSellTokenAddress, initialToken, selectedCredit);
-
     if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
@@ -125,12 +133,81 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
   };
 
+  const approveCreditPosition = () => {
+    console.log('example ', selectedSellTokenAddress, targetTokenAmount, drate, frate);
+    setLoading(true);
+    if (selectedSellTokenAddress === undefined) {
+      return;
+    }
+    dispatch(
+      //@ts-ignore
+      LinesActions.approveDeposit({
+        tokenAddress: selectedSellTokenAddress,
+        amount: `${ethers.utils.parseEther(targetTokenAmount)}`,
+      })
+    );
+    setLoading(false);
+    setTransactionApproved(!transactionApproved);
+  };
+
+  const addCreditPosition = () => {
+    let bigNumDRate = toBN(drate);
+    let bigNumFRate = toBN(frate);
+
+    console.log(bigNumDRate, bigNumFRate);
+
+    if (!selectedSellTokenAddress) {
+      console.log('error');
+      return;
+    }
+
+    dispatch(
+      LinesActions.addCredit({
+        lineAddress: creditLineAddressExample,
+        drate: ethers.utils.parseEther(drate),
+        frate: ethers.utils.parseEther(frate),
+        amount: ethers.utils.parseEther(targetTokenAmount),
+        token: selectedSellTokenAddress,
+        lender: '',
+        dryRun: true,
+      })
+    ).then((res) => {
+      console.log('working ', res);
+      setTransactionCompleted(true);
+    });
+  };
+
+  const txActions = [
+    {
+      label: t('components.transaction.approve'),
+      onAction: approveCreditPosition,
+      status: true,
+      disabled: !transactionApproved,
+      contrast: false,
+    },
+    {
+      label: t('components.transaction.deposit'),
+      onAction: addCreditPosition,
+      status: true,
+      disabled: transactionApproved,
+      contrast: true,
+    },
+  ];
+
   if (!selectedSellToken) return null;
 
   const targetBalance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
   const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
     selectedSellToken.symbol
   }`;
+
+  if (transactionCompleted) {
+    return (
+      <StyledTransaction onClose={onClose} header={'transaction'}>
+        <TxStatus transactionCompletedLabel={'completed'} exit={() => console.log('hey')} />
+      </StyledTransaction>
+    );
+  }
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
@@ -171,6 +248,20 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         setRateChange={onRateChange}
         readOnly={acceptingOffer}
       />
+      <TxActions>
+        {txActions.map(({ label, onAction, status, disabled, contrast }) => (
+          <TxActionButton
+            key={label}
+            data-testid={`modal-action-${label.toLowerCase()}`}
+            onClick={onAction}
+            disabled={disabled}
+            contrast={contrast}
+            isLoading={false}
+          >
+            {label}
+          </TxActionButton>
+        ))}
+      </TxActions>
     </StyledTransaction>
   );
 };

@@ -151,7 +151,7 @@ export interface CreditLineService {
   getUserLinePositions: (...args: any) => Promise<any | undefined>;
   getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;
 
-  // addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
   // close: (props: CloseProps) => Promise<TransactionResponse>;
   // withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse>;
   // setRates: (props: SetRatesProps) => Promise<TransactionResponse | PopulatedTransaction>;
@@ -189,10 +189,10 @@ export interface CreditLineService {
 export interface AddCreditProps {
   lineAddress: string;
   token: Address;
-  lender: Address;
   drate: BigNumber;
   frate: BigNumber;
   amount: BigNumber;
+  lender: Address;
   dryRun: boolean;
 }
 
@@ -229,7 +229,6 @@ export interface DepositAndCloseProps {
 }
 
 export interface ApproveLineDepositProps {
-  network: Network;
   lineAddress: string;
   tokenAddress: string;
   accountAddress: string;
@@ -369,7 +368,7 @@ export interface ApproveProps {
   accountAddress: Address;
   tokenAddress: Address;
   spenderAddress: Address;
-  amount: Wei;
+  amount: string;
 }
 
 // *************** TRANSACTION ***************
@@ -414,4 +413,55 @@ export interface SubscriptionProps {
 export interface SubscriptionService {
   subscribe: (props: SubscriptionProps) => void;
   unsubscribe: (props: SubscriptionProps) => void;
+}
+
+export interface LineFactoryService {
+  deploySpigot(
+    contractAddress: string,
+    owner: Address,
+    borrower: Address,
+    operator: Address,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  deployEscrow(
+    contractAddress: string,
+    minCRatio: BigNumber,
+    oracle: Address,
+    owner: Address,
+    borrower: Address,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  deploySecuredLine(
+    contractAddress: string,
+    oracle: Address,
+    arbiter: Address,
+    borrower: Address,
+    ttl: BigNumber,
+    swapTarget: Address,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  deploySecuredLineWtihConfig(
+    contractAddress: string,
+    oracle: Address,
+    arbiter: Address,
+    borrower: Address,
+    ttl: BigNumber,
+    revenueSplit: BigNumber,
+    cratio: BigNumber,
+    swapTarget: Address,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  rolloverSecuredLine(
+    contractAddress: string,
+    oldLine: Address,
+    borrower: Address,
+    oracle: Address,
+    arbiter: Address,
+    ttl: BigNumber,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
 }

@@ -14,7 +14,6 @@ import {
   STATUS,
   ExecuteTransactionProps,
   Credit,
-  Network,
   CreditLinePage,
   GetLineProps,
   GetLinesProps,
@@ -34,7 +33,7 @@ import { getContract } from '@frameworks/ethers';
 import { getLine, getLinePage, getLines, getUserLinePositions } from '@frameworks/gql';
 import { mapStatusToString } from '@src/utils';
 
-const { GRAPH_API_URL, Arbiter_GOERLI, Oracle_GOERLI, SwapTarget_GOERLI, LineFactory_GOERLI } = getConfig();
+const { GRAPH_API_URL, SecuredLine_GOERLI } = getConfig();
 
 export class CreditLineServiceImpl implements CreditLineService {
   private graphUrl: string;
@@ -69,42 +68,6 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   private async getSignerAddress(): Promise<Address> {
     return await this.web3Provider.getSigner().getAddress();
-  }
-
-  public async addCredit(props: AddCreditProps): Promise<string> {
-    try {
-      const line = props.lineAddress;
-      // check if status is ACTIVE
-      if (!(await this.isActive(line))) {
-        throw new Error(`Adding credit is not possible. reason: "The given creditLine [${line}] is not active`);
-      }
-      const populatedTrx = await this.executeContractMethod(
-        props.lineAddress,
-        'addCredit',
-        [props.drate, props.frate, props.amount, props.token, props.lender],
-        true
-      );
-      // check mutualConsent
-      const borrower = await this.borrower(line);
-      if (!(await this.isMutualConsent(line, populatedTrx.data, props.lender, borrower))) {
-        throw new Error(
-          `Adding credit is not possible. reason: "Consent has not been initialized by other party for the given creditLine [${props.lineAddress}]`
-        );
-      }
-
-      return (<TransactionResponse>(
-        await this.executeContractMethod(props.lineAddress, 'addCredit', [
-          props.drate,
-          props.frate,
-          props.amount,
-          props.token,
-          props.lender,
-        ])
-      )).hash;
-    } catch (e) {
-      console.log(`An error occured while adding credit, error = [${JSON.stringify(e)}]`);
-      return Promise.reject(e);
-    }
   }
 
   public async close(props: CloseProps): Promise<string> {
@@ -239,6 +202,45 @@ export class CreditLineServiceImpl implements CreditLineService {
       return (<TransactionResponse>await this.executeContractMethod(props.lineAddress, 'depositAndClose', [])).hash;
     } catch (e) {
       console.log(`An error occured while depositAndClose credit, error = [${JSON.stringify(e)}]`);
+      return Promise.reject(e);
+    }
+  }
+
+  public async addCredit(props: AddCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
+    try {
+      const line = props.lineAddress;
+      // check if status is ACTIVE
+      //if (!(await this.isActive(line))) {
+      // throw new Error(`Adding credit is not possible. reason: "The given creditLine [${line}] is not active`);
+      // }
+      //const populatedTrx = await this.executeContractMethod(
+      //props.lineAddress,
+      //'addCredit',
+      //[props.drate, props.frate, props.amount, props.token, props.lender],
+      //true
+      //);
+      // check mutualConsent
+      const borrower = await this.borrower(line);
+      const lender = await this.getSignerAddress();
+
+      let data = {
+        drate: props.drate,
+        frate: props.frate,
+        amount: props.amount,
+        token: props.token,
+        lender: lender,
+      };
+
+      return <TransactionResponse>(
+        await this.executeContractMethod(
+          line,
+          'addCredit',
+          [data.drate, data.frate, data.amount, data.token, data.lender],
+          true
+        )
+      );
+    } catch (e) {
+      console.log(`An error occured while adding credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);
     }
   }

@@ -292,7 +292,7 @@ export const Market = () => {
 
   return (
     <ViewContainer>
-      <Button onClick={dispatchAddCredit}>Add Credit</Button>
+      <Button onClick={createLineHandler}>Deploy Line</Button>
       {/* {addCreditStatus.loading === true && (
         <div>
           <p>.... loading......</p>
@@ -413,7 +413,7 @@ export const Market = () => {
                       actions={[
                         {
                           name: t('components.transaction.deposit'),
-                          handler: () => createLineHandler(address),
+                          handler: () => depositHandler(address),
                           disabled: !walletIsConnected,
                         },
                       ]}
