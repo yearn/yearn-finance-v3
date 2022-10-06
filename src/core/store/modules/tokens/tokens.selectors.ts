@@ -4,10 +4,6 @@ import { memoize } from 'lodash';
 import { AllowancesMap, Balance, RootState, Status, Token, TokenView } from '@types';
 import { toBN } from '@utils';
 
-import { AppSelectors } from '../app/app.selectors';
-
-const { selectServicesEnabled } = AppSelectors;
-
 /* ---------------------------------- State --------------------------------- */
 const selectTokensState = (state: RootState) => state.tokens;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
@@ -20,21 +16,18 @@ const selectGetTokensStatus = (state: RootState) => state.tokens.statusMap.getTo
 const selectGetUserTokensStatus = (state: RootState) => state.tokens.statusMap.user.getUserTokens;
 
 /* ----------------------------- Main Selectors ----------------------------- */
-const selectUserTokens = createSelector(
-  [selectTokensMap, selectTokensUser, selectServicesEnabled],
-  (tokensMap, user, servicesEnabled): TokenView[] => {
-    const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
-    const tokens = userTokensAddresses
-      .filter((address) => !!tokensMap[address])
-      .map((address) => {
-        const tokenData = tokensMap[address];
-        const userTokenData = userTokensMap[address];
-        const allowancesMap = userTokensAllowancesMap[address] ?? {};
-        return createToken({ tokenData, userTokenData, allowancesMap });
-      });
-    return tokens.filter((token) => toBN(token.balance).gt(0) && (!token.sourceIsZapper || servicesEnabled.zapper));
-  }
-);
+const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user): TokenView[] => {
+  const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
+  const tokens = userTokensAddresses
+    .filter((address) => !!tokensMap[address])
+    .map((address) => {
+      const tokenData = tokensMap[address];
+      const userTokenData = userTokensMap[address];
+      const allowancesMap = userTokensAllowancesMap[address] ?? {};
+      return createToken({ tokenData, userTokenData, allowancesMap });
+    });
+  return tokens.filter((token) => toBN(token.balance).gt(0));
+});
 
 const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
   let totalBalance = toBN('0');
@@ -88,8 +81,7 @@ export function createToken(props: CreateTokenProps): TokenView {
     categories: tokenData?.metadata?.categories ?? [],
     description: tokenData?.metadata?.description ?? '',
     website: tokenData?.metadata?.website ?? '',
-    isZapable: tokenData?.supported.zapper ?? false,
-    sourceIsZapper: tokenData?.dataSource === 'zapper',
+    isZapable: tokenData?.supported.portalsZapIn ?? false,
     allowancesMap: allowancesMap ?? {},
     supported: tokenData?.supported,
   };

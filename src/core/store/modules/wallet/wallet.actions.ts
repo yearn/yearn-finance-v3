@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { AppDispatch, ThunkAPI } from '@frameworks/redux';
 import { getEthersProvider, ExternalProvider } from '@frameworks/ethers';
-import { Theme, RootState, DIContainer, Subscriptions, Network } from '@types';
+import { Theme, RootState, DIContainer, Subscriptions, Network, Wallet } from '@types';
 import { isValidAddress, getProviderType, getNetwork } from '@utils';
 
 import { NetworkActions } from '../network/network.actions';
@@ -11,15 +11,15 @@ const walletChange = createAction<{ walletName: string }>('wallet/walletChange')
 const addressChange = createAction<{ address: string }>('wallet/addressChange');
 const networkChange = createAction<{ network: number }>('wallet/networkChange');
 const balanceChange = createAction<{ balance: string }>('wallet/balanceChange');
+const ensChange = createAction<{ ens: string | undefined }>('wallet/ensChange');
 
-const getSubscriptions = (dispatch: AppDispatch, customSubscriptions?: Subscriptions) => ({
+const getSubscriptions = (dispatch: AppDispatch, customSubscriptions?: Subscriptions, wallet?: Wallet) => ({
   wallet: (wallet: any) => {
     dispatch(walletChange({ walletName: wallet.name }));
     if (customSubscriptions && customSubscriptions.wallet) customSubscriptions.wallet(wallet);
   },
   address: (address: string) => {
     dispatch(addressChange({ address }));
-    if (address) dispatch(getAddressEnsName({ address }));
     if (customSubscriptions && customSubscriptions.address) customSubscriptions.address(address);
   },
   network: (network: number) => {
@@ -29,6 +29,10 @@ const getSubscriptions = (dispatch: AppDispatch, customSubscriptions?: Subscript
   balance: (balance: string) => {
     dispatch(balanceChange({ balance }));
     if (customSubscriptions && customSubscriptions.balance) customSubscriptions.balance(balance);
+  },
+  ens: (ens: any) => {
+    if (wallet?.name !== 'Unstoppable') dispatch(ensChange({ ens: ens?.name }));
+    if (customSubscriptions && customSubscriptions.ens) customSubscriptions.ens(ens);
   },
 });
 
@@ -56,7 +60,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
 
     if (!wallet.isCreated) {
       const customSubscriptions: Subscriptions = {
-        wallet: (wallet) => {
+        wallet: async (wallet) => {
           web3Provider.register('wallet', getEthersProvider(wallet.provider));
           const providerType = getProviderType(network);
           const sdkInstance = yearnSdk.getInstanceOf(network);
@@ -64,6 +68,10 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
             read: web3Provider.getInstanceOf(providerType),
             write: web3Provider.getInstanceOf('wallet'),
           });
+          if (wallet.name === 'Unstoppable' && wallet.instance?.user) {
+            const user = await wallet.instance.user();
+            dispatch(ensChange({ ens: user.sub }));
+          }
         },
         address: () => {
           if (ALLOW_DEV_MODE && settings.devMode.enabled && isValidAddress(settings.devMode.walletAddressOverride)) {
@@ -88,7 +96,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
           }
         },
       };
-      const subscriptions = getSubscriptions(dispatch, customSubscriptions);
+      const subscriptions = getSubscriptions(dispatch, customSubscriptions, wallet);
       wallet.create(network ?? NETWORK, subscriptions, theme.current);
     }
     const isConnected = await wallet.connect({ name: walletName });
@@ -127,6 +135,7 @@ export const WalletActions = {
   addressChange,
   networkChange,
   balanceChange,
+  ensChange,
   walletSelect,
   changeWalletTheme,
   changeWalletNetwork,

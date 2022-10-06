@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { formatAmount, normalizeAmount, toBN } from '@utils';
 import { useAppTranslation } from '@hooks';
 
+import { TransactionFees } from '../TransactionFees';
+
 import { TxActionButton, TxActions } from './components/TxActions';
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -57,6 +59,7 @@ interface TransactionProps {
   displayTargetGuidance?: boolean;
   targetStatus: Status;
   actions: Action[];
+  zapService?: string;
   loadingText?: string;
   onClose?: () => void;
 }
@@ -90,6 +93,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
     displayTargetGuidance,
     targetStatus,
     actions,
+    zapService,
     loadingText,
     onClose,
   } = props;
@@ -152,6 +156,8 @@ export const Transaction: FC<TransactionProps> = (props) => {
         loadingText={loadingText ?? t('components.transaction.status.simulating')}
         displayGuidance={displayTargetGuidance}
       />
+
+      <TransactionFees zapService={zapService} />
 
       {generalStatus.error && <TxError errorType="warning" errorTitle={generalStatus.error} />}
 

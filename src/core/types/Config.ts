@@ -1,4 +1,4 @@
-import { Network, Address, Wei } from './Blockchain';
+import { Network, Wei } from './Blockchain';
 import { NetworkSettings, Theme, Language } from './Settings';
 
 export interface Config extends Env, Constants {}
@@ -6,6 +6,7 @@ export interface Config extends Env, Constants {}
 export interface Env {
   ENV: string;
   VERSION: string;
+  HOST: string;
   NETWORK: Network;
   CUSTOM_PROVIDER_HTTPS: string;
   USE_MAINNET_FORK: boolean;
@@ -18,13 +19,13 @@ export interface Env {
   BLOCKNATIVE_KEY: string | undefined;
   FORTMATIC_KEY: string | undefined;
   PORTIS_KEY: string | undefined;
+  UNSTOPPABLE_DOMAINS_ID: string | undefined;
   ZAPPER_API_KEY: string | undefined;
   YEARN_SUBGRAPH_KEY: string | undefined;
 }
 
 export interface Constants {
   STATE_VERSION: number;
-  ETHEREUM_ADDRESS: Address;
   MAX_UINT256: Wei;
   YEARN_API: string;
   YEARN_ALERTS_API: string;
@@ -34,13 +35,13 @@ export interface Constants {
   WEB3_PROVIDER_WSS: string;
   FANTOM_PROVIDER_HTTPS: string;
   ARBITRUM_PROVIDER_HTTPS: string;
+  OPTIMISM_PROVIDER_HTTPS: string;
   CONTRACT_ADDRESSES: {
     [KEY: string]: string;
   };
   SLIPPAGE_OPTIONS: number[];
   DEFAULT_SLIPPAGE: number;
   IRON_BANK_MAX_RATIO: number;
-  ZAP_OUT_TOKENS: string[];
   DEFAULT_THEME: Theme;
   AVAILABLE_THEMES: Theme[];
   AVAILABLE_CUSTOM_THEMES: Theme[];

@@ -16,7 +16,8 @@ export const walletInitialState: WalletState = {
   error: undefined,
 };
 
-const { addressChange, balanceChange, networkChange, walletChange, walletSelect, getAddressEnsName } = WalletActions;
+const { addressChange, balanceChange, networkChange, walletChange, ensChange, walletSelect, getAddressEnsName } =
+  WalletActions;
 
 const walletReducer = createReducer(walletInitialState, (builder) => {
   builder
@@ -24,7 +25,6 @@ const walletReducer = createReducer(walletInitialState, (builder) => {
       state.name = walletName;
     })
     .addCase(addressChange, (state, { payload: { address } }) => {
-      state.addressEnsName = undefined;
       state.selectedAddress = address ? getAddress(address) : undefined;
     })
     .addCase(networkChange, (state, { payload: { network } }) => {
@@ -32,6 +32,9 @@ const walletReducer = createReducer(walletInitialState, (builder) => {
     })
     .addCase(balanceChange, (state, { payload: { balance } }) => {
       state.balance = balance;
+    })
+    .addCase(ensChange, (state, { payload: { ens } }) => {
+      state.addressEnsName = ens;
     })
     .addCase(walletSelect.pending, (state) => {
       state.isLoading = true;

@@ -2,5 +2,10 @@
   "coming-soon": {
     "text": "Coming Soon"
   },
+  "theme-gallery": {
+    "title": "Custom Theme Gallery",
+    "community": "Community",
+    "custom": "Custom"
+  },
   "exit": "Exit"
 }

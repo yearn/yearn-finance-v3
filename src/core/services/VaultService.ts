@@ -98,10 +98,12 @@ export class VaultServiceImpl implements VaultService {
   public async getExpectedTransactionOutcome(props: GetExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {
     const { network, transactionType, accountAddress, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } =
       props;
+    const { NETWORK_SETTINGS } = this.config;
+    const currentNetworkSettings = NETWORK_SETTINGS[network];
     const DEFAULT_SLIPPAGE_SIMULATION = 0.99;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
-    if (network !== 'mainnet') {
+    if (!currentNetworkSettings.simulationsEnabled) {
       const tokenAddress = transactionType === 'DEPOSIT' ? sourceTokenAddress : targetTokenAddress;
       const priceUsdc = await yearn.tokens.priceUsdc(tokenAddress);
       const tokens = await yearn.vaults.tokens();
@@ -138,20 +140,20 @@ export class VaultServiceImpl implements VaultService {
     let expectedOutcome: TransactionOutcome;
     switch (transactionType) {
       case 'DEPOSIT':
-        expectedOutcome = await yearn.simulation.deposit(
-          accountAddress,
+        expectedOutcome = await yearn.simulation._deposit(
+          targetTokenAddress,
           sourceTokenAddress,
           sourceTokenAmount,
-          targetTokenAddress,
+          accountAddress,
           { slippage: DEFAULT_SLIPPAGE_SIMULATION }
         );
         break;
       case 'WITHDRAW':
-        expectedOutcome = await yearn.simulation.withdraw(
-          accountAddress,
+        expectedOutcome = await yearn.simulation._withdraw(
           sourceTokenAddress,
-          sourceTokenAmount,
           targetTokenAddress,
+          sourceTokenAmount,
+          accountAddress,
           { slippage: DEFAULT_SLIPPAGE_SIMULATION }
         );
         break;

@@ -66,6 +66,10 @@
       },
       "claim": "Claim",
       "deposit": "Deposit",
+      "fees": {
+        "powered-by": "Zaps powered by Portals.fi",
+        "zaps": "Zap fee"
+      },
       "from-gauge": "From Gauge",
       "from-iron-bank": "From Iron Bank",
       "from-vault": "From vault",
@@ -161,7 +165,8 @@
     "vault": "Vaults",
     "vaults": "Vaults",
     "veyfi": "veYFI",
-    "wallet": "Wallet"
+    "wallet": "Wallet",
+    "ycrv": "yCRV"
   },
   "themes": {
     "classic": "Classic v2",

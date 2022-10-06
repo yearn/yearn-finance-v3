@@ -14,7 +14,6 @@ import { MigrateTxModal } from './MigrateTxModal';
 import { BackscratcherLockTxModal, BackscratcherClaimTxModal, BackscratcherReinvestTxModal } from './Backscratcher';
 import { LabDepositTxModal } from './LabDepositTxModal';
 import { LabWithdrawTxModal } from './LabWithdrawTxModal';
-import { LabStakeTxModal } from './LabStakeTxModal';
 import { GaugeStakeTxModal, GaugeUnstakeTxModal } from './GaugeModals';
 
 const modalTimeout = 300;
@@ -171,12 +170,6 @@ export const Modals = () => {
       {activeModal === 'labWithdrawTx' && (
         <CSSTransition key={'labWithdrawTx'} timeout={modalTimeout} classNames="slideBottom">
           <LabWithdrawTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'labStakeTx' && (
-        <CSSTransition key={'labStakeTx'} timeout={modalTimeout} classNames="slideBottom">
-          <LabStakeTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

@@ -6,6 +6,7 @@ export * from './useExecute';
 export * from './useExecuteThunk';
 export * from './useIsMounting';
 export * from './usePrevious';
+export * from './useQueryParams';
 export * from './useToggler';
 export * from './windowDimensions';
 export * from './useSelectedSellToken';

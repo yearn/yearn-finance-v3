@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { Icon, AddIcon } from '@components/common';
+import { useAppTranslation } from '@src/client/hooks';
 
 const ButtonText = styled.span`
   font-size: 1.2rem;
@@ -37,13 +38,14 @@ interface CustomThemeButtonProps {
 }
 
 export const CustomThemeButton = ({ onClick }: CustomThemeButtonProps) => {
+  const { t } = useAppTranslation('modals');
   return (
     <StyledCustomThemeButton onClick={onClick}>
       <AddButton>
         <StyledIcon Component={AddIcon} />
       </AddButton>
 
-      <ButtonText>Custom</ButtonText>
+      <ButtonText>{t('theme-gallery.custom')}</ButtonText>
     </StyledCustomThemeButton>
   );
 };

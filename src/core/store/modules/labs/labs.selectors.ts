@@ -19,7 +19,7 @@ import { createToken } from '../tokens/tokens.selectors';
 
 import { initialLabActionsStatusMap } from './labs.reducer';
 
-const { YVECRV, CRV, YVBOOST, PSLPYVBOOSTETH } = getConstants().CONTRACT_ADDRESSES;
+const { YVECRV, CRV, YVBOOST } = getConstants().CONTRACT_ADDRESSES;
 
 // general selectors
 const selectLabsMap = (state: RootState) => state.labs.labsMap;
@@ -31,36 +31,6 @@ const selectCrvTokenAllowancesMap = (state: RootState) => state.tokens.user.user
 const selectYveCrvTokenData = (state: RootState) => state.tokens.tokensMap[YVECRV];
 const selectUserYveCrvTokenData = (state: RootState) => state.tokens.user.userTokensMap[YVECRV];
 const selectYveCrvTokenAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVECRV];
-
-const selectYvBoostData = (state: RootState) => state.tokens.tokensMap[YVBOOST];
-const selectUserYvBoostData = (state: RootState) => {
-  const userToken = state.tokens.user.userTokensMap[YVBOOST];
-  if (userToken) {
-    return userToken;
-  }
-
-  // if yvBOOST not in userTokensMap, get balance from lab positions
-  const token = state.tokens.tokensMap[YVBOOST];
-  const position = state.labs.user.userLabsPositionsMap[YVBOOST]?.DEPOSIT;
-  if (!token || !position) {
-    return userToken;
-  }
-
-  const balance: Balance = {
-    address: position.assetAddress,
-    token: {
-      address: token.address,
-      name: token.name,
-      symbol: token.symbol,
-      decimals: token.decimals,
-    },
-    balance: position.balance,
-    balanceUsdc: position.underlyingTokenBalance.amountUsdc,
-    priceUsdc: token.priceUsdc,
-  };
-  return balance;
-};
-const selectYvBoostAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap[YVBOOST];
 
 const selectSelectedLabAddress = (state: RootState) => state.labs.selectedLabAddress;
 const selectGetLabsStatus = (state: RootState) => state.labs.statusMap.getLabs;
@@ -123,62 +93,33 @@ const selectYvBoostLab = createSelector(
   }
 );
 
-// yvBoost-eth selectors
-const selectYvBoostEthLabData = (state: RootState) => state.labs.labsMap[PSLPYVBOOSTETH];
-const selectUserYvBoostEthLabPositions = (state: RootState) => state.labs.user.userLabsPositionsMap[PSLPYVBOOSTETH];
-const selectYvBoostEthLabAllowancesMap = (state: RootState) =>
-  state.tokens.user.userTokensAllowancesMap[PSLPYVBOOSTETH];
-
-const selectYvBoostEthLab = createSelector(
-  [
-    selectYvBoostEthLabData,
-    selectUserYvBoostEthLabPositions,
-    selectYvBoostEthLabAllowancesMap,
-    selectYvBoostData,
-    selectUserYvBoostData,
-    selectYvBoostAllowancesMap,
-  ],
-  (labData, userPositions, labAllowances, tokenData, userTokenData, tokenAllowancesMap) => {
-    if (!labData) return undefined;
-    return createLab({
-      labAllowances,
-      labData,
-      tokenAllowancesMap,
-      tokenData,
-      userPositions,
-      userTokenData,
-      mainPositionKey: 'STAKE',
-    });
-  }
-);
-
 // General selectors
-const selectLabs = createSelector(
-  [selectYveCrvLab, selectYvBoostLab, selectYvBoostEthLab],
-  (yveCrvLab, yvBoostLab, yvBoostEthLab) => {
-    const labs: GeneralLabView[] = [];
-    [yveCrvLab, yvBoostLab, yvBoostEthLab].forEach((lab) => {
-      if (lab) labs.push(lab);
-    });
+const selectLabs = createSelector([selectYveCrvLab, selectYvBoostLab], (yveCrvLab, yvBoostLab) => {
+  const labs: GeneralLabView[] = [];
+  [yveCrvLab, yvBoostLab].forEach((lab) => {
+    if (lab) labs.push(lab);
+  });
 
-    labs.sort((a, b) => {
-      return toBN(b.token.balance).minus(a.token.balance).toNumber();
-    });
-    return labs;
-  }
-);
+  labs.sort((a, b) => {
+    return toBN(b.token.balance).minus(a.token.balance).toNumber();
+  });
+  return labs;
+});
 
 const selectDepositedLabs = createSelector([selectLabs], (labs) => {
   return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).plus(lab?.STAKE.userBalance).gt(0));
 });
 
 const selectLabsOpportunities = createSelector([selectLabs], (labs) => {
-  return labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).plus(lab?.STAKE.userBalance).lte(0));
+  const opportunities = labs.filter((lab) => toBN(lab?.DEPOSIT.userBalance).plus(lab?.STAKE.userBalance).lte(0));
+  // NOTE: current lab opportunities deprecated
+  return opportunities.filter(() => false);
 });
 
 const selectRecommendations = createSelector([selectLabs], (labs) => {
-  // TODO criteria
-  return labs.slice(0, 3).sort((a, b) => Number(b.apyData) - Number(a.apyData));
+  const recommendations = labs.slice(0, 3).sort((a, b) => Number(b.apyData) - Number(a.apyData));
+  // NOTE: current lab opportunities deprecated
+  return recommendations.filter(() => false);
 });
 
 const selectSelectedLab = createSelector([selectLabs, selectSelectedLabAddress], (labs, selectedLabAddress) => {
@@ -235,10 +176,10 @@ function createLab(props: CreateLabProps): GeneralLabView {
     apyMetadata: labData.metadata.apy,
     allowancesMap: labAllowances ?? {},
     pricePerShare: labData.metadata.pricePerShare,
-    allowZapIn: true,
-    allowZapOut: true,
-    zapInWith: 'zapperZapIn',
-    zapOutWith: 'zapperZapOut',
+    allowZapIn: !!labData.metadata.allowZapIn,
+    allowZapOut: !!labData.metadata.allowZapOut,
+    zapInWith: labData.metadata.zapInWith,
+    zapOutWith: labData.metadata.zapOutWith,
     mainPositionKey,
     DEPOSIT: {
       userBalance: userPositions?.DEPOSIT?.balance ?? '0',
@@ -263,7 +204,6 @@ export const LabsSelectors = {
   selectLabsMap,
   selectYveCrvLab,
   selectYvBoostLab,
-  selectYvBoostEthLab,
   selectLabs,
   selectDepositedLabs,
   selectLabsOpportunities,
