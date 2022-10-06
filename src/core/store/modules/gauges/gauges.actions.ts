@@ -199,8 +199,12 @@ const stake = createAsyncThunk<
       amount: toWei(amount, parseInt(token.decimals)),
     });
 
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getGaugesDynamic({ addresses: [gaugeAddress] }));
     dispatch(getUserGaugesPositions({ addresses: [gaugeAddress] }));
@@ -234,8 +238,12 @@ const unstake = createAsyncThunk<void, { tokenAddress: Address; gaugeAddress: Ad
       amount: toWei(amount, parseInt(token.decimals)),
     });
 
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getGaugesDynamic({ addresses: [gaugeAddress] }));
     dispatch(getUserGaugesPositions({ addresses: [gaugeAddress] }));
@@ -267,8 +275,12 @@ const claimRewards = createAsyncThunk<void, { tokenAddress: Address; gaugeAddres
       gaugeAddress,
     });
 
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getGaugesDynamic({ addresses: [gaugeAddress] }));
     dispatch(getUserGaugesPositions({ addresses: [gaugeAddress] }));
@@ -299,8 +311,12 @@ const claimAllRewards = createAsyncThunk<void, { tokenAddress: Address }, ThunkA
       accountAddress,
     });
 
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getGaugesDynamic({ addresses: gauges.gaugesAddresses }));
     dispatch(getUserGaugesPositions({ addresses: gauges.gaugesAddresses }));

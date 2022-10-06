@@ -254,8 +254,12 @@ const lock = createAsyncThunk<
       time,
     });
 
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getVotingEscrowsDynamic({ addresses: [votingEscrowAddress] }));
     dispatch(getUserVotingEscrowsPositions({ addresses: [votingEscrowAddress] }));
@@ -297,8 +301,12 @@ const increaseLockAmount = createAsyncThunk<
       amount: toWei(amount, parseInt(token.decimals)),
     });
 
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getVotingEscrowsDynamic({ addresses: [votingEscrowAddress] }));
     dispatch(getUserVotingEscrowsPositions({ addresses: [votingEscrowAddress] }));
@@ -339,8 +347,12 @@ const extendLockTime = createAsyncThunk<
       time,
     });
 
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getVotingEscrowsDynamic({ addresses: [votingEscrowAddress] }));
     dispatch(getUserVotingEscrowsPositions({ addresses: [votingEscrowAddress] }));
@@ -372,8 +384,12 @@ const withdrawLocked = createAsyncThunk<void, { tokenAddress: Address; votingEsc
       votingEscrowAddress,
     });
 
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getVotingEscrowsDynamic({ addresses: [votingEscrowAddress] }));
     dispatch(getUserVotingEscrowsPositions({ addresses: [votingEscrowAddress] }));
@@ -405,8 +421,12 @@ const withdrawUnlocked = createAsyncThunk<void, { tokenAddress: Address; votingE
       votingEscrowAddress,
     });
 
-    const notifyEnabled = app.servicesEnabled.notify;
-    await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
 
     dispatch(getVotingEscrowsDynamic({ addresses: [votingEscrowAddress] }));
     dispatch(getUserVotingEscrowsPositions({ addresses: [votingEscrowAddress] }));
