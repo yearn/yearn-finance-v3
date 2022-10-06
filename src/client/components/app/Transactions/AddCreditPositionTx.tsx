@@ -58,6 +58,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(false);
   const [transactionApproved, setTransactionApproved] = useState(true);
+  const [transactionLoading, setLoading] = useState(false);
   const [targetTokenAmount, setTargetTokenAmount] = useState('1');
   const [creditLineAddressExample, setCreditlineAddressExample] = useState(
     '0x3eb4ede48e3e808677d1b4f751ebb4042112a070'
@@ -75,7 +76,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
   useEffect(() => {
     console.log('add position tx useEffect token/creditLine', selectedSellTokenAddress, initialToken, selectedCredit);
-
     if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
@@ -134,15 +134,19 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   };
 
   const approveCreditPosition = () => {
-    let bigNumAmount = toBN(+targetTokenAmount);
-    console.log('example ', selectedSellTokenAddress, bigNumAmount);
+    console.log('example ', selectedSellTokenAddress, targetTokenAmount, drate, frate);
+    setLoading(true);
     if (selectedSellTokenAddress === undefined) {
       return;
     }
     dispatch(
       //@ts-ignore
-      LinesActions.approveDeposit({ tokenAddress: selectedSellTokenAddress, amount: 100000 })
+      LinesActions.approveDeposit({
+        tokenAddress: selectedSellTokenAddress,
+        amount: `${ethers.utils.parseEther(targetTokenAmount)}`,
+      })
     );
+    setLoading(false);
     setTransactionApproved(!transactionApproved);
   };
 
@@ -160,9 +164,9 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     dispatch(
       LinesActions.addCredit({
         lineAddress: creditLineAddressExample,
-        drate: ethers.utils.parseEther('2'),
-        frate: ethers.utils.parseEther('2'),
-        amount: ethers.utils.parseEther('10'),
+        drate: ethers.utils.parseEther(drate),
+        frate: ethers.utils.parseEther(frate),
+        amount: ethers.utils.parseEther(targetTokenAmount),
         token: selectedSellTokenAddress,
         lender: '0xc0163E58648b247c143023CFB26C2BAA42C9d9A9',
         dryRun: true,
