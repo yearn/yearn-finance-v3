@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import { string } from 'ethers';
 import { StringLiteral } from 'typescript';
 
 import { Address } from './Blockchain';
@@ -39,10 +39,10 @@ export interface BaseCreditLine {
 
 export interface AggregatedCreditLine extends BaseCreditLine {
   // real-time aggregate usd value across all credits
-  principal?: BigNumber | Promise<BigNumber>;
-  deposit: BigNumber | Promise<BigNumber>;
+  principal?: string | Promise<string>;
+  deposit: string | Promise<string>;
   // id, symbol, APY (4 decimals)
-  highestApy: [string, string, BigNumber];
+  highestApy: [string, string, string];
 
   credits?: { [key: string]: BaseCreditPosition };
 
@@ -52,8 +52,8 @@ export interface AggregatedCreditLine extends BaseCreditLine {
 
 export interface CreditLinePage extends AggregatedCreditLine {
   // total value of asssets repaid *AT TIME OF REPAYMENT*
-  interest?: BigNumber | Promise<BigNumber>;
-  totalInterestRepaid: BigNumber | Promise<BigNumber>;
+  interest?: string | Promise<string>;
+  totalInterestRepaid: string | Promise<string>;
 
   credits?: { [key: string]: LinePageCreditPosition };
 
@@ -66,7 +66,7 @@ export interface CreditLinePage extends AggregatedCreditLine {
 export interface CreditLinePageAuxData {
   credits: {
     [id: string]: {
-      dRate: BigNumber;
+      dRate: string;
       token: Address;
     };
   }[];
@@ -79,17 +79,17 @@ export interface BaseCreditPosition {
   id: string;
   lender: Address;
   token: Address;
-  principal: BigNumber;
-  interestAccrued: BigNumber;
-  interestRepaid: BigNumber;
+  principal: string;
+  interestAccrued: string;
+  interestRepaid: string;
 }
 
 export interface Credit {
-  deposit: BigNumber;
-  principal: BigNumber;
-  interestAccrued: BigNumber;
-  interestRepaid: BigNumber;
-  decimals: BigNumber;
+  deposit: string;
+  principal: string;
+  interestAccrued: string;
+  interestRepaid: string;
+  decimals: string;
   token: Address;
   lender: Address;
 }
@@ -97,12 +97,12 @@ export interface Credit {
 export interface LinePageCreditPosition extends BaseCreditPosition {
   id: string;
   lender: Address;
-  deposit: BigNumber;
-  principal: BigNumber;
-  interestAccrued: BigNumber;
-  interestRepaid: BigNumber;
-  totalInterestRepaid: BigNumber;
-  drawnRate: BigNumber;
+  deposit: string;
+  principal: string;
+  interestAccrued: string;
+  interestRepaid: string;
+  totalInterestRepaid: string;
+  drawnRate: string;
   token: Address;
   // events?: CreditLineEvents[];
 }
@@ -119,8 +119,8 @@ type PositionRole = LenderRole | BorrowerRole | ArbiterRole;
 
 export interface UserPositionMetadata {
   role: PositionRole; // borrower/lender/arbiter
-  amount: BigNumber; // principal/deposit/collateral
-  available: BigNumber; // borrowable/withdrawable/liquidatable
+  amount: string; // principal/deposit/collateral
+  available: string; // borrowable/withdrawable/liquidatable
 }
 
 export interface PositionSummary {
@@ -129,10 +129,10 @@ export interface PositionSummary {
   lender: Address;
   token: Address;
   line: Address;
-  deposit: BigNumber;
-  principal: BigNumber;
-  drate: BigNumber;
-  frate: BigNumber;
+  deposit: string;
+  principal: string;
+  drate: string;
+  frate: string;
 }
 
 export interface UserPositionSummary extends PositionSummary, UserPositionMetadata {}
@@ -140,25 +140,25 @@ export interface UserPositionSummary extends PositionSummary, UserPositionMetada
 // Collateral Module Types
 export interface Collateral {
   token: Address;
-  amount: BigNumber;
-  value: BigNumber;
+  amount: string;
+  value: string;
 }
 
 export interface BaseEscrow {
   id: Address;
-  cratio: BigNumber;
-  minCRatio: BigNumber;
-  collateralValue: BigNumber;
+  cratio: string;
+  minCRatio: string;
+  collateralValue: string;
 }
 
 export interface AggregatedEscrow extends BaseEscrow {
   id: Address;
-  cratio: BigNumber;
-  minCRatio: BigNumber;
-  collateralValue: BigNumber;
+  cratio: string;
+  minCRatio: string;
+  collateralValue: string;
   deposits?: {
     [token: string]: {
-      amount: BigNumber;
+      amount: string;
       enabled: boolean;
       token: Address;
     };
@@ -168,7 +168,7 @@ export interface AggregatedEscrow extends BaseEscrow {
 export interface AggregatedSpigot {
   id: Address;
   // aggregated revenue in USD by token across all spigots
-  tokenRevenue: { [key: string]: BigNumber }; // TODO:  tuple it (revenue, totalTime) 2023Q2
+  tokenRevenue: { [key: string]: string }; // TODO:  tuple it (revenue, totalTime) 2023Q2
 }
 
 export interface LinePageSpigot extends AggregatedSpigot {

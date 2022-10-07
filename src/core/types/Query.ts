@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import { string } from 'ethers';
 
 import { LineStatusTypes, AggregatedCreditLine, CreditLinePage } from '@types';
 
@@ -98,9 +98,9 @@ export interface BaseLineFragResponse {
 
 export interface BaseCreditFragResponse {
   id: Address;
-  principal: BigNumber;
-  deposit: BigNumber;
-  drate: BigNumber;
+  principal: string;
+  deposit: string;
+  drate: string;
   token: {
     id: Address;
     symbol: string;
@@ -109,10 +109,10 @@ export interface BaseCreditFragResponse {
 }
 
 export interface LinePageCreditFragResponse extends BaseCreditFragResponse {
-  interestRepaid: BigNumber;
-  interestAccrued: BigNumber;
-  dRate: BigNumber;
-  fRate: BigNumber;
+  interestRepaid: string;
+  interestAccrued: string;
+  dRate: string;
+  fRate: string;
 }
 
 export interface LineEventFragResponse {
@@ -122,11 +122,11 @@ export interface LineEventFragResponse {
     id: string;
   };
   // events with value
-  value?: BigNumber;
-  amount?: BigNumber;
+  value?: string;
+  amount?: string;
   // events with rates
-  dRate?: BigNumber;
-  fRate?: BigNumber;
+  dRate?: string;
+  fRate?: string;
 
   token: {
     id: Address;
@@ -135,7 +135,7 @@ export interface LineEventFragResponse {
 
 export interface SpigotRevenueSummaryFragresponse {
   token: Address;
-  totalVolumeUsd: BigNumber;
+  totalVolumeUsd: string;
   timeOfFirstIncome: number;
   timeOfLastIncome: number;
 }
@@ -146,14 +146,14 @@ export interface SpigotEventFragResponse {
   revenueToken: {
     id: Address;
   };
-  escrowed: BigNumber;
-  netIncome: BigNumber;
-  value: BigNumber;
+  escrowed: string;
+  netIncome: string;
+  value: string;
 }
 
 export interface BaseEscrowDepositFragResponse {
   enabled: boolean;
-  amount: BigNumber;
+  amount: string;
   token: {
     id: Address;
     symbol: string;
@@ -163,7 +163,7 @@ export interface BaseEscrowDepositFragResponse {
 
 export interface BaseEscrowFragResponse {
   id: Address;
-  minCRatio: BigNumber;
+  minCRatio: string;
   deposits: BaseEscrowDepositFragResponse[];
 }
 
@@ -174,7 +174,7 @@ export interface GetLinesResponse {
     spigot: {
       id: Address;
       summaries: {
-        totalVolumeUsd: BigNumber;
+        totalVolumeUsd: string;
         timeOfFirstIncome: number;
         timeOfLastIncome: number;
       };
@@ -197,9 +197,9 @@ export interface GetLinePageResponse extends BaseLineFragResponse {
 
   escrow?: {
     id: Address;
-    cratio: BigNumber;
-    minCRatio: BigNumber;
-    collateralValue: BigNumber;
+    cratio: string;
+    minCRatio: string;
+    collateralValue: string;
     deposits: {
       id: Address;
       token: {
@@ -207,14 +207,14 @@ export interface GetLinePageResponse extends BaseLineFragResponse {
         symbol: string;
         decimals: number;
       };
-      amount: BigNumber;
+      amount: string;
       enabled: boolean;
       events: {
         __typename: string;
         timestamp: number;
         // only on add/remove collateral
-        amount?: BigNumber;
-        value?: BigNumber;
+        amount?: string;
+        value?: string;
       };
     };
   };

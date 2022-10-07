@@ -226,6 +226,8 @@ export class CreditLineServiceImpl implements CreditLineService {
     return signer === credit.lender || signer === (await this.contract.borrower());
   }
 
+  /* Subgraph Getters */
+
   public async getLine(props: GetLineProps): Promise<AggregatedCreditLine | undefined> {
     return;
   }
@@ -252,15 +254,15 @@ export class CreditLineServiceImpl implements CreditLineService {
     return response;
   }
 
-  public async getLinePageAuxData(prop: GetLinePageProps): Promise<GetLinePageAuxResponse | undefined> {
-    const response = getLinePageAuxData(prop)
-      .then((data) => formatGetLinePageAuxData(data))
-      .catch((err) => {
-        console.log('CreditLineService: error fetching lines', err);
-        return undefined;
-      });
-    return response;
-  }
+  // public async getLinePageAuxData(prop: GetLinePageProps): Promise<GetLinePageAuxResponse | undefined> {
+  //   const response = getLinePageAuxData(prop)
+  //     .then((data) => formatGetLinePageAuxData(data))
+  //     .catch((err) => {
+  //       console.log('CreditLineService: error fetching lines', err);
+  //       return undefined;
+  //     });
+  //   return response;
+  // }
 
   public async getUserLinePositions(): Promise<any | undefined> {
     return;

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { BigNumber } from 'ethers';
 import _ from 'lodash';
 
 import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon, Link } from '@components/common';
@@ -138,10 +137,10 @@ interface Item {
   icon: string;
   name: string;
   info: string;
-  principal: any; // TODO BigNumber
-  deposit: any; // TODO BigNumber
-  collateral: BigNumber;
-  revenue: BigNumber;
+  principal: any;
+  deposit: any;
+  collateral: string;
+  revenue: string;
   tags?: string[];
   infoDetail?: string;
   action?: string;
@@ -187,7 +186,7 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
               </TagContainer>
               <Divider />
               <Metric>
-                ${item.principal} / ${item.deposit}
+                ${item.principal.toString()} / ${item.deposit.toString()}
               </Metric>
               <MetricsTextContainer>
                 <MetricsText>
@@ -197,7 +196,7 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
               </MetricsTextContainer>
 
               <Metric>
-                ${item.collateral} / ${item.revenue}
+                ${item.collateral.toString()} / ${item.revenue.toString()}
               </Metric>
               <MetricsTextContainer>
                 <MetricsText>

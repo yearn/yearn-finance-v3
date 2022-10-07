@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash';
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 
 import {
   CreditLinePage,
@@ -25,6 +25,8 @@ import {
   Address,
   GetLinePageAuxResponse,
 } from '@types';
+
+const { parseUnits, parseEther } = utils;
 
 export const mapStatusToString = (status: number): LineStatusTypes => {
   switch (status) {
@@ -94,7 +96,7 @@ export const formatCollateralEvents = (
     if (type === SPIGOT_MODULE_NAME) {
       // aggregate token revenue. not needed for escrow bc its already segmented by token
       // use price at time of revenue for more accuracy
-      tokenRevenue[symbol] += value;
+      tokenRevenue[symbol] += parseUnits(tokenRevenue[symbol], 'ether').add(value).toString();
     }
     totalVal += valueNow;
     return {
@@ -111,6 +113,9 @@ export const formatCollateralEvents = (
 };
 /** Formatting functions. from GQL structured response to flat data for redux state  */
 
+const unnullify = (thing: any) => {
+  return !thing ? '0' : thing.toString();
+};
 export function formatGetLinesData(
   response: GetLinesResponse[],
   tokenPrices: { [token: string]: BigNumber }
@@ -160,20 +165,20 @@ export const formatAggregatedCreditLineData = (
   tokenPrices: { [token: string]: BigNumber }
 ): {
   credit: {
-    highestApy: [string, string, BigNumber];
-    principal: BigNumber;
-    deposit: BigNumber;
+    highestApy: [string, string, string];
+    principal: string;
+    deposit: string;
   };
-  spigot: { tokenRevenue: { [key: string]: BigNumber } };
+  spigot: { tokenRevenue: { [key: string]: string } };
   escrow: {
-    collateralValue: BigNumber;
-    cratio: BigNumber;
+    collateralValue: string;
+    cratio: string;
   };
 } => {
   // derivative or aggregated data we need to compute and store while mapping position data
 
   // position id, token address, APY
-  const highestApy: [string, string, BigNumber] = ['', '', BigNumber.from(0)];
+  const highestApy: [string, string, string] = ['', '', '0'];
 
   const principal = BigNumber.from(0);
   const deposit = BigNumber.from(0);
@@ -181,10 +186,10 @@ export const formatAggregatedCreditLineData = (
   const credit = credits.reduce(
     (agg: any, c) => {
       const price = tokenPrices[c.token.id] || BigNumber.from(0);
-      const highestApy = c.drate > agg.highestApy[2] ? [c.id, c.token.id, c.drate] : agg.highestApy;
+      const highestApy = Number(c.drate) > Number(agg.highestApy[2]) ? [c.id, c.token.id, c.drate] : agg.highestApy;
       return {
-        principal: agg.principal.add(price.mul(c.principal)),
-        deposit: agg.deposit.add(price.mul(c.deposit)),
+        principal: agg.principal.add(price.mul(unnullify(c.principal).toString())),
+        deposit: agg.deposit.add(price.mul(unnullify(c.deposit).toString())),
         highestApy,
       };
     },
@@ -193,21 +198,27 @@ export const formatAggregatedCreditLineData = (
 
   const collateralValue = collaterals.reduce((agg, c) => {
     const price = tokenPrices[c.token.id];
-    return !c.enabled ? agg : agg.add(c.amount.mul(price));
+    return !c.enabled ? agg : agg.add(parseUnits(unnullify(c.amount).toString(), 'ether').mul(price));
   }, BigNumber.from(0));
 
   const escrow = {
-    collateralValue,
-    cratio: credit.principal.eq(0) ? BigNumber.from(0) : collateralValue.div(credit.principal),
+    collateralValue: collateralValue.toString(),
+    cratio: parseUnits(unnullify(credit.principal).toString(), 'ether').eq(0)
+      ? '0'
+      : collateralValue.div(unnullify(credit.principal).toString()).toString(),
   };
 
   // aggregated revenue in USD by token across all spigots
-  const tokenRevenue: { [key: string]: BigNumber } = revenues.reduce((ggg, r) => {
-    return { ...r, [r.token]: r.totalVolumeUsd };
+  const tokenRevenue: { [key: string]: string } = revenues.reduce((ggg, r) => {
+    return { ...r, [r.token]: (r.totalVolumeUsd ?? '0').toString() };
   }, {});
 
   return {
-    credit,
+    credit: {
+      highestApy: credit.highestApy.map((s: string) => parseUnits(unnullify(s), 'ether').toString()),
+      principal: parseUnits(unnullify(credit.principal), 'ether').toString(),
+      deposit: parseUnits(unnullify(credit.deposit), 'ether').toString(),
+    },
     escrow,
     spigot: { tokenRevenue },
   };
@@ -233,7 +244,7 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
   const highestApy: [string, string, BigNumber] = ['', '', BigNumber.from(0)];
   const activeIds: string[] = [];
   // aggregated revenue in USD by token across all spigots
-  const tokenRevenue: { [key: string]: BigNumber } = {};
+  const tokenRevenue: { [key: string]: string } = {};
   const principal = BigNumber.from(0);
   const deposit = BigNumber.from(0);
   const interest = BigNumber.from(0);
@@ -319,11 +330,11 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
     borrower,
     // todo add UsePositionMetada,
     // debt data
-    principal,
-    deposit,
-    interest,
-    totalInterestRepaid,
-    highestApy,
+    principal: principal.toString(),
+    deposit: deposit.toString(),
+    interest: interest.toString(),
+    totalInterestRepaid: totalInterestRepaid.toString(),
+    highestApy: highestApy.map((s) => s.toString()) as [string, string, string],
     // all recent events
     collateralEvents,
     creditEvents,

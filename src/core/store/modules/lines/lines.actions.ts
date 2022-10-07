@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
@@ -83,14 +83,16 @@ const getLines = createAsyncThunk<
     tokens: { tokensMap },
   } = getState();
 
+  const { creditLineService } = extra.services;
   // @dev tokens will probs be empty if we're not using yearnSDK
   const tokenPrices = Object.entries(tokensMap).reduce(
     (prices, [addy, { priceUsdc }]) => ({ ...prices, [addy]: priceUsdc }),
     {}
   );
 
-  const { creditLineService } = extra.services;
+  // ensure consistent ordering of categories
   const categoryKeys = Object.keys(categories);
+
   const promises = await Promise.all(
     categoryKeys
       .map((k) => categories[k])
@@ -229,7 +231,7 @@ const approveDeposit = createAsyncThunk<void, { lineAddress: string; tokenAddres
       accountAddress,
       tokenAddress,
       lineAddress,
-      amount: BigNumber.from(amount),
+      amount,
     });
 
     await transactionService.handleTransaction({ tx, network: network.current });
@@ -446,7 +448,7 @@ const withdrawLine = createAsyncThunk<
     const lineData = lines.linesMap[lineAddress];
     const userLineData = lines.user.linePositions[lineAddress];
     // selector for UserPositionMetadata to get available liquidity
-    const available = userLineData.deposit.sub(userLineData.principal);
+    const available = utils.parseUnits(userLineData.deposit, 'wei').sub(userLineData.principal);
     // if requesting more than available or max available
     const withdrawAll = amount.eq(config.MAX_UINT256) || amount.gte(available);
     const amountOfShares = withdrawAll ? available : amount;

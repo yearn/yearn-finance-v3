@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import { string } from 'ethers';
 import { Bytes, BytesLike } from '@ethersproject/bytes/src.ts';
 import { PopulatedTransaction } from '@ethersproject/contracts/src.ts';
 
@@ -143,7 +143,7 @@ export enum STATUS {
 }
 
 export interface InterestRateCreditService {
-  accrueInterest: (props: InterestRateAccrueInterestProps) => Promise<BigNumber>;
+  accrueInterest: (props: InterestRateAccrueInterestProps) => Promise<string>;
 }
 
 export interface CreditLineService {
@@ -193,9 +193,9 @@ export interface AddCreditProps {
   lineAddress: string;
   token: Address;
   lender: Address;
-  drate: BigNumber;
-  frate: BigNumber;
-  amount: BigNumber;
+  drate: string;
+  frate: string;
+  amount: string;
 }
 
 export interface CloseProps {
@@ -207,26 +207,26 @@ export interface WithdrawLineProps {
   dryRun: boolean;
   lineAddress: string;
   id: string;
-  amount: BigNumber;
+  amount: string;
 }
 export interface SetRatesProps {
   dryRun: boolean;
   lineAddress: string;
   id: string;
-  frate: BigNumber;
-  drate: BigNumber;
+  frate: string;
+  drate: string;
 }
 export interface IncreaseCreditProps {
   dryRun: boolean;
   lineAddress: string;
   id: string;
-  amount: BigNumber;
+  amount: string;
 }
 export interface DepositAndRepayProps {
   dryRun: boolean;
   lineAddress: string;
   id: string;
-  amount: BigNumber;
+  amount: string;
 }
 export interface DepositAndCloseProps {
   dryRun: boolean;
@@ -239,7 +239,7 @@ export interface ApproveLineDepositProps {
   lineAddress: string;
   tokenAddress: string;
   accountAddress: string;
-  amount: BigNumber;
+  amount: string;
 }
 
 export interface GetLineDepositAllowanceProps {
@@ -259,8 +259,8 @@ export interface GetLineWithdrawAllowanceProps {
 export interface InterestRateAccrueInterestProps {
   contractAddress: Address;
   id: BytesLike;
-  drawnBalance: BigNumber;
-  facilityBalance: BigNumber;
+  drawnBalance: string;
+  facilityBalance: string;
 }
 
 export interface GetLineProps extends GetLineArgs {
@@ -297,7 +297,7 @@ export interface SpigotedLineService {
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction>;
   isOwner(lineAddress: string): Promise<boolean>;
-  maxSplit(lineAddress: string): Promise<BigNumber>;
+  maxSplit(lineAddress: string): Promise<string>;
   isBorrowing: (lineAddress: string) => Promise<boolean>;
   isBorrower: (lineAddress: string) => Promise<boolean>;
   borrower(lineAddress: string): Promise<Address>;
@@ -307,7 +307,7 @@ export interface SpigotedLineService {
 
 export interface ISpigotSetting {
   token: Address; // token to claim as revenue from contract
-  ownerSplit: BigNumber; // x/100 % to Owner, rest to Treasury
+  ownerSplit: string; // x/100 % to Owner, rest to Treasury
   claimFunction: Bytes; // function signature on contract to call and claim revenue
   transferOwnerFunction: Bytes; // function signature on conract to call and transfer ownership
 }
@@ -315,13 +315,13 @@ export interface ISpigotSetting {
 export interface EscrowService {
   addCollateral(
     contractAddress: string,
-    amount: BigNumber,
+    amount: string,
     token: Address,
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction>;
   releaseCollateral(
     contractAddress: string,
-    amount: BigNumber,
+    amount: string,
     token: Address,
     to: Address,
     dryRun: boolean

@@ -216,7 +216,7 @@ export const Market = () => {
   const lineCategoriesForDisplay = useAppSelector(LinesSelectors.selectLinesForCategories);
   const getLinesStatus = useAppSelector(LinesSelectors.selectLinesStatusMap).getLines;
   const [didFetchLines, setLinesFetched] = useState(false);
-  console.log('ready', lineCategoriesForDisplay, getLinesStatus || _.isEmpty(lineCategoriesForDisplay));
+  console.log('ready', lineCategoriesForDisplay, getLinesStatus);
 
   useEffect(() => {
     setSearch(queryParams.search ?? '');
@@ -236,9 +236,9 @@ export const Market = () => {
 
   const dispatchAddCredit = () => {
     const params: AddCreditProps = {
-      drate: utils.parseUnits('0', 'ether'),
-      frate: utils.parseUnits('0', 'ether'),
-      amount: utils.parseUnits('0', 'ether'),
+      drate: '0',
+      frate: '0',
+      amount: '0',
       token: '',
       lender: '',
       lineAddress: '',

@@ -1,4 +1,4 @@
-﻿import { BigNumber, PopulatedTransaction } from 'ethers';
+﻿import { PopulatedTransaction } from 'ethers';
 
 import {
   YearnSdk,
@@ -48,7 +48,7 @@ export class EscrowServiceImpl implements EscrowService {
 
   public async addCollateral(
     contractAddress: string,
-    amount: BigNumber,
+    amount: string,
     token: Address,
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction> {
@@ -57,7 +57,7 @@ export class EscrowServiceImpl implements EscrowService {
 
   public async enableCollateral(
     contractAddress: string,
-    amount: BigNumber,
+    amount: string,
     token: Address,
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction> {
@@ -66,7 +66,7 @@ export class EscrowServiceImpl implements EscrowService {
 
   public async liquidate(
     contractAddress: string,
-    amount: BigNumber,
+    amount: string,
     targetToken: Address,
     to: Address,
     dryRun: boolean
@@ -76,7 +76,7 @@ export class EscrowServiceImpl implements EscrowService {
 
   public async releaseCollateral(
     contractAddress: string,
-    amount: BigNumber,
+    amount: string,
     token: Address,
     to: Address,
     dryRun: boolean
