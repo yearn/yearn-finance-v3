@@ -75,7 +75,7 @@ interface CreateVotingEscrowProps {
   votingEscrow: VotingEscrow;
   tokenView: TokenView;
   userVotingEscrowPositionsMap: VotingEscrowPositionsMap;
-  userVotingEscrowMetadata: VotingEscrowUserMetadata;
+  userVotingEscrowMetadata?: VotingEscrowUserMetadata;
 }
 
 function createVotingEscrowView({
@@ -91,8 +91,8 @@ function createVotingEscrowView({
     decimals: parseInt(votingEscrow.decimals),
     balance: votingEscrow.underlyingTokenBalance.amount,
     balanceUsdc: votingEscrow.underlyingTokenBalance.amountUsdc,
-    unlockDate: userVotingEscrowMetadata.unlockDate,
-    earlyExitPenaltyRatio: userVotingEscrowMetadata.earlyExitPenaltyRatio,
+    unlockDate: userVotingEscrowMetadata?.unlockDate,
+    earlyExitPenaltyRatio: userVotingEscrowMetadata?.earlyExitPenaltyRatio,
     token: tokenView,
     DEPOSIT: {
       userBalance: userVotingEscrowPositionsMap?.DEPOSIT?.balance ?? '0',
