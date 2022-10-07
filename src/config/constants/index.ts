@@ -22,7 +22,7 @@ const PARTNERS = {
 };
 
 const NETWORK_SETTINGS: NetworkSettings = {
-  /*goerli: {
+  goerli: {
     id: 'goerli',
     name: 'Goerli Test Network',
     networkId: 5,
@@ -37,7 +37,7 @@ const NETWORK_SETTINGS: NetworkSettings = {
     notifyEnabled: true,
     blockExplorerUrl: 'https://goerli.etherscan.io/',
     txConfirmations: 2,
-  },*/
+  },
   mainnet: {
     id: 'mainnet',
     name: 'Ethereum',
