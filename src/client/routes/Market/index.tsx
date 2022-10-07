@@ -320,7 +320,7 @@ export const Market = () => {
               key={key}
               items={val.map(({ id, borrower, type, spigot, escrow, principal, deposit }) => ({
                 icon: '',
-                name: borrower,
+                name: borrower + id,
                 principal,
                 deposit,
                 collateral: Object.entries(escrow?.deposits || {})

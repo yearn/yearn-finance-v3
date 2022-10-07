@@ -14,6 +14,7 @@ import {
 } from '@types';
 import { getConfig } from '@config';
 import { getContract } from '@frameworks/ethers';
+import { unnullify } from '@src/utils';
 
 import { TransactionResponse } from '../types';
 
@@ -90,7 +91,7 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
 
     if (
       setting.transferOwnerFunction.length === 0 ||
-      setting.ownerSplit.gt(await this.maxSplit(lineAddress)) ||
+      unnullify(setting.ownerSplit, true).gt(await this.maxSplit(lineAddress)) ||
       setting.token === ethers.constants.AddressZero
     ) {
       throw new Error('Bad setting');
@@ -123,7 +124,7 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
     const id = await this.creditLineService.getFirstID(lineAddress);
     return (
       (await this._getContract(lineAddress).count()) !== 0 &&
-      (await this.creditLineService.getCredit(lineAddress, id)).principal.gt(0)
+      unnullify((await this.creditLineService.getCredit(lineAddress, id)).principal, true).gt(0)
     );
   }
 

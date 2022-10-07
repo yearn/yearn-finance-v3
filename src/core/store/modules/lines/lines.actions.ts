@@ -18,6 +18,7 @@ import {
   PositionSummary,
   AddCreditProps,
   UseCreditLinesParams,
+  GetLinePageResponse,
 } from '@types';
 import {
   calculateSharesAmount,
@@ -26,6 +27,7 @@ import {
   getNetwork,
   validateNetwork,
   formatGetLinesData,
+  formatLinePageData,
   all,
   // validateLineDeposit,
   // validateLineWithdraw,
@@ -33,6 +35,7 @@ import {
   // parseError,
 } from '@utils';
 import { getConfig } from '@config';
+import { unnullify } from '@utils';
 
 import { TokensActions } from '../tokens/tokens.actions';
 
@@ -121,10 +124,12 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
     const existingData = linesMap[id];
     if (!existingData) {
       // navigated directly to line page, need to fetch basic data
-      linePageData = await creditLineService.getLinePage({
+      const linePageResponse = await creditLineService.getLinePage({
         network: network.current,
         id,
       });
+      const linePageData = linePageResponse ? formatLinePageData(linePageResponse) : undefined;
+      return { linePageData };
     } else {
       // already have basi data, just fetch events and position data
 
@@ -148,7 +153,7 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
       );
       // summ total interest paid on positions freom events and add to position data
       // get dRate, token
-      return { linePageData: { ...existingData, credits, ...events } };
+      return { linePageData: { ...existingData, credits, ...events } as CreditLinePage };
     }
   }
 );
@@ -255,7 +260,7 @@ const approveDeposit = createAsyncThunk<
     tokenAddress,
     accountAddress,
     spenderAddress: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
-    amount: amount,
+    amount: unnullify(amount, true),
   });
   console.log('this is approval', approveDepositTx);
 });

@@ -13,6 +13,7 @@ import {
   QueryCreator,
   QueryArgOption,
   GetLinePageResponse,
+  GetLinePageAuxDataResponse,
   PositionSummary,
   GetLinesResponse,
 } from '@src/core/types';

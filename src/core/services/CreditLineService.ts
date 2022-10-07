@@ -1,4 +1,4 @@
-import { ContractFunction, ethers, PopulatedTransaction } from 'ethers';
+import { ContractFunction, ethers, PopulatedTransaction, utils } from 'ethers';
 import { BytesLike } from '@ethersproject/bytes/src.ts';
 import { keccak256 } from 'ethers/lib/utils';
 
@@ -178,8 +178,8 @@ export class CreditLineServiceImpl implements CreditLineService {
       const calcAccrue = await interestRateCreditService.accrueInterest({
         contractAddress: await this.getInterestRateContract(props.lineAddress),
         id,
-        drawnBalance: credit.principal,
-        facilityBalance: credit.deposit,
+        drawnBalance: utils.parseUnits(credit.principal, 'ether'),
+        facilityBalance: utils.parseUnits(credit.deposit, 'ether'),
       });
       const simulateAccrue = unnullify(credit.interestAccrued, true).add(calcAccrue);
       if (unnullify(props.amount, true).gt(unnullify(credit.principal, true).add(simulateAccrue))) {

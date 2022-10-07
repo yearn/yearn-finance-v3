@@ -141,7 +141,7 @@ export enum STATUS {
 }
 
 export interface InterestRateCreditService {
-  accrueInterest: (props: InterestRateAccrueInterestProps) => Promise<string>;
+  accrueInterest: (props: InterestRateAccrueInterestProps) => Promise<BigNumber>;
 }
 
 export interface CreditLineService {
@@ -205,7 +205,7 @@ export interface WithdrawLineProps {
   dryRun: boolean;
   lineAddress: string;
   id: string;
-  amount: string;
+  amount: BigNumber;
 }
 export interface SetRatesProps {
   dryRun: boolean;
@@ -217,12 +217,12 @@ export interface SetRatesProps {
 export interface IncreaseCreditProps {
   lineAddress: string;
   id: string;
-  amount: string;
+  amount: BigNumber;
 }
 export interface DepositAndRepayProps {
   lineAddress: string;
   id: string;
-  amount: string;
+  amount: BigNumber;
 }
 export interface DepositAndCloseProps {
   lineAddress: string;
@@ -233,7 +233,7 @@ export interface ApproveLineDepositProps {
   lineAddress: string;
   tokenAddress: string;
   accountAddress: string;
-  amount: string;
+  amount: BigNumber;
 }
 
 export interface GetLineDepositAllowanceProps {
@@ -253,8 +253,8 @@ export interface GetLineWithdrawAllowanceProps {
 export interface InterestRateAccrueInterestProps {
   contractAddress: Address;
   id: BytesLike;
-  drawnBalance: string;
-  facilityBalance: string;
+  drawnBalance: BigNumber;
+  facilityBalance: BigNumber;
 }
 
 export interface GetLineProps extends GetLineArgs {
@@ -281,7 +281,7 @@ export interface SpigotedLineService {
   claimAndRepay(lineAddress: string, claimToken: Address, calldata: BytesLike, dryRun: boolean): Promise<string>;
   addSpigot(lineAddress: string, revenueContract: Address, setting: ISpigotSetting, dryRun: boolean): Promise<string>;
   isOwner(lineAddress: string): Promise<boolean>;
-  maxSplit(lineAddress: string): Promise<string>;
+  maxSplit(lineAddress: string): Promise<BigNumber>;
   isBorrowing: (lineAddress: string) => Promise<boolean>;
   isBorrower: (lineAddress: string) => Promise<boolean>;
   borrower(lineAddress: string): Promise<Address>;
@@ -300,7 +300,7 @@ export interface EscrowService {
   addCollateral(contractAddress: string, amount: BigNumber, token: Address, dryRun: boolean): Promise<string>;
   releaseCollateral(
     contractAddress: string,
-    amount: string,
+    amount: BigNumber,
     token: Address,
     to: Address,
     dryRun: boolean

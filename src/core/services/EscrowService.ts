@@ -57,7 +57,7 @@ export class EscrowServiceImpl implements EscrowService {
 
   public async enableCollateral(
     contractAddress: string,
-    amount: string,
+    amount: BigNumber,
     token: Address,
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction> {
@@ -66,7 +66,7 @@ export class EscrowServiceImpl implements EscrowService {
 
   public async liquidate(
     contractAddress: string,
-    amount: string,
+    amount: BigNumber,
     targetToken: Address,
     to: Address,
     dryRun: boolean
@@ -76,7 +76,7 @@ export class EscrowServiceImpl implements EscrowService {
 
   public async releaseCollateral(
     contractAddress: string,
-    amount: string,
+    amount: BigNumber,
     token: Address,
     to: Address
   ): Promise<string> {
