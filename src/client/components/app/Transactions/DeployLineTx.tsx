@@ -12,7 +12,7 @@ import {
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
 import { useSelectedCreditLine } from '@hooks';
-import { CreditLine } from '@src/core/types';
+import { AggregatedCreditLine } from '@src/core/types';
 import { LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
@@ -82,7 +82,7 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
         headerText={t('components.transaction.deploy-line.select-borrower')}
         inputText={t('components.transaction.deploy-line.select-borrower')}
         onSelectedCreditLineChange={() => {}}
-        selectedCredit={selectedCredit as CreditLine}
+        selectedCredit={selectedCredit as AggregatedCreditLine}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={false}
