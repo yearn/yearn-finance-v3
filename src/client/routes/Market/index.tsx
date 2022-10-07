@@ -236,9 +236,9 @@ export const Market = () => {
 
   const dispatchAddCredit = () => {
     const params: AddCreditProps = {
-      drate: '0',
-      frate: '0',
-      amount: '0',
+      drate: utils.parseUnits('0', 'ether'),
+      frate: utils.parseUnits('0', 'ether'),
+      amount: utils.parseUnits('0', 'ether'),
       token: '',
       lender: '',
       lineAddress: '',
@@ -250,6 +250,11 @@ export const Market = () => {
   const depositHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
+  };
+
+  const createLineHandler = (vaultAddress: string) => {
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+    dispatch(ModalsActions.openModal({ modalName: 'createLine' }));
   };
 
   const withdrawHandler = (vaultAddress: string) => {
@@ -278,7 +283,18 @@ export const Market = () => {
 
   return (
     <ViewContainer>
-      {/* <StyledSliderCard
+      <Button onClick={createLineHandler}>Deploy Line</Button>
+      {addCreditStatus.loading && (
+        <div>
+          <p>.... loading......</p>
+        </div>
+      )}
+      {addCreditStatus.error && (
+        <div>
+          <p>.... ERROR: {addCreditStatus.error}</p>
+        </div>
+      )}
+      <StyledSliderCard
         header={t('vaults:banner.header')}
         Component={
           <Text>
@@ -286,7 +302,7 @@ export const Market = () => {
           </Text>
         }
         background={<img src={GoblinTown} alt={'Goblin town or the Citadel?'} />}
-      /> */}
+      />
 
       <SummaryCard items={summaryCardItems} cardSize="small" />
       {opportunitiesLoading && <SpinnerLoading flex="1" width="100%" />}
@@ -307,14 +323,12 @@ export const Market = () => {
                 name: borrower,
                 principal,
                 deposit,
-                collateral: Object.entries(escrow?.deposits || {}).reduce(
-                  (sum, [_, val]) => sum.add(val.amount),
-                  utils.parseUnits('0', 'ether')
-                ),
-                revenue: Object.values(spigot?.tokenRevenue || {}).reduce(
-                  (sum, val) => sum.add(val),
-                  utils.parseUnits('0', 'ether')
-                ),
+                collateral: Object.entries(escrow?.deposits || {})
+                  .reduce((sum, [_, val]) => sum.add(val.amount), utils.parseUnits('0', 'ether'))
+                  .toString(),
+                revenue: Object.values(spigot?.tokenRevenue || {})
+                  .reduce((sum, val) => sum.add(val), utils.parseUnits('0', 'ether'))
+                  .toString(),
                 tags: [spigot ? 'revenue' : '', escrow ? 'collateral' : ''].filter((x) => !!x),
                 info: type || 'DAO Line of Credit',
                 infoDetail: 'EYY',

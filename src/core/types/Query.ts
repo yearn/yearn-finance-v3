@@ -1,5 +1,3 @@
-import { string } from 'ethers';
-
 import { LineStatusTypes, AggregatedCreditLine, CreditLinePage } from '@types';
 
 import { Address } from './Blockchain';
@@ -182,7 +180,7 @@ export interface GetLinesResponse {
   };
 }
 
-export interface GetLinePageAuxResponse {
+export interface GetLinePageAuxDataResponse {
   lines?: {
     dRate: number;
   }[];

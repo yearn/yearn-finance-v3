@@ -23,7 +23,7 @@ import {
   BaseEscrowDepositFragResponse,
   SpigotRevenueSummaryFragresponse,
   Address,
-  GetLinePageAuxResponse,
+  GetLinePageAuxDataResponse,
 } from '@types';
 
 const { parseUnits, parseEther } = utils;
@@ -113,8 +113,9 @@ export const formatCollateralEvents = (
 };
 /** Formatting functions. from GQL structured response to flat data for redux state  */
 
-const unnullify = (thing: any) => {
-  return !thing ? '0' : thing.toString();
+export const unnullify = (thing: any, toBN?: boolean) => {
+  const x = !thing ? '0' : thing.toString();
+  return toBN ? BigNumber.from(x) : x;
 };
 export function formatGetLinesData(
   response: GetLinesResponse[],
@@ -149,12 +150,12 @@ export function formatGetLinesData(
 }
 
 export function formatGetLinePageAuxData(
-  response: GetLinePageAuxResponse,
+  response: GetLinePageAuxDataResponse,
   line: AggregatedCreditLine,
   tokenPrices: { [token: string]: BigNumber }
-): CreditLinePage | undefined {
+): GetLinePageAuxDataResponse | undefined {
   const { ...rest } = response;
-
+  // TODO for Line Page
   return;
 }
 

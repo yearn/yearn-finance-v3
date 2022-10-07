@@ -14,7 +14,6 @@ import {
   STATUS,
   ExecuteTransactionProps,
   Credit,
-  Network,
   CreditLinePage,
   GetLineProps,
   GetLinesProps,
@@ -27,13 +26,18 @@ import {
   DepositAndRepayProps,
   DepositAndCloseProps,
   GetLinesResponse,
-  GetLinePageAuxResponse,
+  GetLinePageAuxDataProps,
+  GetLinePageAuxDataResponse,
+  InterestRateCreditService,
+  GetLinePageResponse,
 } from '@types';
 import { getConfig } from '@config';
-import { LineOfCreditABI } from '@services/contracts';
+import { LineOfCreditABI, LineFactoryABI } from '@services/contracts';
 import { getContract } from '@frameworks/ethers';
 import { getLine, getLinePage, getLinePageAuxData, getLines, getUserLinePositions } from '@frameworks/gql';
-import { formatGetLinesData, formatLinePageData, formatGetLinePageAuxData } from '@src/utils';
+import { formatGetLinesData, formatLinePageData, formatGetLinePageAuxData, unnullify } from '@src/utils';
+
+const { GRAPH_API_URL, SecuredLine_GOERLI } = getConfig();
 
 export class CreditLineServiceImpl implements CreditLineService {
   private graphUrl: string;
@@ -57,7 +61,7 @@ export class CreditLineServiceImpl implements CreditLineService {
     this.transactionService = transactionService;
     this.web3Provider = web3Provider;
     this.config = config;
-    const { GRAPH_API_URL } = getConfig();
+
     this.graphUrl = GRAPH_API_URL || 'https://api.thegraph.com';
     this.abi = LineOfCreditABI;
   }
@@ -70,92 +74,208 @@ export class CreditLineServiceImpl implements CreditLineService {
     return await this.web3Provider.getSigner().getAddress();
   }
 
-  public async addCredit(props: AddCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
+  public async close(props: CloseProps): Promise<string> {
     try {
-      if (props.dryRun) {
-        return await this.transactionService.populateTransaction({
-          network: 'mainnet',
-          args: [props.drate, props.frate, props.amount, props.token, props.lender],
-          methodName: 'addCredit',
-          abi: this.abi,
-          contractAddress: props.lineAddress,
-        });
+      if (!(await this.isSignerBorrowerOrLender(props.lineAddress, props.id))) {
+        throw new Error('Unable to close. Signer is not borrower or lender');
+      }
+      return (<TransactionResponse>await this.executeContractMethod(props.lineAddress, 'close', [props.id])).hash;
+    } catch (e) {
+      console.log(`An error occured while closing credit, error = [${JSON.stringify(e)}]`);
+      return Promise.reject(e);
+    }
+  }
+
+  public async withdraw(props: WithdrawLineProps): Promise<string> {
+    try {
+      if (!(await this.isLender(props.lineAddress, props.id))) {
+        throw new Error('Cannot withdraw. Signer is not lender');
+      }
+      return (<TransactionResponse>(
+        await this.executeContractMethod(props.lineAddress, 'withdraw', [props.id, props.amount])
+      )).hash;
+    } catch (e) {
+      console.log(`An error occured while withdrawing credit, error = [${JSON.stringify(e)}]`);
+      return Promise.reject(e);
+    }
+  }
+
+  public async setRates(props: SetRatesProps): Promise<string> {
+    try {
+      const { lineAddress: line, id } = props;
+      // check mutualConsentById
+      const populatedTrx = await this.executeContractMethod(
+        props.lineAddress,
+        'setRates',
+        [props.id, props.drate, props.frate],
+        true
+      );
+      const borrower = await this.borrower(line);
+      const lender = await this.getLenderByCreditID(line, id);
+      if (!(await this.isMutualConsent(line, populatedTrx.data, borrower, lender))) {
+        throw new Error(
+          `Setting rate is not possible. reason: "Consent has not been initialized by other party for the given creditLine [${props.lineAddress}]`
+        );
       }
 
-      let tx;
-      tx = await this.transactionService.execute({
-        network: 'mainnet',
-        args: [props.drate, props.frate, props.amount, props.token, props.lender],
-        methodName: 'addCredit',
-        abi: this.abi,
-        contractAddress: props.lineAddress,
+      return (<TransactionResponse>(
+        await this.executeContractMethod(props.lineAddress, 'setRates', [props.id, props.drate, props.frate])
+      )).hash;
+    } catch (e) {
+      console.log(`An error occured while setting rate, error = [${JSON.stringify(e)}]`);
+      return Promise.reject(e);
+    }
+  }
+
+  public async increaseCredit(props: IncreaseCreditProps): Promise<string> {
+    try {
+      const line = props.lineAddress;
+      if (await this.isActive(line)) {
+        throw new Error(`Increasing credit is not possible. reason: "The given creditLine [${line}] is not active"`);
+      }
+
+      // check mutualConsentById
+      const populatedTrx = await this.executeContractMethod(
+        props.lineAddress,
+        'increaseCredit',
+        [props.id, props.amount],
+        true
+      );
+
+      const borrower = await this.borrower(line);
+      const lender = await this.getLenderByCreditID(line, props.id);
+      if (!(await this.isMutualConsent(line, populatedTrx.data, borrower, lender))) {
+        throw new Error(
+          `Increasing credit is not possible. reason: "Consent has not been initialized by other party for the given creditLine [${props.lineAddress}]`
+        );
+      }
+
+      return (<TransactionResponse>(
+        await this.executeContractMethod(props.lineAddress, 'increaseCredit', [props.id, props.amount])
+      )).hash;
+    } catch (e) {
+      console.log(`An error occured while increasing credit, error = [${JSON.stringify(e)}]`);
+      return Promise.reject(e);
+    }
+  }
+
+  public async depositAndRepay(
+    props: DepositAndRepayProps,
+    interestRateCreditService: InterestRateCreditService
+  ): Promise<string> {
+    try {
+      if (!(await this.isBorrowing(props.lineAddress))) {
+        throw new Error('Deposit and repay is not possible because not borrowing');
+      }
+
+      const id = await this.getFirstID(props.lineAddress);
+      const credit = await this.getCredit(props.lineAddress, props.id);
+
+      // check interest accrual
+      // note: `accrueInterest` will not be called because it has a modifier that is expecting
+      // line of credit to be the msg.sender. We should probably update that modifier since
+      // it only does the calculation and doesn't change state.
+      const calcAccrue = await interestRateCreditService.accrueInterest({
+        contractAddress: await this.getInterestRateContract(props.lineAddress),
+        id,
+        drawnBalance: credit.principal,
+        facilityBalance: credit.deposit,
       });
-      await tx.wait();
-      return tx;
+      const simulateAccrue = unnullify(credit.interestAccrued, true).add(calcAccrue);
+      if (unnullify(props.amount, true).gt(unnullify(credit.principal, true).add(simulateAccrue))) {
+        throw new Error('Amount is greater than (principal + interest to be accrued). Enter lower amount.');
+      }
+
+      return (<TransactionResponse>(
+        await this.executeContractMethod(props.lineAddress, 'depositAndRepay', [props.amount])
+      )).hash;
+    } catch (e) {
+      console.log(`An error occured while depositAndRepay credit, error = [${JSON.stringify(e)}]`);
+      return Promise.reject(e);
+    }
+  }
+
+  public async depositAndClose(props: DepositAndCloseProps): Promise<string> {
+    try {
+      if (!(await this.isBorrowing(props.lineAddress))) {
+        throw new Error('Deposit and close is not possible because not borrowing');
+      }
+      if (!(await this.isBorrower(props.lineAddress))) {
+        throw new Error('Deposit and close is not possible because signer is not borrower');
+      }
+      return (<TransactionResponse>await this.executeContractMethod(props.lineAddress, 'depositAndClose', [])).hash;
+    } catch (e) {
+      console.log(`An error occured while depositAndClose credit, error = [${JSON.stringify(e)}]`);
+      return Promise.reject(e);
+    }
+  }
+
+  public async addCredit(props: AddCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
+    try {
+      const line = props.lineAddress;
+      // check if status is ACTIVE
+      //if (!(await this.isActive(line))) {
+      // throw new Error(`Adding credit is not possible. reason: "The given creditLine [${line}] is not active`);
+      // }
+      //const populatedTrx = await this.executeContractMethod(
+      //props.lineAddress,
+      //'addCredit',
+      //[props.drate, props.frate, props.amount, props.token, props.lender],
+      //true
+      //);
+      // check mutualConsent
+      const borrower = await this.borrower(line);
+      const lender = await this.getSignerAddress();
+
+      let data = {
+        drate: props.drate,
+        frate: props.frate,
+        amount: props.amount,
+        token: props.token,
+        lender: lender,
+      };
+
+      return <TransactionResponse>(
+        await this.executeContractMethod(
+          line,
+          'addCredit',
+          [data.drate, data.frate, data.amount, data.token, data.lender],
+          true
+        )
+      );
     } catch (e) {
       console.log(`An error occured while adding credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);
     }
   }
 
-  public async close(props: CloseProps): Promise<TransactionResponse> {
-    return <TransactionResponse>await this.executeContractMethod(props.lineAddress, 'close', [props.id], false);
-  }
-
-  public async withdraw(props: WithdrawLineProps): Promise<TransactionResponse> {
-    return <TransactionResponse>(
-      await this.executeContractMethod(props.lineAddress, 'withdraw', [props.id, props.amount], false)
-    );
-  }
-
-  public async setRates(props: SetRatesProps): Promise<TransactionResponse | PopulatedTransaction> {
-    return await this.executeContractMethod(
-      props.lineAddress,
-      'setRates',
-      [props.id, props.drate, props.frate],
-      props.dryRun
-    );
-  }
-
-  public async increaseCredit(props: IncreaseCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
-    return await this.executeContractMethod(
-      props.lineAddress,
-      'increaseCredit',
-      [props.id, props.amount],
-      props.dryRun
-    );
-  }
-
-  public async depositAndRepay(props: DepositAndRepayProps): Promise<TransactionResponse | PopulatedTransaction> {
-    return await this.executeContractMethod(props.lineAddress, 'depositAndRepay', [props.amount], props.dryRun);
-  }
-
-  public async depositAndClose(props: DepositAndCloseProps): Promise<TransactionResponse | PopulatedTransaction> {
-    return await this.executeContractMethod(props.lineAddress, 'depositAndClose', [], props.dryRun);
-  }
-
-  private async executeContractMethod(contractAddress: string, methodName: string, params: any[], dryRun: boolean) {
+  private async executeContractMethod(
+    contractAddress: string,
+    methodName: string,
+    params: any[],
+    dryRun: boolean = false
+  ): Promise<TransactionResponse | PopulatedTransaction> {
     let props: ExecuteTransactionProps | undefined = undefined;
+
+    // TODO. pass network as param all the way down from actions
+    // const { getSigner } = this.web3Provider;
+    // const user = getSigner();
+
     try {
       props = {
-        network: 'mainnet',
+        network: 'goerli',
+        contractAddress: contractAddress,
+        abi: this.abi,
         args: params,
         methodName: methodName,
-        abi: this.abi,
-        contractAddress: contractAddress,
       };
-      if (dryRun) {
-        return await this.transactionService.populateTransaction(props);
-      }
 
       const tx = await this.transactionService.execute(props);
       await tx.wait();
       return tx;
     } catch (e) {
       console.log(
-        `An error occured while ${methodName} with params [${params}] on CreditLine [${
-          props?.contractAddress
-        }], error = [${JSON.stringify(e)}] `
+        `An error occured while ${methodName} with params [${params}] on CreditLine [${props?.contractAddress}], error = ${e} `
       );
       return Promise.reject(e);
     }
@@ -244,35 +364,35 @@ export class CreditLineServiceImpl implements CreditLineService {
     return response;
   }
 
-  public async getLinePage(prop: GetLinePageProps): Promise<CreditLinePage | undefined> {
-    const response = getLinePage(prop)
-      .then((data) => formatLinePageData(data))
-      .catch((err) => {
-        console.log('CreditLineService: error fetching lines', err);
-        return undefined;
-      });
+  // TODO
+  public async getLinePage(prop: GetLinePageProps): Promise<GetLinePageResponse | undefined> {
+    const response = getLinePage(prop).catch((err) => {
+      console.log('CreditLineService: error fetching lines', err);
+      return undefined;
+    });
     return response;
   }
 
-  // public async getLinePageAuxData(prop: GetLinePageProps): Promise<GetLinePageAuxResponse | undefined> {
-  //   const response = getLinePageAuxData(prop)
-  //     .then((data) => formatGetLinePageAuxData(data))
-  //     .catch((err) => {
-  //       console.log('CreditLineService: error fetching lines', err);
-  //       return undefined;
-  //     });
-  //   return response;
-  // }
+  public async getLinePageAuxData(prop: GetLinePageAuxDataProps): Promise<GetLinePageAuxDataResponse | undefined> {
+    const response = getLinePageAuxData(prop).catch((err) => {
+      console.log('CreditLineService: error fetching lines', err);
+      return undefined;
+    });
+    return response;
+  }
 
   public async getUserLinePositions(): Promise<any | undefined> {
     return;
   }
+
   public async getExpectedTransactionOutcome(): Promise<any | undefined> {
     return;
   }
+
   public async approveDeposit(): Promise<any | undefined> {
     return;
   }
+
   // public async approveZapOu:  () => Promise<any>t: {
   //   return;
   // };
@@ -282,6 +402,7 @@ export class CreditLineServiceImpl implements CreditLineService {
   public async getDepositAllowance(): Promise<any | undefined> {
     return;
   }
+
   public async getWithdrawAllowance(): Promise<any | undefined> {
     return;
   }

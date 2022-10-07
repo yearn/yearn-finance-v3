@@ -14,6 +14,8 @@ export interface DepositTxModalProps {
   };
 }
 
+/* This is a yearn frontend template, currently not in use ->  Check out addCreditPositionTx Modal */
+
 export const DepositTxModal: FC<DepositTxModalProps> = ({
   onClose,
   modalProps = { allowTokenSelect: true, allowVaultSelect: false },

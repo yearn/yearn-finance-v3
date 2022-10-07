@@ -1,4 +1,3 @@
-import { string } from 'ethers';
 import { StringLiteral } from 'typescript';
 
 import { Address } from './Blockchain';
@@ -268,4 +267,15 @@ export interface LineActionsStatusMap {
 export interface UserLineMetadataStatusMap {
   getUserLinePositions: Status;
   linesActionsStatusMap: { [lineAddress: string]: LineActionsStatusMap };
+}
+
+// Transaction data
+
+export interface DeploySecuredLineTxData {
+  oracle: Address;
+  arbiter: Address;
+  factoryAddress: Address;
+  swapTarget: Address;
+  borrower: Address;
+  ttl: number;
 }

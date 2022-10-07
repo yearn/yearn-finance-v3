@@ -76,7 +76,7 @@ export const getLinePage: QueryCreator<GetLinePageArgs, GetLinePageResponse> = <
 ): QueryResponse<GetLinePageResponse> => getLinePageQuery(arg);
 
 const getLinePageAuxDataQuery = createQuery(GET_LINE_PAGE_AUX_QUERY);
-export const getLinePageAuxData: QueryCreator<GetLinePageArgs, GetLinePageAuxResponse> = <
+export const getLinePageAuxData: QueryCreator<GetLinePageArgs, GetLinePageAuxDataResponse> = <
   GetLinePageArgs,
   GetLinePageResponse
 >(
