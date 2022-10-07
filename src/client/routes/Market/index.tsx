@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { BigNumber } from 'ethers';
+import { utils } from 'ethers';
 
 import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation, useQueryParams } from '@hooks';
 import {
@@ -216,7 +216,7 @@ export const Market = () => {
   const lineCategoriesForDisplay = useAppSelector(LinesSelectors.selectLinesForCategories);
   const getLinesStatus = useAppSelector(LinesSelectors.selectLinesStatusMap).getLines;
   const [didFetchLines, setLinesFetched] = useState(false);
-  console.log('ready', getLinesStatus || _.isEmpty(lineCategoriesForDisplay));
+  console.log('ready', lineCategoriesForDisplay, getLinesStatus || _.isEmpty(lineCategoriesForDisplay));
 
   useEffect(() => {
     setSearch(queryParams.search ?? '');
@@ -236,9 +236,9 @@ export const Market = () => {
 
   const dispatchAddCredit = () => {
     const params: AddCreditProps = {
-      drate: BigNumber.from(0),
-      frate: BigNumber.from(0),
-      amount: BigNumber.from(0),
+      drate: utils.parseUnits('0', 'ether'),
+      frate: utils.parseUnits('0', 'ether'),
+      amount: utils.parseUnits('0', 'ether'),
       token: '',
       lender: '',
       lineAddress: '',
@@ -309,11 +309,11 @@ export const Market = () => {
                 deposit,
                 collateral: Object.entries(escrow?.deposits || {}).reduce(
                   (sum, [_, val]) => sum.add(val.amount),
-                  BigNumber.from(0)
+                  utils.parseUnits('0', 'ether')
                 ),
                 revenue: Object.values(spigot?.tokenRevenue || {}).reduce(
                   (sum, val) => sum.add(val),
-                  BigNumber.from(0)
+                  utils.parseUnits('0', 'ether')
                 ),
                 tags: [spigot ? 'revenue' : '', escrow ? 'collateral' : ''].filter((x) => !!x),
                 info: type || 'DAO Line of Credit',

@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
 
-import { LineStatusTypes, AggregatedCreditLine, CreditLinePage, BaseToken } from '@types';
+import { LineStatusTypes, AggregatedCreditLine, CreditLinePage } from '@types';
 
 import { Address } from './Blockchain';
 
@@ -44,6 +44,10 @@ export interface GetLineArgs {
  * @property {Address} GetLinePageArgs.id - address of line contract
  */
 export interface GetLinePageArgs {
+  id: Address;
+}
+
+export interface GetLinePageAuxArgs {
   id: Address;
 }
 
@@ -111,7 +115,7 @@ export interface LinePageCreditFragResponse extends BaseCreditFragResponse {
   fRate: BigNumber;
 }
 
-export interface LineEventFrag {
+export interface LineEventFragResponse {
   __typename: string;
   timestamp: number;
   credit: {
@@ -123,6 +127,10 @@ export interface LineEventFrag {
   // events with rates
   dRate?: BigNumber;
   fRate?: BigNumber;
+
+  token: {
+    id: Address;
+  };
 }
 
 export interface SpigotRevenueSummaryFragresponse {
@@ -132,9 +140,20 @@ export interface SpigotRevenueSummaryFragresponse {
   timeOfLastIncome: number;
 }
 
+export interface SpigotEventFragResponse {
+  __typename: 'ClaimRevenueEvent';
+  timestamp: number;
+  revenueToken: {
+    id: Address;
+  };
+  escrowed: BigNumber;
+  netIncome: BigNumber;
+  value: BigNumber;
+}
+
 export interface BaseEscrowDepositFragResponse {
   enabled: boolean;
-  amount: BigInt;
+  amount: BigNumber;
   token: {
     id: Address;
     symbol: string;
@@ -163,8 +182,18 @@ export interface GetLinesResponse {
   };
 }
 
+export interface GetLinePageAuxResponse {
+  lines?: {
+    dRate: number;
+  }[];
+  events?: LineEventFragResponse[];
+  spigot?: {
+    events: SpigotEventFragResponse[];
+  };
+}
+
 export interface GetLinePageResponse extends BaseLineFragResponse {
-  credits?: LinePageCreditFragResponse & { events?: LineEventFrag[] }[];
+  credits?: LinePageCreditFragResponse & { events?: LineEventFragResponse[] }[];
 
   escrow?: {
     id: Address;
@@ -173,7 +202,11 @@ export interface GetLinePageResponse extends BaseLineFragResponse {
     collateralValue: BigNumber;
     deposits: {
       id: Address;
-      token: BaseToken;
+      token: {
+        id: Address;
+        symbol: string;
+        decimals: number;
+      };
       amount: BigNumber;
       enabled: boolean;
       events: {
@@ -192,17 +225,6 @@ export interface GetLinePageResponse extends BaseLineFragResponse {
       active: boolean;
       startTime: number;
     };
-    events?: {
-      __typename: 'ClaimRevenueEvent'; //only ever need revenue
-      revenueToken: {
-        id: Address;
-        decimals: number;
-        symbol: string;
-      };
-      timestamp: number;
-      escrowed: BigNumber;
-      netIncome: BigNumber;
-      value: BigNumber;
-    }[];
+    events?: SpigotEventFragResponse[];
   };
 }

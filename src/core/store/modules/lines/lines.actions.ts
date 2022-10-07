@@ -26,6 +26,7 @@ import {
   getNetwork,
   validateNetwork,
   formatGetLinesData,
+  all,
   // validateLineDeposit,
   // validateLineWithdraw,
   // validateMigrateLineAllowance,
@@ -109,16 +110,44 @@ const getLines = createAsyncThunk<
 const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined }, GetLinePageArgs, ThunkAPI>(
   'lines/getLinePage',
   async ({ id }, { getState, extra }) => {
-    const { network } = getState();
+    const {
+      network,
+      lines: { linesMap },
+    } = getState();
     const { creditLineService } = extra.services;
-    // check if AggLine data is already in store
-    // if no^ then send full getLinePage req
-    // else just get credit events
-    const linePageData = await creditLineService.getLinePage({
-      network: network.current,
-      id,
-    });
-    return { linePageData };
+    let linePageData;
+    const existingData = linesMap[id];
+    if (!existingData) {
+      // navigated directly to line page, need to fetch basic data
+      linePageData = await creditLineService.getLinePage({
+        network: network.current,
+        id,
+      });
+    } else {
+      // already have basi data, just fetch events and position data
+
+      const auxdata = await creditLineService.getLinePageAuxData({
+        network: network.current,
+        id,
+      });
+
+      if (!auxdata) return { linePageData };
+      const { credits: auxCredits, ...events } = auxdata;
+      const credits = Object.entries(auxCredits).reduce(
+        (all, [key, aux]) => ({
+          ...all,
+          /// theoretically possible for a credit to exist in aux but not in Agg.
+          [key]: {
+            ...(existingData.credits?.[key] ?? {}),
+            ...aux,
+          },
+        }),
+        {}
+      );
+      // summ total interest paid on positions freom events and add to position data
+      // get dRate, token
+      return { linePageData: { ...existingData, credits, ...events } };
+    }
   }
 );
 

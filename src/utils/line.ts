@@ -23,6 +23,7 @@ import {
   BaseEscrowDepositFragResponse,
   SpigotRevenueSummaryFragresponse,
   Address,
+  GetLinePageAuxResponse,
 } from '@types';
 
 export const mapStatusToString = (status: number): LineStatusTypes => {
@@ -54,12 +55,12 @@ export const mapStatusToString = (status: number): LineStatusTypes => {
  */
 export const formatCreditEvents = (symbol: string, price: number = 0, events: CreditLineEvents[]) => {
   return events.map((e: any): CreditLineEvents => {
-    const { id, __typename, amount, timestamp, value } = e;
+    const { id, __typename, amount, token, timestamp, value } = e;
     return {
       id,
       __typename,
       timestamp,
-      symbol: symbol || 'UNKNOWN',
+      token: token.id,
       amount,
       value,
       currentValue: price * value,
@@ -88,7 +89,7 @@ export const formatCollateralEvents = (
   let totalVal = 0;
   // TODO promise.all token price fetching for better performance
   const newEvents: CollateralEvent[] = events.map((e: any): CollateralEvent => {
-    const { __typename, timestamp, amount, value } = e;
+    const { __typename, timestamp, amount, token, value } = e;
     const valueNow = price * amount;
     if (type === SPIGOT_MODULE_NAME) {
       // aggregate token revenue. not needed for escrow bc its already segmented by token
@@ -103,7 +104,7 @@ export const formatCollateralEvents = (
       amount,
       value,
       valueNow,
-      symbol: symbol || 'UNKNOWN',
+      id: token.id,
     };
   });
   return [totalVal, newEvents];
@@ -142,6 +143,16 @@ export function formatGetLinesData(
   });
 }
 
+export function formatGetLinePageAuxData(
+  response: GetLinePageAuxResponse,
+  line: AggregatedCreditLine,
+  tokenPrices: { [token: string]: BigNumber }
+): CreditLinePage | undefined {
+  const { ...rest } = response;
+
+  return;
+}
+
 export const formatAggregatedCreditLineData = (
   credits: BaseCreditFragResponse[],
   collaterals: BaseEscrowDepositFragResponse[],
@@ -172,8 +183,8 @@ export const formatAggregatedCreditLineData = (
       const price = tokenPrices[c.token.id] || BigNumber.from(0);
       const highestApy = c.drate > agg.highestApy[2] ? [c.id, c.token.id, c.drate] : agg.highestApy;
       return {
-        principal: agg.principal.add(price.times(c.principal)),
-        deposit: agg.deposit.add(price.times(c.deposit)),
+        principal: agg.principal.add(price.mul(c.principal)),
+        deposit: agg.deposit.add(price.mul(c.deposit)),
         highestApy,
       };
     },
@@ -182,12 +193,12 @@ export const formatAggregatedCreditLineData = (
 
   const collateralValue = collaterals.reduce((agg, c) => {
     const price = tokenPrices[c.token.id];
-    return !c.enabled ? agg : agg.add(c.amount.times(price));
+    return !c.enabled ? agg : agg.add(c.amount.mul(price));
   }, BigNumber.from(0));
 
   const escrow = {
     collateralValue,
-    cratio: collateralValue.div(credit.principal),
+    cratio: credit.principal.eq(0) ? BigNumber.from(0) : collateralValue.div(credit.principal),
   };
 
   // aggregated revenue in USD by token across all spigots

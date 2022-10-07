@@ -1,4 +1,5 @@
 import { BigNumber } from 'ethers';
+import { StringLiteral } from 'typescript';
 
 import { Address } from './Blockchain';
 import { Status } from './Status';
@@ -60,11 +61,24 @@ export interface CreditLinePage extends AggregatedCreditLine {
   creditEvents: CreditLineEvents[];
 }
 
+// data that isnt included in AggregatedCreditLine that we need to fetch for full CreditLinePage dattype
+// gets merged into existing AggregatedCredit to form LinePageData
+export interface CreditLinePageAuxData {
+  credits: {
+    [id: string]: {
+      dRate: BigNumber;
+      token: Address;
+    };
+  }[];
+  collateralEvents: CollateralEvent[];
+  creditEvents: CreditLineEvents[];
+}
+
 // TODO consolidate Credit and BaseCreditPosition and resolve type conflicts across codebase
 export interface BaseCreditPosition {
   id: string;
   lender: Address;
-  token: { id: Address; symbol: string };
+  token: Address;
   principal: BigNumber;
   interestAccrued: BigNumber;
   interestRepaid: BigNumber;
@@ -89,11 +103,8 @@ export interface LinePageCreditPosition extends BaseCreditPosition {
   interestRepaid: BigNumber;
   totalInterestRepaid: BigNumber;
   drawnRate: BigNumber;
-  token: {
-    id: Address;
-    symbol: string;
-  };
-  events?: CreditLineEvents[];
+  token: Address;
+  // events?: CreditLineEvents[];
 }
 
 // bare minimum to display about a user on a position
@@ -149,7 +160,7 @@ export interface AggregatedEscrow extends BaseEscrow {
     [token: string]: {
       amount: BigNumber;
       enabled: boolean;
-      token: BaseToken;
+      token: Address;
     };
   };
 }
@@ -169,15 +180,9 @@ export interface RevenueContract {
   contract: Address;
   startTime: number;
   ownerSplit: number;
-  token: BaseToken;
+  token: Address;
 
   events?: SpigotEvents[];
-}
-
-export interface BaseToken {
-  id: Address;
-  symbol: string;
-  decimals: number;
 }
 
 type SPIGOT_NAME = 'spigot';
@@ -207,7 +212,6 @@ export interface EventWithValue {
   __typename?: string;
   timestamp: number;
   amount?: number;
-  symbol: string;
   value?: number;
   valueNow?: number;
   [key: string]: any;
@@ -219,7 +223,6 @@ export interface CreditEvent extends EventWithValue {
   id: string; // position id
   timestamp: number;
   amount: number;
-  symbol: string;
   valueAtTime?: number;
   valueNow?: number;
 }
@@ -237,9 +240,9 @@ export type CreditLineEvents = CreditEvent | SetRateEvent;
 // Collateral Events
 export interface CollateralEvent extends EventWithValue {
   type: ModuleNames;
+  id: Address; // token earned as revenue or used as collateral
   timestamp: number;
   amount: number;
-  symbol: string;
   value?: number;
 }
 

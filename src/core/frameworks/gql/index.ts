@@ -17,7 +17,7 @@ import {
   GetLinesResponse,
 } from '@src/core/types';
 
-import { GET_LINE_QUERY, GET_LINE_PAGE_QUERY, GET_LINES_QUERY } from './queries';
+import { GET_LINE_QUERY, GET_LINE_PAGE_QUERY, GET_LINE_PAGE_AUX_QUERY, GET_LINES_QUERY } from './queries';
 
 const { GRAPH_API_URL, GRAPH_TEST_API_URL } = getEnv();
 
@@ -74,6 +74,14 @@ const getLinePageQuery = createQuery(GET_LINE_PAGE_QUERY);
 export const getLinePage: QueryCreator<GetLinePageArgs, GetLinePageResponse> = <GetLinePageArgs, GetLinePageResponse>(
   arg: GetLinePageArgs
 ): QueryResponse<GetLinePageResponse> => getLinePageQuery(arg);
+
+const getLinePageAuxDataQuery = createQuery(GET_LINE_PAGE_AUX_QUERY);
+export const getLinePageAuxData: QueryCreator<GetLinePageArgs, GetLinePageAuxResponse> = <
+  GetLinePageArgs,
+  GetLinePageResponse
+>(
+  arg: GetLinePageArgs
+): QueryResponse<GetLinePageResponse> => getLinePageAuxDataQuery(arg);
 
 const getLinesQuery = createQuery(GET_LINES_QUERY, 'lineOfCredits');
 export const getLines: QueryCreator<GetLinesArgs, GetLinesResponse[]> = <GetLinesArgs, GetLinesResponse>(

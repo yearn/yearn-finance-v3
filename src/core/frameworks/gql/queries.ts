@@ -32,7 +32,7 @@ const BASE_CREDIT_FRAGMENT = gql`
     id
     principal
     deposit
-    drate
+    dRate
     token {
       id
       symbol
@@ -125,8 +125,7 @@ const SPIGOT_EVENT_FRAGMENT = gql`
       __typename
       timestamp
       revenueToken {
-        symbol
-        lastPriceUSD
+        id
       }
       escrowed
       netIncome
@@ -219,7 +218,7 @@ export const GET_LINE_PAGE_QUERY = gql`
       lines {
         ...LinePageCreditFrag
       }
-      events(first: 5) {
+      events(first: 20) {
         ...LineEventFrag
       }
 
@@ -232,7 +231,27 @@ export const GET_LINE_PAGE_QUERY = gql`
         spigots {
           ...BaseSpigotFrag
         }
-        events(first: 3) {
+        events(first: 20) {
+          ...SpigotEventFrag
+        }
+      }
+    }
+  }
+`;
+
+export const GET_LINE_PAGE_AUX_QUERY = gql`
+  query getLinePageAux($id: ID) {
+    lineOfCredit(id: $id) {
+      lines {
+        dRate
+      }
+
+      events(first: 20) {
+        ...LineEventFrag
+      }
+
+      spigot {
+        events(first: 20) {
           ...SpigotEventFrag
         }
       }
@@ -243,9 +262,11 @@ export const GET_LINE_PAGE_QUERY = gql`
 export const GET_LINES_QUERY = gql`
   ${BASE_LINE_FRAGMENT}
   ${BASE_CREDIT_FRAGMENT}
+  ${ESCROW_FRAGMENT}
+  ${TOKEN_FRAGMENT}
 
   query getLines($first: Int, $orderBy: String, $orderDirection: String) {
-    lines: lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
+    lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
       ...BaseLineFrag
       credits: lines {
         ...BaseCreditFrag
@@ -255,8 +276,10 @@ export const GET_LINES_QUERY = gql`
       }
       spigot {
         id
-        summmaries {
-          token
+        summaries {
+          token {
+            ...TokenFrag
+          }
           totalVolumeUsd
           timeOfFirstIncome
           timeOfLastIncome

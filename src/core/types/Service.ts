@@ -22,8 +22,10 @@ import {
   Network,
   TokenAllowance,
   AggregatedCreditLine,
+  CreditLinePageAuxData,
   CreditLinePage,
   Credit,
+  CollateralEvent,
   PositionSummary,
   GetLineArgs,
   GetLinesArgs,
@@ -148,6 +150,7 @@ export interface CreditLineService {
   getLine: (props: GetLineProps) => Promise<AggregatedCreditLine | undefined>;
   getLines: (props: GetLinesProps) => Promise<GetLinesResponse[] | undefined>;
   getLinePage: (props: GetLinePageProps) => Promise<CreditLinePage | undefined>;
+  getLinePageAuxData: (props: GetLinePageProps) => Promise<CreditLinePageAuxData | undefined>;
   getUserLinePositions: (...args: any) => Promise<any | undefined>;
   getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;
 
