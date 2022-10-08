@@ -35,8 +35,6 @@ const BASE_CREDIT_FRAGMENT = gql`
     dRate
     token {
       id
-      symbol
-      decimals
     }
   }
 `;
@@ -44,7 +42,9 @@ const BASE_CREDIT_FRAGMENT = gql`
 const LINE_PAGE_CREDIT_FRAGMENT = gql`
   fragment LinePageCreditFrag on Credit {
     id
-    lender
+    lender {
+      id
+    }
     deposit
     principal
     interestRepaid
@@ -52,57 +52,21 @@ const LINE_PAGE_CREDIT_FRAGMENT = gql`
     dRate
     fRate
     token {
-      symbol
+      id
     }
   }
 `;
 
 // lewv = line event with value
 const CREDIT_EVENT_FRAGMENT = gql`
-  fragment lewv on LineEvent {
-    amount
-    value
-  }
-  fragment LineEventFrag on LineEvent {
+  fragment LineEventFrag on LineEventWithValue {
     __typename
     timestamp
     credit {
       id
     }
-    ... on BorrowEvent {
-      ...lewv
-    }
-    ... on DefaultEvent {
-      ...lewv
-    }
-    ... on LiquidateEvent {
-      ...lewv
-    }
-    ... on RepayInterestEvent {
-      ...lewv
-    }
-    ... on AddCollateralEvent {
-      ...lewv
-    }
-    ... on RepayPrincipalEvent {
-      ...lewv
-    }
-    ... on WithdrawProfitEvent {
-      ...lewv
-    }
-    ... on WithdrawDepositEvent {
-      ...lewv
-    }
-    ... on InterestAccruedEvent {
-      ...lewv
-    }
-    ... on RemoveCollateralEvent {
-      ...lewv
-    }
-    ... on SetRatesEvent {
-      dRate
-      fRate
-    }
+    amount
+    value
   }
 `;
 
@@ -113,9 +77,6 @@ const BASE_SPIGOT_FRAGMENT = gql`
     active
     contract
     startTime
-    token {
-      ...TokenFrag
-    }
   }
 `;
 
@@ -212,7 +173,7 @@ export const GET_LINE_PAGE_QUERY = gql`
   ${LINE_PAGE_CREDIT_FRAGMENT}
 
   query getLinePage($id: ID!) {
-    lineOfCredits(id: $id) {
+    lineOfCredit(id: $id) {
       ...BaseLineFrag
 
       lines {

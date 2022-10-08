@@ -38,8 +38,8 @@ export interface BaseCreditLine {
 
 export interface AggregatedCreditLine extends BaseCreditLine {
   // real-time aggregate usd value across all credits
-  principal?: string | Promise<string>;
-  deposit: string | Promise<string>;
+  principal: string; // | Promise<string>;
+  deposit: string; // | Promise<string>;
   // id, symbol, APY (4 decimals)
   highestApy: [string, string, string];
 
@@ -51,8 +51,8 @@ export interface AggregatedCreditLine extends BaseCreditLine {
 
 export interface CreditLinePage extends AggregatedCreditLine {
   // total value of asssets repaid *AT TIME OF REPAYMENT*
-  interest?: string | Promise<string>;
-  totalInterestRepaid: string | Promise<string>;
+  interest: string; // | Promise<string>;
+  totalInterestRepaid: string; // | Promise<string>;
 
   credits?: { [key: string]: LinePageCreditPosition };
 
