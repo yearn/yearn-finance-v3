@@ -12,7 +12,7 @@ import {
   WalletSelectors,
 } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
-import { VaultDetailPanels, ViewContainer, SliderCard } from '@components/app';
+import { LineDetailsDisplay, ViewContainer, SliderCard } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
 import {
   // parseHistoricalEarningsUnderlying,
@@ -23,6 +23,7 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
+import { ThreeColumnLayout } from '@src/client/containers/Columns';
 
 const StyledSliderCard = styled(SliderCard)`
   padding: 3rem;
@@ -46,7 +47,7 @@ export interface LineDetailRouteParams {
 }
 
 export const LineDetail = () => {
-  const { t } = useAppTranslation(['common', 'linedetails']);
+  const { t } = useAppTranslation(['common', 'lineDetails']);
   const dispatch = useAppDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -144,14 +145,16 @@ export const LineDetail = () => {
 
       {!generalLoading && !selectedLine && (
         <StyledSliderCard
-          header={t('linedetails:no-line-supported-card.header', { network: currentNetworkSettings.name })}
+          header={t('lineDetails:no-line-supported-card.header', { network: currentNetworkSettings.name })}
           Component={
             <Text>
-              <p>{t('linedetails:no-line-supported-card.content')}</p>
+              <p>{t('lineDetails:no-line-supported-card.content')}</p>
             </Text>
           }
         />
       )}
+
+      {selectedLine && <LineDetailsDisplay line={selectedLine} />}
 
       {/* {!generalLoading && selectedLine && (
         <VaultDetailPanels
