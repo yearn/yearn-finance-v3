@@ -9,7 +9,7 @@ export interface QueryCreator<ArgType, ResponseType> {
 export interface QueryResponse<ResponseType> extends Promise<ResponseType> {
   loading: boolean;
   error?: string | object;
-  data?: ResponseType;
+  data?: ResponseType | undefined;
 
   // make backwards compatible with Apollos response type
   [key: string]: any;

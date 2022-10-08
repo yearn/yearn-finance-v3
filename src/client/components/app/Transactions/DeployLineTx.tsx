@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { formatAmount, normalizeAmount, toBN } from '@utils';
+import { formatAmount, normalizeAmount, toBN, isAddress } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
@@ -17,6 +17,7 @@ import { LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
+import { TxAddressInput } from './components/TxAddressInput';
 import { TxTTLInput } from './components/TxTTLInput';
 import { TxActions } from './components/TxActions';
 import { TxActionButton } from './components/TxActions';
@@ -45,10 +46,12 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
-  const [transactionCompleted, setTransactionCompleted] = useState(false);
+  const [transactionCompleted, setTransactionCompleted] = useState(0);
   const { allowVaultSelect, header, onClose, onPositionChange } = props;
   const [borrower, setBorrower] = useState('0x1A6784925814a13334190Fd249ae0333B90b6443');
-
+  const [inputAddressWarning, setWarning] = useState('');
+  const [inputTTLWarning, setTTLWarning] = useState('');
+  const [loading, setLoading] = useState(false);
   const [timeToLive, setTimeToLive] = useState('0');
 
   const onAmountChange = (ttl: string) => {
@@ -56,38 +59,71 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
     setTimeToLive(timeToLive.toString());
   };
 
-  const deploySecuredLineNoConfig = () => {
+  const onBorrowerChange = (address: string) => {
+    setBorrower(address);
+  };
+
+  const deploySecuredLineNoConfig = async () => {
+    setLoading(true);
+    let checkSumAddress = await isAddress(borrower);
+
+    if (!checkSumAddress) {
+      setWarning('Incorrect address, please verify and try again.');
+      console.log('error', inputAddressWarning);
+      return;
+    }
+
+    if (+timeToLive <= 0) {
+      setTTLWarning('Increase TTL, cannot be 0.');
+      console.log('error', inputTTLWarning);
+      return;
+    }
+
     try {
       dispatch(LinesActions.deploySecuredLine({ borrower, ttl: timeToLive })).then((res) => {
-        console.log('working ', res);
-        setTransactionCompleted(true);
+        if (res.type !== 'lines/deploySecuredLine/rejected') {
+          setTransactionCompleted(1);
+          setLoading(false);
+        } else if (res.type === 'lines/deploySecuredLine/rejected') {
+          setTransactionCompleted(2);
+          setLoading(false);
+        }
       });
     } catch (e) {
       console.log(e);
     }
   };
 
-  if (transactionCompleted) {
+  if (transactionCompleted === 1) {
     return (
       <StyledTransaction onClose={onClose} header={''}>
-        <TxStatus transactionCompletedLabel={''} exit={() => {}} />
+        <TxStatus transactionCompletedLabel={'deployed line successfully'} exit={() => {}} />
+      </StyledTransaction>
+    );
+  }
+
+  if (transactionCompleted === 2) {
+    return (
+      <StyledTransaction>
+        <TxStatus transactionCompletedLabel={'Could not deploy line'} exit={() => {}} />
       </StyledTransaction>
     );
   }
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
-      <TxCreditLineInput
+      <TxAddressInput
         key={'credit-input'}
         headerText={t('components.transaction.deploy-line.select-borrower')}
         inputText={t('components.transaction.deploy-line.select-borrower')}
-        onSelectedCreditLineChange={() => {}}
-        selectedCredit={selectedCredit as AggregatedCreditLine}
+        onBorrowerChange={onBorrowerChange}
+        borrower={borrower}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={false}
         // displayGuidance={displaySourceGuidance}
       />
+      {inputAddressWarning !== '' ? <div style={{ color: '#C3272B' }}>{inputAddressWarning}</div> : ''}
       <TxTTLInput
         headerText={t('components.transaction.deploy-line.select-ttl')}
         inputText={t('components.transaction.deploy-line.time-to-live')}
@@ -101,13 +137,14 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
         loading={false}
         loadingText={''}
       />
+      {inputTTLWarning !== '' ? <div style={{ color: '#C3272B' }}>{inputTTLWarning}</div> : ''}
       <TxActions>
         <TxActionButton
           key={''}
           onClick={deploySecuredLineNoConfig}
           disabled={false}
           contrast={false}
-          isLoading={false}
+          isLoading={loading}
         >
           {'Deploy Line'}
         </TxActionButton>
