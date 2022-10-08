@@ -57,6 +57,12 @@ const StyledSliderCard = styled(SliderCard)`
   min-height: 24rem;
 `;
 
+const DeployLineButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
+`;
+
 const StyledNoWalletCard = styled(NoWalletCard)`
   width: 100%;
   ${halfWidthCss}
@@ -282,7 +288,6 @@ export const Market = () => {
 
   return (
     <ViewContainer>
-      <Button onClick={createLineHandler}>Deploy Line</Button>
       {addCreditStatus.loading && (
         <div>
           <p>.... loading......</p>
@@ -296,9 +301,17 @@ export const Market = () => {
       <StyledSliderCard
         header={t('vaults:banner.header')}
         Component={
-          <Text>
-            <p>{t('vaults:banner.desc')}</p>
-          </Text>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Text>
+              <p>{t('vaults:banner.desc')}</p>
+            </Text>
+            <DeployLineButton onClick={createLineHandler}>Deploy Line</DeployLineButton>
+          </div>
         }
         background={<img src={GoblinTown} alt={'Goblin town or the Citadel?'} />}
       />
