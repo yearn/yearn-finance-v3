@@ -99,7 +99,7 @@ const TopIcon = styled.div`
 `;
 
 const Divider = styled.div`
-  height: 3rem;
+  height: ${({ theme }) => theme.spacing.md};
 `;
 
 const ItemTag = styled.span`
@@ -178,12 +178,6 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
                 {' '}
                 {t('components.line-card.borrower')}: {item.name}
               </ItemName>
-              <ItemInfoLabel>{t('components.line-card.secured-by')}:</ItemInfoLabel>
-              <TagContainer>
-                {item.tags?.map((name: string, i: number) => (
-                  <ItemTag> {name} </ItemTag>
-                ))}
-              </TagContainer>
               <Divider />
               <Metric>
                 ${item.principal.toString()} / ${item.deposit.toString()}
@@ -194,7 +188,9 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
                   {t('components.line-card.total-debt')} / {t('components.line-card.total-credit')}{' '}
                 </MetricsText>
               </MetricsTextContainer>
+              <Divider />
 
+              <ItemInfoLabel>{t('components.line-card.secured-by')}:</ItemInfoLabel>
               <Metric>
                 ${item.collateral.toString()} / ${item.revenue.toString()}
               </Metric>

@@ -19,6 +19,7 @@ const StyledCardContent = styled(FlatCardContent)`
   align-items: stretch;
   justify-content: center;
   flex-wrap: wrap;
+  grid-row-gap: 3rem;
   grid-gap: ${({ theme }) => theme.card.padding};
   margin-top: ${({ theme }) => theme.card.padding};
   padding: 0 ${({ theme }) => theme.card.padding};

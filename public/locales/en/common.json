@@ -40,7 +40,9 @@
       "borrower": "Borrower",
       "secured-by": "Secured By",
       "total-debt": "Outstanding Debt",
-      "total-credit": "Total Credit"
+      "total-credit": "Total Credit",
+      "collateral": "Collateral",
+      "revenue": "Spigoted Revenue"
     },
     "no-wallet": "Wallet not connected",
     "recent-recommendations": {

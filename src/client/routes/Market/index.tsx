@@ -22,7 +22,6 @@ import {
   SummaryCard,
   DetailCard,
   RecommendationsCard,
-  LineCard,
   ActionButtons,
   TokenIcon,
   SliderCard,
@@ -195,19 +194,19 @@ export const Market = () => {
   const defaultLineCategories: UseCreditLinesParams = {
     // using i18m translation as keys for easy display
     'market:featured.highest-credit': {
-      first: 5,
+      first: 3,
       // NOTE: terrible proxy for total credit (oldest = most). Currently getLines only allows filtering by line metadata not modules'
       orderBy: 'start',
       orderDirection: 'asc',
     },
     'market:featured.highest-revenue': {
-      first: 5,
+      first: 3,
       // NOTE: terrible proxy for total revenue earned (highest % = highest notional). Currently getLines only allows filtering by line metadata not modules'
       orderBy: 'defaultSplit',
       orderDirection: 'desc',
     },
     'market:featured.newest': {
-      first: 5,
+      first: 3,
       orderBy: 'start', // NOTE: theoretically gets lines that start in the future, will have to refine query
       orderDirection: 'desc',
     },
@@ -313,9 +312,8 @@ export const Market = () => {
         <SpinnerLoading flex="1" width="100%" />
       ) : (
         Object.entries(lineCategoriesForDisplay!).map(([key, val]: [string, AggregatedCreditLine[]], i: number) => {
-          const CardStyle = i % 2 === 0 ? StyledRecommendationsCard : LineCard;
           return (
-            <CardStyle
+            <StyledRecommendationsCard
               header={t(key)}
               key={key}
               items={val.map(({ id, borrower, type, spigot, escrow, principal, deposit }) => ({
