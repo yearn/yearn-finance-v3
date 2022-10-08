@@ -21,8 +21,7 @@ interface LineDetailsProps {
 }
 
 const Container = styled.div`
-  padding: ${({ theme }) => theme.card.padding};
-  width: 100%;
+  margin: ${({ theme }) => theme.card.padding};
 `;
 
 const Header = styled.h1`

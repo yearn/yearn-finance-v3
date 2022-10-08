@@ -14,11 +14,12 @@ import {
 import { toBN } from '@src/utils';
 import { ThreeColumnLayout } from '@src/client/containers/Columns';
 
-const SectionHeader = styled.h2`
+const SectionHeader = styled.h3`
   ${({ theme }) => `
     font-size: ${theme.fonts.sizes.xl};
     font-weight: 600;
     margin-bottom: ${theme.spacing.lg};
+    color: ${theme.colors.primary};
   `}
 `;
 
@@ -33,6 +34,7 @@ const MetricName = styled.h3`
     font-size: ${theme.fonts.sizes.lg};
     font-weight: 600;
     margin-bottom: ${theme.spacing.md};
+    color: ${theme.colors.primary};
   `}
 `;
 
@@ -113,7 +115,7 @@ export const LineMetadataDisplay = (props: LineMetadataDisplay) => {
       </ThreeColumnLayout>
       <SectionHeader>
         {t('lineDetails:metadata.secured-by')}
-        {modules.map((m) => t(`lineDetails:metadata.${m}.title`)).join(' + ')}
+        {modules.map((m) => t(`lineDetails:metadata.${m}.title`)).join(' + ')}:
       </SectionHeader>
       {!revenue && !deposits ? (
         <MetricName>{t('lineDetails:metadata.no-collateral')}</MetricName>
