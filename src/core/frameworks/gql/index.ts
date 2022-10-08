@@ -26,7 +26,7 @@ let client: any;
 export const getClient = () => (client ? client : createClient());
 const createClient = (): typeof ApolloClient => {
   client = new ApolloClient({
-    uri: GRAPH_API_URL || GRAPH_TEST_API_URL,
+    uri: GRAPH_API_URL,
     cache: new InMemoryCache(),
   });
 
@@ -53,7 +53,7 @@ export const createQuery =
         .query({ query, variables })
         .then((result: QueryResult) => {
           const { data, error } = result;
-          const requestedData = at(data, [path])[0];
+          const requestedData = at(data, [path])?.[0];
           console.log('gql request success', path, result, requestedData);
 
           if (error) return reject(error);

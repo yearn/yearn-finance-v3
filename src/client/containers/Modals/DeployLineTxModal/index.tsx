@@ -5,7 +5,9 @@ import { ModalTx } from '@components/common';
 import { useAppTranslation } from '@hooks';
 import { DeployLineTx } from '@src/client/components/app/Transactions/DeployLineTx';
 
-const StyledDeployLineTxModal = styled(ModalTx)``;
+const StyledDeployLineTxModal = styled(ModalTx)`
+  width: '30%';
+`;
 export interface DeployLineTxModalProps {
   onClose: () => void;
   modalProps?: {
