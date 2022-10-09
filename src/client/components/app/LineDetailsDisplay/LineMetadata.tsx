@@ -18,7 +18,7 @@ const SectionHeader = styled.h3`
   ${({ theme }) => `
     font-size: ${theme.fonts.sizes.xl};
     font-weight: 600;
-    margin-bottom: ${theme.spacing.lg};
+    margin: ${theme.spacing.xl} 0;
     color: ${theme.colors.primary};
   `}
 `;
@@ -48,7 +48,7 @@ const DataSubMetricsContainer = styled.div``;
 
 const DataSubMetric = styled.p``;
 
-interface LineMetadataDisplay {
+interface LineMetadataProps {
   principal: string;
   deposit: string;
   totalInterestPaid: string;
@@ -88,7 +88,7 @@ const MetricDisplay = ({ title, data, displaySubmetrics = false, submetrics }: M
   );
 };
 
-export const LineMetadataDisplay = (props: LineMetadataDisplay) => {
+export const LineMetadata = (props: LineMetadataProps) => {
   const { t } = useAppTranslation(['common', 'lineDetails']);
   const { principal, deposit, totalInterestPaid, revenue, deposits } = props;
   const modules = [revenue && 'revenue', deposits && 'escrow'].filter((x) => !!x);
@@ -115,7 +115,7 @@ export const LineMetadataDisplay = (props: LineMetadataDisplay) => {
       </ThreeColumnLayout>
       <SectionHeader>
         {t('lineDetails:metadata.secured-by')}
-        {modules.map((m) => t(`lineDetails:metadata.${m}.title`)).join(' + ')}:
+        {modules.map((m) => t(`lineDetails:metadata.${m}.title`)).join(' + ')}
       </SectionHeader>
       {!revenue && !deposits ? (
         <MetricName>{t('lineDetails:metadata.no-collateral')}</MetricName>

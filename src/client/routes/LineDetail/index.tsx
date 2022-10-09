@@ -56,6 +56,7 @@ export const LineDetail = () => {
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
+  const selectedPage = useAppSelector(LinesSelectors.selectSelectedLinePage);
   // const selectedLineCreditEvents = useAppSelector(LinesSelectors.selectSelectedLineCreditEvents);
   const linesStatus = useAppSelector(LinesSelectors.selectLinesStatus);
   // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
@@ -91,13 +92,13 @@ export const LineDetail = () => {
   const [tokensInitialized, setTokensInitialized] = useState(false);
 
   useEffect(() => {
-    const assetAddress: string | undefined = location.pathname.split('/')[2];
-    if (!assetAddress || !isValidAddress(assetAddress)) {
+    const lineAddress: string | undefined = location.pathname.split('/')[2];
+    if (!lineAddress || !isValidAddress(lineAddress)) {
       dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
-      history.push('/portfolio');
+      history.push('/market');
       return;
     }
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: assetAddress }));
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
 
     return () => {
       dispatch(LinesActions.clearSelectedLineAndStatus());
@@ -154,7 +155,7 @@ export const LineDetail = () => {
         />
       )}
 
-      {selectedLine && <LineDetailsDisplay line={selectedLine} />}
+      {selectedLine && <LineDetailsDisplay page={selectedPage} line={selectedLine} />}
 
       {/* {!generalLoading && selectedLine && (
         <VaultDetailPanels

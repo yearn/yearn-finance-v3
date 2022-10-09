@@ -9,7 +9,7 @@ export interface QueryCreator<ArgType, ResponseType> {
 export interface QueryResponse<ResponseType> extends Promise<ResponseType> {
   loading: boolean;
   error?: string | object;
-  data?: ResponseType;
+  data?: ResponseType | undefined;
 
   // make backwards compatible with Apollos response type
   [key: string]: any;
@@ -111,10 +111,17 @@ export interface LinePageCreditFragResponse extends BaseCreditFragResponse {
   interestAccrued: string;
   dRate: string;
   fRate: string;
+
+  lender: {
+    id: string;
+  };
+
+  events?: LineEventFragResponse[];
 }
 
 export interface LineEventFragResponse {
   __typename: string;
+  id: string;
   timestamp: number;
   credit: {
     id: string;
@@ -191,7 +198,7 @@ export interface GetLinePageAuxDataResponse {
 }
 
 export interface GetLinePageResponse extends BaseLineFragResponse {
-  credits?: LinePageCreditFragResponse & { events?: LineEventFragResponse[] }[];
+  credits?: LinePageCreditFragResponse[];
 
   escrow?: {
     id: Address;

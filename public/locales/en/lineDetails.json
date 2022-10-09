@@ -17,5 +17,9 @@
       "title": "Collateral",
       "total": "Total Collateral Value"
     }
+  },
+  "credit-events": {
+    "title": "Payment History",
+    "no-data": "No payment history on this line"
   }
 }

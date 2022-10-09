@@ -60,10 +60,14 @@ const LINE_PAGE_CREDIT_FRAGMENT = gql`
 // lewv = line event with value
 const CREDIT_EVENT_FRAGMENT = gql`
   fragment LineEventFrag on LineEventWithValue {
+    id
     __typename
     timestamp
     credit {
       id
+      token {
+        id
+      }
     }
     amount
     value

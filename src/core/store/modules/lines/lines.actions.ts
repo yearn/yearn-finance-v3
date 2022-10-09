@@ -117,12 +117,17 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
   async ({ id }, { getState, extra }) => {
     const {
       network,
-      lines: { linesMap },
+      lines: { linesMap, pagesMap },
     } = getState();
     const { creditLineService } = extra.services;
-    let linePageData;
-    const existingData = linesMap[id];
-    if (!existingData) {
+
+    const pageData = pagesMap[id];
+    console.log('full page data already exists', pageData);
+    if (pageData) return { linePageData: pageData };
+
+    const basicData = linesMap[id];
+    console.log('basic pagedata already exists', basicData);
+    if (!basicData) {
       // navigated directly to line page, need to fetch basic data
       const linePageResponse = await creditLineService.getLinePage({
         network: network.current,
@@ -138,14 +143,15 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
         id,
       });
 
-      if (!auxdata) return { linePageData };
+      if (!auxdata) return { linePageData: undefined };
+
       const { lines: auxCredits, ...events } = auxdata;
       const credits = Object.entries(auxCredits ?? {}).reduce(
         (all, [key, aux]) => ({
           ...all,
           /// theoretically possible for a credit to exist in aux but not in Agg.
           [key]: {
-            ...(existingData.credits?.[key] ?? {}),
+            ...(basicData.credits?.[key] ?? {}),
             ...aux,
           },
         }),
@@ -153,7 +159,7 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
       );
       // summ total interest paid on positions freom events and add to position data
       // get dRate, token
-      return { linePageData: { ...existingData, credits, ...events } as CreditLinePage };
+      return { linePageData: { ...basicData, credits, ...events } as CreditLinePage };
     }
   }
 );

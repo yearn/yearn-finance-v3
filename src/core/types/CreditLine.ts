@@ -57,7 +57,7 @@ export interface CreditLinePage extends AggregatedCreditLine {
   credits?: { [key: string]: LinePageCreditPosition };
 
   collateralEvents: CollateralEvent[];
-  creditEvents: CreditLineEvents[];
+  creditEvents: CreditEvent[];
 }
 
 // data that isnt included in AggregatedCreditLine that we need to fetch for full CreditLinePage dattype
@@ -70,7 +70,7 @@ export interface CreditLinePageAuxData {
     };
   }[];
   collateralEvents: CollateralEvent[];
-  creditEvents: CreditLineEvents[];
+  creditEvents: CreditEvent[];
 }
 
 // TODO consolidate Credit and BaseCreditPosition and resolve type conflicts across codebase
@@ -101,9 +101,9 @@ export interface LinePageCreditPosition extends BaseCreditPosition {
   interestAccrued: string;
   interestRepaid: string;
   totalInterestRepaid: string;
-  drawnRate: string;
+  dRate: string;
   token: Address;
-  // events?: CreditLineEvents[];
+  // events?: CreditEvent[];
 }
 
 // bare minimum to display about a user on a position
@@ -219,7 +219,9 @@ export interface EventWithValue {
 // Credit Events
 export interface CreditEvent extends EventWithValue {
   __typename: string;
-  id: string; // position id
+  id: string;
+  positionId: string; // position id
+  token?: string;
   timestamp: number;
   amount: number;
   valueAtTime?: number;
@@ -230,11 +232,9 @@ export interface SetRateEvent {
   __typename: string;
   id: string; // position id
   timestamp: number;
-  drawnRate: number;
-  facilityRate: number;
+  dRate: number;
+  fRate: number;
 }
-
-export type CreditLineEvents = CreditEvent | SetRateEvent;
 
 // Collateral Events
 export interface CollateralEvent extends EventWithValue {
