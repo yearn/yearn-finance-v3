@@ -59,6 +59,14 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
     setTimeToLive(timeToLive.toString());
   };
 
+  const onTransactionCompletedDismissed = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      setTransactionCompleted(0);
+    }
+  };
+
   const onBorrowerChange = (address: string) => {
     setBorrower(address);
   };
@@ -81,11 +89,14 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
 
     try {
       dispatch(LinesActions.deploySecuredLine({ borrower, ttl: timeToLive })).then((res) => {
-        if (res.type !== 'lines/deploySecuredLine/rejected') {
-          setTransactionCompleted(1);
-          setLoading(false);
-        } else if (res.type === 'lines/deploySecuredLine/rejected') {
+        if (res.meta.requestStatus === 'rejected') {
           setTransactionCompleted(2);
+          console.log(transactionCompleted, 'tester');
+          setLoading(false);
+        }
+        if (res.meta.requestStatus === 'fulfilled') {
+          setTransactionCompleted(1);
+          console.log(transactionCompleted, 'tester');
           setLoading(false);
         }
       });
@@ -96,16 +107,26 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
 
   if (transactionCompleted === 1) {
     return (
-      <StyledTransaction onClose={onClose} header={''}>
-        <TxStatus transactionCompletedLabel={'deployed line successfully'} exit={() => {}} />
+      <StyledTransaction onClose={onClose} header={'Transaction complete'}>
+        {console.log(transactionCompleted)}
+        <TxStatus
+          success={transactionCompleted}
+          transactionCompletedLabel={'deployed line successfully'}
+          exit={onTransactionCompletedDismissed}
+        />
       </StyledTransaction>
     );
   }
 
   if (transactionCompleted === 2) {
     return (
-      <StyledTransaction>
-        <TxStatus transactionCompletedLabel={'Could not deploy line'} exit={() => {}} />
+      <StyledTransaction onClose={onClose} header={'Transaction failed'}>
+        {console.log(transactionCompleted)}
+        <TxStatus
+          success={transactionCompleted}
+          transactionCompletedLabel={'Could not deploy line'}
+          exit={onTransactionCompletedDismissed}
+        />
       </StyledTransaction>
     );
   }

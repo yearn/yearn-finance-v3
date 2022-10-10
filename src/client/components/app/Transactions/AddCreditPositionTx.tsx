@@ -56,7 +56,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
-  const [transactionCompleted, setTransactionCompleted] = useState(false);
+  const [transactionCompleted, setTransactionCompleted] = useState(0);
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
   const [targetTokenAmount, setTargetTokenAmount] = useState('1');
@@ -152,7 +152,16 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     setTransactionApproved(!transactionApproved);
   };
 
+  const onTransactionCompletedDismissed = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      setTransactionCompleted(0);
+    }
+  };
+
   const addCreditPosition = () => {
+    setLoading(true);
     // TODO set error in state to display no line selected
     if (!selectedCredit) return;
 
@@ -177,8 +186,16 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         dryRun: true,
       })
     ).then((res) => {
-      console.log('working ', res);
-      setTransactionCompleted(true);
+      if (res.meta.requestStatus === 'rejected') {
+        setTransactionCompleted(2);
+        console.log(transactionCompleted, 'tester');
+        setLoading(false);
+      }
+      if (res.meta.requestStatus === 'fulfilled') {
+        setTransactionCompleted(1);
+        console.log(transactionCompleted, 'tester');
+        setLoading(false);
+      }
     });
   };
 
@@ -207,10 +224,26 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     selectedSellToken.symbol
   }`;
 
-  if (transactionCompleted) {
+  if (transactionCompleted === 1) {
     return (
       <StyledTransaction onClose={onClose} header={'transaction'}>
-        <TxStatus transactionCompletedLabel={'completed'} exit={() => console.log('hey')} />
+        <TxStatus
+          success={transactionCompleted}
+          transactionCompletedLabel={'completed'}
+          exit={onTransactionCompletedDismissed}
+        />
+      </StyledTransaction>
+    );
+  }
+
+  if (transactionCompleted === 2) {
+    return (
+      <StyledTransaction onClose={onClose} header={'transaction'}>
+        <TxStatus
+          success={transactionCompleted}
+          transactionCompletedLabel={'could not add credit'}
+          exit={onTransactionCompletedDismissed}
+        />
       </StyledTransaction>
     );
   }
@@ -262,7 +295,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
             onClick={onAction}
             disabled={disabled}
             contrast={contrast}
-            isLoading={false}
+            isLoading={transactionLoading}
           >
             {label}
           </TxActionButton>
