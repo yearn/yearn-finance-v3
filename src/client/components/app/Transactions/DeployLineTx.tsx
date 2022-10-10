@@ -48,7 +48,7 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
   const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const { allowVaultSelect, header, onClose, onPositionChange } = props;
-  const [borrower, setBorrower] = useState('0x1A6784925814a13334190Fd249ae0333B90b6443');
+  const [borrower, setBorrower] = useState('');
   const [inputAddressWarning, setWarning] = useState('');
   const [inputTTLWarning, setTTLWarning] = useState('');
   const [loading, setLoading] = useState(false);
