@@ -97,7 +97,8 @@
         "done": "Done",
         "exit": "Exit",
         "simulating": "Simulating...",
-        "transaction-completed": "Transaction completed"
+        "transaction-completed": "Transaction completed",
+        "transaction-failed": "Transaction failed"
       },
       "supply": "Supply",
       "to-gauge": "To gauge",
