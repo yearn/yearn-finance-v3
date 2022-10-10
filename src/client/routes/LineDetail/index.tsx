@@ -12,7 +12,7 @@ import {
   WalletSelectors,
 } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
-import { VaultDetailPanels, ViewContainer, SliderCard } from '@components/app';
+import { LineDetailsDisplay, ViewContainer, SliderCard } from '@components/app';
 import { SpinnerLoading, Text } from '@components/common';
 import {
   // parseHistoricalEarningsUnderlying,
@@ -23,6 +23,7 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
+import { ThreeColumnLayout } from '@src/client/containers/Columns';
 
 const StyledSliderCard = styled(SliderCard)`
   padding: 3rem;
@@ -46,7 +47,7 @@ export interface LineDetailRouteParams {
 }
 
 export const LineDetail = () => {
-  const { t } = useAppTranslation(['common', 'linedetails']);
+  const { t } = useAppTranslation(['common', 'lineDetails']);
   const dispatch = useAppDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -55,6 +56,7 @@ export const LineDetail = () => {
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
+  const selectedPage = useAppSelector(LinesSelectors.selectSelectedLinePage);
   // const selectedLineCreditEvents = useAppSelector(LinesSelectors.selectSelectedLineCreditEvents);
   const linesStatus = useAppSelector(LinesSelectors.selectLinesStatus);
   // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
@@ -90,13 +92,13 @@ export const LineDetail = () => {
   const [tokensInitialized, setTokensInitialized] = useState(false);
 
   useEffect(() => {
-    const assetAddress: string | undefined = location.pathname.split('/')[2];
-    if (!assetAddress || !isValidAddress(assetAddress)) {
+    const lineAddress: string | undefined = location.pathname.split('/')[2];
+    if (!lineAddress || !isValidAddress(lineAddress)) {
       dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
-      history.push('/portfolio');
+      history.push('/market');
       return;
     }
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: assetAddress }));
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
 
     return () => {
       dispatch(LinesActions.clearSelectedLineAndStatus());
@@ -144,14 +146,16 @@ export const LineDetail = () => {
 
       {!generalLoading && !selectedLine && (
         <StyledSliderCard
-          header={t('linedetails:no-line-supported-card.header', { network: currentNetworkSettings.name })}
+          header={t('lineDetails:no-line-supported-card.header', { network: currentNetworkSettings.name })}
           Component={
             <Text>
-              <p>{t('linedetails:no-line-supported-card.content')}</p>
+              <p>{t('lineDetails:no-line-supported-card.content')}</p>
             </Text>
           }
         />
       )}
+
+      {selectedLine && <LineDetailsDisplay page={selectedPage} line={selectedLine} />}
 
       {/* {!generalLoading && selectedLine && (
         <VaultDetailPanels

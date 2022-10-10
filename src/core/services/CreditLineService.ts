@@ -366,11 +366,12 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   // TODO
   public async getLinePage(prop: GetLinePageProps): Promise<GetLinePageResponse | undefined> {
-    const response = getLinePage(prop).catch((err) => {
-      console.log('CreditLineService: error fetching lines', err);
-      return undefined;
-    });
-    return response;
+    return getLinePage(prop)
+      .then((data) => data)
+      .catch((err) => {
+        console.log('CreditLineService: error fetching lines', err);
+        return undefined;
+      });
   }
 
   public async getLinePageAuxData(prop: GetLinePageAuxDataProps): Promise<GetLinePageAuxDataResponse | undefined> {

@@ -20,7 +20,7 @@ import {
 
 import { GET_LINE_QUERY, GET_LINE_PAGE_QUERY, GET_LINE_PAGE_AUX_QUERY, GET_LINES_QUERY } from './queries';
 
-const { GRAPH_API_URL, GRAPH_TEST_API_URL } = getEnv();
+const { GRAPH_API_URL } = getEnv();
 
 let client: any;
 export const getClient = () => (client ? client : createClient());
@@ -46,14 +46,14 @@ const createClient = (): typeof ApolloClient => {
  *        1. for creating curried func and 2. for defining arg/return types of that func
  */
 export const createQuery =
-  (query: DocumentNode, path: string = ''): Function =>
+  (query: DocumentNode, path?: string): Function =>
   <A, R>(variables: A): Promise<QueryResponse<R>> =>
     new Promise(async (resolve, reject) => {
       getClient()
         .query({ query, variables })
         .then((result: QueryResult) => {
           const { data, error } = result;
-          const requestedData = at(data, [path])?.[0];
+          const requestedData = path ? at(data, [path])[0] : data;
           console.log('gql request success', path, result, requestedData);
 
           if (error) return reject(error);
@@ -71,7 +71,7 @@ export const getLine: QueryCreator<GetLineArgs, AggregatedCreditLine> = <GetLine
   arg: GetLineArgs
 ): QueryResponse<AggregatedCreditLine> => getLineQuery(arg);
 
-const getLinePageQuery = createQuery(GET_LINE_PAGE_QUERY);
+const getLinePageQuery = createQuery(GET_LINE_PAGE_QUERY, 'lineOfCredit');
 export const getLinePage: QueryCreator<GetLinePageArgs, GetLinePageResponse> = <GetLinePageArgs, GetLinePageResponse>(
   arg: GetLinePageArgs
 ): QueryResponse<GetLinePageResponse> => getLinePageQuery(arg);
