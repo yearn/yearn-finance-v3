@@ -161,11 +161,12 @@ export const DepositTx: FC<DepositTxProps> = ({
           sourceTokenAddress: selectedSellTokenAddress,
           sourceTokenAmount: toWei(debouncedAmount, selectedSellToken.decimals),
           targetTokenAddress: selectedVault.address,
+          gasless: allowGasless && isGasless,
         })
       );
     }
     dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedSellTokenAddress] }));
-  }, [debouncedAmount]);
+  }, [debouncedAmount, isGasless]);
 
   if (!selectedVault || !selectedSellTokenAddress || !selectedSellToken) {
     return null;
@@ -192,6 +193,7 @@ export const DepositTx: FC<DepositTxProps> = ({
   const { error: slippageError } = validateSlippage({
     slippageTolerance: selectedSlippage,
     expectedSlippage: expectedTxOutcome?.slippage,
+    gasless: allowGasless && isGasless,
   });
 
   const { error: networkError } = validateNetwork({
@@ -292,7 +294,9 @@ export const DepositTx: FC<DepositTxProps> = ({
           VaultsActions.gaslessDeposit({
             vaultAddress: selectedVault.address,
             tokenAddress: selectedSellToken.address,
-            minTargetAmount: expectedTxOutcome?.targetTokenAmount ?? '',
+            vaultAmount: expectedTxOutcome?.targetTokenAmount ?? '',
+            tokenAmount: expectedTxOutcome?.sourceTokenAmount ?? '',
+            feeAmount: expectedTxOutcome?.sourceTokenAmountFee ?? '',
           })
         );
       } else {

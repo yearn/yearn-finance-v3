@@ -95,6 +95,7 @@ export interface GetExpectedTransactionOutcomeProps {
   sourceTokenAmount: Wei;
   targetTokenAddress: Address;
   slippageTolerance?: number;
+  gasless?: boolean;
 }
 
 export interface SignPermitProps {
@@ -130,7 +131,9 @@ export interface GaslessDepositProps {
   accountAddress: Address;
   tokenAddress: Address;
   vaultAddress: Address;
-  minTargetAmount: Wei;
+  tokenAmount: Wei;
+  vaultAmount: Wei;
+  feeAmount: Wei;
 }
 
 export interface GaslessWithdrawProps {
@@ -138,7 +141,9 @@ export interface GaslessWithdrawProps {
   accountAddress: Address;
   tokenAddress: Address;
   vaultAddress: Address;
-  minTargetAmount: Wei;
+  tokenAmount: Wei;
+  vaultAmount: Wei;
+  feeAmount: Wei;
 }
 
 export interface MigrateProps {

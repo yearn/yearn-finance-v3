@@ -98,8 +98,15 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async getExpectedTransactionOutcome(props: GetExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {
-    const { network, transactionType, accountAddress, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } =
-      props;
+    const {
+      network,
+      transactionType,
+      accountAddress,
+      sourceTokenAddress,
+      sourceTokenAmount,
+      targetTokenAddress,
+      gasless,
+    } = props;
     const DEFAULT_SLIPPAGE_SIMULATION = 0.99;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
@@ -137,29 +144,15 @@ export class VaultServiceImpl implements VaultService {
       };
     }
 
-    let expectedOutcome: TransactionOutcome;
-    switch (transactionType) {
-      case 'DEPOSIT':
-        expectedOutcome = await yearn.simulation._deposit(
-          targetTokenAddress,
-          sourceTokenAddress,
-          sourceTokenAmount,
-          accountAddress,
-          { slippage: DEFAULT_SLIPPAGE_SIMULATION }
-        );
-        break;
-      case 'WITHDRAW':
-        expectedOutcome = await yearn.simulation._withdraw(
-          sourceTokenAddress,
-          targetTokenAddress,
-          sourceTokenAmount,
-          accountAddress,
-          { slippage: DEFAULT_SLIPPAGE_SIMULATION }
-        );
-        break;
-      default:
-        throw new Error(`getExpectedTransactionOutcome for '${transactionType}' not defined`);
-    }
+    const expectedOutcome: TransactionOutcome = await yearn.vaults.getExpectedTransactionOutcome({
+      transactionType,
+      sourceTokenAddress,
+      targetTokenAddress,
+      sourceTokenAmount,
+      accountAddress,
+      slippageTolerance: DEFAULT_SLIPPAGE_SIMULATION,
+      gasless,
+    });
 
     return expectedOutcome;
   }
@@ -241,15 +234,29 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async gaslessDeposit(props: GaslessDepositProps): Promise<string> {
-    const { network, accountAddress, tokenAddress, vaultAddress, minTargetAmount } = props;
+    const { network, accountAddress, tokenAddress, vaultAddress, tokenAmount, vaultAmount, feeAmount } = props;
     const yearn = this.yearnSdk.getInstanceOf(network);
-    return await yearn.vaults.gaslessDeposit({ vaultAddress, tokenAddress, minTargetAmount, accountAddress });
+    return await yearn.vaults.gaslessDeposit({
+      vaultAddress,
+      tokenAddress,
+      tokenAmount,
+      vaultAmount,
+      feeAmount,
+      accountAddress,
+    });
   }
 
   public async gaslessWithdraw(props: GaslessWithdrawProps): Promise<string> {
-    const { network, accountAddress, tokenAddress, vaultAddress, minTargetAmount } = props;
+    const { network, accountAddress, tokenAddress, vaultAddress, tokenAmount, vaultAmount, feeAmount } = props;
     const yearn = this.yearnSdk.getInstanceOf(network);
-    return await yearn.vaults.gaslessWithdraw({ vaultAddress, tokenAddress, minTargetAmount, accountAddress });
+    return await yearn.vaults.gaslessWithdraw({
+      vaultAddress,
+      tokenAddress,
+      tokenAmount,
+      vaultAmount,
+      feeAmount,
+      accountAddress,
+    });
   }
 
   public async migrate(props: MigrateProps): Promise<TransactionResponse> {

@@ -265,12 +265,13 @@ export function basicValidateAmount(props: BasicValidateAmountProps): Validation
 export interface ValidateSlippageProps {
   slippageTolerance?: number;
   expectedSlippage?: number;
+  gasless?: boolean;
 }
 
 export function validateSlippage(props: ValidateSlippageProps): ValidationResponse {
-  const { slippageTolerance, expectedSlippage } = props;
+  const { slippageTolerance, expectedSlippage, gasless } = props;
 
-  if (slippageTolerance === undefined || expectedSlippage === undefined) return {};
+  if (slippageTolerance === undefined || expectedSlippage === undefined || gasless) return {};
 
   const isOverSlippageTolerance = toBN(expectedSlippage).gt(slippageTolerance);
   if (isOverSlippageTolerance) {

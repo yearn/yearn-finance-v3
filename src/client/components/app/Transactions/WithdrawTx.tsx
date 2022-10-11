@@ -128,11 +128,12 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
           sourceTokenAddress: selectedVault.address,
           sourceTokenAmount: yvTokenAmount,
           targetTokenAddress: selectedTargetTokenAddress,
+          gasless: allowGasless && isGasless,
         })
       );
     }
     dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedVault.token.address] }));
-  }, [debouncedAmount]);
+  }, [debouncedAmount, isGasless]);
 
   if (!selectedVault || !selectedTargetToken || !targetTokensOptions) {
     return null;
@@ -158,6 +159,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const { error: slippageError } = validateSlippage({
     slippageTolerance: selectedSlippage,
     expectedSlippage: expectedTxOutcome?.slippage,
+    gasless: allowGasless && isGasless,
   });
 
   const { error: networkError } = validateNetwork({
@@ -258,7 +260,9 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
           VaultsActions.gaslessWithdraw({
             vaultAddress: selectedVault.address,
             tokenAddress: selectedTargetTokenAddress,
-            minTargetAmount: expectedTxOutcome?.targetTokenAmount ?? '',
+            vaultAmount: expectedTxOutcome?.sourceTokenAmount ?? '',
+            tokenAmount: expectedTxOutcome?.targetTokenAmount ?? '',
+            feeAmount: expectedTxOutcome?.sourceTokenAmountFee ?? '',
           })
         );
       } else {

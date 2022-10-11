@@ -136,6 +136,7 @@ export interface GetExpectedTransactionOutcomeProps {
   sourceTokenAddress: Address;
   sourceTokenAmount: Wei;
   targetTokenAddress: Address;
+  gasless?: boolean;
 }
 
 const getExpectedTransactionOutcome = createAsyncThunk<
@@ -148,7 +149,8 @@ const getExpectedTransactionOutcome = createAsyncThunk<
     const { network, app } = getState();
     const { services } = extra;
     const { vaultService } = services;
-    const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } = getExpectedTxOutcomeProps;
+    const { transactionType, sourceTokenAddress, sourceTokenAmount, targetTokenAddress, gasless } =
+      getExpectedTxOutcomeProps;
 
     const accountAddress = getState().wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
@@ -163,6 +165,7 @@ const getExpectedTransactionOutcome = createAsyncThunk<
       sourceTokenAddress,
       sourceTokenAmount,
       targetTokenAddress,
+      gasless,
     });
 
     return { txOutcome };
@@ -440,12 +443,14 @@ const gaslessDeposit = createAsyncThunk<
   {
     vaultAddress: string;
     tokenAddress: string;
-    minTargetAmount: Wei;
+    vaultAmount: Wei;
+    tokenAmount: Wei;
+    feeAmount: Wei;
   },
   ThunkAPI
 >(
   'vaults/gaslessDeposit',
-  async ({ vaultAddress, tokenAddress, minTargetAmount }, { extra, getState, dispatch }) => {
+  async ({ vaultAddress, tokenAddress, vaultAmount, tokenAmount, feeAmount }, { extra, getState, dispatch }) => {
     const { network, wallet } = getState();
     const { services } = extra;
 
@@ -464,7 +469,9 @@ const gaslessDeposit = createAsyncThunk<
       accountAddress,
       vaultAddress,
       tokenAddress,
-      minTargetAmount,
+      vaultAmount,
+      tokenAmount,
+      feeAmount,
     });
 
     // dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
@@ -483,12 +490,14 @@ const gaslessWithdraw = createAsyncThunk<
   {
     vaultAddress: string;
     tokenAddress: string;
-    minTargetAmount: Wei;
+    vaultAmount: Wei;
+    tokenAmount: Wei;
+    feeAmount: Wei;
   },
   ThunkAPI
 >(
   'vaults/gaslessWithdraw',
-  async ({ vaultAddress, tokenAddress, minTargetAmount }, { extra, getState, dispatch }) => {
+  async ({ vaultAddress, tokenAddress, vaultAmount, tokenAmount, feeAmount }, { extra, getState, dispatch }) => {
     const { network, wallet } = getState();
     const { services } = extra;
 
@@ -507,7 +516,9 @@ const gaslessWithdraw = createAsyncThunk<
       accountAddress,
       vaultAddress,
       tokenAddress,
-      minTargetAmount,
+      vaultAmount,
+      tokenAmount,
+      feeAmount,
     });
 
     // dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
