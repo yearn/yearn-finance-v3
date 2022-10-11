@@ -63,10 +63,12 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
 
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
+
   const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
     selectedSellTokenAddress: initialToken,
     selectedVaultOrLab: useAppSelector(VaultsSelectors.selectRecommendations)[0],
@@ -74,13 +76,16 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   });
 
   useEffect(() => {
-    console.log('add position tx useEffect token/creditLine', selectedSellTokenAddress, initialToken, selectedCredit);
+    console.log('add position tx useEffect token/creditLine', selectedSellToken, initialToken, selectedCredit);
     if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
           tokenAddress: sourceAssetOptions[0].address,
         })
       );
+    }
+    if (selectedTokenAddress === '' && selectedSellToken) {
+      setSelectedTokenAddress(selectedSellToken.address);
     }
 
     if (
@@ -94,7 +99,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
     dispatch(TokensActions.getTokensDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
     // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
-  }, [selectedSellToken, selectedCredit]);
+  }, [selectedSellToken]);
 
   const _updatePosition = () =>
     onPositionChange({
@@ -133,15 +138,16 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   };
 
   const approveCreditPosition = () => {
-    console.log('example ', selectedSellTokenAddress, targetTokenAmount, drate, frate);
     setLoading(true);
-    if (selectedSellTokenAddress === undefined) {
+    if (!selectedCredit?.id || !drate || !frate || !targetTokenAmount || !selectedTokenAddress) {
+      console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedTokenAddress);
+      setLoading(false);
       return;
     }
     dispatch(
       //@ts-ignore
       LinesActions.approveDeposit({
-        tokenAddress: selectedSellTokenAddress,
+        tokenAddress: selectedTokenAddress,
         amount: `${ethers.utils.parseEther(targetTokenAmount)}`,
       })
     );
@@ -160,8 +166,11 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const addCreditPosition = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    console.log(selectedCredit?.id, drate, frate, targetTokenAmount, selectedSellToken);
-    if (!selectedCredit) return;
+    if (!selectedCredit?.id || !drate || frate || !targetTokenAmount || !selectedSellTokenAddress) {
+      console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedSellTokenAddress);
+      setLoading(false);
+      return;
+    }
 
     let bigNumDRate = toBN(drate);
     let bigNumFRate = toBN(frate);
@@ -169,7 +178,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     console.log(bigNumDRate, bigNumFRate);
 
     if (!selectedSellTokenAddress) {
-      console.log('error');
+      setLoading(false);
       return;
     }
 
