@@ -3,9 +3,11 @@ import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
+  ModalsActions,
   LinesActions,
   AlertsActions,
   AppSelectors,
+  VaultsActions,
   TokensSelectors,
   LinesSelectors,
   NetworkSelectors,
@@ -13,7 +15,7 @@ import {
 } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import { LineDetailsDisplay, ViewContainer, SliderCard } from '@components/app';
-import { SpinnerLoading, Text } from '@components/common';
+import { SpinnerLoading, Text, Button } from '@components/common';
 import {
   // parseHistoricalEarningsUnderlying,
   // parseHistoricalEarningsUsd,
@@ -40,6 +42,13 @@ const LineDetailView = styled(ViewContainer)`
       padding: 1rem;
     }
   }
+`;
+
+const AddCreditButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
+  margin-left: 1rem;
 `;
 
 export interface LineDetailRouteParams {
@@ -72,6 +81,16 @@ export const LineDetail = () => {
   // 2. set selected line as current line
   // 3. fetch line page
   // 4.
+
+  const depositHandler = (vaultAddress: string) => {
+    if (!selectedLine) {
+      return;
+    }
+    console.log(selectedLine);
+    let address = selectedLine.id;
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
+  };
 
   useEffect(() => {
     const lineAddress: string | undefined = location.pathname.split('/')[2];
@@ -167,6 +186,7 @@ export const LineDetail = () => {
           blockExplorerUrl={blockExplorerUrl}
         />
       )} */}
+      <AddCreditButton onClick={depositHandler}>Add Credit</AddCreditButton>
     </LineDetailView>
   );
 };

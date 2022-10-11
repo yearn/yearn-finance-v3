@@ -60,9 +60,10 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
   const [targetTokenAmount, setTargetTokenAmount] = useState('1');
-  const [selectedCredit, setSelectedCredit] = useState('0xb71de8f02215fb0128cc31db0bb738c87ebec5f9');
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');
+  const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
+  const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
 
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
@@ -97,7 +98,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
   const _updatePosition = () =>
     onPositionChange({
-      credit: selectedCredit,
+      credit: selectedCredit?.id,
       token: selectedSellToken?.address,
       amount: targetTokenAmount,
       drate: drate,
@@ -159,6 +160,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const addCreditPosition = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
+    console.log(selectedCredit?.id, drate, frate, targetTokenAmount, selectedSellToken);
     if (!selectedCredit) return;
 
     let bigNumDRate = toBN(drate);
@@ -173,7 +175,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
     dispatch(
       LinesActions.addCredit({
-        lineAddress: selectedCredit,
+        lineAddress: selectedCredit.id,
         drate: ethers.utils.parseEther(drate),
         frate: ethers.utils.parseEther(frate),
         amount: ethers.utils.parseEther(targetTokenAmount),

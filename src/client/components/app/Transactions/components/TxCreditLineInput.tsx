@@ -257,7 +257,7 @@ export interface TxCreditLineInputProps {
   headerText?: string;
   inputText?: string;
   inputError?: boolean;
-  selectedCredit: string;
+  selectedCredit: AggregatedCreditLine;
   onSelectedCreditLineChange?: (address: string) => void;
   creditOptions?: AggregatedCreditLine[];
   readOnly?: boolean;
@@ -285,10 +285,10 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
   let listItems: SearchListItem[] = [];
   let zappableItems: SearchListItem[] = [];
   let selectedItem: SearchListItem = {
-    id: selectedCredit || '',
+    id: selectedCredit?.id || '',
     // icon: selectedCredit?.icon,
-    label: selectedCredit,
-    value: selectedCredit,
+    label: selectedCredit?.status,
+    value: selectedCredit?.principal?.toString(),
   };
 
   if (creditOptions && creditOptions.length > 1) {
@@ -299,7 +299,7 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
           id: item!.id,
           // icon: '',
           label: item!.status,
-          value: selectedCredit,
+          value: selectedCredit?.principal?.toString(),
         };
       })
       .sort((a, b) => amountToNumber(b.value || '0') - amountToNumber(a.value || '0'));
@@ -343,7 +343,7 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
           </CreditLineSelector>
           <CreditLineData>
             <AmountTitle> Borrower Name / ENS </AmountTitle>
-            <AmountTitle> {selectedCredit || `0xDebf...1dao`}</AmountTitle>
+            <AmountTitle> {selectedCredit.id || `0xDebf...1dao`}</AmountTitle>
           </CreditLineData>
         </CreditLineInfo>
       </>
