@@ -60,12 +60,15 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
   const [targetTokenAmount, setTargetTokenAmount] = useState('1');
-  const [selectedCredit, setSelectedCredit] = useState('0xb71de8f02215fb0128cc31db0bb738c87ebec5f9');
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');
+  const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
+  const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
 
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
+
   const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
     selectedSellTokenAddress: initialToken,
     selectedVaultOrLab: useAppSelector(VaultsSelectors.selectRecommendations)[0],
@@ -73,13 +76,16 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   });
 
   useEffect(() => {
-    console.log('add position tx useEffect token/creditLine', selectedSellTokenAddress, initialToken, selectedCredit);
+    console.log('add position tx useEffect token/creditLine', selectedSellToken, initialToken, selectedCredit);
     if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
           tokenAddress: sourceAssetOptions[0].address,
         })
       );
+    }
+    if (selectedTokenAddress === '' && selectedSellToken) {
+      setSelectedTokenAddress(selectedSellToken.address);
     }
 
     if (
@@ -93,11 +99,11 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
     dispatch(TokensActions.getTokensDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
     // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
-  }, [selectedSellToken, selectedCredit]);
+  }, [selectedSellToken]);
 
   const _updatePosition = () =>
     onPositionChange({
-      credit: selectedCredit,
+      credit: selectedCredit?.id,
       token: selectedSellToken?.address,
       amount: targetTokenAmount,
       drate: drate,
@@ -132,15 +138,16 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   };
 
   const approveCreditPosition = () => {
-    console.log('example ', selectedSellTokenAddress, targetTokenAmount, drate, frate);
     setLoading(true);
-    if (selectedSellTokenAddress === undefined) {
+    if (!selectedCredit?.id || !drate || !frate || !targetTokenAmount || !selectedTokenAddress) {
+      console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedTokenAddress);
+      setLoading(false);
       return;
     }
     dispatch(
       //@ts-ignore
       LinesActions.approveDeposit({
-        tokenAddress: selectedSellTokenAddress,
+        tokenAddress: selectedTokenAddress,
         amount: `${ethers.utils.parseEther(targetTokenAmount)}`,
       })
     );
@@ -159,7 +166,11 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const addCreditPosition = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    if (!selectedCredit) return;
+    if (!selectedCredit?.id || !drate || frate || !targetTokenAmount || !selectedSellTokenAddress) {
+      console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedSellTokenAddress);
+      setLoading(false);
+      return;
+    }
 
     let bigNumDRate = toBN(drate);
     let bigNumFRate = toBN(frate);
@@ -167,13 +178,13 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     console.log(bigNumDRate, bigNumFRate);
 
     if (!selectedSellTokenAddress) {
-      console.log('error');
+      setLoading(false);
       return;
     }
 
     dispatch(
       LinesActions.addCredit({
-        lineAddress: selectedCredit,
+        lineAddress: selectedCredit.id,
         drate: ethers.utils.parseEther(drate),
         frate: ethers.utils.parseEther(frate),
         amount: ethers.utils.parseEther(targetTokenAmount),
