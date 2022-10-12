@@ -37,6 +37,7 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { unnullify } from '@utils';
+import { TxCreditLineInput } from '@src/client/components/app/Transactions/components/TxCreditLineInput';
 
 import { TokensActions } from '../tokens/tokens.actions';
 
@@ -390,16 +391,12 @@ const depositAndRepay = createAsyncThunk<
     lineAddress: string;
     tokenAddress: string;
     amount: BigNumber;
-    targetUnderlyingTokenAmount: string | undefined;
     slippageTolerance?: number;
   },
   ThunkAPI
 >(
   'lines/depositAndRepay',
-  async (
-    { lineAddress, tokenAddress, amount, targetUnderlyingTokenAmount, slippageTolerance },
-    { extra, getState, dispatch }
-  ) => {
+  async ({ lineAddress, tokenAddress, amount }, { extra, getState, dispatch }) => {
     const { network, wallet, lines, tokens, app } = getState();
     const { services } = extra;
 
@@ -418,6 +415,7 @@ const depositAndRepay = createAsyncThunk<
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
 
+    const { creditLineService, transactionService, interestRateCreditService } = services;
     // const { error: depositError } = validateLineDeposit({
     //   sellTokenAmount: amount,
     //   depositLimit: lineData?.metadata.depositLimit ?? '0',
@@ -434,7 +432,14 @@ const depositAndRepay = createAsyncThunk<
     // TODO: fix BigNumber type difference issues
     // const amountInWei = amount.multipliedBy(ONE_UNIT);
     // const { creditLineService, transactionService } = services;
-    // const tx = await creditLineService.depositAndRepay(userLineData.id, amount, false);
+    const tx = await creditLineService.depositAndRepay(
+      {
+        lineAddress: lineAddress,
+        amount: amount,
+      },
+      interestRateCreditService
+    );
+    console.log(TxCreditLineInput);
     // const notifyEnabled = app.servicesEnabled.notify;
     // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getLinePage({ id: lineAddress }));

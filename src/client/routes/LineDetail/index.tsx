@@ -56,6 +56,13 @@ const BorrowButton = styled(Button)`
   margin-left: 1rem;
 `;
 
+const DepositAndRepayButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
+  margin-left: 1rem;
+`;
+
 export interface LineDetailRouteParams {
   lineAddress: string;
 }
@@ -104,6 +111,7 @@ export const LineDetail = () => {
     console.log('user wallet: ', userWalletAddress, 'borrower', selectedLine?.borrower);
     if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.borrower) {
       Transactions.push('borrow');
+      Transactions.push('deposit-and-repay');
     }
     if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.borrower) {
       Transactions.push('deposit');
@@ -188,6 +196,10 @@ export const LineDetail = () => {
   // TODO: 0xframe also supports this
   const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';
 
+  const depositAndRepayHandler = () => {
+    dispatch(ModalsActions.openModal({ modalName: 'depositAndRepay' }));
+  };
+
   return (
     <LineDetailView>
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
@@ -217,10 +229,25 @@ export const LineDetail = () => {
       )} */}
       {transactions.map((transaction, i) => {
         if (transaction === 'borrow') {
-          return <BorrowButton onClick={borrowHandler}>Borrow</BorrowButton>;
+          return (
+            <BorrowButton onClick={borrowHandler} key={`${transaction}-${i}`}>
+              Borrow
+            </BorrowButton>
+          );
         }
         if (transaction === 'deposit') {
-          return <AddCreditButton onClick={depositHandler}>Deposit</AddCreditButton>;
+          return (
+            <AddCreditButton onClick={depositHandler} key={`${transaction}-${i}`}>
+              Deposit
+            </AddCreditButton>
+          );
+        }
+        if (transaction === 'deposit-and-repay') {
+          return (
+            <DepositAndRepayButton onClick={depositAndRepayHandler} key={`${transaction}-${i}`}>
+              Repay
+            </DepositAndRepayButton>
+          );
         }
       })}
     </LineDetailView>
