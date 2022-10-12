@@ -89,11 +89,12 @@ export const LineDetail = () => {
   // 3. fetch line page
   // 4.
 
+  console.log(selectedLine?.borrower, userWallet);
+
   const depositHandler = () => {
     if (!selectedLine) {
       return;
     }
-    console.log(selectedLine);
     let address = selectedLine.id;
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
@@ -203,12 +204,8 @@ export const LineDetail = () => {
           blockExplorerUrl={blockExplorerUrl}
         />
       )} */}
-
-      {userWallet === selectedLine?.borrower ? (
-        <BorrowButton onClick={borrowHandler}>Borrow Credit</BorrowButton>
-      ) : (
-        <AddCreditButton onClick={depositHandler}>Add Credit</AddCreditButton>
-      )}
+      <AddCreditButton onClick={depositHandler}>Add Credit</AddCreditButton>
+      <BorrowButton onClick={borrowHandler}>Borrow</BorrowButton>
     </LineDetailView>
   );
 };
