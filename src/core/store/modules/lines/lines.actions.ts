@@ -19,6 +19,7 @@ import {
   AddCreditProps,
   UseCreditLinesParams,
   GetLinePageResponse,
+  BorrowCreditProps,
 } from '@types';
 import {
   calculateSharesAmount,
@@ -270,6 +271,24 @@ const approveDeposit = createAsyncThunk<
   });
   console.log('this is approval', approveDepositTx);
 });
+
+const borrowCredit = createAsyncThunk<void, BorrowCreditProps, ThunkAPI>(
+  'lines/borrowCredit',
+  async ({ lineAddress, amount }, { extra, getState, dispatch }) => {
+    const { network, wallet, lines, tokens, app } = getState();
+    const { services } = extra;
+    console.log('look at borrow credit', wallet, lineAddress, amount);
+    const userAddress = wallet.selectedAddress;
+    const { creditLineService } = services;
+
+    const tx = await creditLineService.borrow({
+      lineAddress: lineAddress,
+      amount: amount,
+      dryRun: true,
+    });
+    console.log(tx);
+  }
+);
 
 const addCredit = createAsyncThunk<void, AddCreditProps, ThunkAPI>(
   'lines/addCredit',
@@ -596,6 +615,7 @@ export const LinesActions = {
   approveDeposit,
   addCredit,
   depositAndRepay,
+  borrowCredit,
   deploySecuredLine,
   // approveZapOut,
   // signZapOut,

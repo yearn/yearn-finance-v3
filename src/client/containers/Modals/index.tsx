@@ -12,6 +12,7 @@ import { DepositTxModal } from './DepositTxModal';
 import { AddCreditPositionTxModal } from './AddCreditPositionTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
 import { MigrateTxModal } from './MigrateTxModal';
+import { BorrowTxModal } from './BorrowTxModal';
 import { DeployLineTxModal } from './DeployLineTxModal';
 
 const modalTimeout = 300;
@@ -154,8 +155,14 @@ export const Modals = () => {
       )}
 
       {activeModal === 'createLine' && (
-        <CSSTransition key={'addPosition'} timeout={modalTimeout} classNames="slideBottom">
+        <CSSTransition key={'createLine'} timeout={modalTimeout} classNames="slideBottom">
           <DeployLineTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'borrow' && (
+        <CSSTransition key={'borrow'} timeout={modalTimeout} classNames="slideBottom">
+          <BorrowTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

@@ -157,6 +157,7 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
         hideAmount={false}
         loading={false}
         loadingText={''}
+        ttlType={true}
       />
       {inputTTLWarning !== '' ? <div style={{ color: '#C3272B' }}>{inputTTLWarning}</div> : ''}
       <TxActions>
