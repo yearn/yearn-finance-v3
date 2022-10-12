@@ -273,6 +273,7 @@ export interface TxTokenInputProps {
   hideAmount?: boolean;
   loading?: boolean;
   loadingText?: string;
+  ttlType: boolean;
 }
 
 export const TxTTLInput: FC<TxTokenInputProps> = ({
@@ -287,6 +288,7 @@ export const TxTTLInput: FC<TxTokenInputProps> = ({
   loading,
   loadingText,
   children,
+  ttlType,
   ...props
 }) => {
   const { t } = useAppTranslation('common');
@@ -310,7 +312,7 @@ export const TxTTLInput: FC<TxTokenInputProps> = ({
           <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
           <AmountInputContainer>
             <StyledAmountInput
-              value={+amount / 60 / 60 / 24}
+              value={ttlType ? +amount / 60 / 60 / 24 : +amount}
               onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
               placeholder={loading ? loadingText : '0'}
               readOnly={readOnly}

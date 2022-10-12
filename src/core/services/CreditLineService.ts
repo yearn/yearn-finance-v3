@@ -255,11 +255,11 @@ export class CreditLineServiceImpl implements CreditLineService {
       const line = props.lineAddress;
 
       let data = {
-        lineId: props.lineAddress,
+        id: props.lineAddress,
         amount: props.amount,
       };
 
-      return <TransactionResponse>await this.executeContractMethod(line, 'borrow', [data.lineId, data.amount], true);
+      return <TransactionResponse>await this.executeContractMethod(line, 'borrow', [data.id, data.amount], false);
     } catch (e) {
       console.log(`An error occured while borrowing credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);

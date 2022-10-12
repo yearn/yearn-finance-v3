@@ -7,7 +7,6 @@ import {
   LinesActions,
   AlertsActions,
   AppSelectors,
-  VaultsActions,
   TokensSelectors,
   LinesSelectors,
   NetworkSelectors,
@@ -79,17 +78,17 @@ export const LineDetail = () => {
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const walletName = useAppSelector(WalletSelectors.selectWallet);
-  const userWallet = useAppSelector(WalletSelectors.selectSelectedAddress);
-
+  const userWalletAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const blockExplorerUrl = currentNetworkSettings.blockExplorerUrl;
+
+  // Used to generate Transaction Button depending on whether user is lender, borrower, or arbiter.
+  const [transactions, setTransactions] = useState<string[]>([]);
 
   // 1. get line address from url parms
   // 2. set selected line as current line
   // 3. fetch line page
   // 4.
-
-  console.log(selectedLine?.borrower, userWallet);
 
   const depositHandler = () => {
     if (!selectedLine) {
@@ -99,6 +98,18 @@ export const LineDetail = () => {
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
+
+  useEffect(() => {
+    let Transactions = [];
+    console.log('user wallet: ', userWalletAddress, 'borrower', selectedLine?.borrower);
+    if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.borrower) {
+      Transactions.push('borrow');
+    }
+    if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.borrower) {
+      Transactions.push('deposit');
+    }
+    setTransactions(Transactions);
+  }, [userWalletAddress, selectedLine]);
 
   const borrowHandler = () => {
     if (!selectedLine) {
@@ -204,8 +215,14 @@ export const LineDetail = () => {
           blockExplorerUrl={blockExplorerUrl}
         />
       )} */}
-      <AddCreditButton onClick={depositHandler}>Add Credit</AddCreditButton>
-      <BorrowButton onClick={borrowHandler}>Borrow</BorrowButton>
+      {transactions.map((transaction, i) => {
+        if (transaction === 'borrow') {
+          return <BorrowButton onClick={borrowHandler}>Borrow</BorrowButton>;
+        }
+        if (transaction === 'deposit') {
+          return <AddCreditButton onClick={depositHandler}>Deposit</AddCreditButton>;
+        }
+      })}
     </LineDetailView>
   );
 };

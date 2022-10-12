@@ -24,10 +24,6 @@ import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
 import { TxTTLInput } from './components/TxTTLInput';
 
-const {
-  CONTRACT_ADDRESSES: { DAI },
-  MAX_INTEREST_RATE,
-} = getConstants();
 const StyledTransaction = styled(TxContainer)``;
 
 const StyledAmountInput = styled(TxTTLInput)``;
@@ -175,6 +171,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
         hideAmount={false}
         loading={false}
         loadingText={''}
+        ttlType={false}
       />
       <TxActions>
         {txActions.map(({ label, onAction, status, disabled, contrast }) => (
