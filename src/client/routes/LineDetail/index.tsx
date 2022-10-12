@@ -79,6 +79,7 @@ export const LineDetail = () => {
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const walletName = useAppSelector(WalletSelectors.selectWallet);
+  const userWallet = useAppSelector(WalletSelectors.selectSelectedAddress);
 
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const blockExplorerUrl = currentNetworkSettings.blockExplorerUrl;
@@ -202,8 +203,12 @@ export const LineDetail = () => {
           blockExplorerUrl={blockExplorerUrl}
         />
       )} */}
-      <AddCreditButton onClick={depositHandler}>Add Credit</AddCreditButton>
-      <BorrowButton onClick={borrowHandler}>Borrow Credit</BorrowButton>
+
+      {userWallet === selectedLine?.borrower ? (
+        <BorrowButton onClick={borrowHandler}>Borrow Credit</BorrowButton>
+      ) : (
+        <AddCreditButton onClick={depositHandler}>Add Credit</AddCreditButton>
+      )}
     </LineDetailView>
   );
 };
