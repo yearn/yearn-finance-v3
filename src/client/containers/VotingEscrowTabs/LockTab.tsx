@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { useAppSelector, useDebounce, useExecuteThunk } from '@hooks';
+import { useAppSelector, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button, ToggleButton } from '@components/common';
@@ -9,6 +9,7 @@ import { humanize, toBN, toUnit, toWei, validateAllowance, validateAmount } from
 const MAX_LOCK_TIME = '208'; // Weeks
 
 export const LockTab = () => {
+  const isMounting = useIsMounting();
   const [lockAmount, setLockAmount] = useState('');
   const [debouncedLockAmount, isDebounceLockAmountPending] = useDebounce(lockAmount, 500);
   const [lockTime, setLockTime] = useState('');
@@ -26,12 +27,12 @@ export const LockTab = () => {
     transactionOutcome && votingEscrow ? toUnit(transactionOutcome.targetTokenAmount, votingEscrow.decimals) : '';
 
   useEffect(() => {
-    if (!votingEscrow || !isWalletConnected) return;
+    if (!votingEscrow || !votingEscrow?.token.address || !isWalletConnected) return;
     getLockAllowance({
       tokenAddress: votingEscrow.token.address,
       votingEscrowAddress: votingEscrow.address,
     });
-  }, [votingEscrow?.address, isWalletConnected]);
+  }, [votingEscrow?.address, votingEscrow?.token.address, isWalletConnected]);
 
   useEffect(() => {
     if (!votingEscrow || toBN(debouncedLockAmount).lte(0) || toBN(debouncedLockTime).lte(0) || inputError) return;
@@ -87,16 +88,19 @@ export const LockTab = () => {
         label: 'Approve',
         onAction: executeApprove,
         status: approveLockStatus.loading,
-        disabled: isApproved || getLockAllowanceStatus.loading,
+        disabled: isMounting || isApproved || getLockAllowanceStatus.loading || !getLockAllowanceStatus.executed,
       }
     : {
         label: 'Lock',
         onAction: executeLock,
         status: lockStatus.loading,
         disabled:
+          isMounting ||
           !isApproved ||
           !isValidLockAmount ||
           !isValidLockTime ||
+          getLockAllowanceStatus.loading ||
+          !getLockAllowanceStatus.executed ||
           isDebounceLockAmountPending ||
           isDebounceLockTimePending,
       };
