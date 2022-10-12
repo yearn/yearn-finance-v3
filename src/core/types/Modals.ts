@@ -15,4 +15,5 @@ export type ModalName =
   | 'labDepositTx'
   | 'labWithdrawTx'
   | 'createLine'
+  | 'borrow'
   | 'labStakeTx';

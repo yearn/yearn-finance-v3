@@ -132,6 +132,11 @@
         "select-borrower": "1. Select a borrower for the line",
         "select-ttl": "2. Select a deadline for the line",
         "time-to-live": "Time this line will remain active for (in days):"
+      },
+      "borrow-credit": {
+        "header": "Borrow Credit",
+        "select-line": "1. Select a borrower for the line",
+        "select-amount": "2. Select amount to borrow"
       }
     }
   },

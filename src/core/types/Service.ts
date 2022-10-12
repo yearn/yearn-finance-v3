@@ -153,6 +153,7 @@ export interface CreditLineService {
   getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;
 
   addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  borrow: (props: BorrowCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
   // close: (props: CloseProps) => Promise<TransactionResponse>;
   // withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse>;
   // setRates: (props: SetRatesProps) => Promise<TransactionResponse | PopulatedTransaction>;
@@ -194,6 +195,12 @@ export interface AddCreditProps {
   frate: BigNumber;
   amount: BigNumber;
   lender: Address;
+  dryRun: boolean;
+}
+
+export interface BorrowCreditProps {
+  lineAddress: string;
+  amount: BigNumber;
   dryRun: boolean;
 }
 

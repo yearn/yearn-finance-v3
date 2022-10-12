@@ -25,7 +25,6 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
-import { ThreeColumnLayout } from '@src/client/containers/Columns';
 
 const StyledSliderCard = styled(SliderCard)`
   padding: 3rem;
@@ -45,6 +44,13 @@ const LineDetailView = styled(ViewContainer)`
 `;
 
 const AddCreditButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
+  margin-left: 1rem;
+`;
+
+const BorrowButton = styled(Button)`
   width: 18rem;
   margin-top: 1em;
   background-color: #00a3ff;
@@ -82,7 +88,7 @@ export const LineDetail = () => {
   // 3. fetch line page
   // 4.
 
-  const depositHandler = (vaultAddress: string) => {
+  const depositHandler = () => {
     if (!selectedLine) {
       return;
     }
@@ -90,6 +96,16 @@ export const LineDetail = () => {
     let address = selectedLine.id;
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
+  };
+
+  const borrowHandler = () => {
+    if (!selectedLine) {
+      return;
+    }
+    console.log(selectedLine);
+    let address = selectedLine.id;
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'borrow' }));
   };
 
   useEffect(() => {
@@ -187,6 +203,7 @@ export const LineDetail = () => {
         />
       )} */}
       <AddCreditButton onClick={depositHandler}>Add Credit</AddCreditButton>
+      <BorrowButton onClick={borrowHandler}>Borrow Credit</BorrowButton>
     </LineDetailView>
   );
 };

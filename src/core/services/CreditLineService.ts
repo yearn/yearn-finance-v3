@@ -3,6 +3,7 @@ import { BytesLike } from '@ethersproject/bytes/src.ts';
 import { keccak256 } from 'ethers/lib/utils';
 
 import {
+  BorrowCreditProps,
   CreditLineService,
   YearnSdk,
   AggregatedCreditLine,
@@ -245,6 +246,22 @@ export class CreditLineServiceImpl implements CreditLineService {
       );
     } catch (e) {
       console.log(`An error occured while adding credit, error = [${JSON.stringify(e)}]`);
+      return Promise.reject(e);
+    }
+  }
+
+  public async borrow(props: BorrowCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
+    try {
+      const line = props.lineAddress;
+
+      let data = {
+        lineId: props.lineAddress,
+        amount: props.amount,
+      };
+
+      return <TransactionResponse>await this.executeContractMethod(line, 'borrow', [data.lineId, data.amount], true);
+    } catch (e) {
+      console.log(`An error occured while borrowing credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);
     }
   }
