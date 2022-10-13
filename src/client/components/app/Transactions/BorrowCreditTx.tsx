@@ -1,9 +1,7 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
-import { TokenCard } from '@yearn-finance/web-lib';
 import { ethers } from 'ethers';
 
-import { formatAmount, normalizeAmount, toBN } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
@@ -13,11 +11,9 @@ import {
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
-import { getConstants } from '@src/config/constants';
-import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors, LinesActions } from '@store';
+import { LinesSelectors, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
-import { TxTokenInput } from './components/TxTokenInput';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';

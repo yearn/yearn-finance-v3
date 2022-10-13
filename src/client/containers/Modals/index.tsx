@@ -159,7 +159,8 @@ export const Modals = () => {
       {activeModal === 'liquidateBorrower' && (
         <CSSTransition key={'liquidateBorrower'} timeout={modalTimeout} classNames="slideBottom">
           <LiquidateBorrowerTxModal onClose={closeModal} />
-
+        </CSSTransition>
+      )}
       {activeModal === 'createLine' && (
         <CSSTransition key={'createLine'} timeout={modalTimeout} classNames="slideBottom">
           <DeployLineTxModal onClose={closeModal} />

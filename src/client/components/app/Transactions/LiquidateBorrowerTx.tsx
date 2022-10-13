@@ -13,8 +13,7 @@ import {
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { Address, Token, Asset, TokenView, CreditLine } from '@src/core/types';
-import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions } from '@store';
+import { TokensActions, TokensSelectors, LinesActions, VaultsSelectors, LinesSelectors } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -45,23 +44,25 @@ const RatesContainer = styled.div`
 export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  const { allowVaultSelect, header, onClose, onPositionChange } = props;
+  const { header, onClose, onPositionChange } = props;
 
   const [targetTokenAmount, setTargetTokenAmount] = useState('10000000');
-  const [drate, setDrate] = useState('0.00');
-  const [frate, setFrate] = useState('0.00');
-  const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
+  const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
+  const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
+
   const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
     selectedSellTokenAddress: initialToken,
     selectedVaultOrLab: useAppSelector(VaultsSelectors.selectRecommendations)[0],
     allowTokenSelect: true,
   });
-
   useEffect(() => {
     console.log('add position tx useEffect token/creditLine', selectedSellTokenAddress, initialToken, selectedCredit);
-
+    if (selectedTokenAddress === '' && selectedSellToken) {
+      setSelectedTokenAddress(selectedSellToken.address);
+    }
     if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
@@ -99,11 +100,12 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
 
   const onSelectedCreditLineChange = (addr: string): void => {
     console.log('select new loc', addr);
-    setSelectedCredit(addr);
     _updatePosition();
   };
 
+  console.log(selectedCredit, selectedCredit, 'here is breaking point');
   if (!selectedSellToken) return null;
+  if (!selectedCredit) return null;
 
   const targetBalance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
   const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
@@ -117,7 +119,7 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
         headerText={t('components.transaction.arbiter-liquidate.select-credit')}
         inputText={t('components.transaction.arbiter-liquidate.select-credit')}
         onSelectedCreditLineChange={onSelectedCreditLineChange}
-        selectedCredit={selectedCredit as CreditLine}
+        selectedCredit={selectedCredit}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={false}

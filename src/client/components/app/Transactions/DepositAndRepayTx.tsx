@@ -1,8 +1,8 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ethers } from 'ethers';
 
-import { formatAmount, normalizeAmount, toBN } from '@utils';
+import { formatAmount, normalizeAmount } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
@@ -12,7 +12,7 @@ import {
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
-import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions, LinesSelectors, LinesActions } from '@store';
+import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors, LinesActions } from '@store';
 import { getConstants } from '@src/config/constants';
 
 import { TxContainer } from './components/TxContainer';
@@ -20,11 +20,8 @@ import { TxTokenInput } from './components/TxTokenInput';
 import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
-import { TxTTLInput } from './components/TxTTLInput';
 
 const StyledTransaction = styled(TxContainer)``;
-
-const StyledAmountInput = styled(TxTTLInput)``;
 
 interface DepositAndRepayProps {
   header: string;
@@ -40,16 +37,10 @@ const {
   MAX_INTEREST_RATE,
 } = getConstants();
 
-const RatesContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
 export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
+  const { acceptingOffer, header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);

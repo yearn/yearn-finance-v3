@@ -1,7 +1,7 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatAmount, normalizeAmount, toBN, isAddress } from '@utils';
+import { isAddress } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
@@ -11,12 +11,9 @@ import {
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { useSelectedCreditLine } from '@hooks';
-import { AggregatedCreditLine } from '@src/core/types';
 import { LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
-import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxAddressInput } from './components/TxAddressInput';
 import { TxTTLInput } from './components/TxTTLInput';
 import { TxActions } from './components/TxActions';
@@ -45,9 +42,8 @@ interface DeployLineProps {
 export const DeployLineTx: FC<DeployLineProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
   const [transactionCompleted, setTransactionCompleted] = useState(0);
-  const { allowVaultSelect, header, onClose, onPositionChange } = props;
+  const { header, onClose } = props;
   const [borrower, setBorrower] = useState('');
   const [inputAddressWarning, setWarning] = useState('');
   const [inputTTLWarning, setTTLWarning] = useState('');
