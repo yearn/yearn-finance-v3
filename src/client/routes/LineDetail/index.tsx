@@ -42,6 +42,13 @@ const LineDetailView = styled(ViewContainer)`
   }
 `;
 
+const WithdrawButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
+  margin-left: 1rem;
+`;
+
 const AddCreditButton = styled(Button)`
   width: 18rem;
   margin-top: 1em;
@@ -106,6 +113,15 @@ export const LineDetail = () => {
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
+  const WithdrawHandler = () => {
+    if (!selectedLine) {
+      return;
+    }
+    let address = selectedLine.id;
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'withdraw' }));
+  };
+
   useEffect(() => {
     let Transactions = [];
     console.log('user wallet: ', userWalletAddress, 'borrower', selectedLine?.borrower);
@@ -115,6 +131,7 @@ export const LineDetail = () => {
     }
     if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.borrower) {
       Transactions.push('deposit');
+      Transactions.push('withdraw');
     }
     setTransactions(Transactions);
   }, [userWalletAddress, selectedLine]);
@@ -247,6 +264,13 @@ export const LineDetail = () => {
             <DepositAndRepayButton onClick={depositAndRepayHandler} key={`${transaction}-${i}`}>
               Repay
             </DepositAndRepayButton>
+          );
+        }
+        if (transaction === 'withdraw') {
+          return (
+            <WithdrawButton onClick={WithdrawHandler} key={`${transaction}-${i}`}>
+              Withdraw
+            </WithdrawButton>
           );
         }
       })}

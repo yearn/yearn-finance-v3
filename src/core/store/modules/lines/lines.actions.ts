@@ -458,25 +458,22 @@ const withdrawLine = createAsyncThunk<
   {
     lineAddress: string;
     amount: BigNumber;
-    targetTokenAddress: string;
-    slippageTolerance?: number;
-    signature?: string;
   },
   ThunkAPI
 >(
   'lines/withdrawLine',
-  async ({ lineAddress, amount, targetTokenAddress, slippageTolerance, signature }, { extra, getState, dispatch }) => {
+  async ({ lineAddress, amount }, { extra, getState, dispatch }) => {
     const { network, wallet, lines, tokens, app } = getState();
     const { services, config } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
-      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
-    });
-    if (networkError) throw networkError;
+    //const { error: networkError } = validateNetwork({
+    //  currentNetwork: network.current,
+    //  walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    //});
+    //if (networkError) throw networkError;
 
     const lineData = lines.linesMap[lineAddress];
     const userLineData = lines.user.linePositions[lineAddress];
@@ -494,17 +491,22 @@ const withdrawLine = createAsyncThunk<
 
     // const error = withdrawError;
     // if (error) throw new Error(error);
-
     // TODO: fix BigNumber type difference issues
-    // const { creditLineService, transactionService } = services;
-    // const tx = await creditLineService.withdraw(userLineData.id, amountOfShares);
+    const { creditLineService, transactionService } = services;
+    const tx = await creditLineService.withdraw({
+      id: lineAddress,
+      amount: amountOfShares,
+      lineAddress: lineAddress,
+      dryRun: true,
+    });
+    console.log(tx);
     // const notifyEnabled = app.servicesEnabled.notify;
     // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getLinePage({ id: lineAddress }));
     // dispatch(getUserLinesSummary());
     dispatch(getUserLinePositions({ lineAddresses: [lineAddress] }));
     // dispatch(getUserLinesMetadata({ linesAddresses: [lineAddress] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, lineAddress] }));
+    //dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, lineAddress] }));
   },
   {
     // serializeError: parseError,

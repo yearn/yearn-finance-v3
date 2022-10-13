@@ -123,6 +123,11 @@ export interface WithdrawProps {
   signature?: string;
 }
 
+export interface WithdrawCreditProps {
+  id: string;
+  amount: BigNumber;
+}
+
 export interface MigrateProps {
   network: Network;
   accountAddress: Address;
@@ -157,6 +162,7 @@ export interface CreditLineService {
   ) => Promise<TransactionResponse | PopulatedTransaction>;
   addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
   borrow: (props: BorrowCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse | PopulatedTransaction>;
   // close: (props: CloseProps) => Promise<TransactionResponse>;
   // withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse>;
   // setRates: (props: SetRatesProps) => Promise<TransactionResponse | PopulatedTransaction>;
