@@ -22,6 +22,22 @@ const PARTNERS = {
 };
 
 const NETWORK_SETTINGS: NetworkSettings = {
+  goerli: {
+    id: 'goerli',
+    name: 'Goerli Test Network',
+    networkId: 5,
+    rpcUrl: 'https://goerli.infura.io/v3/',
+    nativeCurrency: {
+      name: 'ETH',
+      symbol: 'GoerliETH',
+      decimals: 18,
+    },
+    simulationsEnabled: true,
+    earningsEnabled: true,
+    notifyEnabled: true,
+    blockExplorerUrl: 'https://goerli.etherscan.io/',
+    txConfirmations: 2,
+  },
   mainnet: {
     id: 'mainnet',
     name: 'Ethereum',
@@ -99,6 +115,11 @@ export const getConstants = memoize((): Constants => {
     SUPPORTED_LANGS: ['en', 'es', 'ja', 'zh'],
     DUST_AMOUNT_USD: '10000000',
     ASSETS_ICON_URL: 'https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/',
+    Arbiter_GOERLI: '0xde8f0f6769284e41bf0f82d0545141c15a3e4ad1',
+    Oracle_GOERLI: '0x7233038e589913dca4b6d15ff8bba263a433aed2',
+    SwapTarget_GOERLI: '0xcb7b9188ada88cb0c991c807acc6b44097059dec',
+    LineFactory_GOERLI: '0x43158693dba386562f0581cd48e68df027a5a877',
+    SecuredLine_GOERLI: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
     // ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
   };
 });

@@ -1,4 +1,4 @@
-import { BaseCreditLine, CreditLinePage, BaseToken, Escrow, LinePageSpigot, LinePageCreditPosition } from '@types';
+import { LineStatusTypes, AggregatedCreditLine, CreditLinePage } from '@types';
 
 import { Address } from './Blockchain';
 
@@ -9,7 +9,7 @@ export interface QueryCreator<ArgType, ResponseType> {
 export interface QueryResponse<ResponseType> extends Promise<ResponseType> {
   loading: boolean;
   error?: string | object;
-  data?: ResponseType;
+  data?: ResponseType | undefined;
 
   // make backwards compatible with Apollos response type
   [key: string]: any;
@@ -45,6 +45,10 @@ export interface GetLinePageArgs {
   id: Address;
 }
 
+export interface GetLinePageAuxArgs {
+  id: Address;
+}
+
 /**
  * @typedef {object} GetLinesArgs
  * @property {number} GetLinesArgs.first - how many lines to get
@@ -77,55 +81,155 @@ export interface UseCreditLineParams {
 /*
   Query Responses Types
 */
-type QueryResponseTypes = BaseCreditLine | BaseCreditLine[] | CreditLinePage;
+type QueryResponseTypes = AggregatedCreditLine | AggregatedCreditLine[] | CreditLinePage;
 
-export interface LineFrag {
-  id: string;
-  __typename: string;
-  timestamp: number;
-  // events with value
-  value?: number;
-  amount?: number;
-  // events with rates
-  drawnRate?: number;
-  facilityRate?: number;
+export interface BaseLineFragResponse {
+  id: Address;
+  end: number;
+  type: string;
+  start: number;
+  status: LineStatusTypes;
+  borrower: {
+    id: Address;
+  };
 }
 
-export interface LineEventFrag {
+export interface BaseCreditFragResponse {
+  id: Address;
+  principal: string;
+  deposit: string;
+  drate: string;
+  token: {
+    id: Address;
+    symbol: string;
+    decimals: number;
+  };
+}
+
+export interface LinePageCreditFragResponse extends BaseCreditFragResponse {
+  interestRepaid: string;
+  interestAccrued: string;
+  dRate: string;
+  fRate: string;
+
+  lender: {
+    id: string;
+  };
+
+  events?: LineEventFragResponse[];
+}
+
+export interface LineEventFragResponse {
   __typename: string;
+  id: string;
   timestamp: number;
   credit: {
     id: string;
   };
   // events with value
-  value?: number;
-  amount?: number;
+  value?: string;
+  amount?: string;
   // events with rates
-  drawnRate?: number;
-  facilityRate?: number;
+  dRate?: string;
+  fRate?: string;
+
+  token: {
+    id: Address;
+  };
 }
 
-export interface GetLinePageResponse {
-  id: string;
-  end: number;
-  type: string;
-  start: number;
-  status: number;
-  borrower: Address;
+export interface SpigotRevenueSummaryFragresponse {
+  token: Address;
+  totalVolumeUsd: string;
+  timeOfFirstIncome: number;
+  timeOfLastIncome: number;
+}
 
-  credits?: LinePageCreditPosition &
-    {
-      // merge custom format w/ subgraph structure
-      events?: {
-        // cant use our type because we flatten structure for easier use
+export interface SpigotEventFragResponse {
+  __typename: 'ClaimRevenueEvent';
+  timestamp: number;
+  revenueToken: {
+    id: Address;
+  };
+  escrowed: string;
+  netIncome: string;
+  value: string;
+}
+
+export interface BaseEscrowDepositFragResponse {
+  enabled: boolean;
+  amount: string;
+  token: {
+    id: Address;
+    symbol: string;
+    decimals: number;
+  };
+}
+
+export interface BaseEscrowFragResponse {
+  id: Address;
+  minCRatio: string;
+  deposits: BaseEscrowDepositFragResponse[];
+}
+
+export interface GetLinesResponse {
+  lines: BaseLineFragResponse & {
+    credits: BaseCreditFragResponse;
+    escrow: BaseEscrowFragResponse;
+    spigot: {
+      id: Address;
+      summaries: {
+        totalVolumeUsd: string;
+        timeOfFirstIncome: number;
+        timeOfLastIncome: number;
+      };
+    };
+  };
+}
+
+export interface GetLinePageAuxDataResponse {
+  lines?: {
+    dRate: number;
+  }[];
+  events?: LineEventFragResponse[];
+  spigot?: {
+    events: SpigotEventFragResponse[];
+  };
+}
+
+export interface GetLinePageResponse extends BaseLineFragResponse {
+  credits?: LinePageCreditFragResponse[];
+
+  escrow?: {
+    id: Address;
+    cratio: string;
+    minCRatio: string;
+    collateralValue: string;
+    deposits: {
+      id: Address;
+      token: {
+        id: Address;
+        symbol: string;
+        decimals: number;
+      };
+      amount: string;
+      enabled: boolean;
+      events: {
         __typename: string;
         timestamp: number;
-        credit: {
-          id: string;
-        };
-      }[];
-    }[];
-
-  escrow?: Escrow;
-  spigot?: LinePageSpigot;
+        // only on add/remove collateral
+        amount?: string;
+        value?: string;
+      };
+    };
+  };
+  spigot?: {
+    id: Address;
+    spigots: {
+      contract: Address;
+      active: boolean;
+      startTime: number;
+    };
+    events?: SpigotEventFragResponse[];
+  };
 }

@@ -13,6 +13,9 @@ import { AddCreditPositionTxModal } from './AddCreditPositionTxModal';
 import { WithdrawTxModal } from './WithdrawTxModal';
 import { MigrateTxModal } from './MigrateTxModal';
 import { LiquidateBorrowerTxModal } from './LiquidateBorrower';
+import { BorrowTxModal } from './BorrowTxModal';
+import { DeployLineTxModal } from './DeployLineTxModal';
+import { DepositAndRepayTxModal } from './DepositAndRepayTxModal';
 
 const modalTimeout = 300;
 
@@ -156,6 +159,22 @@ export const Modals = () => {
       {activeModal === 'liquidateBorrower' && (
         <CSSTransition key={'liquidateBorrower'} timeout={modalTimeout} classNames="slideBottom">
           <LiquidateBorrowerTxModal onClose={closeModal} />
+
+      {activeModal === 'createLine' && (
+        <CSSTransition key={'createLine'} timeout={modalTimeout} classNames="slideBottom">
+          <DeployLineTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'borrow' && (
+        <CSSTransition key={'borrow'} timeout={modalTimeout} classNames="slideBottom">
+          <BorrowTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'depositAndRepay' && (
+        <CSSTransition key={'depositAndRepay'} timeout={modalTimeout} classNames="slideBottom">
+          <DepositAndRepayTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

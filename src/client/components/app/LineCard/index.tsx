@@ -1,8 +1,10 @@
 import styled from 'styled-components';
+import { BigNumber } from 'ethers';
 
 import { FlatCard, FlatCardHeader, FlatCardContent, Text, Icon, ChevronRightIcon } from '@components/common';
 import { TokenIcon } from '@components/app';
 import { device } from '@src/client/themes/default';
+import { useAppTranslation } from '@hooks';
 
 const TokenListIconSize = '1rem';
 
@@ -17,6 +19,7 @@ const StyledCardContent = styled(FlatCardContent)`
   align-items: stretch;
   justify-content: center;
   flex-wrap: wrap;
+  grid-row-gap: 3rem;
   grid-gap: ${({ theme }) => theme.card.padding};
   margin-top: ${({ theme }) => theme.card.padding};
   padding: 0 ${({ theme }) => theme.card.padding};
@@ -24,14 +27,28 @@ const StyledCardContent = styled(FlatCardContent)`
 
 const ItemCard = styled(FlatCard)<{ onClick: any }>`
   max-width: 33vw;
+  transition: filter 200ms ease-in-out;
+
   @media (${device.tablet}) {
     max-width: 100%;
     min-height: 250px;
   }
-  ${({ theme }) => `
+  ${({ onClick, theme }) => `
     box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.5);
     background: ${theme.colors.background};
     color: ${theme.colors.primary};
+
+    ${
+      onClick &&
+      `
+      cursor: pointer;
+      &:hover {
+        filter: brightness(85%);
+        ${TokenListIcon} {
+          color: ${theme.colors.primary};
+        }
+      }`
+    }
   `}
 `;
 
@@ -98,13 +115,30 @@ const CollateralData = styled.div`
   grid-gap: ${({ theme }) => theme.spacing.md};
 `;
 
+const TagContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  height: 3rem;
+`;
+
+const ItemTag = styled(BorrowerDescription)`
+  border-radius: 10%;
+  // background-color: ${({ theme }) => theme.colors.backgroundVariant};
+  margin-right: ${({ theme }) => theme.spacing.sm};
+  user-select: none;
+`;
+const ItemConjuctior = styled.span`
+  margin-left: ${({ theme }) => theme.spacing.sm};
+`;
+
 interface Item {
   header?: string;
   icon: string;
   name: string;
   info: string;
-  spigot?: string;
-  escrow?: string;
+  principal: any; // TODO BigNumber
+  deposit: any; // TODO BigNumber
   tags?: string[];
   infoDetail?: string;
   action?: string;
@@ -119,6 +153,8 @@ interface RecommendationsProps {
 }
 
 export const LineCard = ({ header, subHeader, items, ...props }: RecommendationsProps) => {
+  const { t } = useAppTranslation(['common']);
+
   if (items.length === 0) {
     return null;
   }
@@ -133,29 +169,43 @@ export const LineCard = ({ header, subHeader, items, ...props }: Recommendations
             {item.header && <ItemHeader>{item.header}</ItemHeader>}
 
             <BorrowerInfo>
-              <BorrowerIcon>
-                {' '}
-                <TokenIcon symbol={item.name} icon={item.icon} size="xBig" />
-              </BorrowerIcon>
+              {!item.icon ? null : (
+                <BorrowerIcon>
+                  {' '}
+                  <TokenIcon symbol={item.name} icon={item.icon} size="xBig" />
+                </BorrowerIcon>
+              )}
               <BorrowerData>
-                <LineBorrowerName>{item.name}</LineBorrowerName>
-                <BorrowerDescription>{item.name}</BorrowerDescription>
-                {item.tags?.map((t) => (
+                <LineBorrowerName ellipsis>
+                  {t('components.line-card.borrower')}: {item.name}
+                </LineBorrowerName>
+                <TagContainer>
+                  <ItemTag>{t('components.line-card.secured-by')}:</ItemTag>
+                  {item.tags?.map((tag, i) => (
+                    <ItemTag>
+                      {tag} {item.tags?.[i + 1] ? <ItemConjuctior>+</ItemConjuctior> : ''}
+                    </ItemTag>
+                  ))}
+                </TagContainer>
+                <BorrowerDescription>
+                  {t('components.line-card.total-debt')}: ${item.principal}
+                </BorrowerDescription>
+                {/* {item.tags?.map((t) => (
                   <BorrowerDescription>{t}</BorrowerDescription>
-                ))}
+                ))} */}
               </BorrowerData>
             </BorrowerInfo>
-
-            <CollateralTitle>Secured By:</CollateralTitle>
+            {/* TODO enable below when aggregate data added to type CreditLine */}
+            {/* <CollateralTitle>{t('components.line-card.secured-by')}:</CollateralTitle> */}
             <CollateralData>
-              {/* TODO: useLineCollateralStats(spigot, escrow) */}
+              {/* <BorrowerDescription>{item.name}</BorrowerDescription>
               <BorrowerDescription>{item.name}</BorrowerDescription>
               <BorrowerDescription>{item.name}</BorrowerDescription>
-              <BorrowerDescription>{item.name}</BorrowerDescription>
-              <BorrowerDescription>{item.name}</BorrowerDescription>
+              <BorrowerDescription>{item.name}</BorrowerDescription> */}
             </CollateralData>
 
-            {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}
+            {/* adds arrow on cards when hovered */}
+            {/* {item.onAction && <TokenListIcon Component={ChevronRightIcon} />} */}
           </ItemCard>
         ))}
       </FlatCardContent>

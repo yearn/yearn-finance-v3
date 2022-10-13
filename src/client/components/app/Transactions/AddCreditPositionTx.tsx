@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { TokenCard } from '@yearn-finance/web-lib';
+import { ethers } from 'ethers';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
 import {
@@ -13,13 +14,16 @@ import {
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { Address, Token, Asset, TokenView, CreditLine } from '@src/core/types';
-import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions } from '@store';
+import { Address, Token, Asset, TokenView, AggregatedCreditLine } from '@src/core/types';
+import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions, LinesSelectors, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxRateInput } from './components/TxRateInput';
+import { TxActionButton } from './components/TxActions';
+import { TxActions } from './components/TxActions';
+import { TxStatus } from './components/TxStatus';
 
 const {
   CONTRACT_ADDRESSES: { DAI },
@@ -52,13 +56,19 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
-
-  const [targetTokenAmount, setTargetTokenAmount] = useState('10000000');
+  const [transactionCompleted, setTransactionCompleted] = useState(0);
+  const [transactionApproved, setTransactionApproved] = useState(true);
+  const [transactionLoading, setLoading] = useState(false);
+  const [targetTokenAmount, setTargetTokenAmount] = useState('1');
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');
-  const [selectedCredit, setSelectedCredit] = useSelectedCreditLine();
+  const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
+  const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
+
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
+
   const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
     selectedSellTokenAddress: initialToken,
     selectedVaultOrLab: useAppSelector(VaultsSelectors.selectRecommendations)[0],
@@ -66,14 +76,16 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   });
 
   useEffect(() => {
-    console.log('add position tx useEffect token/creditLine', selectedSellTokenAddress, initialToken, selectedCredit);
-
+    console.log('add position tx useEffect token/creditLine', selectedSellToken, initialToken, selectedCredit);
     if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
           tokenAddress: sourceAssetOptions[0].address,
         })
       );
+    }
+    if (selectedTokenAddress === '' && selectedSellToken) {
+      setSelectedTokenAddress(selectedSellToken.address);
     }
 
     if (
@@ -87,7 +99,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
     dispatch(TokensActions.getTokensDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
     // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
-  }, [selectedSellToken, selectedCredit]);
+  }, [selectedSellToken]);
 
   const _updatePosition = () =>
     onPositionChange({
@@ -125,12 +137,123 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
   };
 
+  const approveCreditPosition = () => {
+    setLoading(true);
+    if (!selectedCredit?.id || !drate || !frate || !targetTokenAmount || !selectedTokenAddress) {
+      console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedTokenAddress);
+      setLoading(false);
+      return;
+    }
+    dispatch(
+      //@ts-ignore
+      LinesActions.approveDeposit({
+        tokenAddress: selectedTokenAddress,
+        amount: `${ethers.utils.parseEther(targetTokenAmount)}`,
+      })
+    );
+    setLoading(false);
+    setTransactionApproved(!transactionApproved);
+  };
+
+  const onTransactionCompletedDismissed = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      setTransactionCompleted(0);
+    }
+  };
+
+  const addCreditPosition = () => {
+    setLoading(true);
+    // TODO set error in state to display no line selected
+    if (!selectedCredit?.id || !drate || frate || !targetTokenAmount || !selectedSellTokenAddress) {
+      console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedSellTokenAddress);
+      setLoading(false);
+      return;
+    }
+
+    let bigNumDRate = toBN(drate);
+    let bigNumFRate = toBN(frate);
+
+    console.log(bigNumDRate, bigNumFRate);
+
+    if (!selectedSellTokenAddress) {
+      setLoading(false);
+      return;
+    }
+
+    dispatch(
+      LinesActions.addCredit({
+        lineAddress: selectedCredit.id,
+        drate: ethers.utils.parseEther(drate),
+        frate: ethers.utils.parseEther(frate),
+        amount: ethers.utils.parseEther(targetTokenAmount),
+        token: selectedSellTokenAddress,
+        lender: '',
+        dryRun: true,
+      })
+    ).then((res) => {
+      if (res.meta.requestStatus === 'rejected') {
+        setTransactionCompleted(2);
+        console.log(transactionCompleted, 'tester');
+        setLoading(false);
+      }
+      if (res.meta.requestStatus === 'fulfilled') {
+        setTransactionCompleted(1);
+        console.log(transactionCompleted, 'tester');
+        setLoading(false);
+      }
+    });
+  };
+
+  const txActions = [
+    {
+      label: t('components.transaction.approve'),
+      onAction: approveCreditPosition,
+      status: true,
+      disabled: !transactionApproved,
+      contrast: false,
+    },
+    {
+      label: t('components.transaction.deposit'),
+      onAction: addCreditPosition,
+      status: true,
+      disabled: transactionApproved,
+      contrast: true,
+    },
+  ];
+
   if (!selectedSellToken) return null;
+  if (!selectedCredit) return null;
 
   const targetBalance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
   const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
     selectedSellToken.symbol
   }`;
+
+  if (transactionCompleted === 1) {
+    return (
+      <StyledTransaction onClose={onClose} header={'transaction'}>
+        <TxStatus
+          success={transactionCompleted}
+          transactionCompletedLabel={'completed'}
+          exit={onTransactionCompletedDismissed}
+        />
+      </StyledTransaction>
+    );
+  }
+
+  if (transactionCompleted === 2) {
+    return (
+      <StyledTransaction onClose={onClose} header={'transaction'}>
+        <TxStatus
+          success={transactionCompleted}
+          transactionCompletedLabel={'could not add credit'}
+          exit={onTransactionCompletedDismissed}
+        />
+      </StyledTransaction>
+    );
+  }
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
@@ -139,7 +262,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         headerText={t('components.transaction.add-credit.select-credit')}
         inputText={t('components.transaction.add-credit.select-credit')}
         onSelectedCreditLineChange={onSelectedCreditLineChange}
-        selectedCredit={selectedCredit as CreditLine}
+        selectedCredit={selectedCredit}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={false}
@@ -171,6 +294,20 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         setRateChange={onRateChange}
         readOnly={acceptingOffer}
       />
+      <TxActions>
+        {txActions.map(({ label, onAction, status, disabled, contrast }) => (
+          <TxActionButton
+            key={label}
+            data-testid={`modal-action-${label.toLowerCase()}`}
+            onClick={onAction}
+            disabled={disabled}
+            contrast={contrast}
+            isLoading={transactionLoading}
+          >
+            {label}
+          </TxActionButton>
+        ))}
+      </TxActions>
     </StyledTransaction>
   );
 };

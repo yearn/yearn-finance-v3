@@ -1,0 +1,232 @@
+import React, { FC, useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { ethers } from 'ethers';
+
+import { formatAmount, normalizeAmount, toBN } from '@utils';
+import {
+  useAppTranslation,
+  useAppDispatch,
+  useSelectedCreditLine,
+
+  // used to dummy token for dev
+  useAppSelector,
+  useSelectedSellToken,
+} from '@hooks';
+import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions, LinesSelectors, LinesActions } from '@store';
+import { getConstants } from '@src/config/constants';
+
+import { TxContainer } from './components/TxContainer';
+import { TxTokenInput } from './components/TxTokenInput';
+import { TxActionButton } from './components/TxActions';
+import { TxActions } from './components/TxActions';
+import { TxStatus } from './components/TxStatus';
+import { TxTTLInput } from './components/TxTTLInput';
+
+const StyledTransaction = styled(TxContainer)``;
+
+const StyledAmountInput = styled(TxTTLInput)``;
+
+interface DepositAndRepayProps {
+  header: string;
+  onClose: () => void;
+  acceptingOffer: boolean;
+  onSelectedCreditLineChange: Function;
+  allowVaultSelect: boolean;
+  onPositionChange: (data: { credit?: string; token: string | undefined; amount?: string }) => void;
+}
+
+const {
+  CONTRACT_ADDRESSES: { DAI },
+  MAX_INTEREST_RATE,
+} = getConstants();
+
+const RatesContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
+  const { t } = useAppTranslation('common');
+  const dispatch = useAppDispatch();
+  const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
+  const [transactionCompleted, setTransactionCompleted] = useState(0);
+  const [transactionApproved, setTransactionApproved] = useState(true);
+  const [transactionLoading, setLoading] = useState(false);
+  const [targetAmount, setTargetAmount] = useState('1');
+  const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
+  const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
+
+  const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
+  const initialToken: string = selectedSellTokenAddress || DAI;
+
+  const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
+    selectedSellTokenAddress: initialToken,
+    selectedVaultOrLab: useAppSelector(VaultsSelectors.selectRecommendations)[0],
+    allowTokenSelect: true,
+  });
+
+  useEffect(() => {
+    console.log('add position tx useEffect token/creditLine', selectedSellToken, initialToken, selectedCredit);
+    if (!selectedSellToken) {
+      dispatch(
+        TokensActions.setSelectedTokenAddress({
+          tokenAddress: sourceAssetOptions[0].address,
+        })
+      );
+    }
+    if (selectedTokenAddress === '' && selectedSellToken) {
+      setSelectedTokenAddress(selectedSellToken.address);
+    }
+
+    if (
+      !selectedCredit ||
+      !selectedSellToken
+      // toBN(targetTokenAmount).lte(0) ||
+      // inputError ||
+    ) {
+      return;
+    }
+
+    dispatch(TokensActions.getTokensDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
+    // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
+  }, [selectedSellToken]);
+
+  const _updatePosition = () =>
+    onPositionChange({
+      credit: selectedCredit?.id,
+      token: selectedSellToken?.address,
+      amount: targetAmount,
+    });
+
+  // Event Handlers
+
+  const onAmountChange = (amount: string): void => {
+    setTargetAmount(amount);
+    _updatePosition();
+  };
+
+  const onSelectedCreditLineChange = (addr: string): void => {
+    console.log('select new loc', addr);
+    setSelectedCredit(addr);
+    _updatePosition();
+  };
+
+  const onTransactionCompletedDismissed = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      setTransactionCompleted(0);
+    }
+  };
+
+  const depositAndRepay = () => {
+    setLoading(true);
+    // TODO set error in state to display no line selected
+    if (!selectedCredit?.id || !targetAmount || !selectedSellTokenAddress) {
+      console.log('check this', selectedCredit?.id, targetAmount, selectedSellTokenAddress);
+      setLoading(false);
+      return;
+    }
+
+    dispatch(
+      LinesActions.depositAndRepay({
+        lineAddress: selectedCredit.id,
+        tokenAddress: selectedSellTokenAddress,
+        amount: ethers.utils.parseEther(targetAmount),
+      })
+    ).then((res) => {
+      if (res.meta.requestStatus === 'rejected') {
+        setTransactionCompleted(2);
+        console.log(transactionCompleted, 'tester');
+        setLoading(false);
+      }
+      if (res.meta.requestStatus === 'fulfilled') {
+        setTransactionCompleted(1);
+        console.log(transactionCompleted, 'tester');
+        setLoading(false);
+      }
+    });
+  };
+
+  const txActions = [
+    {
+      label: t('components.transaction.deposit-and-repay-header'),
+      onAction: depositAndRepay,
+      status: true,
+      disabled: !transactionApproved,
+      contrast: false,
+    },
+  ];
+
+  if (!selectedCredit) return null;
+  if (!selectedSellToken) return null;
+
+  const onSelectedSellTokenChange = (tokenAddress: string) => {
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
+  };
+
+  const targetBalance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
+  const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
+    selectedSellToken.symbol
+  }`;
+
+  if (transactionCompleted === 1) {
+    return (
+      <StyledTransaction onClose={onClose} header={'transaction'}>
+        <TxStatus
+          success={transactionCompleted}
+          transactionCompletedLabel={'completed'}
+          exit={onTransactionCompletedDismissed}
+        />
+      </StyledTransaction>
+    );
+  }
+
+  if (transactionCompleted === 2) {
+    return (
+      <StyledTransaction onClose={onClose} header={'transaction'}>
+        <TxStatus
+          success={transactionCompleted}
+          transactionCompletedLabel={'could not deposit and repay'}
+          exit={onTransactionCompletedDismissed}
+        />
+      </StyledTransaction>
+    );
+  }
+
+  return (
+    <StyledTransaction onClose={onClose} header={header || t('components.transaction.deposit-and-repay.header')}>
+      <TxTokenInput
+        key={'token-input'}
+        headerText={t('components.transaction.deposit-and-repay.select-amount')}
+        inputText={tokenHeaderText}
+        amount={targetAmount}
+        onAmountChange={onAmountChange}
+        amountValue={String(10000000 * Number(targetAmount))}
+        maxAmount={targetBalance}
+        selectedToken={selectedSellToken}
+        onSelectedTokenChange={onSelectedSellTokenChange}
+        tokenOptions={sourceAssetOptions}
+        // inputError={!!sourceStatus.error}
+        readOnly={acceptingOffer}
+        // displayGuidance={displaySourceGuidance}
+      />
+      <TxActions>
+        {txActions.map(({ label, onAction, status, disabled, contrast }) => (
+          <TxActionButton
+            key={label}
+            data-testid={`modal-action-${label.toLowerCase()}`}
+            onClick={onAction}
+            disabled={disabled}
+            contrast={contrast}
+            isLoading={transactionLoading}
+          >
+            {label}
+          </TxActionButton>
+        ))}
+      </TxActions>
+    </StyledTransaction>
+  );
+};

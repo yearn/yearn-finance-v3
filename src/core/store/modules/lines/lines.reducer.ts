@@ -8,7 +8,7 @@ import {
   UserLineMetadataStatusMap,
   LineActionsStatusMap,
   PositionSummary,
-  CreditLine,
+  AggregatedCreditLine,
 } from '@types';
 
 import { LinesActions } from './lines.actions';
@@ -28,6 +28,7 @@ export const initialUserMetadataStatusMap: UserLineMetadataStatusMap = {
 export const linesInitialState: CreditLineState = {
   selectedLineAddress: undefined,
   linesMap: {},
+  pagesMap: {},
   categories: {},
   user: {
     linePositions: {},
@@ -38,11 +39,13 @@ export const linesInitialState: CreditLineState = {
     getLine: initialStatus,
     getLinePage: initialStatus,
     getAllowances: initialStatus,
+    deploySecuredLine: initialStatus,
     user: initialUserMetadataStatusMap,
   },
 };
 
 const {
+  addCredit,
   approveDeposit,
   depositAndRepay,
   // approveZapOut,
@@ -52,6 +55,7 @@ const {
   getLine,
   getLinePage,
   getLines,
+  deploySecuredLine,
   // initiateSaveLines,
   setSelectedLineAddress,
   getUserLinePositions,
@@ -137,7 +141,7 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
       state.statusMap.getLines = {};
 
       const categories: { [key: string]: string[] } = {};
-      const lines: { [key: string]: CreditLine } = {};
+      const lines: { [key: string]: AggregatedCreditLine } = {};
 
       // loop over nested structure of new Lines and update state
       Object.entries(linesData).map(([category, ls]) =>
@@ -163,13 +167,26 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
     })
     .addCase(getLinePage.fulfilled, (state, { payload: { linePageData } }) => {
       if (linePageData) {
-        state.linesMap = { ...state.linesMap, [linePageData.id]: linePageData as CreditLine };
+        state.pagesMap = { ...state.pagesMap, [linePageData.id]: linePageData };
+        state.linesMap = { ...state.linesMap, [linePageData.id]: linePageData as AggregatedCreditLine };
       }
 
       state.statusMap.getLinePage = {};
     })
     .addCase(getLinePage.rejected, (state, { error }) => {
       state.statusMap.getLinePage = { error: error.message };
+    })
+    /* -------------------------------- deploySecuredLine ------------------------------- */
+    .addCase(deploySecuredLine.pending, (state) => {
+      state.statusMap.deploySecuredLine = { loading: true };
+    })
+    .addCase(deploySecuredLine.fulfilled, (state) => {
+      // deployLine action emits a getLine action if tx is successful
+
+      state.statusMap.deploySecuredLine = {};
+    })
+    .addCase(deploySecuredLine.rejected, (state, { error }) => {
+      state.statusMap.deploySecuredLine = { error: error.message };
     })
     /* ------------------------- getUserLinePositions ------------------------- */
     .addCase(getUserLinePositions.pending, (state, { meta }) => {
@@ -224,17 +241,27 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
     /* -------------------------------------------------------------------------- */
 
     /* ----------------------------- approveDeposit ----------------------------- */
-    .addCase(approveDeposit.pending, (state, { meta }) => {
-      const lineAddress = meta.arg.lineAddress;
-      state.statusMap.user.linesActionsStatusMap[lineAddress].approve = { loading: true };
+    .addCase(approveDeposit.pending, (state) => {
+      state.statusMap.getAllowances = { loading: true };
     })
-    .addCase(approveDeposit.fulfilled, (state, { meta }) => {
-      const lineAddress = meta.arg.lineAddress;
-      state.statusMap.user.linesActionsStatusMap[lineAddress].approve = {};
+    .addCase(approveDeposit.fulfilled, (state) => {
+      // deployLine action emits a getLine action if tx is successful
+
+      state.statusMap.getAllowances = {};
     })
-    .addCase(approveDeposit.rejected, (state, { error, meta }) => {
-      const lineAddress = meta.arg.lineAddress;
-      state.statusMap.user.linesActionsStatusMap[lineAddress].approve = { error: error.message };
+    .addCase(approveDeposit.rejected, (state, { error }) => {
+      state.statusMap.getAllowances = { error: error.message };
+    })
+
+    .addCase(addCredit.pending, (state) => {
+      state.statusMap.getAllowances = { loading: true };
+    })
+    .addCase(addCredit.fulfilled, (state) => {
+      // deployLine action emits a getLine action if tx is successful
+      state.statusMap.getAllowances = {};
+    })
+    .addCase(addCredit.rejected, (state, { error }) => {
+      state.statusMap.getAllowances = { error: error.message };
     })
 
     /* ------------------------------ depositAndRepay ------------------------------ */

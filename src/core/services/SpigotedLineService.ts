@@ -1,5 +1,5 @@
 ﻿import { BytesLike } from '@ethersproject/bytes/src.ts';
-import { ContractFunction, BigNumber, PopulatedTransaction } from 'ethers';
+import { BigNumber, ethers, PopulatedTransaction } from 'ethers';
 
 import {
   YearnSdk,
@@ -14,6 +14,7 @@ import {
 } from '@types';
 import { getConfig } from '@config';
 import { getContract } from '@frameworks/ethers';
+import { unnullify } from '@src/utils';
 
 import { TransactionResponse } from '../types';
 
@@ -53,31 +54,51 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
     return getContract(contractAddress.toString(), SpigotedLineABI, this.web3Provider.getSigner().provider);
   }
 
-  public async claimAndTrade(
-    lineAddress: Address,
-    claimToken: Address,
-    zeroExTradeData: BytesLike,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction> {
-    return await this.executeContractMethod(lineAddress, 'claimAndTrade', [claimToken, zeroExTradeData], dryRun);
+  public async claimAndTrade(lineAddress: Address, claimToken: Address, zeroExTradeData: BytesLike): Promise<string> {
+    if (!(await this.isBorrowing(lineAddress))) {
+      throw new Error('Claim and trade is not possible because not borrowing');
+    }
+    if (!(await this.isBorrower(lineAddress))) {
+      throw new Error('Claim and trade is not possible because signer is not borrower');
+    }
+
+    return (<TransactionResponse>(
+      await this.executeContractMethod(lineAddress, 'claimAndTrade', [claimToken, zeroExTradeData])
+    )).hash;
   }
 
-  public async claimAndRepay(
-    lineAddress: Address,
-    claimToken: Address,
-    calldata: BytesLike,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction> {
-    return await this.executeContractMethod(lineAddress, 'claimAndRepay', [claimToken, calldata], dryRun);
+  public async claimAndRepay(lineAddress: Address, claimToken: Address, calldata: BytesLike): Promise<string> {
+    if (!(await this.isBorrowing(lineAddress))) {
+      throw new Error('Claim and repay is not possible because not borrowing');
+    }
+
+    if (!(await this.isSignerBorrowerOrLender(lineAddress, await this.getFirstID(lineAddress)))) {
+      throw new Error('Claim and repay is not possible because signer is not borrower or lender');
+    }
+
+    return (<TransactionResponse>await this.executeContractMethod(lineAddress, 'claimAndRepay', [claimToken, calldata]))
+      .hash;
   }
 
-  public async addSpigot(
-    lineAddress: Address,
-    revenueContract: Address,
-    setting: ISpigotSetting,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction> {
-    return await this.executeContractMethod(lineAddress, 'addSpigot', [revenueContract, setting], dryRun);
+  public async addSpigot(lineAddress: Address, revenueContract: Address, setting: ISpigotSetting): Promise<string> {
+    if (!(await this.isOwner(lineAddress))) {
+      throw new Error('Cannot add spigot. Signer is not owner.');
+    }
+
+    if (revenueContract === lineAddress) {
+      throw new Error('Invalid revenue contract address. `revenueContract` address is same as `spigotedLineAddress`');
+    }
+
+    if (
+      setting.transferOwnerFunction.length === 0 ||
+      unnullify(setting.ownerSplit, true).gt(await this.maxSplit(lineAddress)) ||
+      setting.token === ethers.constants.AddressZero
+    ) {
+      throw new Error('Bad setting');
+    }
+
+    return (<TransactionResponse>await this.executeContractMethod(lineAddress, 'addSpigot', [revenueContract, setting]))
+      .hash;
   }
 
   public async releaseSpigot(
@@ -103,7 +124,7 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
     const id = await this.creditLineService.getFirstID(lineAddress);
     return (
       (await this._getContract(lineAddress).count()) !== 0 &&
-      (await this.creditLineService.getCredit(lineAddress, id)).principal.gt(0)
+      unnullify((await this.creditLineService.getCredit(lineAddress, id)).principal, true).gt(0)
     );
   }
 
@@ -147,7 +168,7 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
     );
   }
 
-  private async executeContractMethod(lineAddress: string, methodName: string, params: any[], dryRun: boolean) {
+  private async executeContractMethod(lineAddress: string, methodName: string, params: any[], dryRun: boolean = false) {
     let props: ExecuteTransactionProps | undefined = undefined;
     try {
       props = {
@@ -161,8 +182,7 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
         return await this.transactionService.populateTransaction(props);
       }
 
-      let tx;
-      tx = await this.transactionService.execute(props);
+      const tx = await this.transactionService.execute(props);
       await tx.wait();
       return tx;
     } catch (e) {

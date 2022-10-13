@@ -5,29 +5,11 @@ import {
   RootState,
   Status,
   LineActionsStatusMap,
-  CreditLine,
-  Token,
-  Balance,
-  AllowancesMap,
-  BaseCreditLine,
-  GetLinePageResponse,
-  UserPositionMetadata,
+  AggregatedCreditLine,
   Address,
   CreditLinePage, // prev. GeneralVaultView, Super indepth data, CreditLinePage is most similar atm
-  PositionSummary,
-  UserPositionSummary,
-  Spigot,
-  CollateralEvent,
-  CreditLineEvents,
-  ModuleNames,
-  SPIGOT_MODULE_NAME,
-  ESCROW_MODULE_NAME,
-  LENDER_POSITION_ROLE,
-  LinePageCreditPosition,
 } from '@types';
 import { toBN, mapStatusToString, formatCreditEvents, formatCollateralEvents } from '@utils';
-
-import { createToken } from '../tokens/tokens.selectors';
 
 import { initialLineActionsStatusMap } from './lines.reducer';
 
@@ -37,6 +19,7 @@ const selectLinesState = (state: RootState) => state.lines;
 const selectUserLinesPositionsMap = (state: RootState) => state.lines.user.linePositions;
 // const selectUserLinesMetadataMap = (state: RootState) => state.lines.user.userLinesMetadataMap;
 const selectLinesMap = (state: RootState) => state.lines.linesMap;
+const selectLinePagesMap = (state: RootState) => state.lines.pagesMap;
 const selectLineCategories = (state: RootState) => state.lines.categories;
 const selectLinesAddresses = (state: RootState) => Object.keys(state.lines.linesMap);
 const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
@@ -58,8 +41,8 @@ const selectLines = createSelector([selectLinesMap], (linesMap) => {
   return Object.values(linesMap);
 });
 
-const selectLiveLines = createSelector([selectLines], (lines): CreditLine[] => {
-  return lines.filter((line: CreditLine) => line.end < Date.now() / 1000);
+const selectLiveLines = createSelector([selectLines], (lines): AggregatedCreditLine[] => {
+  return lines.filter((line: AggregatedCreditLine) => line.end < Date.now() / 1000);
 });
 
 // Not needed yet. TODO: Select all past-term lines
@@ -70,19 +53,19 @@ const selectLiveLines = createSelector([selectLines], (lines): CreditLine[] => {
 //   return deprecatedLines.filter((line) => toBN(line.userDeposited).gt(0));
 // });
 
-const selectDepositedLines = createSelector(
-  [selectUserLinesPositionsMap, selectUserWallet],
-  (positions, wallet): UserPositionSummary[] => {
-    return Object.values(positions)
-      .filter((p) => p.lender === wallet)
-      .map((p) => ({
-        ...p,
-        role: LENDER_POSITION_ROLE,
-        available: p.deposit - p.principal,
-        amount: p.deposit,
-      }));
-  }
-);
+// const selectDepositedLines = createSelector(
+//   [selectUserLinesPositionsMap, selectUserWallet],
+//   (positions, wallet): UserPositionSummary[] => {
+//     return Object.values(positions)
+//       .filter((p) => p.lender === wallet)
+//       .map((p) => ({
+//         ...p,
+//         role: LENDER_POSITION_ROLE,
+//         available: p.deposit - p.principal,
+//         amount: p.deposit,
+//       }));
+//   }
+// );
 
 const selectSelectedLineActionsStatusMap = createSelector(
   [selectLinesActionsStatusMap, selectSelectedLineAddress],
@@ -93,11 +76,11 @@ const selectSelectedLineActionsStatusMap = createSelector(
 
 const selectLinesForCategories = createSelector(
   [selectLinesMap, selectLineCategories],
-  (linesMap, categories): { [key: string]: CreditLine[] } => {
+  (linesMap, categories): { [key: string]: AggregatedCreditLine[] } => {
     return Object.entries(categories).reduce(
       (obj: object, [category, lines]: [string, string[]]) => ({
         ...obj,
-        [category]: lines.map((l: string): CreditLine => linesMap[l]),
+        [category]: lines.map((l: string): AggregatedCreditLine => linesMap[l]),
       }),
       {}
     );
@@ -170,15 +153,22 @@ const selectLinesStatus = createSelector(
   }
 );
 
+const selectSelectedLinePage = createSelector(
+  [selectLinePagesMap, selectSelectedLineAddress],
+  (pages, line): CreditLinePage | undefined => {
+    return line ? pages[line] : undefined;
+  }
+);
+
 /* --------------------------------- Helper --------------------------------- */
 // interface CreateLineProps {
-//   lineData: BaseCreditLine;
+//   lineData: AggregatedCreditLine;
 //   // tokenAllowancesMap: AllowancesMap;
 //   positions: { [key: string]: PositionSummary };
 //   // userLinesMetadataMap: UserPositionMetadata;
 //   lineAllowancesMap: AllowancesMap;
 // }
-// function createLine(props: CreateLineProps): CreditLine {
+// function createLine(props: CreateLineProps):AggregatedCreditLine{
 //   const {
 //     lineData,
 //     // tokenAllowancesMap,
@@ -192,135 +182,13 @@ const selectLinesStatus = createSelector(
 //   };
 // }
 
-interface CreateLinePageProps {
-  lineData: GetLinePageResponse;
-  tokenAllowancesMap: AllowancesMap;
-  positions: { [key: string]: PositionSummary };
-  // userLinesMetadataMap: UserPositionMetadata;
-  lineAllowancesMap: AllowancesMap;
-}
-function createLinePage(props: CreateLinePageProps): CreditLinePage {
-  const {
-    tokenAllowancesMap,
-    lineData,
-    lineAllowancesMap,
-    positions,
-    // userLinesMetadataMap,
-  } = props;
-  const lineAddress = lineData.id;
-  const currentAllowance = tokenAllowancesMap[lineAddress] ?? '0';
-
-  console.log('get lines category res: ', lineAddress, lineData);
-  const { start, end, status, borrower, credits, spigot, escrow } = lineData;
-
-  // derivative or aggregated data we need to compute and store while mapping position data
-
-  // position id and APY
-  const highestApy: [string, string, number] = ['', '', 0];
-  const activeIds: string[] = [];
-  // aggregated revenue in USD by token across all spigots
-  const tokenRevenue: { [key: string]: number } = {};
-  const principal = 0;
-  const interest = 0;
-  //  all recent Spigot and Escrow events
-  let collateralEvents: CollateralEvent[] = [];
-  //  all recent borrow/lend events
-  let creditEvents: CreditLineEvents[] = [];
-
-  const formattedCredits = credits?.reduce((obj: any, c: any) => {
-    const {
-      deposit,
-      drawnRate,
-      id,
-      lender,
-      events: graphEvents,
-      principal,
-      interestAccrued,
-      interestRepaid,
-      token,
-    } = c;
-    activeIds.push(id);
-    // const currentPrice = await fetchTokenPrice(symbol, Date.now())
-    const currentPrice = 1e8;
-    const events = formatCreditEvents(c.token.symbol, currentPrice, graphEvents);
-    creditEvents.concat(events);
-    return {
-      ...obj,
-      [id]: {
-        id,
-        lender,
-        deposit,
-        drawnRate,
-        principal,
-        interestAccrued,
-        interestRepaid,
-        token: { symbol: token.symbol, lastPriceUSD: currentPrice },
-        events,
-      },
-    };
-  }, {});
-  const formattedSpigotsData = spigot?.spigots?.reduce((obj: any, s: any): { [key: string]: Spigot } => {
-    const {
-      id,
-      token: { symbol, lastPriceUSD },
-      active,
-      contract,
-      startTime,
-      events,
-    } = s;
-    collateralEvents = [
-      ...collateralEvents,
-      ...formatCollateralEvents(SPIGOT_MODULE_NAME, symbol, lastPriceUSD, events, tokenRevenue)[1],
-    ];
-    return { ...obj, [id]: { active, contract, symbol, startTime, lastPriceUSD } };
-  }, {});
-  const formattedEscrowData = escrow?.deposits?.reduce((obj: any, d: any) => {
-    const {
-      id,
-      amount,
-      enabled,
-      token: { symbol },
-      events,
-    } = d;
-    // TODO promise.all token price fetching for better performance
-    // const currentUsdPrice = await fetchTokenPrice(symbol, Datre.now());
-    const currentUsdPrice = 1e8;
-    formatCollateralEvents(ESCROW_MODULE_NAME, symbol, currentUsdPrice, events); // normalize and save events
-    return { ...obj, [id]: { symbol, currentUsdPrice, amount, enabled } };
-  }, {});
-
-  const pageData: CreditLinePage = {
-    // metadata
-    id: lineAddress,
-    start,
-    end,
-    status: mapStatusToString(status),
-    borrower,
-    // debt data
-    principal,
-    interest,
-    highestApy,
-    tokenRevenue,
-    activeIds,
-    // all recent events
-    collateralEvents,
-    creditEvents,
-
-    credits: formattedCredits,
-    // collateral data
-    spigot: !spigot?.active ? undefined : { spigots: formattedSpigotsData },
-    escrow: !escrow?.deposits?.length ? undefined : { deposits: formattedEscrowData },
-  };
-
-  return pageData;
-}
-
 export const LinesSelectors = {
   selectLinesState,
   selectLinesMap,
   selectLines,
   selectLiveLines,
   selectLinesForCategories,
+  selectSelectedLinePage,
   // selectDeprecatedLines,
   selectUserLinesPositionsMap,
   selectUserTokensMap,
@@ -331,7 +199,7 @@ export const LinesSelectors = {
   selectLinesGeneralStatus,
   selectSelectedLine,
   selectSelectedLineActionsStatusMap,
-  selectDepositedLines,
+  // selectDepositedLines,
   selectSummaryData,
   selectRecommendations,
   selectLinesStatus,

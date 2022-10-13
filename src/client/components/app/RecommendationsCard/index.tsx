@@ -1,7 +1,9 @@
 import styled from 'styled-components';
+import _ from 'lodash';
 
-import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@components/common';
+import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon, Link } from '@components/common';
 import { TokenIcon } from '@components/app';
+import { useAppTranslation } from '@hooks';
 
 const TokenListIconSize = '1rem';
 
@@ -97,16 +99,14 @@ const TopIcon = styled.div`
 `;
 
 const Divider = styled.div`
-  height: 3rem;
+  height: ${({ theme }) => theme.spacing.md};
 `;
 
 const ItemTag = styled.span`
-  background-color: black;
   border-radius: 10%;
   height: 2rem;
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem;
   margin-right: ${({ theme }) => theme.layoutPadding};
   user-select: none;
 `;
@@ -137,6 +137,11 @@ interface Item {
   icon: string;
   name: string;
   info: string;
+  principal: any;
+  deposit: any;
+  collateral: string;
+  revenue: string;
+  tags?: string[];
   infoDetail?: string;
   action?: string;
   onAction?: () => void;
@@ -149,10 +154,12 @@ interface RecommendationsProps {
 }
 
 export const RecommendationsCard = ({ header, subHeader, items, ...props }: RecommendationsProps) => {
+  const { t } = useAppTranslation(['common']);
+
   if (items.length === 0) {
     return null;
   }
-
+  // todo handle loading of principal/deposit vals with spinner or something
   return (
     <ContainerCard {...props}>
       <CardHeader header={header} subHeader={subHeader} />
@@ -167,17 +174,31 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
             </TopIcon>
 
             <ItemInfo>
-              <ItemName>{item.name}</ItemName>
-              <ItemInfoLabel>{item.info}</ItemInfoLabel>
-              <TagContainer>
-                {['escrow', 'spigot', 'DAI', 'DeFi'].map((t) => (
-                  <ItemTag> {t} </ItemTag>
-                ))}
-              </TagContainer>
+              <ItemName>
+                {' '}
+                {t('components.line-card.borrower')}: {item.name}
+              </ItemName>
               <Divider />
-              <Metric>300000 / 32313131</Metric>
+              <Metric>
+                ${item.principal.toString()} / ${item.deposit.toString()}
+              </Metric>
               <MetricsTextContainer>
-                <MetricsText>collateral value / outstanding debt </MetricsText>
+                <MetricsText>
+                  {' '}
+                  {t('components.line-card.total-debt')} / {t('components.line-card.total-credit')}{' '}
+                </MetricsText>
+              </MetricsTextContainer>
+              <Divider />
+
+              <ItemInfoLabel>{t('components.line-card.secured-by')}:</ItemInfoLabel>
+              <Metric>
+                ${item.collateral.toString()} / ${item.revenue.toString()}
+              </Metric>
+              <MetricsTextContainer>
+                <MetricsText>
+                  {' '}
+                  {t('components.line-card.collateral')} / {t('components.line-card.revenue')}{' '}
+                </MetricsText>
               </MetricsTextContainer>
             </ItemInfo>
             {item.onAction && <TokenListIcon Component={ChevronRightIcon} />}

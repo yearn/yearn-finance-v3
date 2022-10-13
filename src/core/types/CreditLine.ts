@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import { StringLiteral } from 'typescript';
 
 import { Address } from './Blockchain';
 import { Status } from './Status';
@@ -27,73 +27,68 @@ export type LineStatusTypes =
 export interface BaseCreditLine {
   id: Address;
   type?: string;
-  status: LineStatusTypes;
-  borrower: Address;
-
-  principal?: number;
-  activeIds: string[]; // ids for all open positions
-}
-
-export interface CreditLine extends BaseCreditLine {
-  // TODO: beef up this type so it has everything we need for homepage cards
-  // TODO: replace BaseCreditLine with CreditLine in State.CreditLine and actinos/selectors
-  id: Address;
-  end: number;
   start: number;
-  type?: string;
+  end: number;
   status: LineStatusTypes;
   borrower: Address;
-
-  principal?: number;
-  activeIds: string[];
-
+  credits?: { [key: string]: BaseCreditPosition };
   escrow?: { id: Address };
   spigot?: { id: Address };
 }
 
-export interface CreditLinePage extends BaseCreditLine {
-  id: Address;
-  end: number;
-  start: number;
-  type?: string;
-  status: LineStatusTypes;
-  borrower: Address;
-
+export interface AggregatedCreditLine extends BaseCreditLine {
   // real-time aggregate usd value across all credits
-  principal?: number;
-  interest?: number;
-  // id, symbol, APY (4 decimals
-  highestApy: [string, string, number];
-  // aggregated revenue in USD by token across all spigots
-  tokenRevenue: { [key: string]: number };
+  principal: string; // | Promise<string>;
+  deposit: string; // | Promise<string>;
+  // id, symbol, APY (4 decimals)
+  highestApy: [string, string, string];
 
-  // subgraph id -> depsoit/spigot
-  activeIds: string[];
+  credits?: { [key: string]: BaseCreditPosition };
+
+  escrow?: AggregatedEscrow;
+  spigot?: AggregatedSpigot;
+}
+
+export interface CreditLinePage extends AggregatedCreditLine {
+  // total value of asssets repaid *AT TIME OF REPAYMENT*
+  interest: string; // | Promise<string>;
+  totalInterestRepaid: string; // | Promise<string>;
+
   credits?: { [key: string]: LinePageCreditPosition };
-  escrow?: { [key: string]: Escrow };
-  spigot?: {
-    spigots?: { [key: string]: Spigot };
-  };
 
   collateralEvents: CollateralEvent[];
-  creditEvents: CreditLineEvents[];
+  creditEvents: CreditEvent[];
+}
+
+// data that isnt included in AggregatedCreditLine that we need to fetch for full CreditLinePage dattype
+// gets merged into existing AggregatedCredit to form LinePageData
+export interface CreditLinePageAuxData {
+  credits: {
+    [id: string]: {
+      dRate: string;
+      token: Address;
+    };
+  }[];
+  collateralEvents: CollateralEvent[];
+  creditEvents: CreditEvent[];
 }
 
 // TODO consolidate Credit and BaseCreditPosition and resolve type conflicts across codebase
 export interface BaseCreditPosition {
   id: string;
   lender: Address;
-  principal: number;
-  interestAccrued: number;
-  interestRepaid: number;
-  events?: CreditLineEvents[];
+  token: Address;
+  principal: string;
+  interestAccrued: string;
+  interestRepaid: string;
 }
+
 export interface Credit {
-  deposit: BigNumber;
-  principal: BigNumber;
-  interestAccrued: BigNumber;
-  interestRepaid: BigNumber;
-  decimals: BigNumber;
+  deposit: string;
+  principal: string;
+  interestAccrued: string;
+  interestRepaid: string;
+  decimals: string;
   token: Address;
   lender: Address;
 }
@@ -101,15 +96,14 @@ export interface Credit {
 export interface LinePageCreditPosition extends BaseCreditPosition {
   id: string;
   lender: Address;
-  deposit: number;
-  principal: number;
-  interestAccrued: number;
-  interestRepaid: number;
-  drawnRate: number;
-  token: {
-    symbol: string;
-    lastPriceUSD?: number; // Can be live data or from subgraph
-  };
+  deposit: string;
+  principal: string;
+  interestAccrued: string;
+  interestRepaid: string;
+  totalInterestRepaid: string;
+  dRate: string;
+  token: Address;
+  // events?: CreditEvent[];
 }
 
 // bare minimum to display about a user on a position
@@ -123,9 +117,9 @@ export const ARBITER_POSITION_ROLE: ArbiterRole = 'arbiter';
 type PositionRole = LenderRole | BorrowerRole | ArbiterRole;
 
 export interface UserPositionMetadata {
-  role: PositionRole;
-  amount: number; // principal/deposit
-  available: number; // borrowerable/withdrawable
+  role: PositionRole; // borrower/lender/arbiter
+  amount: string; // principal/deposit/collateral
+  available: string; // borrowable/withdrawable/liquidatable
 }
 
 export interface PositionSummary {
@@ -134,70 +128,50 @@ export interface PositionSummary {
   lender: Address;
   token: Address;
   line: Address;
-  deposit: number;
-  principal: number;
-  drate: number;
-  frate: number;
+  deposit: string;
+  principal: string;
+  drate: string;
+  frate: string;
 }
 
-export interface UserPositionSummary extends PositionSummary, UserPositionMetadata {
-  id: string;
-  borrower: Address;
-  lender: Address;
-  line: Address;
-  token: Address;
-  drate: number;
-  frate: number;
-  // if connected wallet is lender/borrower
-  role: PositionRole;
-  amount: number; // principal/deposit
-  available: number; // borrowerable/withdrawable
-}
+export interface UserPositionSummary extends PositionSummary, UserPositionMetadata {}
 
 // Collateral Module Types
 export interface Collateral {
   token: Address;
-  amount: number;
-  value: number;
+  amount: string;
+  value: string;
 }
 
 export interface BaseEscrow {
   id: Address;
-  cratio: number;
-  minCRatio: number;
-  collateralValue: number;
+  cratio: string;
+  minCRatio: string;
+  collateralValue: string;
 }
 
-export interface Escrow extends BaseEscrow {
+export interface AggregatedEscrow extends BaseEscrow {
   id: Address;
-  cratio: number;
-  minCRatio: number;
-  collateralValue: number;
+  cratio: string;
+  minCRatio: string;
+  collateralValue: string;
   deposits?: {
-    amount: number;
-    enabled: boolean;
-    token: BaseToken;
-  }[];
-  events?: {
-    __typename: string;
-    timestamp: number;
-    amount?: number;
-    value?: number;
-  }[];
+    [token: string]: {
+      amount: string;
+      enabled: boolean;
+      token: Address;
+    };
+  };
 }
 
-export interface Spigot {
-  startTime: string;
-  active: boolean;
-  token: BaseToken;
-  spigots?: RevenueContract[];
+export interface AggregatedSpigot {
+  id: Address;
+  // aggregated revenue in USD by token across all spigots
+  tokenRevenue: { [key: string]: string }; // TODO:  tuple it (revenue, totalTime) 2023Q2
 }
 
-export interface LinePageSpigot {
-  startTime: string;
-  active: boolean;
-  // aggregate token revenue accross all spigots
-  spigots?: RevenueContract[];
+export interface LinePageSpigot extends AggregatedSpigot {
+  spigots?: { [address: string]: RevenueContract };
 }
 
 export interface RevenueContract {
@@ -205,17 +179,9 @@ export interface RevenueContract {
   contract: Address;
   startTime: number;
   ownerSplit: number;
-  token: BaseToken;
+  token: Address;
 
   events?: SpigotEvents[];
-}
-
-export interface BaseToken {
-  id: Address;
-  name: string;
-  symbol: string;
-  decimals: number;
-  lastPriceUSD?: number;
 }
 
 type SPIGOT_NAME = 'spigot';
@@ -245,7 +211,6 @@ export interface EventWithValue {
   __typename?: string;
   timestamp: number;
   amount?: number;
-  symbol: string;
   value?: number;
   valueNow?: number;
   [key: string]: any;
@@ -254,10 +219,11 @@ export interface EventWithValue {
 // Credit Events
 export interface CreditEvent extends EventWithValue {
   __typename: string;
-  id: string; // position id
+  id: string;
+  positionId: string; // position id
+  token?: string;
   timestamp: number;
   amount: number;
-  symbol: string;
   valueAtTime?: number;
   valueNow?: number;
 }
@@ -266,18 +232,16 @@ export interface SetRateEvent {
   __typename: string;
   id: string; // position id
   timestamp: number;
-  drawnRate: number;
-  facilityRate: number;
+  dRate: number;
+  fRate: number;
 }
-
-export type CreditLineEvents = CreditEvent | SetRateEvent;
 
 // Collateral Events
 export interface CollateralEvent extends EventWithValue {
   type: ModuleNames;
+  id: Address; // token earned as revenue or used as collateral
   timestamp: number;
   amount: number;
-  symbol: string;
   value?: number;
 }
 
@@ -303,4 +267,15 @@ export interface LineActionsStatusMap {
 export interface UserLineMetadataStatusMap {
   getUserLinePositions: Status;
   linesActionsStatusMap: { [lineAddress: string]: LineActionsStatusMap };
+}
+
+// Transaction data
+
+export interface DeploySecuredLineTxData {
+  oracle: Address;
+  arbiter: Address;
+  factoryAddress: Address;
+  swapTarget: Address;
+  borrower: Address;
+  ttl: number;
 }

@@ -13,6 +13,7 @@ import { AlertsActions } from '../alerts/alerts.actions';
 import { NetworkActions } from '../network/network.actions';
 import { PartnerActions } from '../partner/partner.actions';
 import { SettingsActions } from '../settings/settings.actions';
+import { LinesActions } from '../lines/lines.actions';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Setters                                  */
@@ -73,8 +74,7 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
   async ({ route, addresses }, { dispatch }) => {
     switch (route) {
       case 'portfolio':
-        await dispatch(VaultsActions.initiateSaveVaults());
-        // await Promise.all([dispatch(VaultsActions.initiateSaveVaults()), dispatch(LabsActions.initiateLabs())]);
+        // TODO await dispatch(LinesActions.getUserPositions()
         break;
       case 'vaults':
         await dispatch(VaultsActions.initiateSaveVaults());
@@ -87,8 +87,9 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
             dispatch(VaultsActions.getVaults({ addresses: [vault.metadata.migrationTargetVault] }));
         });
         break;
+      case 'market':
       default:
-      case 'market': // TODO: our new routets - e.g. market
+        // TODO LinesActions.getHomepageData()
         await dispatch(VaultsActions.initiateSaveVaults());
         break;
     }
@@ -107,6 +108,7 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
     dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
     switch (route) {
       case 'portfolio':
+        // TODO LinesActions.getUserPositions
         dispatch(VaultsActions.getUserVaultsSummary());
         // dispatch(LabsActions.getUserLabsPositions({}));
         break;

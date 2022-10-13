@@ -7,10 +7,8 @@ import { gql } from '@apollo/client';
 const TOKEN_FRAGMENT = gql`
   fragment TokenFrag on Token {
     id
-    name
     symbol
     decimals
-    lastPriceUSD
   }
 `;
 
@@ -29,78 +27,60 @@ const BASE_LINE_FRAGMENT = gql`
   }
 `;
 
+const BASE_CREDIT_FRAGMENT = gql`
+  fragment BaseCreditFrag on Credit {
+    id
+    principal
+    deposit
+    dRate
+    token {
+      id
+    }
+  }
+`;
+
 const LINE_PAGE_CREDIT_FRAGMENT = gql`
   fragment LinePageCreditFrag on Credit {
-    lender
+    id
+    lender {
+      id
+    }
     deposit
     principal
     interestRepaid
     interestAccrued
-    drawnRate
+    dRate
+    fRate
     token {
-      symbol
+      id
     }
   }
 `;
 
 // lewv = line event with value
 const CREDIT_EVENT_FRAGMENT = gql`
-  fragment lewv on LineEvent {
-    amount
-    value
-  }
-  fragment LineEventFrag on LineEvent {
+  fragment LineEventFrag on LineEventWithValue {
+    id
     __typename
     timestamp
     credit {
       id
+      token {
+        id
+      }
     }
-    ... on BorrowEvent {
-      ...lewv
-    }
-    ... on DefaultEvent {
-      ...lewv
-    }
-    ... on LiquidateEvent {
-      ...lewv
-    }
-    ... on RepayInterestEvent {
-      ...lewv
-    }
-    ... on AddCollateralEvent {
-      ...lewv
-    }
-    ... on RepayPrincipalEvent {
-      ...lewv
-    }
-    ... on WithdrawProfitEvent {
-      ...lewv
-    }
-    ... on WithdrawDepositEvent {
-      ...lewv
-    }
-    ... on InterestAccruedEvent {
-      ...lewv
-    }
-    ... on RemoveCollateralEvent {
-      ...lewv
-    }
-    ... on SetRatesEvent {
-      drawnRate
-      facilityRate
-    }
+    amount
+    value
   }
 `;
 
 // Spigot Frags
 const BASE_SPIGOT_FRAGMENT = gql`
+  ${TOKEN_FRAGMENT}
   fragment BaseSpigotFrag on Spigot {
     active
     contract
     startTime
-    token {
-      symbol
-    }
   }
 `;
 
@@ -110,8 +90,7 @@ const SPIGOT_EVENT_FRAGMENT = gql`
       __typename
       timestamp
       revenueToken {
-        symbol
-        lastPriceUSD
+        id
       }
       escrowed
       netIncome
@@ -123,10 +102,17 @@ const SPIGOT_EVENT_FRAGMENT = gql`
 // Escrow Frags
 
 const ESCROW_FRAGMENT = gql`
+  ${TOKEN_FRAGMENT}
   fragment EscrowFrag on Escrow {
-    cratio
+    id
     minCRatio
-    collateralValue
+    deposits {
+      amount
+      enabled
+      token {
+        ...TokenFrag
+      }
+    }
   }
 `;
 
@@ -191,37 +177,47 @@ export const GET_LINE_PAGE_QUERY = gql`
   ${LINE_PAGE_CREDIT_FRAGMENT}
 
   query getLinePage($id: ID!) {
-    lineOfCredits(id: $id) {
+    lineOfCredit(id: $id) {
       ...BaseLineFrag
 
-      credits {
+      lines {
         ...LinePageCreditFrag
-        events(first: 5) {
-          ...LineEventFrag
-        }
+      }
+      events(first: 20) {
+        ...LineEventFrag
       }
 
       escrow {
         ...EscrowFrag
-        deposits {
-          timestamp
-          amount
-          enabled
-          token {
-            ...TokenFrag
-          }
-        }
-        events(first: 3) {
-          ...EscrowEventFrag
-        }
       }
 
-      spigotController {
+      spigot {
+        id
         spigots {
           ...BaseSpigotFrag
-          events(first: 3) {
-            ...SpigotEventFrag
-          }
+        }
+        events(first: 20) {
+          ...SpigotEventFrag
+        }
+      }
+    }
+  }
+`;
+
+export const GET_LINE_PAGE_AUX_QUERY = gql`
+  query getLinePageAux($id: ID) {
+    lineOfCredit(id: $id) {
+      lines {
+        dRate
+      }
+
+      events(first: 20) {
+        ...LineEventFrag
+      }
+
+      spigot {
+        events(first: 20) {
+          ...SpigotEventFrag
         }
       }
     }
@@ -230,25 +226,52 @@ export const GET_LINE_PAGE_QUERY = gql`
 
 export const GET_LINES_QUERY = gql`
   ${BASE_LINE_FRAGMENT}
+  ${BASE_CREDIT_FRAGMENT}
+  ${ESCROW_FRAGMENT}
+  ${TOKEN_FRAGMENT}
 
   query getLines($first: Int, $orderBy: String, $orderDirection: String) {
     lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
       ...BaseLineFrag
+      credits: lines {
+        ...BaseCreditFrag
+      }
       escrow {
-        id
-        collateralValue
+        ...EscrowFrag
       }
       spigot {
         id
+        summaries {
+          token {
+            ...TokenFrag
+          }
+          totalVolumeUsd
+          timeOfFirstIncome
+          timeOfLastIncome
+        }
       }
     }
   }
 `;
 
+// TODO
+// export const GET_HOMEPAGE_LINES_QUERY = gql`
+//   ${BASE_LINE_FRAGMENT}
+//   ${BASE_CREDIT_FRAGMENT}
+
+//   query getHomepageLines() {
+//     newest: lineOfCredits(first: 5, orderBy: start, orderDirection: desc) {
+//       ...BaseLineFrag
+//     }
+//   }
+// `;
+
 export const GET_SPIGOT_QUERY = gql`
   ${BASE_SPIGOT_FRAGMENT}
 
   query getSpigot($id: ID!) {
-    ...BaseSpigotFrag
+    spigotController(id: $id) {
+      ...BaseSpigotFrag
+    }
   }
 `;

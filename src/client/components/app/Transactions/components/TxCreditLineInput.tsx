@@ -6,7 +6,7 @@ import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
 import { Text, Icon, Button, SearchList, LogoIcon, ZapIcon, SearchListItem } from '@components/common';
 import { formatUsd, humanize } from '@utils';
-import { CreditLine } from '@src/core/types';
+import { AggregatedCreditLine } from '@src/core/types';
 
 const MaxButton = styled(Button)`
   border-radius: ${({ theme }) => theme.globalRadius};
@@ -257,9 +257,9 @@ export interface TxCreditLineInputProps {
   headerText?: string;
   inputText?: string;
   inputError?: boolean;
-  selectedCredit: CreditLine;
+  selectedCredit: AggregatedCreditLine;
   onSelectedCreditLineChange?: (address: string) => void;
-  creditOptions?: CreditLine[];
+  creditOptions?: AggregatedCreditLine[];
   readOnly?: boolean;
   loading?: boolean;
   loadingText?: string;
@@ -343,7 +343,7 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
           </CreditLineSelector>
           <CreditLineData>
             <AmountTitle> Borrower Name / ENS </AmountTitle>
-            <AmountTitle> {selectedCredit?.borrower || `0xDebf...1dao`}</AmountTitle>
+            <AmountTitle> {selectedCredit.id || `0xDebf...1dao`}</AmountTitle>
           </CreditLineData>
         </CreditLineInfo>
       </>

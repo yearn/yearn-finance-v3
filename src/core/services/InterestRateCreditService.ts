@@ -1,6 +1,4 @@
-import { BigNumber, ethers, PopulatedTransaction, ContractFunction } from 'ethers';
-import { BytesLike } from '@ethersproject/bytes/src.ts';
-import { keccak256 } from 'ethers/lib/utils';
+import { BigNumber, ContractFunction } from 'ethers';
 
 import {
   InterestRateCreditService,
@@ -10,11 +8,7 @@ import {
   Config,
   InterestRateAccrueInterestProps,
   Address,
-  TransactionResponse,
-  STATUS,
-  ExecuteTransactionProps,
 } from '@types';
-import { getConfig } from '@config';
 import { InterestRateCreditABI } from '@services/contracts';
 import { getContract } from '@frameworks/ethers';
 

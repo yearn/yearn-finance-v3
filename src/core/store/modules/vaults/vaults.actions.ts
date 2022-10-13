@@ -84,7 +84,7 @@ const getUserVaultsPositions = createAsyncThunk<
   const { services } = extra;
   const userAddress = wallet.selectedAddress;
   if (!userAddress) {
-    throw new Error('WALLET NOT CONNECTED');
+    throw new Error('WALLET NOT ED');
   }
   const userVaultsPositions = await services.vaultService.getUserVaultsPositions({
     network: network.current,

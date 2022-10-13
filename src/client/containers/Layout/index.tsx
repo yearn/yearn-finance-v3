@@ -191,7 +191,7 @@ export const Layout: FC = ({ children }) => {
 
       <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
         <Navbar
-          title={t(`navigation.${path}`)}
+          title={t(`pages.${path}`)}
           titleLink={titleLink}
           subTitle={vaultName}
           walletAddress={selectedAddress}

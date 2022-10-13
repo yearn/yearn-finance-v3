@@ -53,4 +53,9 @@ export interface Constants {
   DUST_AMOUNT_USD: string;
   ASSETS_ICON_URL: string;
   // ZAPPER_AUTH_TOKEN: string;
+  Arbiter_GOERLI: Address;
+  Oracle_GOERLI: Address;
+  SwapTarget_GOERLI: Address;
+  LineFactory_GOERLI: Address;
+  SecuredLine_GOERLI: Address;
 }

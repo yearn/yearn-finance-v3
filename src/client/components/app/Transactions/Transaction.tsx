@@ -100,7 +100,11 @@ export const Transaction: FC<TransactionProps> = (props) => {
   if (transactionCompleted) {
     return (
       <StyledTransaction onClose={onClose} header={transactionLabel}>
-        <TxStatus transactionCompletedLabel={transactionCompletedLabel} exit={onTransactionCompletedDismissed} />
+        <TxStatus
+          success={1}
+          transactionCompletedLabel={transactionCompletedLabel}
+          exit={onTransactionCompletedDismissed}
+        />
       </StyledTransaction>
     );
   }

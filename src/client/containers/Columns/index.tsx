@@ -14,7 +14,6 @@ const StyledLayout = styled.div`
   overflow: scroll;
 
   flex: 1;
-  padding: ${({ theme }) => theme.card.padding};
 
   @media ${device.tablet} {
     grid-template-columns: 1fr;

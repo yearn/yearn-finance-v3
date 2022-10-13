@@ -36,6 +36,14 @@
       "lender": "Lender",
       "arbiter": "arbiter"
     },
+    "line-card": {
+      "borrower": "Borrower",
+      "secured-by": "Secured By",
+      "total-debt": "Outstanding Debt",
+      "total-credit": "Total Credit",
+      "collateral": "Collateral",
+      "revenue": "Spigoted Revenue"
+    },
     "no-wallet": "Wallet not connected",
     "recent-recommendations": {
       "header": "Recent Offers"
@@ -64,6 +72,7 @@
       "approve": "Approve",
       "available-borrow": "Available to borrow",
       "borrow": "Borrow",
+      "deposit-and-repay-header": "deposit and repay",
       "borrow-limit": {
         "borrow-apy": "Borrow APY",
         "borrowing": "Borrowing",
@@ -90,7 +99,8 @@
         "done": "Done",
         "exit": "Exit",
         "simulating": "Simulating...",
-        "transaction-completed": "Transaction completed"
+        "transaction-completed": "Transaction completed",
+        "transaction-failed": "Transaction failed"
       },
       "supply": "Supply",
       "to-gauge": "To gauge",
@@ -123,6 +133,21 @@
         "header": "Liquidate Borrowers",
         "select-credit": "1. Select a borrower to liquidate",
         "select-token": "2. Select token and amount"
+      },
+      "deploy-line": {
+        "header": "Deploy Credit Line",
+        "select-borrower": "1. Select a borrower for the line",
+        "select-ttl": "2. Select a deadline for the line",
+        "time-to-live": "Time this line will remain active for (in days):"
+      },
+      "borrow-credit": {
+        "header": "Borrow Credit",
+        "select-line": "1. Select a borrower for the line",
+        "select-amount": "2. Select amount to borrow"
+      },
+      "deposit-and-repay": {
+        "header": "Deposit and repay",
+        "select-amount": "1. Select amount to repay"
       }
     }
   },
@@ -178,7 +203,17 @@
     "discord": "Discord",
     "docs": "Docs",
     "market": "Market",
+    "lines": "Line Of Credit",
     "portfolio": "Portfolio",
+    "settings": "Settings",
+    "vault": "Vaults",
+    "vaults": "Vaults",
+    "wallet": "Wallet"
+  },
+  "pages": {
+    "market": "Debt DAO Credit Market",
+    "lines": "Line Of Credit",
+    "portfolio": "Credit Investment Portfolio",
     "settings": "Settings",
     "vault": "Vaults",
     "vaults": "Vaults",

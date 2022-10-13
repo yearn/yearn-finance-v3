@@ -2,16 +2,9 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { BigNumber } from 'ethers';
+import { utils } from 'ethers';
 
-import {
-  useAppSelector,
-  useAppDispatch,
-  useIsMounting,
-  useAppTranslation,
-  useQueryParams,
-  useCreditLines,
-} from '@hooks';
+import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation, useQueryParams } from '@hooks';
 import {
   ModalsActions,
   ModalSelectors,
@@ -50,7 +43,7 @@ import {
   filterData,
 } from '@utils';
 import { getConfig } from '@config';
-import { CreditLine, VaultView, UseCreditLinesParams, GetLinesArgs, AddCreditProps } from '@src/core/types';
+import { AggregatedCreditLine, VaultView, UseCreditLinesParams, GetLinesArgs, AddCreditProps } from '@src/core/types';
 import { GoblinTown } from '@assets/images';
 
 const StyledHelperCursor = styled.span`
@@ -62,6 +55,12 @@ const StyledRecommendationsCard = styled(RecommendationsCard)``;
 const StyledSliderCard = styled(SliderCard)`
   width: 100%;
   min-height: 24rem;
+`;
+
+const DeployLineButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
 `;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
@@ -197,22 +196,23 @@ export const Market = () => {
   const depositsLoading = generalLoading && !deposits.length;
   // TODO not neeed here
   const addCreditStatus = useAppSelector(LinesSelectors.selectLinesActionsStatusMap);
+
   const defaultLineCategories: UseCreditLinesParams = {
     // using i18m translation as keys for easy display
-    'pages.market.highest-credit': {
-      first: 5,
+    'market:featured.highest-credit': {
+      first: 3,
       // NOTE: terrible proxy for total credit (oldest = most). Currently getLines only allows filtering by line metadata not modules'
       orderBy: 'start',
       orderDirection: 'asc',
     },
-    'pages.market.highest-spigot': {
-      first: 5,
+    'market:featured.highest-revenue': {
+      first: 3,
       // NOTE: terrible proxy for total revenue earned (highest % = highest notional). Currently getLines only allows filtering by line metadata not modules'
       orderBy: 'defaultSplit',
       orderDirection: 'desc',
     },
-    'pages.market.newest': {
-      first: 5,
+    'market:featured.newest': {
+      first: 3,
       orderBy: 'start', // NOTE: theoretically gets lines that start in the future, will have to refine query
       orderDirection: 'desc',
     },
@@ -220,7 +220,8 @@ export const Market = () => {
   const fetchMarketData = () => dispatch(LinesActions.getLines(defaultLineCategories));
   const lineCategoriesForDisplay = useAppSelector(LinesSelectors.selectLinesForCategories);
   const getLinesStatus = useAppSelector(LinesSelectors.selectLinesStatusMap).getLines;
-  console.log('ready', getLinesStatus || _.isEmpty(lineCategoriesForDisplay));
+  const [didFetchLines, setLinesFetched] = useState(false);
+  console.log('ready', lineCategoriesForDisplay, getLinesStatus);
 
   useEffect(() => {
     setSearch(queryParams.search ?? '');
@@ -245,9 +246,9 @@ export const Market = () => {
 
   const dispatchAddCredit = () => {
     const params: AddCreditProps = {
-      drate: 0,
-      frate: 0,
-      amount: BigNumber.from(0),
+      drate: utils.parseUnits('0', 'ether'),
+      frate: utils.parseUnits('0', 'ether'),
+      amount: utils.parseUnits('0', 'ether'),
       token: '',
       lender: '',
       lineAddress: '',
@@ -264,6 +265,11 @@ export const Market = () => {
   const depositHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
+  };
+
+  const createLineHandler = (vaultAddress: string) => {
+    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+    dispatch(ModalsActions.openModal({ modalName: 'createLine' }));
   };
 
   const withdrawHandler = (vaultAddress: string) => {
@@ -292,12 +298,11 @@ export const Market = () => {
 
   return (
     <ViewContainer>
-      <Button onClick={dispatchAddCredit}>Add Credit</Button>
-      {/* {addCreditStatus.loading === true && (
+      {addCreditStatus.loading && (
         <div>
           <p>.... loading......</p>
         </div>
-      )} */}
+      )}
       {addCreditStatus.error && (
         <div>
           <p>.... ERROR: {addCreditStatus.error}</p>
@@ -306,9 +311,17 @@ export const Market = () => {
       <StyledSliderCard
         header={t('vaults:banner.header')}
         Component={
-          <Text>
-            <p>{t('vaults:banner.desc')}</p>
-          </Text>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Text>
+              <p>{t('vaults:banner.desc')}</p>
+            </Text>
+            <DeployLineButton onClick={createLineHandler}>Deploy Line</DeployLineButton>
+          </div>
         }
         background={<img src={GoblinTown} alt={'Goblin town or the Citadel?'} />}
       />
@@ -321,45 +334,35 @@ export const Market = () => {
       {getLinesStatus.loading || _.isEmpty(lineCategoriesForDisplay) ? (
         <SpinnerLoading flex="1" width="100%" />
       ) : (
-        Object.entries(lineCategoriesForDisplay!).map(([key, val]: [string, CreditLine[]]) => (
-          <StyledRecommendationsCard
-            header={t(key)}
-            key={key}
-            items={lineCategoriesForDisplay[key].map(({ borrower, spigot, escrow }) => ({
-              icon: '',
-              name: borrower,
-              info: `spigot: ${spigot?.id} & escrow: ${escrow?.id} `,
-              infoDetail: 'EYY',
-              onAction: () => history.push(`/lines/${borrower}`),
-            }))}
-          />
-        ))
+        Object.entries(lineCategoriesForDisplay!).map(([key, val]: [string, AggregatedCreditLine[]], i: number) => {
+          return (
+            <StyledRecommendationsCard
+              header={t(key)}
+              key={key}
+              items={val.map(({ id, borrower, type, spigot, escrow, principal, deposit }) => ({
+                icon: '',
+                name: borrower + id,
+                principal,
+                deposit,
+                collateral: Object.entries(escrow?.deposits || {})
+                  .reduce((sum, [_, val]) => sum.add(val.amount), utils.parseUnits('0', 'ether'))
+                  .toString(),
+                revenue: Object.values(spigot?.tokenRevenue || {})
+                  .reduce((sum, val) => sum.add(val), utils.parseUnits('0', 'ether'))
+                  .toString(),
+                tags: [spigot ? 'revenue' : '', escrow ? 'collateral' : ''].filter((x) => !!x),
+                info: type || 'DAO Line of Credit',
+                infoDetail: 'EYY',
+                onAction: () => history.push(`/lines/${id}`),
+              }))}
+            />
+          );
+        })
       )}
 
+      {/* TODO keep this UI but populate with state.lines.linesMap */}
       {!opportunitiesLoading && (
         <>
-          <StyledRecommendationsCard
-            header={t('components.recent-recommendations.header')}
-            items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
-              icon: displayIcon,
-              name: displayName,
-              info: formatApy(apyData, apyType),
-              infoDetail: 'EYY',
-              onAction: () => history.push(`/vaults/${address}`),
-            }))}
-          />
-
-          <StyledRecommendationsCard
-            header={t('components.popular-recommendations.header')}
-            items={recommendations.map(({ displayName, displayIcon, apyData, apyType, address }) => ({
-              icon: displayIcon,
-              name: displayName,
-              info: formatApy(apyData, apyType),
-              infoDetail: 'EYY',
-              onAction: () => history.push(`/vaults/${address}`),
-            }))}
-          />
-
           {!opportunitiesLoading && (
             <OpportunitiesCard
               header={t('components.list-card.borrower')}
