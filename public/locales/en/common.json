@@ -72,6 +72,7 @@
       "approve": "Approve",
       "available-borrow": "Available to borrow",
       "borrow": "Borrow",
+      "deposit-and-repay-header": "deposit and repay",
       "borrow-limit": {
         "borrow-apy": "Borrow APY",
         "borrowing": "Borrowing",
@@ -137,6 +138,10 @@
         "header": "Borrow Credit",
         "select-line": "1. Select a borrower for the line",
         "select-amount": "2. Select amount to borrow"
+      },
+      "deposit-and-repay": {
+        "header": "Deposit and repay",
+        "select-amount": "1. Select amount to repay"
       }
     }
   },

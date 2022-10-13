@@ -151,7 +151,10 @@ export interface CreditLineService {
   getLinePageAuxData: (props: GetLinePageProps) => Promise<GetLinePageAuxDataResponse | undefined>;
   getUserLinePositions: (...args: any) => Promise<any | undefined>;
   getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;
-
+  depositAndRepay: (
+    props: DepositAndRepayProps,
+    interest: InterestRateCreditService
+  ) => Promise<TransactionResponse | PopulatedTransaction>;
   addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
   borrow: (props: BorrowCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
   // close: (props: CloseProps) => Promise<TransactionResponse>;
@@ -228,7 +231,6 @@ export interface IncreaseCreditProps {
 }
 export interface DepositAndRepayProps {
   lineAddress: string;
-  id: string;
   amount: BigNumber;
 }
 export interface DepositAndCloseProps {

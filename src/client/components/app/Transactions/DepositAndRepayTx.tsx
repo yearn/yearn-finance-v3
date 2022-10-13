@@ -1,6 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { TokenCard } from '@yearn-finance/web-lib';
 import { ethers } from 'ethers';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
@@ -13,12 +12,11 @@ import {
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
+import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions, LinesSelectors, LinesActions } from '@store';
 import { getConstants } from '@src/config/constants';
-import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
-import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
@@ -28,14 +26,19 @@ const StyledTransaction = styled(TxContainer)``;
 
 const StyledAmountInput = styled(TxTTLInput)``;
 
-interface BorrowCreditProps {
+interface DepositAndRepayProps {
   header: string;
   onClose: () => void;
   acceptingOffer: boolean;
   onSelectedCreditLineChange: Function;
   allowVaultSelect: boolean;
-  onPositionChange: (data: { credit?: string; amount?: string }) => void;
+  onPositionChange: (data: { credit?: string; token: string | undefined; amount?: string }) => void;
 }
+
+const {
+  CONTRACT_ADDRESSES: { DAI },
+  MAX_INTEREST_RATE,
+} = getConstants();
 
 const RatesContainer = styled.div`
   display: flex;
@@ -43,7 +46,7 @@ const RatesContainer = styled.div`
   justify-content: space-between;
 `;
 
-export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
+export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
@@ -53,10 +56,47 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const [targetAmount, setTargetAmount] = useState('1');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
+
+  const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
+  const initialToken: string = selectedSellTokenAddress || DAI;
+
+  const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
+    selectedSellTokenAddress: initialToken,
+    selectedVaultOrLab: useAppSelector(VaultsSelectors.selectRecommendations)[0],
+    allowTokenSelect: true,
+  });
+
+  useEffect(() => {
+    console.log('add position tx useEffect token/creditLine', selectedSellToken, initialToken, selectedCredit);
+    if (!selectedSellToken) {
+      dispatch(
+        TokensActions.setSelectedTokenAddress({
+          tokenAddress: sourceAssetOptions[0].address,
+        })
+      );
+    }
+    if (selectedTokenAddress === '' && selectedSellToken) {
+      setSelectedTokenAddress(selectedSellToken.address);
+    }
+
+    if (
+      !selectedCredit ||
+      !selectedSellToken
+      // toBN(targetTokenAmount).lte(0) ||
+      // inputError ||
+    ) {
+      return;
+    }
+
+    dispatch(TokensActions.getTokensDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
+    // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
+  }, [selectedSellToken]);
 
   const _updatePosition = () =>
     onPositionChange({
       credit: selectedCredit?.id,
+      token: selectedSellToken?.address,
       amount: targetAmount,
     });
 
@@ -81,20 +121,20 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
     }
   };
 
-  const borrowCredit = () => {
+  const depositAndRepay = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    if (!selectedCredit?.id || !targetAmount) {
-      console.log('check this', selectedCredit?.id, targetAmount);
+    if (!selectedCredit?.id || !targetAmount || !selectedSellTokenAddress) {
+      console.log('check this', selectedCredit?.id, targetAmount, selectedSellTokenAddress);
       setLoading(false);
       return;
     }
 
     dispatch(
-      LinesActions.borrowCredit({
+      LinesActions.depositAndRepay({
         lineAddress: selectedCredit.id,
+        tokenAddress: selectedSellTokenAddress,
         amount: ethers.utils.parseEther(targetAmount),
-        dryRun: true,
       })
     ).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
@@ -112,8 +152,8 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
 
   const txActions = [
     {
-      label: t('components.transaction.borrow'),
-      onAction: borrowCredit,
+      label: t('components.transaction.deposit-and-repay-header'),
+      onAction: depositAndRepay,
       status: true,
       disabled: !transactionApproved,
       contrast: false,
@@ -121,6 +161,16 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   ];
 
   if (!selectedCredit) return null;
+  if (!selectedSellToken) return null;
+
+  const onSelectedSellTokenChange = (tokenAddress: string) => {
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
+  };
+
+  const targetBalance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
+  const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
+    selectedSellToken.symbol
+  }`;
 
   if (transactionCompleted === 1) {
     return (
@@ -139,7 +189,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
       <StyledTransaction onClose={onClose} header={'transaction'}>
         <TxStatus
           success={transactionCompleted}
-          transactionCompletedLabel={'could not borrow credit'}
+          transactionCompletedLabel={'could not deposit and repay'}
           exit={onTransactionCompletedDismissed}
         />
       </StyledTransaction>
@@ -147,31 +197,21 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   }
 
   return (
-    <StyledTransaction onClose={onClose} header={header || t('components.transaction.borrow')}>
-      <TxCreditLineInput
-        key={'credit-input'}
-        headerText={t('components.transaction.borrow-credit.select-line')}
-        inputText={t('components.transaction.borrow-credit.select-line')}
-        onSelectedCreditLineChange={onSelectedCreditLineChange}
-        selectedCredit={selectedCredit}
-        // creditOptions={sourceCreditOptions}
-        // inputError={!!sourceStatus.error}
-        readOnly={false}
-        // displayGuidance={displaySourceGuidance}
-      />
-      <StyledAmountInput
-        headerText={t('components.transaction.borrow-credit.select-amount')}
-        inputText={t('')}
-        inputError={false}
+    <StyledTransaction onClose={onClose} header={header || t('components.transaction.deposit-and-repay.header')}>
+      <TxTokenInput
+        key={'token-input'}
+        headerText={t('components.transaction.deposit-and-repay.select-amount')}
+        inputText={tokenHeaderText}
         amount={targetAmount}
         onAmountChange={onAmountChange}
-        maxAmount={'0'}
-        maxLabel={'Max'}
-        readOnly={false}
-        hideAmount={false}
-        loading={false}
-        loadingText={''}
-        ttlType={false}
+        amountValue={String(10000000 * Number(targetAmount))}
+        maxAmount={targetBalance}
+        selectedToken={selectedSellToken}
+        onSelectedTokenChange={onSelectedSellTokenChange}
+        tokenOptions={sourceAssetOptions}
+        // inputError={!!sourceStatus.error}
+        readOnly={acceptingOffer}
+        // displayGuidance={displaySourceGuidance}
       />
       <TxActions>
         {txActions.map(({ label, onAction, status, disabled, contrast }) => (

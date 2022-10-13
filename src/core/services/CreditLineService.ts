@@ -162,21 +162,21 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   public async depositAndRepay(
     props: DepositAndRepayProps,
-    interestRateCreditService: InterestRateCreditService
-  ): Promise<string> {
+    interest: InterestRateCreditService
+  ): Promise<TransactionResponse | PopulatedTransaction> {
     try {
       if (!(await this.isBorrowing(props.lineAddress))) {
         throw new Error('Deposit and repay is not possible because not borrowing');
       }
 
       const id = await this.getFirstID(props.lineAddress);
-      const credit = await this.getCredit(props.lineAddress, props.id);
+      const credit = await this.getCredit(props.lineAddress, id);
 
       // check interest accrual
       // note: `accrueInterest` will not be called because it has a modifier that is expecting
       // line of credit to be the msg.sender. We should probably update that modifier since
       // it only does the calculation and doesn't change state.
-      const calcAccrue = await interestRateCreditService.accrueInterest({
+      const calcAccrue = await interest.accrueInterest({
         contractAddress: await this.getInterestRateContract(props.lineAddress),
         id,
         drawnBalance: utils.parseUnits(credit.principal, 'ether'),
@@ -186,7 +186,7 @@ export class CreditLineServiceImpl implements CreditLineService {
       if (unnullify(props.amount, true).gt(unnullify(credit.principal, true).add(simulateAccrue))) {
         throw new Error('Amount is greater than (principal + interest to be accrued). Enter lower amount.');
       }
-
+      //@ts-ignore
       return (<TransactionResponse>(
         await this.executeContractMethod(props.lineAddress, 'depositAndRepay', [props.amount])
       )).hash;
