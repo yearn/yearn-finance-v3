@@ -257,8 +257,8 @@ export interface PartnerState {
 }
 
 export interface VotingEscrowPositionsMap {
-  DEPOSIT: Position;
-  YIELD: Position;
+  DEPOSIT?: Position;
+  YIELD?: Position;
 }
 
 export interface VotingEscrowsState {

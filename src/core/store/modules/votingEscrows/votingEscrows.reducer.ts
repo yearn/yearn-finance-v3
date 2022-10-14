@@ -107,12 +107,17 @@ const votingEscrowsReducer = createReducer(votingEscrowsInitialState, (builder) 
       const requestedAddresses = meta.arg.addresses || [];
       if (!requestedAddresses.length) state.user.userVotingEscrowsPositionsMap = {};
       const positionsMap = positions.reduce((map, position) => {
+        if (!map[position.assetAddress]) map[position.assetAddress] = {};
         map[position.assetAddress][position.typeId as keyof VotingEscrowPositionsMap] = position;
         return map;
       }, {} as Record<string, VotingEscrowPositionsMap>);
       requestedAddresses.forEach((address) => {
-        state.user.userVotingEscrowsPositionsMap[address] = positionsMap[address];
+        state.user.userVotingEscrowsPositionsMap[address] = positionsMap[address] ?? {};
       });
+      state.user.userVotingEscrowsPositionsMap = { ...state.user.userVotingEscrowsPositionsMap, ...positionsMap };
+      if (!requestedAddresses.length && !positions.length) {
+        state.user.userVotingEscrowsPositionsMap = {};
+      }
     })
     .addCase(getUserVotingEscrowsPositions.rejected, (state, { error }) => {
       state.statusMap.user.getUserVotingEscrowsPositions = { error: error.message };
