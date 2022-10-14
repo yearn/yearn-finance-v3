@@ -91,7 +91,7 @@ function createVotingEscrowView({
     decimals: parseInt(votingEscrow.decimals),
     balance: votingEscrow.underlyingTokenBalance.amount,
     balanceUsdc: votingEscrow.underlyingTokenBalance.amountUsdc,
-    unlockDate: userVotingEscrowMetadata?.unlockDate,
+    unlockDate: userVotingEscrowMetadata?.unlockDate ? new Date(userVotingEscrowMetadata?.unlockDate) : undefined,
     earlyExitPenaltyRatio: userVotingEscrowMetadata?.earlyExitPenaltyRatio,
     token: tokenView,
     DEPOSIT: {

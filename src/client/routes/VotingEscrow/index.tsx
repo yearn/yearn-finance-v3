@@ -1,19 +1,39 @@
-// import styled from 'styled-components';
 import { Card } from '@yearn-finance/web-lib';
 
+import { useAppSelector } from '@hooks';
+import { VotingEscrowsSelectors } from '@store';
 import { Box } from '@components/common';
 import { ViewContainer, SummaryCard, Amount } from '@components/app';
 import { LockTab, ExtendLockTab, EarlyExitTab, ClaimUnlockedTab, ClaimRewardsTab, GaugesTab } from '@containers';
+import { humanize } from '@utils';
 
 export const VotingEscrowPage = () => {
+  const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
+
   return (
     <ViewContainer>
       <SummaryCard
         header="Overview"
         items={[
-          { header: 'Total Locked YFI', Component: <Amount value="0" decimals={8} /> },
-          { header: 'Your Locked YFI', Component: <Amount value="0" decimals={8} /> },
-          { header: 'Expiration for the lock', Component: <Amount value="0" showDecimals={false} /> },
+          {
+            header: 'Total Locked YFI',
+            Component: (
+              <Amount value={humanize('amount', votingEscrow?.balance, votingEscrow?.token.decimals, 4)} decimals={8} />
+            ),
+          },
+          {
+            header: 'Your Locked YFI',
+            Component: (
+              <Amount
+                value={humanize('amount', votingEscrow?.DEPOSIT.userDeposited, votingEscrow?.token.decimals, 4)}
+                decimals={8}
+              />
+            ),
+          },
+          {
+            header: 'Expiration for the lock',
+            Component: <div>{votingEscrow?.unlockDate?.toLocaleDateString() ?? '-'}</div>,
+          },
         ]}
         cardSize="small"
       />
