@@ -12,4 +12,6 @@ export type ExternalServiceId = 'zaps' | 'simulations' | 'notifications';
 
 export type YDeepPartial<T> = T extends object ? { [P in keyof T]?: YDeepPartial<T[P]> } : T;
 
-export type Week = number;
+export type Seconds = number;
+export type Milliseconds = number;
+export type Weeks = number;

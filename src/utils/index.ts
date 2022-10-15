@@ -11,4 +11,5 @@ export * from './iframe';
 export * from './language';
 export * from './misc';
 export * from './network';
+export * from './time';
 export * from './validations';

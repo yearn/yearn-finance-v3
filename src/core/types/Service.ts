@@ -27,7 +27,7 @@ import {
   Gauge,
   GaugeDynamic,
   GaugeUserMetadata,
-  Week,
+  Weeks,
 } from '@types';
 
 // *************** USER ***************
@@ -309,7 +309,7 @@ export interface GetVotingEscrowExpectedTransactionOutcomeProps {
   tokenAddress: Address;
   votingEscrowAddress: Address;
   amount?: Wei;
-  time?: Week;
+  time?: Weeks;
 }
 
 export interface GetLockAllowanceProps {
@@ -333,7 +333,7 @@ export interface VotingEscrowLockProps {
   tokenAddress: Address;
   votingEscrowAddress: Address;
   amount: Wei;
-  time: Week;
+  time: Weeks;
 }
 
 export interface IncreaseLockAmountProps {
@@ -347,7 +347,7 @@ export interface ExtendLockTimeProps {
   network: Network;
   accountAddress: Address;
   votingEscrowAddress: Address;
-  time: Week;
+  time: Weeks;
 }
 
 export interface WithdrawLocked {
