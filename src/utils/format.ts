@@ -72,7 +72,7 @@ export const format = (dataType: DataType, amount?: Amount, decimals?: number): 
 
   switch (dataType) {
     case 'amount':
-      if (!decimals) throw new Error('Invalid Decimals to Format Amount');
+      if (decimals === undefined) return amount;
       return formatAmount(amount, decimals);
     case 'percent':
       return formatPercent(amount, decimals);
