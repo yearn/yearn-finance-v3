@@ -4,7 +4,7 @@ import { useAppSelector, useDebounce, useExecuteThunk, useIsMounting } from '@ho
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button, ToggleButton } from '@components/common';
-import { humanize, toBN, toUnit, toWei, validateAllowance, validateAmount } from '@utils';
+import { humanize, toBN, toUnit, toWei, validateAllowance, validateAmount, toWeeks, getTimeUntil } from '@utils';
 
 const MAX_LOCK_TIME = '208'; // Weeks
 
@@ -23,8 +23,13 @@ export const LockTab = () => {
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
+  const hasLockedAmount = toBN(votingEscrow?.DEPOSIT.userDeposited).gt(0);
   const resultAmount =
-    transactionOutcome && votingEscrow ? toUnit(transactionOutcome.targetTokenAmount, votingEscrow.decimals) : '';
+    hasLockedAmount && votingEscrow
+      ? toUnit(votingEscrow?.DEPOSIT.userBalance, votingEscrow.decimals)
+      : transactionOutcome && votingEscrow
+      ? toUnit(transactionOutcome.targetTokenAmount, votingEscrow.decimals)
+      : '';
 
   useEffect(() => {
     if (!votingEscrow || !votingEscrow?.token.address || !isWalletConnected) return;
@@ -35,7 +40,15 @@ export const LockTab = () => {
   }, [votingEscrow?.address, votingEscrow?.token.address, isWalletConnected]);
 
   useEffect(() => {
-    if (!votingEscrow || toBN(debouncedLockAmount).lte(0) || toBN(debouncedLockTime).lte(0) || inputError) return;
+    if (
+      !votingEscrow ||
+      hasLockedAmount ||
+      toBN(debouncedLockAmount).lte(0) ||
+      toBN(debouncedLockTime).lte(0) ||
+      inputError
+    )
+      return;
+
     getExpectedTransactionOutcome({
       transactionType: 'LOCK',
       tokenAddress: votingEscrow.token.address,
@@ -44,6 +57,12 @@ export const LockTab = () => {
       time: toBN(debouncedLockTime).toNumber(),
     });
   }, [debouncedLockAmount, debouncedLockTime]);
+
+  useEffect(() => {
+    if (!votingEscrow || !hasLockedAmount) return;
+    setLockAmount(toUnit(votingEscrow?.DEPOSIT.userDeposited, votingEscrow?.token.decimals));
+    setLockTime(toWeeks(getTimeUntil(votingEscrow?.unlockDate?.getTime())).toString());
+  }, [votingEscrow, votingEscrow?.DEPOSIT.userDeposited, votingEscrow?.unlockDate, hasLockedAmount]);
 
   const { approved: isApproved, error: allowanceError } = validateAllowance({
     tokenAmount: toBN(debouncedLockAmount),
@@ -128,6 +147,7 @@ export const LockTab = () => {
               )} ${votingEscrow?.token.symbol ?? 'YFI'}`}
               mt="1.6rem"
               width={1 / 2}
+              disabled={hasLockedAmount}
             />
             <AmountInput
               label="Lock time (weeks)"
@@ -137,13 +157,14 @@ export const LockTab = () => {
               message="min 1"
               mt="1.6rem"
               width={1 / 2}
+              disabled={hasLockedAmount}
             />
           </Box>
           <Box display="flex" alignItems="center" gap="1.6rem">
             <AmountInput label="Total veYFI" amount={resultAmount} mt="1.6rem" width={1 / 2} disabled />
             <Button
               onClick={txAction.onAction}
-              disabled={txAction.disabled}
+              disabled={txAction.disabled || hasLockedAmount}
               filled
               width={1 / 2}
               height="5.6rem"
