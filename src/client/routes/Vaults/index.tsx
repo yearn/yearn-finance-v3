@@ -27,7 +27,6 @@ import {
   ApyTooltipData,
 } from '@components/app';
 import { SpinnerLoading, Text, Tooltip, Input, SearchIcon } from '@components/common';
-import { ThreeColumnLayout } from '@containers/Columns';
 import {
   humanize,
   USDC_DECIMALS,

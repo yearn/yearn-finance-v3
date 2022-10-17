@@ -1,21 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { memoize } from 'lodash';
 
-import { toBN } from '@utils';
 import { getConfig } from '@config';
-import { TokenView, Vault } from '@types';
+import { TokenView } from '@types';
 
 import { VaultsSelectors } from '../modules/vaults/vaults.selectors';
 import { TokensSelectors } from '../modules/tokens/tokens.selectors';
 import { AppSelectors } from '../modules/app/app.selectors';
 import { createToken } from '../modules/tokens/tokens.selectors';
 import { NetworkSelectors } from '../modules/network/network.selectors';
-
-type SupportedTokenProps = {
-  assetData: Vault;
-  token: TokenView;
-  zapType: 'zapInWith' | 'zapOutWith';
-};
 
 const { selectVaultsMap } = VaultsSelectors;
 const { selectTokensMap, selectTokensUser } = TokensSelectors;

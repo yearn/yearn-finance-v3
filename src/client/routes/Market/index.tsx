@@ -43,7 +43,7 @@ import {
   filterData,
 } from '@utils';
 import { getConfig } from '@config';
-import { AggregatedCreditLine, VaultView, UseCreditLinesParams, GetLinesArgs, AddCreditProps } from '@src/core/types';
+import { AggregatedCreditLine, VaultView, UseCreditLinesParams } from '@src/core/types';
 import { GoblinTown } from '@assets/images';
 
 const StyledHelperCursor = styled.span`
@@ -91,60 +91,6 @@ const OpportunitiesCard = styled(DetailCard)`
   }
 ` as typeof DetailCard;
 
-const DepositsCard = styled(DetailCard)`
-  @media ${device.tablet} {
-    .col-name {
-      width: 18rem;
-    }
-
-    .col-balance {
-      width: 10rem;
-    }
-  }
-  @media (max-width: 670px) {
-    .col-value {
-      display: none;
-    }
-  }
-  @media ${device.mobile} {
-    .col-apy {
-      display: none;
-    }
-  }
-  @media (max-width: 500px) {
-    .col-earned {
-      display: none;
-    }
-  }
-` as typeof DetailCard;
-
-const DeprecatedCard = styled(DetailCard)`
-  @media ${device.tablet} {
-    .col-name {
-      width: 18rem;
-    }
-
-    .col-balance {
-      width: 10rem;
-    }
-  }
-  @media (max-width: 670px) {
-    .col-value {
-      display: none;
-    }
-  }
-  @media ${device.mobile} {
-    .col-apy {
-      display: none;
-    }
-  }
-  @media (max-width: 500px) {
-    .col-earned {
-      display: none;
-    }
-  }
-` as typeof DetailCard;
-
 const ApyTooltip = ({
   apyData,
   apyType,
@@ -179,9 +125,6 @@ export const Market = () => {
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
-  const recommendations = useAppSelector(VaultsSelectors.selectRecommendations);
-  const deprecated = useAppSelector(VaultsSelectors.selectDeprecatedVaults);
-  const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOpportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
   const [search, setSearch] = useState('');
@@ -193,7 +136,6 @@ export const Market = () => {
   const generalLoading =
     (appStatus.loading || vaultsStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
   const opportunitiesLoading = generalLoading && !filteredVaults.length;
-  const depositsLoading = generalLoading && !deposits.length;
   // TODO not neeed here
   const addCreditStatus = useAppSelector(LinesSelectors.selectLinesActionsStatusMap);
 
@@ -239,19 +181,6 @@ export const Market = () => {
     window.history.replaceState(null, '', `market${search ? `?search=${search}` : ''}`);
   }, [opportunities, search]);
 
-  const dispatchAddCredit = () => {
-    const params: AddCreditProps = {
-      drate: utils.parseUnits('0', 'ether'),
-      frate: utils.parseUnits('0', 'ether'),
-      amount: utils.parseUnits('0', 'ether'),
-      token: '',
-      lender: '',
-      lineAddress: '',
-      dryRun: true,
-    };
-    dispatch(LinesActions.addCredit({ ...params }));
-  };
-
   const depositHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
@@ -260,11 +189,6 @@ export const Market = () => {
   const createLineHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
     dispatch(ModalsActions.openModal({ modalName: 'createLine' }));
-  };
-
-  const withdrawHandler = (vaultAddress: string) => {
-    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
-    dispatch(ModalsActions.openModal({ modalName: 'withdrawTx' }));
   };
 
   const summaryCardItems = [

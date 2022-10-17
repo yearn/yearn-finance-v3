@@ -13,7 +13,6 @@ import { AlertsActions } from '../alerts/alerts.actions';
 import { NetworkActions } from '../network/network.actions';
 import { PartnerActions } from '../partner/partner.actions';
 import { SettingsActions } from '../settings/settings.actions';
-import { LinesActions } from '../lines/lines.actions';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Setters                                  */

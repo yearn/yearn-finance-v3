@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { BigNumber } from 'ethers';
 
-import { FlatCard, FlatCardHeader, FlatCardContent, Text, Icon, ChevronRightIcon } from '@components/common';
+import { FlatCard, FlatCardHeader, FlatCardContent, Text, Icon } from '@components/common';
 import { TokenIcon } from '@components/app';
 import { device } from '@src/client/themes/default';
 import { useAppTranslation } from '@hooks';
@@ -13,16 +12,6 @@ const ContainerCard = styled(FlatCard)`
   width: 100%;
   min-width: 20vw;
   height: 100%;
-`;
-
-const StyledCardContent = styled(FlatCardContent)`
-  align-items: stretch;
-  justify-content: center;
-  flex-wrap: wrap;
-  grid-row-gap: 3rem;
-  grid-gap: ${({ theme }) => theme.card.padding};
-  margin-top: ${({ theme }) => theme.card.padding};
-  padding: 0 ${({ theme }) => theme.card.padding};
 `;
 
 const ItemCard = styled(FlatCard)<{ onClick: any }>`
@@ -99,12 +88,6 @@ const BorrowerData = styled.div`
   display: flex;
   flex-direction: column;
   grid-template-column: 1fr;
-`;
-
-const CollateralTitle = styled.h3`
-  ${({ theme }) => theme.fonts.styles.cardHeader};
-  margin: ${({ theme }) => theme.spacing.md} 0;
-  color: ${({ theme }) => theme.colors.titles};
 `;
 
 const CollateralData = styled.div`

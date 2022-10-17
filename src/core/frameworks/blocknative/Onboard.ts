@@ -3,7 +3,7 @@ import { API } from 'bnc-onboard/dist/src/interfaces';
 import { getAddress } from '@ethersproject/address';
 
 import { getConfig } from '@config';
-import { getNetworkId, getNetworkRpc } from '@utils';
+import { getNetworkRpc } from '@utils';
 import { Wallet, Subscriptions, Network, Theme } from '@types';
 
 import ledgerIframeWallet from './IframeWallet';

@@ -30,7 +30,6 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const dispatch = useAppDispatch();
   const { header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(0);
-  const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
   const [targetAmount, setTargetAmount] = useState('1');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
@@ -97,7 +96,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
       label: t('components.transaction.borrow'),
       onAction: borrowCredit,
       status: true,
-      disabled: !transactionApproved,
+      disabled: false,
       contrast: false,
     },
   ];

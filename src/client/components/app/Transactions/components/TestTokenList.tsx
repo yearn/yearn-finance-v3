@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { useAppTranslation } from '@hooks';
-import { Button, Text, Icon, SearchList } from '@src/client/components/common';
+import { Button, Text, SearchList } from '@src/client/components/common';
 import { TokenIcon } from '@components/app';
 import { humanize } from '@utils';
 

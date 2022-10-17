@@ -1,9 +1,8 @@
-import { ApolloClient, InMemoryCache, gql, useQuery, DocumentNode, QueryResult } from '@apollo/client';
+import { ApolloClient, InMemoryCache, DocumentNode, QueryResult } from '@apollo/client';
 import { at } from 'lodash';
 
 import { getEnv } from '@config/env';
 import {
-  BaseCreditLine,
   AggregatedCreditLine,
   GetLineArgs,
   GetLinePageArgs,
@@ -11,7 +10,6 @@ import {
   GetUserLinePositionsArgs,
   QueryResponse,
   QueryCreator,
-  QueryArgOption,
   GetLinePageResponse,
   GetLinePageAuxDataResponse,
   PositionSummary,
@@ -92,7 +90,6 @@ export const getLines: QueryCreator<GetLinesArgs, GetLinesResponse[]> = <GetLine
 const getUserLinePositionsQuery = createQuery(GET_LINES_QUERY);
 export const getUserLinePositions: QueryCreator<GetUserLinePositionsArgs, PositionSummary[]> = <
   GetUserLinePositionsArgs,
-  PositionSummary
 >(
   arg: GetUserLinePositionsArgs
 ) => getUserLinePositionsQuery(arg);

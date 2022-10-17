@@ -8,7 +8,6 @@ import {
   Token,
   Integer,
   Config,
-  Network,
   TransactionResponse,
   TransactionService,
   GetSupportedTokensProps,
