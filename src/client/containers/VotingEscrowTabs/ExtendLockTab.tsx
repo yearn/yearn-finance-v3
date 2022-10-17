@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 
-import { useAppSelector, useDebounce, useExecuteThunk } from '@hooks';
+import { useAppSelector, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { toBN, toUnit, validateAmount, weeksBetween } from '@utils';
+import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks } from '@utils';
 
-const MAX_LOCK_TIME = '208'; // Weeks
+const MAX_LOCK_TIME = '209'; // Weeks
 
 export const ExtendLockTab = () => {
+  const isMounting = useIsMounting();
   const [lockTime, setLockTime] = useState('');
   const [debouncedLockTime, isDebounceLockTimePending] = useDebounce(lockTime, 500);
   const [extendLockTime, extendLockTimeStatus] = useExecuteThunk(VotingEscrowsActions.extendLockTime);
@@ -18,9 +19,16 @@ export const ExtendLockTab = () => {
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
-  const weeksToUnlock = votingEscrow?.unlockDate ? weeksBetween(new Date(), votingEscrow.unlockDate).toString() : '0';
+  const willExtendLock = toBN(debouncedLockTime).gt(0);
+  const weeksToUnlock = votingEscrow?.unlockDate
+    ? toWeeks(getTimeUntil(votingEscrow.unlockDate.getTime())).toString()
+    : '0';
   const resultAmount =
-    transactionOutcome && votingEscrow ? toUnit(transactionOutcome.targetTokenAmount, votingEscrow.decimals) : '';
+    !willExtendLock && votingEscrow
+      ? toUnit(votingEscrow?.DEPOSIT.userBalance, votingEscrow.decimals)
+      : willExtendLock && transactionOutcome && votingEscrow && !getExpectedTransactionOutcomeStatus.loading
+      ? toUnit(transactionOutcome.targetTokenAmount, votingEscrow.decimals)
+      : '';
 
   useEffect(() => {
     if (!votingEscrow || toBN(debouncedLockTime).lte(0) || inputError) return;
@@ -28,7 +36,7 @@ export const ExtendLockTab = () => {
       transactionType: 'EXTEND',
       tokenAddress: votingEscrow.token.address,
       votingEscrowAddress: votingEscrow.address,
-      time: toBN(debouncedLockTime).toNumber(),
+      time: toBN(debouncedLockTime).plus(weeksToUnlock).toNumber(),
     });
   }, [debouncedLockTime]);
 
@@ -44,7 +52,7 @@ export const ExtendLockTab = () => {
     extendLockTime({
       tokenAddress: votingEscrow.token.address,
       votingEscrowAddress: votingEscrow.address,
-      time: parseInt(lockTime),
+      time: toBN(lockTime).plus(weeksToUnlock).toNumber(),
     });
   };
 
@@ -72,7 +80,13 @@ export const ExtendLockTab = () => {
             <AmountInput label="Total veYFI" amount={resultAmount} mt="1.6rem" width={1 / 2} disabled />
             <Button
               onClick={executeExtendLockTime}
-              disabled={!isValidLockTime || isDebounceLockTimePending}
+              disabled={
+                isMounting ||
+                !isValidLockTime ||
+                isDebounceLockTimePending ||
+                getExpectedTransactionOutcomeStatus.loading ||
+                !getExpectedTransactionOutcomeStatus.executed
+              }
               filled
               width={1 / 2}
               height="5.6rem"
