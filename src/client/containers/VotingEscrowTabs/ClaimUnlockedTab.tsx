@@ -1,10 +1,11 @@
-import { useAppSelector, useExecuteThunk } from '@hooks';
+import { useAppSelector, useExecuteThunk, useIsMounting } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { humanize, toBN } from '@utils';
 
 export const ClaimUnlockedTab = () => {
+  const isMounting = useIsMounting();
   const [withdrawUnlocked, withdrawUnlockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawUnlocked);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
@@ -32,14 +33,14 @@ export const ClaimUnlockedTab = () => {
           <Box display="flex" alignItems="center" gap="1.6rem">
             <AmountInput
               label="Unlocked YFI"
-              amount={humanize('amount', unlockedAmount, votingEscrow?.decimals, 4)}
+              amount={humanize('amount', unlockedAmount, votingEscrow?.decimals)}
               mt="1.6rem"
               width={1 / 2}
               disabled
             />
             <Button
               onClick={executeWithdrawUnlocked}
-              disabled={hasLockedAmount}
+              disabled={isMounting || hasLockedAmount}
               filled
               width={1 / 2}
               height="5.6rem"
