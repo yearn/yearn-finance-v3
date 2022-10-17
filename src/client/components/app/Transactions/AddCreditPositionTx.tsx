@@ -1,20 +1,16 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { TokenCard } from '@yearn-finance/web-lib';
 import { ethers } from 'ethers';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
-  useSelectedCreditLine,
-
   // used to dummy token for dev
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { Address, Token, Asset, TokenView, AggregatedCreditLine } from '@src/core/types';
 import { TokensActions, TokensSelectors, VaultsSelectors, WalletSelectors, LinesSelectors, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
@@ -46,12 +42,6 @@ interface AddCreditPositionProps {
     frate?: string;
   }) => void;
 }
-
-const RatesContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
 
 export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const { t } = useAppTranslation('common');
@@ -111,7 +101,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [selectedSellTestToken, setSelectSellTestToken] = useState(testTokens[0]);
 
   //state for params
-  const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
+  const { acceptingOffer, header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);

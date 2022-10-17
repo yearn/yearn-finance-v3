@@ -1,20 +1,14 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
-import { TokenCard } from '@yearn-finance/web-lib';
 import { ethers } from 'ethers';
 
-import { formatAmount, normalizeAmount, toBN } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
-  useSelectedCreditLine,
-
   // used to dummy token for dev
   useAppSelector,
-  useSelectedSellToken,
 } from '@hooks';
-import { getConstants } from '@src/config/constants';
-import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors, LinesActions } from '@store';
+import { LinesSelectors, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
@@ -34,18 +28,11 @@ interface BorrowCreditProps {
   onPositionChange: (data: { credit?: string; amount?: string }) => void;
 }
 
-const RatesContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
 export const WithdrawCreditTx: FC<BorrowCreditProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const { header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(0);
-  const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
   const [targetAmount, setTargetAmount] = useState('1');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
@@ -111,7 +98,7 @@ export const WithdrawCreditTx: FC<BorrowCreditProps> = (props) => {
       label: t('components.transaction.withdraw'),
       onAction: withdrawCredit,
       status: true,
-      disabled: !transactionApproved,
+      disabled: false,
       contrast: false,
     },
   ];
@@ -170,7 +157,7 @@ export const WithdrawCreditTx: FC<BorrowCreditProps> = (props) => {
         ttlType={false}
       />
       <TxActions>
-        {txActions.map(({ label, onAction, status, disabled, contrast }) => (
+        {txActions.map(({ label, onAction, disabled, contrast }) => (
           <TxActionButton
             key={label}
             data-testid={`modal-action-${label.toLowerCase()}`}

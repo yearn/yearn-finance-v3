@@ -1,23 +1,11 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
-import { TokenCard } from '@yearn-finance/web-lib';
 import { ethers } from 'ethers';
 
-import { formatAmount, normalizeAmount, toBN } from '@utils';
-import {
-  useAppTranslation,
-  useAppDispatch,
-  useSelectedCreditLine,
-
-  // used to dummy token for dev
-  useAppSelector,
-  useSelectedSellToken,
-} from '@hooks';
-import { getConstants } from '@src/config/constants';
-import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors, LinesActions } from '@store';
+import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
+import { LinesSelectors, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
-import { TxTokenInput } from './components/TxTokenInput';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
@@ -37,16 +25,10 @@ interface BorrowCreditProps {
   onPositionChange: (data: { credit?: string; amount?: string }) => void;
 }
 
-const RatesContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
 export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
+  const { header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
