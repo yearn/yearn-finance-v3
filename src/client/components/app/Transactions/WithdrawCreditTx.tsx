@@ -2,7 +2,12 @@ import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { ethers } from 'ethers';
 
-import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
+import {
+  useAppTranslation,
+  useAppDispatch,
+  // used to dummy token for dev
+  useAppSelector,
+} from '@hooks';
 import { LinesSelectors, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
@@ -19,18 +24,15 @@ const StyledAmountInput = styled(TxTTLInput)``;
 interface BorrowCreditProps {
   header: string;
   onClose: () => void;
-  acceptingOffer: boolean;
   onSelectedCreditLineChange: Function;
-  allowVaultSelect: boolean;
   onPositionChange: (data: { credit?: string; amount?: string }) => void;
 }
 
-export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
+export const WithdrawCreditTx: FC<BorrowCreditProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const { header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(0);
-  const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
   const [targetAmount, setTargetAmount] = useState('1');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
@@ -63,7 +65,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
     }
   };
 
-  const borrowCredit = () => {
+  const withdrawCredit = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
     if (!selectedCredit?.id || !targetAmount) {
@@ -73,10 +75,9 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
     }
 
     dispatch(
-      LinesActions.borrowCredit({
+      LinesActions.withdrawLine({
         lineAddress: selectedCredit.id,
         amount: ethers.utils.parseEther(targetAmount),
-        dryRun: true,
       })
     ).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
@@ -94,10 +95,10 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
 
   const txActions = [
     {
-      label: t('components.transaction.borrow'),
-      onAction: borrowCredit,
+      label: t('components.transaction.withdraw'),
+      onAction: withdrawCredit,
       status: true,
-      disabled: !transactionApproved,
+      disabled: false,
       contrast: false,
     },
   ];
@@ -129,11 +130,11 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   }
 
   return (
-    <StyledTransaction onClose={onClose} header={header || t('components.transaction.borrow')}>
+    <StyledTransaction onClose={onClose} header={header || t('components.transaction.withdraw-credit.header')}>
       <TxCreditLineInput
         key={'credit-input'}
-        headerText={t('components.transaction.borrow-credit.select-line')}
-        inputText={t('components.transaction.borrow-credit.select-line')}
+        headerText={t('components.transaction.withdraw-credit.select-line')}
+        inputText={t('components.transaction.withdraw-credit.select-line')}
         onSelectedCreditLineChange={onSelectedCreditLineChange}
         selectedCredit={selectedCredit}
         // creditOptions={sourceCreditOptions}
@@ -142,7 +143,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
         // displayGuidance={displaySourceGuidance}
       />
       <StyledAmountInput
-        headerText={t('components.transaction.borrow-credit.select-amount')}
+        headerText={t('components.transaction.withdraw-credit.select-amount')}
         inputText={t('')}
         inputError={false}
         amount={targetAmount}
@@ -156,7 +157,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
         ttlType={false}
       />
       <TxActions>
-        {txActions.map(({ label, onAction, status, disabled, contrast }) => (
+        {txActions.map(({ label, onAction, disabled, contrast }) => (
           <TxActionButton
             key={label}
             data-testid={`modal-action-${label.toLowerCase()}`}

@@ -73,6 +73,7 @@
       "available-borrow": "Available to borrow",
       "borrow": "Borrow",
       "deposit-and-repay-header": "deposit and repay",
+      "withdraw": "Withdraw Credit",
       "borrow-limit": {
         "borrow-apy": "Borrow APY",
         "borrowing": "Borrowing",
@@ -113,7 +114,6 @@
         "you-have": "You have"
       },
       "wallet-balance": "Wallet Balance",
-      "withdraw": "Withdraw",
       "zap-guidance": {
         "desc": "⚡ Or select a token from your wallet to Zap",
         "view-all": "View all"
@@ -142,6 +142,11 @@
       "deposit-and-repay": {
         "header": "Deposit and repay",
         "select-amount": "1. Select amount to repay"
+      },
+      "withdraw-credit": {
+        "header": "Withdraw",
+        "select-line": "1. Selected line to withdraw",
+        "select-amount": "2. Select amount to withdraw"
       }
     }
   },

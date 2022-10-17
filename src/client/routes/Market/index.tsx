@@ -212,7 +212,7 @@ export const Market = () => {
       orderDirection: 'desc',
     },
     'market:featured.newest': {
-      first: 3,
+      first: 15,
       orderBy: 'start', // NOTE: theoretically gets lines that start in the future, will have to refine query
       orderDirection: 'desc',
     },

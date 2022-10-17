@@ -5,7 +5,6 @@ import { keccak256 } from 'ethers/lib/utils';
 import {
   BorrowCreditProps,
   CreditLineService,
-  YearnSdk,
   AggregatedCreditLine,
   TransactionService,
   Web3Provider,
@@ -50,13 +49,11 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   constructor({
     transactionService,
-    yearnSdk,
     web3Provider,
     config,
   }: {
     transactionService: TransactionService;
     web3Provider: Web3Provider;
-    yearnSdk: YearnSdk;
     config: Config;
   }) {
     this.transactionService = transactionService;
@@ -87,11 +84,12 @@ export class CreditLineServiceImpl implements CreditLineService {
     }
   }
 
-  public async withdraw(props: WithdrawLineProps): Promise<string> {
+  public async withdraw(props: WithdrawLineProps): Promise<TransactionResponse | PopulatedTransaction> {
     try {
       if (!(await this.isLender(props.lineAddress, props.id))) {
         throw new Error('Cannot withdraw. Signer is not lender');
       }
+      //@ts-ignore
       return (<TransactionResponse>(
         await this.executeContractMethod(props.lineAddress, 'withdraw', [props.id, props.amount])
       )).hash;

@@ -1,21 +1,17 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { TokenCard } from '@yearn-finance/web-lib';
 import { ethers } from 'ethers';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
-  useSelectedCreditLine,
-
   // used to dummy token for dev
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { Address, Token, Asset, TokenView, AggregatedCreditLine } from '@src/core/types';
-import { TokensActions, TokensSelectors, VaultsSelectors, VaultsActions, LinesSelectors, LinesActions } from '@store';
+import { TokensActions, TokensSelectors, VaultsSelectors, WalletSelectors, LinesSelectors, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -24,6 +20,7 @@ import { TxRateInput } from './components/TxRateInput';
 import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
+import { TxTestTokenInput } from './components/TestTokenList';
 
 const {
   CONTRACT_ADDRESSES: { DAI },
@@ -46,16 +43,65 @@ interface AddCreditPositionProps {
   }) => void;
 }
 
-const RatesContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
 export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
-  const { allowVaultSelect, acceptingOffer, header, onClose, onPositionChange } = props;
+
+  //in case user is on Goerli Testnet, we set up a testnet state:
+  const [testnetToken, setTestnetToken] = useState('');
+  const [testnetTokenAmount, setTestnetTokenAmount] = useState('0');
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const testTokens = [
+    {
+      address: '0x3730954eC1b5c59246C1fA6a20dD6dE6Ef23aEa6',
+      allowancesMap: 'Object {  }',
+      balance: '0',
+      balanceUsdc: '0',
+      categories: ['Seerocoin'],
+      decimals: 18,
+      description: 'SeeroTestCoin',
+      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/mult…ns/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png',
+      name: 'Serooocoin',
+      priceUsdc: '0',
+      symbol: 'SER',
+      website: 'https://debtdao.finance/',
+      yield: '0',
+    },
+    {
+      address: '0x3D4AA21e8915F3b5409BDb20f76457FCdAF8f757',
+      allowancesMap: 'Object {  }',
+      balance: '0',
+      balanceUsdc: '0',
+      categories: ['kiibacoin'],
+      decimals: 18,
+      description: 'KiibaTestCoin',
+      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/mult…ns/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png',
+      name: 'kibaacoin',
+      priceUsdc: '0',
+      symbol: 'KIB',
+      website: 'https://debtdao.finance/',
+      yield: '0',
+    },
+    {
+      address: '0xe62e4B079D40CF643D3b4963e4B675eC101928df',
+      allowancesMap: 'Object {  }',
+      balance: '0',
+      balanceUsdc: '0',
+      categories: ['Moocoin'],
+      decimals: 18,
+      description: 'MooTestCoin',
+      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/mult…ns/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png',
+      name: 'Moocoin',
+      priceUsdc: '0',
+      symbol: 'SER',
+      website: 'https://debtdao.finance/',
+      yield: '0',
+    },
+  ];
+  const [selectedSellTestToken, setSelectSellTestToken] = useState(testTokens[0]);
+
+  //state for params
+  const { acceptingOffer, header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
@@ -66,9 +112,9 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
 
+  //main net logic
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
-
   const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
     selectedSellTokenAddress: initialToken,
     selectedVaultOrLab: useAppSelector(VaultsSelectors.selectRecommendations)[0],
@@ -77,6 +123,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
   useEffect(() => {
     console.log('add position tx useEffect token/creditLine', selectedSellToken, initialToken, selectedCredit);
+    console.log('wallet net', walletNetwork);
     if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
@@ -96,10 +143,11 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     ) {
       return;
     }
-
-    dispatch(TokensActions.getTokensDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
+    if (walletNetwork === 'goerli') {
+      setTestnetToken(selectedSellTestToken.address);
+    }
     // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
-  }, [selectedSellToken]);
+  }, [selectedSellToken, walletNetwork]);
 
   const _updatePosition = () =>
     onPositionChange({
@@ -112,8 +160,23 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
   // Event Handlers
 
+  const onSelectedSellTestTokenChange = (tokenAddress: string) => {
+    let token;
+    token = testTokens.filter((token) => token.address === tokenAddress);
+    setTargetTokenAmount('');
+    onRateChange('f', '0.00');
+    onRateChange('d', '0.00');
+    setTestnetToken(tokenAddress);
+    setSelectSellTestToken(token[0]);
+  };
+
   const onAmountChange = (amount: string): void => {
     setTargetTokenAmount(amount);
+    _updatePosition();
+  };
+
+  const onTestnetAmountChange = (amount: string): void => {
+    setTestnetTokenAmount(amount);
     _updatePosition();
   };
 
@@ -139,18 +202,20 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
   const approveCreditPosition = () => {
     setLoading(true);
-    if (!selectedCredit?.id || !drate || !frate || !targetTokenAmount || !selectedTokenAddress) {
-      console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedTokenAddress);
+    if (!selectedCredit?.id) {
       setLoading(false);
       return;
     }
-    dispatch(
-      //@ts-ignore
-      LinesActions.approveDeposit({
-        tokenAddress: selectedTokenAddress,
-        amount: `${ethers.utils.parseEther(targetTokenAmount)}`,
-      })
-    );
+    let approvalOBj = {
+      tokenAddress: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
+      amount:
+        walletNetwork === 'goerli'
+          ? `${ethers.utils.parseEther(testnetTokenAmount)}`
+          : `${ethers.utils.parseEther(targetTokenAmount)}`,
+    };
+    console.log('approval obj', approvalOBj);
+    //@ts-ignore
+    dispatch(LinesActions.approveDeposit(approvalOBj));
     setLoading(false);
     setTransactionApproved(!transactionApproved);
   };
@@ -166,7 +231,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const addCreditPosition = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    if (!selectedCredit?.id || !drate || frate || !targetTokenAmount || !selectedSellTokenAddress) {
+    if (!selectedCredit?.id || !drate || !frate) {
       console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedSellTokenAddress);
       setLoading(false);
       return;
@@ -177,22 +242,20 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
     console.log(bigNumDRate, bigNumFRate);
 
-    if (!selectedSellTokenAddress) {
-      setLoading(false);
-      return;
-    }
-
-    dispatch(
-      LinesActions.addCredit({
-        lineAddress: selectedCredit.id,
-        drate: ethers.utils.parseEther(drate),
-        frate: ethers.utils.parseEther(frate),
-        amount: ethers.utils.parseEther(targetTokenAmount),
-        token: selectedSellTokenAddress,
-        lender: '',
-        dryRun: true,
-      })
-    ).then((res) => {
+    let TransactionObj = {
+      lineAddress: selectedCredit.id,
+      drate: ethers.utils.parseEther(drate),
+      frate: ethers.utils.parseEther(frate),
+      amount:
+        walletNetwork === 'goerli'
+          ? ethers.utils.parseEther(testnetTokenAmount)
+          : ethers.utils.parseEther(targetTokenAmount),
+      token: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
+      lender: '',
+      dryRun: true,
+    };
+    //@ts-ignore
+    dispatch(LinesActions.addCredit(TransactionObj)).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
         setTransactionCompleted(2);
         console.log(transactionCompleted, 'tester');
@@ -227,9 +290,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   if (!selectedCredit) return null;
 
   const targetBalance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
-  const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
-    selectedSellToken.symbol
-  }`;
+  const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)}`;
 
   if (transactionCompleted === 1) {
     return (
@@ -268,21 +329,40 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         readOnly={false}
         // displayGuidance={displaySourceGuidance}
       />
-      <TxTokenInput
-        key={'token-input'}
-        headerText={t('components.transaction.add-credit.select-token')}
-        inputText={tokenHeaderText}
-        amount={targetTokenAmount}
-        onAmountChange={onAmountChange}
-        amountValue={String(10000000 * Number(targetTokenAmount))}
-        maxAmount={targetBalance}
-        selectedToken={selectedSellToken}
-        onSelectedTokenChange={onSelectedSellTokenChange}
-        tokenOptions={sourceAssetOptions}
-        // inputError={!!sourceStatus.error}
-        readOnly={acceptingOffer}
-        // displayGuidance={displaySourceGuidance}
-      />
+      {walletNetwork === 'goerli' ? (
+        <TxTestTokenInput
+          key={'token-input'}
+          headerText={t('components.transaction.add-credit.select-token')}
+          inputText={tokenHeaderText}
+          amount={testnetTokenAmount}
+          onAmountChange={onTestnetAmountChange}
+          amountValue={String(10000000 * Number(testnetTokenAmount))}
+          maxAmount={targetBalance}
+          selectedToken={selectedSellTestToken}
+          onSelectedTokenChange={onSelectedSellTestTokenChange}
+          tokenOptions={testTokens}
+          // inputError={!!sourceStatus.error}
+          readOnly={acceptingOffer}
+          // displayGuidance={displaySourceGuidance}
+        />
+      ) : (
+        <TxTokenInput
+          key={'token-input'}
+          headerText={t('components.transaction.add-credit.select-token')}
+          inputText={tokenHeaderText}
+          amount={targetTokenAmount}
+          onAmountChange={onAmountChange}
+          amountValue={String(10000000 * Number(targetTokenAmount))}
+          maxAmount={targetBalance}
+          selectedToken={selectedSellToken}
+          onSelectedTokenChange={onSelectedSellTokenChange}
+          tokenOptions={sourceAssetOptions}
+          // inputError={!!sourceStatus.error}
+          readOnly={acceptingOffer}
+          // displayGuidance={displaySourceGuidance}
+        />
+      )}
+
       <TxRateInput
         key={'frate'}
         headerText={t('components.transaction.add-credit.select-rates')}

@@ -9,6 +9,8 @@ export const getNetworkId = (network: Network): number => {
       return 3;
     case 'rinkeby':
       return 4;
+    case 'goerli':
+      return 4;
     case 'kovan':
       return 42;
     case 'arbitrum':
@@ -28,6 +30,8 @@ export const getNetwork = (networkId: number | string): Network => {
       return 'rinkeby';
     case '42':
       return 'kovan';
+    case '5':
+      return 'goerli';
     case '42161':
       return 'arbitrum';
     default:
