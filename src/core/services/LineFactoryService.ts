@@ -1,6 +1,6 @@
 import { BigNumberish, BigNumber, ContractFunction, PopulatedTransaction, ethers } from 'ethers';
 
-import { TransactionService, Web3Provider, Config, ExecuteTransactionProps, Address, YearnSdk } from '@types';
+import { TransactionService, Web3Provider, Config, ExecuteTransactionProps, Address } from '@types';
 import { getConfig } from '@config';
 import { getContract } from '@frameworks/ethers';
 
@@ -25,7 +25,6 @@ export class LineFactoryServiceImpl {
   }: {
     transactionService: TransactionService;
     web3Provider: Web3Provider;
-    yearnSdk: YearnSdk;
     config: Config;
     contractAddress: Address;
   }) {

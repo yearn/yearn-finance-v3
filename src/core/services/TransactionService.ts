@@ -9,7 +9,6 @@ import {
   TransactionResponse,
   GasService,
   GasFees,
-  YearnSdk,
   TransactionReceipt,
   Web3Provider,
 } from '@types';

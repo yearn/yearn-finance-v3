@@ -5,7 +5,6 @@ import { keccak256 } from 'ethers/lib/utils';
 import {
   BorrowCreditProps,
   CreditLineService,
-  YearnSdk,
   AggregatedCreditLine,
   TransactionService,
   Web3Provider,
@@ -50,13 +49,11 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   constructor({
     transactionService,
-    yearnSdk,
     web3Provider,
     config,
   }: {
     transactionService: TransactionService;
     web3Provider: Web3Provider;
-    yearnSdk: YearnSdk;
     config: Config;
   }) {
     this.transactionService = transactionService;
