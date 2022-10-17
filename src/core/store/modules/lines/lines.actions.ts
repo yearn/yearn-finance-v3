@@ -300,12 +300,6 @@ const addCredit = createAsyncThunk<void, AddCreditProps, ThunkAPI>(
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const userLineData = lines.user.linePositions[lineAddress];
-    const tokenData = tokens.tokensMap[token];
-    const userTokenData = tokens.user.userTokensMap[token];
-    const decimals = toBN(tokenData.decimals);
-    const ONE_UNIT = toBN('10').pow(decimals);
-
     // TODO: fix BigNumber type difference issues
     // const amountInWei = amount.multipliedBy(ONE_UNIT);
     const { creditLineService, transactionService } = services;
