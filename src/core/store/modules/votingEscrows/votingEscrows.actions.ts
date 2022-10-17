@@ -263,6 +263,7 @@ const lock = createAsyncThunk<
 
     dispatch(getVotingEscrowsDynamic({ addresses: [votingEscrowAddress] }));
     dispatch(getUserVotingEscrowsPositions({ addresses: [votingEscrowAddress] }));
+    dispatch(getUserVotingEscrowsMetadata({ addresses: [votingEscrowAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, votingEscrowAddress] }));
   },
   {
@@ -310,6 +311,7 @@ const increaseLockAmount = createAsyncThunk<
 
     dispatch(getVotingEscrowsDynamic({ addresses: [votingEscrowAddress] }));
     dispatch(getUserVotingEscrowsPositions({ addresses: [votingEscrowAddress] }));
+    dispatch(getUserVotingEscrowsMetadata({ addresses: [votingEscrowAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, votingEscrowAddress] }));
   },
   {
@@ -356,6 +358,7 @@ const extendLockTime = createAsyncThunk<
 
     dispatch(getVotingEscrowsDynamic({ addresses: [votingEscrowAddress] }));
     dispatch(getUserVotingEscrowsPositions({ addresses: [votingEscrowAddress] }));
+    dispatch(getUserVotingEscrowsMetadata({ addresses: [votingEscrowAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, votingEscrowAddress] }));
   },
   {
@@ -393,6 +396,7 @@ const withdrawLocked = createAsyncThunk<void, { tokenAddress: Address; votingEsc
 
     dispatch(getVotingEscrowsDynamic({ addresses: [votingEscrowAddress] }));
     dispatch(getUserVotingEscrowsPositions({ addresses: [votingEscrowAddress] }));
+    dispatch(getUserVotingEscrowsMetadata({ addresses: [votingEscrowAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, votingEscrowAddress] }));
   },
   {
@@ -430,6 +434,7 @@ const withdrawUnlocked = createAsyncThunk<void, { tokenAddress: Address; votingE
 
     dispatch(getVotingEscrowsDynamic({ addresses: [votingEscrowAddress] }));
     dispatch(getUserVotingEscrowsPositions({ addresses: [votingEscrowAddress] }));
+    dispatch(getUserVotingEscrowsMetadata({ addresses: [votingEscrowAddress] }));
     dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, votingEscrowAddress] }));
   },
   {
