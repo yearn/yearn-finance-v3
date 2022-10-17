@@ -5,7 +5,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useAppTranslation } from '@hooks';
 import { Button, Text, Icon, SearchList } from '@src/client/components/common';
 import { TokenIcon } from '@components/app';
-import { formatUsd, humanize } from '@utils';
+import { humanize } from '@utils';
 
 const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
   display: flex;
@@ -151,13 +151,6 @@ const TokenName = styled.div`
   max-height: 3rem;
 `;
 
-const TokenListIcon = styled(Icon)`
-  position: absolute;
-  top: 0.8rem;
-  right: 0.4rem;
-  color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
-`;
-
 const TokenIconContainer = styled.div`
   display: flex;
   align-items: center;
@@ -170,11 +163,6 @@ const MaxButton = styled(Button)`
   width: min-content;
   margin-left: 0.5rem;
   text-transform: capitalize;
-`;
-
-const StyledText = styled(Text)`
-  color: ${({ theme }) => theme.colors.txModalColors.text};
-  max-width: 11rem;
 `;
 
 const amountToNumber = (amount: string) => {

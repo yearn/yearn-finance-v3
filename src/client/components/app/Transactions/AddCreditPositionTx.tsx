@@ -290,9 +290,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   if (!selectedCredit) return null;
 
   const targetBalance = normalizeAmount(selectedSellToken.balance, selectedSellToken.decimals);
-  const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
-    selectedSellToken.symbol
-  }`;
+  const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)}`;
 
   if (transactionCompleted === 1) {
     return (
