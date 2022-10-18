@@ -34,10 +34,7 @@ import { getConfig } from '@config';
 import { LineOfCreditABI } from '@services/contracts';
 import { getContract } from '@frameworks/ethers';
 import { getLinePage, getLinePageAuxData, getLines } from '@frameworks/gql';
-import { useAppSelector } from '@src/client/hooks';
 import { unnullify } from '@src/utils';
-
-import { WalletSelectors } from '../store';
 
 const { GRAPH_API_URL } = getConfig();
 
