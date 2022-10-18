@@ -184,7 +184,14 @@ export const LockTab = () => {
             />
           </Box>
           <Box display="flex" alignItems="center" gap="1.6rem">
-            <AmountInput label="Total veYFI" amount={resultAmount} mt="1.6rem" width={1 / 2} disabled />
+            <AmountInput
+              label="Total veYFI"
+              amount={resultAmount}
+              loading={getExpectedTransactionOutcomeStatus.loading}
+              mt="1.6rem"
+              width={1 / 2}
+              disabled
+            />
             <Button
               onClick={txAction.onAction}
               disabled={txAction.disabled || txAction.status}

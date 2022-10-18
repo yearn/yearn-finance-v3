@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Box, Text, Button, BoxProps } from '@components/common';
+import { Box, Text, Button, BoxProps, SpinnerLoading } from '@components/common';
 
 const InputContainer = styled.div`
   position: relative;
@@ -70,6 +70,11 @@ const MaxButton = styled(Button)`
   font-size: 1.2rem;
 `;
 
+const StyledLoading = styled(SpinnerLoading)`
+  position: absolute;
+  font-size: 1rem;
+`;
+
 const StyledCaption = styled(Text)`
   color: ${({ theme }) => theme.colors.input?.placeholder || theme.colors.textsVariant};
   font-size: 1.2rem;
@@ -87,6 +92,7 @@ export interface AmountInputProps extends BoxProps {
   message?: string;
   error?: boolean;
   disabled?: boolean;
+  loading?: boolean;
 }
 
 export const AmountInput = ({
@@ -99,6 +105,7 @@ export const AmountInput = ({
   message,
   error,
   disabled,
+  loading,
   ...props
 }: AmountInputProps) => {
   return (
@@ -108,12 +115,13 @@ export const AmountInput = ({
         <StyledInput
           value={amount}
           onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
-          placeholder={placeholder ?? '0'}
+          placeholder={loading ? '' : placeholder ?? '0'}
           readOnly={disabled}
           error={error}
           type="number"
           aria-label={label}
         />
+        {loading && <StyledLoading />}
         {maxAmount && !disabled && (
           <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
             {maxLabel}
