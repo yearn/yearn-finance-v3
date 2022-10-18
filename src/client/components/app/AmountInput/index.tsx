@@ -13,6 +13,7 @@ const InputContainer = styled.div`
 const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   height: 5.6rem;
   padding: 1.6rem;
+  padding-right: 6.8rem;
   font-size: 1.6rem;
   font-weight: 400;
   background: ${({ theme }) => theme.colors.background};
@@ -32,6 +33,7 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   ${({ readOnly, theme }) =>
     readOnly &&
     `
+    padding: 1.6rem;
     border: 1px solid ${theme.colors.input?.placeholder || theme.colors.textsVariant};
     color: ${theme.colors.input?.placeholder || theme.colors.textsVariant};
     cursor: default;
@@ -68,6 +70,7 @@ const MaxButton = styled(Button)`
   margin-left: 0.5rem;
   height: 2.4rem;
   font-size: 1.2rem;
+  z-index: 1;
 `;
 
 const StyledLoading = styled(SpinnerLoading)`
