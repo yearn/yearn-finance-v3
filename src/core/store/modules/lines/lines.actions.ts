@@ -1,14 +1,11 @@
 import { BigNumber, utils } from 'ethers';
-import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
 import {
-  Position,
   AggregatedCreditLine,
   CreditLinePage,
   TransactionOutcome,
-  // LinesUserSummary,
-  UserPositionMetadata,
   Address,
   Wei,
   TokenAllowance,
@@ -18,24 +15,19 @@ import {
   PositionSummary,
   AddCreditProps,
   UseCreditLinesParams,
-  GetLinePageResponse,
   BorrowCreditProps,
 } from '@types';
 import {
-  calculateSharesAmount,
-  normalizeAmount,
   toBN,
   getNetwork,
   validateNetwork,
   formatGetLinesData,
   formatLinePageData,
-  all,
   // validateLineDeposit,
   // validateLineWithdraw,
   // validateMigrateLineAllowance,
   // parseError,
 } from '@utils';
-import { getConfig } from '@config';
 import { unnullify } from '@utils';
 import { TxCreditLineInput } from '@src/client/components/app/Transactions/components/TxCreditLineInput';
 

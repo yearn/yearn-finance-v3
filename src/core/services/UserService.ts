@@ -2,7 +2,6 @@ import BigNumber from 'bignumber.js';
 import { Contract } from 'ethers';
 
 import { GetAddressEnsNameProps, UserService, Web3Provider, Config } from '@types';
-import { getContract } from '@frameworks/ethers';
 
 // import bluePillNFTAbi from './contracts/bluePillNFT.json';
 // import woofyNFTAbi from './contracts/woofyNFT.json';

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Icon, MediumIcon, Link, TwitterIcon, DiscordIcon, RedditIcon } from '@components/common';
+import { Icon, Link, TwitterIcon, DiscordIcon } from '@components/common';
 import { useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
 

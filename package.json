@@ -10,6 +10,7 @@
     "lint": "eslint  --ignore-path .gitignore --ext .js,.ts,.tsx",
     "test": "craco test",
     "prettier": "prettier --write --ignore-unknown './src/**/*.{js,jsx,ts,tsx,css,scss,md}'",
+    "prettier-win": "prettier --write --ignore-unknown ./src/**/*.{js,jsx,ts,tsx,css,scss,md}",
     "eject": "react-scripts eject",
     "upgrade-sdk": "yarn add yearn/yearn-sdk",
     "syncDevLocales": "locize sync --project-id=1c6d6900-5989-49fe-b221-0001423041d2 --api-key=xxxx --ver=develop --path=./public/locales --format json --reference-language-only false",

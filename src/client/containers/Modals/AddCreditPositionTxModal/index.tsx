@@ -1,10 +1,9 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { useAppTranslation, useSelectedCreditLine } from '@hooks';
+import { useAppTranslation } from '@hooks';
 import { ModalTx } from '@components/common';
 import { AddCreditPositionTx } from '@components/app';
-import { TokenView } from '@core/types';
 
 const StyledAddCreditPositionTxModal = styled(ModalTx)``;
 export interface AddCreditPositionTxModalProps {
@@ -21,7 +20,6 @@ export const AddCreditPositionTxModal: FC<AddCreditPositionTxModalProps> = ({
 }) => {
   console.log('deposit modal', props);
   const { t } = useAppTranslation('common');
-  const [creditLine, setSelected] = useSelectedCreditLine();
   // if (!creditLine) return; // TODO error or creditLine selector input
 
   const onSelectedCreditLineChange = () => {

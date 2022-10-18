@@ -90,11 +90,10 @@ export const LineDetail = () => {
   // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
-  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
-  const walletName = useAppSelector(WalletSelectors.selectWallet);
+  //const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  //const walletName = useAppSelector(WalletSelectors.selectWallet);
   const userWalletAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const blockExplorerUrl = currentNetworkSettings.blockExplorerUrl;
 
   // Used to generate Transaction Button depending on whether user is lender, borrower, or arbiter.
   const [transactions, setTransactions] = useState<string[]>([]);
@@ -198,22 +197,8 @@ export const LineDetail = () => {
     (appStatus.loading || linesStatus.loading || tokensStatus.loading || isMounting) &&
     (!tokensInitialized || !linesInitialized);
 
-  const chartData = currentNetworkSettings.earningsEnabled
-    ? {
-        // underlying: parseHistoricalEarningsUnderlying(selectedLine?.historicalEarnings, selectedLine?.token.decimals),
-        // usd: parseHistoricalEarningsUsd(selectedLine?.historicalEarnings),
-      }
-    : {};
-  const chartValue = currentNetworkSettings.earningsEnabled
-    ? {
-        // usd: parseLastEarningsUsd(selectedLine?.historicalEarnings),
-        // underlying: parseLastEarningsUnderlying(selectedLine?.historicalEarnings, selectedLine?.token.decimals),
-      }
-    : {};
-
   // TODO: 0xframe also supports this
-  const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';
-
+  //const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';
   const depositAndRepayHandler = () => {
     dispatch(ModalsActions.openModal({ modalName: 'depositAndRepay' }));
   };
@@ -273,6 +258,8 @@ export const LineDetail = () => {
               Withdraw
             </WithdrawButton>
           );
+        } else {
+          return;
         }
       })}
     </LineDetailView>
