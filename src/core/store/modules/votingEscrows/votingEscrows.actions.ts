@@ -60,7 +60,7 @@ const getVotingEscrowsDynamic = createAsyncThunk<
   { votingEscrowsDynamic: VotingEscrowDynamic[] },
   { addresses: Address[] },
   ThunkAPI
->('votingEscrows/getVotingEscrowsDynamic', async ({ addresses }, { getState, extra }) => {
+>('votingEscrows/getVotingEscrowsDynamic', async ({ addresses }, { extra }) => {
   const { votingEscrowService } = extra.services;
   const { NETWORK } = extra.config;
   const votingEscrowsDynamic = await votingEscrowService.getVotingEscrowsDynamicData({
