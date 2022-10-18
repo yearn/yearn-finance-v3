@@ -45,8 +45,8 @@ export const VotingEscrowPage = () => {
             { label: 'Extend lock', children: <ExtendLockTab /> },
             { label: 'Early exit', children: <EarlyExitTab /> },
             { label: 'Claim YFI', children: <ClaimUnlockedTab /> },
-            { label: 'Claim rewards', children: <ClaimRewardsTab /> },
-            { label: 'Stake / Unstake', children: <GaugesTab /> },
+            // { label: 'Claim rewards', children: <ClaimRewardsTab /> },
+            // { label: 'Stake / Unstake', children: <GaugesTab /> },
             // { label: 'Vote for gauge', children: <p>{'Vote'}</p> },
           ]}
         />

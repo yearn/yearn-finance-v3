@@ -202,13 +202,14 @@ export const LockTab = () => {
             </Button>
           </Box>
         </Box>
-        <Box mt="2.4rem">
+        {/* TODO: add once functionality gets added */}
+        {/* <Box mt="2.4rem">
           <Text heading="h3">Auto-re-lock</Text>
           <Box display="flex" alignItems="center" justifyContent="space-between" width={1 / 2} pr="0.8rem" mt="1.6rem">
             <Text>Enabled</Text>
             <ToggleButton selected={false} setSelected={() => {}} />
           </Box>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );
