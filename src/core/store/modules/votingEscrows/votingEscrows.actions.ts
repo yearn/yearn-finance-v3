@@ -48,10 +48,10 @@ const initiateVotingEscrows = createAsyncThunk<void, void, ThunkAPI>(
 
 const getVotingEscrows = createAsyncThunk<{ votingEscrows: VotingEscrow[] }, { addresses?: Address[] }, ThunkAPI>(
   'votingEscrows/getVotingEscrows',
-  async ({ addresses }, { getState, extra }) => {
-    const { network } = getState();
+  async ({ addresses }, { extra }) => {
     const { votingEscrowService } = extra.services;
-    const votingEscrows = await votingEscrowService.getSupportedVotingEscrows({ network: network.current, addresses });
+    const { NETWORK } = extra.config;
+    const votingEscrows = await votingEscrowService.getSupportedVotingEscrows({ network: NETWORK, addresses });
     return { votingEscrows };
   }
 );
@@ -61,10 +61,10 @@ const getVotingEscrowsDynamic = createAsyncThunk<
   { addresses: Address[] },
   ThunkAPI
 >('votingEscrows/getVotingEscrowsDynamic', async ({ addresses }, { getState, extra }) => {
-  const { network } = getState();
   const { votingEscrowService } = extra.services;
+  const { NETWORK } = extra.config;
   const votingEscrowsDynamic = await votingEscrowService.getVotingEscrowsDynamicData({
-    network: network.current,
+    network: NETWORK,
     addresses,
   });
   return { votingEscrowsDynamic };
@@ -73,14 +73,15 @@ const getVotingEscrowsDynamic = createAsyncThunk<
 const getUserVotingEscrowsPositions = createAsyncThunk<{ positions: Position[] }, { addresses?: string[] }, ThunkAPI>(
   'votingEscrows/getUserVotingEscrowsPositions',
   async ({ addresses }, { extra, getState }) => {
-    const { network, wallet } = getState();
+    const { wallet } = getState();
     const { votingEscrowService } = extra.services;
+    const { NETWORK } = extra.config;
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const positions = await votingEscrowService.getUserVotingEscrowsPositions({
-      network: network.current,
+      network: NETWORK,
       accountAddress,
       addresses,
     });
@@ -93,14 +94,15 @@ const getUserVotingEscrowsMetadata = createAsyncThunk<
   { addresses?: string[] },
   ThunkAPI
 >('votingEscrows/getUserVotingEscrowsMetadata', async ({ addresses }, { extra, getState }) => {
-  const { network, wallet } = getState();
+  const { wallet } = getState();
   const { votingEscrowService } = extra.services;
+  const { NETWORK } = extra.config;
 
   const accountAddress = wallet.selectedAddress;
   if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
   const userVotingEscrowsMetadata = await votingEscrowService.getUserVotingEscrowsMetadata({
-    network: network.current,
+    network: NETWORK,
     accountAddress,
     addresses,
   });
@@ -121,15 +123,16 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 >(
   'votingEscrows/getExpectedTransactionOutcome',
   async ({ transactionType, tokenAddress, votingEscrowAddress, amount, time }, { extra, getState }) => {
-    const { network, wallet, tokens } = getState();
+    const { wallet, tokens } = getState();
     const { votingEscrowService } = extra.services;
+    const { NETWORK } = extra.config;
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const token = tokens.tokensMap[tokenAddress];
     const transactionOutcome = await votingEscrowService.getExpectedTransactionOutcome({
-      network: network.current,
+      network: NETWORK,
       accountAddress,
       transactionType,
       tokenAddress,
@@ -150,14 +153,15 @@ const getLockAllowance = createAsyncThunk<
   },
   ThunkAPI
 >('votingEscrows/getLockAllowance', async ({ tokenAddress, votingEscrowAddress }, { extra, getState, dispatch }) => {
+  const { wallet } = getState();
   const { votingEscrowService } = extra.services;
-  const { network, wallet } = getState();
+  const { NETWORK } = extra.config;
 
   const accountAddress = wallet.selectedAddress;
   if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
   const tokenAllowance = await votingEscrowService.getLockAllowance({
-    network: network.current,
+    network: NETWORK,
     accountAddress,
     tokenAddress,
     votingEscrowAddress,
@@ -181,12 +185,19 @@ const getLockAllowance = createAsyncThunk<
 const approveLock = createAsyncThunk<TokenAllowance, { tokenAddress: Address; votingEscrowAddress: Address }, ThunkAPI>(
   'votingEscrows/approveLock',
   async ({ tokenAddress, votingEscrowAddress }, { getState, extra, dispatch }) => {
-    const { votingEscrowService, transactionService } = extra.services;
     const { wallet, network } = getState();
-    const amount = extra.config.MAX_UINT256;
+    const { votingEscrowService, transactionService } = extra.services;
+    const { NETWORK, MAX_UINT256 } = extra.config;
+    const amount = MAX_UINT256;
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: NETWORK,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
 
     const tx = await votingEscrowService.approveLock({
       network: network.current,
@@ -232,14 +243,15 @@ const lock = createAsyncThunk<
 >(
   'votingEscrows/lock',
   async ({ tokenAddress, votingEscrowAddress, amount, time }, { extra, getState, dispatch }) => {
-    const { votingEscrowService, transactionService } = extra.services;
     const { network, wallet, tokens, app } = getState();
+    const { votingEscrowService, transactionService } = extra.services;
+    const { NETWORK } = extra.config;
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
+      currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
     if (networkError) throw networkError;
@@ -282,14 +294,15 @@ const increaseLockAmount = createAsyncThunk<
 >(
   'votingEscrows/increaseLockAmount',
   async ({ tokenAddress, votingEscrowAddress, amount }, { extra, getState, dispatch }) => {
-    const { votingEscrowService, transactionService } = extra.services;
     const { network, wallet, tokens, app } = getState();
+    const { votingEscrowService, transactionService } = extra.services;
+    const { NETWORK } = extra.config;
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
+      currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
     if (networkError) throw networkError;
@@ -330,14 +343,15 @@ const extendLockTime = createAsyncThunk<
 >(
   'votingEscrows/extendLockTime',
   async ({ tokenAddress, votingEscrowAddress, time }, { extra, getState, dispatch }) => {
-    const { votingEscrowService, transactionService } = extra.services;
     const { network, wallet, app } = getState();
+    const { votingEscrowService, transactionService } = extra.services;
+    const { NETWORK } = extra.config;
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
+      currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
     if (networkError) throw networkError;
@@ -369,14 +383,15 @@ const extendLockTime = createAsyncThunk<
 const withdrawLocked = createAsyncThunk<void, { tokenAddress: Address; votingEscrowAddress: Address }, ThunkAPI>(
   'votingEscrows/withdrawLocked',
   async ({ tokenAddress, votingEscrowAddress }, { extra, getState, dispatch }) => {
-    const { votingEscrowService, transactionService } = extra.services;
     const { network, wallet, app } = getState();
+    const { votingEscrowService, transactionService } = extra.services;
+    const { NETWORK } = extra.config;
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
+      currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
     if (networkError) throw networkError;
@@ -407,14 +422,15 @@ const withdrawLocked = createAsyncThunk<void, { tokenAddress: Address; votingEsc
 const withdrawUnlocked = createAsyncThunk<void, { tokenAddress: Address; votingEscrowAddress: Address }, ThunkAPI>(
   'votingEscrows/withdrawUnlocked',
   async ({ tokenAddress, votingEscrowAddress }, { extra, getState, dispatch }) => {
-    const { votingEscrowService, transactionService } = extra.services;
     const { network, wallet, app } = getState();
+    const { votingEscrowService, transactionService } = extra.services;
+    const { NETWORK } = extra.config;
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
     const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
+      currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
     if (networkError) throw networkError;
