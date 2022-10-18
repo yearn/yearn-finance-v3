@@ -6,11 +6,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: ""
-    with:
-      ref: ${{github.event.pull_request.head.ref}}
-      repository: ${{github.event.pull_request.head.repo.full_name}}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}  
       - name: Use Node.js 14.17.0
         uses: actions/setup-node@v1
         with:
