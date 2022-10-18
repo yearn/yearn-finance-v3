@@ -33,10 +33,11 @@ import {
 import { getConfig } from '@config';
 import { LineOfCreditABI } from '@services/contracts';
 import { getContract } from '@frameworks/ethers';
-import {  getLinePage, getLinePageAuxData, getLines } from '@frameworks/gql';
-import { WalletSelectors } from '../store';
+import { getLinePage, getLinePageAuxData, getLines } from '@frameworks/gql';
 import { useAppSelector } from '@src/client/hooks';
 import { unnullify } from '@src/utils';
+
+import { WalletSelectors } from '../store';
 
 const { GRAPH_API_URL } = getConfig();
 
@@ -91,7 +92,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         throw new Error('Cannot withdraw. Signer is not lender');
       }
       //@ts-ignore
-      return (TransactionResponse(
+      return (<TransactionResponse>(
         await this.executeContractMethod(props.lineAddress, 'withdraw', [props.id, props.amount])
       )).hash;
     } catch (e) {
@@ -118,7 +119,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         );
       }
       //@ts-ignore
-      return (TransactionResponse(
+      return (<TransactionResponse>(
         await this.executeContractMethod(props.lineAddress, 'setRates', [props.id, props.drate, props.frate])
       )).hash;
     } catch (e) {
@@ -150,7 +151,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         );
       }
       //@ts-ignore
-      return (TransactionResponse(
+      return (<TransactionResponse>(
         await this.executeContractMethod(props.lineAddress, 'increaseCredit', [props.id, props.amount])
       )).hash;
     } catch (e) {
@@ -234,7 +235,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         lender: lender,
       };
       //@ts-ignore
-      return TransactionResponse(
+      return <TransactionResponse>(
         await this.executeContractMethod(
           line,
           'addCredit',
@@ -257,7 +258,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         amount: props.amount,
       };
       //@ts-ignore
-      return TransactionResponse(await this.executeContractMethod(line, 'borrow', [data.id, data.amount], false));
+      return <TransactionResponse>await this.executeContractMethod(line, 'borrow', [data.id, data.amount], false);
     } catch (e) {
       console.log(`An error occured while borrowing credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);
@@ -271,14 +272,13 @@ export class CreditLineServiceImpl implements CreditLineService {
     dryRun: boolean = false
   ): Promise<TransactionResponse | PopulatedTransaction> {
     let props: ExecuteTransactionProps | undefined = undefined;
-    let network = useAppSelector(WalletSelectors.selectWalletNetwork)
     // TODO. pass network as param all the way down from actions
     // const { getSigner } = this.web3Provider;
     // const user = getSigner();
 
     try {
       props = {
-        network: network !== undefined ? network : 'goerli',
+        network: 'goerli',
         contractAddress: contractAddress,
         abi: this.abi,
         args: params,

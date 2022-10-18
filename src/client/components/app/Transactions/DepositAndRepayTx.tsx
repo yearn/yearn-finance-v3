@@ -3,12 +3,7 @@ import styled from 'styled-components';
 import { ethers } from 'ethers';
 
 import { formatAmount, normalizeAmount } from '@utils';
-import {
-  useAppTranslation,
-  useAppDispatch,
-  useAppSelector,
-  useSelectedSellToken,
-} from '@hooks';
+import { useAppTranslation, useAppDispatch, useAppSelector, useSelectedSellToken } from '@hooks';
 import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors, LinesActions } from '@store';
 import { getConstants } from '@src/config/constants';
 

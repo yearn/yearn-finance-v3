@@ -258,8 +258,7 @@ export const LineDetail = () => {
               Withdraw
             </WithdrawButton>
           );
-        }
-        else {
+        } else {
           return;
         }
       })}

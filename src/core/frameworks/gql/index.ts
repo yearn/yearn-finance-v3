@@ -89,7 +89,7 @@ export const getLines: QueryCreator<GetLinesArgs, GetLinesResponse[]> = <GetLine
 
 const getUserLinePositionsQuery = createQuery(GET_LINES_QUERY);
 export const getUserLinePositions: QueryCreator<GetUserLinePositionsArgs, PositionSummary[]> = <
-  GetUserLinePositionsArgs,
+  GetUserLinePositionsArgs
 >(
   arg: GetUserLinePositionsArgs
 ) => getUserLinePositionsQuery(arg);
