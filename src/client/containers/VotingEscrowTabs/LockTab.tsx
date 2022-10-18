@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAppSelector, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput } from '@components/app';
-import { Box, Text, Button, ToggleButton } from '@components/common';
+import { Box, Text, Button } from '@components/common';
 import { humanize, toBN, toUnit, toWei, validateAllowance, validateAmount, toWeeks, getTimeUntil } from '@utils';
 
 const MAX_LOCK_TIME = '208'; // Weeks

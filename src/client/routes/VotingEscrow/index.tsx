@@ -4,7 +4,7 @@ import { useAppSelector } from '@hooks';
 import { VotingEscrowsSelectors } from '@store';
 import { Box } from '@components/common';
 import { ViewContainer, SummaryCard, Amount } from '@components/app';
-import { LockTab, ExtendLockTab, EarlyExitTab, ClaimUnlockedTab, ClaimRewardsTab, GaugesTab } from '@containers';
+import { LockTab, ExtendLockTab, EarlyExitTab, ClaimUnlockedTab } from '@containers';
 import { humanize } from '@utils';
 
 export const VotingEscrowPage = () => {
