@@ -19,7 +19,7 @@ const ButtonSpinnerLoading = styled(SpinnerLoading)`
   font-size: 0.8rem;
 `;
 
-const StyledButton = styled.button<{ outline?: boolean; filled?: boolean; loading?: boolean; success?: boolean }>`
+const StyledButton = styled.button<{ outline?: boolean; filled?: boolean; isLoading?: boolean; success?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -49,10 +49,10 @@ const StyledButton = styled.button<{ outline?: boolean; filled?: boolean; loadin
     filter: contrast(90%);
   }
 
-  ${({ disabled, loading, success, theme: { colors } }) =>
+  ${({ disabled, isLoading, success, theme: { colors } }) =>
     disabled &&
     !success &&
-    !loading &&
+    !isLoading &&
     colors.button?.disabled &&
     `&:disabled {
       border-width: 1px;
@@ -110,7 +110,7 @@ export const Button: FC<ButtonProps> = ({
     outline={outline}
     filled={filled}
     onClick={onClick}
-    loading={isLoading}
+    isLoading={isLoading}
     success={success}
     {...props}
   >
