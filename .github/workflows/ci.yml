@@ -2,7 +2,7 @@ name: CI
 on: 
   workflow_dispatch:
   pull_request_target:
-    types: [reopened, opened, synchronize, edited]
+    types: [reopened, opened, synchronize, edited, push]
 
 # Multiple jobs make up a workflow run
 jobs:
