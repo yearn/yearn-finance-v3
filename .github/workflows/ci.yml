@@ -4,6 +4,8 @@ jobs:
   lhci:
     name: Lighthouse
     runs-on: ubuntu-latest
+    env:
+      CI: ""
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 14.17.0
