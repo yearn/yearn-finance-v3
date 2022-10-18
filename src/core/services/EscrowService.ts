@@ -100,7 +100,7 @@ export class EscrowServiceImpl implements EscrowService {
     let props: ExecuteTransactionProps | undefined = undefined;
     try {
       props = {
-        network: 'mainnet',
+        network: 'goerli',
         args: params,
         methodName: methodName,
         abi: this.abi,

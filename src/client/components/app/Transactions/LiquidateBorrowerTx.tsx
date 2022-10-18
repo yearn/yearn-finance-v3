@@ -1,29 +1,27 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { TokenCard } from '@yearn-finance/web-lib';
+import { ethers } from 'ethers';
 
-import { formatAmount, normalizeAmount, toBN } from '@utils';
+import { formatAmount, normalizeAmount } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
-  useSelectedCreditLine,
 
   // used to dummy token for dev
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { TokensActions, TokensSelectors, LinesActions, VaultsSelectors, LinesSelectors } from '@store';
+import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
-import { TxRateInput } from './components/TxRateInput';
 import { TxActionButton, TxActions } from './components/TxActions';
+import { TxStatus } from './components/TxStatus';
 
 const {
   CONTRACT_ADDRESSES: { DAI },
-  MAX_INTEREST_RATE,
 } = getConstants();
 const StyledTransaction = styled(TxContainer)``;
 
@@ -35,12 +33,6 @@ interface LiquidateBorrowerProps {
   onPositionChange: (data: { credit?: string; token?: string; amount?: string }) => void;
 }
 
-const RatesContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
 export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
@@ -48,8 +40,9 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
 
   const [targetTokenAmount, setTargetTokenAmount] = useState('10000000');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
+  const [transactionLoading, setLoading] = useState(false);
   const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
-  const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
+  const [transactionCompleted, setTransactionCompleted] = useState(0);
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
 
@@ -58,6 +51,7 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
     selectedVaultOrLab: useAppSelector(VaultsSelectors.selectRecommendations)[0],
     allowTokenSelect: true,
   });
+
   useEffect(() => {
     console.log('add position tx useEffect token/creditLine', selectedSellTokenAddress, initialToken, selectedCredit);
     if (selectedTokenAddress === '' && selectedSellToken) {
@@ -91,6 +85,11 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
       amount: targetTokenAmount,
     });
 
+  const onSelectedSellTokenChange = (tokenAddress: string) => {
+    setTargetTokenAmount('');
+    dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
+  };
+
   // Event Handlers
 
   const onAmountChange = (amount: string): void => {
@@ -103,6 +102,53 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
     _updatePosition();
   };
 
+  const onTransactionCompletedDismissed = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      setTransactionCompleted(0);
+    }
+  };
+
+  const liquidateBorrower = () => {
+    setLoading(true);
+    // TODO set error in state to display no line selected
+    if (!selectedCredit?.id || selectedSellTokenAddress === '') {
+      console.log('check this', selectedCredit?.id, selectedSellTokenAddress);
+      setLoading(false);
+      return;
+    }
+
+    let TransactionObj = {
+      lineAddress: selectedCredit.id,
+      amount: ethers.utils.parseEther(targetTokenAmount),
+      token: selectedSellTokenAddress,
+      dryRun: true,
+    };
+    //dispatch(LinesActions.addCredit(TransactionObj)).then((res) => {
+    //  if (res.meta.requestStatus === 'rejected') {
+    //    setTransactionCompleted(2);
+    //    console.log(transactionCompleted, 'tester');
+    //    setLoading(false);
+    //  }
+    //  if (res.meta.requestStatus === 'fulfilled') {
+    //    setTransactionCompleted(1);
+    //    console.log(transactionCompleted, 'tester');
+    //    setLoading(false);
+    //  }
+    //});
+  };
+
+  const txActions = [
+    {
+      label: t('components.transaction.liquidate'),
+      onAction: liquidateBorrower,
+      status: true,
+      disabled: transactionCompleted,
+      contrast: true,
+    },
+  ];
+
   console.log(selectedCredit, selectedCredit, 'here is breaking point');
   if (!selectedSellToken) return null;
   if (!selectedCredit) return null;
@@ -111,6 +157,30 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
   const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)} ${
     selectedSellToken.symbol
   }`;
+
+  if (transactionCompleted === 1) {
+    return (
+      <StyledTransaction onClose={onClose} header={'transaction'}>
+        <TxStatus
+          success={transactionCompleted}
+          transactionCompletedLabel={'completed'}
+          exit={onTransactionCompletedDismissed}
+        />
+      </StyledTransaction>
+    );
+  }
+
+  if (transactionCompleted === 2) {
+    return (
+      <StyledTransaction onClose={onClose} header={'transaction'}>
+        <TxStatus
+          success={transactionCompleted}
+          transactionCompletedLabel={'could not add credit'}
+          exit={onTransactionCompletedDismissed}
+        />
+      </StyledTransaction>
+    );
+  }
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
@@ -134,11 +204,22 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
         amountValue={String(10000000 * Number(targetTokenAmount))}
         maxAmount={targetBalance}
         selectedToken={selectedSellToken}
-        onSelectedTokenChange={() => {}}
+        onSelectedTokenChange={onSelectedSellTokenChange}
         tokenOptions={sourceAssetOptions}
       />
       <TxActions>
-        <TxActionButton>{'Liquidate'}</TxActionButton>
+        {txActions.map(({ label, onAction, status, disabled, contrast }) => (
+          <TxActionButton
+            key={label}
+            data-testid={`modal-action-${label.toLowerCase()}`}
+            onClick={onAction}
+            disabled={false}
+            contrast={contrast}
+            isLoading={transactionLoading}
+          >
+            {label}
+          </TxActionButton>
+        ))}
       </TxActions>
     </StyledTransaction>
   );
