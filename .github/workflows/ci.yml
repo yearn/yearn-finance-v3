@@ -1,44 +1,22 @@
 name: CI
-on: 
-  [push]
-# Multiple jobs make up a workflow run
+on: [push]
 jobs:
-  # Set ENV to false so warnings are not treated as errors
   lhci:
     name: Lighthouse
     runs-on: ubuntu-latest
     env:
       CI: ""
     steps:
-  # Checkout repo under github_workspaces
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{github.event.pull_request.head.ref}}
-          repository: ${{github.event.pull_request.head.repo.full_name}}  
-
+      - uses: actions/checkout@v2
       - name: Use Node.js 14.17.0
         uses: actions/setup-node@v1
         with:
           node-version: 14.17.0
-
       - name: yarn install, build
         run: |
           yarn install
           yarn run build
- # Install lighthouse CI 
       - name: run Lighthouse CI
         run: |
           yarn global add @lhci/cli@0.8.x
- # Generate report for PR
-      - name: run lighthouse action
-        id: lighthouse-report
-        run: |
-          echo "::set-output name=MESSAGE::$(lhci autorun | grep https://storage)"
- # Comment the results in a link
-      - name: Create comment
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            Results deployed here:  - ${{ steps.lighthouse-report.outputs.MESSAGE }}
+          lhci autorun
