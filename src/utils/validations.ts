@@ -264,11 +264,12 @@ export function basicValidateAmount(props: BasicValidateAmountProps): Validation
 export interface ValidateAmountProps {
   amount: Wei;
   balance?: Wei;
+  minAmountAllowed?: Wei;
   maxAmountAllowed?: Wei;
 }
 
 export function validateAmount(props: ValidateAmountProps): ValidationResponse {
-  const { amount, balance, maxAmountAllowed } = props;
+  const { amount, balance, minAmountAllowed, maxAmountAllowed } = props;
   const bnAmount = toBN(amount);
 
   if (bnAmount.isZero()) return {};
@@ -276,6 +277,8 @@ export function validateAmount(props: ValidateAmountProps): ValidationResponse {
   if (bnAmount.lt(0)) return { error: 'Invalid amount' };
 
   if (maxAmountAllowed && bnAmount.gt(maxAmountAllowed)) return { error: 'Exceeded max amount' };
+
+  if (minAmountAllowed && bnAmount.lt(minAmountAllowed)) return { error: 'Amount under minimum allowed' };
 
   if (balance && bnAmount.gt(balance)) return { error: 'Insufficient amount' };
 

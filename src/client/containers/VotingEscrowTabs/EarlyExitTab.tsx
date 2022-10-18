@@ -1,16 +1,15 @@
-import { useAppSelector, useExecuteThunk, useIsMounting } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
+import { useAppSelector, useExecuteThunk } from '@hooks';
+import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { humanize, toBN, getTimeUntil, toWeeks, format } from '@utils';
 
 export const EarlyExitTab = () => {
-  const isMounting = useIsMounting();
   const [withdrawLocked, withdrawLockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawLocked);
-  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
-  const hasLockedAmount = !!votingEscrow?.earlyExitPenaltyRatio && toBN(votingEscrow?.DEPOSIT.userDeposited).gt(0);
+  const hasLockedAmount =
+    toBN(votingEscrow?.earlyExitPenaltyRatio).gt(0) && toBN(votingEscrow?.DEPOSIT.userDeposited).gt(0);
   const weeksToUnlock = votingEscrow?.unlockDate
     ? toWeeks(getTimeUntil(votingEscrow.unlockDate.getTime())).toString()
     : '0';
@@ -57,7 +56,9 @@ export const EarlyExitTab = () => {
             />
             <Button
               onClick={executeWithdrawLocked}
-              disabled={isMounting || !hasLockedAmount}
+              isLoading={withdrawLockedStatus.loading}
+              success={withdrawLockedStatus.executed && !withdrawLockedStatus.error}
+              disabled={!hasLockedAmount || withdrawLockedStatus.loading}
               filled
               width={1 / 2}
               height="5.6rem"

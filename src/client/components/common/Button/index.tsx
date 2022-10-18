@@ -11,6 +11,7 @@ export interface ButtonProps extends LayoutProps, SpaceProps {
   color?: string;
   outline?: boolean;
   filled?: boolean;
+  success?: boolean;
   onClick?: (e?: any) => void;
 }
 
@@ -18,7 +19,7 @@ const ButtonSpinnerLoading = styled(SpinnerLoading)`
   font-size: 0.8rem;
 `;
 
-const StyledButton = styled.button<{ outline?: boolean; filled?: boolean }>`
+const StyledButton = styled.button<{ outline?: boolean; filled?: boolean; loading?: boolean; success?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -48,7 +49,10 @@ const StyledButton = styled.button<{ outline?: boolean; filled?: boolean }>`
     filter: contrast(90%);
   }
 
-  ${({ theme: { colors } }) =>
+  ${({ disabled, loading, success, theme: { colors } }) =>
+    disabled &&
+    !success &&
+    !loading &&
     colors.button?.disabled &&
     `&:disabled {
       border-width: 1px;
@@ -75,6 +79,14 @@ const StyledButton = styled.button<{ outline?: boolean; filled?: boolean }>`
     border-width: 0px;
     font-weight: 700;
   `}
+
+  ${(props) =>
+    props.success &&
+    !props.disabled &&
+    `
+    background-color: ${props.theme.colors.txModalColors.success};
+  `}
+
   ${layout}
   ${space}
 `;
@@ -88,6 +100,7 @@ export const Button: FC<ButtonProps> = ({
   onClick,
   children,
   isLoading,
+  success,
   ...props
 }) => (
   <StyledButton
@@ -97,6 +110,8 @@ export const Button: FC<ButtonProps> = ({
     outline={outline}
     filled={filled}
     onClick={onClick}
+    loading={isLoading}
+    success={success}
     {...props}
   >
     {isLoading ? <ButtonSpinnerLoading /> : children}

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 
 import { useAppSelector, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
+import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks } from '@utils';
 
 const MAX_LOCK_TIME = '209'; // Weeks
+const MIN_LOCK_TIME = '1'; // Weeks
 
 export const ExtendLockTab = () => {
   const isMounting = useIsMounting();
@@ -16,7 +17,6 @@ export const ExtendLockTab = () => {
   const [getExpectedTransactionOutcome, getExpectedTransactionOutcomeStatus, transactionOutcome] = useExecuteThunk(
     VotingEscrowsActions.getExpectedTransactionOutcome
   );
-  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const willExtendLock = toBN(debouncedLockTime).gt(0);
@@ -42,7 +42,7 @@ export const ExtendLockTab = () => {
 
   const { approved: isValidLockTime, error: lockTimeError } = validateAmount({
     amount: votingEscrow ? lockTime : '1',
-    maxAmountAllowed: MAX_LOCK_TIME,
+    minAmountAllowed: MIN_LOCK_TIME,
   });
 
   const inputError = lockTimeError;
@@ -80,12 +80,15 @@ export const ExtendLockTab = () => {
             <AmountInput label="Total veYFI" amount={resultAmount} mt="1.6rem" width={1 / 2} disabled />
             <Button
               onClick={executeExtendLockTime}
+              isLoading={extendLockTimeStatus.loading}
+              success={extendLockTimeStatus.executed && !extendLockTimeStatus.error}
               disabled={
                 isMounting ||
                 !isValidLockTime ||
                 isDebounceLockTimePending ||
                 getExpectedTransactionOutcomeStatus.loading ||
-                !getExpectedTransactionOutcomeStatus.executed
+                !getExpectedTransactionOutcomeStatus.executed ||
+                extendLockTimeStatus.loading
               }
               filled
               width={1 / 2}

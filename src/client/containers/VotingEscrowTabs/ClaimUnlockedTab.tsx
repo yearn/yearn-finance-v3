@@ -1,13 +1,11 @@
-import { useAppSelector, useExecuteThunk, useIsMounting } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
+import { useAppSelector, useExecuteThunk } from '@hooks';
+import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { humanize, toBN } from '@utils';
 
 export const ClaimUnlockedTab = () => {
-  const isMounting = useIsMounting();
   const [withdrawUnlocked, withdrawUnlockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawUnlocked);
-  const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const hasLockedAmount = !!votingEscrow?.earlyExitPenaltyRatio && toBN(votingEscrow?.DEPOSIT.userDeposited).gt(0);
@@ -40,7 +38,9 @@ export const ClaimUnlockedTab = () => {
             />
             <Button
               onClick={executeWithdrawUnlocked}
-              disabled={isMounting || hasLockedAmount}
+              isLoading={withdrawUnlockedStatus.loading}
+              success={withdrawUnlockedStatus.executed && !withdrawUnlockedStatus.error}
+              disabled={hasLockedAmount || withdrawUnlockedStatus.loading}
               filled
               width={1 / 2}
               height="5.6rem"
