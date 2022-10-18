@@ -3,9 +3,11 @@ import { ThemeProvider } from 'styled-components';
 
 import { useAppSelector, usePrevious } from '@hooks';
 import { getTheme } from '@themes';
+import { getConfig } from '@config';
 
 export const Themable: FC = ({ children }) => {
-  const currentTheme = useAppSelector(({ theme }) => theme.current);
+  const { USE_VEYFI_ROUTES } = getConfig();
+  const currentTheme = useAppSelector(({ theme }) => (USE_VEYFI_ROUTES ? 'light' : theme.current));
   const previousTheme = usePrevious(currentTheme);
   const theme = getTheme(currentTheme);
 
