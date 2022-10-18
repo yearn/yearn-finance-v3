@@ -6,6 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: ""
+    with:
+      ref: ${{github.event.pull_request.head.ref}}
+      repository: ${{github.event.pull_request.head.repo.full_name}}
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 14.17.0
@@ -19,7 +22,10 @@ jobs:
       - name: run Lighthouse CI
         run: |
           yarn global add @lhci/cli@0.8.x
-          lhci autorun
+      - name: run lighthouse action
+        id: lighthouse-report
+        run: |
+          echo "::set-output name=MESSAGE::$(lhci autorun | grep https://storage)"
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v2
         with:
