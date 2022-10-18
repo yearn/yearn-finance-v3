@@ -1,15 +1,25 @@
 import { useAppSelector, useExecuteThunk } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
-import { AmountInput } from '@components/app';
+import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
+import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { humanize, toBN } from '@utils';
+import { humanize, toBN, validateNetwork } from '@utils';
+import { getConfig } from '@config';
 
 export const ClaimUnlockedTab = () => {
+  const { NETWORK } = getConfig();
   const [withdrawUnlocked, withdrawUnlockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawUnlocked);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const hasLockedAmount = !!votingEscrow?.earlyExitPenaltyRatio && toBN(votingEscrow?.DEPOSIT.userDeposited).gt(0);
   const unlockedAmount = !votingEscrow?.unlockDate ? votingEscrow?.DEPOSIT.userBalance : '0';
+
+  const { error: networkError } = validateNetwork({
+    currentNetwork: NETWORK,
+    walletNetwork,
+  });
+
+  const error = networkError || withdrawUnlockedStatus.error;
 
   const executeWithdrawUnlocked = async () => {
     if (!votingEscrow) return;
@@ -49,6 +59,11 @@ export const ClaimUnlockedTab = () => {
               Claim
             </Button>
           </Box>
+          {error && (
+            <Box mt="1.6rem">
+              <TxError errorType="warning" errorTitle={error} />
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

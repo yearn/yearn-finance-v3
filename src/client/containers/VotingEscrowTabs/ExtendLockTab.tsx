@@ -1,22 +1,25 @@
 import { useState, useEffect } from 'react';
 
 import { useAppSelector, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
-import { AmountInput } from '@components/app';
+import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
+import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks } from '@utils';
+import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks, validateNetwork } from '@utils';
+import { getConfig } from '@config';
 
 const MAX_LOCK_TIME = '209'; // Weeks
-const MIN_LOCK_TIME = '1'; // Weeks
+const MIN_LOCK_TIME = '2'; // Weeks
 
 export const ExtendLockTab = () => {
   const isMounting = useIsMounting();
+  const { NETWORK } = getConfig();
   const [lockTime, setLockTime] = useState('');
   const [debouncedLockTime, isDebounceLockTimePending] = useDebounce(lockTime, 500);
   const [extendLockTime, extendLockTimeStatus] = useExecuteThunk(VotingEscrowsActions.extendLockTime);
   const [getExpectedTransactionOutcome, getExpectedTransactionOutcomeStatus, transactionOutcome] = useExecuteThunk(
     VotingEscrowsActions.getExpectedTransactionOutcome
   );
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const willExtendLock = toBN(debouncedLockTime).gt(0);
@@ -45,7 +48,13 @@ export const ExtendLockTab = () => {
     minAmountAllowed: MIN_LOCK_TIME,
   });
 
+  const { error: networkError } = validateNetwork({
+    currentNetwork: NETWORK,
+    walletNetwork,
+  });
+
   const inputError = lockTimeError;
+  const error = inputError || networkError || getExpectedTransactionOutcomeStatus.error || extendLockTimeStatus.error;
 
   const executeExtendLockTime = () => {
     if (!votingEscrow) return;
@@ -105,6 +114,11 @@ export const ExtendLockTab = () => {
               Extend
             </Button>
           </Box>
+          {error && (
+            <Box mt="1.6rem">
+              <TxError errorType="warning" errorTitle={error} />
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

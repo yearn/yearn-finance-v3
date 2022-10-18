@@ -32,12 +32,15 @@ export const useExecuteThunk = <T1, T2>(thunk: Thunk<T1, T2>): [Func<T1, T2>, St
     try {
       const thunkResult = await dispatchAndUnwrap(thunk(p));
       setResult(thunkResult);
+      setError(undefined);
       setIsLoading(false);
       setExecuted(true);
       return thunkResult;
     } catch (error: any) {
+      setResult(undefined);
       setError(error.message);
       setIsLoading(false);
+      setExecuted(false);
     }
   };
 

@@ -2,16 +2,28 @@ import { useState, useEffect } from 'react';
 
 import { useAppSelector, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
-import { AmountInput } from '@components/app';
+import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { humanize, toBN, toUnit, toWei, validateAllowance, validateAmount, toWeeks, getTimeUntil } from '@utils';
+import {
+  humanize,
+  toBN,
+  toUnit,
+  toWei,
+  validateAllowance,
+  validateAmount,
+  toWeeks,
+  getTimeUntil,
+  validateNetwork,
+} from '@utils';
+import { getConfig } from '@config';
 
-const MAX_LOCK_TIME = '208'; // Weeks
+const MAX_LOCK_TIME = '209'; // Weeks
 const MIN_LOCK_TIME = '1'; // Weeks
 const MIN_LOCK_AMOUNT = '1';
 
 export const LockTab = () => {
   const isMounting = useIsMounting();
+  const { NETWORK } = getConfig();
   const [lockAmount, setLockAmount] = useState('');
   const [debouncedLockAmount, isDebounceLockAmountPending] = useDebounce(lockAmount, 500);
   const [lockTime, setLockTime] = useState('');
@@ -23,6 +35,7 @@ export const LockTab = () => {
   const [approveLock, approveLockStatus] = useExecuteThunk(VotingEscrowsActions.approveLock);
   const [lock, lockStatus] = useExecuteThunk(VotingEscrowsActions.lock);
   const [increaseLockAmount, increaseLockAmountStatus] = useExecuteThunk(VotingEscrowsActions.increaseLockAmount);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
@@ -80,7 +93,19 @@ export const LockTab = () => {
     minAmountAllowed: MIN_LOCK_TIME,
   });
 
+  const { error: networkError } = validateNetwork({
+    currentNetwork: NETWORK,
+    walletNetwork,
+  });
+
   const inputError = lockAmountError || lockTimeError;
+  const error =
+    inputError ||
+    networkError ||
+    getExpectedTransactionOutcomeStatus.error ||
+    approveLockStatus.error ||
+    lockStatus.error ||
+    increaseLockAmountStatus.error;
 
   const executeApprove = () => {
     if (!votingEscrow) return;
@@ -208,6 +233,12 @@ export const LockTab = () => {
               {txAction.label}
             </Button>
           </Box>
+
+          {error && (
+            <Box mt="1.6rem">
+              <TxError errorType="warning" errorTitle={error} />
+            </Box>
+          )}
         </Box>
         {/* TODO: add once functionality gets added */}
         {/* <Box mt="2.4rem">
