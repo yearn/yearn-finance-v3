@@ -20,3 +20,9 @@ jobs:
         run: |
           yarn global add @lhci/cli@0.8.x
           lhci autorun
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            - ${{ steps.lighthouse-report.outputs.MESSAGE }}
