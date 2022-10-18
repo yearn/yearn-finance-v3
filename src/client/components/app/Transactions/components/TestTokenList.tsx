@@ -2,102 +2,10 @@ import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
-import { Text, Icon, Button, SearchList, ZapIcon, SearchListItem } from '@components/common';
+import { Button, Text, SearchList } from '@src/client/components/common';
+import { TokenIcon } from '@components/app';
 import { humanize } from '@utils';
-
-const MaxButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.globalRadius};
-  width: min-content;
-  margin-left: 0.5rem;
-  text-transform: capitalize;
-`;
-
-const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
-  font-size: 2.4rem;
-  font-weight: 700;
-  background: transparent;
-  outline: none;
-  border: none;
-  color: ${({ theme }) => theme.colors.txModalColors.textContrast};
-  padding: 0;
-  font-family: inherit;
-  appearance: textfield;
-  width: 100%;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.txModalColors.textContrast};
-  }
-
-  ${({ readOnly, theme }) =>
-    readOnly &&
-    `
-    color: ${theme.colors.txModalColors.text};
-    cursor: default;
-
-    &::placeholder {
-      color: ${theme.colors.txModalColors.text};
-    }
-  `}
-
-  ${({ error, theme }) => error && `color: ${theme.colors.txModalColors.error};`}
-
-  ${() => `
-    ::-webkit-outer-spin-button,
-    ::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    };
-  `}
-`;
-
-const AmountInputContainer = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin-top: 0.8rem;
-`;
-
-const AmountTitle = styled(Text)`
-  color: ${({ theme }) => theme.colors.txModalColors.text};
-  text-overflow: ellipsis;
-`;
-
-const TokenData = styled.div`
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border-radius: ${({ theme }) => theme.globalRadius};
-  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
-  padding: ${({ theme }) => theme.layoutPadding};
-  font-size: 1.4rem;
-  flex: 1;
-`;
-
-const TokenName = styled.div`
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-align: center;
-  font-size: 1.3rem;
-  max-height: 3rem;
-`;
-
-const TokenListIcon = styled(Icon)`
-  position: absolute;
-  top: 0.8rem;
-  right: 0.4rem;
-  color: ${({ theme }) => theme.colors.txModalColors.onBackgroundVariantColor};
-`;
-
-const TokenIconContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-`;
 
 const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
   display: flex;
@@ -172,6 +80,91 @@ const StyledTxTokenInput = styled(TransitionGroup)`
   }
 `;
 
+const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
+  font-size: 2.4rem;
+  font-weight: 700;
+  background: transparent;
+  outline: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.txModalColors.textContrast};
+  padding: 0;
+  font-family: inherit;
+  appearance: textfield;
+  width: 100%;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.txModalColors.textContrast};
+  }
+
+  ${({ readOnly, theme }) =>
+    readOnly &&
+    `
+    color: ${theme.colors.txModalColors.text};
+    cursor: default;
+
+    &::placeholder {
+      color: ${theme.colors.txModalColors.text};
+    }
+  `}
+
+  ${({ error, theme }) => error && `color: ${theme.colors.txModalColors.error};`}
+
+  ${() => `
+    ::-webkit-outer-spin-button,
+    ::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    };
+  `}
+`;
+
+const AmountInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 0.8rem;
+`;
+
+const AmountTitle = styled(Text)`
+  color: ${({ theme }) => theme.colors.txModalColors.text};
+  text-overflow: ellipsis;
+`;
+
+const TokenData = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: ${({ theme }) => theme.globalRadius};
+  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
+  padding: ${({ theme }) => theme.layoutPadding};
+  font-size: 1.4rem;
+  flex: 1;
+`;
+
+const TokenName = styled.div`
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  font-size: 1.3rem;
+  max-height: 3rem;
+`;
+
+const TokenIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const MaxButton = styled(Button)`
+  border-radius: ${({ theme }) => theme.globalRadius};
+  width: min-content;
+  margin-left: 0.5rem;
+  text-transform: capitalize;
+`;
+
 const amountToNumber = (amount: string) => {
   const parsedAmount = amount.replace(/[%,$ ]/g, '');
   return parseInt(parsedAmount);
@@ -207,19 +200,19 @@ export interface TxTokenInputProps {
   displayGuidance?: boolean;
 }
 
-export const TxTokenInput: FC<TxTokenInputProps> = ({
+export const TxTestTokenInput: FC<TxTokenInputProps> = ({
   headerText,
   inputText,
   inputError,
   amount,
   onAmountChange,
   amountValue,
+  tokenOptions,
   maxAmount,
   maxLabel = 'Max',
   selectedToken,
   onSelectedTokenChange,
   yieldPercent,
-  tokenOptions,
   readOnly,
   hideAmount,
   loading,
@@ -230,8 +223,8 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
 }) => {
   const { t } = useAppTranslation('common');
 
-  let listItems: SearchListItem[] = [];
-  let selectedItem: SearchListItem = {
+  let listItems: any = [];
+  let selectedItem = {
     id: selectedToken.address,
     icon: selectedToken.icon,
     label: selectedToken.symbol,
@@ -249,7 +242,6 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         };
       })
       .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));
-    listItems.sort((a, b) => (a.id === selectedItem.id ? -1 : 1));
   }
 
   const openSearchList = () => {
@@ -282,7 +274,6 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined} center={hideAmount}>
             <TokenIconContainer>
               <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
-              {listItems?.length > 1 && <TokenListIcon Component={ZapIcon} />}
             </TokenIconContainer>
             <TokenName>{selectedItem.label}</TokenName>
           </TokenSelector>

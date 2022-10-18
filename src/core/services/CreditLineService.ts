@@ -5,7 +5,6 @@ import { keccak256 } from 'ethers/lib/utils';
 import {
   BorrowCreditProps,
   CreditLineService,
-  YearnSdk,
   AggregatedCreditLine,
   TransactionService,
   Web3Provider,
@@ -15,7 +14,6 @@ import {
   STATUS,
   ExecuteTransactionProps,
   Credit,
-  CreditLinePage,
   GetLineProps,
   GetLinesProps,
   GetLinePageProps,
@@ -33,12 +31,15 @@ import {
   GetLinePageResponse,
 } from '@types';
 import { getConfig } from '@config';
-import { LineOfCreditABI, LineFactoryABI } from '@services/contracts';
+import { LineOfCreditABI } from '@services/contracts';
 import { getContract } from '@frameworks/ethers';
-import { getLine, getLinePage, getLinePageAuxData, getLines, getUserLinePositions } from '@frameworks/gql';
-import { formatGetLinesData, formatLinePageData, formatGetLinePageAuxData, unnullify } from '@src/utils';
+import { getLinePage, getLinePageAuxData, getLines } from '@frameworks/gql';
+import { useAppSelector } from '@src/client/hooks';
+import { unnullify } from '@src/utils';
 
-const { GRAPH_API_URL, SecuredLine_GOERLI } = getConfig();
+import { WalletSelectors } from '../store';
+
+const { GRAPH_API_URL } = getConfig();
 
 export class CreditLineServiceImpl implements CreditLineService {
   private graphUrl: string;
@@ -50,13 +51,11 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   constructor({
     transactionService,
-    yearnSdk,
     web3Provider,
     config,
   }: {
     transactionService: TransactionService;
     web3Provider: Web3Provider;
-    yearnSdk: YearnSdk;
     config: Config;
   }) {
     this.transactionService = transactionService;
@@ -87,11 +86,12 @@ export class CreditLineServiceImpl implements CreditLineService {
     }
   }
 
-  public async withdraw(props: WithdrawLineProps): Promise<string> {
+  public async withdraw(props: WithdrawLineProps): Promise<TransactionResponse | PopulatedTransaction> {
     try {
       if (!(await this.isLender(props.lineAddress, props.id))) {
         throw new Error('Cannot withdraw. Signer is not lender');
       }
+      //@ts-ignore
       return (<TransactionResponse>(
         await this.executeContractMethod(props.lineAddress, 'withdraw', [props.id, props.amount])
       )).hash;
@@ -118,7 +118,7 @@ export class CreditLineServiceImpl implements CreditLineService {
           `Setting rate is not possible. reason: "Consent has not been initialized by other party for the given creditLine [${props.lineAddress}]`
         );
       }
-
+      //@ts-ignore
       return (<TransactionResponse>(
         await this.executeContractMethod(props.lineAddress, 'setRates', [props.id, props.drate, props.frate])
       )).hash;
@@ -150,7 +150,7 @@ export class CreditLineServiceImpl implements CreditLineService {
           `Increasing credit is not possible. reason: "Consent has not been initialized by other party for the given creditLine [${props.lineAddress}]`
         );
       }
-
+      //@ts-ignore
       return (<TransactionResponse>(
         await this.executeContractMethod(props.lineAddress, 'increaseCredit', [props.id, props.amount])
       )).hash;
@@ -225,7 +225,6 @@ export class CreditLineServiceImpl implements CreditLineService {
       //true
       //);
       // check mutualConsent
-      const borrower = await this.borrower(line);
       const lender = await this.getSignerAddress();
 
       let data = {
@@ -235,7 +234,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         token: props.token,
         lender: lender,
       };
-
+      //@ts-ignore
       return <TransactionResponse>(
         await this.executeContractMethod(
           line,
@@ -258,7 +257,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         id: props.lineAddress,
         amount: props.amount,
       };
-
+      //@ts-ignore
       return <TransactionResponse>await this.executeContractMethod(line, 'borrow', [data.id, data.amount], false);
     } catch (e) {
       console.log(`An error occured while borrowing credit, error = [${JSON.stringify(e)}]`);
@@ -273,7 +272,6 @@ export class CreditLineServiceImpl implements CreditLineService {
     dryRun: boolean = false
   ): Promise<TransactionResponse | PopulatedTransaction> {
     let props: ExecuteTransactionProps | undefined = undefined;
-
     // TODO. pass network as param all the way down from actions
     // const { getSigner } = this.web3Provider;
     // const user = getSigner();
@@ -371,7 +369,6 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   public async getLines(prop: GetLinesProps): Promise<GetLinesResponse[] | undefined> {
     // todo get all token prices from yearn add update store with values
-    const tokenPrices = {};
     const response = getLines(prop)
       .then((data) => data)
       .catch((err) => {

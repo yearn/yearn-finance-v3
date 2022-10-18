@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Img, LogoIcon } from '@components/common';
+import { Img } from '@components/common';
 
 const fallbackIcon = '';
 

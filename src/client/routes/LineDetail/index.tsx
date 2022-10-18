@@ -42,6 +42,13 @@ const LineDetailView = styled(ViewContainer)`
   }
 `;
 
+const WithdrawButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
+  margin-left: 1rem;
+`;
+
 const AddCreditButton = styled(Button)`
   width: 18rem;
   margin-top: 1em;
@@ -83,11 +90,10 @@ export const LineDetail = () => {
   // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
-  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
-  const walletName = useAppSelector(WalletSelectors.selectWallet);
+  //const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  //const walletName = useAppSelector(WalletSelectors.selectWallet);
   const userWalletAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const blockExplorerUrl = currentNetworkSettings.blockExplorerUrl;
 
   // Used to generate Transaction Button depending on whether user is lender, borrower, or arbiter.
   const [transactions, setTransactions] = useState<string[]>([]);
@@ -106,15 +112,26 @@ export const LineDetail = () => {
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
+  const WithdrawHandler = () => {
+    if (!selectedLine) {
+      return;
+    }
+    let address = selectedLine.id;
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'withdraw' }));
+  };
+
   useEffect(() => {
     let Transactions = [];
     console.log('user wallet: ', userWalletAddress, 'borrower', selectedLine?.borrower);
     if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.borrower) {
       Transactions.push('borrow');
       Transactions.push('deposit-and-repay');
+      Transactions.push('deposit');
     }
     if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.borrower) {
       Transactions.push('deposit');
+      Transactions.push('withdraw');
     }
     setTransactions(Transactions);
   }, [userWalletAddress, selectedLine]);
@@ -180,22 +197,8 @@ export const LineDetail = () => {
     (appStatus.loading || linesStatus.loading || tokensStatus.loading || isMounting) &&
     (!tokensInitialized || !linesInitialized);
 
-  const chartData = currentNetworkSettings.earningsEnabled
-    ? {
-        // underlying: parseHistoricalEarningsUnderlying(selectedLine?.historicalEarnings, selectedLine?.token.decimals),
-        // usd: parseHistoricalEarningsUsd(selectedLine?.historicalEarnings),
-      }
-    : {};
-  const chartValue = currentNetworkSettings.earningsEnabled
-    ? {
-        // usd: parseLastEarningsUsd(selectedLine?.historicalEarnings),
-        // underlying: parseLastEarningsUnderlying(selectedLine?.historicalEarnings, selectedLine?.token.decimals),
-      }
-    : {};
-
   // TODO: 0xframe also supports this
-  const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';
-
+  //const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';
   const depositAndRepayHandler = () => {
     dispatch(ModalsActions.openModal({ modalName: 'depositAndRepay' }));
   };
@@ -238,7 +241,7 @@ export const LineDetail = () => {
         if (transaction === 'deposit') {
           return (
             <AddCreditButton onClick={depositHandler} key={`${transaction}-${i}`}>
-              Deposit
+              Deposit - Consent
             </AddCreditButton>
           );
         }
@@ -248,6 +251,15 @@ export const LineDetail = () => {
               Repay
             </DepositAndRepayButton>
           );
+        }
+        if (transaction === 'withdraw') {
+          return (
+            <WithdrawButton onClick={WithdrawHandler} key={`${transaction}-${i}`}>
+              Withdraw
+            </WithdrawButton>
+          );
+        } else {
+          return;
         }
       })}
     </LineDetailView>

@@ -1,16 +1,6 @@
-import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import {
-  useAppTranslation,
-  useAppDispatch,
-  useSelectedCreditLine,
-
-  // used to dummy token for dev
-  useAppSelector,
-  useSelectedSellToken,
-} from '@hooks';
+import { useAppTranslation } from '@hooks';
 import { toBN } from '@src/utils';
 import { ThreeColumnLayout } from '@src/client/containers/Columns';
 

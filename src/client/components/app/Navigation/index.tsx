@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector, useWindowDimensions } from '@hooks';
 import { SettingsActions, SettingsSelectors } from '@store';
-import { WalletIcon, VaultIcon, LabsIcon, SettingsIcon, SearchIcon, DiscordIcon } from '@components/common';
+import { WalletIcon, VaultIcon, SettingsIcon, SearchIcon, DiscordIcon } from '@components/common';
 
 import { NavSidebar } from './NavSidebar';
 import { NavTabbar } from './NavTabbar';

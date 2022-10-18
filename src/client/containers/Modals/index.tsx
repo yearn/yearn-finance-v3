@@ -10,12 +10,12 @@ import { CommunityThemesModal } from './CommunityThemesModal';
 import { TestTxModal } from './TestTxModal';
 import { DepositTxModal } from './DepositTxModal';
 import { AddCreditPositionTxModal } from './AddCreditPositionTxModal';
-import { WithdrawTxModal } from './WithdrawTxModal';
 import { MigrateTxModal } from './MigrateTxModal';
 import { LiquidateBorrowerTxModal } from './LiquidateBorrower';
 import { BorrowTxModal } from './BorrowTxModal';
 import { DeployLineTxModal } from './DeployLineTxModal';
 import { DepositAndRepayTxModal } from './DepositAndRepayTxModal';
+import { WithdrawCreditTxModal } from './WithdrawCreditTxModal';
 
 const modalTimeout = 300;
 
@@ -132,12 +132,6 @@ export const Modals = () => {
         </CSSTransition>
       )}
 
-      {activeModal === 'withdrawTx' && (
-        <CSSTransition key={'withdrawTx'} timeout={modalTimeout} classNames="slideBottom">
-          <WithdrawTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
       {activeModal === 'migrateTx' && (
         <CSSTransition key={'migrateTx'} timeout={modalTimeout} classNames="slideBottom">
           <MigrateTxModal onClose={closeModal} />
@@ -176,6 +170,12 @@ export const Modals = () => {
       {activeModal === 'depositAndRepay' && (
         <CSSTransition key={'depositAndRepay'} timeout={modalTimeout} classNames="slideBottom">
           <DepositAndRepayTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'withdraw' && (
+        <CSSTransition key={'withdraw'} timeout={modalTimeout} classNames="slideBottom">
+          <WithdrawCreditTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

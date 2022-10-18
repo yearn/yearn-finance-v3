@@ -1,19 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { isEmpty } from 'lodash';
 
-import {
-  useAppTranslation,
-  useAppDispatch,
-  useSelectedCreditLine,
-
-  // used to dummy token for dev
-  useAppSelector,
-  useSelectedSellToken,
-} from '@hooks';
-import { toBN } from '@src/utils';
-import { CreditEvent, SetRateEvent } from '@src/core/types';
+import { useAppTranslation } from '@hooks';
+import { CreditEvent } from '@src/core/types';
 
 const Table = styled.table`
   ${({ theme }) => `
@@ -27,11 +16,6 @@ const TableHeader = styled.h3`
     font-weight: 600;
     margin: ${theme.spacing.xl} 0;
     color: ${theme.colors.primary};
-  `}
-`;
-
-const TableRow = styled.h3`
-  ${({ theme }) => `
   `}
 `;
 

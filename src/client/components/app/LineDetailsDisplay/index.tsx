@@ -1,17 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { AggregatedCreditLine, CreditLinePage } from '@src/core/types';
-import {
-  useAppTranslation,
-  useAppDispatch,
-  useSelectedCreditLine,
-
-  // used to dummy token for dev
-  useAppSelector,
-  useSelectedSellToken,
-} from '@hooks';
+import { useAppTranslation } from '@hooks';
 import { Text } from '@components/common';
 
 import { LineMetadata } from './LineMetadata';
@@ -54,7 +45,7 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
 
   if (!line && !page) return <Container>{t('lineDetails:line.no-data')}</Container>;
 
-  const { principal, deposit, credits, borrower, start, end } = lineData;
+  const { principal, deposit, borrower, start, end } = lineData;
   const StandardMetadata = () => (
     <>
       <Header>

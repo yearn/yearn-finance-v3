@@ -1,0 +1,22 @@
+name: CI
+on: [push]
+jobs:
+  lhci:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    env:
+      CI: ""
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.17.0
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17.0
+      - name: yarn install, build
+        run: |
+          yarn install
+          yarn run build
+      - name: run Lighthouse CI
+        run: |
+          yarn global add @lhci/cli@0.8.x
+          lhci autorun

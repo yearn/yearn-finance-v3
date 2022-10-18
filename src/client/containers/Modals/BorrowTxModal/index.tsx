@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { useAppTranslation, useSelectedCreditLine } from '@hooks';
+import { useAppTranslation } from '@hooks';
 import { ModalTx } from '@components/common';
 import { BorrowCreditTx } from '@components/app';
 
@@ -20,7 +20,6 @@ export const BorrowTxModal: FC<BorrowTxModalProps> = ({
 }) => {
   console.log('borrow modal', props);
   const { t } = useAppTranslation('common');
-  const [creditLine, setSelected] = useSelectedCreditLine();
   // if (!creditLine) return; // TODO error or creditLine selector input
 
   const onSelectedCreditLineChange = () => {

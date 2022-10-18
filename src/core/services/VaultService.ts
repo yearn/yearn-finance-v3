@@ -6,7 +6,6 @@ import {
   SignPermitProps,
   DepositProps,
   WithdrawProps,
-  MigrateProps,
   Position,
   Vault,
   VaultDynamic,

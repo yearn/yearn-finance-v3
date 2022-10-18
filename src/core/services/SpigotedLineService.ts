@@ -2,7 +2,6 @@
 import { BigNumber, ethers, PopulatedTransaction } from 'ethers';
 
 import {
-  YearnSdk,
   TransactionService,
   Web3Provider,
   Config,
@@ -31,13 +30,11 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
   constructor({
     transactionService,
     creditLineService,
-    yearnSdk,
     web3Provider,
     config,
   }: {
     transactionService: TransactionService;
     web3Provider: Web3Provider;
-    yearnSdk: YearnSdk;
     config: Config;
     creditLineService: CreditLineService;
   }) {

@@ -2,15 +2,8 @@ import { FC, useState } from 'react';
 import styled from 'styled-components';
 
 import { isAddress } from '@utils';
-import {
-  useAppTranslation,
-  useAppDispatch,
-
-  // used to dummy token for dev
-  useAppSelector,
-  useSelectedSellToken,
-} from '@hooks';
-import { getConstants } from '@src/config/constants';
+import { useAppTranslation, useAppDispatch } from '@hooks';
+import { useSelectedCreditLine } from '@hooks';
 import { LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
@@ -20,10 +13,6 @@ import { TxActions } from './components/TxActions';
 import { TxActionButton } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
 
-const {
-  CONTRACT_ADDRESSES: { DAI },
-  MAX_INTEREST_RATE,
-} = getConstants();
 const StyledTransaction = styled(TxContainer)``;
 
 interface DeployLineProps {
