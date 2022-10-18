@@ -1,9 +1,6 @@
 name: CI
 on: 
-  workflow_dispatch:
-  pull_request_target:
-    types: [reopened, opened, synchronize, edited, push]
-
+  [push]
 # Multiple jobs make up a workflow run
 jobs:
   # Set ENV to false so warnings are not treated as errors
