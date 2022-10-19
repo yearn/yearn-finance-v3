@@ -8,10 +8,14 @@ export interface Env {
   VERSION: string;
   HOST: string;
   NETWORK: Network;
-  CUSTOM_PROVIDER_HTTPS: string;
   USE_MAINNET_FORK: boolean;
   USE_SDK_MOCK: boolean;
   ALLOW_DEV_MODE: boolean;
+  ETHEREUM_PROVIDER_HTTPS: string | undefined;
+  FANTOM_PROVIDER_HTTPS: string | undefined;
+  ARBITRUM_PROVIDER_HTTPS: string | undefined;
+  OPTIMISM_PROVIDER_HTTPS: string | undefined;
+  CUSTOM_PROVIDER_HTTPS: string;
   INFURA_PROJECT_ID: string | undefined;
   ETHERSCAN_API_KEY: string | undefined;
   ALCHEMY_API_KEY: string | undefined;
@@ -30,11 +34,9 @@ export interface Constants {
   YEARN_ALERTS_API: string;
   SUPPORTED_NETWORKS: Network[];
   NETWORK_SETTINGS: NetworkSettings;
-  WEB3_PROVIDER_HTTPS: string;
-  WEB3_PROVIDER_WSS: string;
-  FANTOM_PROVIDER_HTTPS: string;
-  ARBITRUM_PROVIDER_HTTPS: string;
-  OPTIMISM_PROVIDER_HTTPS: string;
+  RPC_URL: {
+    [network: string]: string;
+  };
   CONTRACT_ADDRESSES: {
     [KEY: string]: string;
   };

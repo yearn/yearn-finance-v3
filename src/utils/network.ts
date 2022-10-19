@@ -49,19 +49,8 @@ export const getNetwork = (networkId: number | string): Network => {
 };
 
 export const getNetworkRpc = (network: Network): string => {
-  const { WEB3_PROVIDER_HTTPS, FANTOM_PROVIDER_HTTPS, ARBITRUM_PROVIDER_HTTPS, OPTIMISM_PROVIDER_HTTPS } = getConfig();
-  switch (network) {
-    case 'mainnet':
-      return WEB3_PROVIDER_HTTPS;
-    case 'fantom':
-      return FANTOM_PROVIDER_HTTPS;
-    case 'arbitrum':
-      return ARBITRUM_PROVIDER_HTTPS;
-    case 'optimism':
-      return OPTIMISM_PROVIDER_HTTPS;
-    default:
-      throw Error('Unknown Network');
-  }
+  const { RPC_URL } = getConfig();
+  return RPC_URL[network];
 };
 
 export const getProviderType = (network: Network): ProviderType => {
