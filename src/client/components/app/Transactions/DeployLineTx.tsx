@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { isAddress } from '@utils';
 import { useAppTranslation, useAppDispatch } from '@hooks';
-import { useSelectedCreditLine } from '@hooks';
 import { LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
@@ -18,7 +17,6 @@ const StyledTransaction = styled(TxContainer)``;
 interface DeployLineProps {
   header: string;
   onClose: () => void;
-  allowVaultSelect: boolean;
   onPositionChange: (data: {
     credit?: string;
     token?: string;

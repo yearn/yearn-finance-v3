@@ -20,7 +20,6 @@ interface DepositAndRepayProps {
   onClose: () => void;
   acceptingOffer: boolean;
   onSelectedCreditLineChange: Function;
-  allowVaultSelect: boolean;
   onPositionChange: (data: { credit?: string; token: string | undefined; amount?: string }) => void;
 }
 

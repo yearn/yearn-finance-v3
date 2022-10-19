@@ -100,7 +100,6 @@ export const Layout: FC = ({ children }) => {
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const previousAddress = usePrevious(selectedAddress);
   const previousNetwork = usePrevious(currentNetwork);
-  const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1] as Route;
   const isLedgerLive = partner.id === 'ledger';
@@ -108,13 +107,8 @@ export const Layout: FC = ({ children }) => {
   const hideControls = isIframe || isLedgerLive;
   const hideOptionalLinks = isLedgerLive;
 
-  let vaultName;
   let titleLink;
   // TODO Add lab details route when its added the view
-  if (path === 'vault') {
-    vaultName = selectedVault?.displayName;
-    titleLink = '/vaults';
-  }
 
   // TODO This is only assetAddress on the vault page
   const assetAddress: string | undefined = location.pathname.split('/')[2];
@@ -192,7 +186,7 @@ export const Layout: FC = ({ children }) => {
         <Navbar
           title={t(`pages.${path}`)}
           titleLink={titleLink}
-          subTitle={vaultName}
+          subTitle={''}
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}
           onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}
