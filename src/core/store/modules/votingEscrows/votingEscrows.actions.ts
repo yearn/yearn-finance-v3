@@ -458,6 +458,45 @@ const withdrawUnlocked = createAsyncThunk<void, { tokenAddress: Address; votingE
   }
 );
 
+// NOTE: just for testing env
+const mint = createAsyncThunk<void, { tokenAddress: Address; amount: Unit }, ThunkAPI>(
+  'votingEscrows/mint',
+  async ({ tokenAddress, amount }, { extra, getState, dispatch }) => {
+    const { network, wallet, tokens, app } = getState();
+    const { votingEscrowService, transactionService } = extra.services;
+    const { NETWORK } = extra.config;
+
+    const accountAddress = wallet.selectedAddress;
+    if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { error: networkError } = validateNetwork({
+      currentNetwork: NETWORK,
+      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    });
+    if (networkError) throw networkError;
+
+    const token = tokens.tokensMap[tokenAddress];
+    const tx = await votingEscrowService.mint({
+      network: network.current,
+      accountAddress,
+      tokenAddress,
+      amount: toWei(amount, parseInt(token.decimals)),
+    });
+
+    const notificationsEnabled = app.servicesEnabled.notifications;
+    await transactionService.handleTransaction({
+      tx,
+      network: network.current,
+      useExternalService: notificationsEnabled,
+    });
+
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress] }));
+  },
+  {
+    serializeError: parseError,
+  }
+);
+
 /* -------------------------------------------------------------------------- */
 /*                                   Exports                                  */
 /* -------------------------------------------------------------------------- */
@@ -480,4 +519,5 @@ export const VotingEscrowsActions = {
   extendLockTime,
   withdrawLocked,
   withdrawUnlocked,
+  mint,
 };

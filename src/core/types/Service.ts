@@ -276,8 +276,9 @@ export interface VotingEscrowService {
   lock: (props: VotingEscrowLockProps) => Promise<TransactionResponse>;
   increaseLockAmount: (props: IncreaseLockAmountProps) => Promise<TransactionResponse>;
   extendLockTime: (props: ExtendLockTimeProps) => Promise<TransactionResponse>;
-  withdrawLocked: (props: WithdrawLocked) => Promise<TransactionResponse>;
-  withdrawUnlocked: (props: WithdrawUnlocked) => Promise<TransactionResponse>;
+  withdrawLocked: (props: WithdrawLockedProps) => Promise<TransactionResponse>;
+  withdrawUnlocked: (props: WithdrawUnlockedProps) => Promise<TransactionResponse>;
+  mint: (props: MintProps) => Promise<TransactionResponse>;
 }
 
 export interface GetSupportedVotingEscrowsProps {
@@ -350,16 +351,23 @@ export interface ExtendLockTimeProps {
   time: Weeks;
 }
 
-export interface WithdrawLocked {
+export interface WithdrawLockedProps {
   network: Network;
   accountAddress: Address;
   votingEscrowAddress: Address;
 }
 
-export interface WithdrawUnlocked {
+export interface WithdrawUnlockedProps {
   network: Network;
   accountAddress: Address;
   votingEscrowAddress: Address;
+}
+
+export interface MintProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  amount: Wei;
 }
 
 // *************** GAUGE ***************

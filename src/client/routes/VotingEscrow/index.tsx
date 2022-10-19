@@ -4,11 +4,23 @@ import { useAppSelector } from '@hooks';
 import { VotingEscrowsSelectors } from '@store';
 import { Box } from '@components/common';
 import { ViewContainer, SummaryCard, Amount } from '@components/app';
-import { LockTab, ExtendLockTab, EarlyExitTab, ClaimUnlockedTab } from '@containers';
-import { humanize } from '@utils';
+import { LockTab, ExtendLockTab, EarlyExitTab, ClaimUnlockedTab, MintTab } from '@containers';
+import { humanize, isDev } from '@utils';
 
 export const VotingEscrowPage = () => {
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
+
+  const tabs = [
+    { label: 'Lock YFI', children: <LockTab /> },
+    { label: 'Extend lock', children: <ExtendLockTab /> },
+    { label: 'Early exit', children: <EarlyExitTab /> },
+    { label: 'Claim YFI', children: <ClaimUnlockedTab /> },
+    // { label: 'Claim rewards', children: <ClaimRewardsTab /> },
+    // { label: 'Stake / Unstake', children: <GaugesTab /> },
+    // { label: 'Vote for gauge', children: <p>{'Vote'}</p> },
+  ];
+
+  if (isDev()) tabs.push({ label: 'Mint', children: <MintTab /> });
 
   return (
     <ViewContainer>
@@ -39,17 +51,7 @@ export const VotingEscrowPage = () => {
       />
 
       <Box width={1}>
-        <Card.Tabs
-          tabs={[
-            { label: 'Lock YFI', children: <LockTab /> },
-            { label: 'Extend lock', children: <ExtendLockTab /> },
-            { label: 'Early exit', children: <EarlyExitTab /> },
-            { label: 'Claim YFI', children: <ClaimUnlockedTab /> },
-            // { label: 'Claim rewards', children: <ClaimRewardsTab /> },
-            // { label: 'Stake / Unstake', children: <GaugesTab /> },
-            // { label: 'Vote for gauge', children: <p>{'Vote'}</p> },
-          ]}
-        />
+        <Card.Tabs tabs={tabs} />
       </Box>
     </ViewContainer>
   );

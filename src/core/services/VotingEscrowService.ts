@@ -16,13 +16,14 @@ import {
   VotingEscrowLockProps,
   VotingEscrowService,
   VotingEscrowUserMetadata,
-  WithdrawLocked,
-  WithdrawUnlocked,
+  WithdrawLockedProps,
+  WithdrawUnlockedProps,
   YearnSdk,
   Web3Provider,
   TransactionService,
   Config,
   TransactionOutcome,
+  MintProps,
 } from '@types';
 
 export class VotingEscrowServiceImpl implements VotingEscrowService {
@@ -176,7 +177,7 @@ export class VotingEscrowServiceImpl implements VotingEscrowService {
     network,
     accountAddress,
     votingEscrowAddress,
-  }: WithdrawLocked): Promise<TransactionResponse> {
+  }: WithdrawLockedProps): Promise<TransactionResponse> {
     const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.votingEscrows.withdrawLocked({
       accountAddress,
@@ -188,11 +189,22 @@ export class VotingEscrowServiceImpl implements VotingEscrowService {
     network,
     accountAddress,
     votingEscrowAddress,
-  }: WithdrawUnlocked): Promise<TransactionResponse> {
+  }: WithdrawUnlockedProps): Promise<TransactionResponse> {
     const yearn = this.yearnSdk.getInstanceOf(network);
     return await yearn.votingEscrows.withdrawUnlocked({
       accountAddress,
       votingEscrowAddress,
+    });
+  }
+
+  public async mint({ network, accountAddress, tokenAddress, amount }: MintProps): Promise<TransactionResponse> {
+    const mintTokenAbi = ['function mint(address _to, uint256 _amount) public'];
+    return await this.transactionService.execute({
+      network,
+      methodName: 'mint',
+      contractAddress: tokenAddress,
+      abi: mintTokenAbi,
+      args: [accountAddress, amount],
     });
   }
 }
