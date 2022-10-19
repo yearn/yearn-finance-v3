@@ -113,7 +113,11 @@ export const AmountInput = ({
 }: AmountInputProps) => {
   return (
     <Box {...props}>
-      {label && <Text mb="0.4rem">{label}</Text>}
+      {label && (
+        <Text ellipsis mb="0.4rem">
+          {label}
+        </Text>
+      )}
       <InputContainer>
         <StyledInput
           value={amount}
