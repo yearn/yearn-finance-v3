@@ -191,7 +191,6 @@ export interface CreditLineService {
 
   // utils
   approveDeposit: (props: ApproveLineDepositProps) => Promise<any | undefined>;
-  liquidate: (props: LiquidateCreditProps) => Promise<any | undefined>;
   // approveZapOut: (...args: any) => Promise<any | undefined>;
   // signPermit: (...args: any) => Promise<any | undefined>;
   getDepositAllowance: (props: GetLineDepositAllowanceProps) => Promise<any | undefined>;
@@ -309,6 +308,7 @@ export interface SpigotedLineService {
   isBorrower: (lineAddress: string) => Promise<boolean>;
   borrower(lineAddress: string): Promise<Address>;
   getFirstID(lineAddress: string): Promise<BytesLike>;
+  liquidate: (props: LiquidateCreditProps) => Promise<any | undefined>;
   isSignerBorrowerOrLender(lineAddress: string, id: BytesLike): Promise<boolean>;
 }
 

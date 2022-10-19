@@ -444,7 +444,7 @@ const liquidate = createAsyncThunk<
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const { creditLineService } = services;
+    const { creditLineService, spigotedLineService } = services;
     // const { error: depositError } = validateLineDeposit({
     //   sellTokenAmount: amount,
     //   depositLimit: lineData?.metadata.depositLimit ?? '0',
@@ -461,7 +461,7 @@ const liquidate = createAsyncThunk<
     // TODO: fix BigNumber type difference issues
     // const amountInWei = amount.multipliedBy(ONE_UNIT);
     // const { creditLineService, transactionService } = services;
-    const tx = await creditLineService.liquidate({
+    const tx = await spigotedLineService.liquidate({
       lineAddress: lineAddress,
       amount: amount,
       targetToken: tokenAddress,

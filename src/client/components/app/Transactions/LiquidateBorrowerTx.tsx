@@ -76,7 +76,7 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
 
     dispatch(TokensActions.getTokensDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
     // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
-  }, [selectedSellToken, selectedCredit]);
+  }, []);
 
   const _updatePosition = () =>
     onPositionChange({
