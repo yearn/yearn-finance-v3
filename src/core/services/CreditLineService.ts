@@ -3,6 +3,7 @@ import { BytesLike } from '@ethersproject/bytes/src.ts';
 import { keccak256 } from 'ethers/lib/utils';
 
 import {
+  LiquidateCreditProps,
   BorrowCreditProps,
   CreditLineService,
   AggregatedCreditLine,
@@ -256,6 +257,24 @@ export class CreditLineServiceImpl implements CreditLineService {
       };
       //@ts-ignore
       return <TransactionResponse>await this.executeContractMethod(line, 'borrow', [data.id, data.amount], false);
+    } catch (e) {
+      console.log(`An error occured while borrowing credit, error = [${JSON.stringify(e)}]`);
+      return Promise.reject(e);
+    }
+  }
+
+  public async liquidate(props: LiquidateCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
+    try {
+      const line = props.lineAddress;
+
+      let data = {
+        amount: props.amount,
+        targetToken: props.targetToken,
+      };
+      //@ts-ignore
+      return <TransactionResponse>(
+        await this.executeContractMethod(line, 'liquidate', [data.amount, data.targetToken], false)
+      );
     } catch (e) {
       console.log(`An error occured while borrowing credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);

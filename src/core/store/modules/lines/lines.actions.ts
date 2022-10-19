@@ -383,25 +383,13 @@ const depositAndRepay = createAsyncThunk<
 >(
   'lines/depositAndRepay',
   async ({ lineAddress, tokenAddress, amount }, { extra, getState, dispatch }) => {
-    const { network, wallet, lines, tokens, app } = getState();
+    const { wallet } = getState();
     const { services } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
-      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
-    });
-    if (networkError) throw networkError;
-
-    const userLineData = lines.user.linePositions[lineAddress];
-    const tokenData = tokens.tokensMap[tokenAddress];
-    const userTokenData = tokens.user.userTokensMap[tokenAddress];
-    const decimals = toBN(tokenData.decimals);
-    const ONE_UNIT = toBN('10').pow(decimals);
-
-    const { creditLineService, transactionService, interestRateCreditService } = services;
+    const { creditLineService, interestRateCreditService } = services;
     // const { error: depositError } = validateLineDeposit({
     //   sellTokenAmount: amount,
     //   depositLimit: lineData?.metadata.depositLimit ?? '0',
@@ -425,7 +413,61 @@ const depositAndRepay = createAsyncThunk<
       },
       interestRateCreditService
     );
-    console.log(TxCreditLineInput);
+    console.log(tx);
+    // const notifyEnabled = app.servicesEnabled.notify;
+    // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    dispatch(getLinePage({ id: lineAddress }));
+    // dispatch(getUserLinesSummary());
+    dispatch(getUserLinePositions({ lineAddresses: [lineAddress] }));
+    // dispatch(getUserLinesMetadata({ linesAddresses: [lineAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, lineAddress] }));
+  },
+  {
+    // serializeError: parseError,
+  }
+);
+
+const liquidate = createAsyncThunk<
+  void,
+  {
+    lineAddress: string;
+    amount: BigNumber;
+    tokenAddress: string;
+  },
+  ThunkAPI
+>(
+  'lines/liquidate',
+  async ({ lineAddress, tokenAddress, amount }, { extra, getState, dispatch }) => {
+    const { wallet } = getState();
+    const { services } = extra;
+
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { creditLineService } = services;
+    // const { error: depositError } = validateLineDeposit({
+    //   sellTokenAmount: amount,
+    //   depositLimit: lineData?.metadata.depositLimit ?? '0',
+    //   emergencyShutdown: lineData?.metadata.emergencyShutdown || false,
+    //   sellTokenDecimals: tokenData?.decimals ?? '0',
+    //   userTokenBalance: userTokenData?.balance ?? '0',
+    //   lineUnderlyingBalance: lineData?.underlyingTokenBalance.amount ?? '0',
+    //   targetUnderlyingTokenAmount,
+    // });
+
+    // const error = depositError;
+    // if (error) throw new Error(error);
+
+    // TODO: fix BigNumber type difference issues
+    // const amountInWei = amount.multipliedBy(ONE_UNIT);
+    // const { creditLineService, transactionService } = services;
+    const tx = await creditLineService.liquidate({
+      lineAddress: lineAddress,
+      amount: amount,
+      targetToken: tokenAddress,
+      dryRun: false,
+    });
+    console.log(tx);
     // const notifyEnabled = app.servicesEnabled.notify;
     // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getLinePage({ id: lineAddress }));
@@ -613,6 +655,7 @@ export const LinesActions = {
   // approveZapOut,
   // signZapOut,
   withdrawLine,
+  liquidate,
   // migrateLine,
   // initSubscriptions,
   clearLinesData,

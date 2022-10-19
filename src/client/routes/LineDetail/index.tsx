@@ -112,6 +112,7 @@ export const LineDetail = () => {
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
+  // THIS NEEDS REVISITNG
   const liquidateHandler = () => {
     if (!selectedLine) {
       return;

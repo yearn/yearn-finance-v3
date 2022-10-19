@@ -1,5 +1,3 @@
-import { StringLiteral } from 'typescript';
-
 import { Address } from './Blockchain';
 import { Status } from './Status';
 

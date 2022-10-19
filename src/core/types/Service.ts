@@ -191,6 +191,7 @@ export interface CreditLineService {
 
   // utils
   approveDeposit: (props: ApproveLineDepositProps) => Promise<any | undefined>;
+  liquidate: (props: LiquidateCreditProps) => Promise<any | undefined>;
   // approveZapOut: (...args: any) => Promise<any | undefined>;
   // signPermit: (...args: any) => Promise<any | undefined>;
   getDepositAllowance: (props: GetLineDepositAllowanceProps) => Promise<any | undefined>;
@@ -210,6 +211,13 @@ export interface AddCreditProps {
 export interface BorrowCreditProps {
   lineAddress: string;
   amount: BigNumber;
+  dryRun: boolean;
+}
+
+export interface LiquidateCreditProps {
+  lineAddress: string;
+  amount: BigNumber;
+  targetToken: Address;
   dryRun: boolean;
 }
 

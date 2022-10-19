@@ -12,7 +12,7 @@ import {
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors } from '@store';
+import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -113,7 +113,7 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
   const liquidateBorrower = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    if (!selectedCredit?.id || selectedSellTokenAddress === '') {
+    if (!selectedCredit?.id || selectedSellTokenAddress === '' || selectedSellTokenAddress === undefined) {
       console.log('check this', selectedCredit?.id, selectedSellTokenAddress);
       setLoading(false);
       return;
@@ -122,9 +122,20 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
     let TransactionObj = {
       lineAddress: selectedCredit.id,
       amount: ethers.utils.parseEther(targetTokenAmount),
-      token: selectedSellTokenAddress,
-      dryRun: true,
+      tokenAddress: selectedSellTokenAddress,
     };
+    dispatch(LinesActions.liquidate(TransactionObj)).then((res) => {
+      if (res.meta.requestStatus === 'rejected') {
+        setTransactionCompleted(2);
+        console.log(transactionCompleted, 'tester');
+        setLoading(false);
+      }
+      if (res.meta.requestStatus === 'fulfilled') {
+        setTransactionCompleted(1);
+        console.log(transactionCompleted, 'tester');
+        setLoading(false);
+      }
+    });
     //dispatch(LinesActions.addCredit(TransactionObj)).then((res) => {
     //  if (res.meta.requestStatus === 'rejected') {
     //    setTransactionCompleted(2);
