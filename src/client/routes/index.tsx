@@ -49,7 +49,7 @@ export const Routes = () => {
 
         {isVeYfiDomain && (
           <Route>
-            <Layout hideNavigation hideFooter>
+            <Layout hideNavigation hideFooter showLogo>
               <Switch>
                 <Route exact path="/veyfi" component={VotingEscrowPage} />
                 <Route path="*">
