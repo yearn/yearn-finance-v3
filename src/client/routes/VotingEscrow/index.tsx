@@ -5,9 +5,11 @@ import { VotingEscrowsSelectors } from '@store';
 import { Box } from '@components/common';
 import { ViewContainer, SummaryCard, Amount } from '@components/app';
 import { LockTab, ExtendLockTab, EarlyExitTab, ClaimUnlockedTab, MintTab } from '@containers';
-import { humanize, isDev } from '@utils';
+import { humanize } from '@utils';
+import { getConfig } from '@config';
 
 export const VotingEscrowPage = () => {
+  const { ALLOW_DEV_MODE } = getConfig();
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const tabs = [
@@ -20,7 +22,7 @@ export const VotingEscrowPage = () => {
     // { label: 'Vote for gauge', children: <p>{'Vote'}</p> },
   ];
 
-  if (isDev()) tabs.push({ label: 'Mint', children: <MintTab /> });
+  if (ALLOW_DEV_MODE) tabs.push({ label: 'Mint', children: <MintTab /> });
 
   return (
     <ViewContainer>
