@@ -16,6 +16,10 @@ export class YearnSdkImpl implements YearnSdk {
       const networkId = getNetworkId(network) as SdkNetwork;
       const sdkInstance = new Yearn(networkId, {
         provider,
+        cache: {
+          useCache: false,
+        },
+        env: 'development',
         zapper: ZAPPER_API_KEY,
         partnerId: isLedger && networkId === 1 ? CONTRACT_ADDRESSES.LEDGER_PARTNER_ID : undefined,
         ...(YEARN_SUBGRAPH_KEY && {

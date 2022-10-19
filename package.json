@@ -46,7 +46,7 @@
     "@types/styled-system": "5.1.13",
     "@uauth/bnc-onboard": "^2.2.0",
     "@yearn-finance/web-lib": "0.8.14",
-    "@yfi/sdk": "3.0.0-alpha.3",
+    "@yfi/sdk": "3.0.0-alpha.4",
     "awilix": "7.0.2",
     "axios": "0.21.2",
     "bignumber.js": "9.0.2",
