@@ -218,11 +218,11 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     //@ts-ignore
     dispatch(LinesActions.approveDeposit(approvalOBj)).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
-        setTransactionApproved(!transactionApproved);
+        setTransactionApproved(transactionApproved);
         setLoading(false);
       }
       if (res.meta.requestStatus === 'fulfilled') {
-        setTransactionApproved(transactionApproved);
+        setTransactionApproved(!transactionApproved);
         setLoading(false);
       }
     });
