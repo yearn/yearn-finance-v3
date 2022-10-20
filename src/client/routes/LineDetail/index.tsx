@@ -144,7 +144,7 @@ export const LineDetail = () => {
       Transactions.push('withdraw');
     }
     //@ts-ignore
-    if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.arbiter) {
+    if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.arbiter) {
       Transactions.push('liquidate');
     }
     setTransactions(Transactions);
