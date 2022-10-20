@@ -109,7 +109,14 @@ const NETWORK_SETTINGS: NetworkSettings = {
 };
 
 export const getConstants = memoize((): Constants => {
-  const { ALCHEMY_API_KEY, ZAPPER_API_KEY } = getEnv();
+  const {
+    ALCHEMY_API_KEY,
+    ZAPPER_API_KEY,
+    ETHEREUM_PROVIDER_HTTPS,
+    FANTOM_PROVIDER_HTTPS,
+    ARBITRUM_PROVIDER_HTTPS,
+    OPTIMISM_PROVIDER_HTTPS,
+  } = getEnv();
   return {
     STATE_VERSION: 1,
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
@@ -117,11 +124,12 @@ export const getConstants = memoize((): Constants => {
     YEARN_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
     SUPPORTED_NETWORKS: ['mainnet', 'fantom', 'arbitrum', 'optimism'],
     NETWORK_SETTINGS,
-    WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-    WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-    FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
-    ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
-    OPTIMISM_PROVIDER_HTTPS: 'https://mainnet.optimism.io',
+    RPC_URL: {
+      mainnet: ETHEREUM_PROVIDER_HTTPS ?? `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+      fantom: FANTOM_PROVIDER_HTTPS ?? NETWORK_SETTINGS['fantom'].rpcUrl,
+      arbitrum: ARBITRUM_PROVIDER_HTTPS ?? NETWORK_SETTINGS['arbitrum'].rpcUrl,
+      optimism: OPTIMISM_PROVIDER_HTTPS ?? NETWORK_SETTINGS['optimism'].rpcUrl,
+    },
     CONTRACT_ADDRESSES: {
       zapIn: '0xc2C171bD6FC3B5885b589ed8b4d135F31085e973',
       zapOut: '0x70ed999E2849A3C85EB4a6288B90c7ecA7b807F4',
