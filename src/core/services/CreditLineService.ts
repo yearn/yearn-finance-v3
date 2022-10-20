@@ -95,7 +95,7 @@ export class CreditLineServiceImpl implements CreditLineService {
       }
       //@ts-ignore
       return (<TransactionResponse>(
-        await this.executeContractMethod(props.lineAddress, 'withdraw', [props.id, props.amount], 'goerli')
+        await this.executeContractMethod(props.lineAddress, 'withdraw', [props.id, props.amount], props.network)
       )).hash;
     } catch (e) {
       console.log(`An error occured while withdrawing credit, error = [${JSON.stringify(e)}]`);
@@ -192,7 +192,7 @@ export class CreditLineServiceImpl implements CreditLineService {
       }
       //@ts-ignore
       return (<TransactionResponse>(
-        await this.executeContractMethod(props.lineAddress, 'depositAndRepay', [props.amount], 'goerli')
+        await this.executeContractMethod(props.lineAddress, 'depositAndRepay', [props.amount], props.network)
       )).hash;
     } catch (e) {
       console.log(`An error occured while depositAndRepay credit, error = [${JSON.stringify(e)}]`);
