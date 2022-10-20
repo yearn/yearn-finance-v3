@@ -212,6 +212,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         walletNetwork === 'goerli'
           ? `${ethers.utils.parseEther(testnetTokenAmount)}`
           : `${ethers.utils.parseEther(targetTokenAmount)}`,
+      network: walletNetwork,
     };
     console.log('approval obj', approvalOBj);
     //@ts-ignore

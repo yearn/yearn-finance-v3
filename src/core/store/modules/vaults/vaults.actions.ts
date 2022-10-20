@@ -21,7 +21,6 @@ import {
   validateNetwork,
   validateVaultDeposit,
   validateVaultWithdraw,
-  validateMigrateVaultAllowance,
   // parseError,
 } from '@utils';
 import { getConfig } from '@config';
@@ -406,6 +405,7 @@ const approveMigrate = createAsyncThunk<
   ThunkAPI
 >('vaults/approveMigrate', async ({ vaultFromAddress, migrationContractAddress }, { dispatch }) => {
   const spenderAddress = migrationContractAddress ?? getConfig().CONTRACT_ADDRESSES.trustedVaultMigrator;
+  //@ts-ignore
   const result = await dispatch(TokensActions.approve({ tokenAddress: vaultFromAddress, spenderAddress }));
   unwrapResult(result);
 });

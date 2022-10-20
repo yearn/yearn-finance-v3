@@ -16,6 +16,7 @@ import {
   AddCreditProps,
   UseCreditLinesParams,
   BorrowCreditProps,
+  Network,
 } from '@types';
 import {
   toBN,
@@ -246,17 +247,18 @@ const approveDeposit = createAsyncThunk<
     tokenAddress: string;
     amount: string;
     lineAddress: string;
+    network: Network;
   },
   ThunkAPI
->('lines/approveDeposit', async ({ amount, tokenAddress }, { getState, dispatch, extra }) => {
-  const { wallet, network } = getState();
-  const { creditLineService, tokenService } = extra.services;
+>('lines/approveDeposit', async ({ amount, tokenAddress, network }, { getState, dispatch, extra }) => {
+  const { wallet } = getState();
+  const { tokenService } = extra.services;
 
   const accountAddress = wallet.selectedAddress;
   if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
   const approveDepositTx = await tokenService.approve({
-    network: 'goerli',
+    network,
     tokenAddress,
     accountAddress,
     spenderAddress: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
@@ -478,7 +480,7 @@ const withdrawLine = createAsyncThunk<
     // const error = withdrawError;
     // if (error) throw new Error(error);
     // TODO: fix BigNumber type difference issues
-    const { creditLineService, transactionService } = services;
+    const { creditLineService } = services;
     const tx = await creditLineService.withdraw({
       id: lineAddress,
       amount: amountOfShares,
