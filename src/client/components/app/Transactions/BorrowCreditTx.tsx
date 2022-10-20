@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ethers } from 'ethers';
 
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
-import { LinesSelectors, LinesActions } from '@store';
+import { LinesSelectors, LinesActions, WalletSelectors } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
@@ -31,6 +31,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const { header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const [transactionLoading, setLoading] = useState(false);
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const [targetAmount, setTargetAmount] = useState('1');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
@@ -65,7 +66,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const borrowCredit = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    if (!selectedCredit?.id || !targetAmount) {
+    if (!selectedCredit?.id || !targetAmount || walletNetwork === undefined) {
       console.log('check this', selectedCredit?.id, targetAmount);
       setLoading(false);
       return;
@@ -75,6 +76,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
       LinesActions.borrowCredit({
         lineAddress: selectedCredit.id,
         amount: ethers.utils.parseEther(targetAmount),
+        network: walletNetwork,
         dryRun: true,
       })
     ).then((res) => {
