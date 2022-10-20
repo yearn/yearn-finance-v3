@@ -23,8 +23,8 @@ export const getJsonRpcProvider = (rpcUrl: RpcUrl) => {
   const { username, password, href } = new URL(rpcUrl);
   return new ethers.providers.JsonRpcProvider({
     url: href,
-    user: username,
-    password: password,
+    user: username || undefined,
+    password: password || undefined,
     timeout: 500000,
   });
 };
