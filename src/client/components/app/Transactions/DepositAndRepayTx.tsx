@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 
 import { formatAmount, normalizeAmount } from '@utils';
 import { useAppTranslation, useAppDispatch, useAppSelector, useSelectedSellToken } from '@hooks';
-import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors, LinesActions } from '@store';
+import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors, LinesActions, WalletSelectors } from '@store';
 import { getConstants } from '@src/config/constants';
 
 import { TxContainer } from './components/TxContainer';
@@ -36,6 +36,7 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
   const [targetAmount, setTargetAmount] = useState('1');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
   const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
 
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
@@ -97,7 +98,7 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
   const depositAndRepay = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    if (!selectedCredit?.id || !targetAmount || !selectedSellTokenAddress) {
+    if (!selectedCredit?.id || !targetAmount || !selectedSellTokenAddress || walletNetwork === undefined) {
       console.log('check this', selectedCredit?.id, targetAmount, selectedSellTokenAddress);
       setLoading(false);
       return;
@@ -108,6 +109,7 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
         lineAddress: selectedCredit.id,
         tokenAddress: selectedSellTokenAddress,
         amount: ethers.utils.parseEther(targetAmount),
+        network: walletNetwork,
       })
     ).then((res) => {
       if (res.meta.requestStatus === 'rejected') {

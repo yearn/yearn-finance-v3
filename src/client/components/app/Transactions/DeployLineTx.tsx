@@ -2,8 +2,8 @@ import { FC, useState } from 'react';
 import styled from 'styled-components';
 
 import { isAddress } from '@utils';
-import { useAppTranslation, useAppDispatch } from '@hooks';
-import { LinesActions } from '@store';
+import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
+import { LinesActions, WalletSelectors } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxAddressInput } from './components/TxAddressInput';
@@ -29,6 +29,7 @@ interface DeployLineProps {
 export const DeployLineTx: FC<DeployLineProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const { header, onClose } = props;
   const [borrower, setBorrower] = useState('');
@@ -58,7 +59,7 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
     setLoading(true);
     let checkSumAddress = await isAddress(borrower);
 
-    if (!checkSumAddress) {
+    if (!checkSumAddress || walletNetwork === undefined) {
       setWarning('Incorrect address, please verify and try again.');
       console.log('error', inputAddressWarning);
       return;
@@ -71,7 +72,7 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
     }
 
     try {
-      dispatch(LinesActions.deploySecuredLine({ borrower, ttl: timeToLive })).then((res) => {
+      dispatch(LinesActions.deploySecuredLine({ borrower, ttl: timeToLive, network: walletNetwork })).then((res) => {
         if (res.meta.requestStatus === 'rejected') {
           setTransactionCompleted(2);
           console.log(transactionCompleted, 'tester');

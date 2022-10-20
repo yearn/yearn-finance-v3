@@ -16,6 +16,7 @@ import {
   AddCreditProps,
   UseCreditLinesParams,
   BorrowCreditProps,
+  Network,
 } from '@types';
 import {
   toBN,
@@ -89,13 +90,13 @@ const getLines = createAsyncThunk<
 
   // ensure consistent ordering of categories
   const categoryKeys = Object.keys(categories);
-
+  //@ts-ignore
   const promises = await Promise.all(
     categoryKeys
       .map((k) => categories[k])
       .map((params: GetLinesArgs) => creditLineService.getLines({ network: network.current, ...params }))
   );
-
+  //@ts-ignore
   const linesData = categoryKeys.reduce(
     (all, category, i) =>
       // @dev assumes `promises` is same order as `categories`
@@ -226,13 +227,12 @@ const deploySecuredLine = createAsyncThunk<
   {
     borrower: Address;
     ttl: string;
+    network: Network;
   },
   ThunkAPI
 >('lines/deploySecredLine', async (deployData, { getState, extra }) => {
-  const { network } = getState();
   const { lineServices } = extra.services;
   const deployedLineData = await lineServices.deploySecuredLine({
-    network: 'goerli',
     ...deployData,
   });
 
@@ -246,17 +246,18 @@ const approveDeposit = createAsyncThunk<
     tokenAddress: string;
     amount: string;
     lineAddress: string;
+    network: Network;
   },
   ThunkAPI
->('lines/approveDeposit', async ({ amount, tokenAddress }, { getState, dispatch, extra }) => {
-  const { wallet, network } = getState();
-  const { creditLineService, tokenService } = extra.services;
+>('lines/approveDeposit', async ({ amount, tokenAddress, network }, { getState, dispatch, extra }) => {
+  const { wallet } = getState();
+  const { tokenService } = extra.services;
 
   const accountAddress = wallet.selectedAddress;
   if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
   const approveDepositTx = await tokenService.approve({
-    network: 'goerli',
+    network,
     tokenAddress,
     accountAddress,
     spenderAddress: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
@@ -267,16 +268,16 @@ const approveDeposit = createAsyncThunk<
 
 const borrowCredit = createAsyncThunk<void, BorrowCreditProps, ThunkAPI>(
   'lines/borrowCredit',
-  async ({ lineAddress, amount }, { extra, getState, dispatch }) => {
-    const { network, wallet, lines, tokens, app } = getState();
+  async ({ lineAddress, amount, network }, { extra, getState }) => {
+    const { wallet } = getState();
     const { services } = extra;
     console.log('look at borrow credit', wallet, lineAddress, amount);
-    const userAddress = wallet.selectedAddress;
     const { creditLineService } = services;
 
     const tx = await creditLineService.borrow({
       lineAddress: lineAddress,
       amount: amount,
+      network: network,
       dryRun: true,
     });
     console.log(tx);
@@ -285,16 +286,15 @@ const borrowCredit = createAsyncThunk<void, BorrowCreditProps, ThunkAPI>(
 
 const addCredit = createAsyncThunk<void, AddCreditProps, ThunkAPI>(
   'lines/addCredit',
-  async ({ lineAddress, drate, frate, amount, token, lender }, { extra, getState, dispatch }) => {
-    const { network, wallet, lines, tokens, app } = getState();
+  async ({ lineAddress, drate, frate, amount, token, lender, network }, { extra, getState, dispatch }) => {
+    const { wallet } = getState();
     const { services } = extra;
-    console.log('look here', network, wallet, lineAddress, drate, frate, amount, token, lender);
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
     // TODO: fix BigNumber type difference issues
     // const amountInWei = amount.multipliedBy(ONE_UNIT);
-    const { creditLineService, transactionService } = services;
+    const { creditLineService } = services;
     const tx = await creditLineService.addCredit({
       lineAddress: lineAddress,
       drate: drate,
@@ -303,6 +303,7 @@ const addCredit = createAsyncThunk<void, AddCreditProps, ThunkAPI>(
       token: token,
       lender: lender,
       dryRun: true,
+      network: network,
     });
     console.log(tx);
     // const notifyEnabled = app.servicesEnabled.notify;
@@ -377,23 +378,18 @@ const depositAndRepay = createAsyncThunk<
     lineAddress: string;
     tokenAddress: string;
     amount: BigNumber;
+    network: Network;
     slippageTolerance?: number;
   },
   ThunkAPI
 >(
   'lines/depositAndRepay',
-  async ({ lineAddress, tokenAddress, amount }, { extra, getState, dispatch }) => {
-    const { network, wallet, lines, tokens, app } = getState();
+  async ({ lineAddress, tokenAddress, amount, network }, { extra, getState, dispatch }) => {
+    const { wallet, lines, tokens } = getState();
     const { services } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
-
-    const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
-      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
-    });
-    if (networkError) throw networkError;
 
     const userLineData = lines.user.linePositions[lineAddress];
     const tokenData = tokens.tokensMap[tokenAddress];
@@ -401,7 +397,7 @@ const depositAndRepay = createAsyncThunk<
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
 
-    const { creditLineService, transactionService, interestRateCreditService } = services;
+    const { creditLineService, interestRateCreditService } = services;
     // const { error: depositError } = validateLineDeposit({
     //   sellTokenAmount: amount,
     //   depositLimit: lineData?.metadata.depositLimit ?? '0',
@@ -422,10 +418,11 @@ const depositAndRepay = createAsyncThunk<
       {
         lineAddress: lineAddress,
         amount: amount,
+        network: network,
       },
       interestRateCreditService
     );
-    console.log(TxCreditLineInput);
+    console.log(tx);
     // const notifyEnabled = app.servicesEnabled.notify;
     // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getLinePage({ id: lineAddress }));
@@ -444,12 +441,13 @@ const withdrawLine = createAsyncThunk<
   {
     lineAddress: string;
     amount: BigNumber;
+    network: Network;
   },
   ThunkAPI
 >(
   'lines/withdrawLine',
-  async ({ lineAddress, amount }, { extra, getState, dispatch }) => {
-    const { network, wallet, lines, tokens, app } = getState();
+  async ({ lineAddress, amount, network }, { extra, getState, dispatch }) => {
+    const { wallet, lines } = getState();
     const { services, config } = extra;
 
     const userAddress = wallet.selectedAddress;
@@ -478,11 +476,12 @@ const withdrawLine = createAsyncThunk<
     // const error = withdrawError;
     // if (error) throw new Error(error);
     // TODO: fix BigNumber type difference issues
-    const { creditLineService, transactionService } = services;
+    const { creditLineService } = services;
     const tx = await creditLineService.withdraw({
       id: lineAddress,
       amount: amountOfShares,
       lineAddress: lineAddress,
+      network: network,
       dryRun: true,
     });
     console.log(tx);
