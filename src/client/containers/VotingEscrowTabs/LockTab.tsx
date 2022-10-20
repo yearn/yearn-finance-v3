@@ -57,7 +57,14 @@ export const LockTab = () => {
   }, [votingEscrow?.address, votingEscrow?.token.address, isWalletConnected]);
 
   useEffect(() => {
-    if (!votingEscrow || !willLock || toBN(debouncedLockAmount).lte(0) || toBN(debouncedLockTime).lte(0) || inputError)
+    if (
+      !votingEscrow ||
+      !willLock ||
+      !isApproved ||
+      toBN(debouncedLockAmount).lte(0) ||
+      toBN(debouncedLockTime).lte(0) ||
+      inputError
+    )
       return;
 
     getExpectedTransactionOutcome({
@@ -67,7 +74,7 @@ export const LockTab = () => {
       amount: debouncedLockAmount,
       time: hasLockedAmount ? undefined : toBN(debouncedLockTime).toNumber(),
     });
-  }, [debouncedLockAmount, debouncedLockTime]);
+  }, [debouncedLockAmount, debouncedLockTime, votingEscrow?.token]);
 
   useEffect(() => {
     if (!votingEscrow || !hasLockedAmount || willLock) return;
