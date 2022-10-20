@@ -167,7 +167,7 @@ export class BlocknativeWalletImpl implements Wallet {
                   chainId: `0x${networkId.toString(16)}`,
                   chainName: networkSettings.name,
                   nativeCurrency: networkSettings.nativeCurrency,
-                  rpcUrls: [networkSettings.rpcUrl],
+                  rpcUrls: getNetworkRpc(network),
                   blockExplorerUrls: [networkSettings.blockExplorerUrl],
                 },
               ],
