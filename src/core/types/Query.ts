@@ -99,6 +99,7 @@ export interface BaseCreditFragResponse {
   principal: string;
   deposit: string;
   drate: string;
+  arbiter: string;
   token: {
     id: Address;
     symbol: string;

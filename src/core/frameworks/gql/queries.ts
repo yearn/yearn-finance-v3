@@ -21,6 +21,7 @@ const BASE_LINE_FRAGMENT = gql`
     type
     start
     status
+    arbiter
     borrower {
       id
     }

@@ -215,6 +215,13 @@ export interface BorrowCreditProps {
   dryRun: boolean;
 }
 
+export interface LiquidateCreditProps {
+  lineAddress: string;
+  amount: BigNumber;
+  targetToken: Address;
+  dryRun: boolean;
+}
+
 export interface CloseProps {
   lineAddress: string;
   id: string;
@@ -305,6 +312,7 @@ export interface SpigotedLineService {
   isBorrower: (lineAddress: string) => Promise<boolean>;
   borrower(lineAddress: string): Promise<Address>;
   getFirstID(lineAddress: string): Promise<BytesLike>;
+  liquidate: (props: LiquidateCreditProps) => Promise<any | undefined>;
   isSignerBorrowerOrLender(lineAddress: string, id: BytesLike): Promise<boolean>;
 }
 

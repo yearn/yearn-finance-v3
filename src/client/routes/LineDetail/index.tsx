@@ -112,6 +112,16 @@ export const LineDetail = () => {
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
+  // THIS NEEDS REVISITNG
+  const liquidateHandler = () => {
+    if (!selectedLine) {
+      return;
+    }
+    let address = selectedLine.id;
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
+  };
+
   const WithdrawHandler = () => {
     if (!selectedLine) {
       return;
@@ -132,6 +142,10 @@ export const LineDetail = () => {
     if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.borrower) {
       Transactions.push('deposit');
       Transactions.push('withdraw');
+    }
+    //@ts-ignore
+    if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.arbiter) {
+      Transactions.push('liquidate');
     }
     setTransactions(Transactions);
   }, [userWalletAddress, selectedLine]);
@@ -250,6 +264,13 @@ export const LineDetail = () => {
             <DepositAndRepayButton onClick={depositAndRepayHandler} key={`${transaction}-${i}`}>
               Repay
             </DepositAndRepayButton>
+          );
+        }
+        if (transaction === 'liquidate') {
+          return (
+            <WithdrawButton onClick={liquidateHandler} key={`${transaction}-${i}`}>
+              liquidate
+            </WithdrawButton>
           );
         }
         if (transaction === 'withdraw') {
