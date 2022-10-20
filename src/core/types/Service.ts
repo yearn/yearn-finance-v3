@@ -204,12 +204,14 @@ export interface AddCreditProps {
   frate: BigNumber;
   amount: BigNumber;
   lender: Address;
+  network: Network;
   dryRun: boolean;
 }
 
 export interface BorrowCreditProps {
   lineAddress: string;
   amount: BigNumber;
+  network: Network;
   dryRun: boolean;
 }
 
