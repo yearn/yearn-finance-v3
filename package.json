@@ -23,6 +23,7 @@
     "@ethersproject/address": "5.4.0",
     "@ethersproject/contracts": "5.4.1",
     "@ethersproject/providers": "5.4.4",
+    "@headlessui/react": "^1.7.3",
     "@ledgerhq/iframe-provider": "0.4.2",
     "@metamask/post-message-stream": "6.0.0",
     "@metamask/providers": "9.0.0",
