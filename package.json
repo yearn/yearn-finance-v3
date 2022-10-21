@@ -1,6 +1,6 @@
 {
   "name": "yearn-finance-v3",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "private": true,
   "scripts": {
     "start": "craco start",
@@ -23,6 +23,7 @@
     "@ethersproject/address": "5.4.0",
     "@ethersproject/contracts": "5.4.1",
     "@ethersproject/providers": "5.4.4",
+    "@headlessui/react": "^1.7.3",
     "@ledgerhq/iframe-provider": "0.4.2",
     "@metamask/post-message-stream": "6.0.0",
     "@metamask/providers": "9.0.0",
@@ -45,7 +46,7 @@
     "@types/styled-components": "5.1.12",
     "@types/styled-system": "5.1.13",
     "@uauth/bnc-onboard": "^2.2.0",
-    "@yearn-finance/web-lib": "0.8.14",
+    "@yearn-finance/web-lib": "0.13.28",
     "@yfi/sdk": "3.0.0-alpha.3",
     "awilix": "7.0.2",
     "axios": "0.21.2",
@@ -105,24 +106,9 @@
       "pre-commit": "lint-staged"
     }
   },
-  "browserslist": {
-    "production": [
-      ">0.3%",
-      "not IE > 0",
-      "not op_mini all",
-      "not dead",
-      "last 2 Edge major versions",
-      "last 1 Chrome version",
-      "last 2 iOS major versions",
-      "last 1 Firefox version",
-      "not iOS 12.5",
-      "Chrome 99"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version",
-      "last 1 edge version"
-    ]
-  }
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ]
 }

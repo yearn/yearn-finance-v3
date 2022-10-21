@@ -28,6 +28,7 @@ module.exports = {
           transpileTemplateLiterals: false,
         },
       ],
+      ['@babel/plugin-proposal-class-properties'],
     ],
   },
   webpack: {
