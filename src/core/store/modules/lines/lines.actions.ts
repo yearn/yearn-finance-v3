@@ -87,7 +87,7 @@ const getLines = createAsyncThunk<
   } = getState();
 
   const { creditLineService } = extra.services;
-  // @dev tokens will probs be empty if we're not using yearnSDK
+
   const tokenPrices = Object.entries(tokensMap).reduce(
     (prices, [addy, { priceUsdc }]) => ({ ...prices, [addy]: priceUsdc }),
     {}
@@ -102,12 +102,10 @@ const getLines = createAsyncThunk<
       .map((params: GetLinesArgs) => creditLineService.getLines({ network: network.current, ...params }))
   );
 
-  const linesData = categoryKeys.reduce(
-    (all, category, i) =>
-      // @dev assumes `promises` is same order as `categories`
-      !promises[i] ? all : { ...all, [category]: formatGetLinesData(promises[i]!, tokenPrices) },
-    {}
-  );
+  const linesData = categoryKeys.reduce((all, category, i) => {
+    // @dev assumes `promises` is same order as `categories`
+    return !promises[i] ? all : { ...all, [category]: formatGetLinesData(promises[i]!, tokenPrices) };
+  }, {});
 
   return { linesData };
 });
