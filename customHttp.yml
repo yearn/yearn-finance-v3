@@ -1,20 +1,8 @@
 customHeaders:
   - pattern: '**/*'
     headers:
-      - key: Strict-Transport-Security
-        value: max-age=31536000; includeSubDomains
-      - key: X-Frame-Options
-        value: SAMEORIGIN
-      - key: X-XSS-Protection
-        value: 1; mode=block
-      - key: X-Content-Type-Options
-        value: nosniff
-      - key: Content-Security-Policy
-        value: script-src 'self' https://*.yearn.finance; child-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors https://*.ledger.com https://*.ledger-sbx.com https://*.ledger-stg.com https://*.ledger-ppr.com https://*.ledger-test.com https://gnosis-safe.io;
-      - key: Referrer-Policy
-        value: same-origin
-      - key: Feature-Policy
-        value: camera 'none'; microphone 'none'; geolocation 'none'; autoplay 'none'; display-capture 'none'; payment 'none'
+      - key: Access-Control-Allow-Origin
+        value: '*'
   - pattern: '**/manifest.json'
     headers:
       - key: Access-Control-Allow-Origin
