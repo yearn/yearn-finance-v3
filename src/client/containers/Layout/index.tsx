@@ -13,7 +13,6 @@ import {
   ModalsActions,
   ModalSelectors,
   NetworkActions,
-  AlertsActions,
   VaultsSelectors,
   PartnerSelectors,
 } from '@store';

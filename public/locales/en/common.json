@@ -72,6 +72,8 @@
       "approve": "Approve",
       "available-borrow": "Available to borrow",
       "borrow": "Borrow",
+      "deposit-and-repay-header": "deposit and repay",
+      "withdraw": "Withdraw Credit",
       "borrow-limit": {
         "borrow-apy": "Borrow APY",
         "borrowing": "Borrowing",
@@ -81,6 +83,7 @@
       },
       "claim": "Claim",
       "deposit": "Deposit",
+      "liquidate": "Liquidate",
       "from-iron-bank": "From Iron Bank",
       "from-vault": "From vault",
       "from-wallet": "From wallet",
@@ -97,7 +100,8 @@
         "done": "Done",
         "exit": "Exit",
         "simulating": "Simulating...",
-        "transaction-completed": "Transaction completed"
+        "transaction-completed": "Transaction completed",
+        "transaction-failed": "Transaction failed"
       },
       "supply": "Supply",
       "to-gauge": "To gauge",
@@ -111,7 +115,6 @@
         "you-have": "You have"
       },
       "wallet-balance": "Wallet Balance",
-      "withdraw": "Withdraw",
       "zap-guidance": {
         "desc": "⚡ Or select a token from your wallet to Zap",
         "view-all": "View all"
@@ -126,11 +129,30 @@
         "select-token": "2. Select token and amount",
         "select-rates": "3. Set interest rates"
       },
+      "arbiter-liquidate": {
+        "header": "Liquidate Borrowers",
+        "select-credit": "1. Select a borrower to liquidate",
+        "select-token": "2. Select token and amount"
+      },
       "deploy-line": {
         "header": "Deploy Credit Line",
         "select-borrower": "1. Select a borrower for the line",
         "select-ttl": "2. Select a deadline for the line",
         "time-to-live": "Time this line will remain active for (in days):"
+      },
+      "borrow-credit": {
+        "header": "Borrow Credit",
+        "select-line": "1. Select a borrower for the line",
+        "select-amount": "2. Select amount to borrow"
+      },
+      "deposit-and-repay": {
+        "header": "Deposit and repay",
+        "select-amount": "1. Select amount to repay"
+      },
+      "withdraw-credit": {
+        "header": "Withdraw",
+        "select-line": "1. Selected line to withdraw",
+        "select-amount": "2. Select amount to withdraw"
       }
     }
   },

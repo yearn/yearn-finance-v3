@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import _ from 'lodash';
 
-import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon, Link } from '@components/common';
+import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@components/common';
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
 
@@ -86,12 +85,6 @@ const TokenListIcon = styled(Icon)`
   transition: color 200ms ease-in-out;
 `;
 
-const CenterIcon = styled.div`
-  display: flex;
-  margin-right: 3rem;
-  user-select: none;
-`;
-
 const TopIcon = styled.div`
   margin-bottom: 10rem;
   margin-right: 3rem;
@@ -100,22 +93,6 @@ const TopIcon = styled.div`
 
 const Divider = styled.div`
   height: ${({ theme }) => theme.spacing.md};
-`;
-
-const ItemTag = styled.span`
-  border-radius: 10%;
-  height: 2rem;
-  display: inline-flex;
-  align-items: center;
-  margin-right: ${({ theme }) => theme.layoutPadding};
-  user-select: none;
-`;
-
-const TagContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  height: 3rem;
 `;
 
 const MetricsTextContainer = styled.div`

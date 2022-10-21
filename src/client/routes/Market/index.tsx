@@ -43,7 +43,7 @@ import {
   filterData,
 } from '@utils';
 import { getConfig } from '@config';
-import { AggregatedCreditLine, VaultView, UseCreditLinesParams, GetLinesArgs, AddCreditProps } from '@src/core/types';
+import { AggregatedCreditLine, VaultView, UseCreditLinesParams } from '@src/core/types';
 import { GoblinTown } from '@assets/images';
 
 const StyledHelperCursor = styled.span`
@@ -55,6 +55,12 @@ const StyledRecommendationsCard = styled(RecommendationsCard)``;
 const StyledSliderCard = styled(SliderCard)`
   width: 100%;
   min-height: 24rem;
+`;
+
+const DeployLineButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
 `;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
@@ -80,60 +86,6 @@ const OpportunitiesCard = styled(DetailCard)`
   }
   @media (max-width: 450px) {
     .col-available {
-      display: none;
-    }
-  }
-` as typeof DetailCard;
-
-const DepositsCard = styled(DetailCard)`
-  @media ${device.tablet} {
-    .col-name {
-      width: 18rem;
-    }
-
-    .col-balance {
-      width: 10rem;
-    }
-  }
-  @media (max-width: 670px) {
-    .col-value {
-      display: none;
-    }
-  }
-  @media ${device.mobile} {
-    .col-apy {
-      display: none;
-    }
-  }
-  @media (max-width: 500px) {
-    .col-earned {
-      display: none;
-    }
-  }
-` as typeof DetailCard;
-
-const DeprecatedCard = styled(DetailCard)`
-  @media ${device.tablet} {
-    .col-name {
-      width: 18rem;
-    }
-
-    .col-balance {
-      width: 10rem;
-    }
-  }
-  @media (max-width: 670px) {
-    .col-value {
-      display: none;
-    }
-  }
-  @media ${device.mobile} {
-    .col-apy {
-      display: none;
-    }
-  }
-  @media (max-width: 500px) {
-    .col-earned {
       display: none;
     }
   }
@@ -173,9 +125,6 @@ export const Market = () => {
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
   const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
-  const recommendations = useAppSelector(VaultsSelectors.selectRecommendations);
-  const deprecated = useAppSelector(VaultsSelectors.selectDeprecatedVaults);
-  const deposits = useAppSelector(VaultsSelectors.selectDepositedVaults);
   const opportunities = useAppSelector(VaultsSelectors.selectVaultsOpportunities);
   const [filteredVaults, setFilteredVaults] = useState(opportunities);
   const [search, setSearch] = useState('');
@@ -187,7 +136,6 @@ export const Market = () => {
   const generalLoading =
     (appStatus.loading || vaultsStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
   const opportunitiesLoading = generalLoading && !filteredVaults.length;
-  const depositsLoading = generalLoading && !deposits.length;
   // TODO not neeed here
   const addCreditStatus = useAppSelector(LinesSelectors.selectLinesActionsStatusMap);
 
@@ -206,7 +154,7 @@ export const Market = () => {
       orderDirection: 'desc',
     },
     'market:featured.newest': {
-      first: 3,
+      first: 15,
       orderBy: 'start', // NOTE: theoretically gets lines that start in the future, will have to refine query
       orderDirection: 'desc',
     },
@@ -214,17 +162,21 @@ export const Market = () => {
   const fetchMarketData = () => dispatch(LinesActions.getLines(defaultLineCategories));
   const lineCategoriesForDisplay = useAppSelector(LinesSelectors.selectLinesForCategories);
   const getLinesStatus = useAppSelector(LinesSelectors.selectLinesStatusMap).getLines;
-  const [didFetchLines, setLinesFetched] = useState(false);
   console.log('ready', lineCategoriesForDisplay, getLinesStatus);
 
   useEffect(() => {
     setSearch(queryParams.search ?? '');
 
-    if (!didFetchLines) {
-      setLinesFetched(true);
-      fetchMarketData();
-    }
-  }, [queryParams.search, didFetchLines]);
+    const expectedCategories = _.keys(defaultLineCategories);
+    const currentCategories = _.keys(lineCategoriesForDisplay);
+
+    // const shouldFetch = expectedCategories.reduce((bool, cat) => bool && cuirrentCategories.includes(cat), true);
+    let shouldFetch: boolean = false;
+    expectedCategories.forEach((cat) => (shouldFetch = shouldFetch || !currentCategories.includes(cat)));
+
+    console.log('should fetch', shouldFetch, currentCategories);
+    if (shouldFetch) fetchMarketData();
+  }, []);
 
   useEffect(() => {
     const searchableKeys = ['name', 'displayName', 'token.symbol', 'token.name'];
@@ -233,32 +185,14 @@ export const Market = () => {
     window.history.replaceState(null, '', `market${search ? `?search=${search}` : ''}`);
   }, [opportunities, search]);
 
-  const dispatchAddCredit = () => {
-    const params: AddCreditProps = {
-      drate: utils.parseUnits('0', 'ether'),
-      frate: utils.parseUnits('0', 'ether'),
-      amount: utils.parseUnits('0', 'ether'),
-      token: '',
-      lender: '',
-      lineAddress: '',
-      dryRun: true,
-    };
-    dispatch(LinesActions.addCredit({ ...params }));
-  };
-
-  const depositHandler = (vaultAddress: string) => {
+  const liquidateBorrowerHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
-    dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
+    dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
   };
 
   const createLineHandler = (vaultAddress: string) => {
     dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
     dispatch(ModalsActions.openModal({ modalName: 'createLine' }));
-  };
-
-  const withdrawHandler = (vaultAddress: string) => {
-    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
-    dispatch(ModalsActions.openModal({ modalName: 'withdrawTx' }));
   };
 
   const summaryCardItems = [
@@ -282,7 +216,6 @@ export const Market = () => {
 
   return (
     <ViewContainer>
-      <Button onClick={createLineHandler}>Deploy Line</Button>
       {addCreditStatus.loading && (
         <div>
           <p>.... loading......</p>
@@ -296,9 +229,17 @@ export const Market = () => {
       <StyledSliderCard
         header={t('vaults:banner.header')}
         Component={
-          <Text>
-            <p>{t('vaults:banner.desc')}</p>
-          </Text>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Text>
+              <p>{t('vaults:banner.desc')}</p>
+            </Text>
+            <DeployLineButton onClick={createLineHandler}>Deploy Line</DeployLineButton>
+          </div>
         }
         background={<img src={GoblinTown} alt={'Goblin town or the Citadel?'} />}
       />
@@ -392,8 +333,8 @@ export const Market = () => {
                     <ActionButtons
                       actions={[
                         {
-                          name: t('components.transaction.deposit'),
-                          handler: () => depositHandler(address),
+                          name: t('components.transaction.liquidate'),
+                          handler: () => liquidateBorrowerHandler(address),
                           disabled: !walletIsConnected,
                         },
                       ]}

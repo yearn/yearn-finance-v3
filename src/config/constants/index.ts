@@ -5,6 +5,9 @@ import { getEnv } from '@config/env';
 // import { encode } from '@src/utils';
 
 export const TOKEN_ADDRESSES = {
+  MooCoin: '0xe62e4B079D40CF643D3b4963e4B675eC101928df',
+  SeeroCoin: '0x3730954eC1b5c59246C1fA6a20dD6dE6Ef23aEa6',
+  KibaCoin: '0x3D4AA21e8915F3b5409BDb20f76457FCdAF8f757',
   ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
   WETH: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
   DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
@@ -120,6 +123,7 @@ export const getConstants = memoize((): Constants => {
     SwapTarget_GOERLI: '0xcb7b9188ada88cb0c991c807acc6b44097059dec',
     LineFactory_GOERLI: '0x43158693dba386562f0581cd48e68df027a5a877',
     SecuredLine_GOERLI: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
+    KibaSero_oracle: '0x0B3807b858B5fa24a39bced436DBc5A988Ca58d6',
     // ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
   };
 });

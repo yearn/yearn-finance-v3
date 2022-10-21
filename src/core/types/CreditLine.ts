@@ -1,5 +1,3 @@
-import { StringLiteral } from 'typescript';
-
 import { Address } from './Blockchain';
 import { Status } from './Status';
 
@@ -38,8 +36,8 @@ export interface BaseCreditLine {
 
 export interface AggregatedCreditLine extends BaseCreditLine {
   // real-time aggregate usd value across all credits
-  principal?: string | Promise<string>;
-  deposit: string | Promise<string>;
+  principal: string; // | Promise<string>;
+  deposit: string; // | Promise<string>;
   // id, symbol, APY (4 decimals)
   highestApy: [string, string, string];
 
@@ -51,13 +49,13 @@ export interface AggregatedCreditLine extends BaseCreditLine {
 
 export interface CreditLinePage extends AggregatedCreditLine {
   // total value of asssets repaid *AT TIME OF REPAYMENT*
-  interest?: string | Promise<string>;
-  totalInterestRepaid: string | Promise<string>;
+  interest: string; // | Promise<string>;
+  totalInterestRepaid: string; // | Promise<string>;
 
   credits?: { [key: string]: LinePageCreditPosition };
 
   collateralEvents: CollateralEvent[];
-  creditEvents: CreditLineEvents[];
+  creditEvents: CreditEvent[];
 }
 
 // data that isnt included in AggregatedCreditLine that we need to fetch for full CreditLinePage dattype
@@ -70,7 +68,7 @@ export interface CreditLinePageAuxData {
     };
   }[];
   collateralEvents: CollateralEvent[];
-  creditEvents: CreditLineEvents[];
+  creditEvents: CreditEvent[];
 }
 
 // TODO consolidate Credit and BaseCreditPosition and resolve type conflicts across codebase
@@ -80,6 +78,8 @@ export interface BaseCreditPosition {
   token: Address;
   principal: string;
   interestAccrued: string;
+
+  arbiter: string;
   interestRepaid: string;
 }
 
@@ -89,6 +89,7 @@ export interface Credit {
   interestAccrued: string;
   interestRepaid: string;
   decimals: string;
+  arbiter: string;
   token: Address;
   lender: Address;
 }
@@ -96,14 +97,15 @@ export interface Credit {
 export interface LinePageCreditPosition extends BaseCreditPosition {
   id: string;
   lender: Address;
+  arbiter: string;
   deposit: string;
   principal: string;
   interestAccrued: string;
   interestRepaid: string;
   totalInterestRepaid: string;
-  drawnRate: string;
+  dRate: string;
   token: Address;
-  // events?: CreditLineEvents[];
+  // events?: CreditEvent[];
 }
 
 // bare minimum to display about a user on a position
@@ -219,7 +221,9 @@ export interface EventWithValue {
 // Credit Events
 export interface CreditEvent extends EventWithValue {
   __typename: string;
-  id: string; // position id
+  id: string;
+  positionId: string; // position id
+  token?: string;
   timestamp: number;
   amount: number;
   valueAtTime?: number;
@@ -230,11 +234,9 @@ export interface SetRateEvent {
   __typename: string;
   id: string; // position id
   timestamp: number;
-  drawnRate: number;
-  facilityRate: number;
+  dRate: number;
+  fRate: number;
 }
-
-export type CreditLineEvents = CreditEvent | SetRateEvent;
 
 // Collateral Events
 export interface CollateralEvent extends EventWithValue {

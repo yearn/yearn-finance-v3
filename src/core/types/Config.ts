@@ -58,4 +58,5 @@ export interface Constants {
   SwapTarget_GOERLI: Address;
   LineFactory_GOERLI: Address;
   SecuredLine_GOERLI: Address;
+  KibaSero_oracle: string;
 }

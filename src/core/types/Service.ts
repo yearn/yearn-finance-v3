@@ -123,6 +123,11 @@ export interface WithdrawProps {
   signature?: string;
 }
 
+export interface WithdrawCreditProps {
+  id: string;
+  amount: BigNumber;
+}
+
 export interface MigrateProps {
   network: Network;
   accountAddress: Address;
@@ -151,8 +156,13 @@ export interface CreditLineService {
   getLinePageAuxData: (props: GetLinePageProps) => Promise<GetLinePageAuxDataResponse | undefined>;
   getUserLinePositions: (...args: any) => Promise<any | undefined>;
   getExpectedTransactionOutcome: (...args: any) => Promise<any | undefined>;
-
+  depositAndRepay: (
+    props: DepositAndRepayProps,
+    interest: InterestRateCreditService
+  ) => Promise<TransactionResponse | PopulatedTransaction>;
   addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  borrow: (props: BorrowCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse | PopulatedTransaction>;
   // close: (props: CloseProps) => Promise<TransactionResponse>;
   // withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse>;
   // setRates: (props: SetRatesProps) => Promise<TransactionResponse | PopulatedTransaction>;
@@ -194,6 +204,21 @@ export interface AddCreditProps {
   frate: BigNumber;
   amount: BigNumber;
   lender: Address;
+  network: Network;
+  dryRun: boolean;
+}
+
+export interface BorrowCreditProps {
+  lineAddress: string;
+  amount: BigNumber;
+  network: Network;
+  dryRun: boolean;
+}
+
+export interface LiquidateCreditProps {
+  lineAddress: string;
+  amount: BigNumber;
+  targetToken: Address;
   dryRun: boolean;
 }
 
@@ -205,6 +230,7 @@ export interface WithdrawLineProps {
   dryRun: boolean;
   lineAddress: string;
   id: string;
+  network: Network;
   amount: BigNumber;
 }
 export interface SetRatesProps {
@@ -221,8 +247,8 @@ export interface IncreaseCreditProps {
 }
 export interface DepositAndRepayProps {
   lineAddress: string;
-  id: string;
   amount: BigNumber;
+  network: Network;
 }
 export interface DepositAndCloseProps {
   lineAddress: string;
@@ -286,6 +312,7 @@ export interface SpigotedLineService {
   isBorrower: (lineAddress: string) => Promise<boolean>;
   borrower(lineAddress: string): Promise<Address>;
   getFirstID(lineAddress: string): Promise<BytesLike>;
+  liquidate: (props: LiquidateCreditProps) => Promise<any | undefined>;
   isSignerBorrowerOrLender(lineAddress: string, id: BytesLike): Promise<boolean>;
 }
 

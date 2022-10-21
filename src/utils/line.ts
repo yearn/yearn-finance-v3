@@ -5,7 +5,7 @@ import {
   CreditLinePage,
   RevenueContract,
   AggregatedCreditLine,
-  CreditLineEvents,
+  CreditEvent,
   CollateralEvent,
   ModuleNames,
   ESCROW_MODULE_NAME,
@@ -24,6 +24,8 @@ import {
   SpigotRevenueSummaryFragresponse,
   Address,
   GetLinePageAuxDataResponse,
+  LinePageCreditFragResponse,
+  LineEventFragResponse,
 } from '@types';
 
 const { parseUnits, parseEther } = utils;
@@ -55,16 +57,21 @@ export const mapStatusToString = (status: number): LineStatusTypes => {
  * @param price - the price to use for events. Generally current price for escrow and time of event for spigot
  * @param events - the events to process
  */
-export const formatCreditEvents = (symbol: string, price: number = 0, events: CreditLineEvents[]) => {
-  return events.map((e: any): CreditLineEvents => {
-    const { id, __typename, amount, token, timestamp, value = unnullify(0, true) } = e;
+export const formatCreditEvents = (
+  symbol: string,
+  price: number = 0,
+  events: LineEventFragResponse[]
+): CreditEvent[] => {
+  return events.map((e: any): CreditEvent => {
+    const { id, __typename, amount, token, credit, timestamp, value = unnullify(0, true) } = e;
     return {
       id,
+      positionId: credit.id,
       __typename,
       timestamp,
-      token: token.id,
       amount,
       value,
+      token: token.id,
       currentValue: price * value,
     };
   });
@@ -225,7 +232,6 @@ export const formatAggregatedCreditLineData = (
   };
 };
 
-// TODO rename formatAggregatedCreditLineData and use in CreditService.getLines() + .getLinePage()
 export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePage => {
   const {
     spigot,
@@ -253,24 +259,14 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
   //  all recent Spigot and Escrow events
   let collateralEvents: CollateralEvent[] = [];
   //  all recent borrow/lend events
-  let creditEvents: CreditLineEvents[] = [];
+  let creditEvents: CreditEvent[] = [];
 
-  const formattedCredits = credits?.reduce((obj: any, c: any) => {
-    const {
-      drawnRate,
-      id,
-      lender,
-      events: graphEvents,
-      principal,
-      deposit,
-      interestAccrued,
-      interestRepaid,
-      token,
-    } = c;
+  const formattedCredits = credits?.reduce((obj: any, c: LinePageCreditFragResponse) => {
+    const { dRate, id, lender, events: graphEvents, principal, deposit, interestAccrued, interestRepaid, token } = c;
     activeIds.push(id);
     // const currentPrice = await fetchTokenPrice(symbol, Date.now())
     const currentPrice = 1e8;
-    const events = formatCreditEvents(c.token.symbol, currentPrice, graphEvents);
+    const events = graphEvents ? formatCreditEvents(c.token.symbol, currentPrice, graphEvents!) : [];
     creditEvents.concat(events);
     return {
       ...obj,
@@ -278,7 +274,7 @@ export const formatLinePageData = (lineData: GetLinePageResponse): CreditLinePag
         id,
         lender,
         deposit,
-        drawnRate,
+        dRate,
         principal,
         interestAccrued,
         interestRepaid,

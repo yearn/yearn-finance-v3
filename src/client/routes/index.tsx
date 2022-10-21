@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import { Layout } from '@containers';
 
 import { Portfolio } from './Portfolio';
-import { VaultDetail } from './VaultDetail';
 import { LineDetail } from './LineDetail';
 import { Vaults } from './Vaults';
 import { Market } from './Market';

@@ -2,7 +2,6 @@ import { BigNumber, ContractFunction } from 'ethers';
 
 import {
   InterestRateCreditService,
-  YearnSdk,
   TransactionService,
   Web3Provider,
   Config,
@@ -21,13 +20,11 @@ export class InterestRateCreditServiceImpl implements InterestRateCreditService 
 
   constructor({
     transactionService,
-    yearnSdk,
     web3Provider,
     config,
   }: {
     transactionService: TransactionService;
     web3Provider: Web3Provider;
-    yearnSdk: YearnSdk;
     config: Config;
   }) {
     this.transactionService = transactionService;

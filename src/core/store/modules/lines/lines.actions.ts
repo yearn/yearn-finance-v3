@@ -1,14 +1,11 @@
 import { BigNumber, utils } from 'ethers';
-import { createAction, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
 import {
-  Position,
   AggregatedCreditLine,
   CreditLinePage,
   TransactionOutcome,
-  // LinesUserSummary,
-  UserPositionMetadata,
   Address,
   Wei,
   TokenAllowance,
@@ -18,24 +15,22 @@ import {
   PositionSummary,
   AddCreditProps,
   UseCreditLinesParams,
-  GetLinePageResponse,
+  BorrowCreditProps,
+  Network,
 } from '@types';
 import {
-  calculateSharesAmount,
-  normalizeAmount,
   toBN,
   getNetwork,
   validateNetwork,
   formatGetLinesData,
   formatLinePageData,
-  all,
   // validateLineDeposit,
   // validateLineWithdraw,
   // validateMigrateLineAllowance,
   // parseError,
 } from '@utils';
-import { getConfig } from '@config';
 import { unnullify } from '@utils';
+import { TxCreditLineInput } from '@src/client/components/app/Transactions/components/TxCreditLineInput';
 
 import { TokensActions } from '../tokens/tokens.actions';
 
@@ -95,17 +90,19 @@ const getLines = createAsyncThunk<
 
   // ensure consistent ordering of categories
   const categoryKeys = Object.keys(categories);
-
+  //@ts-ignore
   const promises = await Promise.all(
     categoryKeys
       .map((k) => categories[k])
       .map((params: GetLinesArgs) => creditLineService.getLines({ network: network.current, ...params }))
   );
-
-  const linesData = categoryKeys.reduce((all, category, i) => {
-    // @dev assumes `promises` is same order as `categories`
-    return !promises[i] ? all : { ...all, [category]: formatGetLinesData(promises[i]!, tokenPrices) };
-  }, {});
+  //@ts-ignore
+  const linesData = categoryKeys.reduce(
+    (all, category, i) =>
+      // @dev assumes `promises` is same order as `categories`
+      !promises[i] ? all : { ...all, [category]: formatGetLinesData(promises[i]!, tokenPrices) },
+    {}
+  );
 
   return { linesData };
 });
@@ -115,12 +112,17 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
   async ({ id }, { getState, extra }) => {
     const {
       network,
-      lines: { linesMap },
+      lines: { linesMap, pagesMap },
     } = getState();
     const { creditLineService } = extra.services;
-    let linePageData;
-    const existingData = linesMap[id];
-    if (!existingData) {
+
+    const pageData = pagesMap[id];
+    console.log('full page data already exists', pageData);
+    if (pageData) return { linePageData: pageData };
+
+    const basicData = linesMap[id];
+    console.log('basic pagedata already exists', basicData);
+    if (!basicData) {
       // navigated directly to line page, need to fetch basic data
       const linePageResponse = await creditLineService.getLinePage({
         network: network.current,
@@ -136,14 +138,15 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
         id,
       });
 
-      if (!auxdata) return { linePageData };
+      if (!auxdata) return { linePageData: undefined };
+
       const { lines: auxCredits, ...events } = auxdata;
       const credits = Object.entries(auxCredits ?? {}).reduce(
         (all, [key, aux]) => ({
           ...all,
           /// theoretically possible for a credit to exist in aux but not in Agg.
           [key]: {
-            ...(existingData.credits?.[key] ?? {}),
+            ...(basicData.credits?.[key] ?? {}),
             ...aux,
           },
         }),
@@ -151,7 +154,7 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
       );
       // summ total interest paid on positions freom events and add to position data
       // get dRate, token
-      return { linePageData: { ...existingData, credits, ...events } as CreditLinePage };
+      return { linePageData: { ...basicData, credits, ...events } as CreditLinePage };
     }
   }
 );
@@ -224,13 +227,12 @@ const deploySecuredLine = createAsyncThunk<
   {
     borrower: Address;
     ttl: string;
+    network: Network;
   },
   ThunkAPI
 >('lines/deploySecredLine', async (deployData, { getState, extra }) => {
-  const { network } = getState();
   const { lineServices } = extra.services;
   const deployedLineData = await lineServices.deploySecuredLine({
-    network: 'goerli',
     ...deployData,
   });
 
@@ -244,17 +246,18 @@ const approveDeposit = createAsyncThunk<
     tokenAddress: string;
     amount: string;
     lineAddress: string;
+    network: Network;
   },
   ThunkAPI
->('lines/approveDeposit', async ({ amount, tokenAddress }, { getState, dispatch, extra }) => {
-  const { wallet, network } = getState();
-  const { creditLineService, tokenService } = extra.services;
+>('lines/approveDeposit', async ({ amount, tokenAddress, network }, { getState, dispatch, extra }) => {
+  const { wallet } = getState();
+  const { tokenService } = extra.services;
 
   const accountAddress = wallet.selectedAddress;
   if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
   const approveDepositTx = await tokenService.approve({
-    network: 'goerli',
+    network,
     tokenAddress,
     accountAddress,
     spenderAddress: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
@@ -263,24 +266,35 @@ const approveDeposit = createAsyncThunk<
   console.log('this is approval', approveDepositTx);
 });
 
+const borrowCredit = createAsyncThunk<void, BorrowCreditProps, ThunkAPI>(
+  'lines/borrowCredit',
+  async ({ lineAddress, amount, network }, { extra, getState }) => {
+    const { wallet } = getState();
+    const { services } = extra;
+    console.log('look at borrow credit', wallet, lineAddress, amount);
+    const { creditLineService } = services;
+
+    const tx = await creditLineService.borrow({
+      lineAddress: lineAddress,
+      amount: amount,
+      network: network,
+      dryRun: true,
+    });
+    console.log(tx);
+  }
+);
+
 const addCredit = createAsyncThunk<void, AddCreditProps, ThunkAPI>(
   'lines/addCredit',
-  async ({ lineAddress, drate, frate, amount, token, lender }, { extra, getState, dispatch }) => {
-    const { network, wallet, lines, tokens, app } = getState();
+  async ({ lineAddress, drate, frate, amount, token, lender, network }, { extra, getState, dispatch }) => {
+    const { wallet } = getState();
     const { services } = extra;
-    console.log('look here', network, wallet, lineAddress, drate, frate, amount, token, lender);
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const userLineData = lines.user.linePositions[lineAddress];
-    const tokenData = tokens.tokensMap[token];
-    const userTokenData = tokens.user.userTokensMap[token];
-    const decimals = toBN(tokenData.decimals);
-    const ONE_UNIT = toBN('10').pow(decimals);
-
     // TODO: fix BigNumber type difference issues
     // const amountInWei = amount.multipliedBy(ONE_UNIT);
-    const { creditLineService, transactionService } = services;
+    const { creditLineService } = services;
     const tx = await creditLineService.addCredit({
       lineAddress: lineAddress,
       drate: drate,
@@ -289,6 +303,7 @@ const addCredit = createAsyncThunk<void, AddCreditProps, ThunkAPI>(
       token: token,
       lender: lender,
       dryRun: true,
+      network: network,
     });
     console.log(tx);
     // const notifyEnabled = app.servicesEnabled.notify;
@@ -363,27 +378,19 @@ const depositAndRepay = createAsyncThunk<
     lineAddress: string;
     tokenAddress: string;
     amount: BigNumber;
-    targetUnderlyingTokenAmount: string | undefined;
+    network: Network;
     slippageTolerance?: number;
   },
   ThunkAPI
 >(
   'lines/depositAndRepay',
-  async (
-    { lineAddress, tokenAddress, amount, targetUnderlyingTokenAmount, slippageTolerance },
-    { extra, getState, dispatch }
-  ) => {
-    const { network, wallet, lines, tokens, app } = getState();
+
+  async ({ lineAddress, tokenAddress, amount, network }, { extra, getState, dispatch }) => {
+    const { wallet, lines, tokens } = getState();
     const { services } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
-
-    const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
-      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
-    });
-    if (networkError) throw networkError;
 
     const userLineData = lines.user.linePositions[lineAddress];
     const tokenData = tokens.tokensMap[tokenAddress];
@@ -391,6 +398,7 @@ const depositAndRepay = createAsyncThunk<
     const decimals = toBN(tokenData.decimals);
     const ONE_UNIT = toBN('10').pow(decimals);
 
+    const { creditLineService, interestRateCreditService } = services;
     // const { error: depositError } = validateLineDeposit({
     //   sellTokenAmount: amount,
     //   depositLimit: lineData?.metadata.depositLimit ?? '0',
@@ -407,7 +415,69 @@ const depositAndRepay = createAsyncThunk<
     // TODO: fix BigNumber type difference issues
     // const amountInWei = amount.multipliedBy(ONE_UNIT);
     // const { creditLineService, transactionService } = services;
-    // const tx = await creditLineService.depositAndRepay(userLineData.id, amount, false);
+    const tx = await creditLineService.depositAndRepay(
+      {
+        lineAddress: lineAddress,
+        amount: amount,
+        network: network,
+      },
+      interestRateCreditService
+    );
+    console.log(tx);
+    // const notifyEnabled = app.servicesEnabled.notify;
+    // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    dispatch(getLinePage({ id: lineAddress }));
+    // dispatch(getUserLinesSummary());
+    dispatch(getUserLinePositions({ lineAddresses: [lineAddress] }));
+    // dispatch(getUserLinesMetadata({ linesAddresses: [lineAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, lineAddress] }));
+  },
+  {
+    // serializeError: parseError,
+  }
+);
+
+const liquidate = createAsyncThunk<
+  void,
+  {
+    lineAddress: string;
+    amount: BigNumber;
+    tokenAddress: string;
+  },
+  ThunkAPI
+>(
+  'lines/liquidate',
+  async ({ lineAddress, tokenAddress, amount }, { extra, getState, dispatch }) => {
+    const { wallet } = getState();
+    const { services } = extra;
+
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { creditLineService, spigotedLineService } = services;
+    // const { error: depositError } = validateLineDeposit({
+    //   sellTokenAmount: amount,
+    //   depositLimit: lineData?.metadata.depositLimit ?? '0',
+    //   emergencyShutdown: lineData?.metadata.emergencyShutdown || false,
+    //   sellTokenDecimals: tokenData?.decimals ?? '0',
+    //   userTokenBalance: userTokenData?.balance ?? '0',
+    //   lineUnderlyingBalance: lineData?.underlyingTokenBalance.amount ?? '0',
+    //   targetUnderlyingTokenAmount,
+    // });
+
+    // const error = depositError;
+    // if (error) throw new Error(error);
+
+    // TODO: fix BigNumber type difference issues
+    // const amountInWei = amount.multipliedBy(ONE_UNIT);
+    // const { creditLineService, transactionService } = services;
+    const tx = await spigotedLineService.liquidate({
+      lineAddress: lineAddress,
+      amount: amount,
+      targetToken: tokenAddress,
+      dryRun: false,
+    });
+    console.log(tx);
     // const notifyEnabled = app.servicesEnabled.notify;
     // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getLinePage({ id: lineAddress }));
@@ -426,25 +496,23 @@ const withdrawLine = createAsyncThunk<
   {
     lineAddress: string;
     amount: BigNumber;
-    targetTokenAddress: string;
-    slippageTolerance?: number;
-    signature?: string;
+    network: Network;
   },
   ThunkAPI
 >(
   'lines/withdrawLine',
-  async ({ lineAddress, amount, targetTokenAddress, slippageTolerance, signature }, { extra, getState, dispatch }) => {
-    const { network, wallet, lines, tokens, app } = getState();
+  async ({ lineAddress, amount, network }, { extra, getState, dispatch }) => {
+    const { wallet, lines } = getState();
     const { services, config } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const { error: networkError } = validateNetwork({
-      currentNetwork: network.current,
-      walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
-    });
-    if (networkError) throw networkError;
+    //const { error: networkError } = validateNetwork({
+    //  currentNetwork: network.current,
+    //  walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
+    //});
+    //if (networkError) throw networkError;
 
     const lineData = lines.linesMap[lineAddress];
     const userLineData = lines.user.linePositions[lineAddress];
@@ -462,17 +530,23 @@ const withdrawLine = createAsyncThunk<
 
     // const error = withdrawError;
     // if (error) throw new Error(error);
-
     // TODO: fix BigNumber type difference issues
-    // const { creditLineService, transactionService } = services;
-    // const tx = await creditLineService.withdraw(userLineData.id, amountOfShares);
+    const { creditLineService } = services;
+    const tx = await creditLineService.withdraw({
+      id: lineAddress,
+      amount: amountOfShares,
+      lineAddress: lineAddress,
+      network: network,
+      dryRun: true,
+    });
+    console.log(tx);
     // const notifyEnabled = app.servicesEnabled.notify;
     // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
     dispatch(getLinePage({ id: lineAddress }));
     // dispatch(getUserLinesSummary());
     dispatch(getUserLinePositions({ lineAddresses: [lineAddress] }));
     // dispatch(getUserLinesMetadata({ linesAddresses: [lineAddress] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, lineAddress] }));
+    //dispatch(TokensActions.getUserTokens({ addresses: [targetTokenAddress, lineAddress] }));
   },
   {
     // serializeError: parseError,
@@ -588,10 +662,12 @@ export const LinesActions = {
   approveDeposit,
   addCredit,
   depositAndRepay,
+  borrowCredit,
   deploySecuredLine,
   // approveZapOut,
   // signZapOut,
   withdrawLine,
+  liquidate,
   // migrateLine,
   // initSubscriptions,
   clearLinesData,

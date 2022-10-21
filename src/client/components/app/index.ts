@@ -3,6 +3,7 @@ export * from './Amount';
 export * from './ApyTooltipData';
 export * from './ConnectWalletButton';
 export * from './DetailCard';
+export * from './LineDetailsDisplay';
 export * from './Footer';
 export * from './SliderCard';
 export * from './Navbar';

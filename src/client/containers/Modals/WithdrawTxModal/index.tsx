@@ -10,6 +10,8 @@ export interface WithdrawTxModalProps {
   onClose: () => void;
 }
 
+// Yearn stuff.
+
 export const WithdrawTxModal: FC<WithdrawTxModalProps> = ({ onClose, ...props }) => {
   const { t } = useAppTranslation('common');
 

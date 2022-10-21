@@ -10,7 +10,7 @@ env:
   PULL_NUMBER: ${{ github.event.pull_request.number }}
   RUN_ID: ${{ github.run_id }}
   FORCE_COLOR: 2
-
+  CI: ""
 jobs:
   pipeline:
     name: Node ${{ matrix.node-version }} on ${{ matrix.os }}

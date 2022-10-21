@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { getAddress } from '@ethersproject/address';
 
 import { AllowancesMap, Network } from '@types';
 import { getConfig } from '@config';
@@ -324,4 +325,13 @@ export function validateNetwork(props: ValidateNetworkProps): ValidationResponse
     return { error: `Incorrect Network Selected. Change Your Wallet to ${currentNetwork} Network` };
 
   return {};
+}
+
+export function isAddress(address: string) {
+  try {
+    getAddress(address);
+  } catch (e) {
+    return false;
+  }
+  return true;
 }

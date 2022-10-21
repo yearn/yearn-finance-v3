@@ -1,14 +1,6 @@
 ﻿import { BigNumber, PopulatedTransaction } from 'ethers';
 
-import {
-  YearnSdk,
-  TransactionService,
-  Web3Provider,
-  Config,
-  ExecuteTransactionProps,
-  Address,
-  EscrowService,
-} from '@types';
+import { TransactionService, Web3Provider, Config, ExecuteTransactionProps, Address, EscrowService } from '@types';
 import { getConfig } from '@config';
 import { getContract } from '@frameworks/ethers';
 
@@ -25,13 +17,11 @@ export class EscrowServiceImpl implements EscrowService {
 
   constructor({
     transactionService,
-    yearnSdk,
     web3Provider,
     config,
   }: {
     transactionService: TransactionService;
     web3Provider: Web3Provider;
-    yearnSdk: YearnSdk;
     config: Config;
   }) {
     this.transactionService = transactionService;
@@ -110,7 +100,7 @@ export class EscrowServiceImpl implements EscrowService {
     let props: ExecuteTransactionProps | undefined = undefined;
     try {
       props = {
-        network: 'mainnet',
+        network: 'goerli',
         args: params,
         methodName: methodName,
         abi: this.abi,

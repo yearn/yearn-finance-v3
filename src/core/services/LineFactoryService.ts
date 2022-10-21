@@ -1,14 +1,13 @@
-import { BigNumberish, BigNumber, ContractFunction, PopulatedTransaction, ethers } from 'ethers';
+import { BigNumber, ContractFunction, PopulatedTransaction, ethers } from 'ethers';
 
-import { TransactionService, Web3Provider, Config, ExecuteTransactionProps, Address, YearnSdk } from '@types';
+import { TransactionService, Web3Provider, Config, ExecuteTransactionProps, Address, Network } from '@types';
 import { getConfig } from '@config';
-import { getContract } from '@frameworks/ethers';
 
 import { TransactionResponse } from '../types';
 
 import { LineFactoryABI } from './contracts';
 
-const { GRAPH_API_URL, Arbiter_GOERLI, Oracle_GOERLI, SwapTarget_GOERLI, LineFactory_GOERLI } = getConfig();
+const { Arbiter_GOERLI, Oracle_GOERLI, SwapTarget_GOERLI, LineFactory_GOERLI } = getConfig();
 
 export class LineFactoryServiceImpl {
   private graphUrl: string;
@@ -25,7 +24,6 @@ export class LineFactoryServiceImpl {
   }: {
     transactionService: TransactionService;
     web3Provider: Web3Provider;
-    yearnSdk: YearnSdk;
     config: Config;
     contractAddress: Address;
   }) {
@@ -44,7 +42,13 @@ export class LineFactoryServiceImpl {
     operator: string,
     dryRun: boolean
   ): Promise<TransactionResponse | PopulatedTransaction> {
-    return await this.executeContractMethod(contractAddress, 'deploySpigot', [owner, borrower, operator], dryRun);
+    return await this.executeContractMethod(
+      contractAddress,
+      'deploySpigot',
+      [owner, borrower, operator],
+      'goerli',
+      dryRun
+    );
   }
 
   public async deployEscrow(
@@ -59,6 +63,7 @@ export class LineFactoryServiceImpl {
       contractAddress,
       'deployEscrow',
       [minCRatio, oracle, owner, borrower],
+      'goerli',
       dryRun
     );
   }
@@ -66,6 +71,7 @@ export class LineFactoryServiceImpl {
   public async deploySecuredLine(props: {
     borrower: string;
     ttl: number;
+    network: Network;
   }): Promise<ethers.providers.TransactionResponse | PopulatedTransaction> {
     const { borrower, ttl } = props;
     const data = {
@@ -82,6 +88,7 @@ export class LineFactoryServiceImpl {
         data.factoryAddress,
         'deploySecuredLine',
         [data.oracle, data.arbiter, data.borrower, data.ttl, data.swapTarget],
+        props.network,
         true
       )
     );
@@ -102,6 +109,7 @@ export class LineFactoryServiceImpl {
       contractAddress,
       'deploySecuredLineWithConfig',
       [oracle, arbiter, borrower, ttl, revenueSplit, cratio, swapTarget],
+      'goerli',
       dryRun
     );
   }
@@ -119,15 +127,22 @@ export class LineFactoryServiceImpl {
       contractAddress,
       'rolloverSecuredLine',
       [oldLine, borrower, oracle, arbiter, ttl],
+      'goerli',
       dryRun
     );
   }
 
-  private async executeContractMethod(contractAddress: string, methodName: string, params: any[], dryRun: boolean) {
+  private async executeContractMethod(
+    contractAddress: string,
+    methodName: string,
+    params: any[],
+    network: Network,
+    dryRun: boolean
+  ) {
     let props: ExecuteTransactionProps | undefined = undefined;
     try {
       props = {
-        network: 'goerli',
+        network: network,
         args: params,
         methodName: methodName,
         abi: this.abi,

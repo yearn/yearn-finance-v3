@@ -5,7 +5,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
 import { Text, Icon, Button, SearchList, ZapIcon, SearchListItem } from '@components/common';
-import { formatUsd, humanize } from '@utils';
+import { humanize } from '@utils';
 
 const MaxButton = styled(Button)`
   border-radius: ${({ theme }) => theme.globalRadius};
@@ -50,29 +50,6 @@ const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
       margin: 0;
     };
   `}
-`;
-
-const ContrastText = styled.span`
-  color: ${({ theme }) => theme.colors.primary};
-`;
-
-const StyledText = styled(Text)`
-  color: ${({ theme }) => theme.colors.txModalColors.text};
-  max-width: 11rem;
-`;
-
-const TokenExtras = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 0.8rem;
-
-  ${StyledText} {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
 `;
 
 const AmountInputContainer = styled.div`
@@ -120,57 +97,6 @@ const TokenIconContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-`;
-
-const ZappableTokenButton = styled(Button)<{ selected?: boolean; viewAll?: boolean }>`
-  display: block;
-  font-size: 1.2rem;
-  height: 2.4rem;
-  padding: 0 0.8rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  width: -webkit-fill-available;
-  // NOTE - hack fallback if fill-available is not supported
-  max-width: 6.6rem;
-  max-width: max-content;
-
-  ${({ selected, theme }) =>
-    selected &&
-    `
-      background-color: ${theme.colors.secondary};
-      color: ${theme.colors.titlesVariant};
-    `}
-  ${({ viewAll }) =>
-    viewAll &&
-    `
-      flex-shrink: 0;
-    `}
-`;
-
-const ZappableTokensList = styled.div`
-  display: flex;
-  // NOTE This will make the list with css grid, an alternative to flexbox wrapping.
-  // We should leave this piece of code here because I think we will need to change the style.
-  // grid-template-columns: repeat(auto-fit, minmax(3rem, max-content));
-  // grid-auto-flow: column;
-  // flex-wrap: wrap;
-  overflow: hidden;
-  margin-top: 0.8rem;
-  grid-gap: 0.8rem;
-  width: 100%;
-`;
-
-const ZapMessageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  border-radius: ${({ theme }) => theme.globalRadius};
-  background: ${({ theme }) => theme.colors.txModalColors.backgroundVariant};
-  padding: 0.8rem;
-  font-size: 1.2rem;
-  width: 100%;
-  overflow: hidden;
 `;
 
 const TokenSelector = styled.div<{ onClick?: () => void; center?: boolean }>`
@@ -305,7 +231,6 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
   const { t } = useAppTranslation('common');
 
   let listItems: SearchListItem[] = [];
-  let zappableItems: SearchListItem[] = [];
   let selectedItem: SearchListItem = {
     id: selectedToken.address,
     icon: selectedToken.icon,
@@ -324,7 +249,6 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
         };
       })
       .sort((a, b) => amountToNumber(b.value) - amountToNumber(a.value));
-    zappableItems = listItems.slice(0, 4);
     listItems.sort((a, b) => (a.id === selectedItem.id ? -1 : 1));
   }
 

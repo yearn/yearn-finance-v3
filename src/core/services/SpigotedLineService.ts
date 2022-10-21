@@ -2,7 +2,6 @@
 import { BigNumber, ethers, PopulatedTransaction } from 'ethers';
 
 import {
-  YearnSdk,
   TransactionService,
   Web3Provider,
   Config,
@@ -10,6 +9,7 @@ import {
   Address,
   ISpigotSetting,
   SpigotedLineService,
+  LiquidateCreditProps,
   CreditLineService,
 } from '@types';
 import { getConfig } from '@config';
@@ -31,13 +31,11 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
   constructor({
     transactionService,
     creditLineService,
-    yearnSdk,
     web3Provider,
     config,
   }: {
     transactionService: TransactionService;
     web3Provider: Web3Provider;
-    yearnSdk: YearnSdk;
     config: Config;
     creditLineService: CreditLineService;
   }) {
@@ -112,6 +110,24 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
     return await this.executeContractMethod(lineAddress, 'releaseSpigot', [spigot, status, borrower, arbiter], dryRun);
   }
 
+  public async liquidate(props: LiquidateCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
+    try {
+      const line = props.lineAddress;
+
+      let data = {
+        amount: props.amount,
+        targetToken: props.targetToken,
+      };
+      //@ts-ignore
+      return <TransactionResponse>(
+        await this.executeContractMethod(line, 'liquidate', [data.amount, data.targetToken], false)
+      );
+    } catch (e) {
+      console.log(`An error occured while borrowing credit, error = [${JSON.stringify(e)}]`);
+      return Promise.reject(e);
+    }
+  }
+
   private async getSignerAddress(): Promise<Address> {
     return await this.web3Provider.getSigner().getAddress();
   }
@@ -172,15 +188,12 @@ export class SpigotedLineServiceImpl implements SpigotedLineService {
     let props: ExecuteTransactionProps | undefined = undefined;
     try {
       props = {
-        network: 'mainnet',
+        network: 'goerli',
         args: params,
         methodName: methodName,
         abi: this.abi,
         contractAddress: lineAddress,
       };
-      if (dryRun) {
-        return await this.transactionService.populateTransaction(props);
-      }
 
       const tx = await this.transactionService.execute(props);
       await tx.wait();

@@ -3,6 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
+  ModalsActions,
   LinesActions,
   AlertsActions,
   AppSelectors,
@@ -12,8 +13,8 @@ import {
   WalletSelectors,
 } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
-import { VaultDetailPanels, ViewContainer, SliderCard } from '@components/app';
-import { SpinnerLoading, Text } from '@components/common';
+import { LineDetailsDisplay, ViewContainer, SliderCard } from '@components/app';
+import { SpinnerLoading, Text, Button } from '@components/common';
 import {
   // parseHistoricalEarningsUnderlying,
   // parseHistoricalEarningsUsd,
@@ -41,12 +42,40 @@ const LineDetailView = styled(ViewContainer)`
   }
 `;
 
+const WithdrawButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
+  margin-left: 1rem;
+`;
+
+const AddCreditButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
+  margin-left: 1rem;
+`;
+
+const BorrowButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
+  margin-left: 1rem;
+`;
+
+const DepositAndRepayButton = styled(Button)`
+  width: 18rem;
+  margin-top: 1em;
+  background-color: #00a3ff;
+  margin-left: 1rem;
+`;
+
 export interface LineDetailRouteParams {
   lineAddress: string;
 }
 
 export const LineDetail = () => {
-  const { t } = useAppTranslation(['common', 'linedetails']);
+  const { t } = useAppTranslation(['common', 'lineDetails']);
   const dispatch = useAppDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -55,21 +84,81 @@ export const LineDetail = () => {
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
+  const selectedPage = useAppSelector(LinesSelectors.selectSelectedLinePage);
   // const selectedLineCreditEvents = useAppSelector(LinesSelectors.selectSelectedLineCreditEvents);
   const linesStatus = useAppSelector(LinesSelectors.selectLinesStatus);
   // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
-  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
-  const walletName = useAppSelector(WalletSelectors.selectWallet);
-
+  //const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  //const walletName = useAppSelector(WalletSelectors.selectWallet);
+  const userWalletAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const blockExplorerUrl = currentNetworkSettings.blockExplorerUrl;
+
+  // Used to generate Transaction Button depending on whether user is lender, borrower, or arbiter.
+  const [transactions, setTransactions] = useState<string[]>([]);
 
   // 1. get line address from url parms
   // 2. set selected line as current line
   // 3. fetch line page
   // 4.
+
+  const depositHandler = () => {
+    if (!selectedLine) {
+      return;
+    }
+    let address = selectedLine.id;
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
+  };
+
+  // THIS NEEDS REVISITNG
+  const liquidateHandler = () => {
+    if (!selectedLine) {
+      return;
+    }
+    let address = selectedLine.id;
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
+  };
+
+  const WithdrawHandler = () => {
+    if (!selectedLine) {
+      return;
+    }
+    let address = selectedLine.id;
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'withdraw' }));
+  };
+
+  useEffect(() => {
+    let Transactions = [];
+    console.log('user wallet: ', userWalletAddress, 'borrower', selectedLine?.borrower);
+    if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.borrower) {
+      Transactions.push('borrow');
+      Transactions.push('deposit-and-repay');
+      Transactions.push('deposit');
+    }
+    if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.borrower) {
+      Transactions.push('deposit');
+      Transactions.push('withdraw');
+    }
+    //@ts-ignore
+    if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.arbiter) {
+      Transactions.push('liquidate');
+    }
+    setTransactions(Transactions);
+  }, [userWalletAddress, selectedLine]);
+
+  const borrowHandler = () => {
+    if (!selectedLine) {
+      return;
+    }
+    console.log(selectedLine);
+    let address = selectedLine.id;
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'borrow' }));
+  };
 
   useEffect(() => {
     const lineAddress: string | undefined = location.pathname.split('/')[2];
@@ -90,13 +179,13 @@ export const LineDetail = () => {
   const [tokensInitialized, setTokensInitialized] = useState(false);
 
   useEffect(() => {
-    const assetAddress: string | undefined = location.pathname.split('/')[2];
-    if (!assetAddress || !isValidAddress(assetAddress)) {
+    const lineAddress: string | undefined = location.pathname.split('/')[2];
+    if (!lineAddress || !isValidAddress(lineAddress)) {
       dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
-      history.push('/portfolio');
+      history.push('/market');
       return;
     }
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: assetAddress }));
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
 
     return () => {
       dispatch(LinesActions.clearSelectedLineAndStatus());
@@ -122,21 +211,11 @@ export const LineDetail = () => {
     (appStatus.loading || linesStatus.loading || tokensStatus.loading || isMounting) &&
     (!tokensInitialized || !linesInitialized);
 
-  const chartData = currentNetworkSettings.earningsEnabled
-    ? {
-        // underlying: parseHistoricalEarningsUnderlying(selectedLine?.historicalEarnings, selectedLine?.token.decimals),
-        // usd: parseHistoricalEarningsUsd(selectedLine?.historicalEarnings),
-      }
-    : {};
-  const chartValue = currentNetworkSettings.earningsEnabled
-    ? {
-        // usd: parseLastEarningsUsd(selectedLine?.historicalEarnings),
-        // underlying: parseLastEarningsUnderlying(selectedLine?.historicalEarnings, selectedLine?.token.decimals),
-      }
-    : {};
-
   // TODO: 0xframe also supports this
-  const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';
+  //const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';
+  const depositAndRepayHandler = () => {
+    dispatch(ModalsActions.openModal({ modalName: 'depositAndRepay' }));
+  };
 
   return (
     <LineDetailView>
@@ -144,14 +223,16 @@ export const LineDetail = () => {
 
       {!generalLoading && !selectedLine && (
         <StyledSliderCard
-          header={t('linedetails:no-line-supported-card.header', { network: currentNetworkSettings.name })}
+          header={t('lineDetails:no-line-supported-card.header', { network: currentNetworkSettings.name })}
           Component={
             <Text>
-              <p>{t('linedetails:no-line-supported-card.content')}</p>
+              <p>{t('lineDetails:no-line-supported-card.content')}</p>
             </Text>
           }
         />
       )}
+
+      {selectedLine && <LineDetailsDisplay page={selectedPage} line={selectedLine} />}
 
       {/* {!generalLoading && selectedLine && (
         <VaultDetailPanels
@@ -163,6 +244,45 @@ export const LineDetail = () => {
           blockExplorerUrl={blockExplorerUrl}
         />
       )} */}
+      {transactions.map((transaction, i) => {
+        if (transaction === 'borrow') {
+          return (
+            <BorrowButton onClick={borrowHandler} key={`${transaction}-${i}`}>
+              Borrow
+            </BorrowButton>
+          );
+        }
+        if (transaction === 'deposit') {
+          return (
+            <AddCreditButton onClick={depositHandler} key={`${transaction}-${i}`}>
+              Deposit - Consent
+            </AddCreditButton>
+          );
+        }
+        if (transaction === 'deposit-and-repay') {
+          return (
+            <DepositAndRepayButton onClick={depositAndRepayHandler} key={`${transaction}-${i}`}>
+              Repay
+            </DepositAndRepayButton>
+          );
+        }
+        if (transaction === 'liquidate') {
+          return (
+            <WithdrawButton onClick={liquidateHandler} key={`${transaction}-${i}`}>
+              liquidate
+            </WithdrawButton>
+          );
+        }
+        if (transaction === 'withdraw') {
+          return (
+            <WithdrawButton onClick={WithdrawHandler} key={`${transaction}-${i}`}>
+              Withdraw
+            </WithdrawButton>
+          );
+        } else {
+          return;
+        }
+      })}
     </LineDetailView>
   );
 };
