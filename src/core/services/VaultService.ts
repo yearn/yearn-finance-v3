@@ -63,11 +63,29 @@ export class VaultServiceImpl implements VaultService {
   /* -------------------------------------------------------------------------- */
 
   public async getSupportedVaults({ network, addresses }: GetSupportedVaultsProps): Promise<Vault[]> {
-    const { YVBOOST } = this.config.CONTRACT_ADDRESSES;
+    const { YVBOOST, STYCRV } = this.config.CONTRACT_ADDRESSES;
     const yearn = this.yearnSdk.getInstanceOf(network);
     const vaults = await yearn.vaults.get(addresses);
     // TODO: Once SDK has a Labs interface, filtering out yvBoost should not be needed anymore
-    return vaults.filter(({ address }) => address !== YVBOOST);
+    return vaults
+      .filter(({ address }) => address !== YVBOOST)
+      .map((vault) =>
+        vault.address === STYCRV
+          ? {
+              ...vault,
+              metadata: {
+                ...vault.metadata,
+                ...(vault.metadata.apy && {
+                  apy: {
+                    ...vault.metadata.apy,
+                    type: 'override',
+                    net_apy: vault.metadata.apy?.points?.week_ago ?? vault.metadata.apy?.net_apy,
+                  },
+                }),
+              },
+            }
+          : vault
+      );
   }
 
   public async getVaultsDynamicData({ network, addresses }: GetVaultsDynamicDataProps): Promise<VaultDynamic[]> {
