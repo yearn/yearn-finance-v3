@@ -96,15 +96,20 @@ export const formatCollateralEvents = (
   tokenRevenue?: any
 ): [number, CollateralEvent[]] => {
   let totalVal = 0;
+
+  if (!events) return [totalVal, []];
+
   // TODO promise.all token price fetching for better performance
-  const newEvents: CollateralEvent[] = events.map((e: any): CollateralEvent => {
+  const newEvents: (CollateralEvent | undefined)[] = events?.map((e: any): CollateralEvent | undefined => {
     const { __typename, timestamp, amount, token, value = unnullify(0, true) } = e;
-    const valueNow = price * amount;
+    if (!timestamp || !amount) return undefined;
+
+    const valueNow = unnullify(price.toString(), true).times(unnullify((amount.toString(), true)));
 
     if (type === SPIGOT_MODULE_NAME) {
       // aggregate token revenue. not needed for escrow bc its already segmented by token
       // use price at time of revenue for more accuracy
-      tokenRevenue[symbol] += parseUnits(tokenRevenue[symbol], 'ether').add(value).toString();
+      tokenRevenue[symbol] += parseUnits(unnullify(tokenRevenue[symbol], true), 'ether').add(value).toString();
     }
     totalVal += valueNow;
     return {
@@ -117,7 +122,9 @@ export const formatCollateralEvents = (
       id: token.id,
     };
   });
-  return [totalVal, newEvents];
+
+  const validEvents = newEvents.filter((x) => !!x) as CollateralEvent[];
+  return [totalVal, validEvents];
 };
 /** Formatting functions. from GQL structured response to flat data for redux state  */
 

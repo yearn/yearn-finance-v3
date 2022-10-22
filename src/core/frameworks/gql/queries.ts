@@ -64,20 +64,19 @@ const CREDIT_EVENT_FRAGMENT = gql`
     id
     __typename
     timestamp
+    amount
+    value
     credit {
       id
       token {
         id
       }
     }
-    amount
-    value
   }
 `;
 
 // Spigot Frags
 const BASE_SPIGOT_FRAGMENT = gql`
-  ${TOKEN_FRAGMENT}
   fragment BaseSpigotFrag on Spigot {
     active
     contract
@@ -86,7 +85,7 @@ const BASE_SPIGOT_FRAGMENT = gql`
 `;
 
 const SPIGOT_EVENT_FRAGMENT = gql`
-  fragment SpigotEventFrag on SpigotEvent {
+  fragment SpigotEventFrag on SpigotControllerEvent {
     ... on ClaimRevenueEvent {
       __typename
       timestamp
@@ -194,9 +193,19 @@ export const GET_LINE_PAGE_QUERY = gql`
 
       spigot {
         id
+        summaries {
+          token {
+            ...TokenFrag
+          }
+          totalVolumeUsd
+          timeOfFirstIncome
+          timeOfLastIncome
+        }
+
         spigots {
           ...BaseSpigotFrag
         }
+
         events(first: 20) {
           ...SpigotEventFrag
         }
