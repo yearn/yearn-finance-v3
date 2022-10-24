@@ -144,7 +144,7 @@ export const LineDetail = () => {
       Transactions.push('withdraw');
     }
     //@ts-ignore
-    if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.arbiter) {
+    if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.arbiter) {
       Transactions.push('liquidate');
     }
     setTransactions(Transactions);
@@ -255,7 +255,7 @@ export const LineDetail = () => {
         if (transaction === 'deposit') {
           return (
             <AddCreditButton onClick={depositHandler} key={`${transaction}-${i}`}>
-              Deposit - Consent
+              Deposit
             </AddCreditButton>
           );
         }
@@ -269,7 +269,7 @@ export const LineDetail = () => {
         if (transaction === 'liquidate') {
           return (
             <WithdrawButton onClick={liquidateHandler} key={`${transaction}-${i}`}>
-              liquidate
+              Liquidate
             </WithdrawButton>
           );
         }
