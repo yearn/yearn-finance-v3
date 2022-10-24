@@ -13,7 +13,6 @@ import {
   ModalsActions,
   ModalSelectors,
   NetworkActions,
-  VaultsSelectors,
   PartnerSelectors,
 } from '@store';
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
@@ -136,14 +135,11 @@ export const Layout: FC = ({ children }) => {
 
   useEffect(() => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
-    fetchAppData(currentNetwork, path);
-    if (selectedAddress) fetchUserData(currentNetwork, path);
   }, [location]);
 
   useEffect(() => {
     if (previousAddress) dispatch(AppActions.clearUserAppData());
     // if (previousAddress) dispatch(UserActions.clearNftBalance());
-    if (selectedAddress) fetchUserData(currentNetwork, path);
     // if (selectedAddress) dispatch(UserActions.getNftBalance());
   }, [selectedAddress]);
 
@@ -152,29 +148,7 @@ export const Layout: FC = ({ children }) => {
     if (previousNetwork) dispatch(AppActions.clearAppData());
     if (selectedAddress) dispatch(AppActions.clearUserAppData());
     dispatch(TokensActions.getTokens());
-    fetchAppData(currentNetwork, path);
-    if (selectedAddress) fetchUserData(currentNetwork, path);
   }, [currentNetwork]);
-
-  function fetchAppData(network: Network, path: Route) {
-    dispatch(
-      AppActions.getAppData({
-        network,
-        route: path,
-        addresses: assetAddress ? [assetAddress] : undefined,
-      })
-    );
-  }
-
-  function fetchUserData(network: Network, path: Route) {
-    dispatch(
-      AppActions.getUserAppData({
-        network,
-        route: path,
-        addresses: assetAddress ? [assetAddress] : undefined,
-      })
-    );
-  }
 
   return (
     <StyledLayout>

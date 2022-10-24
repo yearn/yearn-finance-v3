@@ -9,7 +9,6 @@ import {
   ModalsActions,
   ModalSelectors,
   TokensSelectors,
-  VaultsActions,
   VaultsSelectors,
   WalletSelectors,
   AppSelectors,
@@ -185,13 +184,11 @@ export const Market = () => {
     window.history.replaceState(null, '', `market${search ? `?search=${search}` : ''}`);
   }, [opportunities, search]);
 
-  const liquidateBorrowerHandler = (vaultAddress: string) => {
-    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+  const liquidateBorrowerHandler = () => {
     dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
   };
 
-  const createLineHandler = (vaultAddress: string) => {
-    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+  const createLineHandler = () => {
     dispatch(ModalsActions.openModal({ modalName: 'createLine' }));
   };
 
@@ -334,7 +331,7 @@ export const Market = () => {
                       actions={[
                         {
                           name: t('components.transaction.liquidate'),
-                          handler: () => liquidateBorrowerHandler(address),
+                          handler: () => liquidateBorrowerHandler(),
                           disabled: !walletIsConnected,
                         },
                       ]}
