@@ -63,7 +63,7 @@ export const formatCreditEvents = (
   events: LineEventFragResponse[]
 ): CreditEvent[] => {
   return events.map((e: any): CreditEvent => {
-    const { id, __typename, amount, token, credit, timestamp, value } = e;
+    const { id, __typename, amount, token, credit, timestamp, value = unnullify(0, true) } = e;
     return {
       id,
       positionId: credit.id,
@@ -98,8 +98,9 @@ export const formatCollateralEvents = (
   let totalVal = 0;
   // TODO promise.all token price fetching for better performance
   const newEvents: CollateralEvent[] = events.map((e: any): CollateralEvent => {
-    const { __typename, timestamp, amount, token, value } = e;
+    const { __typename, timestamp, amount, token, value = unnullify(0, true) } = e;
     const valueNow = price * amount;
+
     if (type === SPIGOT_MODULE_NAME) {
       // aggregate token revenue. not needed for escrow bc its already segmented by token
       // use price at time of revenue for more accuracy
@@ -137,7 +138,6 @@ export function formatGetLinesData(
       ...rest
     } = data;
     const { credit, spigot, escrow } = formatAggregatedCreditLineData(credits, deposits, revenues, tokenPrices);
-
     // formatAggData (credits, deposits, summaries);
 
     return {
@@ -205,7 +205,7 @@ export const formatAggregatedCreditLineData = (
   );
 
   const collateralValue = collaterals.reduce((agg, c) => {
-    const price = tokenPrices[c.token.id];
+    const price = unnullify(tokenPrices[c.token.id], true);
     return !c.enabled ? agg : agg.add(parseUnits(unnullify(c.amount).toString(), 'ether').mul(price));
   }, BigNumber.from(0));
 

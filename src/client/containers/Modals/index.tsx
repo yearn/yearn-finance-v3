@@ -10,6 +10,7 @@ import { CommunityThemesModal } from './CommunityThemesModal';
 import { TestTxModal } from './TestTxModal';
 import { AddCreditPositionTxModal } from './AddCreditPositionTxModal';
 import { MigrateTxModal } from './MigrateTxModal';
+import { LiquidateBorrowerTxModal } from './LiquidateBorrower';
 import { BorrowTxModal } from './BorrowTxModal';
 import { DeployLineTxModal } from './DeployLineTxModal';
 import { DepositAndRepayTxModal } from './DepositAndRepayTxModal';
@@ -142,6 +143,11 @@ export const Modals = () => {
         </CSSTransition>
       )}
 
+      {activeModal === 'liquidateBorrower' && (
+        <CSSTransition key={'liquidateBorrower'} timeout={modalTimeout} classNames="slideBottom">
+          <LiquidateBorrowerTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
       {activeModal === 'createLine' && (
         <CSSTransition key={'createLine'} timeout={modalTimeout} classNames="slideBottom">
           <DeployLineTxModal onClose={closeModal} />

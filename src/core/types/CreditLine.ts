@@ -1,5 +1,3 @@
-import { StringLiteral } from 'typescript';
-
 import { Address } from './Blockchain';
 import { Status } from './Status';
 
@@ -80,6 +78,8 @@ export interface BaseCreditPosition {
   token: Address;
   principal: string;
   interestAccrued: string;
+
+  arbiter: string;
   interestRepaid: string;
 }
 
@@ -89,6 +89,7 @@ export interface Credit {
   interestAccrued: string;
   interestRepaid: string;
   decimals: string;
+  arbiter: string;
   token: Address;
   lender: Address;
 }
@@ -96,6 +97,7 @@ export interface Credit {
 export interface LinePageCreditPosition extends BaseCreditPosition {
   id: string;
   lender: Address;
+  arbiter: string;
   deposit: string;
   principal: string;
   interestAccrued: string;

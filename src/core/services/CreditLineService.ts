@@ -3,6 +3,7 @@ import { BytesLike } from '@ethersproject/bytes/src.ts';
 import { keccak256 } from 'ethers/lib/utils';
 
 import {
+  LiquidateCreditProps,
   BorrowCreditProps,
   CreditLineService,
   AggregatedCreditLine,

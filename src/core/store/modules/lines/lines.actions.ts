@@ -82,7 +82,7 @@ const getLines = createAsyncThunk<
   } = getState();
 
   const { creditLineService } = extra.services;
-  // @dev tokens will probs be empty if we're not using yearnSDK
+
   const tokenPrices = Object.entries(tokensMap).reduce(
     (prices, [addy, { priceUsdc }]) => ({ ...prices, [addy]: priceUsdc }),
     {}
@@ -384,6 +384,7 @@ const depositAndRepay = createAsyncThunk<
   ThunkAPI
 >(
   'lines/depositAndRepay',
+
   async ({ lineAddress, tokenAddress, amount, network }, { extra, getState, dispatch }) => {
     const { wallet, lines, tokens } = getState();
     const { services } = extra;
@@ -422,6 +423,60 @@ const depositAndRepay = createAsyncThunk<
       },
       interestRateCreditService
     );
+    console.log(tx);
+    // const notifyEnabled = app.servicesEnabled.notify;
+    // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
+    dispatch(getLinePage({ id: lineAddress }));
+    // dispatch(getUserLinesSummary());
+    dispatch(getUserLinePositions({ lineAddresses: [lineAddress] }));
+    // dispatch(getUserLinesMetadata({ linesAddresses: [lineAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, lineAddress] }));
+  },
+  {
+    // serializeError: parseError,
+  }
+);
+
+const liquidate = createAsyncThunk<
+  void,
+  {
+    lineAddress: string;
+    amount: BigNumber;
+    tokenAddress: string;
+  },
+  ThunkAPI
+>(
+  'lines/liquidate',
+  async ({ lineAddress, tokenAddress, amount }, { extra, getState, dispatch }) => {
+    const { wallet } = getState();
+    const { services } = extra;
+
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    const { creditLineService, spigotedLineService } = services;
+    // const { error: depositError } = validateLineDeposit({
+    //   sellTokenAmount: amount,
+    //   depositLimit: lineData?.metadata.depositLimit ?? '0',
+    //   emergencyShutdown: lineData?.metadata.emergencyShutdown || false,
+    //   sellTokenDecimals: tokenData?.decimals ?? '0',
+    //   userTokenBalance: userTokenData?.balance ?? '0',
+    //   lineUnderlyingBalance: lineData?.underlyingTokenBalance.amount ?? '0',
+    //   targetUnderlyingTokenAmount,
+    // });
+
+    // const error = depositError;
+    // if (error) throw new Error(error);
+
+    // TODO: fix BigNumber type difference issues
+    // const amountInWei = amount.multipliedBy(ONE_UNIT);
+    // const { creditLineService, transactionService } = services;
+    const tx = await spigotedLineService.liquidate({
+      lineAddress: lineAddress,
+      amount: amount,
+      targetToken: tokenAddress,
+      dryRun: false,
+    });
     console.log(tx);
     // const notifyEnabled = app.servicesEnabled.notify;
     // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
@@ -612,6 +667,7 @@ export const LinesActions = {
   // approveZapOut,
   // signZapOut,
   withdrawLine,
+  liquidate,
   // migrateLine,
   // initSubscriptions,
   clearLinesData,
