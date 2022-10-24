@@ -137,14 +137,13 @@ export const LineDetail = () => {
     if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.borrower) {
       Transactions.push('borrow');
       Transactions.push('deposit-and-repay');
-      Transactions.push('deposit');
     }
     if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.borrower) {
       Transactions.push('deposit');
       Transactions.push('withdraw');
     }
     //@ts-ignore
-    if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.arbiter) {
+    if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.arbiter) {
       Transactions.push('liquidate');
     }
     setTransactions(Transactions);
