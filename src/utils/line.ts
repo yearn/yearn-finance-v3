@@ -66,7 +66,6 @@ export const formatCreditEvents = (
     const { id, __typename, amount, token, credit, timestamp, value = unnullify(0, true) } = e;
     return {
       id,
-      positionId: credit.id,
       __typename,
       timestamp,
       amount,
@@ -143,6 +142,7 @@ export function formatGetLinesData(
     return {
       ...rest,
       ...credit,
+      credits,
       borrower,
       spigot: {
         ...baseSpigot,
@@ -194,7 +194,7 @@ export const formatAggregatedCreditLineData = (
   const credit = credits.reduce(
     (agg: any, c) => {
       const price = tokenPrices[c.token.id] || BigNumber.from(0);
-      const highestApy = Number(c.drate) > Number(agg.highestApy[2]) ? [c.id, c.token.id, c.drate] : agg.highestApy;
+      const highestApy = Number(0) > Number(agg.highestApy[2]) ? [c.id, c.token.id, 0] : agg.highestApy;
       return {
         principal: agg.principal.add(price.mul(unnullify(c.principal).toString())),
         deposit: agg.deposit.add(price.mul(unnullify(c.deposit).toString())),
