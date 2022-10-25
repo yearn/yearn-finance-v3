@@ -247,14 +247,12 @@ export interface CollateralEvent extends EventWithValue {
 }
 
 // Spigot Events
-type SpigotEvents = EventWithValue | ClaimRevenueEvent;
+type SpigotEvents = ClaimRevenueEvent;
 
-export interface ClaimRevenueEvent {
-  timestamp: number;
-  revenueToken: { id: string };
+export interface ClaimRevenueEvent extends CollateralEvent {
+  revenueToken: Address;
   escrowed: number;
   netIncome: number;
-  value: number;
 }
 
 // Redux State

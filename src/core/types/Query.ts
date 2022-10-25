@@ -140,7 +140,7 @@ export interface LineEventFragResponse {
   };
 }
 
-export interface SpigotRevenueSummaryFragresponse {
+export interface SpigotRevenueSummaryFragResponse {
   token: Address;
   totalVolumeUsd: string;
   timeOfFirstIncome: number;
@@ -199,36 +199,23 @@ export interface GetLinePageAuxDataResponse {
 export interface GetLinePageResponse extends BaseLineFragResponse {
   positions?: LinePageCreditFragResponse[];
 
-  escrow?: {
-    id: Address;
-    cratio: string;
-    minCRatio: string;
-    collateralValue: string;
-    deposits: {
-      id: Address;
-      token: {
-        id: Address;
-        symbol: string;
-        decimals: number;
-      };
-      amount: string;
-      enabled: boolean;
-      events: {
-        __typename: string;
-        timestamp: number;
-        // only on add/remove collateral
-        amount?: string;
-        value?: string;
-      };
-    };
-  };
   spigot?: {
     id: Address;
+    summaries: SpigotRevenueSummaryFragResponse[];
     spigots: {
       contract: Address;
       active: boolean;
       startTime: number;
     };
     events?: SpigotEventFragResponse[];
+  };
+  escrow?: BaseEscrowFragResponse & {
+    events: {
+      __typename: string;
+      timestamp: number;
+      // only on add/remove collateral
+      amount?: string;
+      value?: string;
+    };
   };
 }

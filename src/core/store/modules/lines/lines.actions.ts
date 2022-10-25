@@ -113,26 +113,35 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
     const {
       network,
       lines: { linesMap, pagesMap },
+      tokens: { tokensMap },
     } = getState();
     const { creditLineService } = extra.services;
 
+    const tokenPrices = Object.entries(tokensMap).reduce(
+      (prices, [addy, { priceUsdc }]) => ({ ...prices, [addy]: priceUsdc }),
+      {}
+    );
+
     const pageData = pagesMap[id];
-    console.log('full page data already exists', pageData);
-    if (pageData) return { linePageData: pageData };
+    console.log('full page data exists?', pageData);
+    if (pageData) {
+      console.log('line page already cached', id);
+      return { linePageData: pageData };
+    }
 
     const basicData = linesMap[id];
-    console.log('basic pagedata already exists', basicData);
+    console.log('basic page data exists?', basicData);
     if (!basicData) {
       // navigated directly to line page, need to fetch basic data
       const linePageResponse = await creditLineService.getLinePage({
         network: network.current,
         id,
       });
-      const linePageData = linePageResponse ? formatLinePageData(linePageResponse) : undefined;
+      const linePageData = linePageResponse ? formatLinePageData(linePageResponse, tokenPrices) : undefined;
       return { linePageData };
     } else {
       // already have basi data, just fetch events and position data
-
+      console.log('Get line page aux data', id);
       const auxdata = await creditLineService.getLinePageAuxData({
         network: network.current,
         id,
