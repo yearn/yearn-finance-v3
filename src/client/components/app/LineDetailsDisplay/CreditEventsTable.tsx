@@ -19,7 +19,7 @@ const TableHeader = styled.h3`
   `}
 `;
 
-const ColumnName = styled.h3`
+const ColumnName = styled.p`
   display: inline;
   font-weight: 600;
   ${({ theme }) => `
@@ -55,12 +55,16 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   return (
     <>
       <TableHeader>{t('lineDetails:credit-events.title')}</TableHeader>
-      <Table>
-        <tr> {isEmpty(events) ? null : columnNames.map((n) => <ColumnName key={n}>{n}</ColumnName>)}</tr>
-        <tbody>
-          {isEmpty(events) ? <ColumnName> {t('lineDetails:credit-events.no-data')} </ColumnName> : renderEvents(events)}
-        </tbody>
-      </Table>
+      {isEmpty(events) ? (
+        <ColumnName>{t('lineDetails:credit-events.no-data')}</ColumnName>
+      ) : (
+        <Table>
+          <thead>
+            <tr>{isEmpty(events) ? null : columnNames.map((n) => <ColumnName key={n}>{n}</ColumnName>)}</tr>
+          </thead>
+          <tbody>{renderEvents(events)}</tbody>
+        </Table>
+      )}
     </>
   );
 };
