@@ -71,7 +71,7 @@ export interface CreditLinePage extends AggregatedCreditLine {
 // data that isnt included in AggregatedCreditLine that we need to fetch for full CreditLinePage dattype
 // gets merged into existing AggregatedCredit to form LinePageData
 export interface CreditLinePageAuxData {
-  credits: {
+  positions: {
     [id: string]: {
       dRate: string;
       token: Address;

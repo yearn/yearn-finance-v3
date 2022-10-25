@@ -138,14 +138,20 @@ export function formatGetLinesData(
   tokenPrices: { [token: string]: BigNumber }
 ): AggregatedCreditLine[] {
   return response.map((data: any) => {
+    console.log('get lines data', data);
     const {
       borrower: { id: borrower },
       positions,
-      escrow: { deposits, ...baseEscrow },
-      spigot: { summaries: revenues, ...baseSpigot },
+      escrow: escrowRes,
+      spigot: spigotRes,
       ...rest
     } = data;
-    const { credit, spigot, escrow } = formatAggregatedCreditLineData(positions, deposits, revenues, tokenPrices);
+    const { credit, spigot, escrow } = formatAggregatedCreditLineData(
+      positions,
+      escrowRes?.deposits ?? [],
+      spigotRes?.revenues ?? [],
+      tokenPrices
+    );
     // formatAggData (positions, deposits, summaries);
 
     return {
@@ -154,11 +160,11 @@ export function formatGetLinesData(
       positions,
       borrower,
       spigot: {
-        ...baseSpigot,
+        ...(spigotRes ?? {}),
         ...spigot,
       },
       escrow: {
-        ...baseEscrow,
+        ...(escrowRes ?? {}),
         ...escrow,
       },
     };

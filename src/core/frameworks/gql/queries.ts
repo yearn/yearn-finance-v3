@@ -29,7 +29,7 @@ const BASE_LINE_FRAGMENT = gql`
 `;
 
 const BASE_CREDIT_FRAGMENT = gql`
-  fragment BaseCreditFrag on Credit {
+  fragment BaseCreditFrag on Position {
     id
     status
     principal
@@ -44,7 +44,7 @@ const BASE_CREDIT_FRAGMENT = gql`
 
 const LINE_PAGE_CREDIT_FRAGMENT = gql`
   ${TOKEN_FRAGMENT}
-  fragment LinePageCreditFrag on Credit {
+  fragment LinePageCreditFrag on Position {
     id
     status
     lender {
@@ -71,7 +71,7 @@ const LINE_EVENT_FRAGMENT = gql`
     timestamp
     amount
     value
-    credit {
+    position {
       id
       token {
         ...TokenFrag

@@ -127,7 +127,7 @@ export interface LineEventFragResponse {
   __typename: string;
   id: string;
   timestamp: number;
-  credit: {
+  position: {
     id: string;
   };
   // events with value
@@ -178,7 +178,7 @@ export interface BaseEscrowFragResponse {
 
 export interface GetLinesResponse {
   lines: BaseLineFragResponse & {
-    credits: BaseCreditFragResponse;
+    positions: BaseCreditFragResponse;
     escrow: BaseEscrowFragResponse;
     spigot: {
       id: Address;
