@@ -66,7 +66,6 @@ export const formatCreditEvents = (
     const { id, __typename, amount, token, credit, timestamp, value = unnullify(0, true) } = e;
     return {
       id,
-      positionId: credit.id,
       __typename,
       timestamp,
       amount,
@@ -143,6 +142,7 @@ export function formatGetLinesData(
     return {
       ...rest,
       ...credit,
+      credits,
       borrower,
       spigot: {
         ...baseSpigot,

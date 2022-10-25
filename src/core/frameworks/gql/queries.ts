@@ -31,9 +31,11 @@ const BASE_LINE_FRAGMENT = gql`
 const BASE_CREDIT_FRAGMENT = gql`
   fragment BaseCreditFrag on Credit {
     id
+    status
     principal
     deposit
     dRate
+    fRate
     token {
       id
     }
@@ -43,6 +45,7 @@ const BASE_CREDIT_FRAGMENT = gql`
 const LINE_PAGE_CREDIT_FRAGMENT = gql`
   fragment LinePageCreditFrag on Credit {
     id
+    status
     lender {
       id
     }

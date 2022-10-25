@@ -222,7 +222,6 @@ export interface EventWithValue {
 export interface CreditEvent extends EventWithValue {
   __typename: string;
   id: string;
-  positionId: string; // position id
   token?: string;
   timestamp: number;
   amount: number;
