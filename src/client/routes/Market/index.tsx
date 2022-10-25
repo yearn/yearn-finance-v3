@@ -9,8 +9,6 @@ import {
   ModalsActions,
   ModalSelectors,
   TokensSelectors,
-  VaultsActions,
-  VaultsSelectors,
   WalletSelectors,
   AppSelectors,
   NetworkSelectors,
@@ -19,25 +17,20 @@ import {
 } from '@store';
 import { device } from '@themes/default';
 import {
-  SummaryCard,
   DetailCard,
   RecommendationsCard,
-  ActionButtons,
-  TokenIcon,
   SliderCard,
   ViewContainer,
   NoWalletCard,
-  Amount,
   ApyTooltipData,
 } from '@components/app';
-import { SpinnerLoading, Text, Tooltip, Input, SearchIcon, Button } from '@components/common';
+import { SpinnerLoading, Text, Tooltip, Button } from '@components/common';
 import {
   humanize,
   USDC_DECIMALS,
   halfWidthCss,
   normalizeAmount,
   formatApy,
-  orderApy,
   toBN,
   isCustomApyType,
   filterData,
@@ -118,24 +111,14 @@ export const Market = () => {
   const history = useHistory();
   const queryParams = useQueryParams<VaultsQueryParams>();
   const dispatch = useAppDispatch();
-  const isMounting = useIsMounting();
   // const { isTablet, isMobile, width: DWidth } = useWindowDimensions();
   const { NETWORK_SETTINGS, CONTRACT_ADDRESSES } = getConfig();
   const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-  const { totalDeposits, totalEarnings, estYearlyYeild } = useAppSelector(VaultsSelectors.selectSummaryData);
-  const opportunities = useAppSelector(VaultsSelectors.selectVaultsOpportunities);
-  const [filteredVaults, setFilteredVaults] = useState(opportunities);
-  const [search, setSearch] = useState('');
-  const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
 
-  const appStatus = useAppSelector(AppSelectors.selectAppStatus);
-  const vaultsStatus = useAppSelector(VaultsSelectors.selectVaultsGeneralStatus);
-  const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
-  const generalLoading =
-    (appStatus.loading || vaultsStatus.loading || tokensStatus.loading || isMounting) && !activeModal;
-  const opportunitiesLoading = generalLoading && !filteredVaults.length;
+  const [search, setSearch] = useState('');
+
   // TODO not neeed here
   const addCreditStatus = useAppSelector(LinesSelectors.selectLinesActionsStatusMap);
 
@@ -178,33 +161,13 @@ export const Market = () => {
     if (shouldFetch) fetchMarketData();
   }, []);
 
-  useEffect(() => {
-    const searchableKeys = ['name', 'displayName', 'token.symbol', 'token.name'];
-    const filteredVaults = filterData(opportunities, searchableKeys, search);
-    setFilteredVaults(filteredVaults);
-    window.history.replaceState(null, '', `market${search ? `?search=${search}` : ''}`);
-  }, [opportunities, search]);
-
-  const liquidateBorrowerHandler = (vaultAddress: string) => {
-    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+  const liquidateBorrowerHandler = () => {
     dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
   };
 
-  const createLineHandler = (vaultAddress: string) => {
-    dispatch(VaultsActions.setSelectedVaultAddress({ vaultAddress }));
+  const createLineHandler = () => {
     dispatch(ModalsActions.openModal({ modalName: 'createLine' }));
   };
-
-  const summaryCardItems = [
-    { header: t('dashboard.holdings'), Component: <Amount value={totalDeposits} input="usdc" /> },
-  ];
-
-  if (currentNetworkSettings.earningsEnabled) {
-    summaryCardItems.push(
-      { header: t('dashboard.earnings'), Component: <Amount value={totalEarnings} input="usdc" /> },
-      { header: t('dashboard.est-yearly-yield'), Component: <Amount value={estYearlyYeild} input="usdc" /> }
-    );
-  }
 
   const filterVaults = (vault: VaultView) => {
     return (
@@ -244,11 +207,6 @@ export const Market = () => {
         background={<img src={GoblinTown} alt={'Goblin town or the Citadel?'} />}
       />
 
-      <SummaryCard items={summaryCardItems} cardSize="small" />
-      {opportunitiesLoading && <SpinnerLoading flex="1" width="100%" />}
-
-      {!generalLoading && !walletIsConnected && <StyledNoWalletCard />}
-
       {getLinesStatus.loading || _.isEmpty(lineCategoriesForDisplay) ? (
         <SpinnerLoading flex="1" width="100%" />
       ) : (
@@ -277,99 +235,8 @@ export const Market = () => {
           );
         })
       )}
-
+      {/**/}
       {/* TODO keep this UI but populate with state.lines.linesMap */}
-      {!opportunitiesLoading && (
-        <>
-          {!opportunitiesLoading && (
-            <OpportunitiesCard
-              header={t('components.list-card.borrower')}
-              data-testid="vaults-opportunities-list"
-              metadata={[
-                {
-                  key: 'displayName',
-                  header: t('components.list-card.borrower'),
-                  transform: ({ displayIcon, displayName, token }) => (
-                    <>
-                      <TokenIcon icon={displayIcon} symbol={token.symbol} />
-                      <Text ellipsis>{displayName}</Text>
-                    </>
-                  ),
-                  width: '23rem',
-                  sortable: true,
-                  className: 'col-name',
-                },
-                /** @TODO add tags e.g. spigot here */
-                {
-                  key: 'vaultBalanceUsdc',
-                  header: t('components.list-card.total-assets'),
-                  format: ({ vaultBalanceUsdc }) => humanize('usd', vaultBalanceUsdc, USDC_DECIMALS, 0),
-                  sortable: true,
-                  width: '15rem',
-                  className: 'col-assets',
-                },
-                {
-                  key: 'apy',
-                  header: t('components.list-card.apy'),
-                  transform: ({ apyData, apyMetadata, apyType, address }) => (
-                    <ApyTooltip apyType={apyType} apyData={apyData} apyMetadata={apyMetadata} address={address} />
-                  ),
-                  sortable: true,
-                  width: '8rem',
-                  className: 'col-apy',
-                },
-                {
-                  key: 'userTokenBalance',
-                  header: t('components.list-card.available-deposit'),
-                  format: ({ token }) =>
-                    token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
-                  sortable: true,
-                  width: '15rem',
-                  className: 'col-available',
-                },
-                {
-                  key: 'actions',
-                  transform: ({ address }) => (
-                    <ActionButtons
-                      actions={[
-                        {
-                          name: t('components.transaction.liquidate'),
-                          handler: () => liquidateBorrowerHandler(address),
-                          disabled: !walletIsConnected,
-                        },
-                      ]}
-                    />
-                  ),
-                  align: 'flex-end',
-                  width: 'auto',
-                  grow: '1',
-                },
-              ]}
-              data={filteredVaults.map((vault) => ({
-                ...vault,
-                apy: orderApy(vault.apyData, vault.apyType),
-                userTokenBalance: normalizeAmount(vault.token.balance, vault.token.decimals),
-                userTokenBalanceUsdc: vault.token.balanceUsdc,
-                actions: null,
-              }))}
-              SearchBar={
-                <Input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder={t('components.search-input.search')}
-                  Icon={SearchIcon}
-                />
-              }
-              searching={opportunities.length > filteredVaults.length}
-              filterLabel="Show 0% APY"
-              filterBy={filterVaults}
-              onAction={({ address }) => history.push(`/creditLine/${address}`)}
-              initialSortBy="apy"
-              wrap
-            />
-          )}
-        </>
-      )}
     </ViewContainer>
   );
 };

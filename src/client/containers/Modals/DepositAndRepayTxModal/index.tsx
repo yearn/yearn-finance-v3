@@ -8,16 +8,9 @@ import { DepositAndRepayTx } from '@components/app';
 const StyledDepositAndRepayTxModal = styled(ModalTx)``;
 export interface DepositAndRepayTxModalProps {
   onClose: () => void;
-  modalProps?: {
-    allowVaultSelect: boolean;
-  };
 }
 
-export const DepositAndRepayTxModal: FC<DepositAndRepayTxModalProps> = ({
-  onClose,
-  modalProps = { allowVaultSelect: false },
-  ...props
-}) => {
+export const DepositAndRepayTxModal: FC<DepositAndRepayTxModalProps> = ({ onClose, ...props }) => {
   console.log('deposit and repay modal', props);
   const { t } = useAppTranslation('common');
   // if (!creditLine) return; // TODO error or creditLine selector input
@@ -36,7 +29,6 @@ export const DepositAndRepayTxModal: FC<DepositAndRepayTxModalProps> = ({
       <DepositAndRepayTx
         header={t('components.transaction.deposit-and-repay.header')} // TODO
         acceptingOffer={false}
-        allowVaultSelect={modalProps.allowVaultSelect}
         onClose={onClose}
         onSelectedCreditLineChange={onSelectedCreditLineChange}
         onPositionChange={onPositionChange}

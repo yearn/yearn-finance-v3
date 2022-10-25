@@ -3,11 +3,10 @@ import { isEqual } from 'lodash';
 
 import { ThunkAPI } from '@frameworks/redux';
 import { isGnosisApp, isLedgerLive, isCoinbaseApp, get } from '@utils';
-import { Network, Route, Address, Vault, ExternalServiceId } from '@types';
+import { Network, Route, Address, ExternalServiceId } from '@types';
 
 import { WalletActions } from '../wallet/wallet.actions';
 import { TokensActions } from '../tokens/tokens.actions';
-import { VaultsActions } from '../vaults/vaults.actions';
 // import { LabsActions } from '../labs/labs.actions';
 import { AlertsActions } from '../alerts/alerts.actions';
 import { NetworkActions } from '../network/network.actions';
@@ -27,7 +26,6 @@ const disableService = createAction<{ service: ExternalServiceId }>('app/disable
 const clearAppData = createAsyncThunk<void, void, ThunkAPI>('app/clearAppData', async (_, { dispatch }) => {
   await Promise.all([
     dispatch(TokensActions.clearTokensData()),
-    dispatch(VaultsActions.clearVaultsData()),
     // dispatch(LabsActions.clearLabsData()),
   ]);
 });
@@ -35,7 +33,6 @@ const clearAppData = createAsyncThunk<void, void, ThunkAPI>('app/clearAppData', 
 const clearUserAppData = createAsyncThunk<void, void, ThunkAPI>('app/clearUserAppData', async (_, { dispatch }) => {
   await Promise.all([
     dispatch(TokensActions.clearUserTokenState()),
-    dispatch(VaultsActions.clearUserData()),
     // dispatch(LabsActions.clearUserData()),
   ]);
 });
@@ -67,71 +64,6 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
 });
-
-const getAppData = createAsyncThunk<void, { network: Network; route: Route; addresses?: Address[] }, ThunkAPI>(
-  'app/getAppData',
-  async ({ route, addresses }, { dispatch }) => {
-    switch (route) {
-      case 'portfolio':
-        // TODO await dispatch(LinesActions.getUserPositions()
-        break;
-      case 'vaults':
-        await dispatch(VaultsActions.initiateSaveVaults());
-        break;
-      case 'vault':
-        await dispatch(VaultsActions.getVaults({ addresses })).then(({ payload }: any) => {
-          const vaults: Vault[] = payload.vaultsData;
-          const vault = vaults.pop();
-          if (vault && vault.metadata.migrationTargetVault)
-            dispatch(VaultsActions.getVaults({ addresses: [vault.metadata.migrationTargetVault] }));
-        });
-        break;
-      case 'market':
-      default:
-        // TODO LinesActions.getHomepageData()
-        await dispatch(VaultsActions.initiateSaveVaults());
-        break;
-    }
-  },
-  {
-    condition: (args, { getState }) => {
-      const { app } = getState();
-      if (isEqual(app.statusMap.getAppData.callArgs, args)) return false;
-    },
-  }
-);
-
-const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; addresses?: Address[] }, ThunkAPI>(
-  'app/getUserAppData',
-  async ({ route, addresses }, { dispatch }) => {
-    dispatch(TokensActions.getUserTokens({})); // always fetch all user tokens
-    switch (route) {
-      case 'portfolio':
-        // TODO LinesActions.getUserPositions
-        dispatch(VaultsActions.getUserVaultsSummary());
-        // dispatch(LabsActions.getUserLabsPositions({}));
-        break;
-      case 'vaults':
-        dispatch(VaultsActions.getUserVaultsSummary());
-        dispatch(VaultsActions.getUserVaultsPositions({}));
-        dispatch(VaultsActions.getUserVaultsMetadata({}));
-        break;
-      case 'vault':
-        dispatch(VaultsActions.getUserVaultsPositions({ vaultAddresses: addresses }));
-        dispatch(VaultsActions.getUserVaultsMetadata({ vaultsAddresses: addresses }));
-        break;
-      // case 'vaults': TODO: our new routets - e.g. market
-      default:
-        break;
-    }
-  },
-  {
-    condition: (args, { getState }) => {
-      const { app } = getState();
-      if (isEqual(app.statusMap.user.getUserAppData.callArgs, args)) return false;
-    },
-  }
-);
 
 /* -------------------------------------------------------------------------- */
 /*                                  Services                                  */
@@ -195,7 +127,5 @@ export const AppActions = {
   clearAppData,
   clearUserAppData,
   initApp,
-  getAppData,
-  getUserAppData,
   // initSubscriptions,
 };

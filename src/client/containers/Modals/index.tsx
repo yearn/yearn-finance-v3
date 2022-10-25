@@ -8,7 +8,6 @@ import { TestModal } from './TestModal';
 import { ComingSoonModal } from './ComingSoonModal';
 import { CommunityThemesModal } from './CommunityThemesModal';
 import { TestTxModal } from './TestTxModal';
-import { DepositTxModal } from './DepositTxModal';
 import { AddCreditPositionTxModal } from './AddCreditPositionTxModal';
 import { MigrateTxModal } from './MigrateTxModal';
 import { LiquidateBorrowerTxModal } from './LiquidateBorrower';
@@ -123,12 +122,6 @@ export const Modals = () => {
       {activeModal === 'testTx' && (
         <CSSTransition key={'testTx'} timeout={modalTimeout} classNames="slideBottom">
           <TestTxModal onClose={closeModal} />
-        </CSSTransition>
-      )}
-
-      {activeModal === 'depositTx' && (
-        <CSSTransition key={'depositTx'} timeout={modalTimeout} classNames="slideBottom">
-          <DepositTxModal modalProps={modalProps} onClose={closeModal} />
         </CSSTransition>
       )}
 

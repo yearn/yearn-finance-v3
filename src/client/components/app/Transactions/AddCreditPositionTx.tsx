@@ -11,7 +11,7 @@ import {
   useSelectedSellToken,
 } from '@hooks';
 import { getConstants } from '@src/config/constants';
-import { TokensActions, TokensSelectors, VaultsSelectors, WalletSelectors, LinesSelectors, LinesActions } from '@store';
+import { TokensActions, TokensSelectors, WalletSelectors, LinesSelectors, LinesActions } from '@store';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -33,7 +33,6 @@ interface AddCreditPositionProps {
   onClose: () => void;
   acceptingOffer: boolean;
   onSelectedCreditLineChange: Function;
-  allowVaultSelect: boolean;
   onPositionChange: (data: {
     credit?: string;
     token?: string;
@@ -117,7 +116,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const initialToken: string = selectedSellTokenAddress || DAI;
   const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
     selectedSellTokenAddress: initialToken,
-    selectedVaultOrLab: useAppSelector(VaultsSelectors.selectRecommendations)[0],
     allowTokenSelect: true,
   });
 

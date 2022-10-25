@@ -13,7 +13,6 @@ import {
   ModalsActions,
   ModalSelectors,
   NetworkActions,
-  VaultsSelectors,
   PartnerSelectors,
 } from '@store';
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
@@ -100,7 +99,6 @@ export const Layout: FC = ({ children }) => {
   const collapsedSidebar = useAppSelector(SettingsSelectors.selectSidebarCollapsed);
   const previousAddress = usePrevious(selectedAddress);
   const previousNetwork = usePrevious(currentNetwork);
-  const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   // const path = useAppSelector(({ route }) => route.path);
   const path = location.pathname.toLowerCase().split('/')[1] as Route;
   const isLedgerLive = partner.id === 'ledger';
@@ -108,13 +106,8 @@ export const Layout: FC = ({ children }) => {
   const hideControls = isIframe || isLedgerLive;
   const hideOptionalLinks = isLedgerLive;
 
-  let vaultName;
   let titleLink;
   // TODO Add lab details route when its added the view
-  if (path === 'vault') {
-    vaultName = selectedVault?.displayName;
-    titleLink = '/vaults';
-  }
 
   // TODO This is only assetAddress on the vault page
   const assetAddress: string | undefined = location.pathname.split('/')[2];
@@ -142,14 +135,11 @@ export const Layout: FC = ({ children }) => {
 
   useEffect(() => {
     dispatch(RouteActions.changeRoute({ path: location.pathname }));
-    fetchAppData(currentNetwork, path);
-    if (selectedAddress) fetchUserData(currentNetwork, path);
   }, [location]);
 
   useEffect(() => {
     if (previousAddress) dispatch(AppActions.clearUserAppData());
     // if (previousAddress) dispatch(UserActions.clearNftBalance());
-    if (selectedAddress) fetchUserData(currentNetwork, path);
     // if (selectedAddress) dispatch(UserActions.getNftBalance());
   }, [selectedAddress]);
 
@@ -158,29 +148,7 @@ export const Layout: FC = ({ children }) => {
     if (previousNetwork) dispatch(AppActions.clearAppData());
     if (selectedAddress) dispatch(AppActions.clearUserAppData());
     dispatch(TokensActions.getTokens());
-    fetchAppData(currentNetwork, path);
-    if (selectedAddress) fetchUserData(currentNetwork, path);
   }, [currentNetwork]);
-
-  function fetchAppData(network: Network, path: Route) {
-    dispatch(
-      AppActions.getAppData({
-        network,
-        route: path,
-        addresses: assetAddress ? [assetAddress] : undefined,
-      })
-    );
-  }
-
-  function fetchUserData(network: Network, path: Route) {
-    dispatch(
-      AppActions.getUserAppData({
-        network,
-        route: path,
-        addresses: assetAddress ? [assetAddress] : undefined,
-      })
-    );
-  }
 
   return (
     <StyledLayout>
@@ -192,7 +160,7 @@ export const Layout: FC = ({ children }) => {
         <Navbar
           title={t(`pages.${path}`)}
           titleLink={titleLink}
-          subTitle={vaultName}
+          subTitle={''}
           walletAddress={selectedAddress}
           addressEnsName={addressEnsName}
           onWalletClick={() => dispatch(WalletActions.walletSelect({ network: currentNetwork }))}
