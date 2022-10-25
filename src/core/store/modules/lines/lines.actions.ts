@@ -1,4 +1,5 @@
 import { BigNumber, utils } from 'ethers';
+import { BytesLike } from '@ethersproject/bytes/src.ts';
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
@@ -434,6 +435,31 @@ const depositAndRepay = createAsyncThunk<
   },
   {
     // serializeError: parseError,
+  }
+);
+
+const claimAndRepay = createAsyncThunk<
+  void,
+  {
+    lineAddress: Address;
+    claimToken: Address;
+    calldata: BytesLike;
+  },
+  ThunkAPI
+>(
+  'lines/claimAndRepay',
+
+  async ({ lineAddress, claimToken, calldata }, { extra, getState, dispatch }) => {
+    const { wallet } = getState();
+    const { services } = extra;
+
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('Wallet not connected');
+
+    const { spigotedLineService } = services;
+
+    const tx = await spigotedLineService.claimAndRepay(lineAddress, claimToken, calldata, false);
+    console.log(tx);
   }
 );
 
