@@ -699,6 +699,7 @@ export const LinesActions = {
   clearLinesData,
   clearUserData,
   getExpectedTransactionOutcome,
+  claimAndRepay,
   clearTransactionData,
   // getUserLinesSummary,
   // getUserLinesMetadata,
