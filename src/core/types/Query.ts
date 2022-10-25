@@ -1,4 +1,4 @@
-import { LineStatusTypes, AggregatedCreditLine, CreditLinePage } from '@types';
+import { LineStatusTypes, AggregatedCreditLine, PositionStatusTypes, CreditLinePage } from '@types';
 
 import { Address } from './Blockchain';
 
@@ -96,6 +96,7 @@ export interface BaseLineFragResponse {
 
 export interface BaseCreditFragResponse {
   id: Address;
+  status: PositionStatusTypes;
   principal: string;
   deposit: string;
   dRate: string;
@@ -109,6 +110,7 @@ export interface BaseCreditFragResponse {
 }
 
 export interface LinePageCreditFragResponse extends BaseCreditFragResponse {
+  status: PositionStatusTypes;
   interestRepaid: string;
   interestAccrued: string;
   dRate: string;

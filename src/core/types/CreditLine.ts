@@ -22,6 +22,16 @@ export type LineStatusTypes =
   | InsolventStatus
   | NoStatus;
 
+// Individual lender positoin status types
+type ProposedStatus = 'PROPOSED';
+export const PROPOSED_STATUS: ProposedStatus = 'PROPOSED';
+type OpenedStatus = 'OPENED';
+export const OPENED_STATUS: OpenedStatus = 'OPENED';
+type ClosedStatus = 'CLOSED';
+export const CLOSED_STATUS: ClosedStatus = 'CLOSED';
+
+export type PositionStatusTypes = ProposedStatus | OpenedStatus | ClosedStatus;
+
 export interface BaseCreditLine {
   id: Address;
   type?: string;
@@ -71,9 +81,9 @@ export interface CreditLinePageAuxData {
   creditEvents: CreditEvent[];
 }
 
-// TODO consolidate Credit and BaseCreditPosition and resolve type conflicts across codebase
 export interface BaseCreditPosition {
   id: string;
+  status: PositionStatusTypes;
   lender: Address;
   token: Address;
   principal: string;
@@ -83,7 +93,9 @@ export interface BaseCreditPosition {
   interestRepaid: string;
 }
 
+// TODO delete Credit type in favor of BaseCreditPosition and resolve type conflicts across codebase
 export interface Credit {
+  status: PositionStatusTypes;
   deposit: string;
   principal: string;
   interestAccrued: string;
@@ -96,6 +108,7 @@ export interface Credit {
 
 export interface LinePageCreditPosition extends BaseCreditPosition {
   id: string;
+  status: PositionStatusTypes;
   lender: Address;
   arbiter: string;
   deposit: string;
