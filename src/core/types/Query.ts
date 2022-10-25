@@ -98,7 +98,8 @@ export interface BaseCreditFragResponse {
   id: Address;
   principal: string;
   deposit: string;
-  drate: string;
+  dRate: string;
+  fRate: string;
   arbiter: string;
   token: {
     id: Address;

@@ -6,7 +6,7 @@ import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isCustomAp
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
-import { DepositTx, WithdrawTx, MigrateTx, TokenIcon, ScanNetworkIcon, ApyTooltipData } from '@components/app';
+import { MigrateTx, TokenIcon, ScanNetworkIcon, ApyTooltipData } from '@components/app';
 import {
   Card,
   CardContent,
@@ -438,14 +438,6 @@ export const VaultDetailPanels = ({
               <MigrateTx />
             </StyledTabPanel>
           )}
-          {!hideDeposit && (
-            <StyledTabPanel value="deposit" tabValue={selectedTab}>
-              <DepositTx />
-            </StyledTabPanel>
-          )}
-          <StyledTabPanel value="withdraw" tabValue={selectedTab}>
-            <WithdrawTx />
-          </StyledTabPanel>
         </VaultActions>
       </Row>
 

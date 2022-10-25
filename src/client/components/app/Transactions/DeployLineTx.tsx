@@ -17,7 +17,6 @@ const StyledTransaction = styled(TxContainer)``;
 interface DeployLineProps {
   header: string;
   onClose: () => void;
-  allowVaultSelect: boolean;
   onPositionChange: (data: {
     credit?: string;
     token?: string;

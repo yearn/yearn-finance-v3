@@ -137,7 +137,6 @@ export const LineDetail = () => {
     if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.borrower) {
       Transactions.push('borrow');
       Transactions.push('deposit-and-repay');
-      Transactions.push('deposit');
     }
     if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.borrower) {
       Transactions.push('deposit');
@@ -255,7 +254,7 @@ export const LineDetail = () => {
         if (transaction === 'deposit') {
           return (
             <AddCreditButton onClick={depositHandler} key={`${transaction}-${i}`}>
-              Deposit - Consent
+              Deposit
             </AddCreditButton>
           );
         }
@@ -269,7 +268,7 @@ export const LineDetail = () => {
         if (transaction === 'liquidate') {
           return (
             <WithdrawButton onClick={liquidateHandler} key={`${transaction}-${i}`}>
-              liquidate
+              Liquidate
             </WithdrawButton>
           );
         }

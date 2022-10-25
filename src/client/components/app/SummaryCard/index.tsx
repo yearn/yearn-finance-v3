@@ -39,6 +39,8 @@ interface SummaryCardProps {
   redirectTo?: string;
 }
 
+//Use this to display info about positions such as total amount, debt amount etc..
+
 export const SummaryCard: FC<SummaryCardProps> = ({ header, items, variant, cardSize, redirectTo, ...props }) => {
   return (
     <StyledCard variant={variant} cardSize={cardSize} {...props}>

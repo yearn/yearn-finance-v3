@@ -8,16 +8,9 @@ import { BorrowCreditTx } from '@components/app';
 const StyledBorrowTxModal = styled(ModalTx)``;
 export interface BorrowTxModalProps {
   onClose: () => void;
-  modalProps?: {
-    allowVaultSelect: boolean;
-  };
 }
 
-export const BorrowTxModal: FC<BorrowTxModalProps> = ({
-  onClose,
-  modalProps = { allowVaultSelect: false },
-  ...props
-}) => {
+export const BorrowTxModal: FC<BorrowTxModalProps> = ({ onClose, ...props }) => {
   console.log('borrow modal', props);
   const { t } = useAppTranslation('common');
   // if (!creditLine) return; // TODO error or creditLine selector input
@@ -36,7 +29,6 @@ export const BorrowTxModal: FC<BorrowTxModalProps> = ({
       <BorrowCreditTx
         header={t('components.transaction.borrow-credit.header')} // TODO
         acceptingOffer={false}
-        allowVaultSelect={modalProps.allowVaultSelect}
         onClose={onClose}
         onSelectedCreditLineChange={onSelectedCreditLineChange}
         onPositionChange={onPositionChange}

@@ -219,7 +219,7 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
         tokenOptions={sourceAssetOptions}
       />
       <TxActions>
-        {txActions.map(({ label, onAction, status, disabled, contrast }) => (
+        {txActions.map(({ label, onAction, contrast }) => (
           <TxActionButton
             key={label}
             data-testid={`modal-action-${label.toLowerCase()}`}

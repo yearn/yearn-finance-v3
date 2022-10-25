@@ -8,16 +8,9 @@ import { AddCreditPositionTx } from '@components/app';
 const StyledAddCreditPositionTxModal = styled(ModalTx)``;
 export interface AddCreditPositionTxModalProps {
   onClose: () => void;
-  modalProps?: {
-    allowVaultSelect: boolean;
-  };
 }
 
-export const AddCreditPositionTxModal: FC<AddCreditPositionTxModalProps> = ({
-  onClose,
-  modalProps = { allowVaultSelect: false },
-  ...props
-}) => {
+export const AddCreditPositionTxModal: FC<AddCreditPositionTxModalProps> = ({ onClose, ...props }) => {
   console.log('deposit modal', props);
   const { t } = useAppTranslation('common');
   // if (!creditLine) return; // TODO error or creditLine selector input
@@ -36,7 +29,6 @@ export const AddCreditPositionTxModal: FC<AddCreditPositionTxModalProps> = ({
       <AddCreditPositionTx
         header={t('components.transaction.add-credit.header')} // TODO
         acceptingOffer={false}
-        allowVaultSelect={modalProps.allowVaultSelect}
         onClose={onClose}
         onSelectedCreditLineChange={onSelectedCreditLineChange}
         onPositionChange={onPositionChange}

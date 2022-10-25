@@ -10,16 +10,9 @@ const StyledDeployLineTxModal = styled(ModalTx)`
 `;
 export interface DeployLineTxModalProps {
   onClose: () => void;
-  modalProps?: {
-    allowVaultSelect: boolean;
-  };
 }
 
-export const DeployLineTxModal: FC<DeployLineTxModalProps> = ({
-  onClose,
-  modalProps = { allowVaultSelect: false },
-  ...props
-}) => {
+export const DeployLineTxModal: FC<DeployLineTxModalProps> = ({ onClose, ...props }) => {
   console.log('deploy modal', props);
   const { t } = useAppTranslation('common');
 
@@ -31,7 +24,6 @@ export const DeployLineTxModal: FC<DeployLineTxModalProps> = ({
     <StyledDeployLineTxModal {...props}>
       <DeployLineTx
         header={t('components.transaction.deploy-line.header')} // TODO
-        allowVaultSelect={modalProps.allowVaultSelect}
         onClose={onClose}
         onPositionChange={onPositionChange}
       />

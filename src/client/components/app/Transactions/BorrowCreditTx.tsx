@@ -21,7 +21,6 @@ interface BorrowCreditProps {
   onClose: () => void;
   acceptingOffer: boolean;
   onSelectedCreditLineChange: Function;
-  allowVaultSelect: boolean;
   onPositionChange: (data: { credit?: string; amount?: string }) => void;
 }
 

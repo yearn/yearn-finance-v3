@@ -201,7 +201,8 @@ export const formatAggregatedCreditLineData = (
   const credit = credits.reduce(
     (agg: any, c) => {
       const price = tokenPrices[c.token?.id] || BigNumber.from(0);
-      const highestApy = Number(c.drate) > Number(agg.highestApy[2]) ? [c.id, c.token?.id, c.drate] : agg.highestApy;
+      const highestApy =
+        BigNumber.from(c.dRate) > BigNumber.from(agg.highestApy[2]) ? [c.id, c.token?.id, c.dRate] : agg.highestApy;
       return {
         principal: agg.principal.add(price.mul(unnullify(c.principal).toString())),
         deposit: agg.deposit.add(price.mul(unnullify(c.deposit).toString())),
