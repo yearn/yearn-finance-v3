@@ -140,21 +140,10 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
 
       if (!auxdata) return { linePageData: undefined };
 
-      const { lines: auxCredits, ...events } = auxdata;
-      const credits = Object.entries(auxCredits ?? {}).reduce(
-        (all, [key, aux]) => ({
-          ...all,
-          /// theoretically possible for a credit to exist in aux but not in Agg.
-          [key]: {
-            ...(basicData.credits?.[key] ?? {}),
-            ...aux,
-          },
-        }),
-        {}
-      );
+      const { ...events } = auxdata;
       // summ total interest paid on positions freom events and add to position data
       // get dRate, token
-      return { linePageData: { ...basicData, credits, ...events } as CreditLinePage };
+      return { linePageData: { ...basicData, ...events } as CreditLinePage };
     }
   }
 );

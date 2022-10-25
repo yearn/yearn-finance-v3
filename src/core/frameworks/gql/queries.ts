@@ -31,9 +31,11 @@ const BASE_LINE_FRAGMENT = gql`
 const BASE_CREDIT_FRAGMENT = gql`
   fragment BaseCreditFrag on Credit {
     id
+    status
     principal
     deposit
     dRate
+    fRate
     token {
       id
     }
@@ -43,6 +45,7 @@ const BASE_CREDIT_FRAGMENT = gql`
 const LINE_PAGE_CREDIT_FRAGMENT = gql`
   fragment LinePageCreditFrag on Credit {
     id
+    status
     lender {
       id
     }
@@ -59,7 +62,7 @@ const LINE_PAGE_CREDIT_FRAGMENT = gql`
 `;
 
 // lewv = line event with value
-const CREDIT_EVENT_FRAGMENT = gql`
+const LINE_EVENT_FRAGMENT = gql`
   fragment LineEventFrag on LineEventWithValue {
     id
     __typename
@@ -171,7 +174,7 @@ export const GET_LINE_PAGE_QUERY = gql`
   ${ESCROW_FRAGMENT}
   ${BASE_LINE_FRAGMENT}
   ${BASE_SPIGOT_FRAGMENT}
-  ${CREDIT_EVENT_FRAGMENT}
+  ${LINE_EVENT_FRAGMENT}
   ${SPIGOT_EVENT_FRAGMENT}
   ${ESCROW_EVENT_FRAGMENT}
   ${LINE_PAGE_CREDIT_FRAGMENT}
@@ -180,7 +183,7 @@ export const GET_LINE_PAGE_QUERY = gql`
     lineOfCredit(id: $id) {
       ...BaseLineFrag
 
-      lines {
+      positions {
         ...LinePageCreditFrag
       }
       events(first: 20) {
@@ -214,10 +217,98 @@ export const GET_LINE_PAGE_QUERY = gql`
   }
 `;
 
+// export const GET_LINE_PAGE_QUERY = gql`
+//   query getLinePage($id: ID!) {
+//     lineOfCredit(id: $id) {
+//       id
+//       type
+//       start
+//       status
+//       end
+//       positions {
+//         id
+//         status
+//         lender {
+//           id
+//         }
+//         deposit
+//         principal
+//         interestRepaid
+//         interestAccrued
+//         dRate
+//         fRate
+//         token {
+//           id
+//           symbol
+//           decimals
+//         }
+//       }
+//       events(first: 20) {
+//         ... on LineEventWithValue {
+//           id
+//           __typename
+//           timestamp
+//           amount
+//           value
+//           credit {
+//             id
+//             token {
+//               id
+//             }
+//           }
+//         }
+//       }
+//       spigot {
+//         id
+//         spigots {
+//           active
+//           contract
+//           startTime
+//         }
+//         summaries {
+//           token {
+//             id
+//             symbol
+//             decimals
+//           }
+//           totalVolumeUsd
+//           timeOfFirstIncome
+//           timeOfLastIncome
+//         }
+//         events(first: 20) {
+//           ... on ClaimRevenueEvent {
+//             __typename
+//             timestamp
+//             revenueToken {
+//               id
+//             }
+//             escrowed
+//             netIncome
+//             value
+//           }
+//         }
+//       }
+//       escrow {
+//         id
+//         minCRatio
+//         deposits {
+//           amount
+//           enabled
+//           token {
+//             id
+//             symbol
+//             decimals
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;
+
 export const GET_LINE_PAGE_AUX_QUERY = gql`
   query getLinePageAux($id: ID) {
     lineOfCredit(id: $id) {
-      lines {
+      positions {
         dRate
       }
 
@@ -243,7 +334,7 @@ export const GET_LINES_QUERY = gql`
   query getLines($first: Int, $orderBy: String, $orderDirection: String) {
     lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
       ...BaseLineFrag
-      credits: lines {
+      positions {
         ...BaseCreditFrag
       }
       escrow {

@@ -189,9 +189,6 @@ export interface GetLinesResponse {
 }
 
 export interface GetLinePageAuxDataResponse {
-  lines?: {
-    dRate: number;
-  }[];
   events?: LineEventFragResponse[];
   spigot?: {
     events: SpigotEventFragResponse[];
@@ -199,7 +196,7 @@ export interface GetLinePageAuxDataResponse {
 }
 
 export interface GetLinePageResponse extends BaseLineFragResponse {
-  credits?: LinePageCreditFragResponse[];
+  positions?: LinePageCreditFragResponse[];
 
   escrow?: {
     id: Address;
