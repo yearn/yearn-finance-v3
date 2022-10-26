@@ -9,7 +9,7 @@ import {
   Address,
   CreditLinePage, // prev. GeneralVaultView, Super indepth data, CreditLinePage is most similar atm
 } from '@types';
-import { toBN, mapStatusToString, formatCreditEvents, formatCollateralEvents } from '@utils';
+import { toBN, formatCreditEvents, formatCollateralEvents } from '@utils';
 
 import { initialLineActionsStatusMap } from './lines.reducer';
 

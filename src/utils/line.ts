@@ -31,23 +31,6 @@ import {
 
 const { parseUnits, parseEther } = utils;
 
-export const mapStatusToString = (status: number): LineStatusTypes => {
-  switch (status) {
-    case 0:
-      return UNINITIALIZED_STATUS;
-    case 2:
-      return ACTIVE_STATUS;
-    case 3:
-      return LIQUIDATABLE_STATUS;
-    case 4:
-      return REPAID_STATUS;
-    case 5:
-      return INSOLVENT_STATUS;
-    default:
-      return NO_STATUS;
-  }
-};
-
 /**
  * @function
  * @name mergeCollateralEvents
@@ -258,6 +241,7 @@ export const formatLinePageData = (
     escrow,
     positions,
     borrower,
+    status,
     ...metadata
     // userLinesMetadataMap,
   } = lineData;
@@ -343,6 +327,7 @@ export const formatLinePageData = (
   const pageData: CreditLinePage = {
     // metadata
     ...metadata,
+    status: status.toLowerCase() as LineStatusTypes,
     borrower: borrower.id,
     // todo add UsePositionMetada,
     // debt data

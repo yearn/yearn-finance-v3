@@ -121,7 +121,8 @@
       },
       "add-credit-input": {
         "search-accept-credit": "Accepting Deal",
-        "search-select-credit": "Find Deal"
+        "search-select-credit": "Find Deal",
+        "bad-status": "Your chosen line is not in a healthy state. Select another one to deposit into."
       },
       "add-credit": {
         "header": "Setup deal terms",
