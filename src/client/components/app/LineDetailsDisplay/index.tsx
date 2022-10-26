@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { AggregatedCreditLine, CreditLinePage } from '@src/core/types';
+import { AggregatedCreditLine, BaseCreditPosition, CreditLinePage } from '@src/core/types';
 import { useAppTranslation } from '@hooks';
 import { Text } from '@components/common';
 
@@ -34,14 +34,23 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
 
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [lineData, setLineData] = useState<AggregatedCreditLine | CreditLinePage>(line!);
+  const [positions, setPositions] = useState<[]>();
 
   useEffect(() => {
-    if (page) {
+    if (page && page.positions) {
       setAllDataLoaded(true);
       setLineData(page);
+      setPositions(page.positions);
     }
     // LineDetails page handles getLinePage query
-  });
+  }, []);
+
+  useEffect(() => {
+    if (!positions || positions === undefined) {
+      return;
+    }
+    console.log(positions);
+  }, [positions]);
 
   if (!line && !page) return <Container>{t('lineDetails:line.no-data')}</Container>;
 
@@ -58,14 +67,12 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
 
   console.log('render line page', allDataLoaded, lineData);
   // allow passing in core data first if we have it already and let Page data render once returned
-  if (allDataLoaded) {
+  if (allDataLoaded && positions !== undefined) {
     // if we have all data render full UI
-    const { creditEvents } = page!;
-
     return (
       <Container>
         <StandardMetadata />
-        <CreditEventsTable events={creditEvents} />
+        <CreditEventsTable events={positions} />
       </Container>
     );
   } else {

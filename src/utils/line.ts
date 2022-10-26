@@ -3,7 +3,6 @@ import { BigNumber, utils } from 'ethers';
 
 import {
   CreditLinePage,
-  RevenueContract,
   AggregatedCreditLine,
   CreditEvent,
   CollateralEvent,
@@ -355,8 +354,8 @@ export const formatLinePageData = (
     // all recent events
     collateralEvents,
     creditEvents,
-
-    positions: formattedPositions,
+    //@ts-ignore
+    positions: positions,
     // collateral data
     spigot: formattedSpigot,
     escrow: isEmpty(escrow?.deposits) ? undefined : { ...escrow!, ...escrowData, deposits: formattedEscrowData },

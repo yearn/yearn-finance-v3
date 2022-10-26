@@ -30,23 +30,24 @@ const ColumnName = styled.p`
 `;
 
 interface CreditEventsTableProps {
-  events: CreditEvent[];
+  events: [];
 }
 
 export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const { t } = useAppTranslation(['common', 'lineDetails']);
   const { events } = props;
 
-  const columnNames = ['positionId', 'timestamp', 'token', 'amount', 'value'];
+  const columnNames = ['positionId', 'timestamp', 'token', 'deposit', 'value'];
 
   const renderEvents = (events: CreditEvent[]) =>
     events.map((e) => {
-      const eventName = e.__typename.split(/[A-Z]/).slice(0, 1).join(' '); // remove 'Event' suffix
+      const eventName = e.__typename; // remove 'Event' suffix
+      console.log(e, eventName);
       return (
         <tr key={e.id}>
           <td>{eventName}</td>
           {columnNames.map((n) => (
-            <td key={`${e.id}-${n}`}>{e[n]}</td>
+            <td key={`${e.id}-${n}`}>{`${e[n]}`}</td>
           ))}
         </tr>
       );
