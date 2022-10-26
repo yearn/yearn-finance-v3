@@ -192,7 +192,7 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
   return (
     <StyledTxCreditLineInput {...props}>
       <>{headerText && <Header>{headerText}</Header>}</>
-      {openedSearch && (
+      {!readOnly && openedSearch && (
         <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
           <StyledSearchList
             list={listItems}

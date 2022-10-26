@@ -333,7 +333,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         selectedCredit={selectedCredit}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
-        readOnly={false}
+        readOnly={true}
         // displayGuidance={displaySourceGuidance}
       />
       {walletNetwork === 'goerli' ? (

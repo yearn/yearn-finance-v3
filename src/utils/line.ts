@@ -138,7 +138,6 @@ export function formatGetLinesData(
   tokenPrices: { [token: string]: BigNumber }
 ): AggregatedCreditLine[] {
   return response.map((data: any) => {
-    console.log('get lines data', data);
     const {
       borrower: { id: borrower },
       positions,
