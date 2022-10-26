@@ -5499,10 +5499,10 @@
     react-virtualized "^9.22.3"
     tailwindcss "^3.1.8"
 
-"@yfi/sdk@3.0.0-alpha.3":
-  version "3.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-3.0.0-alpha.3.tgz#ec81b268b3a49f3101771c8b81b57c3e32cd59fb"
-  integrity sha512-L2oN4Udn9W+OCNEmPrlvADPmjfvc8a4DEQfFmwKZF6IDfyAaArkQJRtixGA4Zm1CExo9NeRwKJFo17h1uL6gFA==
+"@yfi/sdk@3.0.0-alpha.5":
+  version "3.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-3.0.0-alpha.5.tgz#b4a9c1a88b5be48d921d450ba5c137a0274bbb46"
+  integrity sha512-O/LqbYs5UhXMrRrRnMJrKk0t6fYzt8IzeQ8DWT9KumpBw9lYUgI9DhjNx4TPb19yyYf82tP97/0M5FkLQ3qdEQ==
   dependencies:
     bignumber.js "9.0.1"
     cross-fetch "3.1.5"
