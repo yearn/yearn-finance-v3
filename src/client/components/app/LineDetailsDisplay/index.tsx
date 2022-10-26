@@ -43,14 +43,7 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
       setPositions(page.positions);
     }
     // LineDetails page handles getLinePage query
-  }, []);
-
-  useEffect(() => {
-    if (!positions || positions === undefined) {
-      return;
-    }
-    console.log(positions);
-  }, [positions]);
+  }, [page]);
 
   if (!line && !page) return <Container>{t('lineDetails:line.no-data')}</Container>;
 

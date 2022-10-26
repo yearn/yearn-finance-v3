@@ -37,18 +37,25 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const { t } = useAppTranslation(['common', 'lineDetails']);
   const { events } = props;
 
-  const columnNames = ['positionId', 'timestamp', 'token', 'deposit', 'value'];
+  const columnNames = ['positionId', 'timestamp', 'token', 'deposit', 'value', 'status'];
 
   const renderEvents = (events: CreditEvent[]) =>
     events.map((e) => {
       const eventName = e.__typename; // remove 'Event' suffix
-      console.log(e, eventName);
+      const eventToken = e.token;
+      console.log(e, 'token');
       return (
         <tr key={e.id}>
           <td>{eventName}</td>
-          {columnNames.map((n) => (
-            <td key={`${e.id}-${n}`}>{`${e[n]}`}</td>
-          ))}
+          {columnNames.map((n) =>
+            n === 'token' ? (
+              <td key={`${e.id}-${n}`}>{`${e[n]}`}</td>
+            ) : n === 'value' ? (
+              <td key={`${e.id}-${n}`}>{`${e[n]}`}</td>
+            ) : (
+              <td key={`${e.id}-${n}`}>{`${e[n]}`}</td>
+            )
+          )}
         </tr>
       );
     });
