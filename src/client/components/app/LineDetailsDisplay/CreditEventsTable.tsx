@@ -37,13 +37,15 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const { t } = useAppTranslation(['common', 'lineDetails']);
   const { events } = props;
 
-  const columnNames = ['positionId', 'timestamp', 'token', 'deposit', 'value', 'status'];
+  const columnNames = ['deposit', 'status'];
 
   const renderEvents = (events: CreditEvent[]) =>
     events.map((e) => {
       const eventName = e.__typename; // remove 'Event' suffix
       const eventToken = e.token;
-      console.log(e, 'token');
+
+      const getKeys = e.keys as <T extends object>(obj: T) => Array<keyof T>;
+      console.log(e, 'token', getKeys);
       return (
         <tr key={e.id}>
           <td>{eventName}</td>
