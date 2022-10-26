@@ -103,6 +103,8 @@ export const LineDetail = () => {
   // 3. fetch line page
   // 4.
 
+  console.log(location);
+
   const depositHandler = () => {
     if (!selectedLine) {
       return;
@@ -161,6 +163,8 @@ export const LineDetail = () => {
 
   useEffect(() => {
     const lineAddress: string | undefined = location.pathname.split('/')[2];
+
+    console.log('line address', lineAddress);
     if (!lineAddress || !isValidAddress(lineAddress)) {
       dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
       history.push('/market');
@@ -172,7 +176,7 @@ export const LineDetail = () => {
     return () => {
       dispatch(LinesActions.clearSelectedLineAndStatus());
     };
-  }, []);
+  }, [selectedLine, selectedPage]);
 
   const [firstTokensFetch, setFirstTokensFetch] = useState(false);
   const [tokensInitialized, setTokensInitialized] = useState(false);
@@ -225,7 +229,7 @@ export const LineDetail = () => {
           header={t('lineDetails:no-line-supported-card.header', { network: currentNetworkSettings.name })}
           Component={
             <Text>
-              <p>{t('lineDetails:no-line-supported-card.content')}</p>
+              <p>{t('lineDetails:no-line-supported-card.content')} hi</p>
             </Text>
           }
         />

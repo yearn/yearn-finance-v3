@@ -43,7 +43,7 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
       setPositions(page.positions);
     }
     // LineDetails page handles getLinePage query
-  }, [page]);
+  }, [page?.positions]);
 
   if (!line && !page) return <Container>{t('lineDetails:line.no-data')}</Container>;
 
@@ -58,9 +58,9 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
     </>
   );
 
-  console.log('render line page', allDataLoaded, lineData);
+  console.log('render line page', allDataLoaded, lineData, positions);
   // allow passing in core data first if we have it already and let Page data render once returned
-  if (allDataLoaded && positions !== undefined) {
+  if (allDataLoaded && positions) {
     // if we have all data render full UI
     return (
       <Container>

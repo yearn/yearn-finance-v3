@@ -34,21 +34,15 @@ interface CreditEventsTableProps {
 }
 
 export const CreditEventsTable = (props: CreditEventsTableProps) => {
-  const { t } = useAppTranslation(['common', 'lineDetails']);
+  const { t } = useAppTranslation(['common', 'lineDetails', 'tokenAddress', 'lender']);
   const { events } = props;
 
   const columnNames = ['deposit', 'status'];
 
   const renderEvents = (events: CreditEvent[]) =>
     events.map((e) => {
-      const eventName = e.__typename; // remove 'Event' suffix
-      const eventToken = e.token;
-
-      const getKeys = e.keys as <T extends object>(obj: T) => Array<keyof T>;
-      console.log(e, 'token', getKeys);
       return (
         <tr key={e.id}>
-          <td>{eventName}</td>
           {columnNames.map((n) =>
             n === 'token' ? (
               <td key={`${e.id}-${n}`}>{`${e[n]}`}</td>

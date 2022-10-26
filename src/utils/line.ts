@@ -319,7 +319,32 @@ export const formatLinePageData = (
     };
   }, {});
 
+  let newFormattedPositions: any[] = [];
+
+  console.log('positions info', positions);
+
+  positions?.map((position, i) => {
+    console.log('position', position);
+
+    let positionObject = {
+      status: position.status,
+      drate: position.dRate,
+      frate: position.fRate,
+      deposit: position.deposit,
+      tokenAddress: position.lender.id,
+      lender: position.token.id,
+      interestAccrued: position.interestAccrued,
+      interestRepaid: position.interestRepaid,
+      principal: position.principal,
+      id: position.id,
+    };
+
+    newFormattedPositions.push(positionObject);
+    console.log(newFormattedPositions);
+  });
   // TODO add spigot events to collateralEvents
+
+  console.log('test position', positions);
 
   const formattedEscrowData = Object.values(escrow?.deposits ?? {}).reduce((obj: any, d: any) => {
     const {
@@ -355,11 +380,11 @@ export const formatLinePageData = (
     collateralEvents,
     creditEvents,
     //@ts-ignore
-    positions: positions,
+    positions: newFormattedPositions,
     // collateral data
     spigot: formattedSpigot,
     escrow: isEmpty(escrow?.deposits) ? undefined : { ...escrow!, ...escrowData, deposits: formattedEscrowData },
   };
-
+  console.log('page data', pageData);
   return pageData;
 };

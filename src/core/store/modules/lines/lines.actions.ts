@@ -131,7 +131,7 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
 
     const basicData = linesMap[id];
     console.log('basic page data exists?', basicData);
-    if (!basicData) {
+    if (!basicData || basicData === undefined) {
       // navigated directly to line page, need to fetch basic data
       const linePageResponse = await creditLineService.getLinePage({
         network: network.current,
