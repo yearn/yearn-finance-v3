@@ -34,10 +34,10 @@ interface CreditEventsTableProps {
 }
 
 export const CreditEventsTable = (props: CreditEventsTableProps) => {
-  const { t } = useAppTranslation(['common', 'lineDetails', 'tokenAddress', 'lender']);
+  const { t } = useAppTranslation(['common', 'lineDetails']);
   const { events } = props;
 
-  const columnNames = ['deposit', 'status'];
+  const columnNames = ['deposit', 'status', 'tokenAddress', 'lender'];
 
   const renderEvents = (events: CreditEvent[]) =>
     events.map((e) => {

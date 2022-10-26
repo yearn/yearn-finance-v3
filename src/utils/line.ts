@@ -321,9 +321,10 @@ export const formatLinePageData = (
 
   let newFormattedPositions: any[] = [];
 
-  console.log('positions info', positions);
+  console.log('positions info origin', positions);
 
   positions?.map((position, i) => {
+    console.log('positions info origin', positions);
     console.log('position', position);
 
     let positionObject = {
