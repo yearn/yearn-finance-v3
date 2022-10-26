@@ -258,8 +258,8 @@ export const GET_LINES_QUERY = gql`
   ${SPIGOT_SUMMARY_FRAGMENT}
   ${TOKEN_FRAGMENT}
 
-  query getLines($first: Int, $orderBy: String, $orderDirection: String) {
-    lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
+  query getLines($first: Int, $orderBy: String, $orderDirection: String, $blacklist: [ID]) {
+    lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection, where: { id_not_in: $blacklist }) {
       ...BaseLineFrag
 
       positions {
