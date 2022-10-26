@@ -160,7 +160,7 @@ export const Portfolio = () => {
       {
         name: t('components.transaction.deposit'),
         handler: () => actionHandler('invest', tokenAddress),
-        disabled: !walletIsConnected || !(isZapable || vaultsUnderlyingTokens.includes(tokenAddress)),
+        disabled: !walletIsConnected || !((isZapable && zapsEnabled) || vaultsUnderlyingTokens.includes(tokenAddress)),
       },
     ];
   };
