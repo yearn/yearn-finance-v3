@@ -126,6 +126,7 @@ export function formatGetLinesData(
       positions,
       escrow: escrowRes,
       spigot: spigotRes,
+      status,
       ...rest
     } = data;
     const { credit, spigot, escrow } = formatAggregatedCreditLineData(
@@ -139,6 +140,7 @@ export function formatGetLinesData(
     return {
       ...rest,
       ...credit,
+      status: status.toLowerCase() as LineStatusTypes,
       positions,
       borrower,
       spigot: {

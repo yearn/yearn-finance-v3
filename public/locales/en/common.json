@@ -121,14 +121,18 @@
       },
       "add-credit-input": {
         "search-accept-credit": "Accepting Deal",
-        "search-select-credit": "Find Deal",
-        "bad-status": "Your chosen line is not in a healthy state. Select another one to deposit into."
+        "search-select-credit": "Find Deal"
       },
       "add-credit": {
         "header": "Setup deal terms",
-        "select-credit": "1. The borrower you are lending to is",
-        "select-token": "2. Select token and amount",
-        "select-rates": "3. Set interest rates"
+        "select-credit": "1. The borrower you are lending to is: ",
+        "select-token": "2. Select token and amount to deposit",
+        "select-rates": "3. Set your interest rates",
+        "back-to-market": "Head back to the Market",
+        "bad-line": {
+          "title": "This line can not be deposited into",
+          "body": "Your chosen line is not in a healthy state. You can find more lines to deposit into back in the marketplace."
+        }
       },
       "arbiter-liquidate": {
         "header": "Liquidate Borrowers",

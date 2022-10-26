@@ -5,7 +5,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
 import { Text, Icon, SearchList, LogoIcon, ZapIcon, SearchListItem } from '@components/common';
-import { ACTIVE_STATUS, AggregatedCreditLine } from '@src/core/types';
+import { AggregatedCreditLine } from '@src/core/types';
 
 const LineTitle = styled(Text)`
   color: ${({ theme }) => theme.colors.txModalColors.text};
@@ -188,15 +188,7 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
     ? t('components.transaction.add-credit-input.search-accept-credit')
     : t('components.transaction.add-credit-input.search-select-credit');
 
-  const isActive = selectedCredit.status === ACTIVE_STATUS;
-
-  return !isActive ? (
-    <StyledTxCreditLineInput {...props}>
-      <>
-        <Header>{t('components.transaction.add-credit-input.bad-status')}</Header>
-      </>
-    </StyledTxCreditLineInput>
-  ) : (
+  return (
     <StyledTxCreditLineInput {...props}>
       <>{headerText && <Header>{headerText}</Header>}</>
       {!readOnly && openedSearch && (
