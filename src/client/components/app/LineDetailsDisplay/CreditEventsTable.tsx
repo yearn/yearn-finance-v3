@@ -37,11 +37,6 @@ const PositionsCard = styled(DetailCard)`
       display: none;
     }
   }
-  @media (min-width: 780px) {
-    .col-available {
-      border: 2px solid red;
-    }
-  }
 ` as typeof DetailCard;
 
 const TableHeader = styled.h3`

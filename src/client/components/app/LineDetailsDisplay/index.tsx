@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { AggregatedCreditLine, CreditLinePage } from '@src/core/types';
+import { AggregatedCreditLine, BaseCreditPosition, CreditLinePage } from '@src/core/types';
 import { useAppTranslation } from '@hooks';
 import { Text } from '@components/common';
 
@@ -15,6 +15,7 @@ interface LineDetailsProps {
 
 const Container = styled.div`
   margin: 0;
+  padding: 1em;
   width: 100%;
 `;
 
