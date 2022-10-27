@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { AggregatedCreditLine, BaseCreditPosition, CreditLinePage } from '@src/core/types';
+import { AggregatedCreditLine, CreditLinePage } from '@src/core/types';
 import { useAppTranslation } from '@hooks';
 import { Text } from '@components/common';
 
@@ -14,7 +14,8 @@ interface LineDetailsProps {
 }
 
 const Container = styled.div`
-  margin: ${({ theme }) => theme.card.padding};
+  margin: 0;
+  width: 100%;
 `;
 
 const Header = styled.h1`

@@ -10,6 +10,12 @@
       "searching-text": "Please search for another asset",
       "text": "No assets to display"
     },
+    "positions-card": {
+      "positions": "Positions",
+      "total-deposits": "Total deposits",
+      "status": "Status",
+      "lender": "Lender"
+    },
     "list-card": {
       "apy": "APY",
       "asset": "Asset",
