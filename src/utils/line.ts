@@ -88,7 +88,7 @@ export const formatCollateralEvents = (
     if (!timestamp || !amount) return undefined;
 
     const valueNow = unnullify(price.toString(), true).times(unnullify((amount.toString(), true)));
-
+    console.log('formatCollateralevent ', __typename, amount, token, value, valueNow);
     if (type === SPIGOT_MODULE_NAME) {
       // aggregate token revenue. not needed for escrow bc its already segmented by token
       // use price at time of revenue for more accuracy
@@ -247,13 +247,14 @@ export const formatLinePageData = (
     ...metadata
     // userLinesMetadataMap,
   } = lineData;
-
   const {
     credit,
     spigot: spigotData,
     escrow: escrowData,
   } = formatAggregatedCreditLineData(positions!, escrow?.deposits || [], spigot?.summaries || [], tokenPrices);
   const lineAddress = metadata.id;
+
+  console.log('get line page escrow', escrow, escrowData);
 
   // derivative or aggregated data we need to compute and store while mapping position data
 
@@ -315,11 +316,12 @@ export const formatLinePageData = (
       token: { id: tokenId, symbol },
       events,
     } = d;
+    console.log('format escrow deposit data', tokenId, amount, enabled);
     // TODO promise.all token price fetching for better performance
     // const currentUsdPrice = await fetchTokenPrice(symbol, Datre.now());
     const currentUsdPrice = tokenPrices[tokenId];
     formatCollateralEvents(ESCROW_MODULE_NAME, symbol, currentUsdPrice, events); // normalize and save events
-    return { ...obj, [id]: { symbol, currentUsdPrice, amount, enabled } };
+    return { ...obj, [tokenId]: { symbol, currentUsdPrice, amount, enabled, token: tokenId } };
   }, {});
 
   const formattedSpigot = {

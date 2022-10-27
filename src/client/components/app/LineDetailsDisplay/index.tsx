@@ -45,18 +45,17 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
 
   if (!line && !page) return <Container>{t('lineDetails:line.no-data')}</Container>;
 
-  const { principal, deposit, borrower, start, end } = lineData;
-  const StandardMetadata = () => (
+  const { principal, deposit, escrow, spigot, borrower, start, end } = lineData;
+  const StandardMetadata = (metadataProps: any) => (
     <>
       <Header>
         <BorrowerName ellipsis>{borrower}</BorrowerName>
         's Line Of Credit
       </Header>
-      <LineMetadata deposit={deposit} principal={principal} totalInterestPaid={'0'} startTime={start} endTime={end} />
+      <LineMetadata {...metadataProps} />
     </>
   );
 
-  console.log('render line page', allDataLoaded, lineData);
   // allow passing in core data first if we have it already and let Page data render once returned
   if (allDataLoaded) {
     // if we have all data render full UI
@@ -64,7 +63,15 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
 
     return (
       <Container>
-        <StandardMetadata />
+        <StandardMetadata
+          revenue={spigot?.tokenRevenue}
+          deposits={escrow?.deposits}
+          deposit={deposit}
+          principal={principal}
+          totalInterestPaid={'0'}
+          startTime={start}
+          endTime={end}
+        />
         <CreditEventsTable events={creditEvents} />
       </Container>
     );
@@ -72,7 +79,15 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
     // render partial UI with core data
     return (
       <Container>
-        <StandardMetadata />
+        <StandardMetadata
+          revenue={spigot?.tokenRevenue}
+          deposits={escrow?.deposits}
+          deposit={deposit}
+          principal={principal}
+          totalInterestPaid={'0'}
+          startTime={start}
+          endTime={end}
+        />
       </Container>
     );
   }

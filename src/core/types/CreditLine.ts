@@ -154,18 +154,23 @@ export interface BaseEscrow {
   collateralValue: string;
 }
 
+export interface EscrowDeposit {
+  amount: string;
+  enabled: boolean;
+  currentUsdPrice?: string;
+  token: Address;
+}
+
+export interface EscrowDepositList {
+  [token: string]: EscrowDeposit;
+}
+
 export interface AggregatedEscrow extends BaseEscrow {
   id: Address;
   cratio: string;
   minCRatio: string;
   collateralValue: string;
-  deposits?: {
-    [token: string]: {
-      amount: string;
-      enabled: boolean;
-      token: Address;
-    };
-  };
+  deposits?: EscrowDepositList;
 }
 
 export interface AggregatedSpigot {
