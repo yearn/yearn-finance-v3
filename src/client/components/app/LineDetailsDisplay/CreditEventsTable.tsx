@@ -87,17 +87,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
 
   return (
     <>
-      <TableHeader>{t('lineDetails:credit-events.title')}</TableHeader>
-      {isEmpty(events) ? (
-        <ColumnName>{t('lineDetails:credit-events.no-data')}</ColumnName>
-      ) : (
-        <Table>
-          <thead>
-            <tr>{isEmpty(events) ? null : columnNames.map((n) => <ColumnName key={n}>{n}</ColumnName>)}</tr>
-          </thead>
-          <tbody>{renderEvents(events)}</tbody>
-        </Table>
-      )}
+      <TableHeader>{t('components.positions-card.positions')}</TableHeader>
       {isEmpty(events) ? (
         ''
       ) : (
