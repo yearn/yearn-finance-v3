@@ -31,6 +31,7 @@ import {
   InterestRateCreditService,
   GetLinePageResponse,
   Network,
+  UserPositionMetadata,
 } from '@types';
 import { getConfig } from '@config';
 import { LineOfCreditABI } from '@services/contracts';

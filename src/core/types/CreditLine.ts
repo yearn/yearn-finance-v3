@@ -39,7 +39,8 @@ export interface BaseCreditLine {
   end: number;
   status: LineStatusTypes;
   borrower: Address;
-  positions?: { [key: string]: BaseCreditPosition };
+  arbiter: Address;
+  positions?: { [key: string]: Credit };
   escrow?: { id: Address };
   spigot?: { id: Address };
 }
@@ -51,7 +52,7 @@ export interface AggregatedCreditLine extends BaseCreditLine {
   // id, symbol, APY (4 decimals)
   highestApy: [string, string, string];
 
-  positions?: { [key: string]: BaseCreditPosition };
+  positions?: { [key: string]: Credit };
 
   escrow?: AggregatedEscrow;
   spigot?: AggregatedSpigot;
@@ -81,19 +82,7 @@ export interface CreditLinePageAuxData {
   creditEvents: CreditEvent[];
 }
 
-export interface BaseCreditPosition {
-  id: string;
-  status: PositionStatusTypes;
-  lender: Address;
-  token: Address;
-  principal: string;
-  interestAccrued: string;
-
-  arbiter: string;
-  interestRepaid: string;
-}
-
-// TODO delete Credit type in favor of BaseCreditPosition and resolve type conflicts across codebase
+// TODO delete Credit type in favor of Credit and resolve type conflicts across codebase
 export interface Credit {
   status: PositionStatusTypes;
   deposit: string;
@@ -101,12 +90,12 @@ export interface Credit {
   interestAccrued: string;
   interestRepaid: string;
   decimals: string;
-  arbiter: string;
+  arbiter: Address;
   token: Address;
   lender: Address;
 }
 
-export interface LinePageCreditPosition extends BaseCreditPosition {
+export interface LinePageCreditPosition extends Credit {
   id: string;
   status: PositionStatusTypes;
   lender: Address;

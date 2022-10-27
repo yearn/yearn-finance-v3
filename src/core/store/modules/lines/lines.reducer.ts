@@ -27,6 +27,7 @@ export const initialUserMetadataStatusMap: UserLineMetadataStatusMap = {
 
 export const linesInitialState: CreditLineState = {
   selectedLineAddress: undefined,
+  selectedPosition: undefined,
   linesMap: {},
   pagesMap: {},
   categories: {},

@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { memoize } from 'lodash';
+import { memoize, find } from 'lodash';
 
 import {
   RootState,
@@ -7,9 +7,13 @@ import {
   LineActionsStatusMap,
   AggregatedCreditLine,
   Address,
-  CreditLinePage, // prev. GeneralVaultView, Super indepth data, CreditLinePage is most similar atm
+  CreditLinePage,
+  UserPositionMetadata,
+  BORROWER_POSITION_ROLE,
+  LENDER_POSITION_ROLE,
+  ARBITER_POSITION_ROLE, // prev. GeneralVaultView, Super indepth data, CreditLinePage is most similar atm
 } from '@types';
-import { toBN, formatCreditEvents, formatCollateralEvents } from '@utils';
+import { toBN, formatCreditEvents, formatCollateralEvents, unnullify } from '@utils';
 
 import { initialLineActionsStatusMap } from './lines.reducer';
 
@@ -27,6 +31,8 @@ const selectUserTokensAllowancesMap = (state: RootState) => state.tokens.user.us
 const selectLinesAllowancesMap = (state: RootState) => state.lines.user.lineAllowances;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedLineAddress = (state: RootState) => state.lines.selectedLineAddress;
+const selectSelectedPosition = (state: RootState) => state.lines.selectedPosition;
+
 const selectLinesActionsStatusMap = (state: RootState) => state.lines.statusMap.user.linesActionsStatusMap;
 const selectLinesStatusMap = (state: RootState) => state.lines.statusMap;
 // const selectExpectedTxOutcome = (state: RootState) => state.lines.transaction.expectedOutcome;
@@ -160,6 +166,67 @@ const selectSelectedLinePage = createSelector(
   }
 );
 
+const selectUserPositionMetadata = createSelector(
+  [selectUserWallet, selectSelectedLine, selectSelectedPosition],
+  (userAddress, line, selectedPosition): UserPositionMetadata => {
+    const defaultRole = {
+      role: LENDER_POSITION_ROLE,
+      amount: '0',
+      available: '0',
+    };
+
+    if (!line || !selectUserWallet) return defaultRole;
+    const position = selectedPosition ? line!.positions?.[selectedPosition] : undefined;
+
+    switch (userAddress) {
+      case line.borrower:
+        const borrowerData = position
+          ? { amount: position.principal, available: toBN(position.deposit).minus(toBN(position.principal)).toString() }
+          : { amount: line.principal, available: toBN(line.deposit).minus(toBN(line.principal)).toString() };
+        return {
+          role: BORROWER_POSITION_ROLE,
+          ...borrowerData,
+        };
+
+      case line.arbiter:
+        const arbiterData = {
+          amount: unnullify(line.escrow?.collateralValue),
+          available: unnullify(line.escrow?.collateralValue),
+        };
+        return {
+          role: ARBITER_POSITION_ROLE,
+          ...arbiterData,
+        };
+
+      case position?.lender:
+        const lenderData = {
+          amount: position!.deposit,
+          available: toBN(position!.deposit).minus(toBN(position!.principal)).toString(),
+        };
+        return {
+          role: LENDER_POSITION_ROLE,
+          ...lenderData,
+        };
+
+      default:
+        // if no selected position, still try to find their position on the line
+        const foundPosition = find(line.positions, (p) => p.lender === userAddress);
+        if (foundPosition) {
+          const lenderData = {
+            amount: foundPosition.deposit,
+            available: toBN(foundPosition.deposit).minus(toBN(foundPosition.principal)).toString(),
+          };
+          return {
+            role: LENDER_POSITION_ROLE,
+            ...lenderData,
+          };
+        }
+
+        return defaultRole;
+    }
+  }
+);
+
 /* --------------------------------- Helper --------------------------------- */
 // interface CreateLineProps {
 //   lineData: AggregatedCreditLine;
@@ -188,6 +255,7 @@ export const LinesSelectors = {
   selectLines,
   selectLiveLines,
   selectLinesForCategories,
+  selectUserPositionMetadata,
   selectSelectedLinePage,
   // selectDeprecatedLines,
   selectUserLinesPositionsMap,
