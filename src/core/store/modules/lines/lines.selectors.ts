@@ -15,8 +15,11 @@ import {
   ARBITER_POSITION_ROLE, // prev. GeneralVaultView, Super indepth data, CreditLinePage is most similar atm
 } from '@types';
 import { toBN, formatCreditEvents, formatCollateralEvents, unnullify } from '@utils';
+import { getConstants } from '@src/config/constants';
 
 import { initialLineActionsStatusMap } from './lines.reducer';
+
+const { ZERO_ADDRESS } = getConstants();
 
 /* ---------------------------------- State --------------------------------- */
 const selectUserWallet = (state: RootState) => state.wallet.selectedAddress;
@@ -176,7 +179,7 @@ const selectUserPositionMetadata = createSelector(
       available: '0',
     };
 
-    if (!line || !selectUserWallet) return defaultRole;
+    if (!line || !userAddress) return defaultRole;
 
     const position = selectedPosition ? line!.positions?.[selectedPosition] : undefined;
 
@@ -200,7 +203,7 @@ const selectUserPositionMetadata = createSelector(
           ...arbiterData,
         };
 
-      case getAddress(position?.lender ?? ''):
+      case getAddress(position?.lender ?? ZERO_ADDRESS):
         const lenderData = {
           amount: position!.deposit,
           available: toBN(position!.deposit).minus(toBN(position!.principal)).toString(),
