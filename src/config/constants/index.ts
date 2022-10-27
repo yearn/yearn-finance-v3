@@ -24,6 +24,8 @@ const PARTNERS = {
   LEDGER_PARTNER_ID: '0x558247e365be655f9144e1a0140D793984372Ef3',
 };
 
+const BLACKLISTED_LINES = ['0x0000000000000000000000000000000000000000'];
+
 const NETWORK_SETTINGS: NetworkSettings = {
   goerli: {
     id: 'goerli',
@@ -89,6 +91,7 @@ export const getConstants = memoize((): Constants => {
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
+    BLACKLISTED_LINES: BLACKLISTED_LINES,
     CONTRACT_ADDRESSES: {
       zapIn: '0x8E52522E6a77578904ddd7f528A22521DC4154F5',
       zapOut: '0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c',
