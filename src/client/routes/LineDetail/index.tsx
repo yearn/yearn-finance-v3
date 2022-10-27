@@ -88,7 +88,7 @@ export const LineDetail = () => {
   const selectedPage = useAppSelector(LinesSelectors.selectSelectedLinePage);
   const userRoleMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   // const selectedLineCreditEvents = useAppSelector(LinesSelectors.selectSelectedLineCreditEvents);
-  const linesStatus = useAppSelector(LinesSelectors.selectLinesStatus);
+  const getLinePageStatus = useAppSelector(LinesSelectors.selectGetLinePageStatus);
   // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
@@ -156,7 +156,6 @@ export const LineDetail = () => {
     if (!selectedLine) {
       return;
     }
-    console.log(selectedLine);
     let address = selectedLine.id;
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'borrow' }));
@@ -177,7 +176,7 @@ export const LineDetail = () => {
     };
   }, []);
 
-  const [firstTokensFetch, setFirstTokensFetch] = useState(false);
+  const [firstTokensFetch, setFirstTokensFetch] = useState(true);
   const [tokensInitialized, setTokensInitialized] = useState(false);
 
   useEffect(() => {
@@ -200,18 +199,20 @@ export const LineDetail = () => {
     if (!loading && firstTokensFetch) setTokensInitialized(true);
   }, [tokensStatus.loading]);
 
-  const [firstLinesFetch, setFirstLinesFetch] = useState(false);
+  const [firstLinesFetch, setFirstLinesFetch] = useState(true);
   const [linesInitialized, setLinesInitialized] = useState(false);
 
   useEffect(() => {
-    const loading = linesStatus.loading;
+    const loading = getLinePageStatus.loading;
     if (loading && !firstLinesFetch) setFirstLinesFetch(true);
     if (!loading && firstLinesFetch) setLinesInitialized(true);
-  }, [linesStatus.loading]);
+  }, [getLinePageStatus.loading]);
 
   const generalLoading =
-    (appStatus.loading || linesStatus.loading || tokensStatus.loading || isMounting) &&
-    (!tokensInitialized || !linesInitialized);
+    appStatus.loading ||
+    getLinePageStatus.loading ||
+    tokensStatus.loading ||
+    (isMounting && (!tokensInitialized || !linesInitialized));
 
   // TODO: 0xframe also supports this
   //const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';

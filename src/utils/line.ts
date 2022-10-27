@@ -135,7 +135,10 @@ export function formatGetLinesData(
       spigotRes?.revenues ?? [],
       tokenPrices
     );
+
+    const deposits = escrowRes?.deposits.map((d: any) => ({ ...d, token: d.token.id }));
     // formatAggData (positions, deposits, summaries);
+    console.log('escrow deposits getLines', escrowRes, deposits);
 
     return {
       ...rest,
@@ -150,6 +153,7 @@ export function formatGetLinesData(
       escrow: {
         ...(escrowRes ?? {}),
         ...escrow,
+        deposits,
       },
     };
   });
@@ -180,6 +184,7 @@ export const formatAggregatedCreditLineData = (
   escrow: {
     collateralValue: string;
     cratio: string;
+    // TODO add formated deposits here
   };
 } => {
   // derivative or aggregated data we need to compute and store while mapping position data

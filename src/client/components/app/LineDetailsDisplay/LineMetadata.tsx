@@ -102,9 +102,19 @@ export const LineMetadata = (props: LineMetadataProps) => {
         .div(BigNumber.from(1)) // scale to usd decimals
         .toString();
 
-  console.log('line page metadata', deposit, deposits, revenue, totalCollateral, totalRevenue);
-  // TODO gereneralize MetricNAme/DataMetric/SubMetricContainer/SubMetric
-  // for more DRY and reuse logic for open/close
+  const renderEscrowMetadata = () => {
+    if (!deposits) return null;
+    if (!totalCollateral)
+      return <MetricDisplay title={t('lineDetails:metadata.escrow.no-collateral')} data={`$ ${totalCollateral}`} />;
+    return <MetricDisplay title={t('lineDetails:metadata.escrow.total')} data={`$ ${totalCollateral}`} />;
+  };
+  const renderSpigotMetadata = () => {
+    if (!revenue) return null;
+    if (!totalRevenue)
+      return <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={`$ ${totalRevenue}`} />;
+    return <MetricDisplay title={t('lineDetails:metadata.revenue.per-month')} data={`$ ${totalRevenue}`} />;
+  };
+
   return (
     <>
       <ThreeColumnLayout>
@@ -120,17 +130,10 @@ export const LineMetadata = (props: LineMetadataProps) => {
       {!revenue && !deposits && <MetricName>{t('lineDetails:metadata.unsecured')}</MetricName>}
 
       <ThreeColumnLayout>
-        {!totalRevenue ? (
-          <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={totalRevenue} />
-        ) : (
-          <MetricDisplay title={t('lineDetails:metadata.revenue.per-month')} data={`$ ${totalRevenue}`} />
-        )}
-        {!totalCollateral ? (
-          <MetricDisplay title={t('lineDetails:metadata.no-collateral')} data={totalCollateral} />
-        ) : (
-          <MetricDisplay title={t('lineDetails:metadata.escrow.total')} data={`$ ${totalCollateral}`} />
-        )}
+        {renderSpigotMetadata()}
+        {renderEscrowMetadata()}
       </ThreeColumnLayout>
+
       <ThreeColumnLayout>
         {!isEmpty(revenue) && (
           <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={totalRevenue} />
@@ -141,7 +144,7 @@ export const LineMetadata = (props: LineMetadataProps) => {
             (d, i) =>
               d.enabled && (
                 <ThreeColumnLayout>
-                  Deposit #{i}: {d.token.toString()} {d.amount}
+                  Deposit #{i}: {d.token} {d.amount}
                 </ThreeColumnLayout>
               )
           )}

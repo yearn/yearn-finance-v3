@@ -157,7 +157,6 @@ export const Market = () => {
     let shouldFetch: boolean = false;
     expectedCategories.forEach((cat) => (shouldFetch = shouldFetch || !currentCategories.includes(cat)));
 
-    console.log('should fetch', shouldFetch, currentCategories);
     if (shouldFetch) fetchMarketData();
   }, []);
 

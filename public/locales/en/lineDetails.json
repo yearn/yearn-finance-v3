@@ -17,7 +17,7 @@
     "escrow": {
       "title": "Collateral",
       "total": "Total Collateral Value",
-      "no-collateral": "No revenue or collateral backing debt"
+      "no-collateral": "No collateral deposited"
     }
   },
   "credit-events": {

@@ -44,6 +44,8 @@ const selectLinesStatusMap = (state: RootState) => state.lines.statusMap;
 const selectUserLinesSummary = (state: RootState) => state.lines.user.linePositions;
 
 const selectGetLinesStatus = (state: RootState) => state.lines.statusMap.getLines;
+const selectGetLinePageStatus = (state: RootState) => state.lines.statusMap.getLinePage;
+
 const selectGetUserLinesPositionsStatus = (state: RootState) => state.lines.statusMap.user.getUserLinePositions;
 
 /* ----------------------------- Main Selectors ----------------------------- */
@@ -155,6 +157,16 @@ const selectSelectedLine = createSelector([selectLines, selectSelectedLineAddres
 
 const selectLinesStatus = createSelector(
   [selectGetLinesStatus, selectGetUserLinesPositionsStatus],
+  (getLinesStatus, getUserLinesPositionsStatus): Status => {
+    return {
+      loading: getLinesStatus.loading || getUserLinesPositionsStatus.loading,
+      error: getLinesStatus.error || getUserLinesPositionsStatus.error,
+    };
+  }
+);
+
+const selectLinePageStatus = createSelector(
+  [selectGetLinePageStatus, selectGetUserLinesPositionsStatus],
   (getLinesStatus, getUserLinesPositionsStatus): Status => {
     return {
       loading: getLinesStatus.loading || getUserLinesPositionsStatus.loading,
@@ -277,6 +289,7 @@ export const LinesSelectors = {
   selectSummaryData,
   selectRecommendations,
   selectLinesStatus,
+  selectGetLinePageStatus,
   selectLine,
   // selectExpectedTxOutcome,
   // selectExpectedTxOutcomeStatus,
