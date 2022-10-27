@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { memoize, find } from 'lodash';
+import { getAddress } from '@ethersproject/address';
 
 import {
   RootState,
@@ -176,10 +177,11 @@ const selectUserPositionMetadata = createSelector(
     };
 
     if (!line || !selectUserWallet) return defaultRole;
+
     const position = selectedPosition ? line!.positions?.[selectedPosition] : undefined;
 
-    switch (userAddress) {
-      case line.borrower:
+    switch (getAddress(userAddress!)) {
+      case getAddress(line.borrower):
         const borrowerData = position
           ? { amount: position.principal, available: toBN(position.deposit).minus(toBN(position.principal)).toString() }
           : { amount: line.principal, available: toBN(line.deposit).minus(toBN(line.principal)).toString() };
@@ -188,7 +190,7 @@ const selectUserPositionMetadata = createSelector(
           ...borrowerData,
         };
 
-      case line.arbiter:
+      case getAddress(line.arbiter):
         const arbiterData = {
           amount: unnullify(line.escrow?.collateralValue),
           available: unnullify(line.escrow?.collateralValue),
@@ -198,7 +200,7 @@ const selectUserPositionMetadata = createSelector(
           ...arbiterData,
         };
 
-      case position?.lender:
+      case getAddress(position?.lender ?? ''):
         const lenderData = {
           amount: position!.deposit,
           available: toBN(position!.deposit).minus(toBN(position!.principal)).toString(),
@@ -222,6 +224,7 @@ const selectUserPositionMetadata = createSelector(
           };
         }
 
+        // user isnt a party on the line
         return defaultRole;
     }
   }

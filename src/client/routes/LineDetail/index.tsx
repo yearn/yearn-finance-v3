@@ -24,6 +24,7 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
+import { ARBITER_POSITION_ROLE, BORROWER_POSITION_ROLE, LENDER_POSITION_ROLE } from '@src/core/types';
 
 const StyledSliderCard = styled(SliderCard)`
   padding: 3rem;
@@ -85,6 +86,7 @@ export const LineDetail = () => {
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
   const selectedPage = useAppSelector(LinesSelectors.selectSelectedLinePage);
+  const userRoleMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   // const selectedLineCreditEvents = useAppSelector(LinesSelectors.selectSelectedLineCreditEvents);
   const linesStatus = useAppSelector(LinesSelectors.selectLinesStatus);
   // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
@@ -133,17 +135,18 @@ export const LineDetail = () => {
 
   useEffect(() => {
     let Transactions = [];
-    console.log('user wallet: ', userWalletAddress, 'borrower', selectedLine?.borrower);
-    if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.borrower) {
+
+    // TODO integrate UserPositoinMetadata in here
+    if (userRoleMetadata.role === BORROWER_POSITION_ROLE) {
       Transactions.push('borrow');
       Transactions.push('deposit-and-repay');
     }
-    if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.borrower) {
+    if (userRoleMetadata.role === LENDER_POSITION_ROLE) {
       Transactions.push('deposit');
       Transactions.push('withdraw');
     }
     //@ts-ignore
-    if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.arbiter) {
+    if (userRoleMetadata.role === ARBITER_POSITION_ROLE) {
       Transactions.push('liquidate');
     }
     setTransactions(Transactions);
