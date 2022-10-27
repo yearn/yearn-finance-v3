@@ -11,7 +11,7 @@ import {
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
-import { ACTIVE_STATUS } from '@src/core/types';
+import { ACTIVE_STATUS, BORROWER_POSITION_ROLE, UserPositionMetadata } from '@src/core/types';
 import { getConstants } from '@src/config/constants';
 import { TokensActions, TokensSelectors, WalletSelectors, LinesSelectors, LinesActions } from '@store';
 import { Button, Icon, Link } from '@components/common';
@@ -76,6 +76,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   //in case user is on Goerli Testnet, we set up a testnet state:
   const [testnetToken, setTestnetToken] = useState('');
   const [testnetTokenAmount, setTestnetTokenAmount] = useState('0');
+  const userMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const testTokens = [
     {
@@ -303,22 +304,33 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     });
   };
 
-  const txActions = [
-    {
-      label: t('components.transaction.approve'),
-      onAction: approveCreditPosition,
-      status: true,
-      disabled: !transactionApproved,
-      contrast: false,
-    },
-    {
-      label: t('components.transaction.deposit'),
-      onAction: addCreditPosition,
-      status: true,
-      disabled: transactionApproved,
-      contrast: true,
-    },
-  ];
+  const txActions =
+    userMetadata.role === BORROWER_POSITION_ROLE
+      ? [
+          {
+            label: t('components.transaction.deposit'),
+            onAction: addCreditPosition,
+            status: true,
+            disabled: transactionApproved,
+            contrast: true,
+          },
+        ]
+      : [
+          {
+            label: t('components.transaction.approve'),
+            onAction: approveCreditPosition,
+            status: true,
+            disabled: !transactionApproved,
+            contrast: false,
+          },
+          {
+            label: t('components.transaction.deposit'),
+            onAction: addCreditPosition,
+            status: true,
+            disabled: transactionApproved,
+            contrast: true,
+          },
+        ];
 
   if (!selectedSellToken) return null;
   if (!selectedCredit) return null;
