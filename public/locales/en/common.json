@@ -125,7 +125,7 @@
       },
       "add-credit": {
         "header": "Setup deal terms",
-        "select-credit": "1. The borrower you are lending to is: ",
+        "select-credit": "1. You are lending to:",
         "select-token": "2. Select token and amount to deposit",
         "select-rates": "3. Set your interest rates",
         "back-to-market": "Head back to the Market",
