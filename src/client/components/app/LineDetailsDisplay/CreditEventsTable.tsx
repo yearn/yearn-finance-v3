@@ -3,12 +3,10 @@ import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 
 import { ModalsActions, LinesActions, LinesSelectors } from '@store';
-import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
-import { CreditEvent } from '@src/core/types';
+import { useAppDispatch, useAppSelector, useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
 import { DetailCard, ActionButtons, ViewContainer } from '@components/app';
-import { SpinnerLoading, Text, Tooltip, Input, SearchIcon, Button } from '@components/common';
-import { humanize, USDC_DECIMALS } from '@utils';
+import { SpinnerLoading, Input, SearchIcon } from '@components/common';
 import { ARBITER_POSITION_ROLE, BORROWER_POSITION_ROLE, LENDER_POSITION_ROLE } from '@src/core/types';
 
 const PositionsCard = styled(DetailCard)`
