@@ -89,6 +89,7 @@ export interface BaseLineFragResponse {
   type: string;
   start: number;
   status: LineStatusTypes;
+  arbiter: Address;
   borrower: {
     id: Address;
   };

@@ -131,9 +131,14 @@
       },
       "add-credit": {
         "header": "Setup deal terms",
-        "select-credit": "1. Select a borrower to lend to",
-        "select-token": "2. Select token and amount",
-        "select-rates": "3. Set interest rates"
+        "select-credit": "1. You are lending to:",
+        "select-token": "2. Select token and amount to deposit",
+        "select-rates": "3. Set your interest rates",
+        "back-to-market": "Head back to the Market",
+        "bad-line": {
+          "title": "This line can not be deposited into",
+          "body": "Your chosen line is not in a healthy state. You can find more lines to deposit into back in the marketplace."
+        }
       },
       "arbiter-liquidate": {
         "header": "Liquidate Borrowers",

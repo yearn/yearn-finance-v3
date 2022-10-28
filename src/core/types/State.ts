@@ -104,6 +104,7 @@ export interface VaultTransaction {
 
 export interface CreditLineState {
   selectedLineAddress: string | undefined;
+  selectedPosition: string | undefined;
   linesMap: { [lineAddress: string]: AggregatedCreditLine };
   // probs can just consolidate line/linePage since we need a lot of derived data in linePage for basic functionality
   pagesMap: { [lineAddress: string]: CreditLinePage };

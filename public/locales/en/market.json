@@ -1,4 +1,10 @@
 {
+    "banner": {
+      "title": "Debt DAO is the one stop shop for cryptonative credit.",
+      "body": "Secured lending solutions that are fully onchain, fully trustless, and fully anonymous",
+      "cta-lender": "Lender FAQ",
+      "cta-borrower": "Get Credit"
+    },
     "featured": {
       "highest-credit": "Highest Credit",
       "highest-revenue": "Most Revenue",

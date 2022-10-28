@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { memoize } from 'lodash';
+import { memoize, find } from 'lodash';
+import { getAddress } from '@ethersproject/address';
 
 import {
   RootState,
@@ -7,11 +8,18 @@ import {
   LineActionsStatusMap,
   AggregatedCreditLine,
   Address,
-  CreditLinePage, // prev. GeneralVaultView, Super indepth data, CreditLinePage is most similar atm
+  CreditLinePage,
+  UserPositionMetadata,
+  BORROWER_POSITION_ROLE,
+  LENDER_POSITION_ROLE,
+  ARBITER_POSITION_ROLE, // prev. GeneralVaultView, Super indepth data, CreditLinePage is most similar atm
 } from '@types';
-import { toBN, mapStatusToString, formatCreditEvents, formatCollateralEvents } from '@utils';
+import { toBN, formatCreditEvents, formatCollateralEvents, unnullify } from '@utils';
+import { getConstants } from '@src/config/constants';
 
 import { initialLineActionsStatusMap } from './lines.reducer';
+
+const { ZERO_ADDRESS } = getConstants();
 
 /* ---------------------------------- State --------------------------------- */
 const selectUserWallet = (state: RootState) => state.wallet.selectedAddress;
@@ -27,6 +35,8 @@ const selectUserTokensAllowancesMap = (state: RootState) => state.tokens.user.us
 const selectLinesAllowancesMap = (state: RootState) => state.lines.user.lineAllowances;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedLineAddress = (state: RootState) => state.lines.selectedLineAddress;
+const selectSelectedPosition = (state: RootState) => state.lines.selectedPosition;
+
 const selectLinesActionsStatusMap = (state: RootState) => state.lines.statusMap.user.linesActionsStatusMap;
 const selectLinesStatusMap = (state: RootState) => state.lines.statusMap;
 // const selectExpectedTxOutcome = (state: RootState) => state.lines.transaction.expectedOutcome;
@@ -34,6 +44,8 @@ const selectLinesStatusMap = (state: RootState) => state.lines.statusMap;
 const selectUserLinesSummary = (state: RootState) => state.lines.user.linePositions;
 
 const selectGetLinesStatus = (state: RootState) => state.lines.statusMap.getLines;
+const selectGetLinePageStatus = (state: RootState) => state.lines.statusMap.getLinePage;
+
 const selectGetUserLinesPositionsStatus = (state: RootState) => state.lines.statusMap.user.getUserLinePositions;
 
 /* ----------------------------- Main Selectors ----------------------------- */
@@ -153,10 +165,86 @@ const selectLinesStatus = createSelector(
   }
 );
 
+const selectLinePageStatus = createSelector(
+  [selectGetLinePageStatus, selectGetUserLinesPositionsStatus],
+  (getLinesStatus, getUserLinesPositionsStatus): Status => {
+    return {
+      loading: getLinesStatus.loading || getUserLinesPositionsStatus.loading,
+      error: getLinesStatus.error || getUserLinesPositionsStatus.error,
+    };
+  }
+);
+
 const selectSelectedLinePage = createSelector(
   [selectLinePagesMap, selectSelectedLineAddress],
   (pages, line): CreditLinePage | undefined => {
     return line ? pages[line] : undefined;
+  }
+);
+
+const selectUserPositionMetadata = createSelector(
+  [selectUserWallet, selectSelectedLine, selectSelectedPosition],
+  (userAddress, line, selectedPosition): UserPositionMetadata => {
+    const defaultRole = {
+      role: LENDER_POSITION_ROLE,
+      amount: '0',
+      available: '0',
+    };
+
+    if (!line || !userAddress) return defaultRole;
+    //@ts-ignore
+    const position = selectedPosition ? line!.positions?.[selectedPosition] : undefined;
+
+    switch (getAddress(userAddress!)) {
+      case getAddress(line.borrower):
+        const borrowerData = position
+          ? { amount: position.principal, available: toBN(position.deposit).minus(toBN(position.principal)).toString() }
+          : { amount: line.principal, available: toBN(line.deposit).minus(toBN(line.principal)).toString() };
+        return {
+          role: BORROWER_POSITION_ROLE,
+          ...borrowerData,
+        };
+
+      case getAddress(line.arbiter):
+        const arbiterData = {
+          amount: unnullify(line.escrow?.collateralValue),
+          available: unnullify(line.escrow?.collateralValue),
+        };
+        return {
+          role: ARBITER_POSITION_ROLE,
+          ...arbiterData,
+        };
+
+      case getAddress(position?.lender ?? ZERO_ADDRESS):
+        const lenderData = {
+          amount: position!.deposit,
+          available: toBN(position!.deposit).minus(toBN(position!.principal)).toString(),
+        };
+        return {
+          role: LENDER_POSITION_ROLE,
+          ...lenderData,
+        };
+
+      default:
+        // if no selected position, still try to find their position on the line
+        //@ts-ignore
+        const foundPosition = find(line.positions, (p) => p.lender === userAddress);
+        if (foundPosition) {
+          const lenderData = {
+            //@ts-ignore
+            amount: foundPosition.deposit,
+            //@ts-ignore
+            available: toBN(foundPosition.deposit).minus(toBN(foundPosition.principal)).toString(),
+          };
+          return {
+            role: LENDER_POSITION_ROLE,
+            ...lenderData,
+          };
+        }
+
+        // user isnt a party on the line
+        return defaultRole;
+    }
   }
 );
 
@@ -188,6 +276,7 @@ export const LinesSelectors = {
   selectLines,
   selectLiveLines,
   selectLinesForCategories,
+  selectUserPositionMetadata,
   selectSelectedLinePage,
   // selectDeprecatedLines,
   selectUserLinesPositionsMap,
@@ -203,6 +292,7 @@ export const LinesSelectors = {
   selectSummaryData,
   selectRecommendations,
   selectLinesStatus,
+  selectGetLinePageStatus,
   selectLine,
   // selectExpectedTxOutcome,
   // selectExpectedTxOutcomeStatus,

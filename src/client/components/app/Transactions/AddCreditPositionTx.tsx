@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ethers } from 'ethers';
+import { useLocation, useHistory } from 'react-router-dom';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
 import {
@@ -10,8 +11,10 @@ import {
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
+import { ACTIVE_STATUS, BORROWER_POSITION_ROLE, UserPositionMetadata } from '@src/core/types';
 import { getConstants } from '@src/config/constants';
 import { TokensActions, TokensSelectors, WalletSelectors, LinesSelectors, LinesActions } from '@store';
+import { Button, Icon, Link } from '@components/common';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -42,13 +45,38 @@ interface AddCreditPositionProps {
   }) => void;
 }
 
+const BadLineErrorContainer = styled.div``;
+
+const BadLineErrorBody = styled.h3`
+  ${({ theme }) => `
+    margin: ${theme.spacing.lg} 0;
+    font-size: ${theme.fonts.sizes.md};;
+  `}
+`;
+
+const BadLineErrorImageContainer = styled.div``;
+
+const BadLineErrorImage = styled.img``;
+
+const StyledTxActionButton = styled(Button)<{ color?: string; contrast?: boolean }>`
+  height: 4rem;
+  flex: 1;
+  font-size: 1.6rem;
+  font-weight: 700;
+  gap: 0.5rem;
+  background-color: ${({ theme }) => theme.colors.txModalColors.primary};
+  color: ${({ theme }) => theme.colors.txModalColors.onPrimary};
+`;
+
 export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+  const history = useHistory();
 
   //in case user is on Goerli Testnet, we set up a testnet state:
   const [testnetToken, setTestnetToken] = useState('');
   const [testnetTokenAmount, setTestnetTokenAmount] = useState('0');
+  const userMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const testTokens = [
     {
@@ -276,22 +304,33 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     });
   };
 
-  const txActions = [
-    {
-      label: t('components.transaction.approve'),
-      onAction: approveCreditPosition,
-      status: true,
-      disabled: !transactionApproved,
-      contrast: false,
-    },
-    {
-      label: t('components.transaction.deposit'),
-      onAction: addCreditPosition,
-      status: true,
-      disabled: transactionApproved,
-      contrast: true,
-    },
-  ];
+  const txActions =
+    userMetadata.role === BORROWER_POSITION_ROLE
+      ? [
+          {
+            label: t('components.transaction.deposit'),
+            onAction: addCreditPosition,
+            status: true,
+            disabled: transactionApproved,
+            contrast: true,
+          },
+        ]
+      : [
+          {
+            label: t('components.transaction.approve'),
+            onAction: approveCreditPosition,
+            status: true,
+            disabled: !transactionApproved,
+            contrast: false,
+          },
+          {
+            label: t('components.transaction.deposit'),
+            onAction: addCreditPosition,
+            status: true,
+            disabled: transactionApproved,
+            contrast: true,
+          },
+        ];
 
   if (!selectedSellToken) return null;
   if (!selectedCredit) return null;
@@ -323,6 +362,67 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     );
   }
 
+  const isActive = selectedCredit.status === ACTIVE_STATUS;
+  if (!isActive) {
+    const toMarketplace = () => {
+      onClose();
+      // send user to top of market page instead of bottom where they currently are
+      window.scrollTo({ top: 0, left: 0 });
+      history.push('/market');
+    };
+
+    return (
+      <StyledTransaction onClose={onClose} header={t('components.transaction.add-credit.bad-line.title')}>
+        <BadLineErrorContainer>
+          <BadLineErrorBody>{t('components.transaction.add-credit.bad-line.body')}</BadLineErrorBody>
+          <StyledTxActionButton color="primary" onClick={toMarketplace}>
+            {t('components.transaction.add-credit.back-to-market')}
+          </StyledTxActionButton>
+          <BadLineErrorImageContainer>
+            <BadLineErrorImage />
+          </BadLineErrorImageContainer>
+        </BadLineErrorContainer>
+      </StyledTransaction>
+    );
+  }
+
+  const TokenInput =
+    walletNetwork === 'goerli'
+      ? () => (
+          <TxTestTokenInput
+            key={'token-input'}
+            headerText={t('components.transaction.add-credit.select-token')}
+            inputText={tokenHeaderText}
+            amount={testnetTokenAmount}
+            onAmountChange={onTestnetAmountChange}
+            amountValue={String(10000000 * Number(testnetTokenAmount))}
+            maxAmount={targetBalance}
+            selectedToken={selectedSellTestToken}
+            onSelectedTokenChange={onSelectedSellTestTokenChange}
+            tokenOptions={testTokens}
+            // inputError={!!sourceStatus.error}
+            readOnly={acceptingOffer}
+            // displayGuidance={displaySourceGuidance}
+          />
+        )
+      : () => (
+          <TxTokenInput
+            key={'token-input'}
+            headerText={t('components.transaction.add-credit.select-token')}
+            inputText={tokenHeaderText}
+            amount={targetTokenAmount}
+            onAmountChange={onAmountChange}
+            amountValue={String(10000000 * Number(targetTokenAmount))}
+            maxAmount={targetBalance}
+            selectedToken={selectedSellToken}
+            onSelectedTokenChange={onSelectedSellTokenChange}
+            tokenOptions={sourceAssetOptions}
+            // inputError={!!sourceStatus.error}
+            readOnly={acceptingOffer}
+            // displayGuidance={displaySourceGuidance}
+          />
+        );
+
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
       <TxCreditLineInput
@@ -333,42 +433,11 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         selectedCredit={selectedCredit}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
-        readOnly={false}
+        readOnly={true}
         // displayGuidance={displaySourceGuidance}
       />
-      {walletNetwork === 'goerli' ? (
-        <TxTestTokenInput
-          key={'token-input'}
-          headerText={t('components.transaction.add-credit.select-token')}
-          inputText={tokenHeaderText}
-          amount={testnetTokenAmount}
-          onAmountChange={onTestnetAmountChange}
-          amountValue={String(10000000 * Number(testnetTokenAmount))}
-          maxAmount={targetBalance}
-          selectedToken={selectedSellTestToken}
-          onSelectedTokenChange={onSelectedSellTestTokenChange}
-          tokenOptions={testTokens}
-          // inputError={!!sourceStatus.error}
-          readOnly={acceptingOffer}
-          // displayGuidance={displaySourceGuidance}
-        />
-      ) : (
-        <TxTokenInput
-          key={'token-input'}
-          headerText={t('components.transaction.add-credit.select-token')}
-          inputText={tokenHeaderText}
-          amount={targetTokenAmount}
-          onAmountChange={onAmountChange}
-          amountValue={String(10000000 * Number(targetTokenAmount))}
-          maxAmount={targetBalance}
-          selectedToken={selectedSellToken}
-          onSelectedTokenChange={onSelectedSellTokenChange}
-          tokenOptions={sourceAssetOptions}
-          // inputError={!!sourceStatus.error}
-          readOnly={acceptingOffer}
-          // displayGuidance={displaySourceGuidance}
-        />
-      )}
+
+      <TokenInput />
 
       <TxRateInput
         key={'frate'}

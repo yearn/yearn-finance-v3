@@ -39,7 +39,8 @@ export interface BaseCreditLine {
   end: number;
   status: LineStatusTypes;
   borrower: Address;
-  positions?: BaseCreditPosition[];
+  arbiter: Address;
+  positions?: [];
   escrow?: { id: Address };
   spigot?: { id: Address };
 }
@@ -81,19 +82,7 @@ export interface CreditLinePageAuxData {
   creditEvents: CreditEvent[];
 }
 
-export interface BaseCreditPosition {
-  id: string;
-  status: PositionStatusTypes;
-  lender: Address;
-  token: Address;
-  principal: string;
-  interestAccrued: string;
-
-  arbiter: string;
-  interestRepaid: string;
-}
-
-// TODO delete Credit type in favor of BaseCreditPosition and resolve type conflicts across codebase
+// TODO delete Credit type in favor of Credit and resolve type conflicts across codebase
 export interface Credit {
   status: PositionStatusTypes;
   deposit: string;
@@ -101,12 +90,12 @@ export interface Credit {
   interestAccrued: string;
   interestRepaid: string;
   decimals: string;
-  arbiter: string;
+  arbiter: Address;
   token: Address;
   lender: Address;
 }
 
-export interface LinePageCreditPosition extends BaseCreditPosition {
+export interface LinePageCreditPosition extends Credit {
   id: string;
   status: PositionStatusTypes;
   lender: Address;
@@ -165,18 +154,23 @@ export interface BaseEscrow {
   collateralValue: string;
 }
 
+export interface EscrowDeposit {
+  amount: string;
+  enabled: boolean;
+  currentUsdPrice?: string;
+  token: Address;
+}
+
+export interface EscrowDepositList {
+  [token: string]: EscrowDeposit;
+}
+
 export interface AggregatedEscrow extends BaseEscrow {
   id: Address;
   cratio: string;
   minCRatio: string;
   collateralValue: string;
-  deposits?: {
-    [token: string]: {
-      amount: string;
-      enabled: boolean;
-      token: Address;
-    };
-  };
+  deposits?: EscrowDepositList;
 }
 
 export interface AggregatedSpigot {

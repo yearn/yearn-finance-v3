@@ -24,6 +24,7 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
+import { ARBITER_POSITION_ROLE, BORROWER_POSITION_ROLE, LENDER_POSITION_ROLE } from '@src/core/types';
 
 const StyledSliderCard = styled(SliderCard)`
   padding: 3rem;
@@ -85,8 +86,9 @@ export const LineDetail = () => {
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
   const selectedPage = useAppSelector(LinesSelectors.selectSelectedLinePage);
+  const userRoleMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   // const selectedLineCreditEvents = useAppSelector(LinesSelectors.selectSelectedLineCreditEvents);
-  const linesStatus = useAppSelector(LinesSelectors.selectLinesStatus);
+  const getLinePageStatus = useAppSelector(LinesSelectors.selectGetLinePageStatus);
   // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
   const tokensStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
@@ -135,17 +137,18 @@ export const LineDetail = () => {
 
   useEffect(() => {
     let Transactions = [];
-    console.log('user wallet: ', userWalletAddress, 'borrower', selectedLine?.borrower);
-    if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.borrower) {
+
+    // TODO integrate UserPositoinMetadata in here
+    if (userRoleMetadata.role === BORROWER_POSITION_ROLE) {
       Transactions.push('borrow');
       Transactions.push('deposit-and-repay');
     }
-    if (userWalletAddress?.toLocaleLowerCase() !== selectedLine?.borrower) {
+    if (userRoleMetadata.role === LENDER_POSITION_ROLE) {
       Transactions.push('deposit');
       Transactions.push('withdraw');
     }
     //@ts-ignore
-    if (userWalletAddress?.toLocaleLowerCase() === selectedLine?.arbiter) {
+    if (userRoleMetadata.role === ARBITER_POSITION_ROLE) {
       Transactions.push('liquidate');
     }
     setTransactions(Transactions);
@@ -155,7 +158,6 @@ export const LineDetail = () => {
     if (!selectedLine) {
       return;
     }
-    console.log(selectedLine);
     let address = selectedLine.id;
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'borrow' }));
@@ -178,7 +180,7 @@ export const LineDetail = () => {
     };
   }, [selectedLine, selectedPage]);
 
-  const [firstTokensFetch, setFirstTokensFetch] = useState(false);
+  const [firstTokensFetch, setFirstTokensFetch] = useState(true);
   const [tokensInitialized, setTokensInitialized] = useState(false);
 
   useEffect(() => {
@@ -201,18 +203,20 @@ export const LineDetail = () => {
     if (!loading && firstTokensFetch) setTokensInitialized(true);
   }, [tokensStatus.loading]);
 
-  const [firstLinesFetch, setFirstLinesFetch] = useState(false);
+  const [firstLinesFetch, setFirstLinesFetch] = useState(true);
   const [linesInitialized, setLinesInitialized] = useState(false);
 
   useEffect(() => {
-    const loading = linesStatus.loading;
+    const loading = getLinePageStatus.loading;
     if (loading && !firstLinesFetch) setFirstLinesFetch(true);
     if (!loading && firstLinesFetch) setLinesInitialized(true);
-  }, [linesStatus.loading]);
+  }, [getLinePageStatus.loading]);
 
   const generalLoading =
-    (appStatus.loading || linesStatus.loading || tokensStatus.loading || isMounting) &&
-    (!tokensInitialized || !linesInitialized);
+    appStatus.loading ||
+    getLinePageStatus.loading ||
+    tokensStatus.loading ||
+    (isMounting && (!tokensInitialized || !linesInitialized));
 
   // TODO: 0xframe also supports this
   //const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';

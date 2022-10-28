@@ -28,6 +28,7 @@ export interface Constants {
   TOKEN_ADDRESSES: {
     [KEY: string]: string;
   };
+  ZERO_ADDRESS: string;
   MAX_UINT256: Wei;
   DEBT_DAO_API: string;
   DEBT_DAO_ALERTS_API: string;

@@ -44,7 +44,7 @@ const StyledCardContent = styled(CardContent)`
   margin-bottom: 0;
   font-size: 1.6rem;
   line-height: 2.4rem;
-  padding-right: 12.8rem;
+  padding-right: 12.4rem;
   color: inherit;
 
   @media ${device.tablet} {

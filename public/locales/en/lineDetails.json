@@ -8,14 +8,16 @@
     "deposit": "Total Credit Provided",
     "totalInterestPaid": "Lifetime Interest Paid",
     "secured-by": "Secured By ",
-    "no-collateral": "No revenue or collateral backing debt",
+    "unsecured": "This is an unsecured line of credit. You MUST trust the borrower.",
     "revenue": {
       "title": "Revenue",
-      "per-month": "/ month"
+      "per-month": "/ month",
+      "no-revenue": "No revenue earned on Spigot"
     },
     "escrow": {
       "title": "Collateral",
-      "total": "Total Collateral Value"
+      "total": "Total Collateral Value",
+      "no-collateral": "No collateral deposited"
     }
   },
   "credit-events": {

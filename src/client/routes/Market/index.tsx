@@ -50,10 +50,10 @@ const StyledSliderCard = styled(SliderCard)`
   min-height: 24rem;
 `;
 
-const DeployLineButton = styled(Button)`
-  width: 18rem;
+const BannerCtaButton = styled(Button)`
+  width: 80%;
+  max-width: 20rem;
   margin-top: 1em;
-  background-color: #00a3ff;
 `;
 
 const StyledNoWalletCard = styled(NoWalletCard)`
@@ -157,7 +157,6 @@ export const Market = () => {
     let shouldFetch: boolean = false;
     expectedCategories.forEach((cat) => (shouldFetch = shouldFetch || !currentCategories.includes(cat)));
 
-    console.log('should fetch', shouldFetch, currentCategories);
     if (shouldFetch) fetchMarketData();
   }, []);
 
@@ -165,7 +164,11 @@ export const Market = () => {
     dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
   };
 
-  const createLineHandler = () => {
+  const onLenderCtaClick = () => {
+    window.open('https://docs.debtdao.finance/products/introduction/line-of-credit', '_blank');
+  };
+
+  const onBorrowerCtaClick = () => {
     dispatch(ModalsActions.openModal({ modalName: 'createLine' }));
   };
 
@@ -190,7 +193,7 @@ export const Market = () => {
         </div>
       )}
       <StyledSliderCard
-        header={t('vaults:banner.header')}
+        header={t('market:banner.title')}
         Component={
           <div
             style={{
@@ -199,9 +202,14 @@ export const Market = () => {
             }}
           >
             <Text>
-              <p>{t('vaults:banner.desc')}</p>
+              <p>{t('market:banner.body')}</p>
             </Text>
-            <DeployLineButton onClick={createLineHandler}>Deploy Line</DeployLineButton>
+            <BannerCtaButton styling="primary" onClick={onBorrowerCtaClick}>
+              {t('market:banner.cta-borrower')}
+            </BannerCtaButton>
+            <BannerCtaButton styling="secondary" outline onClick={onLenderCtaClick}>
+              {t('market:banner.cta-lender')}
+            </BannerCtaButton>
           </div>
         }
         background={<img src={GoblinTown} alt={'Goblin town or the Citadel?'} />}
