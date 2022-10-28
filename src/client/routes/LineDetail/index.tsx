@@ -240,56 +240,6 @@ export const LineDetail = () => {
       )}
 
       {selectedLine && <LineDetailsDisplay page={selectedPage} line={selectedLine} />}
-
-      {/* {!generalLoading && selectedLine && (
-        <VaultDetailPanels
-          selectedVault={selectedLine}
-          chartData={chartData}
-          chartValue={chartValue}
-          displayAddToken={displayAddToken}
-          currentNetwork={currentNetwork}
-          blockExplorerUrl={blockExplorerUrl}
-        />
-      )} */}
-      {transactions.map((transaction, i) => {
-        if (transaction === 'borrow') {
-          return (
-            <BorrowButton onClick={borrowHandler} key={`${transaction}-${i}`}>
-              Borrow
-            </BorrowButton>
-          );
-        }
-        if (transaction === 'deposit') {
-          return (
-            <AddCreditButton onClick={depositHandler} key={`${transaction}-${i}`}>
-              Deposit
-            </AddCreditButton>
-          );
-        }
-        if (transaction === 'deposit-and-repay') {
-          return (
-            <DepositAndRepayButton onClick={depositAndRepayHandler} key={`${transaction}-${i}`}>
-              Repay
-            </DepositAndRepayButton>
-          );
-        }
-        if (transaction === 'liquidate') {
-          return (
-            <WithdrawButton onClick={liquidateHandler} key={`${transaction}-${i}`}>
-              Liquidate
-            </WithdrawButton>
-          );
-        }
-        if (transaction === 'withdraw') {
-          return (
-            <WithdrawButton onClick={WithdrawHandler} key={`${transaction}-${i}`}>
-              Withdraw
-            </WithdrawButton>
-          );
-        } else {
-          return;
-        }
-      })}
     </LineDetailView>
   );
 };
