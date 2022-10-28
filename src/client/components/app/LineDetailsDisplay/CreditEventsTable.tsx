@@ -8,12 +8,6 @@ import { DetailCard, ActionButtons, ViewContainer } from '@components/app';
 import { SpinnerLoading, Text, Tooltip, Input, SearchIcon, Button } from '@components/common';
 import { humanize, USDC_DECIMALS } from '@utils';
 
-const Table = styled.table`
-  ${({ theme }) => `
-    margin: ${theme.fonts.sizes.xl} 0;
-  `}
-`;
-
 const PositionsCard = styled(DetailCard)`
   max-width: ${({ theme }) => theme.globalMaxWidth};
   padding: ${({ theme }) => theme.card.padding};
@@ -66,24 +60,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const { t } = useAppTranslation(['common', 'lineDetails']);
   const { events } = props;
 
-  const columnNames = ['deposit', 'status', 'tokenAddress', 'lender'];
-
-  const renderEvents = (events: CreditEvent[]) =>
-    events.map((e) => {
-      return (
-        <tr key={e.id}>
-          {columnNames.map((n) =>
-            n === 'token' ? (
-              <td key={`${e.id}-${n}`}>{`${e[n]}`}</td>
-            ) : n === 'value' ? (
-              <td key={`${e.id}-${n}`}>{`${e[n]}`}</td>
-            ) : (
-              <td key={`${e.id}-${n}`}>{`${e[n]}`}</td>
-            )
-          )}
-        </tr>
-      );
-    });
+  console.log('events ', events);
 
   return (
     <>
