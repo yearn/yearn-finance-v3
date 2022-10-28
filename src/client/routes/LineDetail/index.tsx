@@ -2,19 +2,10 @@ import { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import {
-  ModalsActions,
-  LinesActions,
-  AlertsActions,
-  AppSelectors,
-  TokensSelectors,
-  LinesSelectors,
-  NetworkSelectors,
-  WalletSelectors,
-} from '@store';
+import { LinesActions, AlertsActions, AppSelectors, TokensSelectors, LinesSelectors, NetworkSelectors } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation, useIsMounting } from '@hooks';
 import { LineDetailsDisplay, ViewContainer, SliderCard } from '@components/app';
-import { SpinnerLoading, Text, Button } from '@components/common';
+import { SpinnerLoading, Text } from '@components/common';
 import {
   // parseHistoricalEarningsUnderlying,
   // parseHistoricalEarningsUsd,
@@ -24,7 +15,6 @@ import {
 } from '@utils';
 import { getConfig } from '@config';
 import { device } from '@themes/default';
-import { ARBITER_POSITION_ROLE, BORROWER_POSITION_ROLE, LENDER_POSITION_ROLE } from '@src/core/types';
 
 const StyledSliderCard = styled(SliderCard)`
   padding: 3rem;
@@ -43,34 +33,6 @@ const LineDetailView = styled(ViewContainer)`
   }
 `;
 
-const WithdrawButton = styled(Button)`
-  width: 18rem;
-  margin-top: 1em;
-  background-color: #00a3ff;
-  margin-left: 1rem;
-`;
-
-const AddCreditButton = styled(Button)`
-  width: 18rem;
-  margin-top: 1em;
-  background-color: #00a3ff;
-  margin-left: 1rem;
-`;
-
-const BorrowButton = styled(Button)`
-  width: 18rem;
-  margin-top: 1em;
-  background-color: #00a3ff;
-  margin-left: 1rem;
-`;
-
-const DepositAndRepayButton = styled(Button)`
-  width: 18rem;
-  margin-top: 1em;
-  background-color: #00a3ff;
-  margin-left: 1rem;
-`;
-
 export interface LineDetailRouteParams {
   lineAddress: string;
 }
@@ -86,7 +48,6 @@ export const LineDetail = () => {
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
   const selectedPage = useAppSelector(LinesSelectors.selectSelectedLinePage);
-  const userRoleMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   // const selectedLineCreditEvents = useAppSelector(LinesSelectors.selectSelectedLineCreditEvents);
   const getLinePageStatus = useAppSelector(LinesSelectors.selectGetLinePageStatus);
   // const linesPageData = useAppSelector(LinesSelectors.selectLinePageData);
@@ -94,75 +55,19 @@ export const LineDetail = () => {
   const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
   //const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   //const walletName = useAppSelector(WalletSelectors.selectWallet);
-  const userWalletAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-
-  // Used to generate Transaction Button depending on whether user is lender, borrower, or arbiter.
-  const [transactions, setTransactions] = useState<string[]>([]);
 
   // 1. get line address from url parms
   // 2. set selected line as current line
   // 3. fetch line page
   // 4.
 
-  const depositHandler = () => {
-    if (!selectedLine) {
-      return;
-    }
-    let address = selectedLine.id;
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
-    dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
-  };
-
-  // THIS NEEDS REVISITNG
-  const liquidateHandler = () => {
-    if (!selectedLine) {
-      return;
-    }
-    let address = selectedLine.id;
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
-    dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
-  };
-
-  const WithdrawHandler = () => {
-    if (!selectedLine) {
-      return;
-    }
-    let address = selectedLine.id;
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
-    dispatch(ModalsActions.openModal({ modalName: 'withdraw' }));
-  };
-
-  useEffect(() => {
-    let Transactions = [];
-
-    // TODO integrate UserPositoinMetadata in here
-    if (userRoleMetadata.role === BORROWER_POSITION_ROLE) {
-      Transactions.push('borrow');
-      Transactions.push('deposit-and-repay');
-    }
-    if (userRoleMetadata.role === LENDER_POSITION_ROLE) {
-      Transactions.push('deposit');
-      Transactions.push('withdraw');
-    }
-    //@ts-ignore
-    if (userRoleMetadata.role === ARBITER_POSITION_ROLE) {
-      Transactions.push('liquidate');
-    }
-    setTransactions(Transactions);
-  }, [userWalletAddress, selectedLine]);
-
-  const borrowHandler = () => {
-    if (!selectedLine) {
-      return;
-    }
-    let address = selectedLine.id;
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
-    dispatch(ModalsActions.openModal({ modalName: 'borrow' }));
-  };
+  console.log(location);
 
   useEffect(() => {
     const lineAddress: string | undefined = location.pathname.split('/')[2];
+
+    console.log('line address', lineAddress);
     if (!lineAddress || !isValidAddress(lineAddress)) {
       dispatch(AlertsActions.openAlert({ message: 'INVALID_ADDRESS', type: 'error' }));
       history.push('/market');
@@ -174,7 +79,7 @@ export const LineDetail = () => {
     return () => {
       dispatch(LinesActions.clearSelectedLineAndStatus());
     };
-  }, []);
+  }, [selectedLine, selectedPage]);
 
   const [firstTokensFetch, setFirstTokensFetch] = useState(true);
   const [tokensInitialized, setTokensInitialized] = useState(false);
@@ -216,10 +121,6 @@ export const LineDetail = () => {
 
   // TODO: 0xframe also supports this
   //const displayAddToken = walletIsConnected && walletName.name === 'MetaMask';
-  const depositAndRepayHandler = () => {
-    dispatch(ModalsActions.openModal({ modalName: 'depositAndRepay' }));
-  };
-
   return (
     <LineDetailView>
       {generalLoading && <SpinnerLoading flex="1" width="100%" height="100%" />}
@@ -236,56 +137,6 @@ export const LineDetail = () => {
       )}
 
       {selectedLine && <LineDetailsDisplay page={selectedPage} line={selectedLine} />}
-
-      {/* {!generalLoading && selectedLine && (
-        <VaultDetailPanels
-          selectedVault={selectedLine}
-          chartData={chartData}
-          chartValue={chartValue}
-          displayAddToken={displayAddToken}
-          currentNetwork={currentNetwork}
-          blockExplorerUrl={blockExplorerUrl}
-        />
-      )} */}
-      {transactions.map((transaction, i) => {
-        if (transaction === 'borrow') {
-          return (
-            <BorrowButton onClick={borrowHandler} key={`${transaction}-${i}`}>
-              Borrow
-            </BorrowButton>
-          );
-        }
-        if (transaction === 'deposit') {
-          return (
-            <AddCreditButton onClick={depositHandler} key={`${transaction}-${i}`}>
-              Deposit
-            </AddCreditButton>
-          );
-        }
-        if (transaction === 'deposit-and-repay') {
-          return (
-            <DepositAndRepayButton onClick={depositAndRepayHandler} key={`${transaction}-${i}`}>
-              Repay
-            </DepositAndRepayButton>
-          );
-        }
-        if (transaction === 'liquidate') {
-          return (
-            <WithdrawButton onClick={liquidateHandler} key={`${transaction}-${i}`}>
-              Liquidate
-            </WithdrawButton>
-          );
-        }
-        if (transaction === 'withdraw') {
-          return (
-            <WithdrawButton onClick={WithdrawHandler} key={`${transaction}-${i}`}>
-              Withdraw
-            </WithdrawButton>
-          );
-        } else {
-          return;
-        }
-      })}
     </LineDetailView>
   );
 };

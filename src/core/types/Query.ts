@@ -179,7 +179,7 @@ export interface BaseEscrowFragResponse {
 
 export interface GetLinesResponse {
   lines: BaseLineFragResponse & {
-    positions: BaseCreditFragResponse;
+    positions: BaseCreditFragResponse[];
     escrow: BaseEscrowFragResponse;
     spigot: {
       id: Address;

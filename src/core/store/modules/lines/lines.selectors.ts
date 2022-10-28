@@ -192,7 +192,7 @@ const selectUserPositionMetadata = createSelector(
     };
 
     if (!line || !userAddress) return defaultRole;
-
+    //@ts-ignore
     const position = selectedPosition ? line!.positions?.[selectedPosition] : undefined;
 
     switch (getAddress(userAddress!)) {
@@ -227,10 +227,13 @@ const selectUserPositionMetadata = createSelector(
 
       default:
         // if no selected position, still try to find their position on the line
+        //@ts-ignore
         const foundPosition = find(line.positions, (p) => p.lender === userAddress);
         if (foundPosition) {
           const lenderData = {
+            //@ts-ignore
             amount: foundPosition.deposit,
+            //@ts-ignore
             available: toBN(foundPosition.deposit).minus(toBN(foundPosition.principal)).toString(),
           };
           return {

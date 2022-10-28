@@ -14,7 +14,9 @@ interface LineDetailsProps {
 }
 
 const Container = styled.div`
-  margin: ${({ theme }) => theme.card.padding};
+  margin: 0;
+  padding: 1em;
+  width: 100%;
 `;
 
 const Header = styled.h1`
@@ -34,14 +36,16 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
 
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [lineData, setLineData] = useState<AggregatedCreditLine | CreditLinePage>(line!);
+  const [positions, setPositions] = useState<[]>();
 
   useEffect(() => {
-    if (page) {
+    if (page && page.positions) {
       setAllDataLoaded(true);
       setLineData(page);
+      setPositions(page.positions);
     }
     // LineDetails page handles getLinePage query
-  });
+  }, [page?.positions]);
 
   if (!line && !page) return <Container>{t('lineDetails:line.no-data')}</Container>;
 
@@ -57,10 +61,8 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
   );
 
   // allow passing in core data first if we have it already and let Page data render once returned
-  if (allDataLoaded) {
+  if (allDataLoaded && positions) {
     // if we have all data render full UI
-    const { creditEvents } = page!;
-
     return (
       <Container>
         <StandardMetadata
@@ -72,7 +74,7 @@ export const LineDetailsDisplay = (props: LineDetailsProps) => {
           startTime={start}
           endTime={end}
         />
-        <CreditEventsTable events={creditEvents} />
+        <CreditEventsTable events={positions} />
       </Container>
     );
   } else {

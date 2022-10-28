@@ -128,28 +128,14 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
     }
 
     const basicData = linesMap[id];
-    if (!basicData) {
-      // navigated directly to line page, need to fetch basic data
-      const linePageResponse = await creditLineService.getLinePage({
-        network: network.current,
-        id,
-      });
-      const linePageData = linePageResponse ? formatLinePageData(linePageResponse, tokenPrices) : undefined;
-      return { linePageData };
-    } else {
-      // already have basi data, just fetch events and position data
-      const auxdata = await creditLineService.getLinePageAuxData({
-        network: network.current,
-        id,
-      });
 
-      if (!auxdata) return { linePageData: undefined };
-
-      const { ...events } = auxdata;
-      // summ total interest paid on positions freom events and add to position data
-      // get dRate, token
-      return { linePageData: { ...basicData, ...events } as CreditLinePage };
-    }
+    // navigated directly to line page, need to fetch basic data
+    const linePageResponse = await creditLineService.getLinePage({
+      network: network.current,
+      id,
+    });
+    const linePageData = linePageResponse ? formatLinePageData(linePageResponse, tokenPrices) : undefined;
+    return { linePageData };
   }
 );
 
