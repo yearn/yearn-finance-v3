@@ -23,5 +23,10 @@
   "credit-events": {
     "title": "Payment History",
     "no-data": "No payment history on this line"
+  },
+  "positions-events" : {
+    "header": "Positions Table",
+    "no-data": "No positions on this Line of Credit",
+    "propose-position": "Propose Position"
   }
 }

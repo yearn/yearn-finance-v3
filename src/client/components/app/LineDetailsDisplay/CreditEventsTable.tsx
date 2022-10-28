@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { ModalsActions, LinesActions, LinesSelectors } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
-import { DetailCard, ActionButtons, ViewContainer } from '@components/app';
-import { SpinnerLoading, Input, SearchIcon } from '@components/common';
+import { DetailCard, ActionButtons, ViewContainer, SliderCard } from '@components/app';
+import { Input, SearchIcon, Text, Button } from '@components/common';
 import { ARBITER_POSITION_ROLE, BORROWER_POSITION_ROLE, LENDER_POSITION_ROLE } from '@src/core/types';
 
 const PositionsCard = styled(DetailCard)`
@@ -46,6 +46,12 @@ const TableHeader = styled.h3`
 interface CreditEventsTableProps {
   events: [];
 }
+
+const BannerCtaButton = styled(Button)`
+  width: 80%;
+  max-width: 20rem;
+  margin-top: 1em;
+`;
 
 export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const { t } = useAppTranslation(['common', 'lineDetails']);
@@ -140,7 +146,18 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     <>
       <TableHeader>{t('components.positions-card.positions')}</TableHeader>
       {isEmpty(events) ? (
-        <SpinnerLoading flex="1" width="100%" />
+        <SliderCard
+          header={t('lineDetails:positions-events.header')}
+          Component={
+            <Text>
+              <p>{t('lineDetails:positions-events.no-data')}</p>
+
+              <BannerCtaButton styling="primary" onClick={depositHandler}>
+                {t('lineDetails:positions-events.propose-position')}
+              </BannerCtaButton>
+            </Text>
+          }
+        />
       ) : (
         <ViewContainer>
           <PositionsCard

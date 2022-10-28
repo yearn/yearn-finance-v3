@@ -130,7 +130,7 @@ export const LineDetail = () => {
           header={t('lineDetails:no-line-supported-card.header', { network: currentNetworkSettings.name })}
           Component={
             <Text>
-              <p>{t('lineDetails:no-line-supported-card.content')} hi</p>
+              <p>{t('lineDetails:no-line-supported-card.content')}</p>
             </Text>
           }
         />
