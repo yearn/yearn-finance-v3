@@ -127,7 +127,8 @@
       },
       "add-credit-input": {
         "search-accept-credit": "Accepting Deal",
-        "search-select-credit": "Find Deal"
+        "search-select-credit": "Find Deal",
+        "select-an-offer": "Select An Offer"
       },
       "add-credit": {
         "header": "Setup deal terms",
@@ -152,12 +153,12 @@
         "time-to-live": "Time this line will remain active for (in days):"
       },
       "borrow-credit": {
-        "header": "Borrow Credit",
-        "select-line": "1. Select a borrower for the line",
+        "header": "Borrow",
+        "select-line": "1. Select a Lender's Offer.",
         "select-amount": "2. Select amount to borrow"
       },
       "deposit-and-repay": {
-        "header": "Deposit and repay",
+        "header": "Repay",
         "select-amount": "1. Select amount to repay"
       },
       "withdraw-credit": {
