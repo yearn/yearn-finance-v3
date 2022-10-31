@@ -210,7 +210,6 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
               },
               {
                 key: 'actions',
-                transform: () => <ActionButtons actions={actions} />,
                 align: 'flex-end',
                 width: 'auto',
                 grow: '1',
@@ -223,7 +222,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
               frate: `${event['frate']} %`,
               status: event['status'],
               lender: event['lender'],
-              actions: null,
+              actions: <ActionButtons actions={actions} />,
             }))}
             SearchBar={
               <Input
