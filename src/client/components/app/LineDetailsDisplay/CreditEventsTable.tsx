@@ -81,7 +81,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     if (userRoleMetadata.role === LENDER_POSITION_ROLE) {
       Transactions.push({
         name: t('components.transaction.deposit'),
-        handler: () => depositHandler(),
+        handler: (e: Event) => depositHandler(e),
         disabled: false,
       });
       Transactions.push({
@@ -109,11 +109,13 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     setActions(Transactions);
   }, [selectedLine]);
 
-  const depositHandler = () => {
+  const depositHandler = (e: Event) => {
     if (!selectedLine) {
       return;
     }
     let address = selectedLine.id;
+    //@ts-ignore
+    console.log(e.target.value);
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
@@ -222,7 +224,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
               frate: `${event['frate']} %`,
               status: event['status'],
               lender: event['lender'],
-              actions: <ActionButtons actions={actions} />,
+              actions: <ActionButtons value={event['id']} actions={actions} />,
             }))}
             SearchBar={
               <Input
