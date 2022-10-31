@@ -69,12 +69,12 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     if (userRoleMetadata.role === BORROWER_POSITION_ROLE) {
       Transactions.push({
         name: t('components.transaction.borrow'),
-        handler: () => borrowHandler(),
+        handler: (e: Event) => borrowHandler(e),
         disabled: false,
       });
       Transactions.push({
         name: t('components.transaction.deposit-and-repay.header'),
-        handler: () => depositAndRepayHandler(),
+        handler: (e: Event) => depositAndRepayHandler(e),
         disabled: false,
       });
     }
@@ -86,7 +86,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
       });
       Transactions.push({
         name: t('components.transaction.withdraw'),
-        handler: () => WithdrawHandler(),
+        handler: (e: Event) => WithdrawHandler(e),
         disabled: false,
       });
     }
@@ -94,14 +94,14 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     if (userRoleMetadata.role === ARBITER_POSITION_ROLE) {
       Transactions.push({
         name: t('components.transaction.liquidate'),
-        handler: () => liquidateHandler(),
+        handler: (e: Event) => liquidateHandler(e),
         disabled: false,
       });
     }
     if (userRoleMetadata.role === LENDER_POSITION_ROLE || userRoleMetadata.role === BORROWER_POSITION_ROLE) {
       //Transactions.push({
       //  name: t('Accept'),
-      //  handler: () => console.log('Accept deal'),
+      //  handler: (e: Event) => console.log(e),
       //   disabled: true,
       //});
     }
@@ -121,34 +121,42 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   };
 
   // THIS NEEDS REVISITNG
-  const liquidateHandler = () => {
+  const liquidateHandler = (e: Event) => {
     if (!selectedLine) {
       return;
     }
     let address = selectedLine.id;
+    //@ts-ignore
+    console.log(e.target.value);
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
   };
 
-  const WithdrawHandler = () => {
+  const WithdrawHandler = (e: Event) => {
     if (!selectedLine) {
       return;
     }
     let address = selectedLine.id;
+    //@ts-ignore
+    console.log(e.target.value);
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'withdraw' }));
   };
 
-  const borrowHandler = () => {
+  const borrowHandler = (e: Event) => {
     if (!selectedLine) {
       return;
     }
     let address = selectedLine.id;
+    //@ts-ignore
+    console.log(e.target.value);
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'borrow' }));
   };
 
-  const depositAndRepayHandler = () => {
+  const depositAndRepayHandler = (e: Event) => {
+    //@ts-ignore
+    console.log(e.target.value);
     dispatch(ModalsActions.openModal({ modalName: 'depositAndRepay' }));
   };
 
