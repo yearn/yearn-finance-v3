@@ -72,7 +72,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
         disabled: false,
       });
       Transactions.push({
-        name: t('components.transaction.deposit-and-repay'),
+        name: t('components.transaction.deposit-and-repay.header'),
         handler: () => depositAndRepayHandler(),
         disabled: false,
       });
