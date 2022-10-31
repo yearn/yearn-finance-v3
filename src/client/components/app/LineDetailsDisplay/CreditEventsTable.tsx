@@ -99,11 +99,11 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
       });
     }
     if (userRoleMetadata.role === LENDER_POSITION_ROLE || userRoleMetadata.role === BORROWER_POSITION_ROLE) {
-      Transactions.push({
-        name: t('Accept'),
-        handler: () => console.log('Accept deal'),
-        disabled: true,
-      });
+      //Transactions.push({
+      //  name: t('Accept'),
+      //  handler: () => console.log('Accept deal'),
+      //   disabled: true,
+      //});
     }
     //@ts-ignore
     setActions(Transactions);
