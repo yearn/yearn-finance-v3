@@ -12,6 +12,8 @@
     },
     "positions-card": {
       "positions": "Positions",
+      "drate": "drate",
+      "frate": "frate",
       "total-deposits": "Total deposits",
       "status": "Status",
       "lender": "Lender"

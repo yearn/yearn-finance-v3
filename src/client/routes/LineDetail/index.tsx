@@ -135,7 +135,6 @@ export const LineDetail = () => {
           }
         />
       )}
-
       {selectedLine && <LineDetailsDisplay page={selectedPage} line={selectedLine} />}
     </LineDetailView>
   );

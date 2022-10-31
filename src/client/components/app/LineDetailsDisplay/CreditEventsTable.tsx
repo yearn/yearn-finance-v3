@@ -8,6 +8,7 @@ import { device } from '@themes/default';
 import { DetailCard, ActionButtons, ViewContainer, SliderCard } from '@components/app';
 import { Input, SearchIcon, Text, Button } from '@components/common';
 import { ARBITER_POSITION_ROLE, BORROWER_POSITION_ROLE, LENDER_POSITION_ROLE } from '@src/core/types';
+import { humanize } from '@src/utils';
 
 const PositionsCard = styled(DetailCard)`
   max-width: ${({ theme }) => theme.globalMaxWidth};
@@ -171,27 +172,13 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
             header={t('components.positions-card.positions')}
             data-testid="vaults-opportunities-list"
             metadata={[
-              {
-                key: 'displayName',
-                header: t('components.positions-card.positions'),
-                width: '23rem',
-                sortable: true,
-                className: 'col-name',
-              },
               /** @TODO add tags e.g. spigot here */
               {
                 key: 'deposit',
-                header: t('components.positions-card.positions'),
+                header: t('components.positions-card.total-deposits'),
                 sortable: true,
                 width: '15rem',
                 className: 'col-assets',
-              },
-              {
-                key: 'status',
-                header: t('components.positions-card.status'),
-                sortable: true,
-                width: '8rem',
-                className: 'col-apy',
               },
               {
                 key: 'lender',
@@ -199,6 +186,27 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
                 sortable: true,
                 width: '15rem',
                 className: 'col-available',
+              },
+              {
+                key: 'drate',
+                header: t('components.positions-card.drate'),
+                sortable: true,
+                width: '7rem',
+                className: 'col-assets',
+              },
+              {
+                key: 'frate',
+                header: t('components.positions-card.frate'),
+                sortable: true,
+                width: '7rem',
+                className: 'col-assets',
+              },
+              {
+                key: 'status',
+                header: t('components.positions-card.status'),
+                sortable: true,
+                width: '10rem',
+                className: 'col-apy',
               },
               {
                 key: 'actions',
@@ -209,8 +217,10 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
               },
             ]}
             data={events.map((event) => ({
-              deposit: event['deposit'],
-              displayName: event['id'],
+              // this needs to be humanized to correct amount depending on the token.
+              deposit: humanize('amount', event['deposit'], 18, 2),
+              drate: `${event['drate']} %`,
+              frate: `${event['frate']} %`,
               status: event['status'],
               lender: event['lender'],
               actions: null,
