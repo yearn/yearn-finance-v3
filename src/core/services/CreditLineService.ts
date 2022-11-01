@@ -293,6 +293,9 @@ export class CreditLineServiceImpl implements CreditLineService {
         abi: this.abi,
         args: params,
         methodName: methodName,
+        overrides: {
+          gasLimit: 600000,
+        },
       };
 
       const tx = await this.transactionService.execute(props);
