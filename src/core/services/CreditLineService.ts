@@ -229,6 +229,7 @@ export class CreditLineServiceImpl implements CreditLineService {
       //true
       //);
       // check mutualConsent
+      console.log('this is line address', line);
       const lender = await this.getSignerAddress();
 
       let data = {
@@ -236,7 +237,7 @@ export class CreditLineServiceImpl implements CreditLineService {
         frate: props.frate,
         amount: props.amount,
         token: props.token,
-        lender: lender,
+        lender: props.lender,
         network: props.network,
       };
       //@ts-ignore

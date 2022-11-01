@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 
-import { ModalsActions, LinesActions, LinesSelectors } from '@store';
+import { ModalsActions, LinesActions, LinesSelectors, WalletSelectors } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
 import { DetailCard, ActionButtons, ViewContainer, SliderCard } from '@components/app';
@@ -56,11 +56,20 @@ const BannerCtaButton = styled(Button)`
 
 export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const { t } = useAppTranslation(['common', 'lineDetails']);
+  const userWallet = useAppSelector(WalletSelectors.selectSelectedAddress);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
   const userRoleMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   const [actions, setActions] = useState([]);
   const { events } = props;
   const dispatch = useAppDispatch();
+
+  console.log('here', userWallet);
+
+  const ApproveMutualConsent = {
+    name: t('Accept'),
+    handler: (e: Event) => acceptProposalHandler(e),
+    disabled: false,
+  };
 
   useEffect(() => {
     let Transactions = [];
@@ -80,11 +89,6 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     }
     if (userRoleMetadata.role === LENDER_POSITION_ROLE) {
       Transactions.push({
-        name: t('components.transaction.deposit'),
-        handler: (e: Event) => depositHandler(e),
-        disabled: false,
-      });
-      Transactions.push({
         name: t('components.transaction.withdraw'),
         handler: (e: Event) => WithdrawHandler(e),
         disabled: false,
@@ -97,13 +101,6 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
         handler: (e: Event) => liquidateHandler(e),
         disabled: false,
       });
-    }
-    if (userRoleMetadata.role === LENDER_POSITION_ROLE || userRoleMetadata.role === BORROWER_POSITION_ROLE) {
-      //Transactions.push({
-      //  name: t('Accept'),
-      //  handler: (e: Event) => console.log(e),
-      //   disabled: true,
-      //});
     }
     //@ts-ignore
     setActions(Transactions);
@@ -158,6 +155,17 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     //@ts-ignore
     console.log(e.target.value);
     dispatch(ModalsActions.openModal({ modalName: 'depositAndRepay' }));
+  };
+
+  const acceptProposalHandler = (e: Event) => {
+    if (!selectedLine) {
+      return;
+    }
+    let address = selectedLine.id;
+    //@ts-ignore
+    console.log(e.target.value);
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
   return (
@@ -232,15 +240,29 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
               frate: `${event['frate']} %`,
               status: event['status'],
               lender: event['lender'],
-              actions: <ActionButtons value={event['id']} actions={actions} />,
+              actions: (
+                <ActionButtons
+                  value={event['id']}
+                  actions={
+                    event['status'] === 'PROPOSED' && userRoleMetadata.role === BORROWER_POSITION_ROLE
+                      ? [ApproveMutualConsent]
+                      : event['lender'] === userWallet
+                      ? actions
+                      : []
+                  }
+                />
+              ),
             }))}
             SearchBar={
-              <Input
-                value={''}
-                onChange={(e) => console.log('hi')}
-                placeholder={t('components.search-input.search')}
-                Icon={SearchIcon}
-              />
+              <>
+                <Input
+                  value={''}
+                  onChange={(e) => console.log(e)}
+                  placeholder={t('components.search-input.search')}
+                  Icon={SearchIcon}
+                />
+                <Button onClick={depositHandler}>New Position</Button>
+              </>
             }
             searching={false}
             filterLabel="Show 0% APY"
@@ -252,6 +274,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
           />
         </ViewContainer>
       )}
+      <br />
     </>
   );
 };

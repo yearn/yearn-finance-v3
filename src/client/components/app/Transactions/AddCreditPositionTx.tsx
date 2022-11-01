@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ethers } from 'ethers';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
 import {
@@ -11,10 +11,10 @@ import {
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
-import { ACTIVE_STATUS, BORROWER_POSITION_ROLE, UserPositionMetadata } from '@src/core/types';
+import { ACTIVE_STATUS, BORROWER_POSITION_ROLE } from '@src/core/types';
 import { getConstants } from '@src/config/constants';
 import { TokensActions, TokensSelectors, WalletSelectors, LinesSelectors, LinesActions } from '@store';
-import { Button, Icon, Link } from '@components/common';
+import { Button } from '@components/common';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -78,6 +78,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [testnetTokenAmount, setTestnetTokenAmount] = useState('0');
   const userMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const userWallet = useAppSelector(WalletSelectors.selectSelectedAddress);
   const testTokens = [
     {
       address: '0x3730954eC1b5c59246C1fA6a20dD6dE6Ef23aEa6',
@@ -265,11 +266,12 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const addCreditPosition = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    if (!selectedCredit?.id || !drate || !frate) {
+    if (!selectedCredit?.id || !drate || !frate || userWallet === undefined) {
       console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedSellTokenAddress);
       setLoading(false);
       return;
     }
+    console.log(userWallet);
 
     let bigNumDRate = toBN(drate);
     let bigNumFRate = toBN(frate);
@@ -285,7 +287,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
           ? ethers.utils.parseEther(testnetTokenAmount)
           : ethers.utils.parseEther(targetTokenAmount),
       token: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
-      lender: '',
+      lender: userWallet,
       network: walletNetwork,
       dryRun: true,
     };
@@ -311,7 +313,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
             label: t('components.transaction.deposit'),
             onAction: addCreditPosition,
             status: true,
-            disabled: transactionApproved,
+            disabled: !transactionApproved,
             contrast: true,
           },
         ]
