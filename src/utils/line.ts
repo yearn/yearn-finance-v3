@@ -138,7 +138,6 @@ export function formatGetLinesData(
 
     const deposits = escrowRes?.deposits.map((d: any) => ({ ...d, token: d.token.id }));
     // formatAggData (positions, deposits, summaries);
-    console.log('escrow deposits getLines', escrowRes, deposits);
 
     return {
       ...rest,

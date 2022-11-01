@@ -17,8 +17,15 @@
     "escrow": {
       "title": "Collateral",
       "total": "Total Collateral Value",
-      "no-collateral": "No collateral deposited"
+      "no-collateral": "No collateral deposited",
+      "assets-list": {
+        "title": "Assets As Collateral",
+        "symbol": "Symbol",
+        "token": "Token",
+        "value": "USD Value"
+      }
     }
+    
   },
   "credit-events": {
     "title": "Payment History",

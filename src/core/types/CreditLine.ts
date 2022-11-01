@@ -158,7 +158,11 @@ export interface EscrowDeposit {
   amount: string;
   enabled: boolean;
   currentUsdPrice?: string;
+  value?: string;
   token: Address;
+  symbol: string;
+
+  displayIcon?: string; // url to token icon
 }
 
 export interface EscrowDepositList {
