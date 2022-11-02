@@ -152,8 +152,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   });
 
   useEffect(() => {
-    console.log('add position tx useEffect token/creditLine', selectedSellToken, initialToken, selectedCredit);
-    console.log('wallet net', walletNetwork);
     if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
@@ -222,7 +220,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   };
 
   const onSelectedCreditLineChange = (addr: string): void => {
-    console.log('select new loc', addr);
     setSelectedCredit(addr);
     _updatePosition();
   };
@@ -248,7 +245,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
           : `${ethers.utils.parseEther(targetTokenAmount)}`,
       network: walletNetwork,
     };
-    console.log('approval obj', approvalOBj);
     //@ts-ignore
     dispatch(LinesActions.approveDeposit(approvalOBj)).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
@@ -277,17 +273,10 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
       setLoading(false);
       return;
     }
-    console.log(userWallet);
-
-    let bigNumDRate = toBN(drate);
-    let bigNumFRate = toBN(frate);
-
-    console.log(bigNumDRate, bigNumFRate);
 
     let checkSumAddress = await isAddress(lenderAddress);
 
     if (!checkSumAddress) {
-      console.log('error', checkSumAddress);
       return;
     }
 
@@ -308,12 +297,10 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     dispatch(LinesActions.addCredit(TransactionObj)).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
         setTransactionCompleted(2);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
       if (res.meta.requestStatus === 'fulfilled') {
         setTransactionCompleted(1);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
     });

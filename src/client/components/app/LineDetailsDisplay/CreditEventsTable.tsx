@@ -63,8 +63,6 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const { events } = props;
   const dispatch = useAppDispatch();
 
-  console.log('here', userWallet);
-
   const ApproveMutualConsent = {
     name: t('Accept'),
     handler: (e: Event) => acceptProposalHandler(e),
@@ -112,7 +110,6 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     }
     let address = selectedLine.id;
     //@ts-ignore
-    console.log(e.target.value);
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
@@ -123,8 +120,6 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
       return;
     }
     let address = selectedLine.id;
-    //@ts-ignore
-    console.log(e.target.value);
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
   };
@@ -134,8 +129,6 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
       return;
     }
     let address = selectedLine.id;
-    //@ts-ignore
-    console.log(e.target.value);
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'withdraw' }));
   };
@@ -145,25 +138,23 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
       return;
     }
     let address = selectedLine.id;
-    //@ts-ignore
-    console.log(e.target.value);
+
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'borrow' }));
   };
 
   const depositAndRepayHandler = (e: Event) => {
-    //@ts-ignore
-    console.log(e.target.value);
     dispatch(ModalsActions.openModal({ modalName: 'depositAndRepay' }));
   };
 
   const acceptProposalHandler = (e: Event) => {
-    if (!selectedLine) {
+    //@ts-ignore
+    if (!selectedLine || e?.target?.value === null) {
       return;
     }
     let address = selectedLine.id;
     //@ts-ignore
-    console.log(e.target.value);
+    dispatch(LinesActions.setSelectedLinePosition(e.target.value));
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
