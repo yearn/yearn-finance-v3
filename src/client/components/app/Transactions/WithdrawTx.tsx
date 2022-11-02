@@ -55,7 +55,8 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const selectedVault = useAppSelector(VaultsSelectors.selectSelectedVault);
   const [selectedTargetTokenAddress, setSelectedTargetTokenAddress] = useState('');
   const selectedSlippage = useAppSelector(SettingsSelectors.selectDefaultSlippage);
-  const signedApprovalsEnabled = useAppSelector(SettingsSelectors.selectSignedApprovalsEnabled);
+  const signedApprovalsEnabled =
+    useAppSelector(SettingsSelectors.selectSignedApprovalsEnabled) && currentNetwork !== 'optimism';
   const withdrawTokenOptionsByVault = useAppSelector(selectWithdrawTokenOptionsByAsset);
   const targetTokensOptions = withdrawTokenOptionsByVault(selectedVault?.address);
   const targetTokensOptionsMap = keyBy(targetTokensOptions, 'address');
