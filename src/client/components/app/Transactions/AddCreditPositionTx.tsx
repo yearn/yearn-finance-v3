@@ -267,7 +267,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     setLoading(true);
     // TODO set error in state to display no line selected
     if (!selectedCredit?.id || !drate || !frate || userWallet === undefined) {
-      console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedSellTokenAddress);
       setLoading(false);
       return;
     }
