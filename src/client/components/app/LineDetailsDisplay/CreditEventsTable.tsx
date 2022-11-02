@@ -192,11 +192,11 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
             metadata={[
               /** @TODO add tags e.g. spigot here */
               {
-                key: 'deposit',
-                header: t('components.positions-card.total-deposits'),
+                key: 'status',
+                header: t('components.positions-card.status'),
                 sortable: true,
-                width: '15rem',
-                className: 'col-assets',
+                width: '10rem',
+                className: 'col-apy',
               },
               {
                 key: 'lender',
@@ -204,6 +204,13 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
                 sortable: true,
                 width: '15rem',
                 className: 'col-available',
+              },
+              {
+                key: 'deposit',
+                header: t('components.positions-card.total-deposits'),
+                sortable: true,
+                width: '15rem',
+                className: 'col-assets',
               },
               {
                 key: 'drate',
@@ -218,13 +225,6 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
                 sortable: true,
                 width: '7rem',
                 className: 'col-assets',
-              },
-              {
-                key: 'status',
-                header: t('components.positions-card.status'),
-                sortable: true,
-                width: '10rem',
-                className: 'col-apy',
               },
               {
                 key: 'actions',

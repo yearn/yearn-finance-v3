@@ -230,7 +230,6 @@ export class CreditLineServiceImpl implements CreditLineService {
       //);
       // check mutualConsent
       console.log('this is line address', line);
-      const lender = await this.getSignerAddress();
 
       let data = {
         drate: props.drate,

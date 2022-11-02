@@ -318,10 +318,13 @@ export const formatLinePageData = (
     console.log('positions info origin', positions);
     console.log('position', position);
 
+    let formattedFrate = `${position.fRate}`;
+    let formattedDrate = `${position.dRate}`;
+
     let positionObject = {
       status: position.status,
-      drate: position.dRate,
-      frate: position.fRate,
+      drate: formattedDrate.slice(0, -2),
+      frate: formattedFrate.slice(0, -2),
       deposit: position.deposit,
       tokenAddress: position.lender.id,
       lender: position.token.id,

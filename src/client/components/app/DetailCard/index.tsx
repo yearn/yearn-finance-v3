@@ -203,7 +203,12 @@ export const DetailCard = <T,>({
       {displayData.map((item, i) => (
         <StyledCardContent
           //@ts-ignore
-          style={item.status ? { borderLeft: '10px solid #00A3FF', marginBottom: '1rem' } : ''}
+          style={
+            //@ts-ignore
+            item.status === 'PROPOSED'
+              ? { borderLeft: '10px solid #FAFF00', marginBottom: '1rem' }
+              : { borderLeft: '10px solid #05FF00', marginBottom: '1rem' }
+          }
           key={`content-${i}`}
           wrap={wrap}
           pointer={!!onAction}
