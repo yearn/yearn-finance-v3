@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ethers } from 'ethers';
 import { useLocation, useHistory } from 'react-router-dom';
 
-import { formatAmount, normalizeAmount, toBN } from '@utils';
+import { formatAmount, normalizeAmount, toBN, isAddress } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
@@ -14,7 +14,7 @@ import {
 import { ACTIVE_STATUS, BORROWER_POSITION_ROLE, UserPositionMetadata } from '@src/core/types';
 import { getConstants } from '@src/config/constants';
 import { TokensActions, TokensSelectors, WalletSelectors, LinesSelectors, LinesActions } from '@store';
-import { Button, Icon, Link } from '@components/common';
+import { Button } from '@components/common';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -24,6 +24,7 @@ import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
 import { TxTestTokenInput } from './components/TestTokenList';
+import { TxAddressInput } from './components/TxAddressInput';
 
 const {
   CONTRACT_ADDRESSES: { DAI },
@@ -78,6 +79,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [testnetTokenAmount, setTestnetTokenAmount] = useState('0');
   const userMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const walletAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const testTokens = [
     {
       address: '0x3730954eC1b5c59246C1fA6a20dD6dE6Ef23aEa6',
@@ -135,6 +137,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [targetTokenAmount, setTargetTokenAmount] = useState('1');
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');
+  const [lenderAddress, setLenderAddress] = useState(walletAddress ? walletAddress : '');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
   const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
@@ -226,6 +229,10 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
   };
 
+  const onLenderAddressChange = (lenderAddress: string) => {
+    setLenderAddress(lenderAddress);
+  };
+
   const approveCreditPosition = () => {
     setLoading(true);
     if (!selectedCredit?.id) {
@@ -262,12 +269,19 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     }
   };
 
-  const addCreditPosition = () => {
+  const addCreditPosition = async () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    if (!selectedCredit?.id || !drate || !frate) {
+    if (!selectedCredit?.id || !drate || !frate || lenderAddress === '') {
       console.log('check this', selectedCredit?.id, drate, frate, targetTokenAmount, selectedSellTokenAddress);
       setLoading(false);
+      return;
+    }
+
+    let checkSumAddress = await isAddress(lenderAddress);
+
+    if (!checkSumAddress) {
+      console.log('error', checkSumAddress);
       return;
     }
 
@@ -285,7 +299,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
           ? ethers.utils.parseEther(testnetTokenAmount)
           : ethers.utils.parseEther(targetTokenAmount),
       token: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
-      lender: '',
+      lender: lenderAddress,
       network: walletNetwork,
       dryRun: true,
     };
@@ -426,7 +440,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
       <TxCreditLineInput
-        key={'credit-input'}
+        key={'borrower-input'}
         headerText={t('components.transaction.add-credit.select-credit')}
         inputText={t('components.transaction.add-credit.select-credit')}
         onSelectedCreditLineChange={onSelectedCreditLineChange}
@@ -434,6 +448,18 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={true}
+        // displayGuidance={displaySourceGuidance}
+      />
+
+      <TxAddressInput
+        key={'lender-input'}
+        headerText={t('components.transaction.add-credit.select-lender')}
+        inputText={t('components.transaction.add-credit.lender-address')}
+        onBorrowerChange={onLenderAddressChange}
+        borrower={lenderAddress}
+        // creditOptions={sourceCreditOptions}
+        // inputError={!!sourceStatus.error}
+        readOnly={false}
         // displayGuidance={displaySourceGuidance}
       />
 
