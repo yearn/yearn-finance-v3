@@ -181,7 +181,7 @@ export const LockTab = () => {
       };
 
   return (
-    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))" minHeight="35rem">
+    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))" minHeight="35rem">
       <Box>
         <Text heading="h2">Lock YFI into veYFI</Text>
         <Text>Description goes here</Text>
@@ -189,7 +189,7 @@ export const LockTab = () => {
       <Box>
         <Box mt="0.8rem">
           <Text heading="h3">Locking</Text>
-          <Box display="flex" gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'row']} gap="1.6rem">
             <AmountInput
               label={`${votingEscrow?.token.symbol ?? 'YFI'}`}
               amount={lockAmount}
@@ -202,7 +202,7 @@ export const LockTab = () => {
                 4
               )} ${votingEscrow?.token.symbol ?? 'YFI'}`}
               mt="1.6rem"
-              width={1 / 2}
+              width={[1, 1 / 2]}
             />
             <AmountInput
               label="Lock time (weeks)"
@@ -211,17 +211,17 @@ export const LockTab = () => {
               maxAmount={MAX_LOCK_TIME}
               disabled={hasLockedAmount}
               message="min 1"
-              mt="1.6rem"
-              width={1 / 2}
+              mt={['0rem', '1.6rem']}
+              width={[1, 1 / 2]}
             />
           </Box>
-          <Box display="flex" alignItems="center" gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'row']} alignItems="center" gap="1.6rem">
             <AmountInput
               label="Total veYFI"
               amount={resultAmount}
               loading={getExpectedTransactionOutcomeStatus.loading}
               mt="1.6rem"
-              width={1 / 2}
+              width={[1, 1 / 2]}
               disabled
             />
             <Button
@@ -233,9 +233,9 @@ export const LockTab = () => {
                 (increaseLockAmountStatus.executed && !increaseLockAmountStatus.error)
               }
               filled
-              width={1 / 2}
+              width={[1, 1 / 2]}
               height="5.6rem"
-              mt="4.4rem"
+              mt={['0rem', '4.4rem']}
             >
               {txAction.label}
             </Button>

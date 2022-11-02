@@ -66,32 +66,32 @@ export const ExtendLockTab = () => {
   };
 
   return (
-    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))" minHeight="35rem">
+    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))" minHeight="35rem">
       <Box>
         <Text heading="h2">Extend lock</Text>
         <Text>Description goes here</Text>
       </Box>
       <Box>
         <Box mt="0.8rem">
-          <Box display="flex" gap="1.6rem">
-            <AmountInput label="Current time" amount={weeksToUnlock} mt="1.6rem" width={1 / 2} disabled />
+          <Box display="flex" flexDirection={['column', 'row']} gap="1.6rem">
+            <AmountInput label="Current time" amount={weeksToUnlock} mt="1.6rem" width={[1, 1 / 2]} disabled />
             <AmountInput
               label="Increase lock time (weeks)"
               amount={lockTime}
               onAmountChange={setLockTime}
               maxAmount={toBN(MAX_LOCK_TIME).minus(weeksToUnlock).toString()}
               message="min 1"
-              mt="1.6rem"
-              width={1 / 2}
+              mt={['0rem', '1.6rem']}
+              width={[1, 1 / 2]}
             />
           </Box>
-          <Box display="flex" alignItems="center" gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'row']} alignItems="center" gap="1.6rem">
             <AmountInput
               label="Total veYFI"
               amount={resultAmount}
               loading={getExpectedTransactionOutcomeStatus.loading}
               mt="1.6rem"
-              width={1 / 2}
+              width={[1, 1 / 2]}
               disabled
             />
             <Button
@@ -107,9 +107,9 @@ export const ExtendLockTab = () => {
                 extendLockTimeStatus.loading
               }
               filled
-              width={1 / 2}
+              width={[1, 1 / 2]}
               height="5.6rem"
-              mt="4.4rem"
+              mt={['0rem', '4.4rem']}
             >
               Extend
             </Button>
