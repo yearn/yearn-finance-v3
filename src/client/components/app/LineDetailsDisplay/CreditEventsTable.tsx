@@ -61,6 +61,8 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const { events } = props;
   const dispatch = useAppDispatch();
 
+  console.log('user Role', userRoleMetadata);
+
   useEffect(() => {
     let Transactions = [];
 

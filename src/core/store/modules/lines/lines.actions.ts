@@ -20,8 +20,6 @@ import {
 } from '@types';
 import {
   toBN,
-  getNetwork,
-  validateNetwork,
   formatGetLinesData,
   formatLinePageData,
   // validateLineDeposit,
@@ -30,7 +28,6 @@ import {
   // parseError,
 } from '@utils';
 import { unnullify } from '@utils';
-import { TxCreditLineInput } from '@src/client/components/app/Transactions/components/TxCreditLineInput';
 
 import { TokensActions } from '../tokens/tokens.actions';
 
@@ -39,6 +36,7 @@ import { TokensActions } from '../tokens/tokens.actions';
 /* -------------------------------------------------------------------------- */
 
 const setSelectedLineAddress = createAction<{ lineAddress?: string }>('lines/setSelectedLineAddress');
+const setSelectedLinePosition = createAction<{ position?: string }>('lines/setSelectedLinePosition');
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
@@ -634,6 +632,7 @@ const getWithdrawAllowance = createAsyncThunk<
 
 export const LinesActions = {
   setSelectedLineAddress,
+  setSelectedLinePosition,
   // initiateSaveLines,
   getLine,
   getLines,
