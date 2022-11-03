@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ethers } from 'ethers';
 import { useHistory } from 'react-router-dom';
 
-import { formatAmount, normalizeAmount, toBN, isAddress } from '@utils';
+import { formatAmount, normalizeAmount, isAddress } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
@@ -131,7 +131,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [selectedSellTestToken, setSelectSellTestToken] = useState(testTokens[0]);
 
   //state for params
-  const { acceptingOffer, header, onClose, onPositionChange } = props;
+  const { header, onClose, onPositionChange } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
@@ -142,7 +142,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [lenderAddress, setLenderAddress] = useState(walletAddress ? walletAddress : '');
   const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
-
+  const acceptingOffer = userMetadata.role === BORROWER_POSITION_ROLE;
   //main net logic
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
@@ -152,7 +152,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   });
 
   useEffect(() => {
-    if (selectedPosition && selectedPosition.length > 0) {
+    if (selectedPosition && selectedPosition.length > 0 && userMetadata.role === BORROWER_POSITION_ROLE) {
       console.log(selectedPosition, 'correctly Rendered');
       const position: PositionInt = selectedPosition[0];
 
@@ -414,7 +414,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
             amount={testnetTokenAmount}
             onAmountChange={onTestnetAmountChange}
             amountValue={String(10000000 * Number(testnetTokenAmount))}
-            maxAmount={targetBalance}
+            maxAmount={acceptingOffer ? targetTokenAmount : targetBalance}
             selectedToken={selectedSellTestToken}
             onSelectedTokenChange={onSelectedSellTestTokenChange}
             tokenOptions={testTokens}
@@ -431,7 +431,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
             amount={targetTokenAmount}
             onAmountChange={onAmountChange}
             amountValue={String(10000000 * Number(targetTokenAmount))}
-            maxAmount={targetBalance}
+            maxAmount={acceptingOffer ? targetTokenAmount : targetBalance}
             selectedToken={selectedSellToken}
             onSelectedTokenChange={onSelectedSellTokenChange}
             tokenOptions={sourceAssetOptions}
@@ -463,7 +463,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         borrower={lenderAddress}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
-        readOnly={false}
+        readOnly={acceptingOffer}
         // displayGuidance={displaySourceGuidance}
       />
 
