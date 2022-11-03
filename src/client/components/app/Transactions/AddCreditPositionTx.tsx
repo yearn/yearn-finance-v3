@@ -142,7 +142,8 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [lenderAddress, setLenderAddress] = useState(walletAddress ? walletAddress : '');
   const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
-  const acceptingOffer = userMetadata.role === BORROWER_POSITION_ROLE;
+  const acceptingOffer =
+    userMetadata.role === BORROWER_POSITION_ROLE && selectedPosition && selectedPosition.length > 0;
   //main net logic
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
@@ -442,7 +443,10 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         );
 
   return (
-    <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
+    <StyledTransaction
+      onClose={onClose}
+      header={acceptingOffer ? t('components.transaction.add-credit.header-accepting') : header}
+    >
       <TxCreditLineInput
         key={'borrower-input'}
         headerText={t('components.transaction.add-credit.select-credit')}

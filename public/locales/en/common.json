@@ -134,10 +134,11 @@
       },
       "add-credit": {
         "header": "Setup deal terms",
-        "select-credit": "1. Lending to:",
-        "select-lender": "2. Input Lender Address:",
-        "select-token": "3. Select token and amount to deposit",
-        "select-rates": "4. Set your interest rates",
+        "header-accepting": "Agree To Deal Terms",
+        "select-credit": "1. Borrower:",
+        "select-lender": "2. Lender:",
+        "select-token": "3. The token being lent",
+        "select-rates": "4. Set Interest Rates",
         "lender-address": "Ethereum Address",
         "back-to-market": "Head back to the Market",
         "bad-line": {
