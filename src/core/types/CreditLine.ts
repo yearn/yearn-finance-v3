@@ -126,6 +126,19 @@ export interface UserPositionMetadata {
   available: string; // borrowable/withdrawable/liquidatable
 }
 
+export interface PositionInt {
+  drate: string;
+  frate: string;
+  id: string;
+  interestAccrued: string;
+  interestRepaid: string;
+  lender: string;
+  deposit: string;
+  principal: string;
+  status: string;
+  tokenAddress: string;
+}
+
 export interface PositionSummary {
   id: string;
   borrower: Address;

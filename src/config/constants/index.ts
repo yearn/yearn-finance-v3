@@ -125,7 +125,7 @@ export const getConstants = memoize((): Constants => {
     Arbiter_GOERLI: '0xde8f0f6769284e41bf0f82d0545141c15a3e4ad1',
     Oracle_GOERLI: '0x7233038e589913dca4b6d15ff8bba263a433aed2',
     SwapTarget_GOERLI: '0xcb7b9188ada88cb0c991c807acc6b44097059dec',
-    LineFactory_GOERLI: '0x43158693dba386562f0581cd48e68df027a5a877',
+    LineFactory_GOERLI: '0xc23b896F2b4aE3E6362B0D536113Fa2F0C9b8886',
     SecuredLine_GOERLI: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
     KibaSero_oracle: '0x0B3807b858B5fa24a39bced436DBc5A988Ca58d6',
     // ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),

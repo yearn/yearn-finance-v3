@@ -9,6 +9,7 @@ import {
   AggregatedCreditLine,
   Address,
   CreditLinePage,
+  PositionInt,
   UserPositionMetadata,
   BORROWER_POSITION_ROLE,
   LENDER_POSITION_ROLE,
@@ -182,6 +183,19 @@ const selectSelectedLinePage = createSelector(
   }
 );
 
+const selectPositionData = createSelector(
+  [selectSelectedLine, selectSelectedPosition],
+  (line, selectSelectedPosition) => {
+    if (selectSelectedPosition === undefined) {
+      return;
+    }
+    let selectedPositionData = line?.positions?.filter(
+      (position: PositionInt) => position.id === selectSelectedPosition
+    );
+    return selectedPositionData;
+  }
+);
+
 const selectUserPositionMetadata = createSelector(
   [selectUserWallet, selectSelectedLine, selectSelectedPosition],
   (userAddress, line, selectedPosition): UserPositionMetadata => {
@@ -289,12 +303,14 @@ export const LinesSelectors = {
   selectLinesStatusMap,
   selectLinesGeneralStatus,
   selectSelectedLine,
+  selectSelectedPosition,
   selectSelectedLineActionsStatusMap,
   // selectDepositedLines,
   selectSummaryData,
   selectRecommendations,
   selectLinesStatus,
   selectGetLinePageStatus,
+  selectPositionData,
   selectLine,
   // selectExpectedTxOutcome,
   // selectExpectedTxOutcomeStatus,

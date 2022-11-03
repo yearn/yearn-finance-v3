@@ -49,7 +49,6 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   };
 
   const onSelectedCreditLineChange = (addr: string): void => {
-    console.log('select new loc', addr);
     setSelectedCredit(addr);
     _updatePosition();
   };
@@ -66,7 +65,6 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
     setLoading(true);
     // TODO set error in state to display no line selected
     if (!selectedCredit?.id || !targetAmount || walletNetwork === undefined) {
-      console.log('check this', selectedCredit?.id, targetAmount);
       setLoading(false);
       return;
     }
@@ -81,12 +79,10 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
     ).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
         setTransactionCompleted(2);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
       if (res.meta.requestStatus === 'fulfilled') {
         setTransactionCompleted(1);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
     });

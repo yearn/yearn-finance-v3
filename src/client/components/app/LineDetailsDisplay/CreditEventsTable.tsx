@@ -2,12 +2,13 @@ import styled from 'styled-components';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 
-import { ModalsActions, LinesActions, LinesSelectors } from '@store';
+import { ModalsActions, LinesActions, LinesSelectors, WalletSelectors } from '@store';
 import { useAppDispatch, useAppSelector, useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
 import { DetailCard, ActionButtons, ViewContainer, SliderCard } from '@components/app';
 import { Input, SearchIcon, Text, Button } from '@components/common';
 import { ARBITER_POSITION_ROLE, BORROWER_POSITION_ROLE, LENDER_POSITION_ROLE } from '@src/core/types';
+import { humanize } from '@src/utils';
 
 const PositionsCard = styled(DetailCard)`
   max-width: ${({ theme }) => theme.globalMaxWidth};
@@ -55,13 +56,23 @@ const BannerCtaButton = styled(Button)`
 
 export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const { t } = useAppTranslation(['common', 'lineDetails']);
+  const userWallet = useAppSelector(WalletSelectors.selectSelectedAddress);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
   const userRoleMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
+  const selectedPosition = useAppSelector(LinesSelectors.selectPositionData);
   const [actions, setActions] = useState([]);
   const { events } = props;
   const dispatch = useAppDispatch();
 
-  console.log('user Role', userRoleMetadata);
+  useEffect(() => {
+    console.log('pos', selectedPosition);
+  }, [selectedPosition]);
+
+  const ApproveMutualConsent = {
+    name: t('Accept'),
+    handler: (e: Event) => acceptProposalHandler(e),
+    disabled: false,
+  };
 
   useEffect(() => {
     let Transactions = [];
@@ -70,24 +81,19 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     if (userRoleMetadata.role === BORROWER_POSITION_ROLE) {
       Transactions.push({
         name: t('components.transaction.borrow'),
-        handler: () => borrowHandler(),
+        handler: (e: Event) => borrowHandler(e),
         disabled: false,
       });
       Transactions.push({
         name: t('components.transaction.deposit-and-repay.header'),
-        handler: () => depositAndRepayHandler(),
+        handler: (e: Event) => depositAndRepayHandler(e),
         disabled: false,
       });
     }
     if (userRoleMetadata.role === LENDER_POSITION_ROLE) {
       Transactions.push({
-        name: t('components.transaction.deposit'),
-        handler: () => depositHandler(),
-        disabled: false,
-      });
-      Transactions.push({
         name: t('components.transaction.withdraw'),
-        handler: () => WithdrawHandler(),
+        handler: (e: Event) => WithdrawHandler(e),
         disabled: false,
       });
     }
@@ -95,7 +101,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     if (userRoleMetadata.role === ARBITER_POSITION_ROLE) {
       Transactions.push({
         name: t('components.transaction.liquidate'),
-        handler: () => liquidateHandler(),
+        handler: (e: Event) => liquidateHandler(e),
         disabled: false,
       });
     }
@@ -103,17 +109,18 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     setActions(Transactions);
   }, [selectedLine]);
 
-  const depositHandler = () => {
+  const depositHandler = (e: Event) => {
     if (!selectedLine) {
       return;
     }
     let address = selectedLine.id;
+    //@ts-ignore
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
   // THIS NEEDS REVISITNG
-  const liquidateHandler = () => {
+  const liquidateHandler = (e: Event) => {
     if (!selectedLine) {
       return;
     }
@@ -122,7 +129,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
   };
 
-  const WithdrawHandler = () => {
+  const WithdrawHandler = (e: Event) => {
     if (!selectedLine) {
       return;
     }
@@ -131,17 +138,30 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     dispatch(ModalsActions.openModal({ modalName: 'withdraw' }));
   };
 
-  const borrowHandler = () => {
+  const borrowHandler = (e: Event) => {
     if (!selectedLine) {
       return;
     }
     let address = selectedLine.id;
+
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'borrow' }));
   };
 
-  const depositAndRepayHandler = () => {
+  const depositAndRepayHandler = (e: Event) => {
     dispatch(ModalsActions.openModal({ modalName: 'depositAndRepay' }));
+  };
+
+  const acceptProposalHandler = (e: Event) => {
+    //@ts-ignore
+    if (!selectedLine || e?.target?.value === null) {
+      return;
+    }
+    let address = selectedLine.id;
+    //@ts-ignore
+    dispatch(LinesActions.setSelectedLinePosition({ position: e.target.value }));
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
   return (
@@ -166,57 +186,81 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
             header={t('components.positions-card.positions')}
             data-testid="vaults-opportunities-list"
             metadata={[
-              {
-                key: 'displayName',
-                header: t('components.positions-card.positions'),
-                width: '23rem',
-                sortable: true,
-                className: 'col-name',
-              },
               /** @TODO add tags e.g. spigot here */
-              {
-                key: 'deposit',
-                header: t('components.positions-card.positions'),
-                sortable: true,
-                width: '15rem',
-                className: 'col-assets',
-              },
               {
                 key: 'status',
                 header: t('components.positions-card.status'),
                 sortable: true,
-                width: '8rem',
+                width: '14rem',
                 className: 'col-apy',
               },
               {
                 key: 'lender',
                 header: t('components.positions-card.lender'),
                 sortable: true,
-                width: '15rem',
+                width: '13rem',
                 className: 'col-available',
               },
               {
+                key: 'deposit',
+                header: t('components.positions-card.total-deposits'),
+                sortable: true,
+                width: '10rem',
+                className: 'col-assets',
+              },
+              {
+                key: 'drate',
+                header: t('components.positions-card.drate'),
+                sortable: true,
+                width: '7rem',
+                className: 'col-assets',
+              },
+              {
+                key: 'frate',
+                header: t('components.positions-card.frate'),
+                sortable: true,
+                width: '7rem',
+                className: 'col-assets',
+              },
+              {
                 key: 'actions',
-                transform: () => <ActionButtons actions={actions} />,
                 align: 'flex-end',
                 width: 'auto',
                 grow: '1',
               },
             ]}
             data={events.map((event) => ({
-              deposit: event['deposit'],
-              displayName: event['id'],
+              // this needs to be humanized to correct amount depending on the token.
+              deposit: humanize('amount', event['deposit'], 18, 2),
+              drate: `${event['drate']} %`,
+              frate: `${event['frate']} %`,
               status: event['status'],
               lender: event['lender'],
-              actions: null,
+              actions: (
+                <ActionButtons
+                  value={event['id']}
+                  actions={
+                    event['status'] === 'PROPOSED'
+                      ? [ApproveMutualConsent]
+                      : event['lender'] === userWallet
+                      ? actions
+                      : userRoleMetadata.role === BORROWER_POSITION_ROLE
+                      ? actions
+                      : []
+                  }
+                />
+              ),
             }))}
             SearchBar={
-              <Input
-                value={''}
-                onChange={(e) => console.log('hi')}
-                placeholder={t('components.search-input.search')}
-                Icon={SearchIcon}
-              />
+              <>
+                <Input
+                  value={''}
+                  onChange={(e) => console.log(e)}
+                  placeholder={t('components.search-input.search')}
+                  Icon={SearchIcon}
+                />
+                <Button onClick={depositHandler}>New Position</Button>
+              </>
             }
             searching={false}
             filterLabel="Show 0% APY"
@@ -228,6 +272,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
           />
         </ViewContainer>
       )}
+      <br />
     </>
   );
 };
