@@ -11,7 +11,7 @@ import {
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
-import { ACTIVE_STATUS, BORROWER_POSITION_ROLE } from '@src/core/types';
+import { ACTIVE_STATUS, BORROWER_POSITION_ROLE, PositionInt } from '@src/core/types';
 import { getConstants } from '@src/config/constants';
 import { TokensActions, TokensSelectors, WalletSelectors, LinesSelectors, LinesActions } from '@store';
 import { Button } from '@components/common';
@@ -79,7 +79,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [testnetTokenAmount, setTestnetTokenAmount] = useState('0');
   const userMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
-  const userWallet = useAppSelector(WalletSelectors.selectSelectedAddress);
+  const selectedPosition = useAppSelector(LinesSelectors.selectPositionData);
   const walletAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
   const testTokens = [
     {
@@ -150,6 +150,22 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     selectedSellTokenAddress: initialToken,
     allowTokenSelect: true,
   });
+
+  useEffect(() => {
+    if (selectedPosition && selectedPosition.length > 0) {
+      console.log(selectedPosition, 'correctly Rendered');
+      const position: PositionInt = selectedPosition[0];
+
+      let deposit = normalizeAmount(position.deposit, 18);
+      setTargetTokenAmount(deposit);
+      setTestnetTokenAmount(deposit);
+      setSelectedTokenAddress(position.tokenAddress);
+      setTestnetToken(position.tokenAddress);
+      setDrate(position.drate);
+      setFrate(position.frate);
+      setLenderAddress(position.lender);
+    }
+  }, [selectedPosition]);
 
   useEffect(() => {
     if (!selectedSellToken) {

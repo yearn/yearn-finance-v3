@@ -59,9 +59,14 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const userWallet = useAppSelector(WalletSelectors.selectSelectedAddress);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
   const userRoleMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
+  const selectedPosition = useAppSelector(LinesSelectors.selectPositionData);
   const [actions, setActions] = useState([]);
   const { events } = props;
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    console.log('pos', selectedPosition);
+  }, [selectedPosition]);
 
   const ApproveMutualConsent = {
     name: t('Accept'),
@@ -154,7 +159,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     }
     let address = selectedLine.id;
     //@ts-ignore
-    dispatch(LinesActions.setSelectedLinePosition(e.target.value));
+    dispatch(LinesActions.setSelectedLinePosition({ position: e.target.value }));
     dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
@@ -186,21 +191,21 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
                 key: 'status',
                 header: t('components.positions-card.status'),
                 sortable: true,
-                width: '10rem',
+                width: '14rem',
                 className: 'col-apy',
               },
               {
                 key: 'lender',
                 header: t('components.positions-card.lender'),
                 sortable: true,
-                width: '15rem',
+                width: '13rem',
                 className: 'col-available',
               },
               {
                 key: 'deposit',
                 header: t('components.positions-card.total-deposits'),
                 sortable: true,
-                width: '15rem',
+                width: '10rem',
                 className: 'col-assets',
               },
               {
