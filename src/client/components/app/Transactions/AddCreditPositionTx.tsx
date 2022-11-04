@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ethers } from 'ethers';
 import { useHistory } from 'react-router-dom';
 
-import { formatAmount, normalizeAmount, isAddress } from '@utils';
+import { formatAmount, normalizeAmount, isAddress, toWei } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
@@ -256,10 +256,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     }
     let approvalOBj = {
       tokenAddress: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
-      amount:
-        walletNetwork === 'goerli'
-          ? `${ethers.utils.parseEther(testnetTokenAmount)}`
-          : `${ethers.utils.parseEther(targetTokenAmount)}`,
+      amount: walletNetwork === 'goerli' ? toWei(testnetTokenAmount, 18) : toWei(targetTokenAmount, 18),
       network: walletNetwork,
     };
     //@ts-ignore
@@ -299,17 +296,15 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
     let TransactionObj = {
       lineAddress: selectedCredit.id,
-      drate: ethers.utils.parseEther(drate),
-      frate: ethers.utils.parseEther(frate),
-      amount:
-        walletNetwork === 'goerli'
-          ? ethers.utils.parseEther(testnetTokenAmount)
-          : ethers.utils.parseEther(targetTokenAmount),
+      drate: drate,
+      frate: frate,
+      amount: walletNetwork === 'goerli' ? toWei(testnetTokenAmount, 18) : toWei(targetTokenAmount, 18),
       token: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
       lender: lenderAddress,
       network: walletNetwork,
-      dryRun: true,
+      dryRun: false,
     };
+    console.log(TransactionObj, 'tx obj');
     //@ts-ignore
     dispatch(LinesActions.addCredit(TransactionObj)).then((res) => {
       if (res.meta.requestStatus === 'rejected') {

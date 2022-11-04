@@ -240,7 +240,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
                 <ActionButtons
                   value={event['id']}
                   actions={
-                    event['status'] === 'PROPOSED'
+                    event['status'] === 'PROPOSED' && userRoleMetadata.role === BORROWER_POSITION_ROLE
                       ? [ApproveMutualConsent]
                       : event['lender'] === userWallet
                       ? actions
