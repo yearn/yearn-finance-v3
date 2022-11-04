@@ -15,6 +15,7 @@
       "drate": "drate",
       "frate": "frate",
       "total-deposits": "Supplied",
+      "token": "Token",
       "status": "Status",
       "lender": "Lender"
     },

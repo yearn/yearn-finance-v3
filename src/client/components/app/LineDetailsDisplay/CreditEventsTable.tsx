@@ -65,8 +65,12 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log('pos', selectedPosition);
-  }, [selectedPosition]);
+    if (!selectedLine) {
+      return;
+    }
+    let address = selectedLine.id;
+    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+  }, [selectedLine]);
 
   const ApproveMutualConsent = {
     name: t('Accept'),
@@ -110,57 +114,39 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   }, [selectedLine]);
 
   const depositHandler = (e: Event) => {
-    if (!selectedLine) {
-      return;
-    }
-    let address = selectedLine.id;
     //@ts-ignore
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(LinesActions.setSelectedLinePosition({ position: e.target.value }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
   // THIS NEEDS REVISITNG
   const liquidateHandler = (e: Event) => {
-    if (!selectedLine) {
-      return;
-    }
-    let address = selectedLine.id;
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    //@ts-ignore
+    dispatch(LinesActions.setSelectedLinePosition({ position: e.target.value }));
     dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
   };
 
   const WithdrawHandler = (e: Event) => {
-    if (!selectedLine) {
-      return;
-    }
-    let address = selectedLine.id;
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    //@ts-ignore
+    dispatch(LinesActions.setSelectedLinePosition({ position: e.target.value }));
     dispatch(ModalsActions.openModal({ modalName: 'withdraw' }));
   };
 
   const borrowHandler = (e: Event) => {
-    if (!selectedLine) {
-      return;
-    }
-    let address = selectedLine.id;
-
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    //@ts-ignore
+    dispatch(LinesActions.setSelectedLinePosition({ position: e.target.value }));
     dispatch(ModalsActions.openModal({ modalName: 'borrow' }));
   };
 
   const depositAndRepayHandler = (e: Event) => {
+    //@ts-ignore
+    dispatch(LinesActions.setSelectedLinePosition({ position: e.target.value }));
     dispatch(ModalsActions.openModal({ modalName: 'depositAndRepay' }));
   };
 
   const acceptProposalHandler = (e: Event) => {
     //@ts-ignore
-    if (!selectedLine || e?.target?.value === null) {
-      return;
-    }
-    let address = selectedLine.id;
-    //@ts-ignore
     dispatch(LinesActions.setSelectedLinePosition({ position: e.target.value }));
-    dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
@@ -202,6 +188,13 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
                 className: 'col-available',
               },
               {
+                key: 'token',
+                header: t('components.positions-card.token'),
+                sortable: true,
+                width: '10rem',
+                className: 'col-available',
+              },
+              {
                 key: 'deposit',
                 header: t('components.positions-card.total-deposits'),
                 sortable: true,
@@ -236,11 +229,12 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
               frate: `${event['frate']} %`,
               status: event['status'],
               lender: event['lender'],
+              token: event['tokenSymbol'],
               actions: (
                 <ActionButtons
                   value={event['id']}
                   actions={
-                    event['status'] === 'PROPOSED'
+                    event['status'] === 'PROPOSED' && userRoleMetadata.role === BORROWER_POSITION_ROLE
                       ? [ApproveMutualConsent]
                       : event['lender'] === userWallet
                       ? actions

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ethers } from 'ethers';
 import { useHistory } from 'react-router-dom';
 
-import { formatAmount, normalizeAmount, isAddress } from '@utils';
+import { formatAmount, normalizeAmount, isAddress, toWei } from '@utils';
 import {
   useAppTranslation,
   useAppDispatch,
@@ -254,12 +254,12 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
       setLoading(false);
       return;
     }
+    console.log(testnetTokenAmount, 'this is raw amount');
+    console.log(ethers.utils.parseEther(testnetTokenAmount).toString(), 'this is BN');
     let approvalOBj = {
+      spenderAddress: selectedCredit.id,
       tokenAddress: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
-      amount:
-        walletNetwork === 'goerli'
-          ? `${ethers.utils.parseEther(testnetTokenAmount)}`
-          : `${ethers.utils.parseEther(targetTokenAmount)}`,
+      amount: walletNetwork === 'goerli' ? ethers.utils.parseEther(testnetTokenAmount) : toWei(targetTokenAmount, 18),
       network: walletNetwork,
     };
     //@ts-ignore
@@ -296,20 +296,18 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     if (!checkSumAddress) {
       return;
     }
-
+    console.log(ethers.utils.parseEther(testnetTokenAmount).toString());
     let TransactionObj = {
       lineAddress: selectedCredit.id,
-      drate: ethers.utils.parseEther(drate),
-      frate: ethers.utils.parseEther(frate),
-      amount:
-        walletNetwork === 'goerli'
-          ? ethers.utils.parseEther(testnetTokenAmount)
-          : ethers.utils.parseEther(targetTokenAmount),
+      drate: drate,
+      frate: frate,
+      amount: walletNetwork === 'goerli' ? ethers.utils.parseEther(testnetTokenAmount) : toWei(targetTokenAmount, 18),
       token: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
       lender: lenderAddress,
       network: walletNetwork,
-      dryRun: true,
+      dryRun: false,
     };
+    console.log(TransactionObj, 'tx obj');
     //@ts-ignore
     dispatch(LinesActions.addCredit(TransactionObj)).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
@@ -420,7 +418,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
             onSelectedTokenChange={onSelectedSellTestTokenChange}
             tokenOptions={testTokens}
             // inputError={!!sourceStatus.error}
-            readOnly={acceptingOffer}
+            readOnly={false}
             // displayGuidance={displaySourceGuidance}
           />
         )
