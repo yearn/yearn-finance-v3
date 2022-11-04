@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import ethers from 'ethers';
 
 import { Wei, Unit, Amount, FormattedAmount, Fraction, DataType } from '@types';
 
@@ -28,8 +29,10 @@ export const toBN = (amount?: Amount | number): BigNumber => {
   return new BigNumber(amount || 0);
 };
 
+// testing some logic here, must be changed back:  toBN(10).pow(decimals);
 export const toWei = (amount: Unit, decimals: number): Wei => {
   const ONE_UNIT = toBN(10).pow(decimals);
+  console.log('yearn value', ONE_UNIT);
   return toBN(amount).times(ONE_UNIT).toFixed(0);
 };
 

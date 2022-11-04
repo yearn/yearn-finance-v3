@@ -254,9 +254,12 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
       setLoading(false);
       return;
     }
+    console.log(testnetTokenAmount, 'this is raw amount');
+    console.log(ethers.utils.parseEther(testnetTokenAmount).toString(), 'this is BN');
     let approvalOBj = {
+      spenderAddress: selectedCredit.id,
       tokenAddress: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
-      amount: walletNetwork === 'goerli' ? toWei(testnetTokenAmount, 18) : toWei(targetTokenAmount, 18),
+      amount: walletNetwork === 'goerli' ? ethers.utils.parseEther(testnetTokenAmount) : toWei(targetTokenAmount, 18),
       network: walletNetwork,
     };
     //@ts-ignore
@@ -293,12 +296,12 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     if (!checkSumAddress) {
       return;
     }
-
+    console.log(ethers.utils.parseEther(testnetTokenAmount).toString());
     let TransactionObj = {
       lineAddress: selectedCredit.id,
       drate: drate,
       frate: frate,
-      amount: walletNetwork === 'goerli' ? toWei(testnetTokenAmount, 18) : toWei(targetTokenAmount, 18),
+      amount: walletNetwork === 'goerli' ? ethers.utils.parseEther(testnetTokenAmount) : toWei(targetTokenAmount, 18),
       token: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
       lender: lenderAddress,
       network: walletNetwork,
@@ -415,7 +418,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
             onSelectedTokenChange={onSelectedSellTestTokenChange}
             tokenOptions={testTokens}
             // inputError={!!sourceStatus.error}
-            readOnly={acceptingOffer}
+            readOnly={false}
             // displayGuidance={displaySourceGuidance}
           />
         )
