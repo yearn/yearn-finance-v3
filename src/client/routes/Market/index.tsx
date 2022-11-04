@@ -49,7 +49,7 @@ export const Market = () => {
       orderDirection: 'asc',
     },
     'market:featured.highest-revenue': {
-      first: 3,
+      first: 16,
       // NOTE: terrible proxy for total revenue earned (highest % = highest notional). Currently getLines only allows filtering by line metadata not modules'
       orderBy: 'defaultSplit',
       orderDirection: 'desc',
