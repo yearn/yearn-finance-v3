@@ -142,7 +142,7 @@ export const TxAddressInput: FC<TxAddressProps> = ({
             <StyledBorrowerInput
               value={borrower}
               onChange={onBorrowerChange ? (e) => onBorrowerChange(e.target.value) : undefined}
-              placeholder={loading ? loadingText : 'Borrower Address'}
+              placeholder={loading ? loadingText : 'Address'}
               readOnly={readOnly}
               error={inputError}
               type="text"

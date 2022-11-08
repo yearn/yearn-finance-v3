@@ -21,8 +21,6 @@ import {
 } from '@types';
 import {
   toBN,
-  getNetwork,
-  validateNetwork,
   formatGetLinesData,
   formatLinePageData,
   // validateLineDeposit,
@@ -31,7 +29,6 @@ import {
   // parseError,
 } from '@utils';
 import { unnullify } from '@utils';
-import { TxCreditLineInput } from '@src/client/components/app/Transactions/components/TxCreditLineInput';
 
 import { TokensActions } from '../tokens/tokens.actions';
 
@@ -40,6 +37,7 @@ import { TokensActions } from '../tokens/tokens.actions';
 /* -------------------------------------------------------------------------- */
 
 const setSelectedLineAddress = createAction<{ lineAddress?: string }>('lines/setSelectedLineAddress');
+const setSelectedLinePosition = createAction<{ position?: string }>('lines/setSelectedLinePosition');
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
@@ -114,49 +112,29 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
     const {
       network,
       lines: { linesMap, pagesMap },
+      tokens: { tokensMap },
     } = getState();
     const { creditLineService } = extra.services;
 
+    const tokenPrices = Object.entries(tokensMap).reduce(
+      (prices, [addy, { priceUsdc }]) => ({ ...prices, [addy]: priceUsdc }),
+      {}
+    );
+
     const pageData = pagesMap[id];
-    console.log('full page data already exists', pageData);
-    if (pageData) return { linePageData: pageData };
+    if (pageData) {
+      return { linePageData: pageData };
+    }
 
     const basicData = linesMap[id];
-    console.log('basic pagedata already exists', basicData);
-    if (!basicData) {
-      // navigated directly to line page, need to fetch basic data
-      const linePageResponse = await creditLineService.getLinePage({
-        network: network.current,
-        id,
-      });
-      const linePageData = linePageResponse ? formatLinePageData(linePageResponse) : undefined;
-      return { linePageData };
-    } else {
-      // already have basi data, just fetch events and position data
 
-      const auxdata = await creditLineService.getLinePageAuxData({
-        network: network.current,
-        id,
-      });
-
-      if (!auxdata) return { linePageData: undefined };
-
-      const { lines: auxCredits, ...events } = auxdata;
-      const credits = Object.entries(auxCredits ?? {}).reduce(
-        (all, [key, aux]) => ({
-          ...all,
-          /// theoretically possible for a credit to exist in aux but not in Agg.
-          [key]: {
-            ...(basicData.credits?.[key] ?? {}),
-            ...aux,
-          },
-        }),
-        {}
-      );
-      // summ total interest paid on positions freom events and add to position data
-      // get dRate, token
-      return { linePageData: { ...basicData, credits, ...events } as CreditLinePage };
-    }
+    // navigated directly to line page, need to fetch basic data
+    const linePageResponse = await creditLineService.getLinePage({
+      network: network.current,
+      id,
+    });
+    const linePageData = linePageResponse ? formatLinePageData(linePageResponse, tokenPrices) : undefined;
+    return { linePageData };
   }
 );
 
@@ -250,7 +228,8 @@ const approveDeposit = createAsyncThunk<
     network: Network;
   },
   ThunkAPI
->('lines/approveDeposit', async ({ amount, tokenAddress, network }, { getState, dispatch, extra }) => {
+  //@ts-ignore
+>('lines/approveDeposit', async ({ amount, spenderAddress, tokenAddress, network }, { getState, dispatch, extra }) => {
   const { wallet } = getState();
   const { tokenService } = extra.services;
 
@@ -261,7 +240,7 @@ const approveDeposit = createAsyncThunk<
     network,
     tokenAddress,
     accountAddress,
-    spenderAddress: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
+    spenderAddress: spenderAddress,
     amount: unnullify(amount, true),
   });
   console.log('this is approval', approveDepositTx);
@@ -269,17 +248,18 @@ const approveDeposit = createAsyncThunk<
 
 const borrowCredit = createAsyncThunk<void, BorrowCreditProps, ThunkAPI>(
   'lines/borrowCredit',
-  async ({ lineAddress, amount, network }, { extra, getState }) => {
+  async ({ positionId, amount, network, line }, { extra, getState }) => {
     const { wallet } = getState();
     const { services } = extra;
-    console.log('look at borrow credit', wallet, lineAddress, amount);
+    console.log('look at borrow credit', wallet, positionId, amount, line);
     const { creditLineService } = services;
 
     const tx = await creditLineService.borrow({
-      lineAddress: lineAddress,
+      line: line,
+      positionId: positionId,
       amount: amount,
       network: network,
-      dryRun: true,
+      dryRun: false,
     });
     console.log(tx);
   }
@@ -680,6 +660,7 @@ const getWithdrawAllowance = createAsyncThunk<
 
 export const LinesActions = {
   setSelectedLineAddress,
+  setSelectedLinePosition,
   // initiateSaveLines,
   getLine,
   getLines,

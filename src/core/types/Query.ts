@@ -1,4 +1,4 @@
-import { LineStatusTypes, AggregatedCreditLine, CreditLinePage } from '@types';
+import { LineStatusTypes, AggregatedCreditLine, PositionStatusTypes, CreditLinePage } from '@types';
 
 import { Address } from './Blockchain';
 
@@ -89,6 +89,7 @@ export interface BaseLineFragResponse {
   type: string;
   start: number;
   status: LineStatusTypes;
+  arbiter: Address;
   borrower: {
     id: Address;
   };
@@ -96,9 +97,11 @@ export interface BaseLineFragResponse {
 
 export interface BaseCreditFragResponse {
   id: Address;
+  status: PositionStatusTypes;
   principal: string;
   deposit: string;
-  drate: string;
+  dRate: string;
+  fRate: string;
   arbiter: string;
   token: {
     id: Address;
@@ -108,6 +111,7 @@ export interface BaseCreditFragResponse {
 }
 
 export interface LinePageCreditFragResponse extends BaseCreditFragResponse {
+  status: PositionStatusTypes;
   interestRepaid: string;
   interestAccrued: string;
   dRate: string;
@@ -124,7 +128,7 @@ export interface LineEventFragResponse {
   __typename: string;
   id: string;
   timestamp: number;
-  credit: {
+  position: {
     id: string;
   };
   // events with value
@@ -139,7 +143,7 @@ export interface LineEventFragResponse {
   };
 }
 
-export interface SpigotRevenueSummaryFragresponse {
+export interface SpigotRevenueSummaryFragResponse {
   token: Address;
   totalVolumeUsd: string;
   timeOfFirstIncome: number;
@@ -175,7 +179,7 @@ export interface BaseEscrowFragResponse {
 
 export interface GetLinesResponse {
   lines: BaseLineFragResponse & {
-    credits: BaseCreditFragResponse;
+    positions: BaseCreditFragResponse[];
     escrow: BaseEscrowFragResponse;
     spigot: {
       id: Address;
@@ -189,9 +193,6 @@ export interface GetLinesResponse {
 }
 
 export interface GetLinePageAuxDataResponse {
-  lines?: {
-    dRate: number;
-  }[];
   events?: LineEventFragResponse[];
   spigot?: {
     events: SpigotEventFragResponse[];
@@ -199,38 +200,25 @@ export interface GetLinePageAuxDataResponse {
 }
 
 export interface GetLinePageResponse extends BaseLineFragResponse {
-  credits?: LinePageCreditFragResponse[];
+  positions?: LinePageCreditFragResponse[];
 
-  escrow?: {
-    id: Address;
-    cratio: string;
-    minCRatio: string;
-    collateralValue: string;
-    deposits: {
-      id: Address;
-      token: {
-        id: Address;
-        symbol: string;
-        decimals: number;
-      };
-      amount: string;
-      enabled: boolean;
-      events: {
-        __typename: string;
-        timestamp: number;
-        // only on add/remove collateral
-        amount?: string;
-        value?: string;
-      };
-    };
-  };
   spigot?: {
     id: Address;
+    summaries: SpigotRevenueSummaryFragResponse[];
     spigots: {
       contract: Address;
       active: boolean;
       startTime: number;
     };
     events?: SpigotEventFragResponse[];
+  };
+  escrow?: BaseEscrowFragResponse & {
+    events: {
+      __typename: string;
+      timestamp: number;
+      // only on add/remove collateral
+      amount?: string;
+      value?: string;
+    };
   };
 }

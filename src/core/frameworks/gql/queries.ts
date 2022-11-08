@@ -29,11 +29,13 @@ const BASE_LINE_FRAGMENT = gql`
 `;
 
 const BASE_CREDIT_FRAGMENT = gql`
-  fragment BaseCreditFrag on Credit {
+  fragment BaseCreditFrag on Position {
     id
+    status
     principal
     deposit
     dRate
+    fRate
     token {
       id
     }
@@ -41,8 +43,10 @@ const BASE_CREDIT_FRAGMENT = gql`
 `;
 
 const LINE_PAGE_CREDIT_FRAGMENT = gql`
-  fragment LinePageCreditFrag on Credit {
+  ${TOKEN_FRAGMENT}
+  fragment LinePageCreditFrag on Position {
     id
+    status
     lender {
       id
     }
@@ -53,45 +57,64 @@ const LINE_PAGE_CREDIT_FRAGMENT = gql`
     dRate
     fRate
     token {
-      id
+      ...TokenFrag
     }
   }
 `;
 
 // lewv = line event with value
-const CREDIT_EVENT_FRAGMENT = gql`
+const LINE_EVENT_FRAGMENT = gql`
+  ${TOKEN_FRAGMENT}
   fragment LineEventFrag on LineEventWithValue {
     id
     __typename
     timestamp
-    credit {
-      id
-      token {
-        id
-      }
-    }
     amount
     value
+    position {
+      id
+      token {
+        ...TokenFrag
+      }
+    }
   }
 `;
 
 // Spigot Frags
 const BASE_SPIGOT_FRAGMENT = gql`
-  ${TOKEN_FRAGMENT}
   fragment BaseSpigotFrag on Spigot {
+    id
     active
     contract
     startTime
+    totalVolumeUsd
+  }
+`;
+
+const SPIGOT_SUMMARY_FRAGMENT = gql`
+  ${TOKEN_FRAGMENT}
+  fragment SpigotSummaryFrag on SpigotRevenueSummary {
+    id
+
+    totalVolumeUsd
+    timeOfFirstIncome
+    timeOfLastIncome
+
+    token {
+      ...TokenFrag
+    }
   }
 `;
 
 const SPIGOT_EVENT_FRAGMENT = gql`
-  fragment SpigotEventFrag on SpigotEvent {
+  ${TOKEN_FRAGMENT}
+  fragment SpigotEventFrag on SpigotControllerEvent {
     ... on ClaimRevenueEvent {
+      id
       __typename
       timestamp
       revenueToken {
-        id
+        ...TokenFrag
       }
       escrowed
       netIncome
@@ -168,28 +191,25 @@ export const GET_USER_POSITIONS_QUERY = gql`
 `;
 
 export const GET_LINE_PAGE_QUERY = gql`
-  ${TOKEN_FRAGMENT}
-  ${ESCROW_FRAGMENT}
   ${BASE_LINE_FRAGMENT}
-  ${BASE_SPIGOT_FRAGMENT}
-  ${CREDIT_EVENT_FRAGMENT}
-  ${SPIGOT_EVENT_FRAGMENT}
-  ${ESCROW_EVENT_FRAGMENT}
   ${LINE_PAGE_CREDIT_FRAGMENT}
+  ${LINE_EVENT_FRAGMENT}
+
+  ${BASE_SPIGOT_FRAGMENT}
+  ${SPIGOT_SUMMARY_FRAGMENT}
+  ${SPIGOT_EVENT_FRAGMENT}
+  ${ESCROW_FRAGMENT}
 
   query getLinePage($id: ID!) {
     lineOfCredit(id: $id) {
       ...BaseLineFrag
 
-      lines {
+      positions(first: 20) {
         ...LinePageCreditFrag
       }
+
       events(first: 20) {
         ...LineEventFrag
-      }
-
-      escrow {
-        ...EscrowFrag
       }
 
       spigot {
@@ -197,21 +217,27 @@ export const GET_LINE_PAGE_QUERY = gql`
         spigots {
           ...BaseSpigotFrag
         }
+
+        summaries {
+          ...SpigotSummaryFrag
+        }
         events(first: 20) {
           ...SpigotEventFrag
         }
+      }
+      escrow {
+        ...EscrowFrag
       }
     }
   }
 `;
 
 export const GET_LINE_PAGE_AUX_QUERY = gql`
+  ${LINE_EVENT_FRAGMENT}
+  ${SPIGOT_EVENT_FRAGMENT}
+
   query getLinePageAux($id: ID) {
     lineOfCredit(id: $id) {
-      lines {
-        dRate
-      }
-
       events(first: 20) {
         ...LineEventFrag
       }
@@ -229,26 +255,25 @@ export const GET_LINES_QUERY = gql`
   ${BASE_LINE_FRAGMENT}
   ${BASE_CREDIT_FRAGMENT}
   ${ESCROW_FRAGMENT}
+  ${SPIGOT_SUMMARY_FRAGMENT}
   ${TOKEN_FRAGMENT}
 
-  query getLines($first: Int, $orderBy: String, $orderDirection: String) {
-    lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection) {
+  query getLines($first: Int, $orderBy: String, $orderDirection: String, $blacklist: [ID]) {
+    lineOfCredits(first: $first, orderBy: $orderBy, orderDirection: $orderDirection, where: { id_not_in: $blacklist }) {
       ...BaseLineFrag
-      credits: lines {
+
+      positions {
         ...BaseCreditFrag
       }
+
       escrow {
         ...EscrowFrag
       }
+
       spigot {
         id
         summaries {
-          token {
-            ...TokenFrag
-          }
-          totalVolumeUsd
-          timeOfFirstIncome
-          timeOfLastIncome
+          ...SpigotSummaryFrag
         }
       }
     }

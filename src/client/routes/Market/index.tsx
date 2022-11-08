@@ -4,44 +4,12 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { utils } from 'ethers';
 
-import { useAppSelector, useAppDispatch, useIsMounting, useAppTranslation, useQueryParams } from '@hooks';
-import {
-  ModalsActions,
-  ModalSelectors,
-  TokensSelectors,
-  WalletSelectors,
-  AppSelectors,
-  NetworkSelectors,
-  LinesActions,
-  LinesSelectors,
-} from '@store';
-import { device } from '@themes/default';
-import {
-  DetailCard,
-  RecommendationsCard,
-  SliderCard,
-  ViewContainer,
-  NoWalletCard,
-  ApyTooltipData,
-} from '@components/app';
-import { SpinnerLoading, Text, Tooltip, Button } from '@components/common';
-import {
-  humanize,
-  USDC_DECIMALS,
-  halfWidthCss,
-  normalizeAmount,
-  formatApy,
-  toBN,
-  isCustomApyType,
-  filterData,
-} from '@utils';
-import { getConfig } from '@config';
-import { AggregatedCreditLine, VaultView, UseCreditLinesParams } from '@src/core/types';
+import { useAppSelector, useAppDispatch, useAppTranslation, useQueryParams } from '@hooks';
+import { ModalsActions, LinesActions, LinesSelectors } from '@store';
+import { RecommendationsCard, SliderCard, ViewContainer } from '@components/app';
+import { SpinnerLoading, Text, Button } from '@components/common';
+import { AggregatedCreditLine, UseCreditLinesParams } from '@src/core/types';
 import { GoblinTown } from '@assets/images';
-
-const StyledHelperCursor = styled.span`
-  cursor: help;
-`;
 
 const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
@@ -50,56 +18,11 @@ const StyledSliderCard = styled(SliderCard)`
   min-height: 24rem;
 `;
 
-const DeployLineButton = styled(Button)`
-  width: 18rem;
+const BannerCtaButton = styled(Button)`
+  width: 80%;
+  max-width: 20rem;
   margin-top: 1em;
-  background-color: #00a3ff;
 `;
-
-const StyledNoWalletCard = styled(NoWalletCard)`
-  width: 100%;
-  ${halfWidthCss}
-`;
-
-const OpportunitiesCard = styled(DetailCard)`
-  @media ${device.tablet} {
-    .col-name {
-      width: 18rem;
-    }
-  }
-  @media (max-width: 750px) {
-    .col-assets {
-      display: none;
-    }
-  }
-  @media ${device.mobile} {
-    .col-available {
-      width: 10rem;
-    }
-  }
-  @media (max-width: 450px) {
-    .col-available {
-      display: none;
-    }
-  }
-` as typeof DetailCard;
-
-const ApyTooltip = ({
-  apyData,
-  apyType,
-  apyMetadata,
-  address,
-}: Pick<VaultView, 'apyData' | 'apyMetadata' | 'address' | 'apyType'>) => {
-  if (isCustomApyType(apyType) || !apyMetadata) {
-    return <span>{formatApy(apyData, apyType)}</span>;
-  }
-
-  return (
-    <Tooltip placement="bottom" tooltipComponent={<ApyTooltipData apy={apyMetadata} address={address} />}>
-      <StyledHelperCursor>{formatApy(apyData, apyType)}</StyledHelperCursor>
-    </Tooltip>
-  );
-};
 
 interface VaultsQueryParams {
   search: string;
@@ -112,11 +35,6 @@ export const Market = () => {
   const queryParams = useQueryParams<VaultsQueryParams>();
   const dispatch = useAppDispatch();
   // const { isTablet, isMobile, width: DWidth } = useWindowDimensions();
-  const { NETWORK_SETTINGS, CONTRACT_ADDRESSES } = getConfig();
-  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
-  const currentNetwork = useAppSelector(NetworkSelectors.selectCurrentNetwork);
-  const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
-
   const [search, setSearch] = useState('');
 
   // TODO not neeed here
@@ -131,7 +49,7 @@ export const Market = () => {
       orderDirection: 'asc',
     },
     'market:featured.highest-revenue': {
-      first: 3,
+      first: 16,
       // NOTE: terrible proxy for total revenue earned (highest % = highest notional). Currently getLines only allows filtering by line metadata not modules'
       orderBy: 'defaultSplit',
       orderDirection: 'desc',
@@ -157,24 +75,15 @@ export const Market = () => {
     let shouldFetch: boolean = false;
     expectedCategories.forEach((cat) => (shouldFetch = shouldFetch || !currentCategories.includes(cat)));
 
-    console.log('should fetch', shouldFetch, currentCategories);
     if (shouldFetch) fetchMarketData();
   }, []);
 
-  const liquidateBorrowerHandler = () => {
-    dispatch(ModalsActions.openModal({ modalName: 'liquidateBorrower' }));
+  const onLenderCtaClick = () => {
+    window.open('https://docs.debtdao.finance/products/introduction/line-of-credit', '_blank');
   };
 
-  const createLineHandler = () => {
+  const onBorrowerCtaClick = () => {
     dispatch(ModalsActions.openModal({ modalName: 'createLine' }));
-  };
-
-  const filterVaults = (vault: VaultView) => {
-    return (
-      toBN(vault.apyMetadata?.net_apy).gt(0) ||
-      isCustomApyType(vault.apyType) ||
-      vault.address === CONTRACT_ADDRESSES.YVYFI
-    );
   };
 
   return (
@@ -190,7 +99,7 @@ export const Market = () => {
         </div>
       )}
       <StyledSliderCard
-        header={t('vaults:banner.header')}
+        header={t('market:banner.title')}
         Component={
           <div
             style={{
@@ -199,9 +108,14 @@ export const Market = () => {
             }}
           >
             <Text>
-              <p>{t('vaults:banner.desc')}</p>
+              <p>{t('market:banner.body')}</p>
             </Text>
-            <DeployLineButton onClick={createLineHandler}>Deploy Line</DeployLineButton>
+            <BannerCtaButton styling="primary" onClick={onBorrowerCtaClick}>
+              {t('market:banner.cta-borrower')}
+            </BannerCtaButton>
+            <BannerCtaButton styling="secondary" outline onClick={onLenderCtaClick}>
+              {t('market:banner.cta-lender')}
+            </BannerCtaButton>
           </div>
         }
         background={<img src={GoblinTown} alt={'Goblin town or the Citadel?'} />}

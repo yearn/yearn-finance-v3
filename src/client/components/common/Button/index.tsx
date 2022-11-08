@@ -4,12 +4,13 @@ import styled from 'styled-components';
 export interface ButtonProps {
   className?: string;
   disabled?: boolean;
-  color?: string;
+  color?: string; // TODO deprecate
+  styling?: string;
   outline?: boolean;
   onClick?: (e?: any) => void;
 }
 
-const StyledButton = styled.button<{ outline?: boolean }>`
+const StyledButton = styled.button<{ styling?: string; outline?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -18,8 +19,7 @@ const StyledButton = styled.button<{ outline?: boolean }>`
   height: 3.2rem;
   border: 2px solid transparent;
   border-radius: ${({ theme }) => theme.globalRadius};
-  background: ${(props) => props.theme.colors.secondary};
-  color: ${(props) => props.theme.colors.titlesVariant};
+
   font-family: inherit;
   cursor: pointer;
   user-select: none;
@@ -39,17 +39,36 @@ const StyledButton = styled.button<{ outline?: boolean }>`
     filter: contrast(90%);
   }
 
-  ${(props) =>
-    props.outline &&
-    `
-    border-color: ${props.color || props.theme.colors.primary};
-    background: transparent;
-    color: ${props.color || props.theme.colors.primary};
-  `}
+  ${({ theme, styling }) =>
+    styling === 'primary'
+      ? `background-color: ${theme.colors.txModalColors.primary};
+      color: ${theme.colors.titlesVariant};`
+      : styling === 'secondary'
+      ? `background-color: ${theme.colors.txModalColors.backgroundVariant};
+      color: ${theme.colors.titlesVariant};`
+      : `background-color: ${theme.colors.txModalColors.primary};
+          color: ${theme.colors.titlesVariant};`}
 `;
 
-export const Button: FC<ButtonProps> = ({ className, disabled, color, outline, onClick, children, ...props }) => (
-  <StyledButton className={className} disabled={disabled} color={color} outline={outline} onClick={onClick} {...props}>
+export const Button: FC<ButtonProps> = ({
+  className,
+  disabled,
+  styling,
+  color,
+  outline,
+  onClick,
+  children,
+  ...props
+}) => (
+  <StyledButton
+    className={className}
+    styling={styling}
+    disabled={disabled}
+    color={color}
+    outline={outline}
+    onClick={onClick}
+    {...props}
+  >
     {children}
   </StyledButton>
 );

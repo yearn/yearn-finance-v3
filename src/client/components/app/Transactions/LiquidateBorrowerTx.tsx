@@ -53,7 +53,6 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
   });
 
   useEffect(() => {
-    console.log('add position tx useEffect token/creditLine', selectedSellTokenAddress, initialToken, selectedCredit);
     if (selectedTokenAddress === '' && selectedSellToken) {
       setSelectedTokenAddress(selectedSellToken.address);
     }
@@ -98,7 +97,6 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
   };
 
   const onSelectedCreditLineChange = (addr: string): void => {
-    console.log('select new loc', addr);
     _updatePosition();
   };
 
@@ -114,7 +112,6 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
     setLoading(true);
     // TODO set error in state to display no line selected
     if (!selectedCredit?.id || selectedSellTokenAddress === '' || selectedSellTokenAddress === undefined) {
-      console.log('check this', selectedCredit?.id, selectedSellTokenAddress);
       setLoading(false);
       return;
     }
@@ -127,12 +124,10 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
     dispatch(LinesActions.liquidate(TransactionObj)).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
         setTransactionCompleted(2);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
       if (res.meta.requestStatus === 'fulfilled') {
         setTransactionCompleted(1);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
     });
@@ -160,7 +155,6 @@ export const LiquidateBorrowerTx: FC<LiquidateBorrowerProps> = (props) => {
     },
   ];
 
-  console.log(selectedCredit, selectedCredit, 'here is breaking point');
   if (!selectedSellToken) return null;
   if (!selectedCredit) return null;
 

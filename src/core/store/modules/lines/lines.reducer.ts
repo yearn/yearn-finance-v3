@@ -1,13 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { difference, groupBy, keyBy, union } from 'lodash';
 
 import {
   initialStatus,
-  Position,
   CreditLineState,
   UserLineMetadataStatusMap,
   LineActionsStatusMap,
-  PositionSummary,
   AggregatedCreditLine,
 } from '@types';
 
@@ -27,6 +24,7 @@ export const initialUserMetadataStatusMap: UserLineMetadataStatusMap = {
 
 export const linesInitialState: CreditLineState = {
   selectedLineAddress: undefined,
+  selectedPosition: undefined,
   linesMap: {},
   pagesMap: {},
   categories: {},
@@ -58,6 +56,7 @@ const {
   deploySecuredLine,
   // initiateSaveLines,
   setSelectedLineAddress,
+  setSelectedLinePosition,
   getUserLinePositions,
   clearLinesData,
   clearUserData,
@@ -76,6 +75,10 @@ const linesReducer = createReducer(linesInitialState, (builder) => {
     /* -------------------------------------------------------------------------- */
     .addCase(setSelectedLineAddress, (state, { payload: { lineAddress } }) => {
       state.selectedLineAddress = lineAddress;
+    })
+
+    .addCase(setSelectedLinePosition, (state, { payload: { position } }) => {
+      state.selectedPosition = position;
     })
 
     /* -------------------------------------------------------------------------- */

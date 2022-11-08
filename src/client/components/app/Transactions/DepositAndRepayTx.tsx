@@ -48,7 +48,6 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
   });
 
   useEffect(() => {
-    console.log('add position tx useEffect token/creditLine', selectedSellToken, initialToken, selectedCredit);
     if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
@@ -99,7 +98,6 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
     setLoading(true);
     // TODO set error in state to display no line selected
     if (!selectedCredit?.id || !targetAmount || !selectedSellTokenAddress || walletNetwork === undefined) {
-      console.log('check this', selectedCredit?.id, targetAmount, selectedSellTokenAddress);
       setLoading(false);
       return;
     }
@@ -114,12 +112,10 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
     ).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
         setTransactionCompleted(2);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
       if (res.meta.requestStatus === 'fulfilled') {
         setTransactionCompleted(1);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
     });

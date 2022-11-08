@@ -22,6 +22,16 @@ export type LineStatusTypes =
   | InsolventStatus
   | NoStatus;
 
+// Individual lender positoin status types
+type ProposedStatus = 'PROPOSED';
+export const PROPOSED_STATUS: ProposedStatus = 'PROPOSED';
+type OpenedStatus = 'OPENED';
+export const OPENED_STATUS: OpenedStatus = 'OPENED';
+type ClosedStatus = 'CLOSED';
+export const CLOSED_STATUS: ClosedStatus = 'CLOSED';
+
+export type PositionStatusTypes = ProposedStatus | OpenedStatus | ClosedStatus;
+
 export interface BaseCreditLine {
   id: Address;
   type?: string;
@@ -29,7 +39,8 @@ export interface BaseCreditLine {
   end: number;
   status: LineStatusTypes;
   borrower: Address;
-  credits?: { [key: string]: BaseCreditPosition };
+  arbiter: Address;
+  positions?: [];
   escrow?: { id: Address };
   spigot?: { id: Address };
 }
@@ -41,7 +52,7 @@ export interface AggregatedCreditLine extends BaseCreditLine {
   // id, symbol, APY (4 decimals)
   highestApy: [string, string, string];
 
-  credits?: { [key: string]: BaseCreditPosition };
+  positions?: [];
 
   escrow?: AggregatedEscrow;
   spigot?: AggregatedSpigot;
@@ -52,7 +63,7 @@ export interface CreditLinePage extends AggregatedCreditLine {
   interest: string; // | Promise<string>;
   totalInterestRepaid: string; // | Promise<string>;
 
-  credits?: { [key: string]: LinePageCreditPosition };
+  positions?: [];
 
   collateralEvents: CollateralEvent[];
   creditEvents: CreditEvent[];
@@ -61,7 +72,7 @@ export interface CreditLinePage extends AggregatedCreditLine {
 // data that isnt included in AggregatedCreditLine that we need to fetch for full CreditLinePage dattype
 // gets merged into existing AggregatedCredit to form LinePageData
 export interface CreditLinePageAuxData {
-  credits: {
+  positions: {
     [id: string]: {
       dRate: string;
       token: Address;
@@ -71,31 +82,22 @@ export interface CreditLinePageAuxData {
   creditEvents: CreditEvent[];
 }
 
-// TODO consolidate Credit and BaseCreditPosition and resolve type conflicts across codebase
-export interface BaseCreditPosition {
-  id: string;
-  lender: Address;
-  token: Address;
-  principal: string;
-  interestAccrued: string;
-
-  arbiter: string;
-  interestRepaid: string;
-}
-
+// TODO delete Credit type in favor of Credit and resolve type conflicts across codebase
 export interface Credit {
+  status: PositionStatusTypes;
   deposit: string;
   principal: string;
   interestAccrued: string;
   interestRepaid: string;
   decimals: string;
-  arbiter: string;
+  arbiter: Address;
   token: Address;
   lender: Address;
 }
 
-export interface LinePageCreditPosition extends BaseCreditPosition {
+export interface LinePageCreditPosition extends Credit {
   id: string;
+  status: PositionStatusTypes;
   lender: Address;
   arbiter: string;
   deposit: string;
@@ -122,6 +124,19 @@ export interface UserPositionMetadata {
   role: PositionRole; // borrower/lender/arbiter
   amount: string; // principal/deposit/collateral
   available: string; // borrowable/withdrawable/liquidatable
+}
+
+export interface PositionInt {
+  drate: string;
+  frate: string;
+  id: string;
+  interestAccrued: string;
+  interestRepaid: string;
+  lender: string;
+  deposit: string;
+  principal: string;
+  status: string;
+  tokenAddress: string;
 }
 
 export interface PositionSummary {
@@ -152,18 +167,23 @@ export interface BaseEscrow {
   collateralValue: string;
 }
 
+export interface EscrowDeposit {
+  amount: string;
+  enabled: boolean;
+  currentUsdPrice?: string;
+  token: Address;
+}
+
+export interface EscrowDepositList {
+  [token: string]: EscrowDeposit;
+}
+
 export interface AggregatedEscrow extends BaseEscrow {
   id: Address;
   cratio: string;
   minCRatio: string;
   collateralValue: string;
-  deposits?: {
-    [token: string]: {
-      amount: string;
-      enabled: boolean;
-      token: Address;
-    };
-  };
+  deposits?: EscrowDepositList;
 }
 
 export interface AggregatedSpigot {
@@ -221,8 +241,7 @@ export interface EventWithValue {
 // Credit Events
 export interface CreditEvent extends EventWithValue {
   __typename: string;
-  id: string;
-  positionId: string; // position id
+  id: string; // position id
   token?: string;
   timestamp: number;
   amount: number;
@@ -248,14 +267,12 @@ export interface CollateralEvent extends EventWithValue {
 }
 
 // Spigot Events
-type SpigotEvents = EventWithValue | ClaimRevenueEvent;
+type SpigotEvents = ClaimRevenueEvent;
 
-export interface ClaimRevenueEvent {
-  timestamp: number;
-  revenueToken: { id: string };
+export interface ClaimRevenueEvent extends CollateralEvent {
+  revenueToken: Address;
   escrowed: number;
   netIncome: number;
-  value: number;
 }
 
 // Redux State

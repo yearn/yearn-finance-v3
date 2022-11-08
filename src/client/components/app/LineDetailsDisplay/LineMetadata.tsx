@@ -1,8 +1,10 @@
+import { isEmpty } from 'lodash';
+import { BigNumber } from 'ethers';
 import styled from 'styled-components';
 
 import { useAppTranslation } from '@hooks';
-import { toBN } from '@src/utils';
 import { ThreeColumnLayout } from '@src/client/containers/Columns';
+import { EscrowDeposit, EscrowDepositList } from '@src/core/types';
 
 const SectionHeader = styled.h3`
   ${({ theme }) => `
@@ -45,7 +47,7 @@ interface LineMetadataProps {
   startTime: number;
   endTime: number;
   revenue?: { [token: string]: string };
-  deposits?: { [token: string]: string };
+  deposits?: EscrowDepositList;
 }
 
 interface Metric {
@@ -82,20 +84,37 @@ export const LineMetadata = (props: LineMetadataProps) => {
   const { t } = useAppTranslation(['common', 'lineDetails']);
   const { principal, deposit, totalInterestPaid, revenue, deposits } = props;
   const modules = [revenue && 'revenue', deposits && 'escrow'].filter((x) => !!x);
-  const totalRevenue = !revenue
-    ? '0'
-    : Object.values(revenue)
-        .reduce((sum, rev) => sum.plus(toBN(rev)), toBN())
-        .div(toBN(1))
+  const totalRevenue = isEmpty(revenue)
+    ? ''
+    : Object.values(revenue!)
+        .reduce((sum, rev) => sum.add(BigNumber.from(rev)), BigNumber.from('0'))
+        .div(BigNumber.from(1)) // scale to usd decimals
         .toString();
-  const totalCollateral = !deposits
-    ? '0'
-    : Object.values(deposits)
-        .reduce((sum, rev) => sum.plus(toBN(rev)), toBN())
-        .div(toBN(1))
+
+  const totalCollateral = isEmpty(deposits)
+    ? ''
+    : Object.values(deposits!)
+        .reduce<BigNumber>(
+          (sum: BigNumber, d: EscrowDeposit) =>
+            !d ? sum : sum.add(BigNumber.from(d!.currentUsdPrice ?? '0').mul(d!.amount)),
+          BigNumber.from('0')
+        )
+        .div(BigNumber.from(1)) // scale to usd decimals
         .toString();
-  // TODO gereneralize MetricNAme/DataMetric/SubMetricContainer/SubMetric
-  // for more DRY and reuse logic for open/close
+
+  const renderEscrowMetadata = () => {
+    if (!deposits) return null;
+    if (!totalCollateral)
+      return <MetricDisplay title={t('lineDetails:metadata.escrow.no-collateral')} data={`$ ${totalCollateral}`} />;
+    return <MetricDisplay title={t('lineDetails:metadata.escrow.total')} data={`$ ${totalCollateral}`} />;
+  };
+  const renderSpigotMetadata = () => {
+    if (!revenue) return null;
+    if (!totalRevenue)
+      return <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={`$ ${totalRevenue}`} />;
+    return <MetricDisplay title={t('lineDetails:metadata.revenue.per-month')} data={`$ ${totalRevenue}`} />;
+  };
+
   return (
     <>
       <ThreeColumnLayout>
@@ -107,14 +126,29 @@ export const LineMetadata = (props: LineMetadataProps) => {
         {t('lineDetails:metadata.secured-by')}
         {modules.map((m) => t(`lineDetails:metadata.${m}.title`)).join(' + ')}
       </SectionHeader>
-      {!revenue && !deposits ? (
-        <MetricName>{t('lineDetails:metadata.no-collateral')}</MetricName>
-      ) : (
-        <ThreeColumnLayout>
-          {revenue && <MetricDisplay title={t('lineDetails:metadata.revenue.per-month')} data={totalRevenue} />}
-          {deposits && <MetricDisplay title={t('lineDetails:metadata.escrow.total')} data={totalCollateral} />}
-        </ThreeColumnLayout>
-      )}
+
+      {!revenue && !deposits && <MetricName>{t('lineDetails:metadata.unsecured')}</MetricName>}
+
+      <ThreeColumnLayout>
+        {renderSpigotMetadata()}
+        {renderEscrowMetadata()}
+      </ThreeColumnLayout>
+
+      <ThreeColumnLayout>
+        {!isEmpty(revenue) && (
+          <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={totalRevenue} />
+        )}
+
+        {!isEmpty(deposits) &&
+          Object.values(deposits!).map(
+            (d, i) =>
+              d.enabled && (
+                <ThreeColumnLayout>
+                  Deposit #{i}: {d.token} {d.amount}
+                </ThreeColumnLayout>
+              )
+          )}
+      </ThreeColumnLayout>
     </>
   );
 };

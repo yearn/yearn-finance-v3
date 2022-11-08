@@ -2,6 +2,7 @@ import { ApolloClient, InMemoryCache, DocumentNode, QueryResult } from '@apollo/
 import { at } from 'lodash';
 
 import { getEnv } from '@config/env';
+import { getConstants } from '@src/config/constants';
 import {
   AggregatedCreditLine,
   GetLineArgs,
@@ -19,6 +20,7 @@ import {
 import { GET_LINE_QUERY, GET_LINE_PAGE_QUERY, GET_LINE_PAGE_AUX_QUERY, GET_LINES_QUERY } from './queries';
 
 const { GRAPH_API_URL } = getEnv();
+const { BLACKLISTED_LINES: blacklist } = getConstants();
 
 let client: any;
 export const getClient = () => (client ? client : createClient());
@@ -52,7 +54,6 @@ export const createQuery =
         .then((result: QueryResult) => {
           const { data, error } = result;
           const requestedData = path ? at(data, [path])[0] : data;
-          console.log('gql request success', path, result, requestedData);
 
           if (error) return reject(error);
           else return resolve(requestedData);
@@ -85,7 +86,7 @@ export const getLinePageAuxData: QueryCreator<GetLinePageArgs, GetLinePageAuxDat
 const getLinesQuery = createQuery(GET_LINES_QUERY, 'lineOfCredits');
 export const getLines: QueryCreator<GetLinesArgs, GetLinesResponse[]> = <GetLinesArgs, GetLinesResponse>(
   arg: GetLinesArgs
-): QueryResponse<GetLinesResponse[]> => getLinesQuery(arg);
+): QueryResponse<GetLinesResponse[]> => getLinesQuery({ ...arg, blacklist });
 
 const getUserLinePositionsQuery = createQuery(GET_LINES_QUERY);
 export const getUserLinePositions: QueryCreator<GetUserLinePositionsArgs, PositionSummary[]> = <

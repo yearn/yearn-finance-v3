@@ -31,6 +31,7 @@ import {
   InterestRateCreditService,
   GetLinePageResponse,
   Network,
+  UserPositionMetadata,
 } from '@types';
 import { getConfig } from '@config';
 import { LineOfCreditABI } from '@services/contracts';
@@ -228,14 +229,14 @@ export class CreditLineServiceImpl implements CreditLineService {
       //true
       //);
       // check mutualConsent
-      const lender = await this.getSignerAddress();
+      console.log('this is line address', line);
 
       let data = {
         drate: props.drate,
         frate: props.frate,
         amount: props.amount,
         token: props.token,
-        lender: lender,
+        lender: props.lender,
         network: props.network,
       };
       //@ts-ignore
@@ -256,10 +257,10 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   public async borrow(props: BorrowCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
     try {
-      const line = props.lineAddress;
+      const line = props.line;
 
       let data = {
-        id: props.lineAddress,
+        id: props.positionId,
         amount: props.amount,
       };
       //@ts-ignore
@@ -291,6 +292,9 @@ export class CreditLineServiceImpl implements CreditLineService {
         abi: this.abi,
         args: params,
         methodName: methodName,
+        overrides: {
+          gasLimit: 600000,
+        },
       };
 
       const tx = await this.transactionService.execute(props);

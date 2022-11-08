@@ -28,6 +28,7 @@ export interface Constants {
   TOKEN_ADDRESSES: {
     [KEY: string]: string;
   };
+  ZERO_ADDRESS: string;
   MAX_UINT256: Wei;
   DEBT_DAO_API: string;
   DEBT_DAO_ALERTS_API: string;
@@ -36,6 +37,7 @@ export interface Constants {
   WEB3_PROVIDER_HTTPS: string;
   WEB3_PROVIDER_WSS: string;
   ARBITRUM_PROVIDER_HTTPS: string;
+  BLACKLISTED_LINES: string[];
   CONTRACT_ADDRESSES: {
     [KEY: string]: string;
   };

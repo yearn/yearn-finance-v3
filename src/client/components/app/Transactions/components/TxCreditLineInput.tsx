@@ -7,9 +7,8 @@ import { useAppTranslation } from '@hooks';
 import { Text, Icon, SearchList, LogoIcon, ZapIcon, SearchListItem } from '@components/common';
 import { AggregatedCreditLine } from '@src/core/types';
 
-const AmountTitle = styled(Text)`
+const LineTitle = styled(Text)`
   color: ${({ theme }) => theme.colors.txModalColors.text};
-  text-overflow: ellipsis;
 `;
 
 const CreditLineData = styled.div`
@@ -186,13 +185,13 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
 
   const [openedSearch, setOpenedSearch] = useState(false);
   const searchListHeader = readOnly
-    ? t('components.transaction.add-credit-input.search-accept-credit')
-    : t('components.transaction.add-credit-input.search-select-credit');
+    ? t('components.transaction.add-credit-input.select-an-offer')
+    : t('components.transaction.add-credit-input.select-an-offer');
 
   return (
     <StyledTxCreditLineInput {...props}>
       <>{headerText && <Header>{headerText}</Header>}</>
-      {openedSearch && (
+      {!readOnly && openedSearch && (
         <CSSTransition in={openedSearch} appear={true} timeout={scaleTransitionTime} classNames="scale">
           <StyledSearchList
             list={listItems}
@@ -215,8 +214,8 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
             <CreditLineName>{selectedItem.label}</CreditLineName>
           </CreditLineSelector>
           <CreditLineData>
-            <AmountTitle> Borrower Name / ENS </AmountTitle>
-            <AmountTitle> {selectedCredit.id || `0xDebf...1dao`}</AmountTitle>
+            <LineTitle ellipsis> Borrower: ENS / {selectedCredit.borrower} </LineTitle>
+            <LineTitle ellipsis> Line: {selectedCredit.id || `0xDebf...1dao`}</LineTitle>
           </CreditLineData>
         </CreditLineInfo>
       </>

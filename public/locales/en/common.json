@@ -10,6 +10,15 @@
       "searching-text": "Please search for another asset",
       "text": "No assets to display"
     },
+    "positions-card": {
+      "positions": "Positions",
+      "drate": "drate",
+      "frate": "frate",
+      "total-deposits": "Supplied",
+      "token": "Token",
+      "status": "Status",
+      "lender": "Lender"
+    },
     "list-card": {
       "apy": "APY",
       "asset": "Asset",
@@ -73,7 +82,7 @@
       "available-borrow": "Available to borrow",
       "borrow": "Borrow",
       "deposit-and-repay-header": "deposit and repay",
-      "withdraw": "Withdraw Credit",
+      "withdraw": "Withdraw",
       "borrow-limit": {
         "borrow-apy": "Borrow APY",
         "borrowing": "Borrowing",
@@ -121,13 +130,22 @@
       },
       "add-credit-input": {
         "search-accept-credit": "Accepting Deal",
-        "search-select-credit": "Find Deal"
+        "search-select-credit": "Find Deal",
+        "select-an-offer": "Select An Offer"
       },
       "add-credit": {
         "header": "Setup deal terms",
-        "select-credit": "1. Select a borrower to lend to",
-        "select-token": "2. Select token and amount",
-        "select-rates": "3. Set interest rates"
+        "header-accepting": "Agree To Deal Terms",
+        "select-credit": "1. Borrower:",
+        "select-lender": "2. Lender:",
+        "select-token": "3. The token being lent",
+        "select-rates": "4. Set Interest Rates",
+        "lender-address": "Ethereum Address",
+        "back-to-market": "Head back to the Market",
+        "bad-line": {
+          "title": "This line can not be deposited into",
+          "body": "Your chosen line is not in a healthy state. You can find more lines to deposit into back in the marketplace."
+        }
       },
       "arbiter-liquidate": {
         "header": "Liquidate Borrowers",
@@ -141,12 +159,13 @@
         "time-to-live": "Time this line will remain active for (in days):"
       },
       "borrow-credit": {
-        "header": "Borrow Credit",
-        "select-line": "1. Select a borrower for the line",
-        "select-amount": "2. Select amount to borrow"
+        "header": "Borrow",
+        "select-line": "1. Select a Position:",
+        "select-amount": "2. Select Token and Amount:",
+        "your-rates": "3. Your Rates:"
       },
       "deposit-and-repay": {
-        "header": "Deposit and repay",
+        "header": "Repay",
         "select-amount": "1. Select amount to repay"
       },
       "withdraw-credit": {

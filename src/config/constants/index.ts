@@ -24,6 +24,8 @@ const PARTNERS = {
   LEDGER_PARTNER_ID: '0x558247e365be655f9144e1a0140D793984372Ef3',
 };
 
+const BLACKLISTED_LINES = ['0x0000000000000000000000000000000000000000'];
+
 const NETWORK_SETTINGS: NetworkSettings = {
   goerli: {
     id: 'goerli',
@@ -81,6 +83,7 @@ export const getConstants = memoize((): Constants => {
     STATE_VERSION: 1,
     ETHEREUM_ADDRESS: TOKEN_ADDRESSES.ETH,
     TOKEN_ADDRESSES: TOKEN_ADDRESSES,
+    ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
     DEBT_DAO_API: 'https://api.yearn.finance/v1/chains/1/vaults/all',
     DEBT_DAO_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
@@ -89,6 +92,7 @@ export const getConstants = memoize((): Constants => {
     WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
     ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
+    BLACKLISTED_LINES: BLACKLISTED_LINES,
     CONTRACT_ADDRESSES: {
       zapIn: '0x8E52522E6a77578904ddd7f528A22521DC4154F5',
       zapOut: '0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c',
@@ -121,7 +125,7 @@ export const getConstants = memoize((): Constants => {
     Arbiter_GOERLI: '0xde8f0f6769284e41bf0f82d0545141c15a3e4ad1',
     Oracle_GOERLI: '0x7233038e589913dca4b6d15ff8bba263a433aed2',
     SwapTarget_GOERLI: '0xcb7b9188ada88cb0c991c807acc6b44097059dec',
-    LineFactory_GOERLI: '0x43158693dba386562f0581cd48e68df027a5a877',
+    LineFactory_GOERLI: '0xc23b896F2b4aE3E6362B0D536113Fa2F0C9b8886',
     SecuredLine_GOERLI: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
     KibaSero_oracle: '0x0B3807b858B5fa24a39bced436DBc5A988Ca58d6',
     // ZAPPER_AUTH_TOKEN: encode({ str: `${ZAPPER_API_KEY}:`, encoding: 'base64' }),
