@@ -6,7 +6,7 @@ export * from './components/TxStatus';
 export * from './components/TxTokenInput';
 export * from './BorrowCreditTx';
 export * from './AddCreditPositionTx';
-export * from './DepositAndRepayTx';
+export * from './RepayTx';
 export * from './MigrateTx';
 export * from './TestTx';
 export * from './WithdrawCreditTx';

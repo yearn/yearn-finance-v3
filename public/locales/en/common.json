@@ -166,7 +166,9 @@
       },
       "deposit-and-repay": {
         "header": "Repay",
-        "select-amount": "1. Select amount to repay"
+        "select-position": "1. Select Position to Repay:",
+        "select-amount": "2. You Owe:",
+        "your-rates": "3. Your Interest Rates:"
       },
       "withdraw-credit": {
         "header": "Withdraw",

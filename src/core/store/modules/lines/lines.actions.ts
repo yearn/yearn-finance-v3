@@ -428,7 +428,7 @@ const liquidate = createAsyncThunk<
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const { creditLineService, spigotedLineService } = services;
+    const { spigotedLineService } = services;
     // const { error: depositError } = validateLineDeposit({
     //   sellTokenAmount: amount,
     //   depositLimit: lineData?.metadata.depositLimit ?? '0',
