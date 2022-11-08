@@ -247,17 +247,18 @@ const approveDeposit = createAsyncThunk<
 
 const borrowCredit = createAsyncThunk<void, BorrowCreditProps, ThunkAPI>(
   'lines/borrowCredit',
-  async ({ lineAddress, amount, network }, { extra, getState }) => {
+  async ({ positionId, amount, network, line }, { extra, getState }) => {
     const { wallet } = getState();
     const { services } = extra;
-    console.log('look at borrow credit', wallet, lineAddress, amount);
+    console.log('look at borrow credit', wallet, positionId, amount, line);
     const { creditLineService } = services;
 
     const tx = await creditLineService.borrow({
-      lineAddress: lineAddress,
+      line: line,
+      positionId: positionId,
       amount: amount,
       network: network,
-      dryRun: true,
+      dryRun: false,
     });
     console.log(tx);
   }
