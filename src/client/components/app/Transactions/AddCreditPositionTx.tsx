@@ -34,15 +34,7 @@ const StyledTransaction = styled(TxContainer)``;
 interface AddCreditPositionProps {
   header: string;
   onClose: () => void;
-  acceptingOffer: boolean;
-  onSelectedCreditLineChange: Function;
-  onPositionChange: (data: {
-    credit?: string;
-    token?: string;
-    amount?: string;
-    drate?: string;
-    frate?: string;
-  }) => void;
+  acceptingOffer?: boolean;
 }
 
 const BadLineErrorContainer = styled.div``;
@@ -128,7 +120,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [selectedSellTestToken, setSelectSellTestToken] = useState(testTokens[0]);
 
   //state for params
-  const { acceptingOffer, header, onClose, onPositionChange } = props;
+  const { header, onClose } = props;
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
@@ -139,7 +131,8 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
 
-  //main net logic
+  const acceptingOffer = props.acceptingOffer;
+
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
   const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
@@ -175,15 +168,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
   }, [selectedSellToken, walletNetwork]);
 
-  const _updatePosition = () =>
-    onPositionChange({
-      credit: selectedCredit?.id,
-      token: selectedSellToken?.address,
-      amount: targetTokenAmount,
-      drate: drate,
-      frate: frate,
-    });
-
   // Event Handlers
 
   const onSelectedSellTestTokenChange = (tokenAddress: string) => {
@@ -198,25 +182,20 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
   const onAmountChange = (amount: string): void => {
     setTargetTokenAmount(amount);
-    _updatePosition();
   };
 
   const onTestnetAmountChange = (amount: string): void => {
     setTestnetTokenAmount(amount);
-    _updatePosition();
   };
 
   const onRateChange = (type: string, amount: string): void => {
     if (type === 'd') setDrate(amount);
     if (type === 'f') setFrate(amount);
-
-    _updatePosition();
   };
 
   const onSelectedCreditLineChange = (addr: string): void => {
     console.log('select new loc', addr);
     setSelectedCredit(addr);
-    _updatePosition();
   };
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {

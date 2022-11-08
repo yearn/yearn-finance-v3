@@ -83,6 +83,12 @@ export interface UseCreditLineParams {
 */
 type QueryResponseTypes = AggregatedCreditLine | AggregatedCreditLine[] | CreditLinePage;
 
+export interface TokenFragRepsonse {
+  id: Address;
+  name: string;
+  symbol: string;
+  decimals: number;
+}
 export interface BaseLineFragResponse {
   id: Address;
   end: number;
@@ -103,11 +109,7 @@ export interface BaseCreditFragResponse {
   dRate: string;
   fRate: string;
   arbiter: string;
-  token: {
-    id: Address;
-    symbol: string;
-    decimals: number;
-  };
+  token: TokenFragRepsonse;
 }
 
 export interface LinePageCreditFragResponse extends BaseCreditFragResponse {
@@ -138,9 +140,7 @@ export interface LineEventFragResponse {
   dRate?: string;
   fRate?: string;
 
-  token: {
-    id: Address;
-  };
+  token: TokenFragRepsonse;
 }
 
 export interface SpigotRevenueSummaryFragResponse {
@@ -153,9 +153,7 @@ export interface SpigotRevenueSummaryFragResponse {
 export interface SpigotEventFragResponse {
   __typename: 'ClaimRevenueEvent';
   timestamp: number;
-  revenueToken: {
-    id: Address;
-  };
+  revenueToken: TokenFragRepsonse;
   escrowed: string;
   netIncome: string;
   value: string;
@@ -164,11 +162,7 @@ export interface SpigotEventFragResponse {
 export interface BaseEscrowDepositFragResponse {
   enabled: boolean;
   amount: string;
-  token: {
-    id: Address;
-    symbol: string;
-    decimals: number;
-  };
+  token: TokenFragRepsonse;
 }
 
 export interface BaseEscrowFragResponse {

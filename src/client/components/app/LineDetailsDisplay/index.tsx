@@ -11,6 +11,7 @@ import { CreditEventsTable } from './CreditEventsTable';
 interface LineDetailsProps {
   line?: AggregatedCreditLine;
   page?: CreditLinePage;
+  onAddCollateral?: Function;
 }
 
 const Container = styled.div`

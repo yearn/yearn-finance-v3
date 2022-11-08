@@ -3,21 +3,20 @@ import styled from 'styled-components';
 
 import { useAppTranslation } from '@hooks';
 import { ModalTx } from '@components/common';
-import { AddCreditPositionTx } from '@components/app';
+import { AddCollateralTx } from '@components/app';
 
 const StyledAddCreditPositionTxModal = styled(ModalTx)``;
 export interface AddCreditPositionTxModalProps {
   onClose: () => void;
 }
 
-export const AddCreditPositionTxModal: FC<AddCreditPositionTxModalProps> = ({ onClose, ...props }) => {
-  console.log('deposit modal', props);
+export const AddCollateralTxModal: FC<AddCreditPositionTxModalProps> = ({ onClose, ...props }) => {
   const { t } = useAppTranslation('common');
   // if (!creditLine) return; // TODO error or creditLine selector input
 
   return (
     <StyledAddCreditPositionTxModal {...props}>
-      <AddCreditPositionTx header={t('components.transaction.add-credit.header')} onClose={onClose} />
+      <AddCollateralTx header={t('components.transaction.add-collateral.header')} onClose={onClose} />
     </StyledAddCreditPositionTxModal>
   );
 };

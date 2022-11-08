@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { memoize, find } from 'lodash';
 import { getAddress } from '@ethersproject/address';
+import _ from 'lodash';
 
 import {
   RootState,
@@ -24,7 +25,11 @@ const { ZERO_ADDRESS } = getConstants();
 /* ---------------------------------- State --------------------------------- */
 const selectUserWallet = (state: RootState) => state.wallet.selectedAddress;
 const selectLinesState = (state: RootState) => state.lines;
-const selectUserLinesPositionsMap = (state: RootState) => state.lines.user.linePositions;
+const selectUserLinesPositionsMap = (state: RootState) =>
+  _.filter(
+    state.lines.user.linePositions,
+    (p) => state.wallet.selectedAddress !== p.lender || state.wallet.selectedAddress !== p.borrower
+  );
 // const selectUserLinesMetadataMap = (state: RootState) => state.lines.user.userLinesMetadataMap;
 const selectLinesMap = (state: RootState) => state.lines.linesMap;
 const selectLinePagesMap = (state: RootState) => state.lines.pagesMap;
@@ -37,15 +42,16 @@ const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedLineAddress = (state: RootState) => state.lines.selectedLineAddress;
 const selectSelectedPosition = (state: RootState) => state.lines.selectedPosition;
 
-const selectLinesActionsStatusMap = (state: RootState) => state.lines.statusMap.user.linesActionsStatusMap;
-const selectLinesStatusMap = (state: RootState) => state.lines.statusMap;
 // const selectExpectedTxOutcome = (state: RootState) => state.lines.transaction.expectedOutcome;
 // const selectExpectedTxOutcomeStatus = (state: RootState) => state.lines.statusMap.getExpectedTransactionOutcome;
 const selectUserLinesSummary = (state: RootState) => state.lines.user.linePositions;
 
+/* ---------------------------------- Action Statuses --------------------------------- */
+const selectLinesStatusMap = (state: RootState) => state.lines.statusMap;
+const selectLinesActionsStatusMap = (state: RootState) => state.lines.statusMap.user.linesActionsStatusMap;
+
 const selectGetLinesStatus = (state: RootState) => state.lines.statusMap.getLines;
 const selectGetLinePageStatus = (state: RootState) => state.lines.statusMap.getLinePage;
-
 const selectGetUserLinesPositionsStatus = (state: RootState) => state.lines.statusMap.user.getUserLinePositions;
 
 /* ----------------------------- Main Selectors ----------------------------- */
@@ -137,8 +143,8 @@ const selectLine = createSelector([selectLinesMap], (linesMap) =>
   memoize((lineAddress: string) => linesMap[lineAddress])
 );
 
-const selectUnderlyingTokensAddresses = createSelector([selectUserLinesPositionsMap], (lines): Address[] => {
-  return Object.values(lines).map((line) => line.token);
+const selectUnderlyingTokensAddresses = createSelector([selectUserLinesPositionsMap], (positions): Address[] => {
+  return Object.values(positions).map((p) => p.token.address);
 });
 
 /* -------------------------------- Statuses -------------------------------- */
@@ -274,6 +280,7 @@ export const LinesSelectors = {
   selectLiveLines,
   selectLinesForCategories,
   selectUserPositionMetadata,
+  selectSelectedPosition,
   selectSelectedLinePage,
   // selectDeprecatedLines,
   selectUserLinesPositionsMap,

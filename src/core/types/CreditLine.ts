@@ -1,5 +1,6 @@
 import { Address } from './Blockchain';
 import { Status } from './Status';
+import { TokenView } from './Token';
 
 type UninitializedStatus = 'uninitialized';
 export const UNINITIALIZED_STATUS: UninitializedStatus = 'uninitialized';
@@ -82,7 +83,6 @@ export interface CreditLinePageAuxData {
   creditEvents: CreditEvent[];
 }
 
-// TODO delete Credit type in favor of Credit and resolve type conflicts across codebase
 export interface Credit {
   status: PositionStatusTypes;
   deposit: string;
@@ -91,7 +91,7 @@ export interface Credit {
   interestRepaid: string;
   decimals: string;
   arbiter: Address;
-  token: Address;
+  token: TokenView;
   lender: Address;
 }
 
@@ -106,7 +106,7 @@ export interface LinePageCreditPosition extends Credit {
   interestRepaid: string;
   totalInterestRepaid: string;
   dRate: string;
-  token: Address;
+  token: TokenView;
   // events?: CreditEvent[];
 }
 
@@ -120,6 +120,13 @@ type ArbiterRole = 'arbiter';
 export const ARBITER_POSITION_ROLE: ArbiterRole = 'arbiter';
 type PositionRole = LenderRole | BorrowerRole | ArbiterRole;
 
+type CollateralTypeAsset = 'asset';
+export const COLLATERAL_TYPE_ASSET: CollateralTypeAsset = 'asset';
+type CollateralTypeRevenue = 'revenue';
+export const COLLATERAL_TYPE_REVENUE: CollateralTypeRevenue = 'revenue';
+
+type CollateralTypes = CollateralTypeAsset | CollateralTypeRevenue | undefined;
+
 export interface UserPositionMetadata {
   role: PositionRole; // borrower/lender/arbiter
   amount: string; // principal/deposit/collateral
@@ -127,10 +134,11 @@ export interface UserPositionMetadata {
 }
 
 export interface PositionSummary {
+  type: 'revenue';
   id: string;
   borrower: Address;
   lender: Address;
-  token: Address;
+  token: TokenView;
   line: Address;
   deposit: string;
   principal: string;
@@ -142,7 +150,8 @@ export interface UserPositionSummary extends PositionSummary, UserPositionMetada
 
 // Collateral Module Types
 export interface Collateral {
-  token: Address;
+  type: CollateralTypes;
+  token: TokenView;
   amount: string;
   value: string;
 }
@@ -154,13 +163,12 @@ export interface BaseEscrow {
   collateralValue: string;
 }
 
-export interface EscrowDeposit {
+export interface EscrowDeposit extends Collateral {
+  type: CollateralTypeAsset;
+  token: TokenView;
   amount: string;
+  value: string;
   enabled: boolean;
-  currentUsdPrice?: string;
-  value?: string;
-  token: Address;
-  symbol: string;
 
   displayIcon?: string; // url to token icon
 }
@@ -177,10 +185,18 @@ export interface AggregatedEscrow extends BaseEscrow {
   deposits?: EscrowDepositList;
 }
 
+export interface RevenueSummary extends Collateral {
+  type: CollateralTypeRevenue;
+  token: TokenView;
+  amount: string;
+  value: string;
+  firstRevenueTimestamp: number;
+  lastRevenueTimestamp: number;
+}
 export interface AggregatedSpigot {
   id: Address;
   // aggregated revenue in USD by token across all spigots
-  tokenRevenue: { [key: string]: string }; // TODO:  tuple it (revenue, totalTime) 2023Q2
+  tokenRevenue: { [key: string]: string }; // TODO: RevenueSummary
 }
 
 export interface LinePageSpigot extends AggregatedSpigot {
@@ -192,7 +208,7 @@ export interface RevenueContract {
   contract: Address;
   startTime: number;
   ownerSplit: number;
-  token: Address;
+  token: TokenView;
 
   events?: SpigotEvents[];
 }
@@ -250,7 +266,7 @@ export interface SetRateEvent {
 
 // Collateral Events
 export interface CollateralEvent extends EventWithValue {
-  type: ModuleNames;
+  type: CollateralTypes;
   id: Address; // token earned as revenue or used as collateral
   timestamp: number;
   amount: number;
@@ -261,7 +277,7 @@ export interface CollateralEvent extends EventWithValue {
 type SpigotEvents = ClaimRevenueEvent;
 
 export interface ClaimRevenueEvent extends CollateralEvent {
-  revenueToken: Address;
+  revenueToken: TokenView;
   escrowed: number;
   netIncome: number;
 }

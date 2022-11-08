@@ -6,8 +6,6 @@ import { toBN } from '@utils';
 
 import { AppSelectors } from '../app/app.selectors';
 
-const { selectServicesEnabled } = AppSelectors;
-
 /* ---------------------------------- State --------------------------------- */
 const selectTokensState = (state: RootState) => state.tokens;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
@@ -18,21 +16,31 @@ const selectGetTokensStatus = (state: RootState) => state.tokens.statusMap.getTo
 const selectGetUserTokensStatus = (state: RootState) => state.tokens.statusMap.user.getUserTokens;
 
 /* ----------------------------- Main Selectors ----------------------------- */
-const selectUserTokens = createSelector(
-  [selectTokensMap, selectTokensUser, selectServicesEnabled],
-  (tokensMap, user, servicesEnabled): TokenView[] => {
-    const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
-    const tokens = userTokensAddresses
-      .filter((address) => !!tokensMap[address])
-      .map((address) => {
-        const tokenData = tokensMap[address];
-        const userTokenData = userTokensMap[address];
-        const allowancesMap = userTokensAllowancesMap[address] ?? {};
-        return createToken({ tokenData, userTokenData, allowancesMap });
-      });
-    return tokens.filter((token) => toBN(token.balance).gt(0) && servicesEnabled.zapper);
-  }
-);
+const selectUserTokens = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user): TokenView[] => {
+  const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
+  const tokens = userTokensAddresses
+    .filter((address) => !!tokensMap[address])
+    .map((address) => {
+      const tokenData = tokensMap[address];
+      const userTokenData = userTokensMap[address];
+      const allowancesMap = userTokensAllowancesMap[address] ?? {};
+      return createToken({ tokenData, userTokenData, allowancesMap });
+    });
+  return tokens.filter((token) => toBN(token.balance).gt(0));
+});
+
+const selectCollateralTokens = createSelector([selectTokensMap, selectTokensUser], (tokensMap, user): TokenView[] => {
+  const { userTokensAddresses, userTokensMap, userTokensAllowancesMap } = user;
+  const tokens = userTokensAddresses
+    .filter((address) => !!tokensMap[address])
+    .map((address) => {
+      const tokenData = tokensMap[address];
+      const userTokenData = userTokensMap[address];
+      const allowancesMap = userTokensAllowancesMap[address] ?? {};
+      return createToken({ tokenData, userTokenData, allowancesMap });
+    });
+  return tokens.filter((token) => toBN(token.balance).gt(0));
+});
 
 const selectSummaryData = createSelector([selectUserTokens], (userTokens) => {
   let totalBalance = toBN('0');
@@ -96,6 +104,7 @@ export const TokensSelectors = {
   selectTokensMap,
   selectSelectedTokenAddress,
   selectTokensUser,
+  selectCollateralTokens,
   selectUserTokensStatusMap,
   selectUserTokens,
   selectSummaryData,

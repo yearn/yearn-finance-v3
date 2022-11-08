@@ -133,6 +133,16 @@ export const LineDetail = () => {
     dispatch(ModalsActions.openModal({ modalName: 'withdraw' }));
   };
 
+  // THIS NEEDS REVISITNG
+  const addCollateralHandler = () => {
+    if (!selectedLine?.escrow) {
+      return;
+    }
+    let address = selectedLine.escrow.id;
+    // dispatch(LinesActions.setSelectedLineAddress({ lineAddress: address }));
+    dispatch(ModalsActions.openModal({ modalName: 'addCollateral' }));
+  };
+
   useEffect(() => {
     let Transactions = [];
 
@@ -140,6 +150,7 @@ export const LineDetail = () => {
     if (userRoleMetadata.role === BORROWER_POSITION_ROLE) {
       Transactions.push('borrow');
       Transactions.push('deposit-and-repay');
+      Transactions.push('add-collateral');
     }
     if (userRoleMetadata.role === LENDER_POSITION_ROLE) {
       Transactions.push('deposit');
@@ -148,6 +159,7 @@ export const LineDetail = () => {
     //@ts-ignore
     if (userRoleMetadata.role === ARBITER_POSITION_ROLE) {
       Transactions.push('liquidate');
+      Transactions.push('enable-collateral');
     }
     setTransactions(Transactions);
   }, [userWalletAddress, selectedLine]);
@@ -274,6 +286,13 @@ export const LineDetail = () => {
             <WithdrawButton onClick={liquidateHandler} key={`${transaction}-${i}`}>
               Liquidate
             </WithdrawButton>
+          );
+        }
+        if (transaction === 'add-collateral') {
+          return (
+            <AddCreditButton onClick={addCollateralHandler} key={`${transaction}-${i}`}>
+              Add Collateral
+            </AddCreditButton>
           );
         }
         if (transaction === 'withdraw') {

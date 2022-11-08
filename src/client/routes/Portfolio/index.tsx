@@ -216,10 +216,18 @@ export const Portfolio = () => {
 
       {userTokensLoading && <StyledSpinnerLoading />}
 
-      {!userTokensLoading && (
+      {/* {!userTokensLoading && (
         <TokensCard
           header={t('components.list-card.wallet')}
           metadata={[
+            {
+              key: 'balanceUsdc',
+              header: t('components.list-card.value'),
+              format: ({ balanceUsdc }) => humanize('usd', balanceUsdc),
+              sortable: true,
+              width: '11rem',
+              className: 'col-value',
+            },
             {
               key: 'displayName',
               header: t('components.list-card.asset'),
@@ -249,14 +257,7 @@ export const Portfolio = () => {
               width: '11rem',
               className: 'col-price',
             },
-            {
-              key: 'balanceUsdc',
-              header: t('components.list-card.value'),
-              format: ({ balanceUsdc }) => humanize('usd', balanceUsdc),
-              sortable: true,
-              width: '11rem',
-              className: 'col-value',
-            },
+
             {
               key: 'invest',
               transform: ({ address }) => <ActionButtons actions={[...investButton(address, false)]} />,
@@ -277,7 +278,7 @@ export const Portfolio = () => {
           filterBy={filterDustTokens}
           filterLabel="Show dust"
         />
-      )}
+      )} */}
     </StyledViewContainer>
   );
 };

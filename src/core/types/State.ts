@@ -33,10 +33,12 @@ export interface RootState {
   vaults: VaultsState;
   wallet: WalletState;
   tokens: TokensState;
-  lines: CreditLineState;
   settings: SettingsState;
   // user: UserState;
   partner: PartnerState;
+  // debt dao
+  lines: CreditLineState;
+  collateral: CollateralState;
 }
 
 export interface AppState {
@@ -187,22 +189,26 @@ export interface TokensState {
   };
 }
 
-export interface MarketActionsStatusMap {
-  approve: Status;
-  borrow: Status;
-  supply: Status;
-  repay: Status;
-  withdraw: Status;
-  enterMarket: Status;
-  exitMarket: Status;
-  get: Status;
+export interface CollateralState {
+  selectedEscrow?: Address;
+  selectedSpigot?: Address;
+  selectedRevenueContract?: Address;
+  selectedCollateralToken?: Address;
+  // collateralTradeData?: ZeroExApiResponse;
+  user: {
+    escrowAllowances: { [line: string]: { [token: string]: string } };
+  };
+  statusMap: CollateralActionsStatusMap;
 }
 
-export type MarketActionsTypes = keyof MarketActionsStatusMap;
-
-export interface UserMarketActionsStatusMap {
-  getPosition: Status;
-  getMetadata: Status;
+export interface CollateralActionsStatusMap {
+  getLineCollateralData: Status;
+  approve: Status;
+  addCollateral: Status;
+  enableCollateral: Status;
+  addSpigot: Status;
+  releaseSpigot: Status;
+  updateOwnerSplit: Status;
 }
 
 export interface SettingsState {
@@ -213,53 +219,6 @@ export interface SettingsState {
   devMode: {
     enabled: boolean;
     walletAddressOverride: Address;
-  };
-}
-
-export interface LabsPositionsMap {
-  DEPOSIT: Position;
-  YIELD: Position;
-  STAKE: Position;
-}
-
-export type LabsPositionsTypes = keyof LabsPositionsMap;
-
-export interface LabActionsStatusMap {
-  get: Status;
-  approveDeposit: Status;
-  deposit: Status;
-  approveWithdraw: Status;
-  withdraw: Status;
-  claimReward: Status;
-  approveReinvest: Status;
-  reinvest: Status;
-  approveInvest: Status;
-  invest: Status;
-  approveStake: Status;
-  stake: Status;
-}
-
-export interface UserLabActionsStatusMap {
-  get: Status;
-  getPositions: Status;
-}
-
-export interface LabsState {
-  labsAddresses: string[];
-  labsMap: { [address: string]: Lab };
-  selectedLabAddress: Address | undefined;
-  user: {
-    userLabsPositionsMap: { [address: string]: LabsPositionsMap };
-    labsAllowancesMap: { [labAddress: string]: AllowancesMap };
-  };
-  statusMap: {
-    initiateLabs: Status;
-    getLabs: Status;
-    labsActionsStatusMap: { [labAddress: string]: LabActionsStatusMap };
-    user: {
-      getUserLabsPositions: Status;
-      userLabsActionsStatusMap: { [labAddress: string]: UserLabActionsStatusMap };
-    };
   };
 }
 

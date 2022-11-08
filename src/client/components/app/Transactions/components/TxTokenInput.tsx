@@ -180,10 +180,10 @@ const amountToNumber = (amount: string) => {
 interface Token {
   address: string;
   symbol: string;
-  icon?: string;
-  balance: string;
-  balanceUsdc: string;
   decimals: number;
+  icon?: string;
+  balance?: string;
+  balanceUsdc?: string;
   yield?: string;
 }
 

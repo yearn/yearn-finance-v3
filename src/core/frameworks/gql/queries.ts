@@ -7,6 +7,7 @@ import { gql } from '@apollo/client';
 const TOKEN_FRAGMENT = gql`
   fragment TokenFrag on Token {
     id
+    name
     symbol
     decimals
   }
@@ -29,6 +30,7 @@ const BASE_LINE_FRAGMENT = gql`
 `;
 
 const BASE_CREDIT_FRAGMENT = gql`
+  ${TOKEN_FRAGMENT}
   fragment BaseCreditFrag on Position {
     id
     status
@@ -37,7 +39,7 @@ const BASE_CREDIT_FRAGMENT = gql`
     dRate
     fRate
     token {
-      id
+      ...TokenFrag
     }
   }
 `;

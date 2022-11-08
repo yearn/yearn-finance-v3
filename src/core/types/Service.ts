@@ -17,6 +17,7 @@ import {
   TransactionReceipt,
   VaultsUserSummary,
   VaultUserMetadata,
+  UserPositionMetadata,
   GasFees,
   Overrides,
   Network,
@@ -214,14 +215,6 @@ export interface BorrowCreditProps {
   network: Network;
   dryRun: boolean;
 }
-
-export interface LiquidateCreditProps {
-  lineAddress: string;
-  amount: BigNumber;
-  targetToken: Address;
-  dryRun: boolean;
-}
-
 export interface CloseProps {
   lineAddress: string;
   id: string;
@@ -302,20 +295,6 @@ export interface GetLinePageAuxDataProps extends GetLinePageArgs {
   network: Network;
 }
 
-export interface SpigotedLineService {
-  claimAndTrade(lineAddress: string, claimToken: Address, zeroExTradeData: BytesLike, dryRun: boolean): Promise<string>;
-  claimAndRepay(lineAddress: string, claimToken: Address, calldata: BytesLike, dryRun: boolean): Promise<string>;
-  addSpigot(lineAddress: string, revenueContract: Address, setting: ISpigotSetting, dryRun: boolean): Promise<string>;
-  isOwner(lineAddress: string): Promise<boolean>;
-  maxSplit(lineAddress: string): Promise<BigNumber>;
-  isBorrowing: (lineAddress: string) => Promise<boolean>;
-  isBorrower: (lineAddress: string) => Promise<boolean>;
-  borrower(lineAddress: string): Promise<Address>;
-  getFirstID(lineAddress: string): Promise<BytesLike>;
-  liquidate: (props: LiquidateCreditProps) => Promise<any | undefined>;
-  isSignerBorrowerOrLender(lineAddress: string, id: BytesLike): Promise<boolean>;
-}
-
 export interface ISpigotSetting {
   token: Address; // token to claim as revenue from contract
   ownerSplit: string; // x/100 % to Owner, rest to Treasury
@@ -323,16 +302,125 @@ export interface ISpigotSetting {
   transferOwnerFunction: Bytes; // function signature on conract to call and transfer ownership
 }
 
-export interface EscrowService {
-  addCollateral(contractAddress: string, amount: BigNumber, token: Address, dryRun: boolean): Promise<string>;
-  releaseCollateral(
-    contractAddress: string,
-    amount: BigNumber,
-    token: Address,
-    to: Address,
+export interface EnableCollateralProps {
+  userPositionMetadata: UserPositionMetadata;
+  escrowAddress: Address;
+  token: Address;
+  network: Network;
+  dryRun?: boolean;
+}
+
+export interface AddCollateralProps {
+  userPositionMetadata: UserPositionMetadata;
+  escrowAddress: Address;
+  token: Address;
+  amount: BigNumber;
+  network: Network;
+  dryRun?: boolean;
+}
+
+export interface LiquidateEscrowAssetProps {
+  userPositionMetadata: UserPositionMetadata;
+  escrowAddress: Address;
+  lineAddress: Address;
+  token: Address;
+  amount: BigNumber;
+  to: Address;
+  network: Network;
+  dryRun: boolean;
+}
+
+export interface ReleaseCollateraltProps {
+  userPositionMetadata: UserPositionMetadata;
+  escrowAddress: Address;
+  lineAddress: Address;
+  token: Address;
+  amount: BigNumber;
+  to: Address;
+  network: Network;
+  dryRun: boolean;
+}
+
+export interface CollateralService {
+  // collateral maintenance
+  // escrow
+  enableCollateral(props: EnableCollateralProps): Promise<TransactionResponse | PopulatedTransaction>;
+  addCollateral(props: AddCollateralProps): Promise<TransactionResponse | PopulatedTransaction>;
+  releaseCollateral(props: ReleaseCollateraltProps): Promise<TransactionResponse | PopulatedTransaction>;
+  // spigot
+  updateOwnerSplit(
+    userPositionMetadata: UserPositionMetadata,
+    lineAddress: string,
+    network: Network,
     dryRun: boolean
-  ): Promise<string>;
-  isBorrower(contractAddress: string): Promise<boolean>;
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+  addSpigot(
+    userPositionMetadata: UserPositionMetadata,
+    lineAddress: string,
+    revenueContract: Address,
+    setting: ISpigotSetting,
+    network: Network,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  // liquidate collateral
+  // Escrow assets
+  liquidate: (props: LiquidateEscrowAssetProps) => Promise<TransactionResponse | PopulatedTransaction>;
+  // unused spigot revenue
+  sweep(
+    userPositionMetadata: UserPositionMetadata,
+    lineAddress: string,
+    to: Address,
+    token: Address,
+    amount: BigNumber,
+    status: string,
+    borrower: Address,
+    arbiter: Address,
+    network: Network,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  // spigot itself
+  releaseSpigot(
+    userPositionMetadata: UserPositionMetadata,
+    lineAddress: string,
+    spigot: Address,
+    status: string,
+    borrower: Address,
+    arbiter: Address,
+    network: Network,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  // repay with revenue collateral
+  claimAndTrade(
+    userPositionMetadata: UserPositionMetadata,
+    lineAddress: string,
+    claimToken: Address,
+    zeroExTradeData: BytesLike,
+    network: Network,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+  claimAndRepay(
+    userPositionMetadata: UserPositionMetadata,
+    lineAddress: string,
+    claimToken: Address,
+    zeroExTradeData: BytesLike,
+    network: Network,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+  useAndRepay(
+    userPositionMetadata: UserPositionMetadata,
+    lineAddress: string,
+    amount: BigNumber,
+    network: Network,
+    dryRun: boolean
+  ): Promise<TransactionResponse | PopulatedTransaction>;
+
+  // view functions
+  isSpigotOwner(spigotAddress?: string, lineAddress?: string): Promise<boolean>;
+  defaultSplit(lineAddress: string): Promise<BigNumber>;
+  maxSplit(): BigNumber; // always 100
 }
 
 // *************** TOKEN ***************

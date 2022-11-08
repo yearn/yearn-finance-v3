@@ -19,9 +19,11 @@
       "total": "Total Collateral Value",
       "no-collateral": "No collateral deposited",
       "assets-list": {
-        "title": "Assets As Collateral",
+        "title": "Collateral",
         "symbol": "Symbol",
         "token": "Token",
+        "type": "Type",
+        "amount": "Amount",
         "value": "USD Value"
       }
     }

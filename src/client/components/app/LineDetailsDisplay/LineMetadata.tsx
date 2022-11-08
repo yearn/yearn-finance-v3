@@ -2,9 +2,22 @@ import { isEmpty } from 'lodash';
 import { BigNumber } from 'ethers';
 import styled from 'styled-components';
 
-import { useAppTranslation } from '@hooks';
+import { device } from '@themes/default';
+import { useAppDispatch, useAppSelector, useAppTranslation } from '@hooks';
 import { ThreeColumnLayout } from '@src/client/containers/Columns';
-import { EscrowDeposit, EscrowDepositList } from '@src/core/types';
+import {
+  ARBITER_POSITION_ROLE,
+  BORROWER_POSITION_ROLE,
+  Collateral,
+  EscrowDeposit,
+  EscrowDepositList,
+  RevenueSummary,
+  TokenView,
+} from '@src/core/types';
+import { DetailCard, ActionButtons, TokenIcon } from '@components/app';
+import { Text, Tooltip } from '@components/common';
+import { LinesSelectors, ModalsActions, WalletSelectors } from '@src/core/store';
+import { humanize } from '@src/utils';
 
 const SectionHeader = styled.h3`
   ${({ theme }) => `
@@ -40,13 +53,36 @@ const DataSubMetricsContainer = styled.div``;
 
 const DataSubMetric = styled.p``;
 
+const AssetsListCard = styled(DetailCard)`
+  @media ${device.tablet} {
+    .col-name {
+      width: 18rem;
+    }
+  }
+  @media (max-width: 750px) {
+    .col-assets {
+      display: none;
+    }
+  }
+  @media ${device.mobile} {
+    .col-available {
+      width: 10rem;
+    }
+  }
+  @media (max-width: 450px) {
+    .col-available {
+      display: none;
+    }
+  }
+` as typeof DetailCard;
+
 interface LineMetadataProps {
   principal: string;
   deposit: string;
   totalInterestPaid: string;
   startTime: number;
   endTime: number;
-  revenue?: { [token: string]: string };
+  revenue?: { [token: string]: RevenueSummary };
   deposits?: EscrowDepositList;
 }
 
@@ -82,6 +118,10 @@ const MetricDisplay = ({ title, data, displaySubmetrics = false, submetrics }: M
 
 export const LineMetadata = (props: LineMetadataProps) => {
   const { t } = useAppTranslation(['common', 'lineDetails']);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const userPositionMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
+  const dispatch = useAppDispatch();
+
   const { principal, deposit, totalInterestPaid, revenue, deposits } = props;
   const modules = [revenue && 'revenue', deposits && 'escrow'].filter((x) => !!x);
   const totalRevenue = isEmpty(revenue)
@@ -96,7 +136,7 @@ export const LineMetadata = (props: LineMetadataProps) => {
     : Object.values(deposits!)
         .reduce<BigNumber>(
           (sum: BigNumber, d: EscrowDeposit) =>
-            !d ? sum : sum.add(BigNumber.from(d!.currentUsdPrice ?? '0').mul(d!.amount)),
+            !d ? sum : sum.add(BigNumber.from(Number(d!.token.priceUsdc) ?? '0').mul(d!.amount)),
           BigNumber.from('0')
         )
         .div(BigNumber.from(1)) // scale to usd decimals
@@ -114,6 +154,36 @@ export const LineMetadata = (props: LineMetadataProps) => {
       return <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={`$ ${totalRevenue}`} />;
     return <MetricDisplay title={t('lineDetails:metadata.revenue.per-month')} data={`$ ${totalRevenue}`} />;
   };
+
+  const formatAssetsTableRow = (deposit: EscrowDeposit) => ({
+    key: deposit.token.toString(),
+    header: deposit.token.toString(),
+    align: 'flex-start',
+  });
+
+  const depositHandler = (token: TokenView) => {
+    dispatch(ModalsActions.openModal({ modalName: 'addCollateral' }));
+  };
+
+  const allCollateral = [...Object.values(deposits ?? {}), ...Object.values(revenue ?? {})];
+
+  const getActionForRole = (role: string) => {
+    switch (role) {
+      case ARBITER_POSITION_ROLE:
+        return 'liquidate';
+      case BORROWER_POSITION_ROLE:
+      default:
+        console.log('add collateral action selected for buuton');
+        return 'add-collateral';
+    }
+  };
+  const formattedCollataralData = allCollateral.map((c) => ({
+    ...c,
+    key: c.type + c.token.toString(),
+    // header: c.type + c.token.toString(),
+    align: 'flex-start',
+    actions: getActionForRole(userPositionMetadata.role),
+  }));
 
   return (
     <>
@@ -139,15 +209,163 @@ export const LineMetadata = (props: LineMetadataProps) => {
           <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={totalRevenue} />
         )}
 
-        {!isEmpty(deposits) &&
-          Object.values(deposits!).map(
-            (d, i) =>
-              d.enabled && (
-                <ThreeColumnLayout>
-                  Deposit #{i}: {d.token} {d.amount}
-                </ThreeColumnLayout>
-              )
-          )}
+        {(!isEmpty(deposits) || !isEmpty(revenue)) && (
+          <>
+            <AssetsListCard
+              header={t('lineDetails:metadata.escrow.assets-list.title')}
+              data-testid="line-assets-list"
+              metadata={[
+                {
+                  key: 'type',
+                  header: t('lineDetails:metadata.escrow.assets-list.type'),
+                  transform: ({ type }) => (
+                    <>
+                      <Text>{type?.toUpperCase()}</Text>
+                    </>
+                  ),
+                  width: '10rem',
+                  sortable: true,
+                  className: 'col-type',
+                },
+                {
+                  key: 'token',
+                  header: t('lineDetails:metadata.escrow.assets-list.symbol'),
+                  transform: ({ token: { symbol, icon } }) => (
+                    <>
+                      {icon && <TokenIcon icon={icon} symbol={symbol} />}
+                      <Text>{symbol}</Text>
+                    </>
+                  ),
+                  width: '15rem',
+                  sortable: true,
+                  className: 'col-symbol',
+                },
+                {
+                  key: 'amount',
+                  header: t('lineDetails:metadata.escrow.assets-list.amount'),
+                  transform: ({ token: { balance } }) => <Text ellipsis> {balance} </Text>,
+                  sortable: true,
+                  width: '20rem',
+                  className: 'col-amount',
+                },
+                {
+                  key: 'value',
+                  header: t('lineDetails:metadata.escrow.assets-list.value'),
+                  format: ({ value }) => humanize('usd', value, 2 /* 4 decimals but as percentage */, 0),
+                  sortable: true,
+                  width: '20rem',
+                  className: 'col-value',
+                },
+                {
+                  key: 'actions',
+                  transform: ({ token }) => (
+                    <ActionButtons
+                      actions={[
+                        {
+                          name: t('components.transaction.deposit'),
+                          handler: () => depositHandler(token),
+                          disabled: !walletIsConnected,
+                        },
+                      ]}
+                    />
+                  ),
+                  align: 'flex-end',
+                  width: 'auto',
+                  grow: '1',
+                },
+              ]}
+              data={formattedCollataralData}
+              SearchBar={null}
+              searching={false}
+              onAction={undefined}
+              initialSortBy="value"
+              wrap
+            />
+            {/* <AssetsListCard
+                header={t('components.list-card.opportunities')}
+                data-testid="vaults-opportunities-list"
+                metadata={[
+                  {
+                    key: 'displayName',
+                    header: t('components.list-card.asset'),
+                    transform: ({ displayIcon, displayName, token }) => (
+                      <>
+                        <TokenIcon icon={displayIcon} symbol={token.symbol} />
+                        <Text ellipsis>{displayName}</Text>
+                      </>
+                    ),
+                    width: '23rem',
+                    sortable: true,
+                    className: 'col-name',
+                  },
+
+                  {
+                    key: 'apy',
+                    header: t('components.list-card.apy'),
+                    transform: ({ apyData, apyMetadata, apyType, address }) => (
+                      <ApyTooltip apyType={apyType} apyData={apyData} apyMetadata={apyMetadata} address={address} />
+                    ),
+                    sortable: true,
+                    width: '8rem',
+                    className: 'col-apy',
+                  },
+                  {
+                    key: 'vaultBalanceUsdc',
+                    header: t('components.list-card.total-assets'),
+                    format: ({ vaultBalanceUsdc }) => humanize('usd', vaultBalanceUsdc, USDC_DECIMALS, 0),
+                    sortable: true,
+                    width: '15rem',
+                    className: 'col-assets',
+                  },
+                  {
+                    key: 'userTokenBalance',
+                    header: t('components.list-card.available-deposit'),
+                    format: ({ token }) =>
+                      token.balance === '0' ? '-' : humanize('amount', token.balance, token.decimals, 4),
+                    sortable: true,
+                    width: '15rem',
+                    className: 'col-available',
+                  },
+                  {
+                    key: 'actions',
+                    transform: ({ address }) => (
+                      <ActionButtons
+                        actions={[
+                          {
+                            name: t('components.transaction.deposit'),
+                            handler: () => depositHandler(address),
+                            disabled: !walletIsConnected,
+                          },
+                        ]}
+                      />
+                    ),
+                    align: 'flex-end',
+                    width: 'auto',
+                    grow: '1',
+                  },
+                ]}
+                data={filteredVaults.map((vault) => ({
+                  ...vault,
+                  apy: orderApy(vault.apyData, vault.apyType),
+                  userTokenBalance: normalizeAmount(vault.token.balance, vault.token.decimals),
+                  userTokenBalanceUsdc: vault.token.balanceUsdc,
+                  actions: null,
+                }))}
+                SearchBar={
+                  <SearchInput
+                    searchableData={opportunities}
+                    searchableKeys={['name', 'displayName', 'token.symbol', 'token.name']}
+                    placeholder={t('components.search-input.search')}
+                    onSearch={(data) => setFilteredVaults(data)}
+                  />
+                }
+                searching={opportunities.length > filteredVaults.length}
+                onAction={({ address }) => history.push(`/vault/${address}`)}
+                initialSortBy="apy"
+                wrap
+              /> */}
+          </>
+        )}
       </ThreeColumnLayout>
     </>
   );
