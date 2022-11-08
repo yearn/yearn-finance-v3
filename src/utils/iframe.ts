@@ -17,7 +17,7 @@ export const isLedgerLive = () => {
 };
 
 export const isGnosisApp = () => {
-  return isLoadedInOtherDomain('gnosis');
+  return isLoadedInOtherDomain('gnosis') || isLoadedInOtherDomain('safe');
 };
 
 export const isCoinbaseApp = () => {
