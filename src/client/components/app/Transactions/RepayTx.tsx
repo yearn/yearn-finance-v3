@@ -186,7 +186,7 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
         selectedCredit={selectedCredit}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
-        readOnly={false}
+        readOnly={true}
         // displayGuidance={displaySourceGuidance}
       />
       <TxTokenInput
