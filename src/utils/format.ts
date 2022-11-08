@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import ethers from 'ethers';
 
 import { Wei, Unit, Amount, FormattedAmount, Fraction, DataType } from '@types';
 

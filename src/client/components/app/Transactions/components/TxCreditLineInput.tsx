@@ -185,8 +185,8 @@ export const TxCreditLineInput: FC<TxCreditLineInputProps> = ({
 
   const [openedSearch, setOpenedSearch] = useState(false);
   const searchListHeader = readOnly
-    ? t('components.transaction.add-credit-input.search-accept-credit')
-    : t('components.transaction.add-credit-input.search-select-credit');
+    ? t('components.transaction.add-credit-input.select-an-offer')
+    : t('components.transaction.add-credit-input.select-an-offer');
 
   return (
     <StyledTxCreditLineInput {...props}>

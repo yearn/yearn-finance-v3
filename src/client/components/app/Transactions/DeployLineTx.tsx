@@ -65,13 +65,11 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
 
     if (!checkSumAddress || walletNetwork === undefined) {
       setWarning('Incorrect address, please verify and try again.');
-      console.log('error', inputAddressWarning);
       return;
     }
 
     if (+timeToLive <= 0) {
       setTTLWarning('Increase TTL, cannot be 0.');
-      console.log('error', inputTTLWarning);
       return;
     }
 
@@ -88,12 +86,10 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
       ).then((res) => {
         if (res.meta.requestStatus === 'rejected') {
           setTransactionCompleted(2);
-          console.log(transactionCompleted, 'tester');
           setLoading(false);
         }
         if (res.meta.requestStatus === 'fulfilled') {
           setTransactionCompleted(1);
-          console.log(transactionCompleted, 'tester');
           setLoading(false);
         }
       });
@@ -105,7 +101,6 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
   if (transactionCompleted === 1) {
     return (
       <StyledTransaction onClose={onClose} header={'Transaction complete'}>
-        {console.log(transactionCompleted)}
         <TxStatus
           success={transactionCompleted}
           transactionCompletedLabel={'deployed line successfully'}
@@ -118,7 +113,6 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
   if (transactionCompleted === 2) {
     return (
       <StyledTransaction onClose={onClose} header={'Transaction failed'}>
-        {console.log(transactionCompleted)}
         <TxStatus
           success={transactionCompleted}
           transactionCompletedLabel={'Could not deploy line'}

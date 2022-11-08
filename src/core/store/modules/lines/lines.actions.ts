@@ -1,4 +1,5 @@
 import { BigNumber, utils } from 'ethers';
+import { BytesLike } from '@ethersproject/bytes/src.ts';
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
@@ -21,8 +22,6 @@ import {
 } from '@types';
 import {
   toBN,
-  getNetwork,
-  validateNetwork,
   formatGetLinesData,
   formatLinePageData,
   // validateLineDeposit,
@@ -31,7 +30,6 @@ import {
   // parseError,
 } from '@utils';
 import { unnullify } from '@utils';
-import { TxCreditLineInput } from '@src/client/components/app/Transactions/components/TxCreditLineInput';
 
 import { TokensActions } from '../tokens/tokens.actions';
 
@@ -40,6 +38,7 @@ import { TokensActions } from '../tokens/tokens.actions';
 /* -------------------------------------------------------------------------- */
 
 const setSelectedLineAddress = createAction<{ lineAddress?: string }>('lines/setSelectedLineAddress');
+const setSelectedLinePosition = createAction<{ position?: string }>('lines/setSelectedLinePosition');
 
 /* -------------------------------------------------------------------------- */
 /*                                 Clear State                                */
@@ -129,28 +128,14 @@ const getLinePage = createAsyncThunk<{ linePageData: CreditLinePage | undefined 
     }
 
     const basicData = linesMap[id];
-    if (!basicData) {
-      // navigated directly to line page, need to fetch basic data
-      const linePageResponse = await creditLineService.getLinePage({
-        network: network.current,
-        id,
-      });
-      const linePageData = linePageResponse ? formatLinePageData(linePageResponse, tokenPrices) : undefined;
-      return { linePageData };
-    } else {
-      // already have basi data, just fetch events and position data
-      const auxdata = await creditLineService.getLinePageAuxData({
-        network: network.current,
-        id,
-      });
 
-      if (!auxdata) return { linePageData: undefined };
-
-      const { ...events } = auxdata;
-      // summ total interest paid on positions freom events and add to position data
-      // get dRate, token
-      return { linePageData: { ...basicData, ...events } as CreditLinePage };
-    }
+    // navigated directly to line page, need to fetch basic data
+    const linePageResponse = await creditLineService.getLinePage({
+      network: network.current,
+      id,
+    });
+    const linePageData = linePageResponse ? formatLinePageData(linePageResponse, tokenPrices) : undefined;
+    return { linePageData };
   }
 );
 
@@ -239,7 +224,8 @@ const approveDeposit = createAsyncThunk<
     network: Network;
   },
   ThunkAPI
->('lines/approveDeposit', async ({ amount, tokenAddress, network }, { getState, dispatch, extra }) => {
+  //@ts-ignore
+>('lines/approveDeposit', async ({ amount, spenderAddress, tokenAddress, network }, { getState, dispatch, extra }) => {
   const { wallet } = getState();
   const { tokenService } = extra.services;
 
@@ -250,7 +236,7 @@ const approveDeposit = createAsyncThunk<
     network,
     tokenAddress,
     accountAddress,
-    spenderAddress: '0x32cD4087c98C09A89Dd5c45965FB13ED64c45456',
+    spenderAddress: spenderAddress,
     amount: unnullify(amount, true),
   });
   console.log('this is approval', approveDepositTx);
@@ -258,17 +244,18 @@ const approveDeposit = createAsyncThunk<
 
 const borrowCredit = createAsyncThunk<void, BorrowCreditProps, ThunkAPI>(
   'lines/borrowCredit',
-  async ({ lineAddress, amount, network }, { extra, getState }) => {
+  async ({ positionId, amount, network, line }, { extra, getState }) => {
     const { wallet } = getState();
     const { services } = extra;
-    console.log('look at borrow credit', wallet, lineAddress, amount);
+    console.log('look at borrow credit', wallet, positionId, amount, line);
     const { creditLineService } = services;
 
     const tx = await creditLineService.borrow({
-      lineAddress: lineAddress,
+      line: line,
+      positionId: positionId,
       amount: amount,
       network: network,
-      dryRun: true,
+      dryRun: false,
     });
     console.log(tx);
   }
@@ -300,67 +287,6 @@ const addCredit = createAsyncThunk<void, AddCreditProps, ThunkAPI>(
     // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
   }
 );
-
-/////
-// øld yearn<>zapper code. Keep for future zaps re-integration
-/////
-
-// const approveZapOut = createAsyncThunk<void, { lineAddress: string; tokenAddress: string }, ThunkAPI>(
-//   'lines/approveZapOut',
-//   async ({ lineAddress, tokenAddress }, { getState, dispatch, extra }) => {
-//     const { wallet, network } = getState();
-//     const { creditLineService, transactionService } = extra.services;
-//     const amount = extra.config.MAX_UINT256;
-
-//     const accountAddress = wallet.selectedAddress;
-//     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
-
-//     const tx = await creditLineService.approveZapOut({
-//       network: network.current,
-//       accountAddress,
-//       amount,
-//       lineAddress,
-//       tokenAddress,
-//     });
-
-//     await transactionService.handleTransaction({ tx, network: network.current });
-
-//     await dispatch(getWithdrawAllowance({ tokenAddress, lineAddress }));
-//   },
-//   {
-//     // serializeError: parseError,
-//   }
-// );
-
-// const signZapOut = createAsyncThunk<{ signature: string }, { lineAddress: string }, ThunkAPI>(
-//   'lines/signZapOut',
-//   async ({ lineAddress }, { getState, extra }) => {
-//     const { network, wallet } = getState();
-//     const { creditLineService } = extra.services;
-//     const { CONTRACT_ADDRESSES } = extra.config;
-
-//     // NOTE: this values are hardcoded on zappers zapOut contract
-//     const amount = '79228162514260000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L83
-//     const deadline = '0xf000000000000000000000000000000000000000000000000000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L80
-
-//     const accountAddress = wallet.selectedAddress;
-//     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
-
-//     const signature = await creditLineService.signPermit({
-//       network: network.current,
-//       accountAddress,
-//       lineAddress,
-//       spenderAddress: CONTRACT_ADDRESSES.zapOut,
-//       amount,
-//       deadline,
-//     });
-
-//     return { signature };
-//   },
-//   {
-//     // serializeError: parseError,
-//   }
-// );
 
 const depositAndRepay = createAsyncThunk<
   void,
@@ -427,6 +353,60 @@ const depositAndRepay = createAsyncThunk<
   }
 );
 
+const claimAndRepay = createAsyncThunk<
+  void,
+  {
+    lineAddress: Address;
+    claimToken: Address;
+    calldata: BytesLike;
+  },
+  ThunkAPI
+>(
+  'lines/claimAndRepay',
+
+  async ({ lineAddress, claimToken, calldata }, { extra, getState, dispatch }) => {
+    const { wallet } = getState();
+    const { services } = extra;
+
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('Wallet not connected');
+
+    const { spigotedLineService } = services;
+
+    const tx = await spigotedLineService.claimAndRepay(lineAddress, claimToken, calldata, false);
+    console.log(tx);
+  }
+);
+
+const depositAndClose = createAsyncThunk<
+  void,
+  {
+    lineAddress: Address;
+    network: Network;
+    id: string;
+  },
+  ThunkAPI
+>(
+  'lines/depositAndClose',
+
+  async ({ lineAddress, network, id }, { extra, getState, dispatch }) => {
+    const { wallet } = getState();
+    const { services } = extra;
+
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('Wallet not connected');
+
+    const { creditLineService } = services;
+
+    const tx = await creditLineService.depositAndClose({
+      lineAddress: lineAddress,
+      id: id,
+      network: network,
+    });
+    console.log(tx);
+  }
+);
+
 const liquidate = createAsyncThunk<
   void,
   {
@@ -444,7 +424,7 @@ const liquidate = createAsyncThunk<
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const { creditLineService, collateralService } = services;
+    const { collateralService } = services;
     // TODO get user collateral metadata
     // TODO assert metadata role === arbiter
 
@@ -471,13 +451,14 @@ const liquidate = createAsyncThunk<
       dryRun: false,
     });
     console.log(tx);
+
     // const notifyEnabled = app.servicesEnabled.notify;
     // await transactionService.handleTransaction({ tx, network: network.current, useExternalService: notifyEnabled });
-    dispatch(getLinePage({ id: lineAddress }));
-    // dispatch(getUserLinesSummary());
-    dispatch(getUserLinePositions({ lineAddresses: [lineAddress] }));
-    // dispatch(getUserLinesMetadata({ linesAddresses: [lineAddress] }));
-    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, lineAddress] }));
+    // dispatch(getLinePage({ id: lineAddress }));
+    // // dispatch(getUserLinesSummary());
+    // dispatch(getUserLinePositions({ lineAddresses: [lineAddress] }));
+    // // dispatch(getUserLinesMetadata({ linesAddresses: [lineAddress] }));
+    // dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, lineAddress] }));
   },
   {
     // serializeError: parseError,
@@ -614,6 +595,67 @@ const getWithdrawAllowance = createAsyncThunk<
   return tokenAllowance;
 });
 
+/////
+// øld yearn<>zapper code. Keep for future zaps re-integration
+/////
+
+// const approveZapOut = createAsyncThunk<void, { lineAddress: string; tokenAddress: string }, ThunkAPI>(
+//   'lines/approveZapOut',
+//   async ({ lineAddress, tokenAddress }, { getState, dispatch, extra }) => {
+//     const { wallet, network } = getState();
+//     const { creditLineService, transactionService } = extra.services;
+//     const amount = extra.config.MAX_UINT256;
+
+//     const accountAddress = wallet.selectedAddress;
+//     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+//     const tx = await creditLineService.approveZapOut({
+//       network: network.current,
+//       accountAddress,
+//       amount,
+//       lineAddress,
+//       tokenAddress,
+//     });
+
+//     await transactionService.handleTransaction({ tx, network: network.current });
+
+//     await dispatch(getWithdrawAllowance({ tokenAddress, lineAddress }));
+//   },
+//   {
+//     // serializeError: parseError,
+//   }
+// );
+
+// const signZapOut = createAsyncThunk<{ signature: string }, { lineAddress: string }, ThunkAPI>(
+//   'lines/signZapOut',
+//   async ({ lineAddress }, { getState, extra }) => {
+//     const { network, wallet } = getState();
+//     const { creditLineService } = extra.services;
+//     const { CONTRACT_ADDRESSES } = extra.config;
+
+//     // NOTE: this values are hardcoded on zappers zapOut contract
+//     const amount = '79228162514260000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L83
+//     const deadline = '0xf000000000000000000000000000000000000000000000000000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L80
+
+//     const accountAddress = wallet.selectedAddress;
+//     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+//     const signature = await creditLineService.signPermit({
+//       network: network.current,
+//       accountAddress,
+//       lineAddress,
+//       spenderAddress: CONTRACT_ADDRESSES.zapOut,
+//       amount,
+//       deadline,
+//     });
+
+//     return { signature };
+//   },
+//   {
+//     // serializeError: parseError,
+//   }
+// );
+
 /* -------------------------------------------------------------------------- */
 /*                                Subscriptions                               */
 /* -------------------------------------------------------------------------- */
@@ -647,6 +689,7 @@ const getWithdrawAllowance = createAsyncThunk<
 
 export const LinesActions = {
   setSelectedLineAddress,
+  setSelectedLinePosition,
   // initiateSaveLines,
   getLine,
   getLines,
@@ -666,6 +709,7 @@ export const LinesActions = {
   clearLinesData,
   clearUserData,
   getExpectedTransactionOutcome,
+  claimAndRepay,
   clearTransactionData,
   // getUserLinesSummary,
   // getUserLinesMetadata,

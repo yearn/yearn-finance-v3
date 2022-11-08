@@ -206,7 +206,7 @@ export const GET_LINE_PAGE_QUERY = gql`
     lineOfCredit(id: $id) {
       ...BaseLineFrag
 
-      positions {
+      positions(first: 20) {
         ...LinePageCreditFrag
       }
 

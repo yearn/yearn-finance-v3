@@ -10,6 +10,7 @@ import {
   AggregatedCreditLine,
   Address,
   CreditLinePage,
+  PositionInt,
   UserPositionMetadata,
   BORROWER_POSITION_ROLE,
   LENDER_POSITION_ROLE,
@@ -188,6 +189,19 @@ const selectSelectedLinePage = createSelector(
   }
 );
 
+const selectPositionData = createSelector(
+  [selectSelectedLine, selectSelectedPosition],
+  (line, selectSelectedPosition) => {
+    if (selectSelectedPosition === undefined) {
+      return;
+    }
+    let selectedPositionData = line?.positions?.filter(
+      (position: PositionInt) => position.id === selectSelectedPosition
+    );
+    return selectedPositionData;
+  }
+);
+
 const selectUserPositionMetadata = createSelector(
   [selectUserWallet, selectSelectedLine, selectSelectedPosition],
   (userAddress, line, selectedPosition): UserPositionMetadata => {
@@ -198,8 +212,10 @@ const selectUserPositionMetadata = createSelector(
     };
 
     if (!line || !userAddress) return defaultRole;
-
+    console.log('made it here');
+    //@ts-ignore
     const position = selectedPosition ? line!.positions?.[selectedPosition] : undefined;
+    console.log('position here', position);
 
     switch (getAddress(userAddress!)) {
       case getAddress(line.borrower):
@@ -233,10 +249,13 @@ const selectUserPositionMetadata = createSelector(
 
       default:
         // if no selected position, still try to find their position on the line
+        //@ts-ignore
         const foundPosition = find(line.positions, (p) => p.lender === userAddress);
         if (foundPosition) {
           const lenderData = {
+            //@ts-ignore
             amount: foundPosition.deposit,
+            //@ts-ignore
             available: toBN(foundPosition.deposit).minus(toBN(foundPosition.principal)).toString(),
           };
           return {
@@ -291,12 +310,14 @@ export const LinesSelectors = {
   selectLinesStatusMap,
   selectLinesGeneralStatus,
   selectSelectedLine,
+  selectSelectedPosition,
   selectSelectedLineActionsStatusMap,
   // selectDepositedLines,
   selectSummaryData,
   selectRecommendations,
   selectLinesStatus,
   selectGetLinePageStatus,
+  selectPositionData,
   selectLine,
   // selectExpectedTxOutcome,
   // selectExpectedTxOutcomeStatus,

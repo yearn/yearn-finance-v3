@@ -198,7 +198,7 @@ export class CreditLineServiceImpl implements CreditLineService {
     }
   }
 
-  public async depositAndClose(props: DepositAndCloseProps): Promise<string> {
+  public async depositAndClose(props: DepositAndCloseProps): Promise<TransactionResponse | PopulatedTransaction> {
     try {
       if (!(await this.isBorrowing(props.lineAddress))) {
         throw new Error('Deposit and close is not possible because not borrowing');
@@ -206,8 +206,10 @@ export class CreditLineServiceImpl implements CreditLineService {
       if (!(await this.isBorrower(props.lineAddress))) {
         throw new Error('Deposit and close is not possible because signer is not borrower');
       }
-      return (<TransactionResponse>await this.executeContractMethod(props.lineAddress, 'depositAndClose', [], 'goerli'))
-        .hash;
+      //@ts-ignore
+      return (<TransactionResponse>(
+        await this.executeContractMethod(props.lineAddress, 'depositAndClose', [], props.network)
+      )).hash;
     } catch (e) {
       console.log(`An error occured while depositAndClose credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);
@@ -228,14 +230,14 @@ export class CreditLineServiceImpl implements CreditLineService {
       //true
       //);
       // check mutualConsent
-      const lender = await this.getSignerAddress();
+      console.log('this is line address', line);
 
       let data = {
         drate: props.drate,
         frate: props.frate,
         amount: props.amount,
         token: props.token,
-        lender: lender,
+        lender: props.lender,
         network: props.network,
       };
       //@ts-ignore
@@ -256,10 +258,10 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   public async borrow(props: BorrowCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
     try {
-      const line = props.lineAddress;
+      const line = props.line;
 
       let data = {
-        id: props.lineAddress,
+        id: props.positionId,
         amount: props.amount,
       };
       //@ts-ignore
@@ -291,6 +293,9 @@ export class CreditLineServiceImpl implements CreditLineService {
         abi: this.abi,
         args: params,
         methodName: methodName,
+        overrides: {
+          gasLimit: 600000,
+        },
       };
 
       const tx = await this.transactionService.execute(props);

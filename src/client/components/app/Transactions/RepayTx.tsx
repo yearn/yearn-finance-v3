@@ -12,6 +12,8 @@ import { TxTokenInput } from './components/TxTokenInput';
 import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
+import { TxRateInput } from './components/TxRateInput';
+import { TxCreditLineInput } from './components/TxCreditLineInput';
 
 const StyledTransaction = styled(TxContainer)``;
 
@@ -31,13 +33,15 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const { acceptingOffer, header, onClose, onPositionChange } = props;
+  const [repayType, setRepayType] = useState('');
+  const selectedPosition = useAppSelector(LinesSelectors.selectPositionData);
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const [transactionLoading, setLoading] = useState(false);
   const [targetAmount, setTargetAmount] = useState('1');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
   const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
-
+  const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
 
@@ -48,7 +52,6 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
   });
 
   useEffect(() => {
-    console.log('add position tx useEffect token/creditLine', selectedSellToken, initialToken, selectedCredit);
     if (!selectedSellToken) {
       dispatch(
         TokensActions.setSelectedTokenAddress({
@@ -99,7 +102,6 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
     setLoading(true);
     // TODO set error in state to display no line selected
     if (!selectedCredit?.id || !targetAmount || !selectedSellTokenAddress || walletNetwork === undefined) {
-      console.log('check this', selectedCredit?.id, targetAmount, selectedSellTokenAddress);
       setLoading(false);
       return;
     }
@@ -114,12 +116,10 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
     ).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
         setTransactionCompleted(2);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
       if (res.meta.requestStatus === 'fulfilled') {
         setTransactionCompleted(1);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
     });
@@ -135,7 +135,12 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
     },
   ];
 
-  if (!selectedCredit) return null;
+  const onSelectedCreditLineChange = (addr: string): void => {
+    setSelectedCredit(addr);
+    _updatePosition();
+  };
+
+  if (!selectedCredit || selectedPosition === undefined) return null;
   if (!selectedSellToken) return null;
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
@@ -173,6 +178,17 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.deposit-and-repay.header')}>
+      <TxCreditLineInput
+        key={'credit-input'}
+        headerText={t('components.transaction.deposit-and-repay.select-position')}
+        inputText={t('components.transaction.borrow-credit.select-line')}
+        onSelectedCreditLineChange={onSelectedCreditLineChange}
+        selectedCredit={selectedCredit}
+        // creditOptions={sourceCreditOptions}
+        // inputError={!!sourceStatus.error}
+        readOnly={true}
+        // displayGuidance={displaySourceGuidance}
+      />
       <TxTokenInput
         key={'token-input'}
         headerText={t('components.transaction.deposit-and-repay.select-amount')}
@@ -187,6 +203,17 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
         // inputError={!!sourceStatus.error}
         readOnly={acceptingOffer}
         // displayGuidance={displaySourceGuidance}
+      />
+      <TxRateInput
+        key={'frate'}
+        headerText={t('components.transaction.deposit-and-repay.your-rates')}
+        frate={selectedPosition[0]['frate']}
+        drate={selectedPosition[0]['drate']}
+        amount={selectedPosition[0]['frate']}
+        maxAmount={'100'}
+        // setRateChange={onFrateChange}
+        setRateChange={() => {}}
+        readOnly={true}
       />
       <TxActions>
         {txActions.map(({ label, onAction, status, disabled, contrast }) => (

@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { LinesSelectors, LinesActions, WalletSelectors } from '@store';
+import { normalizeAmount } from '@src/utils';
 
 import { TxContainer } from './components/TxContainer';
 import { TxCreditLineInput } from './components/TxCreditLineInput';
@@ -11,6 +12,7 @@ import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
 import { TxTTLInput } from './components/TxTTLInput';
+import { TxRateInput } from './components/TxRateInput';
 
 const StyledTransaction = styled(TxContainer)``;
 
@@ -31,6 +33,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const [transactionLoading, setLoading] = useState(false);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const selectedPosition = useAppSelector(LinesSelectors.selectPositionData);
   const [targetAmount, setTargetAmount] = useState('1');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
@@ -49,7 +52,6 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   };
 
   const onSelectedCreditLineChange = (addr: string): void => {
-    console.log('select new loc', addr);
     setSelectedCredit(addr);
     _updatePosition();
   };
@@ -65,28 +67,26 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const borrowCredit = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    if (!selectedCredit?.id || !targetAmount || walletNetwork === undefined) {
-      console.log('check this', selectedCredit?.id, targetAmount);
+    if (!selectedCredit?.id || !targetAmount || walletNetwork === undefined || selectedPosition === undefined) {
       setLoading(false);
       return;
     }
 
     dispatch(
       LinesActions.borrowCredit({
-        lineAddress: selectedCredit.id,
+        line: selectedCredit.id,
+        positionId: selectedPosition[0]['id'],
         amount: ethers.utils.parseEther(targetAmount),
         network: walletNetwork,
-        dryRun: true,
+        dryRun: false,
       })
     ).then((res) => {
       if (res.meta.requestStatus === 'rejected') {
         setTransactionCompleted(2);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
       if (res.meta.requestStatus === 'fulfilled') {
         setTransactionCompleted(1);
-        console.log(transactionCompleted, 'tester');
         setLoading(false);
       }
     });
@@ -102,7 +102,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
     },
   ];
 
-  if (!selectedCredit) return null;
+  if (!selectedCredit || selectedPosition === undefined) return null;
 
   if (transactionCompleted === 1) {
     return (
@@ -147,13 +147,24 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
         inputError={false}
         amount={targetAmount}
         onAmountChange={onAmountChange}
-        maxAmount={'0'}
+        maxAmount={normalizeAmount(selectedPosition[0]['deposit'], 18)}
         maxLabel={'Max'}
         readOnly={false}
         hideAmount={false}
         loading={false}
         loadingText={''}
         ttlType={false}
+      />
+      <TxRateInput
+        key={'frate'}
+        headerText={t('components.transaction.borrow-credit.your-rates')}
+        frate={selectedPosition[0]['frate']}
+        drate={selectedPosition[0]['drate']}
+        amount={selectedPosition[0]['frate']}
+        maxAmount={'100'}
+        // setRateChange={onFrateChange}
+        setRateChange={() => {}}
+        readOnly={true}
       />
       <TxActions>
         {txActions.map(({ label, onAction, status, disabled, contrast }) => (
