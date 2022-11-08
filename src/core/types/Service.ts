@@ -209,7 +209,8 @@ export interface AddCreditProps {
 }
 
 export interface BorrowCreditProps {
-  lineAddress: string;
+  line: string;
+  positionId: string;
   amount: BigNumber;
   network: Network;
   dryRun: boolean;

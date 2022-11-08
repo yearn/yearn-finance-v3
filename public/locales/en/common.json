@@ -160,8 +160,9 @@
       },
       "borrow-credit": {
         "header": "Borrow",
-        "select-line": "1. Select a Lender's Offer.",
-        "select-amount": "2. Select amount to borrow"
+        "select-line": "1. Select a Position:",
+        "select-amount": "2. Select Token and Amount:",
+        "your-rates": "3. Your Rates:"
       },
       "deposit-and-repay": {
         "header": "Repay",

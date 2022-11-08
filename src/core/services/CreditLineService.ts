@@ -257,10 +257,10 @@ export class CreditLineServiceImpl implements CreditLineService {
 
   public async borrow(props: BorrowCreditProps): Promise<TransactionResponse | PopulatedTransaction> {
     try {
-      const line = props.lineAddress;
+      const line = props.line;
 
       let data = {
-        id: props.lineAddress,
+        id: props.positionId,
         amount: props.amount,
       };
       //@ts-ignore
