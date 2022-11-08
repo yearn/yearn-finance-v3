@@ -160,6 +160,7 @@ export interface CreditLineService {
     props: DepositAndRepayProps,
     interest: InterestRateCreditService
   ) => Promise<TransactionResponse | PopulatedTransaction>;
+  depositAndClose: (props: DepositAndCloseProps) => Promise<TransactionResponse | PopulatedTransaction>;
   addCredit: (props: AddCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
   borrow: (props: BorrowCreditProps) => Promise<TransactionResponse | PopulatedTransaction>;
   withdraw: (props: WithdrawLineProps) => Promise<TransactionResponse | PopulatedTransaction>;
@@ -253,6 +254,7 @@ export interface DepositAndRepayProps {
 }
 export interface DepositAndCloseProps {
   lineAddress: string;
+  network: Network;
   id: string;
 }
 

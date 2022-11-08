@@ -199,7 +199,7 @@ export class CreditLineServiceImpl implements CreditLineService {
     }
   }
 
-  public async depositAndClose(props: DepositAndCloseProps): Promise<string> {
+  public async depositAndClose(props: DepositAndCloseProps): Promise<TransactionResponse | PopulatedTransaction> {
     try {
       if (!(await this.isBorrowing(props.lineAddress))) {
         throw new Error('Deposit and close is not possible because not borrowing');
@@ -207,8 +207,10 @@ export class CreditLineServiceImpl implements CreditLineService {
       if (!(await this.isBorrower(props.lineAddress))) {
         throw new Error('Deposit and close is not possible because signer is not borrower');
       }
-      return (<TransactionResponse>await this.executeContractMethod(props.lineAddress, 'depositAndClose', [], 'goerli'))
-        .hash;
+      //@ts-ignore
+      return (<TransactionResponse>(
+        await this.executeContractMethod(props.lineAddress, 'depositAndClose', [], props.network)
+      )).hash;
     } catch (e) {
       console.log(`An error occured while depositAndClose credit, error = [${JSON.stringify(e)}]`);
       return Promise.reject(e);
