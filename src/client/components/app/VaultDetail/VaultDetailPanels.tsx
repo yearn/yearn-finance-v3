@@ -205,6 +205,7 @@ const Row = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  width: 100%;
   justify-content: center;
   gap: ${({ theme }) => theme.layoutPadding};
 `;
@@ -388,12 +389,12 @@ export const VaultDetailPanels = ({
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.type')}</span>
-                <StyledText>{selectedVault.token.categories}</StyledText>
+                <StyledText>{selectedVault.token.categories || "N/A"}</StyledText>
               </InfoValueRow>
               <InfoValueRow>
                 <span>{t('vaultdetails:overview-panel.web')}</span>
                 <StyledLink target="_blank" href={selectedVault.token.website}>
-                  {selectedVault.token.website}
+                  {selectedVault.token.website  || "N/A"}
                 </StyledLink>
               </InfoValueRow>
             </TokenInfo>
