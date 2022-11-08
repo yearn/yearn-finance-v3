@@ -292,67 +292,6 @@ const addCredit = createAsyncThunk<void, AddCreditProps, ThunkAPI>(
   }
 );
 
-/////
-// øld yearn<>zapper code. Keep for future zaps re-integration
-/////
-
-// const approveZapOut = createAsyncThunk<void, { lineAddress: string; tokenAddress: string }, ThunkAPI>(
-//   'lines/approveZapOut',
-//   async ({ lineAddress, tokenAddress }, { getState, dispatch, extra }) => {
-//     const { wallet, network } = getState();
-//     const { creditLineService, transactionService } = extra.services;
-//     const amount = extra.config.MAX_UINT256;
-
-//     const accountAddress = wallet.selectedAddress;
-//     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
-
-//     const tx = await creditLineService.approveZapOut({
-//       network: network.current,
-//       accountAddress,
-//       amount,
-//       lineAddress,
-//       tokenAddress,
-//     });
-
-//     await transactionService.handleTransaction({ tx, network: network.current });
-
-//     await dispatch(getWithdrawAllowance({ tokenAddress, lineAddress }));
-//   },
-//   {
-//     // serializeError: parseError,
-//   }
-// );
-
-// const signZapOut = createAsyncThunk<{ signature: string }, { lineAddress: string }, ThunkAPI>(
-//   'lines/signZapOut',
-//   async ({ lineAddress }, { getState, extra }) => {
-//     const { network, wallet } = getState();
-//     const { creditLineService } = extra.services;
-//     const { CONTRACT_ADDRESSES } = extra.config;
-
-//     // NOTE: this values are hardcoded on zappers zapOut contract
-//     const amount = '79228162514260000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L83
-//     const deadline = '0xf000000000000000000000000000000000000000000000000000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L80
-
-//     const accountAddress = wallet.selectedAddress;
-//     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
-
-//     const signature = await creditLineService.signPermit({
-//       network: network.current,
-//       accountAddress,
-//       lineAddress,
-//       spenderAddress: CONTRACT_ADDRESSES.zapOut,
-//       amount,
-//       deadline,
-//     });
-
-//     return { signature };
-//   },
-//   {
-//     // serializeError: parseError,
-//   }
-// );
-
 const depositAndRepay = createAsyncThunk<
   void,
   {
@@ -439,6 +378,35 @@ const claimAndRepay = createAsyncThunk<
     const { spigotedLineService } = services;
 
     const tx = await spigotedLineService.claimAndRepay(lineAddress, claimToken, calldata, false);
+    console.log(tx);
+  }
+);
+
+const depositAndClose = createAsyncThunk<
+  void,
+  {
+    lineAddress: Address;
+    network: Network;
+    id: string;
+  },
+  ThunkAPI
+>(
+  'lines/depositAndClose',
+
+  async ({ lineAddress, network, id }, { extra, getState, dispatch }) => {
+    const { wallet } = getState();
+    const { services } = extra;
+
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('Wallet not connected');
+
+    const { creditLineService } = services;
+
+    const tx = await creditLineService.depositAndClose({
+      lineAddress: lineAddress,
+      id: id,
+      network: network,
+    });
     console.log(tx);
   }
 );
@@ -626,6 +594,67 @@ const getWithdrawAllowance = createAsyncThunk<
 
   return tokenAllowance;
 });
+
+/////
+// øld yearn<>zapper code. Keep for future zaps re-integration
+/////
+
+// const approveZapOut = createAsyncThunk<void, { lineAddress: string; tokenAddress: string }, ThunkAPI>(
+//   'lines/approveZapOut',
+//   async ({ lineAddress, tokenAddress }, { getState, dispatch, extra }) => {
+//     const { wallet, network } = getState();
+//     const { creditLineService, transactionService } = extra.services;
+//     const amount = extra.config.MAX_UINT256;
+
+//     const accountAddress = wallet.selectedAddress;
+//     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+//     const tx = await creditLineService.approveZapOut({
+//       network: network.current,
+//       accountAddress,
+//       amount,
+//       lineAddress,
+//       tokenAddress,
+//     });
+
+//     await transactionService.handleTransaction({ tx, network: network.current });
+
+//     await dispatch(getWithdrawAllowance({ tokenAddress, lineAddress }));
+//   },
+//   {
+//     // serializeError: parseError,
+//   }
+// );
+
+// const signZapOut = createAsyncThunk<{ signature: string }, { lineAddress: string }, ThunkAPI>(
+//   'lines/signZapOut',
+//   async ({ lineAddress }, { getState, extra }) => {
+//     const { network, wallet } = getState();
+//     const { creditLineService } = extra.services;
+//     const { CONTRACT_ADDRESSES } = extra.config;
+
+//     // NOTE: this values are hardcoded on zappers zapOut contract
+//     const amount = '79228162514260000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L83
+//     const deadline = '0xf000000000000000000000000000000000000000000000000000000000000000'; // https://etherscan.io/address/0xd6b88257e91e4E4D4E990B3A858c849EF2DFdE8c#code#F8#L80
+
+//     const accountAddress = wallet.selectedAddress;
+//     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
+
+//     const signature = await creditLineService.signPermit({
+//       network: network.current,
+//       accountAddress,
+//       lineAddress,
+//       spenderAddress: CONTRACT_ADDRESSES.zapOut,
+//       amount,
+//       deadline,
+//     });
+
+//     return { signature };
+//   },
+//   {
+//     // serializeError: parseError,
+//   }
+// );
 
 /* -------------------------------------------------------------------------- */
 /*                                Subscriptions                               */
