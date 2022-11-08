@@ -206,28 +206,28 @@ export interface AddCreditProps {
   amount: BigNumber;
   lender: Address;
   network: Network;
-  dryRun: boolean;
+  dryRun?: boolean;
 }
 
 export interface BorrowCreditProps {
   lineAddress: string;
   amount: BigNumber;
   network: Network;
-  dryRun: boolean;
+  dryRun?: boolean;
 }
 export interface CloseProps {
   lineAddress: string;
   id: string;
 }
 export interface WithdrawLineProps {
-  dryRun: boolean;
+  dryRun?: boolean;
   lineAddress: string;
   id: string;
   network: Network;
   amount: BigNumber;
 }
 export interface SetRatesProps {
-  dryRun: boolean;
+  dryRun?: boolean;
   lineAddress: string;
   id: string;
   frate: string;
@@ -302,8 +302,9 @@ export interface ISpigotSetting {
   transferOwnerFunction: Bytes; // function signature on conract to call and transfer ownership
 }
 
+// Colalteral Service Function Props
 export interface EnableCollateralProps {
-  userPositionMetadata: UserPositionMetadata;
+  // userPositionMetadata: UserPositionMetadata;
   escrowAddress: Address;
   token: Address;
   network: Network;
@@ -311,7 +312,7 @@ export interface EnableCollateralProps {
 }
 
 export interface AddCollateralProps {
-  userPositionMetadata: UserPositionMetadata;
+  // userPositionMetadata: UserPositionMetadata;
   escrowAddress: Address;
   token: Address;
   amount: BigNumber;
@@ -320,25 +321,86 @@ export interface AddCollateralProps {
 }
 
 export interface LiquidateEscrowAssetProps {
-  userPositionMetadata: UserPositionMetadata;
-  escrowAddress: Address;
+  // userPositionMetadata: UserPositionMetadata;
   lineAddress: Address;
   token: Address;
   amount: BigNumber;
   to: Address;
   network: Network;
-  dryRun: boolean;
+  dryRun?: boolean;
 }
 
 export interface ReleaseCollateraltProps {
-  userPositionMetadata: UserPositionMetadata;
+  // userPositionMetadata: UserPositionMetadata;
   escrowAddress: Address;
-  lineAddress: Address;
   token: Address;
   amount: BigNumber;
   to: Address;
   network: Network;
-  dryRun: boolean;
+  dryRun?: boolean;
+}
+
+export interface ClaimAndTradeProps {
+  // userPositionMetadata: UserPositionMetadata;
+  lineAddress: string;
+  claimToken: Address;
+  zeroExTradeData: BytesLike;
+  network: Network;
+  dryRun?: boolean;
+}
+export interface ClaimAndRepayProps {
+  // userPositionMetadata: UserPositionMetadata;
+  lineAddress: string;
+  claimToken: Address;
+  zeroExTradeData: BytesLike;
+  network: Network;
+  dryRun?: boolean;
+}
+export interface UseAndRepayProps {
+  // userPositionMetadata: UserPositionMetadata;
+  lineAddress: string;
+  amount: BigNumber;
+  network: Network;
+  dryRun?: boolean;
+}
+
+export interface SweepSpigotProps {
+  // userPositionMetadata: UserPositionMetadata;
+  lineAddress: string;
+  to: Address;
+  token: Address;
+  amount: BigNumber;
+  status: string;
+  borrower: Address;
+  arbiter: Address;
+  network: Network;
+  dryRun?: boolean;
+}
+
+export interface AddSpigotProps {
+  // userPositionMetadata: UserPositionMetadata;
+  lineAddress: string;
+  revenueContract: Address;
+  setting: ISpigotSetting;
+  network: Network;
+  dryRun?: boolean;
+}
+
+export interface ReleaseSpigotProps {
+  // userPositionMetadata: UserPositionMetadata;
+  lineAddress: string;
+  status: string;
+  to: Address;
+  network: Network;
+  dryRun?: boolean;
+}
+
+export interface UpdateSpigotOwnerSplitProps {
+  // userPositionMetadata: UserPositionMetadata;
+  lineAddress: string;
+  revenueContract: string;
+  network: Network;
+  dryRun?: boolean;
 }
 
 export interface CollateralService {
@@ -348,74 +410,22 @@ export interface CollateralService {
   addCollateral(props: AddCollateralProps): Promise<TransactionResponse | PopulatedTransaction>;
   releaseCollateral(props: ReleaseCollateraltProps): Promise<TransactionResponse | PopulatedTransaction>;
   // spigot
-  updateOwnerSplit(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: string,
-    network: Network,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
-  addSpigot(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: string,
-    revenueContract: Address,
-    setting: ISpigotSetting,
-    network: Network,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  updateOwnerSplit(props: UpdateSpigotOwnerSplitProps): Promise<TransactionResponse | PopulatedTransaction>;
+  addSpigot(props: AddSpigotProps): Promise<TransactionResponse | PopulatedTransaction>;
 
   // liquidate collateral
   // Escrow assets
   liquidate: (props: LiquidateEscrowAssetProps) => Promise<TransactionResponse | PopulatedTransaction>;
   // unused spigot revenue
-  sweep(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: string,
-    to: Address,
-    token: Address,
-    amount: BigNumber,
-    status: string,
-    borrower: Address,
-    arbiter: Address,
-    network: Network,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  sweep(props: SweepSpigotProps): Promise<TransactionResponse | PopulatedTransaction>;
 
   // spigot itself
-  releaseSpigot(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: string,
-    spigot: Address,
-    status: string,
-    borrower: Address,
-    arbiter: Address,
-    network: Network,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  releaseSpigot(props: ReleaseSpigotProps): Promise<TransactionResponse | PopulatedTransaction>;
 
   // repay with revenue collateral
-  claimAndTrade(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: string,
-    claimToken: Address,
-    zeroExTradeData: BytesLike,
-    network: Network,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
-  claimAndRepay(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: string,
-    claimToken: Address,
-    zeroExTradeData: BytesLike,
-    network: Network,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
-  useAndRepay(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: string,
-    amount: BigNumber,
-    network: Network,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  claimAndTrade(props: ClaimAndTradeProps): Promise<TransactionResponse | PopulatedTransaction>;
+  claimAndRepay(props: ClaimAndRepayProps): Promise<TransactionResponse | PopulatedTransaction>;
+  useAndRepay(props: UseAndRepayProps): Promise<TransactionResponse | PopulatedTransaction>;
 
   // view functions
   isSpigotOwner(spigotAddress?: string, lineAddress?: string): Promise<boolean>;
@@ -536,53 +546,62 @@ export interface SubscriptionService {
   unsubscribe: (props: SubscriptionProps) => void;
 }
 
+export interface DeploySpigotProps {
+  factory: Address;
+  owner: Address;
+  borrower: Address;
+  operator: Address;
+  network: Network;
+  dryRun?: boolean;
+}
+
+export interface DeployEscrowProps {
+  factory: Address;
+  minCRatio: BigNumber;
+  oracle: Address;
+  owner: Address;
+  borrower: Address;
+  network: Network;
+  dryRun?: boolean;
+}
+
+export interface DeploySecuredLineProps {
+  factory: Address;
+  borrower: Address;
+  ttl: BigNumber;
+  network: Network;
+  dryRun?: boolean;
+}
+
+export interface DeploySecuredLineWithConfigProps {
+  factory: Address;
+  borrower: Address;
+  ttl: BigNumber;
+  revenueSplit: BigNumber;
+  cratio: BigNumber;
+  network: Network;
+  dryRun?: boolean;
+}
+
+export interface RolloverSecuredLineProps {
+  factory: Address;
+  oldLine: Address;
+  borrower: Address;
+  ttl: BigNumber;
+  network: Network;
+  dryRun?: boolean;
+}
+
 export interface LineFactoryService {
-  deploySpigot(
-    contractAddress: string,
-    owner: Address,
-    borrower: Address,
-    operator: Address,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  deploySpigot(props: DeploySpigotProps): Promise<TransactionResponse | PopulatedTransaction>;
 
-  deployEscrow(
-    contractAddress: string,
-    minCRatio: BigNumber,
-    oracle: Address,
-    owner: Address,
-    borrower: Address,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  deployEscrow(props: DeployEscrowProps): Promise<TransactionResponse | PopulatedTransaction>;
 
-  deploySecuredLine(
-    contractAddress: string,
-    oracle: Address,
-    arbiter: Address,
-    borrower: Address,
-    ttl: BigNumber,
-    swapTarget: Address,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  deploySecuredLine(props: DeploySecuredLineProps): Promise<TransactionResponse | PopulatedTransaction>;
 
   deploySecuredLineWtihConfig(
-    contractAddress: string,
-    oracle: Address,
-    arbiter: Address,
-    borrower: Address,
-    ttl: BigNumber,
-    revenueSplit: BigNumber,
-    cratio: BigNumber,
-    swapTarget: Address,
-    dryRun: boolean
+    props: DeploySecuredLineWithConfigProps
   ): Promise<TransactionResponse | PopulatedTransaction>;
 
-  rolloverSecuredLine(
-    contractAddress: string,
-    oldLine: Address,
-    borrower: Address,
-    oracle: Address,
-    arbiter: Address,
-    ttl: BigNumber,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction>;
+  rolloverSecuredLine(props: RolloverSecuredLineProps): Promise<TransactionResponse | PopulatedTransaction>;
 }

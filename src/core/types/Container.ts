@@ -10,7 +10,7 @@ import {
   TransactionService,
   SubscriptionService,
   CollateralService,
-  LineFactoryServices,
+  LineFactoryService,
   InterestRateCreditService,
   YearnSdk,
 } from '@types';
@@ -35,7 +35,7 @@ export interface ServiceContainer {
   transactionService: TransactionService;
   collateralService: CollateralService;
   interestRateCreditService: InterestRateCreditService;
-  lineFactoryServices: LineFactoryServices;
+  lineFactoryService: LineFactoryService;
 }
 
 export interface ConfigContainer extends Config {}

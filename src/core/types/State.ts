@@ -201,11 +201,14 @@ export interface CollateralState {
   statusMap: CollateralActionsStatusMap;
 }
 
+interface TokenCollateralMap {
+  [contract: string]: { [token: string]: Status };
+}
 export interface CollateralActionsStatusMap {
   getLineCollateralData: Status;
-  approve: Status;
-  addCollateral: Status;
-  enableCollateral: Status;
+  approve: TokenCollateralMap;
+  addCollateral: TokenCollateralMap;
+  enableCollateral: TokenCollateralMap;
   addSpigot: Status;
   releaseSpigot: Status;
   updateOwnerSplit: Status;

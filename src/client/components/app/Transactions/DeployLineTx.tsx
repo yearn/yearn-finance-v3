@@ -1,9 +1,11 @@
 import { FC, useState } from 'react';
+import { BigNumber } from 'ethers';
 import styled from 'styled-components';
 
 import { isAddress } from '@utils';
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { LinesActions, WalletSelectors } from '@store';
+import { getConstants } from '@src/config/constants';
 
 import { TxContainer } from './components/TxContainer';
 import { TxAddressInput } from './components/TxAddressInput';
@@ -13,6 +15,8 @@ import { TxActionButton } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
 
 const StyledTransaction = styled(TxContainer)``;
+
+const { LineFactory_GOERLI } = getConstants();
 
 interface DeployLineProps {
   header: string;
@@ -72,7 +76,16 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
     }
 
     try {
-      dispatch(LinesActions.deploySecuredLine({ borrower, ttl: timeToLive, network: walletNetwork })).then((res) => {
+      // TODO Dynamic var based on network
+
+      dispatch(
+        LinesActions.deploySecuredLine({
+          factory: LineFactory_GOERLI,
+          borrower,
+          ttl: BigNumber.from(timeToLive),
+          network: walletNetwork,
+        })
+      ).then((res) => {
         if (res.meta.requestStatus === 'rejected') {
           setTransactionCompleted(2);
           console.log(transactionCompleted, 'tester');

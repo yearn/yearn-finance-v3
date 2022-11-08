@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { difference, groupBy, keyBy, union } from 'lodash';
+import _, { difference, groupBy, keyBy, union } from 'lodash';
 
 import {
   initialStatus,
@@ -13,13 +13,13 @@ import {
 import { CollateralActions } from './collateral.actions';
 
 export const initialCollateralActionsStatusMap: CollateralActionsStatusMap = {
-  approve: initialStatus,
-  addCollateral: initialStatus,
-  enableCollateral: initialStatus,
-  addSpigot: initialStatus,
-  releaseSpigot: initialStatus,
-  updateOwnerSplit: initialStatus,
-  getLineCollateralData: initialStatus,
+  approve: {},
+  addCollateral: {},
+  enableCollateral: {},
+  addSpigot: {},
+  releaseSpigot: {},
+  updateOwnerSplit: {},
+  getLineCollateralData: {},
 };
 
 export const collateralInitialState: CollateralState = {
@@ -46,24 +46,28 @@ const collateralReducer = createReducer(collateralInitialState, (builder) => {
     })
 
     /* -------------------------------- enableCollateral ------------------------------- */
-    .addCase(enableCollateral.pending, (state) => {
-      state.statusMap.enableCollateral = { loading: true };
+    .addCase(enableCollateral.pending, (state, payload) => {
+      console.log('collateral action payload', payload);
+      // state.statusMap.enableCollateral = { loading: true };
     })
-    .addCase(enableCollateral.fulfilled, (state) => {
-      state.statusMap.enableCollateral = {};
+    .addCase(enableCollateral.fulfilled, (state, payload) => {
+      console.log('collateral action payload', payload);
+      // state.statusMap.enableCollateral = {};
     })
     .addCase(enableCollateral.rejected, (state, { error }) => {
-      state.statusMap.enableCollateral = { error: error.message };
+      // state.statusMap.enableCollateral = { error: error.message };
     })
-    /* -------------------------------- enableCollateral ------------------------------- */
-    .addCase(addCollateral.pending, (state) => {
-      state.statusMap.addCollateral = { loading: true };
+    /* -------------------------------- addCollateral ------------------------------- */
+    .addCase(addCollateral.pending, (state, payload) => {
+      console.log('collateral action payload', payload);
+      // state.statusMap.addCollateral = { loading: true };
     })
-    // .addCase(addCollateral.fulfilled, (state, { escroAddressw, amout, amount, success }) => {
-    //   state.statusMap.addCollateral = {};
-    // })
+    .addCase(addCollateral.fulfilled, (state, payload) => {
+      console.log('collateral action payload', payload);
+      // state.statusMap.addCollateral = {};
+    })
     .addCase(addCollateral.rejected, (state, { error }) => {
-      state.statusMap.addCollateral = { error: error.message };
+      // _.assignIn(state.statusMap.addCollateral, { [contract]: { [token]: { error: error.message } } });
     });
 });
 

@@ -20,6 +20,16 @@ import {
   AddCollateralProps,
   ReleaseCollateraltProps,
   ARBITER_POSITION_ROLE,
+  ClaimAndRepayProps,
+  ClaimAndTradeProps,
+  SweepSpigotProps,
+  ReleaseSpigotProps,
+  AddSpigotProps,
+  ACTIVE_STATUS,
+  REPAID_STATUS,
+  LIQUIDATABLE_STATUS,
+  UseAndRepayProps,
+  UpdateSpigotOwnerSplitProps,
 } from '@types';
 import { getConfig } from '@config';
 import { getContract } from '@frameworks/ethers';
@@ -74,10 +84,10 @@ export class CollateralServiceImpl implements CollateralService {
   }
 
   public async enableCollateral(props: EnableCollateralProps): Promise<TransactionResponse | PopulatedTransaction> {
-    const { userPositionMetadata, escrowAddress, network, dryRun, token } = props;
+    const { escrowAddress, network, dryRun, token } = props;
 
-    if (userPositionMetadata.role !== ARBITER_POSITION_ROLE)
-      return Promise.reject(new Error("Can't enable collateral, not arbiter on line"));
+    // if (userPositionMetadata.role !== ARBITER_POSITION_ROLE)
+    //   return Promise.reject(new Error("Can't enable collateral, not arbiter on line"));
 
     return await this.executeContractMethod(
       escrowAddress,
@@ -103,9 +113,9 @@ export class CollateralServiceImpl implements CollateralService {
   }
 
   public async releaseCollateral(props: ReleaseCollateraltProps): Promise<TransactionResponse | PopulatedTransaction> {
-    const { userPositionMetadata, escrowAddress, network, dryRun, token, amount, to } = props;
-    if (userPositionMetadata.role !== BORROWER_POSITION_ROLE)
-      return Promise.reject(new Error("Can't release collateral, not borrower on line"));
+    const { escrowAddress, network, dryRun, token, amount, to } = props;
+    // if (userPositionMetadata.role !== BORROWER_POSITION_ROLE)
+    //   return Promise.reject(new Error("Can't release collateral, not borrower on line"));
 
     return await this.executeContractMethod(
       escrowAddress,
@@ -117,57 +127,57 @@ export class CollateralServiceImpl implements CollateralService {
     );
   }
 
-  public async addSpigot(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: Address,
-    revenueContract: Address,
-    setting: ISpigotSetting,
-    network: Network
-  ): Promise<TransactionResponse | PopulatedTransaction> {
-    if (!(await this.isSpigotOwner(null, lineAddress))) {
+  public async addSpigot(props: AddSpigotProps): Promise<TransactionResponse | PopulatedTransaction> {
+    if (!(await this.isSpigotOwner(undefined, props.lineAddress))) {
       throw new Error('Cannot add spigot. Signer is not owner.');
     }
 
-    if (revenueContract === lineAddress) {
+    if (props.revenueContract === props.lineAddress) {
       throw new Error('Invalid revenue contract address. `revenueContract` address is same as `spigotedLineAddress`');
     }
 
     // TODO check that revenueContract isn't spigot
 
     if (
-      setting.transferOwnerFunction.length === 0 ||
-      unnullify(setting.ownerSplit, true).gt(this.maxSplit()) ||
-      setting.token === ethers.constants.AddressZero
+      props.setting.transferOwnerFunction.length === 0 ||
+      unnullify(props.setting.ownerSplit, true).gt(this.maxSplit()) ||
+      props.setting.token === ethers.constants.AddressZero
     ) {
       throw new Error('Bad setting');
     }
 
     return await this.executeContractMethod(
-      lineAddress,
+      props.lineAddress,
       this.lineAbi,
       'addSpigot',
-      [revenueContract, setting],
-      network
+      [props.revenueContract, props.setting],
+      props.network
     );
   }
 
-  public async releaseSpigot(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: Address,
-    spigot: Address,
-    status: string,
-    borrower: Address,
-    arbiter: Address,
-    network: Network,
-    dryRun: boolean
+  public async updateOwnerSplit(
+    props: UpdateSpigotOwnerSplitProps
   ): Promise<TransactionResponse | PopulatedTransaction> {
+    // TODO get current status and split from subgraph and simulate calling updateSplit if it will change anything *return false)
     return await this.executeContractMethod(
-      lineAddress,
+      props.lineAddress,
+      this.lineAbi,
+      'addSpigot',
+      [props.revenueContract],
+      props.network
+    );
+  }
+
+  public async releaseSpigot(props: ReleaseSpigotProps): Promise<TransactionResponse | PopulatedTransaction> {
+    if (props.status === ACTIVE_STATUS) return Promise.reject();
+
+    return await this.executeContractMethod(
+      props.lineAddress,
       this.lineAbi,
       'releaseSpigot',
-      [spigot, status, borrower, arbiter],
-      network,
-      dryRun
+      [props.to],
+      props.network,
+      props.dryRun
     );
   }
 
@@ -199,77 +209,79 @@ export class CollateralServiceImpl implements CollateralService {
     }
   }
 
-  public async sweep(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: string,
-    to: Address,
-    token: Address,
-    amount: BigNumber,
-    status: string,
-    borrower: Address,
-    arbiter: Address,
-    network: Network,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction> {
+  public async sweep(props: SweepSpigotProps): Promise<TransactionResponse | PopulatedTransaction> {
+    // const role = props.userPositionMetadata.role;
+    // if (props.status === ACTIVE_STATUS) Promise.reject();
+    // if (props.status === LIQUIDATABLE_STATUS && role !== ARBITER_POSITION_ROLE) Promise.reject();
+    // if (props.status === REPAID_STATUS && role !== BORROWER_POSITION_ROLE) Promise.reject();
+
     return await this.executeContractMethod(
-      lineAddress,
+      props.lineAddress,
       this.lineAbi,
       'sweep',
-      [to, token, amount, status, borrower, arbiter],
-      network,
-      dryRun
+      [props.to, props.token],
+      props.network,
+      props.dryRun
     );
   }
 
-  public async claimAndTrade(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: Address,
-    claimToken: Address,
-    zeroExTradeData: BytesLike,
-    network: Network
-  ): Promise<TransactionResponse | PopulatedTransaction> {
+  public async claimAndTrade(props: ClaimAndTradeProps): Promise<TransactionResponse | PopulatedTransaction> {
     // todo use CreditLineService
-    if (!(await this.creditLineService.isBorrowing(lineAddress))) {
+    if (!(await this.creditLineService.isBorrowing(props.lineAddress))) {
       throw new Error('Claim and trade is not possible because not borrowing');
     }
     // todo call contract for first position and check that lender is them
-    const role = userPositionMetadata.role;
-    if (role !== BORROWER_POSITION_ROLE && role !== LENDER_POSITION_ROLE) {
-      throw new Error('Claim and trade is not possible because signer is not borrower');
-    }
+    // const role = props.userPositionMetadata.role;
+    // if (role !== BORROWER_POSITION_ROLE && role !== LENDER_POSITION_ROLE) {
+    //   throw new Error('Claim and trade is not possible because signer is not borrower');
+    // }
 
-    // todo check that
+    // TODO check that there are tokens to claim on spigot
+    // TODO simulate trade and try to check against known token prices
 
     return await this.executeContractMethod(
-      lineAddress,
+      props.lineAddress,
       this.lineAbi,
       'claimAndTrade',
-      [claimToken, zeroExTradeData],
-      network
+      [props.claimToken, props.zeroExTradeData],
+      props.network
     );
   }
 
-  public async claimAndRepay(
-    userPositionMetadata: UserPositionMetadata,
-    lineAddress: Address,
-    claimToken: Address,
-    network: Network,
-    calldata: BytesLike
-  ): Promise<TransactionResponse | PopulatedTransaction> {
-    if (!(await this.creditLineService.isBorrowing(lineAddress))) {
+  // repay from spigot revenue collateral
+
+  public async claimAndRepay(props: ClaimAndRepayProps): Promise<TransactionResponse | PopulatedTransaction> {
+    if (!(await this.creditLineService.isBorrowing(props.lineAddress))) {
       throw new Error('Claim and repay is not possible because not borrowing');
     }
 
-    if (!(await this.creditLineService.isSignerBorrowerOrLender(lineAddress, await this.getFirstID(lineAddress)))) {
+    if (
+      !(await this.creditLineService.isSignerBorrowerOrLender(
+        props.lineAddress,
+        await this.getFirstID(props.lineAddress)
+      ))
+    ) {
       throw new Error('Claim and repay is not possible because signer is not borrower or lender');
     }
 
     return await this.executeContractMethod(
-      lineAddress,
+      props.lineAddress,
       this.lineAbi,
       'claimAndRepay',
-      [claimToken, calldata],
-      network
+      [props.claimToken, props.zeroExTradeData],
+      props.network
+    );
+  }
+
+  public async useAndRepay(props: UseAndRepayProps): Promise<TransactionResponse | PopulatedTransaction> {
+    // TODO check unused is <= amount
+    // TODO
+    return await this.executeContractMethod(
+      props.lineAddress,
+      this.lineAbi,
+      'useAndRepay',
+      [props.amount],
+      props.network
     );
   }
 
@@ -290,6 +302,10 @@ export class CollateralServiceImpl implements CollateralService {
 
   public async getFirstID(lineAddress: string): Promise<BytesLike> {
     return await this.creditLineService.getFirstID(lineAddress);
+  }
+
+  public async defaultSplit(lineAddress: string): Promise<BigNumber> {
+    return (await this._getLineContract(lineAddress)).defaultRevenueSplit();
   }
 
   // todo pass in user position metadata state where used instead

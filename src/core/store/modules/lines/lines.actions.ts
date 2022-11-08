@@ -17,6 +17,7 @@ import {
   UseCreditLinesParams,
   BorrowCreditProps,
   Network,
+  DeploySecuredLineProps,
 } from '@types';
 import {
   toBN,
@@ -216,23 +217,18 @@ const getExpectedTransactionOutcome = createAsyncThunk<
 /*                             Transaction Methods                            */
 /* -------------------------------------------------------------------------- */
 
-const deploySecuredLine = createAsyncThunk<
-  void,
-  {
-    borrower: Address;
-    ttl: string;
-    network: Network;
-  },
-  ThunkAPI
->('lines/deploySecredLine', async (deployData, { getState, extra }) => {
-  const { lineServices } = extra.services;
-  const deployedLineData = await lineServices.deploySecuredLine({
-    ...deployData,
-  });
+const deploySecuredLine = createAsyncThunk<void, DeploySecuredLineProps, ThunkAPI>(
+  'lines/deploySecredLine',
+  async (deployData, { getState, extra }) => {
+    const { lineFactoryService } = extra.services;
+    const deployedLineData = await lineFactoryService.deploySecuredLine({
+      ...deployData,
+    });
 
-  console.log('new secured line deployed. tx response', deployedLineData);
-  // await dispatch(getLine(deployedLineData.))
-});
+    console.log('new secured line deployed. tx response', deployedLineData);
+    // await dispatch(getLine(deployedLineData.))
+  }
+);
 
 const approveDeposit = createAsyncThunk<
   void,
@@ -442,13 +438,16 @@ const liquidate = createAsyncThunk<
 >(
   'lines/liquidate',
   async ({ lineAddress, tokenAddress, amount }, { extra, getState, dispatch }) => {
-    const { wallet } = getState();
+    const { wallet, network } = getState();
     const { services } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const { creditLineService, spigotedLineService } = services;
+    const { creditLineService, collateralService } = services;
+    // TODO get user collateral metadata
+    // TODO assert metadata role === arbiter
+
     // const { error: depositError } = validateLineDeposit({
     //   sellTokenAmount: amount,
     //   depositLimit: lineData?.metadata.depositLimit ?? '0',
@@ -462,13 +461,13 @@ const liquidate = createAsyncThunk<
     // const error = depositError;
     // if (error) throw new Error(error);
 
-    // TODO: fix BigNumber type difference issues
-    // const amountInWei = amount.multipliedBy(ONE_UNIT);
-    // const { creditLineService, transactionService } = services;
-    const tx = await spigotedLineService.liquidate({
+    const tx = await collateralService.liquidate({
+      // userPositionMetadata: ,
       lineAddress: lineAddress,
       amount: amount,
-      targetToken: tokenAddress,
+      token: tokenAddress,
+      to: userAddress,
+      network: network.current,
       dryRun: false,
     });
     console.log(tx);
