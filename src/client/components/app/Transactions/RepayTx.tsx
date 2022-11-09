@@ -6,6 +6,7 @@ import { formatAmount, normalizeAmount } from '@utils';
 import { useAppTranslation, useAppDispatch, useAppSelector, useSelectedSellToken } from '@hooks';
 import { TokensActions, TokensSelectors, VaultsSelectors, LinesSelectors, LinesActions, WalletSelectors } from '@store';
 import { getConstants } from '@src/config/constants';
+import { PositionItem } from '@src/core/types';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -13,8 +14,8 @@ import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
 import { TxRateInput } from './components/TxRateInput';
-import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxDropdown } from './components/TxDropdown';
+import { TxPositionInput } from './components/TxPositionInput';
 
 const StyledTransaction = styled(TxContainer)``;
 
@@ -45,6 +46,7 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
   const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
   const initialToken: string = selectedSellTokenAddress || DAI;
+  const positions = useAppSelector(LinesSelectors.selectPositions);
 
   const repaymentOptions = [
     { id: '1', label: 'Repay from:', value: 'Wallet' },
@@ -223,6 +225,10 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
     _updatePosition();
   };
 
+  const onSelectedPositionChange = (arg: PositionItem): void => {
+    dispatch(LinesActions.setSelectedLinePosition({ position: arg.id }));
+  };
+
   if (!selectedCredit || selectedPosition === undefined) return null;
   if (!selectedSellToken) return null;
 
@@ -261,15 +267,16 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.deposit-and-repay.header')}>
-      <TxCreditLineInput
+      <TxPositionInput
         key={'credit-input'}
-        headerText={t('components.transaction.deposit-and-repay.select-position')}
+        headerText={t('components.transaction.borrow-credit.select-line')}
         inputText={t('components.transaction.borrow-credit.select-line')}
-        onSelectedCreditLineChange={onSelectedCreditLineChange}
-        selectedCredit={selectedCredit}
+        onSelectedPositionChange={onSelectedPositionChange}
+        selectedPosition={selectedPosition[0]}
+        positions={positions}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
-        readOnly={true}
+        readOnly={false}
         // displayGuidance={displaySourceGuidance}
       />
       <TxDropdown

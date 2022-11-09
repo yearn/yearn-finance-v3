@@ -37,10 +37,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const selectedPosition = useAppSelector(LinesSelectors.selectPositionData);
   const [targetAmount, setTargetAmount] = useState('1');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
-  const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
   const positions = useAppSelector(LinesSelectors.selectPositions);
-
-  console.log('positions', positions);
 
   const _updatePosition = () =>
     onPositionChange({
@@ -52,11 +49,6 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
 
   const onAmountChange = (amount: string): void => {
     setTargetAmount(amount);
-    _updatePosition();
-  };
-
-  const onSelectedCreditLineChange = (addr: string): void => {
-    setSelectedCredit(addr);
     _updatePosition();
   };
 
