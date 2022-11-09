@@ -81,7 +81,9 @@
       "approve": "Approve",
       "available-borrow": "Available to borrow",
       "borrow": "Borrow",
-      "deposit-and-repay-header": "deposit and repay",
+      "deposit-and-repay-header": "Deposit and Repay",
+      "claim-and-repay-header": "Claim and Repay",
+      "deposit-and-close-header": "Deposit and Close",
       "withdraw": "Withdraw",
       "borrow-limit": {
         "borrow-apy": "Borrow APY",
@@ -167,8 +169,10 @@
       "deposit-and-repay": {
         "header": "Repay",
         "select-position": "1. Select Position to Repay:",
-        "select-amount": "2. You Owe:",
-        "your-rates": "3. Your Interest Rates:"
+        "repay-type": "2. Select Repay Type:",
+        "select-amount": "3. You Owe:",
+        "your-rates": "4. Your Interest Rates:",
+        "select-repay": "Select Repayment Method"
       },
       "withdraw-credit": {
         "header": "Withdraw",
