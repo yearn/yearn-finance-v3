@@ -38,7 +38,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { NETWORK_SETTINGS, MAX_UINT256 } = getConfig();
+  const { NETWORK_SETTINGS, MAX_UINT256, CONTRACT_ADDRESSES } = getConfig();
   const [signature, setSignature] = useState<string | undefined>();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
@@ -205,7 +205,9 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
     : t('components.transaction.status.calculating');
 
   const isZap = selectedVault.token.address !== selectedTargetTokenAddress;
-  const zapService = isZap ? selectedVault.zapOutWith : undefined;
+  const isWethToEthZap =
+    selectedTargetTokenAddress === CONTRACT_ADDRESSES.ETH && selectedVault.address === CONTRACT_ADDRESSES.YVWETH;
+  const zapService = isZap && !isWethToEthZap ? selectedVault.zapOutWith : undefined;
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -229,7 +231,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const approve = async () => {
     try {
-      if (signedApprovalsEnabled) {
+      if (signedApprovalsEnabled && !isWethToEthZap) {
         const signResult = await dispatchAndUnwrap(
           VaultsActions.signZapOut({
             vaultAddress: selectedVault.address,
@@ -263,7 +265,10 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const txActions = [
     {
-      label: signedApprovalsEnabled ? t('components.transaction.sign') : t('components.transaction.approve'),
+      label:
+        signedApprovalsEnabled && !isWethToEthZap
+          ? t('components.transaction.sign')
+          : t('components.transaction.approve'),
       onAction: approve,
       status: actionsStatus.approveZapOut,
       disabled: isApproved || isFetchingAllowance,
