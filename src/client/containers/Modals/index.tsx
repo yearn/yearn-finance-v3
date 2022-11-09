@@ -9,6 +9,7 @@ import { ComingSoonModal } from './ComingSoonModal';
 import { CommunityThemesModal } from './CommunityThemesModal';
 import { TestTxModal } from './TestTxModal';
 import { AddCreditPositionTxModal } from './AddCreditPositionTxModal';
+import { EnableCollateralAssetTxModal } from './EnableCollateralAssetTxModal';
 import { MigrateTxModal } from './MigrateTxModal';
 import { LiquidateBorrowerTxModal } from './LiquidateBorrower';
 import { BorrowTxModal } from './BorrowTxModal';
@@ -176,6 +177,18 @@ export const Modals = () => {
       {activeModal === 'addCollateral' && (
         <CSSTransition key={'addCollateral'} timeout={modalTimeout} classNames="slideBottom">
           <AddCollateralTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'enableCollateral' && (
+        <CSSTransition key={'enableCollateral'} timeout={modalTimeout} classNames="slideBottom">
+          <EnableCollateralAssetTxModal onClose={closeModal} />
+        </CSSTransition>
+      )}
+
+      {activeModal === 'addSpigot' && (
+        <CSSTransition key={'addSpigot'} timeout={modalTimeout} classNames="slideBottom">
+          {/* <AddSpigotTxModal onClose={closeModal} /> */}
         </CSSTransition>
       )}
 

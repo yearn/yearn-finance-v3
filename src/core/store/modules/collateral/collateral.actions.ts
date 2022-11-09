@@ -3,7 +3,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { Address } from '@yfi/sdk';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { EnableCollateralProps, AddCollateralProps } from '@src/core/types';
+import { EnableCollateralAssetProps, AddCollateralProps } from '@src/core/types';
 
 import { TokensActions } from '../tokens/tokens.actions';
 
@@ -12,7 +12,7 @@ const setSelectedSpigotAddress = createAction<{ spigotAddress?: string }>('lines
 
 const enableCollateral = createAsyncThunk<
   { contract: string; token: string; success: boolean },
-  EnableCollateralProps,
+  EnableCollateralAssetProps,
   ThunkAPI
 >('collateral/enableCollateral', async (props, { extra, getState, dispatch }) => {
   const { wallet } = getState();

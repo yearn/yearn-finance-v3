@@ -192,10 +192,10 @@ const selectSelectedLinePage = createSelector(
 const selectPositionData = createSelector(
   [selectSelectedLine, selectSelectedPosition],
   (line, selectSelectedPosition) => {
-    if (selectSelectedPosition === undefined) {
-      return;
-    }
-    let selectedPositionData = line?.positions?.filter(
+    if (!selectSelectedPosition) return;
+
+    let selectedPositionData = _.find(
+      line?.positions,
       (position: PositionInt) => position.id === selectSelectedPosition
     );
     return selectedPositionData;
@@ -299,8 +299,6 @@ export const LinesSelectors = {
   selectLiveLines,
   selectLinesForCategories,
   selectUserPositionMetadata,
-  selectSelectedPosition,
-  selectSelectedLinePage,
   // selectDeprecatedLines,
   selectUserLinesPositionsMap,
   selectUserTokensMap,
@@ -310,6 +308,7 @@ export const LinesSelectors = {
   selectLinesStatusMap,
   selectLinesGeneralStatus,
   selectSelectedLine,
+  selectSelectedLinePage,
   selectSelectedPosition,
   selectSelectedLineActionsStatusMap,
   // selectDepositedLines,

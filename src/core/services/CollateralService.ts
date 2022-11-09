@@ -16,7 +16,7 @@ import {
   UserPositionMetadata,
   BORROWER_POSITION_ROLE,
   LENDER_POSITION_ROLE,
-  EnableCollateralProps,
+  EnableCollateralAssetProps,
   AddCollateralProps,
   ReleaseCollateraltProps,
   ARBITER_POSITION_ROLE,
@@ -83,7 +83,9 @@ export class CollateralServiceImpl implements CollateralService {
     return getContract(contractAddress.toString(), this.spigotAbi, this.web3Provider.getSigner().provider);
   }
 
-  public async enableCollateral(props: EnableCollateralProps): Promise<TransactionResponse | PopulatedTransaction> {
+  public async enableCollateral(
+    props: EnableCollateralAssetProps
+  ): Promise<TransactionResponse | PopulatedTransaction> {
     const { escrowAddress, network, dryRun, token } = props;
 
     // if (userPositionMetadata.role !== ARBITER_POSITION_ROLE)

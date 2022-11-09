@@ -133,6 +133,7 @@ export interface UserPositionMetadata {
   available: string; // borrowable/withdrawable/liquidatable
 }
 
+// TODO consolidate PositonInt and PositionSummary types
 export interface PositionInt {
   drate: string;
   frate: string;
@@ -145,9 +146,7 @@ export interface PositionInt {
   status: string;
   tokenAddress: string;
 }
-
 export interface PositionSummary {
-  type: 'revenue';
   id: string;
   borrower: Address;
   lender: Address;

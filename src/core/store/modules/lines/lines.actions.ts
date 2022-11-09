@@ -365,15 +365,21 @@ const claimAndRepay = createAsyncThunk<
   'lines/claimAndRepay',
 
   async ({ lineAddress, claimToken, calldata }, { extra, getState, dispatch }) => {
-    const { wallet } = getState();
+    const { wallet, network } = getState();
     const { services } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('Wallet not connected');
 
-    const { spigotedLineService } = services;
+    const { collateralService } = services;
 
-    const tx = await spigotedLineService.claimAndRepay(lineAddress, claimToken, calldata, false);
+    const tx = await collateralService.claimAndRepay({
+      lineAddress,
+      claimToken,
+      zeroExTradeData: calldata,
+      network: network.current,
+      dryRun: false,
+    });
     console.log(tx);
   }
 );

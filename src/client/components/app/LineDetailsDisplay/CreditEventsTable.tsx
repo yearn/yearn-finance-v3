@@ -150,6 +150,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
     dispatch(ModalsActions.openModal({ modalName: 'addPosition' }));
   };
 
+  console.log('credit events table', events);
   return (
     <>
       <TableHeader>{t('components.positions-card.positions')}</TableHeader>

@@ -306,7 +306,7 @@ export interface ISpigotSetting {
 }
 
 // Colalteral Service Function Props
-export interface EnableCollateralProps {
+export interface EnableCollateralAssetProps {
   // userPositionMetadata: UserPositionMetadata;
   escrowAddress: Address;
   token: Address;
@@ -409,7 +409,7 @@ export interface UpdateSpigotOwnerSplitProps {
 export interface CollateralService {
   // collateral maintenance
   // escrow
-  enableCollateral(props: EnableCollateralProps): Promise<TransactionResponse | PopulatedTransaction>;
+  enableCollateral(props: EnableCollateralAssetProps): Promise<TransactionResponse | PopulatedTransaction>;
   addCollateral(props: AddCollateralProps): Promise<TransactionResponse | PopulatedTransaction>;
   releaseCollateral(props: ReleaseCollateraltProps): Promise<TransactionResponse | PopulatedTransaction>;
   // spigot
