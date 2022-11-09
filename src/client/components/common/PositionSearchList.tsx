@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { PositionItem } from '@src/core/types';
+import { normalizeAmount } from '@src/utils';
 
 import { Icon, ChevronLeftIcon } from './Icon';
 import { SearchInput } from './SearchInput';
@@ -136,8 +137,13 @@ export const PositionSearchList: FC<PositionSearchListProps> = ({
           (item: PositionItem) =>
             item && (
               <ListItem key={item.id} onClick={() => selectItem(item)} selected={item.id === selected.id}>
-                <ItemLabel>{item.lender}</ItemLabel>
-                {item.deposit}
+                <ItemLabel>
+                  Lender: {item.lender}
+                  <br />
+                  Deposit: {normalizeAmount(item.deposit, 18)}
+                  <br />
+                  Rates: {item.frate} / {item.drate}%
+                </ItemLabel>
               </ListItem>
             )
         )}

@@ -144,6 +144,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
         inputText={t('components.transaction.borrow-credit.select-line')}
         onSelectedPositionChange={onSelectedPositionChange}
         selectedPosition={selectedPosition[0]}
+        positions={positions}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={false}

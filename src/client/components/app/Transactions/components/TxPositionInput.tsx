@@ -179,7 +179,8 @@ export const TxPositionInput: FC<TxPositionInputProps> = ({
     drate: selectedPosition!.drate,
   };
 
-  if (positions && positions.length >= 1) {
+  if (positions && positions.length > 1) {
+    console.log('positions 2', positions);
     listItems = positions
       .filter((s) => !!s)
       .map((item) => {
@@ -201,8 +202,8 @@ export const TxPositionInput: FC<TxPositionInputProps> = ({
 
   const [openedSearch, setOpenedSearch] = useState(false);
   const searchListHeader = readOnly
-    ? t('components.transaction.deposit-and-repay.select-repay')
-    : t('components.transaction.deposit-and-repay.select-repay');
+    ? t('components.transaction.borrow-credit.select-line')
+    : t('components.transaction.borrow-credit.select-line');
 
   if (selectedPosition === undefined) {
     return;
