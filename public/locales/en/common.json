@@ -90,6 +90,13 @@
         "total-borrow-limit": "Total borrow limit",
         "total-borrow-limit-used": "Total borrow limit used"
       },
+      "enable-collateral-asset": {
+        "header": "As Arbiter you're enabling the Borrow to use this token as collateral",
+        "token-input-header": "Select an asset",
+        "token-input-desc": "",
+        "cta": "Enable Asset"
+      },
+      "oracle-price": "Oracle Price",
       "claim": "Claim",
       "deposit": "Deposit",
       "liquidate": "Liquidate",

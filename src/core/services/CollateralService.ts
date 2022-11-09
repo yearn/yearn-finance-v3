@@ -349,7 +349,7 @@ export class CollateralServiceImpl implements CollateralService {
       return tx;
     } catch (e) {
       console.log(
-        `An error occured while ${methodName} with params [${params}] on CreditLine [${props?.contractAddress}], error = ${e} `
+        `An error occured while ${methodName} with params [${params}] on contract [${props?.contractAddress}], error = ${e} `
       );
       return Promise.reject(e);
     }

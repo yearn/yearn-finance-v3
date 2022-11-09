@@ -167,11 +167,11 @@ export const LineMetadata = (props: LineMetadataProps) => {
   };
 
   const addSpigotHandler = (token: TokenView) => {
-    dispatch(ModalsActions.openModal({ modalName: 'enableCollateral' }));
+    dispatch(ModalsActions.openModal({ modalName: 'addSpigot' }));
   };
 
   const enableAssetHandler = (token: TokenView) => {
-    dispatch(ModalsActions.openModal({ modalName: 'addSpigot' }));
+    dispatch(ModalsActions.openModal({ modalName: 'enableCollateral' }));
   };
 
   const allCollateral = [...Object.values(deposits ?? {}), ...Object.values(revenue ?? {})];

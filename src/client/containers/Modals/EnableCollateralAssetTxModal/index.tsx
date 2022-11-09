@@ -17,7 +17,7 @@ export const EnableCollateralAssetTxModal: FC<EnableCollateralAssetTxModalProps>
 
   return (
     <StyledEnableCollateralAssetTxModal {...props}>
-      <EnableCollateralAssetTx header={t('components.transaction.add-credit.header')} onClose={onClose} />
+      <EnableCollateralAssetTx header={t('components.transaction.enable-collateral-asset.header')} onClose={onClose} />
     </StyledEnableCollateralAssetTxModal>
   );
 };

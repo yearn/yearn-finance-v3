@@ -27,6 +27,7 @@ import {
   LinesSelectors,
   CollateralActions,
   selectDepositTokenOptionsByAsset,
+  CollateralSelectors,
 } from '@store';
 import { Button, Icon, Link } from '@components/common';
 
@@ -76,8 +77,12 @@ export const EnableCollateralAssetTx: FC<EnableCollateralAssetTxProps> = (props)
 
   // user data
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const walletIsConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
+  const walletAddresssk = useAppSelector(WalletSelectors.selectSelectedAddress);
   const userMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
+  // need to get call statusMap from state
+  const collateralStatusMap = useAppSelector(CollateralSelectors.selectStatusMap);
 
   //state for params
   const { header, onClose } = props;
@@ -86,11 +91,11 @@ export const EnableCollateralAssetTx: FC<EnableCollateralAssetTxProps> = (props)
   const [transactionApproved, setTransactionApproved] = useState(true);
   const [transactionLoading, setLoading] = useState(false);
 
-  const selectedAssetAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
+  const selectedAssetAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress) || TOKEN_ADDRESSES.DAI;
   const collateralOptions = useAppSelector(selectDepositTokenOptionsByAsset)();
-  const selectedAsset = !selectedAssetAddress
-    ? _.find(collateralOptions, (t) => t.address === TOKEN_ADDRESSES.DAI)
-    : _.find(collateralOptions, (t) => t.address === selectedAssetAddress);
+  const selectedAsset = _.find(collateralOptions, (t) => t.address === selectedAssetAddress);
+  // TODO get token prices from yearn API and display
+
   const enabledCollateralAddressess = _.values(selectedLine?.escrow?.deposits)?.map((d) => d.token.address);
 
   useEffect(() => {
@@ -107,6 +112,12 @@ export const EnableCollateralAssetTx: FC<EnableCollateralAssetTxProps> = (props)
       return;
     }
   }, [selectedAsset, walletNetwork]);
+
+  const notArbiter = selectedLine?.status === ACTIVE_STATUS; // TODO
+  if (!notArbiter) {
+    onClose(); // close modal and exit
+    return null;
+  }
 
   const onNoCollateralAssets = () => {
     console.log('no collateral optionsL');
@@ -156,14 +167,14 @@ export const EnableCollateralAssetTx: FC<EnableCollateralAssetTxProps> = (props)
       return; // TODO throw error ot UI component
     }
 
+    console.log('wallet network on enable collat tx', walletNetwork, walletIsConnected, walletAddresssk);
     if (!walletNetwork) {
-      console.log('no wallet network on enable collat tx');
       setLoading(false);
       return; // TODO throw error ot UI component
     }
 
     const transactionData: EnableCollateralAssetProps = {
-      escrowAddress: selectedLine.id,
+      escrowAddress: selectedLine.escrow.id,
       token: selectedAssetAddress,
       network: walletNetwork,
       dryRun: true,
@@ -186,9 +197,6 @@ export const EnableCollateralAssetTx: FC<EnableCollateralAssetTxProps> = (props)
   if (!selectedAsset) return null;
   if (!selectedLine) return null;
 
-  const targetBalance = normalizeAmount(selectedAsset.balance, selectedAsset.decimals);
-  const tokenHeaderText = `${t('components.transaction.token-input.you-have')} ${formatAmount(targetBalance, 4)}`;
-
   if (transactionCompleted === 1) {
     return (
       <StyledTransaction onClose={onClose} header={'transaction'}>
@@ -206,60 +214,37 @@ export const EnableCollateralAssetTx: FC<EnableCollateralAssetTxProps> = (props)
       <StyledTransaction onClose={onClose} header={'transaction'}>
         <TxStatus
           success={transactionCompleted}
-          transactionCompletedLabel={'could not add credit'}
+          transactionCompletedLabel={'Tx Failed with error: ' + collateralStatusMap.enableCollateral.error}
           exit={onTransactionCompletedDismissed}
         />
       </StyledTransaction>
     );
   }
 
-  const isActive = selectedLine.status === ACTIVE_STATUS;
-  if (!isActive) {
-    const toMarketplace = () => {
-      onClose();
-      // send user to top of market page instead of bottom where they currently are
-      window.scrollTo({ top: 0, left: 0 });
-      history.push('/market');
-    };
-
-    return (
-      <StyledTransaction onClose={onClose} header={t('components.transaction.add-credit.bad-line.title')}>
-        <BadLineErrorContainer>
-          <BadLineErrorBody>{t('components.transaction.add-credit.bad-line.body')}</BadLineErrorBody>
-          <StyledTxActionButton color="primary" onClick={toMarketplace}>
-            {t('components.transaction.add-credit.back-to-market')}
-          </StyledTxActionButton>
-          <BadLineErrorImageContainer>
-            <BadLineErrorImage />
-          </BadLineErrorImageContainer>
-        </BadLineErrorContainer>
-      </StyledTransaction>
-    );
-  }
-
   return (
-    <StyledTransaction onClose={onClose} header={header || t('components.transaction.title')}>
+    <StyledTransaction onClose={onClose} header={header}>
       <TxTokenInput
         key={'token-input'}
-        headerText={t('components.transaction.add-credit.select-token')}
+        style="oracle"
         readOnly
-        inputText={tokenHeaderText}
+        headerText={t('components.transaction.enable-collateral-asset.token-input-header')}
+        inputText={t('components.transaction.oracle-price')}
         selectedToken={selectedAsset}
-        amount={'0'}
+        amount={'$' + selectedAsset.priceUsdc}
         tokenOptions={collateralOptions}
         // inputError={!!sourceStatus.error}
         // displayGuidance={displaySourceGuidance}
       />
       <TxActions>
         <TxActionButton
-          key={t('components.transaction.deposit') as string}
-          data-testid={`modal-action-${t('components.transaction.deposit').toLowerCase()}`}
+          key={t('components.transaction.enable-collateral-asset.cta') as string}
+          data-testid={`modal-action-${t('components.transaction.enable-collateral-asset.cta').toLowerCase()}`}
           onClick={enableCollateralAsset}
           disabled={!transactionApproved}
           contrast={true}
           isLoading={transactionLoading}
         >
-          {t('components.transaction.deposit')}
+          {t('components.transaction.enable-collateral-asset.cta')}
         </TxActionButton>
       </TxActions>
     </StyledTransaction>

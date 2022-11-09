@@ -4,7 +4,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
-import { Text, Icon, Button, SearchList, ZapIcon, SearchListItem } from '@components/common';
+import { Text, Icon, Button, SearchList, ChailinkIcon, ZapIcon, SearchListItem } from '@components/common';
 import { humanize } from '@utils';
 
 const MaxButton = styled(Button)`
@@ -15,8 +15,6 @@ const MaxButton = styled(Button)`
 `;
 
 const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
-  font-size: 2.4rem;
-  font-weight: 700;
   background: transparent;
   outline: none;
   border: none;
@@ -57,6 +55,9 @@ const AmountInputContainer = styled.div`
   align-items: center;
   width: 100%;
   margin-top: 0.8rem;
+
+  font-size: 2.4rem;
+  font-weight: 700;
 `;
 
 const AmountTitle = styled(Text)`
@@ -187,11 +188,14 @@ interface Token {
   yield?: string;
 }
 
+type TokenInputStyles = 'amount' | 'oracle';
+
 export interface TxTokenInputProps {
+  style?: TokenInputStyles;
   headerText?: string;
   inputText?: string;
   inputError?: boolean;
-  amount: string;
+  amount?: string;
   onAmountChange?: (amount: string) => void;
   amountValue?: string;
   maxAmount?: string;
@@ -208,6 +212,7 @@ export interface TxTokenInputProps {
 }
 
 export const TxTokenInput: FC<TxTokenInputProps> = ({
+  style = 'amount',
   headerText,
   inputText,
   inputError,
@@ -261,6 +266,14 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
     ? t('components.transaction.token-input.search-select-vault')
     : t('components.transaction.token-input.search-select-token');
 
+  // const getMainInputField = () => {
+  //   if(hideAmount) return null;
+  //   switch(style) {
+  //     case 'amount':
+  //       return
+  // }
+
+  const tokenInfoIcon = style === 'oracle' ? ChailinkIcon : ZapIcon;
   return (
     <StyledTxTokenInput {...props}>
       <>{headerText && <Header>{headerText}</Header>}</>
@@ -282,7 +295,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
           <TokenSelector onClick={listItems?.length > 1 ? openSearchList : undefined} center={hideAmount}>
             <TokenIconContainer>
               <TokenIcon icon={selectedItem.icon} symbol={selectedItem.label} size="big" />
-              {listItems?.length > 1 && <TokenListIcon Component={ZapIcon} />}
+              {listItems?.length > 1 && <TokenListIcon Component={tokenInfoIcon} />}
             </TokenIconContainer>
             <TokenName>{selectedItem.label}</TokenName>
           </TokenSelector>
@@ -292,6 +305,7 @@ export const TxTokenInput: FC<TxTokenInputProps> = ({
               <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
 
               <AmountInputContainer>
+                {style === 'oracle' && '$'}
                 <StyledAmountInput
                   value={amount}
                   onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
