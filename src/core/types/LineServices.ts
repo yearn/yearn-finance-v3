@@ -1,7 +1,4 @@
-import { BigNumber } from 'ethers';
-
 import { Address } from './Blockchain';
-import { Status } from './Status';
 
 export interface LineServices {
   deploySecuredLine(arg0: { borrower: string; ttl: string; network: string }): unknown;

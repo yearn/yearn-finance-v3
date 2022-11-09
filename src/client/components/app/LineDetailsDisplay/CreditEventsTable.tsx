@@ -59,7 +59,6 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
   const userWallet = useAppSelector(WalletSelectors.selectSelectedAddress);
   const selectedLine = useAppSelector(LinesSelectors.selectSelectedLine);
   const userRoleMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
-  const selectedPosition = useAppSelector(LinesSelectors.selectPositionData);
   const [actions, setActions] = useState([]);
   const { events } = props;
   const dispatch = useAppDispatch();

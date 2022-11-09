@@ -5,14 +5,15 @@ import { ethers } from 'ethers';
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { LinesSelectors, LinesActions, WalletSelectors } from '@store';
 import { normalizeAmount } from '@src/utils';
+import { PositionItem } from '@src/core/types';
 
 import { TxContainer } from './components/TxContainer';
-import { TxCreditLineInput } from './components/TxCreditLineInput';
 import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
 import { TxTTLInput } from './components/TxTTLInput';
 import { TxRateInput } from './components/TxRateInput';
+import { TxPositionInput } from './components/TxPositionInput';
 
 const StyledTransaction = styled(TxContainer)``;
 
@@ -37,6 +38,9 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const [targetAmount, setTargetAmount] = useState('1');
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
   const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
+  const positions = useAppSelector(LinesSelectors.selectPositions);
+
+  console.log('positions', positions);
 
   const _updatePosition = () =>
     onPositionChange({
@@ -54,6 +58,10 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const onSelectedCreditLineChange = (addr: string): void => {
     setSelectedCredit(addr);
     _updatePosition();
+  };
+
+  const onSelectedPositionChange = (arg: PositionItem): void => {
+    dispatch(LinesActions.setSelectedLinePosition({ position: arg.id }));
   };
 
   const onTransactionCompletedDismissed = () => {
@@ -130,12 +138,12 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
 
   return (
     <StyledTransaction onClose={onClose} header={header || t('components.transaction.borrow')}>
-      <TxCreditLineInput
+      <TxPositionInput
         key={'credit-input'}
         headerText={t('components.transaction.borrow-credit.select-line')}
         inputText={t('components.transaction.borrow-credit.select-line')}
-        onSelectedCreditLineChange={onSelectedCreditLineChange}
-        selectedCredit={selectedCredit}
+        onSelectedPositionChange={onSelectedPositionChange}
+        selectedPosition={selectedPosition[0]}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={false}
