@@ -149,6 +149,7 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
     dispatch(
       LinesActions.depositAndClose({
         lineAddress: selectedCredit.id,
+        //@ts-ignore
         id: selectedPosition[0]['id'],
         network: walletNetwork,
       })
@@ -272,7 +273,8 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
         headerText={t('components.transaction.borrow-credit.select-line')}
         inputText={t('components.transaction.borrow-credit.select-line')}
         onSelectedPositionChange={onSelectedPositionChange}
-        selectedPosition={selectedPosition[0]}
+        //@ts-ignore
+        selectedPosition={selectedPosition}
         positions={positions}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
@@ -308,9 +310,9 @@ export const DepositAndRepayTx: FC<DepositAndRepayProps> = (props) => {
       <TxRateInput
         key={'frate'}
         headerText={t('components.transaction.deposit-and-repay.your-rates')}
-        frate={selectedPosition[0]['frate']}
-        drate={selectedPosition[0]['drate']}
-        amount={selectedPosition[0]['frate']}
+        frate={selectedPosition['frate']}
+        drate={selectedPosition['drate']}
+        amount={selectedPosition['frate']}
         maxAmount={'100'}
         // setRateChange={onFrateChange}
         setRateChange={() => {}}

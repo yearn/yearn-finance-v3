@@ -11,14 +11,14 @@ export interface TokenView {
   name: string;
   symbol: string;
   decimals: number;
-  icon: string | undefined;
+  icon?: string;
   balance: string;
   balanceUsdc: string;
   priceUsdc: string;
   categories: string[];
   description: string;
-  website: string;
-  allowancesMap: { [tokenAddress: string]: string };
+  website?: string;
+  allowancesMap?: { [tokenAddress: string]: string };
 }
 
 export interface TokenDynamicData {

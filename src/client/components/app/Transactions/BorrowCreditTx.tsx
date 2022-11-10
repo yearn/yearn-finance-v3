@@ -39,6 +39,8 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
   const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
   const positions = useAppSelector(LinesSelectors.selectPositions);
 
+  console.log('selected Position', selectedPosition);
+
   const _updatePosition = () =>
     onPositionChange({
       credit: selectedCredit?.id,
@@ -75,7 +77,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
     dispatch(
       LinesActions.borrowCredit({
         line: selectedCredit.id,
-        positionId: selectedPosition[0]['id'],
+        positionId: selectedPosition['id'],
         amount: ethers.utils.parseEther(targetAmount),
         network: walletNetwork,
         dryRun: false,
@@ -135,7 +137,8 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
         headerText={t('components.transaction.borrow-credit.select-line')}
         inputText={t('components.transaction.borrow-credit.select-line')}
         onSelectedPositionChange={onSelectedPositionChange}
-        selectedPosition={selectedPosition[0]}
+        //@ts-ignore
+        selectedPosition={selectedPosition}
         positions={positions}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
@@ -148,7 +151,7 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
         inputError={false}
         amount={targetAmount}
         onAmountChange={onAmountChange}
-        maxAmount={normalizeAmount(selectedPosition[0]['deposit'], 18)}
+        maxAmount={normalizeAmount(selectedPosition['deposit'], 18)}
         maxLabel={'Max'}
         readOnly={false}
         hideAmount={false}
@@ -159,9 +162,9 @@ export const BorrowCreditTx: FC<BorrowCreditProps> = (props) => {
       <TxRateInput
         key={'frate'}
         headerText={t('components.transaction.borrow-credit.your-rates')}
-        frate={selectedPosition[0]['frate']}
-        drate={selectedPosition[0]['drate']}
-        amount={selectedPosition[0]['frate']}
+        frate={selectedPosition['frate']}
+        drate={selectedPosition['drate']}
+        amount={selectedPosition['frate']}
         maxAmount={'100'}
         // setRateChange={onFrateChange}
         setRateChange={() => {}}

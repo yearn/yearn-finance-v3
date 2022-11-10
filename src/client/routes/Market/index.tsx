@@ -63,6 +63,7 @@ export const Market = () => {
   const fetchMarketData = () => dispatch(LinesActions.getLines(defaultLineCategories));
   const lineCategoriesForDisplay = useAppSelector(LinesSelectors.selectLinesForCategories);
   const getLinesStatus = useAppSelector(LinesSelectors.selectLinesStatusMap).getLines;
+
   console.log('ready', lineCategoriesForDisplay, getLinesStatus);
 
   useEffect(() => {
