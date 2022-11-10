@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { normalizeAmount } from '@utils';
 import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@components/common';
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
@@ -132,6 +133,9 @@ interface RecommendationsProps {
 
 export const RecommendationsCard = ({ header, subHeader, items, ...props }: RecommendationsProps) => {
   const { t } = useAppTranslation(['common']);
+  items.forEach((element) => {
+    console.log(normalizeAmount(element.collateral, 18));
+  });
 
   if (items.length === 0) {
     return null;
@@ -169,7 +173,7 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
 
               <ItemInfoLabel>{t('components.line-card.secured-by')}:</ItemInfoLabel>
               <Metric>
-                ${item.collateral.toString()} / ${item.revenue.toString()}
+                ${normalizeAmount(item.collateral, 18).toString()} / ${item.revenue.toString()}
               </Metric>
               <MetricsTextContainer>
                 <MetricsText>
