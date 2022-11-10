@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useAppTranslation } from '@hooks';
 import { ThreeColumnLayout } from '@src/client/containers/Columns';
 import { EscrowDeposit, EscrowDepositList } from '@src/core/types';
+import { normalizeAmount } from '@src/utils';
 
 const SectionHeader = styled.h3`
   ${({ theme }) => `
@@ -96,7 +97,7 @@ export const LineMetadata = (props: LineMetadataProps) => {
     : Object.values(deposits!)
         .reduce<BigNumber>(
           (sum: BigNumber, d: EscrowDeposit) =>
-            !d ? sum : sum.add(BigNumber.from(d!.currentUsdPrice ?? '0').mul(d!.amount)),
+            !d ? sum : sum.add(BigNumber.from(d!.currentUsdPrice ?? '1').mul(d!.amount)),
           BigNumber.from('0')
         )
         .div(BigNumber.from(1)) // scale to usd decimals
@@ -104,8 +105,11 @@ export const LineMetadata = (props: LineMetadataProps) => {
 
   const renderEscrowMetadata = () => {
     if (!deposits) return null;
-    if (!totalCollateral)
-      return <MetricDisplay title={t('lineDetails:metadata.escrow.no-collateral')} data={`$ ${totalCollateral}`} />;
+    if (!totalCollateral) return;
+    <MetricDisplay
+      title={t('lineDetails:metadata.escrow.no-collateral')}
+      data={`$ ${normalizeAmount(totalCollateral, 18)}`}
+    />;
     return <MetricDisplay title={t('lineDetails:metadata.escrow.total')} data={`$ ${totalCollateral}`} />;
   };
   const renderSpigotMetadata = () => {
