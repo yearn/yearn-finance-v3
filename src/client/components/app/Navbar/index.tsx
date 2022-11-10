@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 import { ConnectWalletButton } from '@components/app';
 import { OptionList, EthereumIcon, ArbitrumIcon, Link } from '@components/common';
+import { WalletSelectors } from '@src/core/store';
+import { useAppSelector } from '@hooks';
 import { useWindowDimensions } from '@hooks';
 import { Network } from '@types';
 import { device } from '@themes/default';
@@ -114,12 +116,20 @@ export const Navbar = ({
 }: NavbarProps) => {
   const { isMobile } = useWindowDimensions();
   const { NETWORK_SETTINGS } = getConfig();
+  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
 
   const dropdownSelectedNetwork = {
     value: selectedNetwork,
     label: NETWORK_SETTINGS[selectedNetwork].name,
     Icon: getNetworkIcon(selectedNetwork),
   };
+
+  const dropdownSelectedWalletNetwork = {
+    value: walletNetwork,
+    label: walletNetwork,
+    Icon: getNetworkIcon(walletNetwork!),
+  };
+
   const dropdownNetworkOptions = networkOptions.map((network, i) => ({
     value: network,
     label: NETWORK_SETTINGS[network].name,
@@ -145,9 +155,10 @@ export const Navbar = ({
         {!hideDisabledControls && (
           /* turn this into not a list because we only support mainnet right now */
           <StyledOptionList
-            selected={dropdownSelectedNetwork}
+            //@ts-ignore
+            selected={walletNetwork !== undefined ? dropdownSelectedWalletNetwork : dropdownSelectedNetwork}
             setSelected={(option) => onNetworkChange(option.value)}
-            options={dropdownNetworkOptions}
+            options={[]}
             hideIcons={isMobile}
             disabled={disableNetworkChange}
           />

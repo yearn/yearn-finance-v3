@@ -14,7 +14,7 @@ const light = {
     primaryVariant: '#004ADF',
     secondary: '#E0EAFF',
     titles: '#001746',
-    titlesVariant: '#0657F9',
+    titlesVariant: 'black',
     texts: '#475570',
     textsVariant: '#7F8DA9',
     textsSecondary: '#A8A8A8',
