@@ -206,6 +206,7 @@ const selectPositionData = createSelector(
       line?.positions,
       (position: PositionInt) => position.id === selectSelectedPosition
     );
+    console.log(selectedPositionData, 'e');
     return selectedPositionData;
   }
 );
