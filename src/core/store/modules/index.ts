@@ -53,10 +53,15 @@ import { SettingsSelectors } from './settings/settings.selectors';
 import partnerReducer, { partnerInitialState } from './partner/partner.reducer';
 import { PartnerActions } from './partner/partner.actions';
 import { PartnerSelectors } from './partner/partner.selectors';
+// Debt DAO custom state
 // Lines State
 import linesReducer, { linesInitialState } from './lines/lines.reducer';
 import { LinesActions } from './lines/lines.actions';
 import { LinesSelectors } from './lines/lines.selectors';
+// Lines State
+import collateralReducer, { collateralInitialState } from './collateral/collateral.reducer';
+import { CollateralActions } from './collateral/collateral.actions';
+import { CollateralSelectors } from './collateral/collateral.selectors';
 
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
@@ -71,6 +76,7 @@ const rootReducer: Reducer<RootState> = combineReducers({
   settings: settingsReducer,
   partner: partnerReducer,
   lines: linesReducer,
+  collateral: collateralReducer,
 });
 
 export default rootReducer;
@@ -91,6 +97,7 @@ export {
   // UserActions,
   PartnerActions,
   LinesActions,
+  CollateralActions,
 };
 
 // Selectors
@@ -108,6 +115,7 @@ export {
   // UserSelectors,
   PartnerSelectors,
   LinesSelectors,
+  CollateralSelectors,
 };
 
 // initialState
@@ -126,4 +134,5 @@ export {
   // userInitialState,
   partnerInitialState,
   linesInitialState,
+  collateralInitialState,
 };

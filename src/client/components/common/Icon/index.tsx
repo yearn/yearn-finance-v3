@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { ReactComponent as AddCircleIcon } from '@assets/icons/add-circle.svg';
 import { ReactComponent as AddIcon } from '@assets/icons/add.svg';
 import { ReactComponent as ArrowDownIcon } from '@assets/icons/arrow-down.svg';
+import { ReactComponent as ChailinkIcon } from '@assets/icons/chainlink-logo-blue.svg';
 import { ReactComponent as CheckRoundIcon } from '@assets/icons/check-round.svg';
 import { ReactComponent as ChevronDownIcon } from '@assets/icons/chevron-down.svg';
 import { ReactComponent as ChevronLeftIcon } from '@assets/icons/chevron-left.svg';
@@ -63,6 +64,7 @@ export const Icon = styled(forwardRef(({ Component, ...props }: IconProps, ref) 
 `;
 
 export {
+  ChailinkIcon,
   DeleteIcon,
   DiscordIcon,
   HamburguerIcon,

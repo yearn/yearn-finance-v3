@@ -10,10 +10,9 @@ import {
   VaultServiceImpl,
   GasServiceImpl,
   TransactionServiceImpl,
-  SpigotedLineServiceImpl,
-  EscrowServiceImpl,
   InterestRateCreditServiceImpl,
   LineFactoryServiceImpl,
+  CollateralServiceImpl,
 } from '@services';
 import { getConfig } from '@config';
 import { DIContainer, ContextContainer, ServiceContainer, ConfigContainer } from '@types';
@@ -42,15 +41,14 @@ export class Container implements DIContainer {
   private registerServices() {
     this.container.register({
       creditLineService: awilix.asClass(CreditLineServiceImpl),
-      spigotedLineService: awilix.asClass(SpigotedLineServiceImpl),
-      escrowService: awilix.asClass(EscrowServiceImpl),
+      collateralService: awilix.asClass(CollateralServiceImpl),
       tokenService: awilix.asClass(TokenServiceImpl),
       userService: awilix.asClass(UserServiceImpl),
       vaultService: awilix.asClass(VaultServiceImpl),
       gasService: awilix.asClass(GasServiceImpl),
       transactionService: awilix.asClass(TransactionServiceImpl),
       interestRateCreditService: awilix.asClass(InterestRateCreditServiceImpl),
-      lineServices: awilix.asClass(LineFactoryServiceImpl),
+      lineFactoryService: awilix.asClass(LineFactoryServiceImpl),
     });
   }
 
@@ -76,10 +74,9 @@ export class Container implements DIContainer {
       vaultService: this.container.cradle.vaultService,
       gasService: this.container.cradle.gasService,
       transactionService: this.container.cradle.transactionService,
-      spigotedLineService: this.container.cradle.spigotedLineService,
-      escrowService: this.container.cradle.escrowService,
       interestRateCreditService: this.container.cradle.interestRateCreditService,
-      lineServices: this.container.cradle.lineServices,
+      lineFactoryService: this.container.cradle.lineFactoryService,
+      collateralService: this.container.cradle.collateralService,
     };
   }
 

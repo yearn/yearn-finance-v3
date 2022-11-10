@@ -1,4 +1,16 @@
 export type ModalName =
+  // debt dao modals
+  | 'addCollateral'
+  | 'enableCollateral'
+  | 'enableSpigot'
+  | 'claimRevenue'
+  | 'operateSpigot'
+  | 'addPosition'
+  | 'liquidateBorrower'
+  | 'createLine'
+  | 'borrow'
+  | 'depositAndRepay'
+  // yearn modals
   | 'test'
   | 'comingSoon'
   | 'communityThemes'
@@ -6,7 +18,6 @@ export type ModalName =
   | 'withdraw'
   | 'testTx'
   | 'depositTx'
-  | 'addPosition'
   | 'withdrawTx'
   | 'migrateTx'
   | 'backscratcherLockTx'
@@ -14,8 +25,4 @@ export type ModalName =
   | 'backscratcherReinvestTx'
   | 'labDepositTx'
   | 'labWithdrawTx'
-  | 'liquidateBorrower'
-  | 'createLine'
-  | 'borrow'
-  | 'depositAndRepay'
   | 'labStakeTx';
