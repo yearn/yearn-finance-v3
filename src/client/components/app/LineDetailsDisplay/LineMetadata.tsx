@@ -55,6 +55,8 @@ const DataSubMetricsContainer = styled.div``;
 const DataSubMetric = styled.p``;
 
 const AssetsListCard = styled(DetailCard)`
+  max-width: ${({ theme }) => theme.globalMaxWidth};
+  padding: ${({ theme }) => theme.card.padding};
   @media ${device.tablet} {
     .col-name {
       width: 18rem;
