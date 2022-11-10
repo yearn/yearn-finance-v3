@@ -12,7 +12,7 @@ export const ClaimUnlockedTab = () => {
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const hasLockedAmount = !!votingEscrow?.earlyExitPenaltyRatio && toBN(votingEscrow?.DEPOSIT.userDeposited).gt(0);
-  const unlockedAmount = !votingEscrow?.unlockDate ? votingEscrow?.DEPOSIT.userBalance : '0';
+  const unlockedAmount = !votingEscrow?.unlockDate ? votingEscrow?.DEPOSIT.userDeposited : '0';
 
   const { error: networkError } = validateNetwork({
     currentNetwork: NETWORK,
