@@ -359,6 +359,7 @@ const claimAndRepay = createAsyncThunk<
     lineAddress: Address;
     claimToken: Address;
     calldata: BytesLike;
+    network: Network;
   },
   ThunkAPI
 >(
@@ -704,6 +705,7 @@ export const LinesActions = {
   approveDeposit,
   addCredit,
   depositAndRepay,
+  depositAndClose,
   borrowCredit,
   deploySecuredLine,
   // approveZapOut,

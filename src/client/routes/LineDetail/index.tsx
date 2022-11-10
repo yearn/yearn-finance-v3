@@ -61,9 +61,6 @@ export const LineDetail = () => {
   // 2. set selected line as current line
   // 3. fetch line page
   // 4.
-
-  console.log(location);
-
   useEffect(() => {
     const lineAddress: string | undefined = location.pathname.split('/')[2];
 

@@ -189,6 +189,14 @@ const selectSelectedLinePage = createSelector(
   }
 );
 
+const selectPositions = createSelector([selectSelectedLine], (line) => {
+  if (line === undefined) {
+    return;
+  }
+  let positions = line?.positions;
+  return positions;
+});
+
 const selectPositionData = createSelector(
   [selectSelectedLine, selectSelectedPosition],
   (line, selectSelectedPosition) => {
@@ -306,6 +314,7 @@ export const LinesSelectors = {
   selectSelectedLineAddress,
   selectLinesActionsStatusMap,
   selectLinesStatusMap,
+  selectPositions,
   selectLinesGeneralStatus,
   selectSelectedLine,
   selectSelectedLinePage,

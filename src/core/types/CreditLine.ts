@@ -146,6 +146,16 @@ export interface PositionInt {
   status: string;
   tokenAddress: string;
 }
+
+export interface PositionItem {
+  drate: string;
+  frate: string;
+  lender: string;
+  deposit: string;
+  tokenSymbol: string;
+  id: string;
+}
+
 export interface PositionSummary {
   id: string;
   borrower: Address;
