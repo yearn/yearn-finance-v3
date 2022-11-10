@@ -298,13 +298,6 @@ export interface GetLinePageAuxDataProps extends GetLinePageArgs {
   network: Network;
 }
 
-export interface ISpigotSetting {
-  token: Address; // token to claim as revenue from contract
-  ownerSplit: string; // x/100 % to Owner, rest to Treasury
-  claimFunction: Bytes; // function signature on contract to call and claim revenue
-  transferOwnerFunction: Bytes; // function signature on conract to call and transfer ownership
-}
-
 // Colalteral Service Function Props
 export interface EnableCollateralAssetProps {
   // userPositionMetadata: UserPositionMetadata;
@@ -380,9 +373,16 @@ export interface SweepSpigotProps {
   dryRun?: boolean;
 }
 
+export interface ISpigotSetting {
+  ownerSplit: string; // x/100 % to Owner, rest to Treasury
+  claimFunction: string; // function signature on contract to call and claim revenue
+  transferOwnerFunction: string; // function signature on conract to call and transfer ownership
+}
+
 export interface AddSpigotProps {
   // userPositionMetadata: UserPositionMetadata;
   lineAddress: string;
+  spigotAddress: string; // dont strictly need data atm but good for double checking things
   revenueContract: Address;
   setting: ISpigotSetting;
   network: Network;

@@ -167,7 +167,7 @@ export const LineMetadata = (props: LineMetadataProps) => {
   };
 
   const addSpigotHandler = (token: TokenView) => {
-    dispatch(ModalsActions.openModal({ modalName: 'addSpigot' }));
+    dispatch(ModalsActions.openModal({ modalName: 'enableSpigot' }));
   };
 
   const enableAssetHandler = (token: TokenView) => {

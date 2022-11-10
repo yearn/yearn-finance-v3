@@ -5,9 +5,18 @@ import { TransitionGroup } from 'react-transition-group';
 import { useAppTranslation } from '@hooks';
 import { Text } from '@components/common';
 
-const StyledBorrowerInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
-  font-size: 1.7rem;
-  font-weight: 500;
+const RatesContainer = styled.div``;
+
+const InterestRateInputContainer = styled.div`
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+`;
+
+const StyledAmountInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
+  font-size: 2.4rem;
+  font-weight: 700;
   background: transparent;
   outline: none;
   border: none;
@@ -15,7 +24,7 @@ const StyledBorrowerInput = styled.input<{ readOnly?: boolean; error?: boolean }
   padding: 0;
   font-family: inherit;
   appearance: textfield;
-  width: 100%;
+  width: 80%;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.txModalColors.textContrast};
@@ -43,11 +52,16 @@ const StyledBorrowerInput = styled.input<{ readOnly?: boolean; error?: boolean }
   `}
 `;
 
+const InputPercent = styled.span`
+  font-size: 2.4rem;
+`;
+
 const AmountInputContainer = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
   margin-top: 0.8rem;
+  column-gap: 5rem;
 `;
 
 const AmountTitle = styled(Text)`
@@ -55,7 +69,7 @@ const AmountTitle = styled(Text)`
   text-overflow: ellipsis;
 `;
 
-const TokenData = styled.div`
+const PositionData = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -74,9 +88,8 @@ const Header = styled.div`
 
 const scaleTransitionTime = 300;
 
-const StyledTxTokenInput = styled(TransitionGroup)`
+const StyledTxNumberInput = styled(TransitionGroup)`
   display: grid;
-  // min-height: 15.6rem;
   width: 100%;
   border-radius: ${({ theme }) => theme.globalRadius};
   grid-gap: 0.8rem;
@@ -104,48 +117,68 @@ const StyledTxTokenInput = styled(TransitionGroup)`
   }
 `;
 
-export interface TxAddressProps {
+export interface TxNumberInputProps {
   headerText?: string;
-  inputText?: string;
-  inputError?: boolean;
-  address: string;
-  onAddressChange?: (amount: string) => void;
+  inputLabel?: string;
+  width?: 'sm' | 'md';
+  amount: string;
+  maxAmount?: string;
+  onInputChange: Function;
   readOnly?: boolean;
+  hideAmount?: boolean;
+  inputError?: boolean;
 }
 
-export const TxAddressInput: FC<TxAddressProps> = ({
+export const TxNumberInput: FC<TxNumberInputProps> = ({
   headerText,
-  inputText,
+  inputLabel,
+  width = 'sm',
   inputError,
-  address,
-  onAddressChange,
+  amount,
+  onInputChange,
+  // openedTokenSearch,
+  // setOpenedTokenSearch,
+  // selectedToken,
+  // setSelectedToken,
+  // tokenList,
+  // openedCreditSearch,
+  // setOpenedCreditSearch,
+  // selectedCredit,
+  // setSelectedCredit,
+  // creditList,
+  maxAmount,
   readOnly,
+  hideAmount,
   children,
   ...props
 }) => {
-  const { t } = useAppTranslation('common');
-
   return (
-    <StyledTxTokenInput {...props}>
-      <>{headerText && <Header>{headerText}</Header>}</>
-
-      {/* NOTE Using fragments here because: https://github.com/yearn/yearn-finance-v3/pull/565 */}
-      <>
-        <TokenData>
-          <AmountTitle ellipsis>{inputText || t('components.transaction.token-input.you-have')}</AmountTitle>
-          <AmountInputContainer>
-            <StyledBorrowerInput
-              value={address}
-              onChange={onAddressChange ? (e) => onAddressChange(e.target.value) : undefined}
-              placeholder={'Address'}
-              readOnly={readOnly}
-              error={inputError}
-              type="text"
-              aria-label={headerText}
-            />
-          </AmountInputContainer>
-        </TokenData>
-      </>
-    </StyledTxTokenInput>
+    <>
+      <StyledTxNumberInput {...props}>
+        <>{headerText && <Header>{headerText}</Header>}</>
+        {/* NOTE Using fragments here because: https://github.com/yearn/yearn-finance-v3/pull/565 */}
+        <>
+          <PositionData>
+            <AmountInputContainer>
+              <RatesContainer>
+                {headerText && <AmountTitle ellipsis>{headerText}</AmountTitle>}
+                <InterestRateInputContainer>
+                  <StyledAmountInput
+                    value={amount}
+                    onChange={onInputChange ? (e) => onInputChange(e.target.value) : undefined}
+                    placeholder={'15.00'}
+                    readOnly={readOnly}
+                    error={inputError}
+                    type="number"
+                    aria-label={inputLabel || ''}
+                  />
+                  <InputPercent>%</InputPercent>
+                </InterestRateInputContainer>
+              </RatesContainer>
+            </AmountInputContainer>
+          </PositionData>
+        </>
+      </StyledTxNumberInput>
+    </>
   );
 };

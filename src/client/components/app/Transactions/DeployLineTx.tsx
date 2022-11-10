@@ -55,7 +55,7 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
     }
   };
 
-  const onBorrowerChange = (address: string) => {
+  const onBorrowerAddressChange = (address: string) => {
     setBorrower(address);
   };
 
@@ -128,8 +128,8 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
         key={'credit-input'}
         headerText={t('components.transaction.deploy-line.select-borrower')}
         inputText={t('components.transaction.deploy-line.select-borrower')}
-        onBorrowerChange={onBorrowerChange}
-        borrower={borrower}
+        onAddressChange={onBorrowerAddressChange}
+        address={borrower}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={false}

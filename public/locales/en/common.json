@@ -94,6 +94,7 @@
         "header": "As Arbiter you're enabling the Borrow to use this token as collateral",
         "token-input-header": "Select an asset",
         "token-input-desc": "",
+        "enable-failed": "Could not add token as collateral",
         "cta": "Enable Asset"
       },
       "oracle-price": "Oracle Price",

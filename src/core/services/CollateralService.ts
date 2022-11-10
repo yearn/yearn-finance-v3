@@ -140,19 +140,27 @@ export class CollateralServiceImpl implements CollateralService {
 
     // TODO check that revenueContract isn't spigot
 
-    if (
-      props.setting.transferOwnerFunction.length === 0 ||
-      unnullify(props.setting.ownerSplit, true).gt(this.maxSplit()) ||
-      props.setting.token === ethers.constants.AddressZero
-    ) {
-      throw new Error('Bad setting');
+    if (props.setting.transferOwnerFunction.length === 0) {
+      throw new Error('addSpigot: no tranfer owner function');
     }
+
+    if (
+      unnullify(props.setting.ownerSplit, true).lt(BigNumber.from(0)) ||
+      unnullify(props.setting.ownerSplit, true).gt(this.maxSplit())
+    ) {
+      throw new Error('addSpigot: bad owner split');
+    }
+
+    const settingsData = ethers.utils.AbiCoder.prototype.encode(
+      ['uint8', 'bytes4', 'bytes4'],
+      [props.setting.ownerSplit, props.setting.claimFunction, props.setting.transferOwnerFunction]
+    );
 
     return await this.executeContractMethod(
       props.lineAddress,
       this.lineAbi,
       'addSpigot',
-      [props.revenueContract, props.setting],
+      [props.revenueContract, settingsData],
       props.network
     );
   }
@@ -169,6 +177,8 @@ export class CollateralServiceImpl implements CollateralService {
       props.network
     );
   }
+
+  // Liquidate functions
 
   public async releaseSpigot(props: ReleaseSpigotProps): Promise<TransactionResponse | PopulatedTransaction> {
     if (props.status === ACTIVE_STATUS) return Promise.reject();
@@ -226,6 +236,8 @@ export class CollateralServiceImpl implements CollateralService {
       props.dryRun
     );
   }
+
+  // Trade functions
 
   public async claimAndTrade(props: ClaimAndTradeProps): Promise<TransactionResponse | PopulatedTransaction> {
     // todo use CreditLineService

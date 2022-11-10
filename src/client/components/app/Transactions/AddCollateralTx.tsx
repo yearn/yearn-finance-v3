@@ -37,7 +37,6 @@ import { TxRateInput } from './components/TxRateInput';
 import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
-import { TxTestTokenInput } from './components/TestTokenList';
 
 const { ZERO_ADDRESS } = getConstants();
 
@@ -93,10 +92,10 @@ export const AddCollateralTx: FC<AddCollateralTxProps> = (props) => {
   const setSelectedTokenAddress = (token: string) => dispatch(TokensActions.setSelectedTokenAddress);
 
   //main net logic
-  const selectedCollateralToken = useAppSelector(CollateralSelectors.selectSelectedCollateralToken);
+  const selectedCollateralAsset = useAppSelector(CollateralSelectors.selectSelectedCollateralToken);
   // const selectedTokenAddress = useAppSelector(TokensSelectors.selectToken);
   const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
-    selectedSellTokenAddress: selectedCollateralToken,
+    selectedSellTokenAddress: selectedCollateralAsset,
     allowTokenSelect: true,
   });
 
@@ -166,7 +165,7 @@ export const AddCollateralTx: FC<AddCollateralTxProps> = (props) => {
     //   return;
     // }
     // let approvalOBj = {
-    //   tokenAddress: selectedCollateralToken,
+    //   tokenAddress: selectedCollateralAsset,
     //   amount: `${ethers.utils.parseEther(targetTokenAmount)}`,
     //   network: walletNetwork,
     // };
@@ -195,8 +194,8 @@ export const AddCollateralTx: FC<AddCollateralTxProps> = (props) => {
   const addCollateral = () => {
     setLoading(true);
     // TODO set error in state to display no line selected
-    // if (!selectedLine?.escrow || !selectedCollateralToken || !targetTokenAmount) {
-    //   console.log('check this', selectedLine?.id, targetTokenAmount, selectedCollateralToken);
+    // if (!selectedLine?.escrow || !selectedCollateralAsset || !targetTokenAmount) {
+    //   console.log('check this', selectedLine?.id, targetTokenAmount, selectedCollateralAsset);
     //   setLoading(false);
     //   return;
     // }
@@ -204,7 +203,7 @@ export const AddCollateralTx: FC<AddCollateralTxProps> = (props) => {
     // const transactionData = {
     //   lineAddress: selectedLine.id,
     //   amount: ethers.utils.parseEther(targetTokenAmount),
-    //   token: selectedCollateralToken,
+    //   token: selectedCollateralAsset,
     //   network: walletNetwork,
     //   dryRun: true,
     // };
@@ -225,7 +224,7 @@ export const AddCollateralTx: FC<AddCollateralTxProps> = (props) => {
 
   const spigotCollateralSettings = [
     {
-      label: t('components.transaction.addSpigot'),
+      label: t('components.transaction.enableSpigot'),
       onAction: addCollateral,
       status: true,
       disabled: transactionApproved,

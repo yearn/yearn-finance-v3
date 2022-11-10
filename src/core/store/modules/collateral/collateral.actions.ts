@@ -3,12 +3,14 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { Address } from '@yfi/sdk';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { EnableCollateralAssetProps, AddCollateralProps } from '@src/core/types';
+import { EnableCollateralAssetProps, AddCollateralProps, AddSpigotProps } from '@src/core/types';
 
 import { TokensActions } from '../tokens/tokens.actions';
 
-const setSelectedEscrowAddress = createAction<{ escrowAddress?: string }>('lines/setSelectedEscrowAddress');
-const setSelectedSpigotAddress = createAction<{ spigotAddress?: string }>('lines/setSelectedSpigotAddress');
+const setSelectedEscrow = createAction<{ escrowAddress?: string }>('lines/setSelectedEscrow');
+const setSelectedSpigot = createAction<{ spigotAddress?: string }>('lines/setSelectedSpigot');
+const setSelectedRevenueContract = createAction<{ contractAddress?: string }>('lines/setSelectedRevenueContract');
+const setSelectedCollateralAsset = createAction<{ assetAddress?: string }>('lines/setSelectedCollateralAsset');
 
 const enableCollateral = createAsyncThunk<
   { contract: string; token: string; success: boolean },
@@ -51,7 +53,7 @@ const addCollateral = createAsyncThunk<
 
   const { collateralService } = services;
   const tx = await collateralService.addCollateral(props);
-  console.log(tx);
+  console.log('addCollateral tx', tx);
 
   if (!tx) {
     throw new Error('failed to add collateral');
@@ -64,9 +66,38 @@ const addCollateral = createAsyncThunk<
   };
 });
 
+const addSpigot = createAsyncThunk<{ contract: string; asset: string; success: boolean }, AddSpigotProps, ThunkAPI>(
+  'collateral/addSpigot',
+  async (props, { extra, getState, dispatch }) => {
+    const { wallet } = getState();
+    const { services } = extra;
+    const userAddress = wallet.selectedAddress;
+    if (!userAddress) throw new Error('WALLET NOT CONNECTED');
+
+    // TODO chekc that they are arbiter on line that owns Escrowbeforethey send tx
+
+    const { collateralService } = services;
+    const tx = await collateralService.addSpigot(props);
+    console.log('addSpigot tx', tx);
+
+    if (!tx) {
+      throw new Error('failed to enable spigot');
+    }
+
+    return {
+      contract: props.lineAddress,
+      asset: props.spigotAddress,
+      success: !!tx,
+    };
+  }
+);
+
 export const CollateralActions = {
-  setSelectedEscrowAddress,
-  setSelectedSpigotAddress,
+  setSelectedEscrow,
+  setSelectedSpigot,
+  setSelectedRevenueContract,
+  setSelectedCollateralAsset,
   enableCollateral,
   addCollateral,
+  addSpigot,
 };

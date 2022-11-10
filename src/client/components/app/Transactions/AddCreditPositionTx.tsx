@@ -439,8 +439,8 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         key={'lender-input'}
         headerText={t('components.transaction.add-credit.select-lender')}
         inputText={t('components.transaction.add-credit.lender-address')}
-        onBorrowerChange={onLenderAddressChange}
-        borrower={lenderAddress}
+        onAddressChange={onLenderAddressChange}
+        address={lenderAddress}
         // creditOptions={sourceCreditOptions}
         // inputError={!!sourceStatus.error}
         readOnly={acceptingOffer}

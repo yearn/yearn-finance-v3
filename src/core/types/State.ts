@@ -193,7 +193,7 @@ export interface CollateralState {
   selectedEscrow?: Address;
   selectedSpigot?: Address;
   selectedRevenueContract?: Address;
-  selectedCollateralToken?: Address;
+  selectedCollateralAsset?: Address;
   // collateralTradeData?: ZeroExApiResponse;
   user: {
     escrowAllowances: { [line: string]: { [token: string]: string } };
@@ -209,6 +209,7 @@ export interface CollateralActionsStatusMap {
   approve: TokenCollateralMap;
   addCollateral: TokenCollateralMap;
   enableCollateral: TokenCollateralMap;
+
   addSpigot: Status;
   releaseSpigot: Status;
   updateOwnerSplit: Status;

@@ -2,7 +2,7 @@ export type ModalName =
   // debt dao modals
   | 'addCollateral'
   | 'enableCollateral'
-  | 'addSpigot'
+  | 'enableSpigot'
   | 'claimRevenue'
   | 'operateSpigot'
   | 'addPosition'

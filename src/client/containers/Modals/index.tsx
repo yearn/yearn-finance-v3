@@ -17,6 +17,7 @@ import { DeployLineTxModal } from './DeployLineTxModal';
 import { DepositAndRepayTxModal } from './DepositAndRepayTxModal';
 import { WithdrawCreditTxModal } from './WithdrawCreditTxModal';
 import { AddCollateralTxModal } from './AddCollateralTxModal';
+import { EnableSpigotTxModal } from './EnableSpigotTxModal';
 
 const modalTimeout = 300;
 
@@ -186,9 +187,9 @@ export const Modals = () => {
         </CSSTransition>
       )}
 
-      {activeModal === 'addSpigot' && (
-        <CSSTransition key={'addSpigot'} timeout={modalTimeout} classNames="slideBottom">
-          {/* <AddSpigotTxModal onClose={closeModal} /> */}
+      {activeModal === 'enableSpigot' && (
+        <CSSTransition key={'enableSpigot'} timeout={modalTimeout} classNames="slideBottom">
+          <EnableSpigotTxModal onClose={closeModal} />
         </CSSTransition>
       )}
 

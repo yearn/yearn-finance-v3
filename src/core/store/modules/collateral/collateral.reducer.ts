@@ -31,18 +31,31 @@ export const collateralInitialState: CollateralState = {
   statusMap: initialCollateralActionsStatusMap,
 };
 
-const { setSelectedEscrowAddress, setSelectedSpigotAddress, addCollateral, enableCollateral } = CollateralActions;
+const {
+  setSelectedEscrow,
+  setSelectedSpigot,
+  setSelectedRevenueContract,
+  setSelectedCollateralAsset,
+  addCollateral,
+  enableCollateral,
+} = CollateralActions;
 
 const collateralReducer = createReducer(collateralInitialState, (builder) => {
   builder
     /* -------------------------------------------------------------------------- */
     /*                                   Setters                                  */
     /* -------------------------------------------------------------------------- */
-    .addCase(setSelectedEscrowAddress, (state, { payload: { escrowAddress } }) => {
+    .addCase(setSelectedEscrow, (state, { payload: { escrowAddress } }) => {
       state.selectedEscrow = escrowAddress;
     })
-    .addCase(setSelectedSpigotAddress, (state, { payload: { spigotAddress } }) => {
+    .addCase(setSelectedSpigot, (state, { payload: { spigotAddress } }) => {
       state.selectedSpigot = spigotAddress;
+    })
+    .addCase(setSelectedRevenueContract, (state, { payload: { contractAddress } }) => {
+      state.selectedRevenueContract = contractAddress;
+    })
+    .addCase(setSelectedCollateralAsset, (state, { payload: { assetAddress } }) => {
+      state.selectedCollateralAsset = assetAddress;
     })
 
     /* -------------------------------- enableCollateral ------------------------------- */
