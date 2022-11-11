@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { normalizeAmount } from '@utils';
+import { normalizeAmount, numberWithCommas, prettyNumbers } from '@utils';
 import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@components/common';
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
@@ -133,9 +133,6 @@ interface RecommendationsProps {
 
 export const RecommendationsCard = ({ header, subHeader, items, ...props }: RecommendationsProps) => {
   const { t } = useAppTranslation(['common']);
-  items.forEach((element) => {
-    console.log(normalizeAmount(element.collateral, 18));
-  });
 
   if (items.length === 0) {
     return null;
@@ -161,7 +158,7 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
               </ItemName>
               <Divider />
               <Metric>
-                ${item.principal.toString()} / ${item.deposit.toString()}
+                ${prettyNumbers(item.revenue)} / ${prettyNumbers(item.deposit)}
               </Metric>
               <MetricsTextContainer>
                 <MetricsText>
@@ -173,7 +170,7 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
 
               <ItemInfoLabel>{t('components.line-card.secured-by')}:</ItemInfoLabel>
               <Metric>
-                ${normalizeAmount(item.collateral, 18).toString()} / ${item.revenue.toString()}
+                ${prettyNumbers(item.collateral)} / ${prettyNumbers(item.revenue)}
               </Metric>
               <MetricsTextContainer>
                 <MetricsText>

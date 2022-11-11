@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useAppTranslation } from '@hooks';
 import { ThreeColumnLayout } from '@src/client/containers/Columns';
 import { EscrowDeposit, EscrowDepositList } from '@src/core/types';
-import { normalizeAmount } from '@src/utils';
+import { normalizeAmount, numberWithCommas, prettyNumbers } from '@src/utils';
 
 const SectionHeader = styled.h3`
   ${({ theme }) => `
@@ -97,7 +97,7 @@ export const LineMetadata = (props: LineMetadataProps) => {
     : Object.values(deposits!)
         .reduce<BigNumber>(
           (sum: BigNumber, d: EscrowDeposit) =>
-            !d ? sum : sum.add(BigNumber.from(d!.currentUsdPrice ?? '1').mul(d!.amount)),
+            !d ? sum : sum.add(BigNumber.from(d!.currentUsdPrice ?? '1').mul(d!.amount)), // temporary until we get proper pricing on subgraph
           BigNumber.from('0')
         )
         .div(BigNumber.from(1)) // scale to usd decimals
@@ -108,23 +108,32 @@ export const LineMetadata = (props: LineMetadataProps) => {
     if (!totalCollateral) return;
     <MetricDisplay
       title={t('lineDetails:metadata.escrow.no-collateral')}
-      data={`$ ${normalizeAmount(totalCollateral, 18)}`}
+      data={`$ ${prettyNumbers(totalCollateral)}`}
     />;
-    return <MetricDisplay title={t('lineDetails:metadata.escrow.total')} data={`$ ${totalCollateral}`} />;
+    return (
+      <MetricDisplay title={t('lineDetails:metadata.escrow.total')} data={`$ ${prettyNumbers(totalCollateral)}`} />
+    );
   };
   const renderSpigotMetadata = () => {
     if (!revenue) return null;
     if (!totalRevenue)
-      return <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={`$ ${totalRevenue}`} />;
-    return <MetricDisplay title={t('lineDetails:metadata.revenue.per-month')} data={`$ ${totalRevenue}`} />;
+      return (
+        <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={`$ ${prettyNumbers(totalRevenue)}`} />
+      );
+    return (
+      <MetricDisplay title={t('lineDetails:metadata.revenue.per-month')} data={`$ ${prettyNumbers(totalRevenue)}`} />
+    );
   };
 
   return (
     <>
       <ThreeColumnLayout>
-        <MetricDisplay title={t('lineDetails:metadata.principal')} data={`$ ${principal}`} />
-        <MetricDisplay title={t('lineDetails:metadata.deposit')} data={`$ ${deposit}`} />
-        <MetricDisplay title={t('lineDetails:metadata.totalInterestPaid')} data={`$ ${totalInterestPaid}`} />
+        <MetricDisplay title={t('lineDetails:metadata.principal')} data={`$ ${prettyNumbers(principal)}`} />
+        <MetricDisplay title={t('lineDetails:metadata.deposit')} data={`$ ${prettyNumbers(deposit)}`} />
+        <MetricDisplay
+          title={t('lineDetails:metadata.totalInterestPaid')}
+          data={`$ ${prettyNumbers(totalInterestPaid)}`}
+        />
       </ThreeColumnLayout>
       <SectionHeader>
         {t('lineDetails:metadata.secured-by')}
@@ -140,7 +149,7 @@ export const LineMetadata = (props: LineMetadataProps) => {
 
       <ThreeColumnLayout>
         {!isEmpty(revenue) && (
-          <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={totalRevenue} />
+          <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={prettyNumbers(totalRevenue)} />
         )}
 
         {!isEmpty(deposits) &&
@@ -148,7 +157,7 @@ export const LineMetadata = (props: LineMetadataProps) => {
             (d, i) =>
               d.enabled && (
                 <ThreeColumnLayout>
-                  Deposit #{i}: {d.token} {d.amount}
+                  Deposit #{i}: {d.token} {prettyNumbers(d.amount)}
                 </ThreeColumnLayout>
               )
           )}
