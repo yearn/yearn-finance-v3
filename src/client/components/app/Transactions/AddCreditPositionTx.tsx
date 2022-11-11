@@ -71,6 +71,15 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const selectedPosition = useAppSelector(LinesSelectors.selectPositionData);
   const walletAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
+  const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
+  const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
+  const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
+  const initialToken: string = selectedSellTokenAddress || DAI;
+  const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
+    selectedSellTokenAddress: initialToken,
+    allowTokenSelect: true,
+  });
+  const acceptingOffer = props.acceptingOffer || (userMetadata.role === BORROWER_POSITION_ROLE && !!selectedPosition);
 
   //state for params
   const { header, onClose } = props;
@@ -80,25 +89,14 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [targetTokenAmount, setTargetTokenAmount] = useState('1');
   const [drate, setDrate] = useState('0.00');
   const [frate, setFrate] = useState('0.00');
-  const selectedCredit = useAppSelector(LinesSelectors.selectSelectedLine);
   const [lenderAddress, setLenderAddress] = useState(walletAddress ? walletAddress : '');
   const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
-  const setSelectedCredit = (lineAddress: string) => dispatch(LinesActions.setSelectedLineAddress({ lineAddress }));
   // TODO fix acceptingOffer logic based on who proposed. dont assume lender must accept
-  const acceptingOffer = props.acceptingOffer || (userMetadata.role === BORROWER_POSITION_ROLE && !!selectedPosition);
 
   //main net logic
-  const selectedSellTokenAddress = useAppSelector(TokensSelectors.selectSelectedTokenAddress);
-  const initialToken: string = selectedSellTokenAddress || DAI;
-  const { selectedSellToken, sourceAssetOptions } = useSelectedSellToken({
-    selectedSellTokenAddress: initialToken,
-    allowTokenSelect: true,
-  });
 
   useEffect(() => {
     if (selectedPosition && userMetadata.role === BORROWER_POSITION_ROLE) {
-      console.log(selectedPosition, 'correctly Rendered');
-
       let deposit = normalizeAmount(selectedPosition.deposit, 18);
       setTargetTokenAmount(deposit);
       setSelectedTokenAddress(selectedPosition.tokenAddress);
@@ -309,43 +307,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     );
   }
 
-  const TokenInput =
-    walletNetwork === 'goerli'
-      ? () => (
-          <TxTokenInput
-            key={'token-input'}
-            headerText={t('components.transaction.add-credit.select-token')}
-            inputText={tokenHeaderText}
-            amount={targetTokenAmount}
-            onAmountChange={onAmountChange}
-            amountValue={String(10000000 * Number(targetTokenAmount))}
-            maxAmount={acceptingOffer ? targetTokenAmount : targetBalance}
-            selectedToken={selectedSellToken}
-            onSelectedTokenChange={onSelectedSellTokenChange}
-            tokenOptions={testTokens}
-            // inputError={!!sourceStatus.error}
-            readOnly={acceptingOffer}
-            // displayGuidance={displaySourceGuidance}
-          />
-        )
-      : () => (
-          <TxTokenInput
-            key={'token-input'}
-            headerText={t('components.transaction.add-credit.select-token')}
-            inputText={tokenHeaderText}
-            amount={targetTokenAmount}
-            onAmountChange={onAmountChange}
-            amountValue={String(10000000 * Number(targetTokenAmount))}
-            maxAmount={acceptingOffer ? targetTokenAmount : targetBalance}
-            selectedToken={selectedSellToken}
-            onSelectedTokenChange={onSelectedSellTokenChange}
-            tokenOptions={sourceAssetOptions}
-            // inputError={!!sourceStatus.error}
-            readOnly={acceptingOffer}
-            // displayGuidance={displaySourceGuidance}
-          />
-        );
-
   return (
     <StyledTransaction
       onClose={onClose}
@@ -363,6 +324,22 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         // displayGuidance={displaySourceGuidance}
       />
 
+      <TxTokenInput
+        key={'token-input'}
+        headerText={t('components.transaction.add-credit.select-token')}
+        inputText={tokenHeaderText}
+        amount={targetTokenAmount}
+        onAmountChange={onAmountChange}
+        amountValue={String(10000000 * Number(targetTokenAmount))}
+        maxAmount={acceptingOffer ? targetTokenAmount : targetBalance}
+        selectedToken={selectedSellToken}
+        onSelectedTokenChange={onSelectedSellTokenChange}
+        tokenOptions={walletNetwork === 'goerli' ? testTokens : sourceAssetOptions}
+        // inputError={!!sourceStatus.error}
+        readOnly={acceptingOffer}
+        // displayGuidance={displaySourceGuidance}
+      />
+
       <TxAddressInput
         key={'lender-input'}
         headerText={t('components.transaction.add-credit.select-lender')}
@@ -374,8 +351,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         readOnly={acceptingOffer}
         // displayGuidance={displaySourceGuidance}
       />
-
-      <TokenInput />
 
       <TxRateInput
         key={'frate'}
