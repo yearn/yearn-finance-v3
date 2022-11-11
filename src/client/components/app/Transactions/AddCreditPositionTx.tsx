@@ -11,10 +11,11 @@ import {
   useAppSelector,
   useSelectedSellToken,
 } from '@hooks';
-import { ACTIVE_STATUS, BORROWER_POSITION_ROLE, PositionInt } from '@src/core/types';
+import { ACTIVE_STATUS, BORROWER_POSITION_ROLE } from '@src/core/types';
 import { getConstants } from '@src/config/constants';
 import { TokensActions, TokensSelectors, WalletSelectors, LinesSelectors, LinesActions } from '@store';
 import { Button } from '@components/common';
+import { testTokens } from '@src/config/constants';
 
 import { TxContainer } from './components/TxContainer';
 import { TxTokenInput } from './components/TxTokenInput';
@@ -23,7 +24,6 @@ import { TxRateInput } from './components/TxRateInput';
 import { TxActionButton } from './components/TxActions';
 import { TxActions } from './components/TxActions';
 import { TxStatus } from './components/TxStatus';
-import { TxTestTokenInput } from './components/TestTokenList';
 import { TxAddressInput } from './components/TxAddressInput';
 
 const {
@@ -73,53 +73,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const selectedPosition = useAppSelector(LinesSelectors.selectPositionData);
   const walletAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
-  const testTokens = [
-    {
-      address: '0x3730954eC1b5c59246C1fA6a20dD6dE6Ef23aEa6',
-      allowancesMap: 'Object {  }',
-      balance: '0',
-      balanceUsdc: '0',
-      categories: ['Seerocoin'],
-      decimals: 18,
-      description: 'SeeroTestCoin',
-      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/mult…ns/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png',
-      name: 'Serooocoin',
-      priceUsdc: '0',
-      symbol: 'SER',
-      website: 'https://debtdao.finance/',
-      yield: '0',
-    },
-    {
-      address: '0x3D4AA21e8915F3b5409BDb20f76457FCdAF8f757',
-      allowancesMap: 'Object {  }',
-      balance: '0',
-      balanceUsdc: '0',
-      categories: ['kiibacoin'],
-      decimals: 18,
-      description: 'KiibaTestCoin',
-      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/mult…ns/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png',
-      name: 'kibaacoin',
-      priceUsdc: '0',
-      symbol: 'KIB',
-      website: 'https://debtdao.finance/',
-      yield: '0',
-    },
-    {
-      address: '0xe62e4B079D40CF643D3b4963e4B675eC101928df',
-      allowancesMap: 'Object {  }',
-      balance: '0',
-      balanceUsdc: '0',
-      categories: ['Moocoin'],
-      decimals: 18,
-      description: 'MooTestCoin',
-      icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/mult…ns/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png',
-      name: 'Moocoin',
-      priceUsdc: '0',
-      symbol: 'SER',
-      website: 'https://debtdao.finance/',
-      yield: '0',
-    },
-  ];
   const [selectedSellTestToken, setSelectSellTestToken] = useState(testTokens[0]);
 
   //state for params
@@ -151,9 +104,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
 
       let deposit = normalizeAmount(selectedPosition.deposit, 18);
       setTargetTokenAmount(deposit);
-      setTestnetTokenAmount(deposit);
       setSelectedTokenAddress(selectedPosition.tokenAddress);
-      setTestnetToken(selectedPosition.tokenAddress);
       setDrate(selectedPosition.drate);
       setFrate(selectedPosition.frate);
       setLenderAddress(selectedPosition.lender);
@@ -192,22 +143,8 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     setLenderAddress(lenderAddress);
   };
 
-  const onSelectedSellTestTokenChange = (tokenAddress: string) => {
-    let token;
-    token = testTokens.filter((token) => token.address === tokenAddress);
-    setTargetTokenAmount('');
-    onRateChange('f', '0.00');
-    onRateChange('d', '0.00');
-    setTestnetToken(tokenAddress);
-    setSelectSellTestToken(token[0]);
-  };
-
   const onAmountChange = (amount: string): void => {
     setTargetTokenAmount(amount);
-  };
-
-  const onTestnetAmountChange = (amount: string): void => {
-    setTestnetTokenAmount(amount);
   };
 
   const onRateChange = (type: string, amount: string): void => {
@@ -279,8 +216,8 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
       lineAddress: selectedCredit.id,
       drate: drate,
       frate: frate,
-      amount: walletNetwork === 'goerli' ? ethers.utils.parseEther(testnetTokenAmount) : toWei(targetTokenAmount, 18),
-      token: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
+      amount: toWei(targetTokenAmount, 18),
+      token: selectedSellTokenAddress,
       lender: lenderAddress,
       network: walletNetwork,
       dryRun: false,
@@ -384,19 +321,19 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const TokenInput =
     walletNetwork === 'goerli'
       ? () => (
-          <TxTestTokenInput
+          <TxTokenInput
             key={'token-input'}
             headerText={t('components.transaction.add-credit.select-token')}
             inputText={tokenHeaderText}
-            amount={testnetTokenAmount}
-            onAmountChange={onTestnetAmountChange}
-            amountValue={String(10000000 * Number(testnetTokenAmount))}
+            amount={targetTokenAmount}
+            onAmountChange={onAmountChange}
+            amountValue={String(10000000 * Number(targetTokenAmount))}
             maxAmount={acceptingOffer ? targetTokenAmount : targetBalance}
-            selectedToken={selectedSellTestToken}
-            onSelectedTokenChange={onSelectedSellTestTokenChange}
+            selectedToken={selectedSellToken}
+            onSelectedTokenChange={onSelectedSellTokenChange}
             tokenOptions={testTokens}
             // inputError={!!sourceStatus.error}
-            readOnly={false}
+            readOnly={acceptingOffer}
             // displayGuidance={displaySourceGuidance}
           />
         )

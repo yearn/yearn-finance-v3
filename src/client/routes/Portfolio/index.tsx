@@ -103,7 +103,6 @@ export const Portfolio = () => {
   const userTokens = useAppSelector(TokensSelectors.selectUserTokens);
   const activeModal = useAppSelector(ModalSelectors.selectActiveModal);
   const vaultsUnderlyingTokens = useAppSelector(VaultsSelectors.selectUnderlyingTokensAddresses);
-
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
   const zapperEnabled = servicesEnabled.zapper && currentNetwork === 'mainnet';
