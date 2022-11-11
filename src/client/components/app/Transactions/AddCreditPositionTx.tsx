@@ -67,13 +67,10 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const history = useHistory();
 
   //in case user is on Goerli Testnet, we set up a testnet state:
-  const [testnetToken, setTestnetToken] = useState('');
-  const [testnetTokenAmount, setTestnetTokenAmount] = useState('0');
   const userMetadata = useAppSelector(LinesSelectors.selectUserPositionMetadata);
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const selectedPosition = useAppSelector(LinesSelectors.selectPositionData);
   const walletAddress = useAppSelector(WalletSelectors.selectSelectedAddress);
-  const [selectedSellTestToken, setSelectSellTestToken] = useState(testTokens[0]);
 
   //state for params
   const { header, onClose } = props;
@@ -131,9 +128,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     ) {
       return;
     }
-    if (walletNetwork === 'goerli') {
-      setTestnetToken(selectedSellTestToken.address);
-    }
     // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
   }, [selectedSellToken, walletNetwork]);
 
@@ -169,12 +163,10 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
       setLoading(false);
       return;
     }
-    console.log(testnetTokenAmount, 'this is raw amount');
-    console.log(ethers.utils.parseEther(testnetTokenAmount).toString(), 'this is BN');
     let approvalOBj = {
       spenderAddress: selectedCredit.id,
-      tokenAddress: walletNetwork === 'goerli' ? testnetToken : selectedSellTokenAddress,
-      amount: walletNetwork === 'goerli' ? ethers.utils.parseEther(testnetTokenAmount) : toWei(targetTokenAmount, 18),
+      tokenAddress: selectedSellTokenAddress,
+      amount: toWei(targetTokenAmount, 18),
       network: walletNetwork,
     };
     //@ts-ignore
@@ -211,7 +203,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     if (!checkSumAddress) {
       return;
     }
-    console.log(ethers.utils.parseEther(testnetTokenAmount).toString());
     let TransactionObj = {
       lineAddress: selectedCredit.id,
       drate: drate,
