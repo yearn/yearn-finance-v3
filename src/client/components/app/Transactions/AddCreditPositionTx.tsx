@@ -1,6 +1,5 @@
 import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { ethers } from 'ethers';
 import { useHistory } from 'react-router-dom';
 
 import { formatAmount, normalizeAmount, isAddress, toWei } from '@utils';
@@ -91,7 +90,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   const [frate, setFrate] = useState('0.00');
   const [lenderAddress, setLenderAddress] = useState(walletAddress ? walletAddress : '');
   const [selectedTokenAddress, setSelectedTokenAddress] = useState('');
-  // TODO fix acceptingOffer logic based on who proposed. dont assume lender must accept
 
   //main net logic
 
@@ -118,15 +116,9 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
       setSelectedTokenAddress(selectedSellToken.address);
     }
 
-    if (
-      !selectedCredit ||
-      !selectedSellToken
-      // toBN(targetTokenAmount).lte(0) ||
-      // inputError ||
-    ) {
+    if (!selectedCredit || !selectedSellToken) {
       return;
     }
-    // dispatch(CreditLineActions.getCreditLinesDynamicData({ addresses: [initialToken] })); // pulled from DepositTX, not sure why data not already filled
   }, [selectedSellToken, walletNetwork]);
 
   // Event Handlers
@@ -318,10 +310,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         inputText={t('components.transaction.add-credit.select-credit')}
         onSelectedCreditLineChange={onSelectedCreditLineChange}
         selectedCredit={selectedCredit}
-        // creditOptions={sourceCreditOptions}
-        // inputError={!!sourceStatus.error}
         readOnly={true}
-        // displayGuidance={displaySourceGuidance}
       />
 
       <TxTokenInput
@@ -335,9 +324,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         selectedToken={selectedSellToken}
         onSelectedTokenChange={onSelectedSellTokenChange}
         tokenOptions={walletNetwork === 'goerli' ? testTokens : sourceAssetOptions}
-        // inputError={!!sourceStatus.error}
         readOnly={acceptingOffer}
-        // displayGuidance={displaySourceGuidance}
       />
 
       <TxAddressInput
@@ -346,10 +333,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         inputText={t('components.transaction.add-credit.lender-address')}
         onAddressChange={onLenderAddressChange}
         address={lenderAddress}
-        // creditOptions={sourceCreditOptions}
-        // inputError={!!sourceStatus.error}
         readOnly={acceptingOffer}
-        // displayGuidance={displaySourceGuidance}
       />
 
       <TxRateInput
@@ -359,7 +343,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
         drate={drate}
         amount={frate}
         maxAmount={MAX_INTEREST_RATE.toString()}
-        // setRateChange={onFrateChange}
         setRateChange={onRateChange}
         readOnly={acceptingOffer}
       />
