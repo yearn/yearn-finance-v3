@@ -20,6 +20,54 @@ export const TOKEN_ADDRESSES = {
   WBTC: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
 };
 
+export const testTokens = [
+  {
+    address: '0x3730954eC1b5c59246C1fA6a20dD6dE6Ef23aEa6',
+    allowancesMap: 'Object {  }',
+    balance: '0',
+    balanceUsdc: '0',
+    categories: ['Seerocoin'],
+    decimals: 18,
+    description: 'SeeroTestCoin',
+    icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/mult…ns/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png',
+    name: 'Serooocoin',
+    priceUsdc: '0',
+    symbol: 'SER',
+    website: 'https://debtdao.finance/',
+    yield: '0',
+  },
+  {
+    address: '0x3D4AA21e8915F3b5409BDb20f76457FCdAF8f757',
+    allowancesMap: 'Object {  }',
+    balance: '0',
+    balanceUsdc: '0',
+    categories: ['kiibacoin'],
+    decimals: 18,
+    description: 'KiibaTestCoin',
+    icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/mult…ns/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png',
+    name: 'kibaacoin',
+    priceUsdc: '0',
+    symbol: 'KIB',
+    website: 'https://debtdao.finance/',
+    yield: '0',
+  },
+  {
+    address: '0xe62e4B079D40CF643D3b4963e4B675eC101928df',
+    allowancesMap: 'Object {  }',
+    balance: '0',
+    balanceUsdc: '0',
+    categories: ['Moocoin'],
+    decimals: 18,
+    description: 'MooTestCoin',
+    icon: 'https://raw.githack.com/yearn/yearn-assets/master/icons/mult…ns/1/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo-128.png',
+    name: 'Moocoin',
+    priceUsdc: '0',
+    symbol: 'MOO',
+    website: 'https://debtdao.finance/',
+    yield: '0',
+  },
+];
+
 const PARTNERS = {
   LEDGER_PARTNER_ID: '0x558247e365be655f9144e1a0140D793984372Ef3',
 };
