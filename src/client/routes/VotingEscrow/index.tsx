@@ -4,7 +4,7 @@ import { useAppSelector } from '@hooks';
 import { VotingEscrowsSelectors } from '@store';
 import { Box } from '@components/common';
 import { ViewContainer, SummaryCard, Amount } from '@components/app';
-import { LockTab, ExtendLockTab, EarlyExitTab, ClaimUnlockedTab, MintTab } from '@containers';
+import { LockTab, ManageLockTab, ClaimUnlockedTab, MintTab } from '@containers';
 import { humanize } from '@utils';
 import { getConfig } from '@config';
 
@@ -14,8 +14,8 @@ export const VotingEscrowPage = () => {
 
   const tabs = [
     { label: 'Lock YFI', children: <LockTab /> },
-    { label: 'Extend lock', children: <ExtendLockTab /> },
-    { label: 'Early exit', children: <EarlyExitTab /> },
+    { label: 'Manage lock', children: <ManageLockTab /> },
+    // { label: 'Early exit', children: <EarlyExitTab /> },
     { label: 'Claim YFI', children: <ClaimUnlockedTab /> },
     // { label: 'Claim rewards', children: <ClaimRewardsTab /> },
     // { label: 'Stake / Unstake', children: <GaugesTab /> },
