@@ -141,9 +141,6 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
   };
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
-    setTargetTokenAmount('');
-    onRateChange('f', '0.00');
-    onRateChange('d', '0.00');
     dispatch(TokensActions.setSelectedTokenAddress({ tokenAddress }));
   };
 
@@ -188,6 +185,8 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
       return;
     }
 
+    console.log(toWei(drate, 2), toWei(frate, 2), 'to wei');
+
     let checkSumAddress = await isAddress(lenderAddress);
 
     if (!checkSumAddress) {
@@ -195,8 +194,8 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     }
     let TransactionObj = {
       lineAddress: selectedCredit.id,
-      drate: drate,
-      frate: frate,
+      drate: toWei(drate, 2),
+      frate: toWei(frate, 2),
       amount: toWei(targetTokenAmount, 18),
       token: selectedSellTokenAddress,
       lender: lenderAddress,

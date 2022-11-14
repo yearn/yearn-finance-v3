@@ -34,7 +34,7 @@ import {
   COLLATERAL_TYPE_ASSET,
 } from '@types';
 
-import { format, humanize } from './format';
+import { format, humanize, normalizeAmount } from './format';
 
 const { parseUnits, parseEther } = utils;
 
@@ -352,10 +352,13 @@ export const formatLinePageData = (
     console.log('positions info origin', positions);
     console.log('position', position);
 
+    let Frate = normalizeAmount(position.fRate, 2);
+    let Drate = normalizeAmount(position.dRate, 2);
+
     let positionObject = {
       status: position.status,
-      drate: position.fRate,
-      frate: position.dRate,
+      drate: Drate,
+      frate: Frate,
       deposit: position.deposit,
       tokenAddress: position.token.id,
       tokenDecimals: position.token.decimals,
