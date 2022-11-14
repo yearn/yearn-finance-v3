@@ -87,7 +87,7 @@ export const parseError = (e: any): SerializedError => {
   }
 
   return {
-    message: e.message ?? 'An unknown error occurred',
+    message: e?.message ?? 'An unknown error occurred',
     name: 'Unknown',
   };
 };
