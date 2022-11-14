@@ -161,7 +161,7 @@ export const TxNumberInput: FC<TxNumberInputProps> = ({
           <PositionData>
             <AmountInputContainer>
               <RatesContainer>
-                {headerText && <AmountTitle ellipsis>{headerText}</AmountTitle>}
+                {inputLabel && <AmountTitle ellipsis>{inputLabel}</AmountTitle>}
                 <InterestRateInputContainer>
                   <StyledAmountInput
                     value={amount}
