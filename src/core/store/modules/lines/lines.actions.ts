@@ -19,6 +19,7 @@ import {
   BorrowCreditProps,
   Network,
   DeploySecuredLineProps,
+  DeploySecuredLineWithConfigProps,
 } from '@types';
 import {
   toBN,
@@ -211,6 +212,19 @@ const deploySecuredLine = createAsyncThunk<void, DeploySecuredLineProps, ThunkAP
     });
 
     console.log('new secured line deployed. tx response', deployedLineData);
+    // await dispatch(getLine(deployedLineData.))
+  }
+);
+
+const deploySecuredLineWithConfig = createAsyncThunk<void, DeploySecuredLineWithConfigProps, ThunkAPI>(
+  'lines/deploySecuredLineWithConfigProps',
+  async (deployData, { getState, extra }) => {
+    const { lineFactoryService } = extra.services;
+    const deploySecuredLineWithConfigData = await lineFactoryService.deploySecuredLineWtihConfig({
+      ...deployData,
+    });
+
+    console.log('new secured line with Config deployed. tx response', deploySecuredLineWithConfigData);
     // await dispatch(getLine(deployedLineData.))
   }
 );
@@ -708,6 +722,7 @@ export const LinesActions = {
   depositAndClose,
   borrowCredit,
   deploySecuredLine,
+  deploySecuredLineWithConfig,
   // approveZapOut,
   // signZapOut,
   withdrawLine,

@@ -94,23 +94,31 @@ export class LineFactoryServiceImpl {
     );
   }
 
-  public async deploySecuredLineWtihConfig(
-    contractAddress: Address,
-    oracle: string,
-    arbiter: string,
-    borrower: string,
-    ttl: BigNumber,
-    revenueSplit: BigNumber,
-    cratio: BigNumber,
-    swapTarget: string,
-    dryRun: boolean
-  ): Promise<TransactionResponse | PopulatedTransaction> {
+  public async deploySecuredLineWtihConfig(props: {
+    borrower: string;
+    ttl: number;
+    network: Network;
+    cratio: number;
+    revenueSplit: number;
+  }): Promise<TransactionResponse | PopulatedTransaction> {
+    const { borrower, ttl, cratio, revenueSplit, network } = props;
+    const data = {
+      borrower,
+      ttl,
+      cratio,
+      revenueSplit,
+      network,
+      arbiter: Arbiter_GOERLI,
+      oracle: KibaSero_oracle,
+      factoryAddress: LineFactory_GOERLI,
+      swapTarget: SwapTarget_GOERLI,
+    };
     return await this.executeContractMethod(
-      contractAddress,
+      data.factoryAddress,
       'deploySecuredLineWithConfig',
-      [oracle, arbiter, borrower, ttl, revenueSplit, cratio, swapTarget],
-      'goerli',
-      dryRun
+      [data.oracle, data.arbiter, data.borrower, data.ttl, data.revenueSplit, data.cratio, data.swapTarget],
+      data.network,
+      false
     );
   }
 
