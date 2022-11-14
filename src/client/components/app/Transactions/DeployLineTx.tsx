@@ -7,6 +7,8 @@ import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { LinesActions, WalletSelectors } from '@store';
 import { getConstants } from '@src/config/constants';
 
+import { ToggleButton } from '../../common';
+
 import { TxContainer } from './components/TxContainer';
 import { TxAddressInput } from './components/TxAddressInput';
 import { TxTTLInput } from './components/TxTTLInput';
@@ -17,6 +19,13 @@ import { TxStatus } from './components/TxStatus';
 const StyledTransaction = styled(TxContainer)``;
 
 const { LineFactory_GOERLI } = getConstants();
+
+const SectionContent = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 1.2rem;
+  justify-content: right;
+`;
 
 interface DeployLineProps {
   header: string;
@@ -151,6 +160,21 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
         ttlType={true}
       />
       {inputTTLWarning !== '' ? <div style={{ color: '#C3272B' }}>{inputTTLWarning}</div> : ''}
+      <SectionContent>
+        <>
+          Advanced Mode
+          <ToggleButton
+            selected={false}
+            setSelected={() => {}}
+            className=""
+            disabled={false}
+            color=""
+            onClick={() => {}}
+            ariaLabel=""
+          />
+        </>
+      </SectionContent>
+
       <TxActions>
         <TxActionButton
           key={''}

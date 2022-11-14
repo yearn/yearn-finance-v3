@@ -260,8 +260,8 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
             filterLabel="Show 0% APY"
             //@ts-ignore
             filterBy={''}
-            //@ts-ignore
-            onAction={console.log('o')}
+            initialSortBy="deposit"
+            onAction={() => console.log('action')}
             wrap
           />
         </ViewContainer>
