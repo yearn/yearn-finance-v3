@@ -11,8 +11,8 @@ export const ClaimUnlockedTab = () => {
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
-  const hasLockedAmount = !!votingEscrow?.earlyExitPenaltyRatio && toBN(votingEscrow?.DEPOSIT.userDeposited).gt(0);
   const unlockedAmount = !votingEscrow?.unlockDate ? votingEscrow?.DEPOSIT.userDeposited : '0';
+  const hasUnlockedAmount = toBN(unlockedAmount).gt(0);
 
   const { error: networkError } = validateNetwork({
     currentNetwork: NETWORK,
@@ -33,7 +33,6 @@ export const ClaimUnlockedTab = () => {
     <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))" minHeight="35rem">
       <Box>
         <Text heading="h2">Claim YFI (expired lock)</Text>
-        <Text>Description goes here</Text>
       </Box>
       <Box>
         <Box mt="0.8rem">
@@ -50,7 +49,7 @@ export const ClaimUnlockedTab = () => {
               onClick={executeWithdrawUnlocked}
               isLoading={withdrawUnlockedStatus.loading}
               success={withdrawUnlockedStatus.executed && !withdrawUnlockedStatus.error}
-              disabled={hasLockedAmount || withdrawUnlockedStatus.loading}
+              disabled={!hasUnlockedAmount || withdrawUnlockedStatus.loading}
               filled
               width={[1, 1 / 2]}
               height="5.6rem"

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
-import { useAppSelector, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
+import { useAppSelector, useAppTranslation, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
@@ -21,7 +22,13 @@ const MAX_LOCK_TIME = '209'; // Weeks
 const MIN_LOCK_TIME = '1'; // Weeks
 const MIN_LOCK_AMOUNT = '1';
 
+const Bullet = styled.li`
+  list-style-type: disc;
+  margin-left: 2.4rem;
+`;
+
 export const LockTab = () => {
+  const { t } = useAppTranslation(['common', 'veyfi']);
   const isMounting = useIsMounting();
   const { NETWORK } = getConfig();
   const [lockAmount, setLockAmount] = useState('');
@@ -181,14 +188,22 @@ export const LockTab = () => {
       };
 
   return (
-    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))" minHeight="35rem">
+    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))" minHeight="35rem" gap="7.2rem">
       <Box>
-        <Text heading="h2">Lock YFI into veYFI</Text>
-        <Text>Description goes here</Text>
+        <Text heading="h2">{t('veyfi:lock-tab.lock-section.header')}</Text>
+        <Text mt="1.6rem">{t('veyfi:lock-tab.lock-section.desc-1')}</Text>
+        <br />
+        <Text>{t('veyfi:lock-tab.lock-section.desc-2')}</Text>
+        <br />
+        <ul>
+          <Bullet>{t('veyfi:lock-tab.lock-section.bullet-1')}</Bullet>
+          <Bullet>{t('veyfi:lock-tab.lock-section.bullet-2')}</Bullet>
+          <Bullet>{t('veyfi:lock-tab.lock-section.bullet-3')}</Bullet>
+        </ul>
       </Box>
       <Box>
         <Box mt="0.8rem">
-          <Text heading="h3">Locking</Text>
+          <Text heading="h3">{t('veyfi:lock-tab.locking')}</Text>
           <Box display="flex" flexDirection={['column', 'row']} gap="1.6rem">
             <AmountInput
               label={`${votingEscrow?.token.symbol ?? 'YFI'}`}
@@ -205,7 +220,7 @@ export const LockTab = () => {
               width={[1, 1 / 2]}
             />
             <AmountInput
-              label="Lock time (weeks)"
+              label={t('veyfi:lock-tab.lock-period')}
               amount={lockTime}
               onAmountChange={setLockTime}
               maxAmount={MAX_LOCK_TIME}
@@ -217,7 +232,7 @@ export const LockTab = () => {
           </Box>
           <Box display="flex" flexDirection={['column', 'row']} alignItems="center" gap="1.6rem">
             <AmountInput
-              label="Total veYFI"
+              label={t('veyfi:lock-tab.total')}
               amount={resultAmount}
               loading={getExpectedTransactionOutcomeStatus.loading}
               mt="1.6rem"

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { useAppSelector, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
+import { useAppSelector, useAppTranslation, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
@@ -11,6 +11,7 @@ const MAX_LOCK_TIME = '209'; // Weeks
 const MIN_LOCK_TIME = '2'; // Weeks
 
 export const ManageLockTab = () => {
+  const { t } = useAppTranslation(['common', 'veyfi']);
   const isMounting = useIsMounting();
   const { NETWORK } = getConfig();
   const [lockTime, setLockTime] = useState('');
@@ -88,15 +89,23 @@ export const ManageLockTab = () => {
     <Box minHeight="35rem">
       <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))" gap="7.2rem">
         <Box>
-          <Text heading="h2">Extend lock</Text>
-          <Text>Description goes here</Text>
+          <Text heading="h2">{t('veyfi:manage-tab.extend-section.header')}</Text>
+          <Text mt="1.6rem">{t('veyfi:manage-tab.extend-section.desc-1')}</Text>
+          <br />
+          <Text mt="1.6rem">{t('veyfi:manage-tab.extend-section.desc-2')}</Text>
         </Box>
         <Box>
           <Box mt="0.8rem">
             <Box display="flex" flexDirection={['column', 'row']} gap="1.6rem">
-              <AmountInput label="Current time" amount={weeksToUnlock} mt="1.6rem" width={[1, 1 / 2]} disabled />
               <AmountInput
-                label="Increase lock time (weeks)"
+                label={t('veyfi:manage-tab.lock-period')}
+                amount={weeksToUnlock}
+                mt="1.6rem"
+                width={[1, 1 / 2]}
+                disabled
+              />
+              <AmountInput
+                label={t('veyfi:manage-tab.increase-period')}
                 amount={lockTime}
                 onAmountChange={setLockTime}
                 maxAmount={toBN(MAX_LOCK_TIME).minus(weeksToUnlock).toString()}
@@ -108,7 +117,7 @@ export const ManageLockTab = () => {
             </Box>
             <Box display="flex" flexDirection={['column', 'row']} alignItems="center" gap="1.6rem">
               <AmountInput
-                label="Total veYFI"
+                label={t('veyfi:manage-tab.total')}
                 amount={extendResultAmount}
                 loading={getExpectedTransactionOutcomeStatus.loading}
                 mt="1.6rem"
@@ -145,21 +154,20 @@ export const ManageLockTab = () => {
       </Box>
       <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))" gap="7.2rem" mt="6.4rem">
         <Box>
-          <Text heading="h2">Early exit</Text>
-          <Text>Description goes here</Text>
+          <Text heading="h2">{t('veyfi:manage-tab.exit-section.header')}</Text>
         </Box>
         <Box>
           <Box mt="0.8rem">
             <Box display="flex" flexDirection={['column', 'row']} gap="1.6rem">
               <AmountInput
-                label="veYFI you have"
+                label={t('veyfi:manage-tab.balance')}
                 amount={humanize('amount', votingEscrow?.DEPOSIT.userBalance, votingEscrow?.decimals)}
                 mt="1.6rem"
                 width={[1, 1 / 2]}
                 disabled
               />
               <AmountInput
-                label="Current lock time (weeks)"
+                label={t('veyfi:manage-tab.lock-time')}
                 amount={weeksToUnlock}
                 mt={['0rem', '1.6rem']}
                 width={[1, 1 / 2]}
@@ -168,7 +176,7 @@ export const ManageLockTab = () => {
             </Box>
             <Box display="flex" flexDirection={['column', 'row']} alignItems="center" gap="1.6rem">
               <AmountInput
-                label="YFI you get"
+                label={t('veyfi:manage-tab.expected')}
                 amount={humanize('amount', exitResultAmount, votingEscrow?.token.decimals)}
                 message={`Penalty: ${format('percent', votingEscrow?.earlyExitPenaltyRatio?.toString(), 2)}`}
                 mt="1.6rem"
