@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { device } from '@themes/default';
 import { useAppDispatch, useAppSelector, useAppTranslation } from '@hooks';
 import { ThreeColumnLayout } from '@src/client/containers/Columns';
+import { normalizeAmount, numberWithCommas, prettyNumbers } from '@src/utils';
 import {
   ARBITER_POSITION_ROLE,
   BORROWER_POSITION_ROLE,
@@ -147,17 +148,24 @@ export const LineMetadata = (props: LineMetadataProps) => {
 
   const renderEscrowMetadata = () => {
     if (!deposits) return null;
-    if (!totalCollateral)
-      return <MetricDisplay title={t('lineDetails:metadata.escrow.no-collateral')} data={`$ ${totalCollateral}`} />;
-    return <MetricDisplay title={t('lineDetails:metadata.escrow.total')} data={`$ ${totalCollateral}`} />;
+    if (!totalCollateral) return;
+    <MetricDisplay
+      title={t('lineDetails:metadata.escrow.no-collateral')}
+      data={`$ ${prettyNumbers(totalCollateral)}`}
+    />;
+    return (
+      <MetricDisplay title={t('lineDetails:metadata.escrow.total')} data={`$ ${prettyNumbers(totalCollateral)}`} />
+    );
   };
   const renderSpigotMetadata = () => {
     if (!revenue) return null;
     if (!totalRevenue)
       return (
-        <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={`$ ${totalRevenue} 0 / month`} />
+        <MetricDisplay title={t('lineDetails:metadata.revenue.no-revenue')} data={`$ ${prettyNumbers(totalRevenue)}`} />
       );
-    return <MetricDisplay title={t('lineDetails:metadata.revenue.per-month')} data={`$ ${totalRevenue}`} />;
+    return (
+      <MetricDisplay title={t('lineDetails:metadata.revenue.per-month')} data={`$ ${prettyNumbers(totalRevenue)}`} />
+    );
   };
 
   const formatAssetsTableRow = (deposit: EscrowDeposit) => ({
@@ -224,9 +232,12 @@ export const LineMetadata = (props: LineMetadataProps) => {
   return (
     <>
       <ThreeColumnLayout>
-        <MetricDisplay title={t('lineDetails:metadata.principal')} data={`$ ${principal}`} />
-        <MetricDisplay title={t('lineDetails:metadata.deposit')} data={`$ ${deposit}`} />
-        <MetricDisplay title={t('lineDetails:metadata.totalInterestPaid')} data={`$ ${totalInterestPaid}`} />
+        <MetricDisplay title={t('lineDetails:metadata.principal')} data={`$ ${prettyNumbers(principal)}`} />
+        <MetricDisplay title={t('lineDetails:metadata.deposit')} data={`$ ${prettyNumbers(deposit)}`} />
+        <MetricDisplay
+          title={t('lineDetails:metadata.totalInterestPaid')}
+          data={`$ ${prettyNumbers(totalInterestPaid)}`}
+        />
       </ThreeColumnLayout>
       <SectionHeader>
         {t('lineDetails:metadata.secured-by')}
@@ -239,7 +250,6 @@ export const LineMetadata = (props: LineMetadataProps) => {
         {renderSpigotMetadata()}
         {renderEscrowMetadata()}
       </ThreeColumnLayout>
-
       {(!isEmpty(deposits) || !isEmpty(revenue)) && (
         <ViewContainer>
           <AssetsListCard

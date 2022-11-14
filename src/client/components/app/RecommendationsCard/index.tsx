@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { normalizeAmount, numberWithCommas, prettyNumbers } from '@utils';
 import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@components/common';
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
@@ -157,7 +158,7 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
               </ItemName>
               <Divider />
               <Metric>
-                ${item.principal.toString()} / ${item.deposit.toString()}
+                ${prettyNumbers(item.revenue)} / ${prettyNumbers(item.deposit)}
               </Metric>
               <MetricsTextContainer>
                 <MetricsText>
@@ -169,7 +170,7 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
 
               <ItemInfoLabel>{t('components.line-card.secured-by')}:</ItemInfoLabel>
               <Metric>
-                ${item.collateral.toString()} / ${item.revenue.toString()}
+                ${prettyNumbers(item.collateral)} / ${prettyNumbers(item.revenue)}
               </Metric>
               <MetricsTextContainer>
                 <MetricsText>

@@ -104,6 +104,10 @@ export const formatApy = (apyData: Fraction, apyType?: string): FormattedAmount 
   return formatPercent(apyData, 2);
 };
 
+export const numberWithCommas = (x: string) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
 /* -------------------------------------------------------------------------- */
 /*                                  Humanize                                  */
 /* -------------------------------------------------------------------------- */
@@ -117,4 +121,8 @@ export const humanize = (
   if (!tokenDecimals && dataType === 'amount') return '0';
   const units = normalize(dataType, amount, tokenDecimals);
   return format(dataType, units, formatDecimals);
+};
+
+export const prettyNumbers = (x: string) => {
+  return numberWithCommas(parseInt(normalizeAmount(x, 18)).toFixed(2));
 };

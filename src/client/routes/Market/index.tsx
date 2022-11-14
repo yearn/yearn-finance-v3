@@ -135,8 +135,8 @@ export const Market = () => {
                 name: borrower + id,
                 principal,
                 deposit,
-                collateral: Object.entries(escrow?.deposits || {})
-                  .reduce((sum, [_, val]) => sum.add(val.amount), utils.parseUnits('0', 'ether'))
+                collateral: Object.entries(escrow?.deposits || {}) // change to collateralValue once we have prices
+                  .reduce((sum, [_, val]) => sum.add(val.amount), utils.parseUnits('0', 'ether')) // remove 'amount' once the above is changed
                   .toString(),
                 revenue: Object.values(spigot?.tokenRevenue || {})
                   .reduce((sum, val) => sum.add(val), utils.parseUnits('0', 'ether'))
