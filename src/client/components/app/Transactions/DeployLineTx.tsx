@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { BigNumber } from 'ethers';
 import styled from 'styled-components';
 
-import { isAddress } from '@utils';
+import { isAddress, toWei } from '@utils';
 import { useAppTranslation, useAppDispatch, useAppSelector } from '@hooks';
 import { LinesActions, WalletSelectors } from '@store';
 import { getConstants } from '@src/config/constants';
@@ -14,6 +14,7 @@ import { TxAddressInput } from './components/TxAddressInput';
 import { TxTTLInput } from './components/TxTTLInput';
 import { TxActions } from './components/TxActions';
 import { TxActionButton } from './components/TxActions';
+import { TxNumberInput } from './components/TxNumberInput';
 import { TxStatus } from './components/TxStatus';
 
 const StyledTransaction = styled(TxContainer)``;
@@ -67,6 +68,14 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
     setTimeToLive(timeToLive.toString());
   };
 
+  const onCratioChange = (amount: string) => {
+    setCratio(amount);
+  };
+
+  const onRevenueSplitChange = (amount: string) => {
+    setRevenueSplit(amount);
+  };
+
   const onTransactionCompletedDismissed = () => {
     if (onClose) {
       onClose();
@@ -102,6 +111,53 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
           borrower,
           ttl: BigNumber.from(timeToLive),
           network: walletNetwork,
+        })
+      ).then((res) => {
+        if (res.meta.requestStatus === 'rejected') {
+          setTransactionCompleted(2);
+          setLoading(false);
+        }
+        if (res.meta.requestStatus === 'fulfilled') {
+          setTransactionCompleted(1);
+          setLoading(false);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const deploySecuredLineWithConfig = async () => {
+    setLoading(true);
+    let checkSumAddress = await isAddress(borrower);
+
+    if (!checkSumAddress || walletNetwork === undefined) {
+      setWarning('Incorrect address, please verify and try again.');
+      return;
+    }
+
+    if (+timeToLive <= 0) {
+      setTTLWarning('Increase TTL, cannot be 0.');
+      return;
+    }
+
+    let BNCratio = toWei(cratio, 2);
+    let BNRevenueSplit = toWei(revenueSplit, 0);
+    console.log(typeof BNCratio);
+
+    try {
+      // TODO Dynamic var based on network
+
+      dispatch(
+        LinesActions.deploySecuredLineWithConfig({
+          factory: LineFactory_GOERLI,
+          borrower,
+          ttl: BigNumber.from(timeToLive),
+          network: walletNetwork,
+          //@ts-ignore
+          revenueSplit: BNRevenueSplit,
+          //@ts-ignore
+          cratio: BNCratio,
         })
       ).then((res) => {
         if (res.meta.requestStatus === 'rejected') {
@@ -172,9 +228,32 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
       />
       {inputTTLWarning !== '' ? <div style={{ color: '#C3272B' }}>{inputTTLWarning}</div> : ''}
       {advancedMode ? (
-        <h3>advanced Mode something here and something there</h3>
+        <SectionContent>
+          <TxNumberInput
+            headerText={t('components.transaction.deploy-line.cratio')}
+            inputLabel={t('components.transaction.deploy-line.cratio-input')}
+            width={'sm'}
+            amount={cratio}
+            maxAmount={'max string'}
+            onInputChange={onCratioChange}
+            readOnly={false}
+            hideAmount={false}
+            inputError={false}
+          />
+          <TxNumberInput
+            headerText={t('components.transaction.deploy-line.revenue-split')}
+            inputLabel={t('components.transaction.deploy-line.revenue-split-input')}
+            width={'sm'}
+            amount={revenueSplit}
+            maxAmount={'max string'}
+            onInputChange={onRevenueSplitChange}
+            readOnly={false}
+            hideAmount={false}
+            inputError={false}
+          />
+        </SectionContent>
       ) : (
-        <h4>Not advanced Mode something here and something there</h4>
+        <h6>You should not deploy a line without discussing terms.</h6>
       )}
       <SectionContent>
         <>
@@ -194,7 +273,7 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
       <TxActions>
         <TxActionButton
           key={''}
-          onClick={deploySecuredLineNoConfig}
+          onClick={advancedMode ? deploySecuredLineWithConfig : deploySecuredLineNoConfig}
           disabled={false}
           contrast={false}
           isLoading={loading}
