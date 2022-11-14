@@ -26,7 +26,15 @@ import {
   LinePageCreditFragResponse,
   LineEventFragResponse,
   SpigotEventFragResponse,
+  EscrowDeposit,
+  EscrowDepositList,
+  TokenFragRepsonse,
+  COLLATERAL_TYPE_REVENUE,
+  Collateral,
+  COLLATERAL_TYPE_ASSET,
 } from '@types';
+
+import { format, humanize, normalizeAmount } from './format';
 
 const { parseUnits, parseEther } = utils;
 
@@ -88,14 +96,25 @@ export const formatCollateralEvents = (
 
     const valueNow = unnullify(price.toString(), true).times(unnullify((amount.toString(), true)));
     console.log('formatCollateralevent ', __typename, amount, token, value, valueNow);
-    if (type === SPIGOT_MODULE_NAME) {
-      // aggregate token revenue. not needed for escrow bc its already segmented by token
-      // use price at time of revenue for more accuracy
-      tokenRevenue[symbol] += parseUnits(unnullify(tokenRevenue[symbol], true), 'ether').add(value).toString();
+    let collatType;
+    switch (type) {
+      case SPIGOT_MODULE_NAME:
+        // aggregate token revenue. not needed for escrow bc its already segmented by token
+        // use price at time of revenue for more accuracy
+        tokenRevenue[symbol] += parseUnits(unnullify(tokenRevenue[symbol], true), 'ether').add(value).toString();
+        collatType = COLLATERAL_TYPE_REVENUE;
+        break;
+      case ESCROW_MODULE_NAME:
+        collatType = COLLATERAL_TYPE_ASSET;
+        break;
+      default:
+        break;
     }
+
     totalVal += valueNow;
+
     return {
-      type,
+      type: collatType,
       __typename,
       timestamp,
       amount,
@@ -137,7 +156,6 @@ export function formatGetLinesData(
 
     const deposits = escrowRes?.deposits.map((d: any) => ({ ...d, token: d.token.id }));
     // formatAggData (positions, deposits, summaries);
-    console.log('escrow deposits getLines', escrowRes, deposits);
 
     return {
       ...rest,
@@ -152,7 +170,6 @@ export function formatGetLinesData(
       escrow: {
         ...(escrowRes ?? {}),
         ...escrow,
-        deposits,
       },
     };
   });
@@ -170,7 +187,7 @@ export function formatGetLinePageAuxData(
 
 export const formatAggregatedCreditLineData = (
   positions: (BaseCreditFragResponse | LinePageCreditFragResponse)[],
-  collaterals: BaseEscrowDepositFragResponse[],
+  collateralDeposits: BaseEscrowDepositFragResponse[],
   revenues: SpigotRevenueSummaryFragResponse[],
   tokenPrices: { [token: string]: BigNumber }
 ): {
@@ -183,6 +200,7 @@ export const formatAggregatedCreditLineData = (
   escrow: {
     collateralValue: string;
     cratio: string;
+    deposits: EscrowDepositList;
     // TODO add formated deposits here
   };
 } => {
@@ -209,12 +227,28 @@ export const formatAggregatedCreditLineData = (
     { principal, deposit, highestApy }
   );
 
-  const collateralValue = collaterals.reduce((agg, c) => {
-    const price = unnullify(tokenPrices[c.token?.id], true);
-    return !c.enabled ? agg : agg.add(parseUnits(unnullify(c.amount).toString(), 'ether').mul(price));
-  }, BigNumber.from(0));
+  const [collateralValue, deposits]: [BigNumber, EscrowDepositList] = collateralDeposits.reduce(
+    (agg, c) => {
+      const price = unnullify(tokenPrices[c.token.id], true);
+      return !c.enabled
+        ? agg
+        : [
+            agg[0].add(parseUnits(unnullify(c.amount).toString(), 'ether').mul(price)),
+            {
+              ...agg[1],
+              [c.token.id]: {
+                ...c,
+                type: COLLATERAL_TYPE_ASSET,
+                token: _createTokenView(c.token, BigNumber.from(c.amount), price),
+              },
+            },
+          ];
+    },
+    [BigNumber.from(0), {}]
+  );
 
   const escrow = {
+    deposits,
     collateralValue: collateralValue.toString(),
     cratio: parseUnits(unnullify(credit.principal).toString(), 'ether').eq(0)
       ? '0'
@@ -318,10 +352,13 @@ export const formatLinePageData = (
     console.log('positions info origin', positions);
     console.log('position', position);
 
+    let Frate = normalizeAmount(position.fRate, 2);
+    let Drate = normalizeAmount(position.dRate, 2);
+
     let positionObject = {
       status: position.status,
-      drate: position.fRate,
-      frate: position.dRate,
+      drate: Drate,
+      frate: Frate,
       deposit: position.deposit,
       tokenAddress: position.token.id,
       tokenDecimals: position.token.decimals,
@@ -360,6 +397,7 @@ export const formatLinePageData = (
     ...spigot!,
     ...spigotData,
   };
+
   const pageData: CreditLinePage = {
     // metadata
     ...metadata,
@@ -379,8 +417,28 @@ export const formatLinePageData = (
     positions: newFormattedPositions,
     // collateral data
     spigot: formattedSpigot,
-    escrow: isEmpty(escrow?.deposits) ? undefined : { ...escrow!, ...escrowData, deposits: formattedEscrowData },
+    escrow: isEmpty(escrow?.deposits) ? undefined : { ...escrow!, ...escrowData },
   };
   console.log('page data', pageData);
   return pageData;
+};
+
+const _createTokenView = (tokenResponse: TokenFragRepsonse, amount?: BigNumber, price?: BigNumber) => {
+  // might already have for token in state but we only pass in prices to these util functions
+  // will need to merge and prefer state vs this jank
+  console.log('create token', tokenResponse, amount, price);
+  return {
+    address: tokenResponse.id,
+    name: tokenResponse.name,
+    symbol: tokenResponse.symbol,
+    decimals: tokenResponse.decimals,
+    balance: humanize('amount', amount?.toString(), tokenResponse.decimals, 2),
+    priceUsdc: humanize('amount', price?.toString(), 2, 2), // slice of last decimals -2 for rounding
+    balanceUsdc:
+      !amount || !price || price.eq(0)
+        ? '0'
+        : humanize('amount', amount?.mul(price)?.toString(), tokenResponse.decimals, 2),
+    categories: [],
+    description: '',
+  };
 };

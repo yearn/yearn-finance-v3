@@ -81,7 +81,9 @@
       "approve": "Approve",
       "available-borrow": "Available to borrow",
       "borrow": "Borrow",
-      "deposit-and-repay-header": "deposit and repay",
+      "deposit-and-repay-header": "Deposit and Repay",
+      "claim-and-repay-header": "Claim and Repay",
+      "deposit-and-close-header": "Deposit and Close",
       "withdraw": "Withdraw",
       "borrow-limit": {
         "borrow-apy": "Borrow APY",
@@ -90,6 +92,14 @@
         "total-borrow-limit": "Total borrow limit",
         "total-borrow-limit-used": "Total borrow limit used"
       },
+      "enable-collateral-asset": {
+        "header": "As Arbiter you're enabling the Borrow to use this token as collateral",
+        "token-input-header": "Select an asset",
+        "token-input-desc": "",
+        "enable-failed": "Could not add token as collateral",
+        "cta": "Enable Asset"
+      },
+      "oracle-price": "Oracle Price",
       "claim": "Claim",
       "deposit": "Deposit",
       "liquidate": "Liquidate",
@@ -147,6 +157,20 @@
           "body": "Your chosen line is not in a healthy state. You can find more lines to deposit into back in the marketplace."
         }
       },
+      "add-collateral": {
+        "header": "Setup deal terms",
+        "select-credit": "1. You are lending to:",
+        "select-token": "2. Select token and amount to deposit",
+        "select-rates": "3. Set your interest rates",
+        "back-to-market": "Head back to the Market",
+        "no-assets-enabled": {
+          "title": "No tokens have been enabled as collateral on your line!",
+          "body": "The arbiter is the only oen that can enable assets to be depostied as collateral. Find and contact yours in the Debt DAO discord.",
+          "find-cta": "Go to discord",
+          "login-cta": "Login as arbiter",
+          "enable-cta": "Enable token"
+        }
+      },
       "arbiter-liquidate": {
         "header": "Liquidate Borrowers",
         "select-credit": "1. Select a borrower to liquidate",
@@ -167,8 +191,10 @@
       "deposit-and-repay": {
         "header": "Repay",
         "select-position": "1. Select Position to Repay:",
-        "select-amount": "2. You Owe:",
-        "your-rates": "3. Your Interest Rates:"
+        "repay-type": "2. Select Repay Type:",
+        "select-amount": "3. You Owe:",
+        "your-rates": "4. Your Interest Rates:",
+        "select-repay": "Select Repayment Method"
       },
       "withdraw-credit": {
         "header": "Withdraw",
