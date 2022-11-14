@@ -53,7 +53,7 @@ const classicTheme: DefaultTheme = {
   colors: {
     logo: '#006AE3',
 
-    primary: classic.colors.primary,
+    primary: 'white',
     background: classic.colors.background,
     surface: classic.colors.surface,
 
