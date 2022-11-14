@@ -223,6 +223,9 @@ const deploySecuredLineWithConfig = createAsyncThunk<void, DeploySecuredLineWith
     const deploySecuredLineWithConfigData = await lineFactoryService.deploySecuredLineWtihConfig({
       ...deployData,
     });
+
+    console.log('new secured line with Config deployed. tx response', deploySecuredLineWithConfigData);
+    // await dispatch(getLine(deployedLineData.))
   }
 );
 

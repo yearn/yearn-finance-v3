@@ -42,6 +42,8 @@ interface DeployLineProps {
 export const DeployLineTx: FC<DeployLineProps> = (props) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
+
+  // Deploy Line base data state
   const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const [transactionCompleted, setTransactionCompleted] = useState(0);
   const { header, onClose } = props;
@@ -50,6 +52,15 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
   const [inputTTLWarning, setTTLWarning] = useState('');
   const [loading, setLoading] = useState(false);
   const [timeToLive, setTimeToLive] = useState('0');
+
+  // Deploy Line with config state
+  const [advancedMode, setAdvancedMode] = useState(false);
+  const [cratio, setCratio] = useState('0');
+  const [revenueSplit, setRevenueSplit] = useState('0');
+
+  const toggleSecuredMode = () => {
+    setAdvancedMode(!advancedMode);
+  };
 
   const onAmountChange = (ttl: string) => {
     let timeToLive = +ttl * 24 * 60 * 60;
@@ -160,12 +171,17 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
         ttlType={true}
       />
       {inputTTLWarning !== '' ? <div style={{ color: '#C3272B' }}>{inputTTLWarning}</div> : ''}
+      {advancedMode ? (
+        <h3>advanced Mode something here and something there</h3>
+      ) : (
+        <h4>Not advanced Mode something here and something there</h4>
+      )}
       <SectionContent>
         <>
           Advanced Mode
           <ToggleButton
-            selected={false}
-            setSelected={() => {}}
+            selected={advancedMode}
+            setSelected={() => toggleSecuredMode()}
             className=""
             disabled={false}
             color=""
