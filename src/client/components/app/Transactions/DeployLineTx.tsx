@@ -141,7 +141,10 @@ export const DeployLineTx: FC<DeployLineProps> = (props) => {
       return;
     }
 
+    // BPS IS USED so we must multiply by 10^2
     let BNCratio = toWei(cratio, 2);
+
+    // BPS IS NOT USED so we run through toWei to get BN
     let BNRevenueSplit = toWei(revenueSplit, 0);
     console.log(typeof BNCratio);
 
