@@ -167,12 +167,14 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
               <Divider />
               <ItemName>
                 {' '}
-                {t('components.line-card.start')}: {getDate(item.start)}
+                <Metric>{t('components.line-card.start')}: </Metric>
+                <MetricsText>{getDate(item.start)}</MetricsText>
               </ItemName>
               <Divider />
               <ItemName>
                 {' '}
-                {t('components.line-card.end')}: {getDate(item.end)}
+                <Metric>{t('components.line-card.end')}: </Metric>
+                <MetricsText>{getDate(item.end)}</MetricsText>
               </ItemName>
               <Divider />
               <Metric>

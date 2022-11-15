@@ -24,6 +24,7 @@ const Header = styled.h1`
   ${({ theme }) => `
     margin-bottom: ${theme.spacing.xl};
     font-size: ${theme.fonts.sizes.xl};
+    color: ${theme.colors.titles};
   `};
 `;
 
