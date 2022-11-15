@@ -220,7 +220,7 @@ export const AddCreditPositionTx: FC<AddCreditPositionProps> = (props) => {
     userMetadata.role === BORROWER_POSITION_ROLE
       ? [
           {
-            label: t('components.transaction.deposit'),
+            label: t('components.transaction.accept'),
             onAction: addCreditPosition,
             status: true,
             disabled: !transactionApproved,
