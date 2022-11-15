@@ -51,6 +51,9 @@
       "total-debt": "Outstanding Debt",
       "total-credit": "Total Credit",
       "collateral": "Collateral",
+      "start": "Start Time",
+      "end": "End Time",
+      "line": "Line Id",
       "revenue": "Spigoted Revenue"
     },
     "no-wallet": "Wallet not connected",

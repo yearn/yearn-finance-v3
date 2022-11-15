@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useAppTranslation } from '@hooks';
 import { Button, Text } from '@components/common';
 import { device } from '@themes/default';
+import { formatAddress } from '@utils';
 
 interface WalletAddressProps {
   address?: string;
@@ -27,7 +28,7 @@ export const ConnectWalletButton = ({ address, ensName, disabled, onClick }: Wal
   if (!address) {
     buttonMessage = t('components.connect-button.connect');
   } else {
-    buttonMessage = ensName ?? address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length);
+    buttonMessage = ensName ?? formatAddress(address);
   }
 
   return (

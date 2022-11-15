@@ -8,7 +8,7 @@ import { device } from '@themes/default';
 import { DetailCard, ActionButtons, ViewContainer, SliderCard } from '@components/app';
 import { Input, SearchIcon, Text, Button } from '@components/common';
 import { ARBITER_POSITION_ROLE, BORROWER_POSITION_ROLE, LENDER_POSITION_ROLE } from '@src/core/types';
-import { humanize } from '@src/utils';
+import { humanize, formatAddress } from '@src/utils';
 
 const PositionsCard = styled(DetailCard)`
   max-width: ${({ theme }) => theme.globalMaxWidth};
@@ -228,7 +228,7 @@ export const CreditEventsTable = (props: CreditEventsTableProps) => {
               drate: `${event['drate']} %`,
               frate: `${event['frate']} %`,
               status: event['status'],
-              lender: event['lender'],
+              lender: formatAddress(event['lender']),
               token: event['tokenSymbol'],
               actions: (
                 <ActionButtons

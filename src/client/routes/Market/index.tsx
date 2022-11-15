@@ -130,9 +130,12 @@ export const Market = () => {
             <StyledRecommendationsCard
               header={t(key)}
               key={key}
-              items={val.map(({ id, borrower, type, spigot, escrow, principal, deposit }) => ({
+              items={val.map(({ id, borrower, type, spigot, escrow, principal, deposit, start, end }) => ({
                 icon: '',
-                name: borrower + id,
+                name: borrower,
+                start: start,
+                end: end,
+                id: id,
                 principal,
                 deposit,
                 collateral: Object.entries(escrow?.deposits || {}) // change to collateralValue once we have prices

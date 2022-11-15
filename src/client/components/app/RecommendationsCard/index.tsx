@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { normalizeAmount, numberWithCommas, prettyNumbers } from '@utils';
+import { normalizeAmount, numberWithCommas, prettyNumbers, formatAddress, getDate } from '@utils';
 import { Card, CardHeader, CardContent, Text, Icon, ChevronRightIcon } from '@components/common';
 import { TokenIcon } from '@components/app';
 import { useAppTranslation } from '@hooks';
@@ -112,6 +112,7 @@ const MetricsText = styled.span`
 
 interface Item {
   header?: string;
+  id: string;
   icon: string;
   name: string;
   info: string;
@@ -120,6 +121,8 @@ interface Item {
   collateral: string;
   revenue: string;
   tags?: string[];
+  start: number;
+  end: number;
   infoDetail?: string;
   action?: string;
   onAction?: () => void;
@@ -154,7 +157,22 @@ export const RecommendationsCard = ({ header, subHeader, items, ...props }: Reco
             <ItemInfo>
               <ItemName>
                 {' '}
-                {t('components.line-card.borrower')}: {item.name}
+                {t('components.line-card.borrower')}: {formatAddress(item.name)}
+              </ItemName>
+              <Divider />
+              <ItemName>
+                {' '}
+                {t('components.line-card.line')}: {formatAddress(item.id)}
+              </ItemName>
+              <Divider />
+              <ItemName>
+                {' '}
+                {t('components.line-card.start')}: {getDate(item.start)}
+              </ItemName>
+              <Divider />
+              <ItemName>
+                {' '}
+                {t('components.line-card.end')}: {getDate(item.end)}
               </ItemName>
               <Divider />
               <Metric>
