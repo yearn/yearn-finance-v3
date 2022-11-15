@@ -68,7 +68,7 @@ export const Routes = () => {
                   <Route key={index} exact path={route.path} component={route.component} />
                 ))}
                 <Route path="*">
-                  <Redirect to="/portfolio" />
+                  <Redirect to="/vaults" />
                 </Route>
               </Switch>
             </Layout>

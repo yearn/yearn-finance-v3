@@ -499,7 +499,7 @@ export const Vaults = () => {
               filterLabel="Show 0% APY"
               filterBy={filterVaults}
               onAction={({ address }) => history.push(`/vault/${address}`)}
-              initialSortBy="apy"
+              initialSortBy="vaultBalanceUsdc"
               wrap
             />
           )}
