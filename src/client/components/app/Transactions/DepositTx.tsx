@@ -50,7 +50,7 @@ export const DepositTx: FC<DepositTxProps> = ({
 
   const dispatch = useAppDispatch();
   const dispatchAndUnwrap = useAppDispatchAndUnwrap();
-  const { NETWORK_SETTINGS } = getConfig();
+  const { NETWORK_SETTINGS, CONTRACT_ADDRESSES } = getConfig();
   const [amount, setAmount] = useState('');
   const [debouncedAmount, isDebouncePending] = useDebounce(amount, 500);
   const [txCompleted, setTxCompleted] = useState(false);
@@ -236,7 +236,9 @@ export const DepositTx: FC<DepositTxProps> = ({
     : t('components.transaction.status.calculating');
 
   const isZap = selectedVault.token.address !== selectedSellTokenAddress;
-  const zapService = isZap ? selectedVault.zapInWith : undefined;
+  const isEthToWethZap =
+    selectedSellTokenAddress === CONTRACT_ADDRESSES.ETH && selectedVault.address === CONTRACT_ADDRESSES.YVWETH;
+  const zapService = isZap && !isEthToWethZap ? selectedVault.zapInWith : undefined;
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
