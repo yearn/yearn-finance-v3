@@ -1,4 +1,4 @@
-import { Card } from '@yearn-finance/web-lib';
+import { Card } from '@yearn-finance/web-lib/components';
 
 import { useAppSelector } from '@hooks';
 import { VotingEscrowsSelectors } from '@store';
