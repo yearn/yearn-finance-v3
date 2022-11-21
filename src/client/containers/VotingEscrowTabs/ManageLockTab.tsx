@@ -86,7 +86,7 @@ export const ManageLockTab = () => {
   };
 
   return (
-    <Box minHeight="35rem">
+    <Box minHeight="35rem" p={['1.6rem', '2.4rem']}>
       <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))" gap="7.2rem">
         <Box>
           <Text heading="h2">{t('veyfi:manage-tab.extend-section.header')}</Text>

@@ -188,7 +188,13 @@ export const LockTab = () => {
       };
 
   return (
-    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))" minHeight="35rem" gap="7.2rem">
+    <Box
+      display="grid"
+      gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))"
+      minHeight="35rem"
+      gap="7.2rem"
+      p={['1.6rem', '2.4rem']}
+    >
       <Box>
         <Text heading="h2">{t('veyfi:lock-tab.lock-section.header')}</Text>
         <Text mt="1.6rem">{t('veyfi:lock-tab.lock-section.desc-1')}</Text>

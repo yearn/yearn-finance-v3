@@ -1,4 +1,5 @@
 import { Card } from '@yearn-finance/web-lib/components';
+import styled from 'styled-components';
 
 import { useAppSelector } from '@hooks';
 import { VotingEscrowsSelectors } from '@store';
@@ -7,6 +8,12 @@ import { ViewContainer, SummaryCard, Amount } from '@components/app';
 import { LockTab, ManageLockTab, ClaimUnlockedTab, MintTab } from '@containers';
 import { humanize } from '@utils';
 import { getConfig } from '@config';
+
+const TabsContainer = styled(Box)`
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.globalRadius};
+`;
 
 export const VotingEscrowPage = () => {
   const { ALLOW_DEV_MODE } = getConfig();
@@ -52,9 +59,9 @@ export const VotingEscrowPage = () => {
         cardSize="small"
       />
 
-      <Box width={1}>
+      <TabsContainer>
         <Card.Tabs tabs={tabs} />
-      </Box>
+      </TabsContainer>
     </ViewContainer>
   );
 };
