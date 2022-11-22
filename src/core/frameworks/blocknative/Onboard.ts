@@ -113,7 +113,7 @@ export class BlocknativeWalletImpl implements Wallet {
     this.onboard = Onboard({
       networkId,
       dappId: BLOCKNATIVE_KEY,
-      darkMode: theme !== 'light',
+      darkMode: !theme?.includes('light'),
       subscriptions,
       walletSelect: {
         wallets: [...wallets, uauthWallet, ledgerIframeWallet],
@@ -135,7 +135,7 @@ export class BlocknativeWalletImpl implements Wallet {
   }
 
   public async changeTheme(theme: Theme) {
-    const darkMode = theme !== 'light';
+    const darkMode = !theme?.includes('light');
     if (this.onboard) {
       this.onboard.config({ darkMode });
     }
