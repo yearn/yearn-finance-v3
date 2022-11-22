@@ -40,9 +40,10 @@ export const EarlyExitTab = () => {
   return (
     <Box
       display="grid"
-      gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))"
+      gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
       minHeight="35rem"
-      p={['1.6rem', '2.4rem']}
+      p={['1.6rem', '1.6rem', '2.4rem']}
+      width={1}
     >
       <Box>
         <Text heading="h2">Early exit</Text>
@@ -50,29 +51,29 @@ export const EarlyExitTab = () => {
       </Box>
       <Box>
         <Box mt="0.8rem">
-          <Box display="flex" flexDirection={['column', 'row']} gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'column', 'row']} gap="1.6rem">
             <AmountInput
               label="veYFI you have"
               amount={humanize('amount', votingEscrow?.DEPOSIT.userBalance, votingEscrow?.decimals)}
               mt="1.6rem"
-              width={[1, 1 / 2]}
+              width={[1, 1, 1 / 2]}
               disabled
             />
             <AmountInput
               label="Current lock time (weeks)"
               amount={weeksToUnlock}
-              mt={['0rem', '1.6rem']}
-              width={[1, 1 / 2]}
+              mt={['0rem', '0rem', '1.6rem']}
+              width={[1, 1, 1 / 2]}
               disabled
             />
           </Box>
-          <Box display="flex" flexDirection={['column', 'row']} alignItems="center" gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="1.6rem">
             <AmountInput
               label="YFI you get"
               amount={humanize('amount', expectedTokens, votingEscrow?.token.decimals)}
               message={`Penalty: ${format('percent', votingEscrow?.earlyExitPenaltyRatio?.toString(), 2)}`}
               mt="1.6rem"
-              width={[1, 1 / 2]}
+              width={[1, 1, 1 / 2]}
               disabled
             />
             <Button
@@ -81,9 +82,9 @@ export const EarlyExitTab = () => {
               success={withdrawLockedStatus.executed && !withdrawLockedStatus.error}
               disabled={!hasLockedAmount || withdrawLockedStatus.loading}
               filled
-              width={[1, 1 / 2]}
+              width={[1, 1, 1 / 2]}
               height="5.6rem"
-              mt={['0rem', '2.4rem']}
+              mt={['0rem', '0rem', '2.4rem']}
             >
               Exit
             </Button>

@@ -32,9 +32,10 @@ export const ClaimUnlockedTab = () => {
   return (
     <Box
       display="grid"
-      gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))"
+      gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
       minHeight="35rem"
-      p={['1.6rem', '2.4rem']}
+      p={['1.6rem', '1.6rem', '2.4rem']}
+      width={1}
     >
       <Box>
         <Text heading="h2">Claim YFI (expired lock)</Text>
@@ -42,12 +43,12 @@ export const ClaimUnlockedTab = () => {
       <Box>
         <Box mt="0.8rem">
           <Text heading="h3">Claiming</Text>
-          <Box display="flex" flexDirection={['column', 'row']} alignItems="center" gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="1.6rem">
             <AmountInput
               label="Unlocked YFI"
               amount={humanize('amount', unlockedAmount, votingEscrow?.decimals)}
               mt="1.6rem"
-              width={[1, 1 / 2]}
+              width={[1, 1, 1 / 2]}
               disabled
             />
             <Button
@@ -56,9 +57,9 @@ export const ClaimUnlockedTab = () => {
               success={withdrawUnlockedStatus.executed && !withdrawUnlockedStatus.error}
               disabled={!hasUnlockedAmount || withdrawUnlockedStatus.loading}
               filled
-              width={[1, 1 / 2]}
+              width={[1, 1, 1 / 2]}
               height="5.6rem"
-              mt={['0rem', '4.4rem']}
+              mt={['0rem', '0rem', '4.4rem']}
             >
               Claim
             </Button>

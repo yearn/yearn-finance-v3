@@ -190,10 +190,11 @@ export const LockTab = () => {
   return (
     <Box
       display="grid"
-      gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))"
+      gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
       minHeight="35rem"
       gap="7.2rem"
-      p={['1.6rem', '2.4rem']}
+      p={['1.6rem', '1.6rem', '2.4rem']}
+      width={1}
     >
       <Box>
         <Text heading="h2">{t('veyfi:lock-tab.lock-section.header')}</Text>
@@ -210,7 +211,7 @@ export const LockTab = () => {
       <Box>
         <Box mt="0.8rem">
           <Text heading="h3">{t('veyfi:lock-tab.locking')}</Text>
-          <Box display="flex" flexDirection={['column', 'row']} gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'column', 'row']} gap="1.6rem">
             <AmountInput
               label={`${votingEscrow?.token.symbol ?? 'YFI'}`}
               amount={lockAmount}
@@ -223,7 +224,7 @@ export const LockTab = () => {
                 4
               )} ${votingEscrow?.token.symbol ?? 'YFI'}`}
               mt="1.6rem"
-              width={[1, 1 / 2]}
+              width={[1, 1, 1 / 2]}
             />
             <AmountInput
               label={t('veyfi:lock-tab.lock-period')}
@@ -232,17 +233,17 @@ export const LockTab = () => {
               maxAmount={MAX_LOCK_TIME}
               disabled={hasLockedAmount}
               message="min 1"
-              mt={['0rem', '1.6rem']}
-              width={[1, 1 / 2]}
+              mt={['0rem', '0rem', '1.6rem']}
+              width={[1, 1, 1 / 2]}
             />
           </Box>
-          <Box display="flex" flexDirection={['column', 'row']} alignItems="center" gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="1.6rem">
             <AmountInput
               label={t('veyfi:lock-tab.total')}
               amount={resultAmount}
               loading={getExpectedTransactionOutcomeStatus.loading}
               mt="1.6rem"
-              width={[1, 1 / 2]}
+              width={[1, 1, 1 / 2]}
               disabled
             />
             <Button
@@ -254,9 +255,9 @@ export const LockTab = () => {
                 (increaseLockAmountStatus.executed && !increaseLockAmountStatus.error)
               }
               filled
-              width={[1, 1 / 2]}
+              width={[1, 1, 1 / 2]}
               height="5.6rem"
-              mt={['0rem', '4.4rem']}
+              mt={['0rem', '0rem', '4.4rem']}
             >
               {txAction.label}
             </Button>

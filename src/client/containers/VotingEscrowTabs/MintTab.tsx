@@ -32,9 +32,10 @@ export const MintTab = () => {
   return (
     <Box
       display="grid"
-      gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))"
+      gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
       minHeight="35rem"
-      p={['1.6rem', '2.4rem']}
+      p={['1.6rem', '1.6rem', '2.4rem']}
+      width={1}
     >
       <Box>
         <Text heading="h2">Mint Test YFI</Text>
@@ -43,7 +44,7 @@ export const MintTab = () => {
       <Box>
         <Box mt="0.8rem">
           <Text heading="h3">Mint</Text>
-          <Box display="flex" alignItems="center" gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="1.6rem">
             <AmountInput
               label={`${votingEscrow?.token.symbol ?? 'YFI'}`}
               amount={amount}
@@ -56,16 +57,16 @@ export const MintTab = () => {
                 4
               )} ${votingEscrow?.token.symbol ?? 'YFI'}`}
               mt="1.6rem"
-              width={1 / 2}
+              width={[1, 1, 1 / 2]}
             />
             <Button
               onClick={executeMint}
               isLoading={mintStatus.loading}
               success={mintStatus.executed && !mintStatus.error}
               filled
-              width={1 / 2}
+              mt={['0rem', '0rem', '1.6rem']}
+              width={[1, 1, 1 / 2]}
               height="5.6rem"
-              mt="2.4rem"
             >
               Mint
             </Button>
