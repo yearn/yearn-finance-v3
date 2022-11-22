@@ -59,9 +59,10 @@ const StyledTab = styled.div<{ selected?: boolean }>`
   text-align: inherit;
   text-transform: inherit;
   border-radius: inherit;
-  border-bottom: 2px solid var(--tabs-color);
+  border-bottom: 2px solid ${({ theme }) => theme.colors.surfaceVariant};
   background: inherit;
   cursor: pointer;
+  padding: 0 1rem;
 
   ${({ selected }) =>
     selected &&
