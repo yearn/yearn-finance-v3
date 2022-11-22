@@ -82,8 +82,9 @@ export const EarlyExitTab = () => {
               success={withdrawLockedStatus.executed && !withdrawLockedStatus.error}
               disabled={!hasLockedAmount || withdrawLockedStatus.loading}
               filled
+              rounded={false}
               width={[1, 1, 1 / 2]}
-              height="5.6rem"
+              height="4rem"
               mt={['0rem', '0rem', '2.4rem']}
             >
               Exit

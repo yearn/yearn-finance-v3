@@ -57,9 +57,10 @@ export const ClaimUnlockedTab = () => {
               success={withdrawUnlockedStatus.executed && !withdrawUnlockedStatus.error}
               disabled={!hasUnlockedAmount || withdrawUnlockedStatus.loading}
               filled
+              rounded={false}
               width={[1, 1, 1 / 2]}
-              height="5.6rem"
-              mt={['0rem', '0rem', '4.4rem']}
+              height="4rem"
+              mt={['0rem', '0rem', '3.8rem']}
             >
               Claim
             </Button>

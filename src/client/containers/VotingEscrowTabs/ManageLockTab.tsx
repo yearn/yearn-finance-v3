@@ -137,9 +137,10 @@ export const ManageLockTab = () => {
                   extendLockTimeStatus.loading
                 }
                 filled
+                rounded={false}
                 width={[1, 1, 1 / 2]}
-                height="5.6rem"
-                mt={['0rem', '0rem', '4.4rem']}
+                height="4rem"
+                mt={['0rem', '0rem', '3.8rem']}
               >
                 Extend
               </Button>
@@ -189,9 +190,10 @@ export const ManageLockTab = () => {
                 success={withdrawLockedStatus.executed && !withdrawLockedStatus.error}
                 disabled={!hasLockedAmount || withdrawLockedStatus.loading}
                 filled
+                rounded={false}
                 width={[1, 1, 1 / 2]}
-                height="5.6rem"
-                mt={['0rem', '0rem', '2.4rem']}
+                height="4rem"
+                mt={['0rem', '0rem', '1.8rem']}
               >
                 Exit
               </Button>

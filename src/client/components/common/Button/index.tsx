@@ -11,6 +11,7 @@ export interface ButtonProps extends LayoutProps, SpaceProps {
   color?: string;
   outline?: boolean;
   filled?: boolean;
+  rounded?: boolean;
   success?: boolean;
   onClick?: (e?: any) => void;
 }
@@ -19,7 +20,13 @@ const ButtonSpinnerLoading = styled(SpinnerLoading)`
   font-size: 0.8rem;
 `;
 
-const StyledButton = styled.button<{ outline?: boolean; filled?: boolean; isLoading?: boolean; success?: boolean }>`
+const StyledButton = styled.button<{
+  outline?: boolean;
+  filled?: boolean;
+  rounded?: boolean;
+  isLoading?: boolean;
+  success?: boolean;
+}>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -27,7 +34,7 @@ const StyledButton = styled.button<{ outline?: boolean; filled?: boolean; isLoad
   padding: 0 1rem;
   height: 3.2rem;
   border: 2px solid transparent;
-  border-radius: ${({ theme }) => theme.globalRadius};
+  border-radius: ${({ theme, rounded }) => (rounded ? theme.globalRadius : 0)};
   background: ${(props) => props.theme.colors.secondary};
   color: ${(props) => props.theme.colors.titlesVariant};
   font-family: inherit;
@@ -74,7 +81,7 @@ const StyledButton = styled.button<{ outline?: boolean; filled?: boolean; isLoad
     filled &&
     `
     background-color: ${theme.colors.primary};
-    color: ${theme.colors.surface};
+    color: ${theme.colors.titlesVariant};
     border: ${disabled ? undefined : 'none'};
     border-width: 0px;
     font-weight: 700;
@@ -97,6 +104,7 @@ export const Button: FC<ButtonProps> = ({
   color,
   outline,
   filled,
+  rounded = true,
   onClick,
   children,
   isLoading,
@@ -109,6 +117,7 @@ export const Button: FC<ButtonProps> = ({
     color={color}
     outline={outline}
     filled={filled}
+    rounded={rounded}
     onClick={onClick}
     isLoading={isLoading}
     success={success}

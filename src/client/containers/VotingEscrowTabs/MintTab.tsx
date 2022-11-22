@@ -64,9 +64,10 @@ export const MintTab = () => {
               isLoading={mintStatus.loading}
               success={mintStatus.executed && !mintStatus.error}
               filled
-              mt={['0rem', '0rem', '1.6rem']}
+              rounded={false}
+              mt={['0rem', '0rem', '1.8rem']}
               width={[1, 1, 1 / 2]}
-              height="5.6rem"
+              height="4rem"
             >
               Mint
             </Button>
