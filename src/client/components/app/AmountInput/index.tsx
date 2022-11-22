@@ -127,7 +127,9 @@ export const AmountInput = ({
         />
         {loading && <StyledLoading />}
         {maxAmount && !disabled && (
-          <MaxButton onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>{maxLabel}</MaxButton>
+          <MaxButton filled onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+            {maxLabel}
+          </MaxButton>
         )}
       </InputContainer>
       {message && <StyledCaption>{message}</StyledCaption>}

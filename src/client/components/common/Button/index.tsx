@@ -81,7 +81,7 @@ const StyledButton = styled.button<{
     filled &&
     `
     background-color: ${theme.colors.primary};
-    color: ${theme.colors.titlesVariant};
+    color: ${theme.colors.background};
     border: ${disabled ? undefined : 'none'};
     border-width: 0px;
     font-weight: 700;
