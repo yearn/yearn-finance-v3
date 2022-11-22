@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
-import { Layout } from '@containers';
+import { Layout, LayoutAlternate } from '@containers';
 import { getConfig } from '@config';
 
 import { Portfolio } from './Portfolio';
@@ -49,14 +49,14 @@ export const Routes = () => {
 
         {isVeYfiDomain && (
           <Route>
-            <Layout hideNavigation hideFooter showLogo>
+            <LayoutAlternate>
               <Switch>
                 <Route exact path="/veyfi" component={VotingEscrowPage} />
                 <Route path="*">
                   <Redirect to="/veyfi" />
                 </Route>
               </Switch>
-            </Layout>
+            </LayoutAlternate>
           </Route>
         )}
 
