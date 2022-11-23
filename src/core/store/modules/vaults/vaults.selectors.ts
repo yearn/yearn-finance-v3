@@ -15,7 +15,7 @@ import {
   Address,
   GeneralVaultView,
 } from '@types';
-import { toBN } from '@utils';
+import { isValidAddress, isZeroAddress, toBN } from '@utils';
 
 import { createToken } from '../tokens/tokens.selectors';
 
@@ -276,7 +276,12 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     allowZapOut: !!vaultData.metadata.allowZapOut,
     zapInWith: vaultData.metadata.zapInWith,
     zapOutWith: vaultData.metadata.zapOutWith,
-    migrationAvailable: vaultData.metadata.migrationAvailable,
+    migrationAvailable:
+      vaultData.metadata.migrationAvailable &&
+      !isZeroAddress(vaultData.metadata.migrationContract) &&
+      isValidAddress(vaultData.metadata.migrationContract) &&
+      !isZeroAddress(vaultData.metadata.migrationTargetVault) &&
+      isValidAddress(vaultData.metadata.migrationTargetVault),
     migrationContract: vaultData.metadata.migrationContract,
     migrationTargetVault: vaultData.metadata.migrationTargetVault,
     DEPOSIT: {

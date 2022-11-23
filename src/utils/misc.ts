@@ -1,7 +1,8 @@
 import { ethers } from 'ethers';
 import { keyBy, merge, values, orderBy, toNumber, isString, get } from 'lodash';
 
-export const isValidAddress = (address: string): boolean => {
+export const isValidAddress = (address: string | undefined): boolean => {
+  if (!address) return false;
   try {
     ethers.utils.getAddress(address);
     return true;
