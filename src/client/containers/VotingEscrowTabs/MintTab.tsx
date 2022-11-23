@@ -4,7 +4,7 @@ import { useAppSelector, useExecuteThunk } from '@hooks';
 import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { humanize, toUnit } from '@utils';
+import { humanize } from '@utils';
 
 export const MintTab = () => {
   const [amount, setAmount] = useState('');
@@ -41,7 +41,6 @@ export const MintTab = () => {
               label={`${votingEscrow?.token.symbol ?? 'YFI'}`}
               amount={amount}
               onAmountChange={setAmount}
-              maxAmount={votingEscrow ? toUnit(votingEscrow.token.balance, votingEscrow.token.decimals) : '0'}
               message={`Available: ${humanize(
                 'amount',
                 votingEscrow?.token.balance,
