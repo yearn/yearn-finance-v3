@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 
 import { useAppSelector, useAppTranslation, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
+import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks, validateNetwork, humanize, format } from '@utils';
-import { getConfig } from '@config';
+import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks, humanize, format } from '@utils';
 
 const MAX_LOCK_TIME = '209'; // Weeks
 const MIN_LOCK_TIME = '2'; // Weeks
@@ -13,7 +12,6 @@ const MIN_LOCK_TIME = '2'; // Weeks
 export const ManageLockTab = () => {
   const { t } = useAppTranslation(['common', 'veyfi']);
   const isMounting = useIsMounting();
-  const { NETWORK } = getConfig();
   const [lockTime, setLockTime] = useState('');
   const [debouncedLockTime, isDebounceLockTimePending] = useDebounce(lockTime, 500);
   const [extendLockTime, extendLockTimeStatus] = useExecuteThunk(VotingEscrowsActions.extendLockTime);
@@ -21,7 +19,6 @@ export const ManageLockTab = () => {
   const [getExpectedTransactionOutcome, getExpectedTransactionOutcomeStatus, transactionOutcome] = useExecuteThunk(
     VotingEscrowsActions.getExpectedTransactionOutcome
   );
-  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const willExtendLock = toBN(debouncedLockTime).gt(0);
@@ -58,15 +55,9 @@ export const ManageLockTab = () => {
     minAmountAllowed: MIN_LOCK_TIME,
   });
 
-  const { error: networkError } = validateNetwork({
-    currentNetwork: NETWORK,
-    walletNetwork,
-  });
-
   const inputError = lockTimeError;
-  const extendError =
-    inputError || networkError || getExpectedTransactionOutcomeStatus.error || extendLockTimeStatus.error;
-  const exitError = networkError || withdrawLockedStatus.error;
+  const extendError = inputError || getExpectedTransactionOutcomeStatus.error || extendLockTimeStatus.error;
+  const exitError = withdrawLockedStatus.error;
 
   const executeExtendLockTime = () => {
     if (!votingEscrow) return;

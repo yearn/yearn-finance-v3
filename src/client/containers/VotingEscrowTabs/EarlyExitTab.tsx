@@ -1,14 +1,11 @@
 import { useAppSelector, useExecuteThunk } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
+import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { humanize, toBN, getTimeUntil, toWeeks, format, validateNetwork } from '@utils';
-import { getConfig } from '@config';
+import { humanize, toBN, getTimeUntil, toWeeks, format } from '@utils';
 
 export const EarlyExitTab = () => {
-  const { NETWORK } = getConfig();
   const [withdrawLocked, withdrawLockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawLocked);
-  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const hasLockedAmount =
@@ -22,12 +19,7 @@ export const EarlyExitTab = () => {
         .toString()
     : '0';
 
-  const { error: networkError } = validateNetwork({
-    currentNetwork: NETWORK,
-    walletNetwork,
-  });
-
-  const error = networkError || withdrawLockedStatus.error;
+  const error = withdrawLockedStatus.error;
 
   const executeWithdrawLocked = async () => {
     if (!votingEscrow) return;

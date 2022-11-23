@@ -1,25 +1,17 @@
 import { useAppSelector, useExecuteThunk } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
+import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { humanize, toBN, validateNetwork } from '@utils';
-import { getConfig } from '@config';
+import { humanize, toBN } from '@utils';
 
 export const ClaimUnlockedTab = () => {
-  const { NETWORK } = getConfig();
   const [withdrawUnlocked, withdrawUnlockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawUnlocked);
-  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const unlockedAmount = !votingEscrow?.unlockDate ? votingEscrow?.DEPOSIT.userDeposited : '0';
   const hasUnlockedAmount = toBN(unlockedAmount).gt(0);
 
-  const { error: networkError } = validateNetwork({
-    currentNetwork: NETWORK,
-    walletNetwork,
-  });
-
-  const error = networkError || withdrawUnlockedStatus.error;
+  const error = withdrawUnlockedStatus.error;
 
   const executeWithdrawUnlocked = async () => {
     if (!votingEscrow) return;

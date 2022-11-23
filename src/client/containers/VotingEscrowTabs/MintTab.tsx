@@ -1,25 +1,17 @@
 import { useState } from 'react';
 
 import { useAppSelector, useExecuteThunk } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
+import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { humanize, toUnit, validateNetwork } from '@utils';
-import { getConfig } from '@config';
+import { humanize, toUnit } from '@utils';
 
 export const MintTab = () => {
-  const { NETWORK } = getConfig();
   const [amount, setAmount] = useState('');
   const [mint, mintStatus] = useExecuteThunk(VotingEscrowsActions.mint);
-  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
-  const { error: networkError } = validateNetwork({
-    currentNetwork: NETWORK,
-    walletNetwork,
-  });
-
-  const error = networkError || mintStatus.error;
+  const error = mintStatus.error;
 
   const executeMint = async () => {
     if (!votingEscrow) return;

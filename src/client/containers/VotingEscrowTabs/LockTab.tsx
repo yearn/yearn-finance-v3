@@ -5,18 +5,7 @@ import { useAppSelector, useAppTranslation, useDebounce, useExecuteThunk, useIsM
 import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput, TxError } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import {
-  humanize,
-  toBN,
-  toUnit,
-  toWei,
-  validateAllowance,
-  validateAmount,
-  toWeeks,
-  getTimeUntil,
-  validateNetwork,
-} from '@utils';
-import { getConfig } from '@config';
+import { humanize, toBN, toUnit, toWei, validateAllowance, validateAmount, toWeeks, getTimeUntil } from '@utils';
 
 const MAX_LOCK_TIME = '209'; // Weeks
 const MIN_LOCK_TIME = '1'; // Weeks
@@ -30,7 +19,6 @@ const Bullet = styled.li`
 export const LockTab = () => {
   const { t } = useAppTranslation(['common', 'veyfi']);
   const isMounting = useIsMounting();
-  const { NETWORK } = getConfig();
   const [lockAmount, setLockAmount] = useState('');
   const [debouncedLockAmount, isDebounceLockAmountPending] = useDebounce(lockAmount, 500);
   const [lockTime, setLockTime] = useState('');
@@ -42,7 +30,6 @@ export const LockTab = () => {
   const [approveLock, approveLockStatus] = useExecuteThunk(VotingEscrowsActions.approveLock);
   const [lock, lockStatus] = useExecuteThunk(VotingEscrowsActions.lock);
   const [increaseLockAmount, increaseLockAmountStatus] = useExecuteThunk(VotingEscrowsActions.increaseLockAmount);
-  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
@@ -107,15 +94,9 @@ export const LockTab = () => {
     minAmountAllowed: MIN_LOCK_TIME,
   });
 
-  const { error: networkError } = validateNetwork({
-    currentNetwork: NETWORK,
-    walletNetwork,
-  });
-
   const inputError = lockAmountError || lockTimeError;
   const error =
     inputError ||
-    networkError ||
     getExpectedTransactionOutcomeStatus.error ||
     approveLockStatus.error ||
     lockStatus.error ||
