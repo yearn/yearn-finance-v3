@@ -49,7 +49,7 @@ export const VotingEscrowPage = () => {
       <Box
         display="flex"
         flexDirection="row"
-        justifyContent="space-around"
+        justifyContent="center"
         alignItems="center"
         flexWrap="wrap"
         width={1}
