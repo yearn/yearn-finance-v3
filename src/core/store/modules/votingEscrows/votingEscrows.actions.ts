@@ -197,7 +197,7 @@ const approveLock = createAsyncThunk<TokenAllowance, { tokenAddress: Address; vo
       currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const tx = await votingEscrowService.approveLock({
       network: network.current,
@@ -254,7 +254,7 @@ const lock = createAsyncThunk<
       currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const token = tokens.tokensMap[tokenAddress];
     const tx = await votingEscrowService.lock({
@@ -305,7 +305,7 @@ const increaseLockAmount = createAsyncThunk<
       currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const token = tokens.tokensMap[tokenAddress];
     const tx = await votingEscrowService.increaseLockAmount({
@@ -354,7 +354,7 @@ const extendLockTime = createAsyncThunk<
       currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const tx = await votingEscrowService.extendLockTime({
       network: network.current,
@@ -394,7 +394,7 @@ const withdrawLocked = createAsyncThunk<void, { tokenAddress: Address; votingEsc
       currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const tx = await votingEscrowService.withdrawLocked({
       network: network.current,
@@ -433,7 +433,7 @@ const withdrawUnlocked = createAsyncThunk<void, { tokenAddress: Address; votingE
       currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const tx = await votingEscrowService.withdrawUnlocked({
       network: network.current,
@@ -473,7 +473,7 @@ const mint = createAsyncThunk<void, { tokenAddress: Address; amount: Unit }, Thu
       currentNetwork: NETWORK,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const token = tokens.tokensMap[tokenAddress];
     const tx = await votingEscrowService.mint({
