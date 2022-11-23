@@ -5,6 +5,7 @@ import { getEnv } from '@config/env';
 import { encode } from '@src/utils';
 
 const ADDRESSES = {
+  ZERO: '0x0000000000000000000000000000000000000000',
   NATIVE: '0x0000000000000000000000000000000000000000',
   ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
   WETH: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
@@ -135,7 +136,6 @@ export const getConstants = memoize((): Constants => {
       zapIn: '0xc2C171bD6FC3B5885b589ed8b4d135F31085e973',
       zapOut: '0x70ed999E2849A3C85EB4a6288B90c7ecA7b807F4',
       y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
-      trustedVaultMigrator: '0x1824df8D751704FA10FA371d62A37f9B8772ab90',
       triCryptoVaultMigrator: '0xC306a5ef4B990A7F2b3bC2680E022E6a84D75fC1',
       ...ADDRESSES,
       ...PARTNERS,
