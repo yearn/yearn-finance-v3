@@ -86,101 +86,108 @@ export const ManageLockTab = () => {
   };
 
   return (
-    <Box minHeight="35rem" p={['1.6rem', '1.6rem', '2.4rem']} width={1}>
-      <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="7.2rem">
-        <Box>
-          <Text heading="h2">{t('veyfi:manage-tab.extend-section.header')}</Text>
-          <Text mt="1.6rem">{t('veyfi:manage-tab.extend-section.desc-1')}</Text>
-          <br />
-          <Text mt="1.6rem">{t('veyfi:manage-tab.extend-section.desc-2')}</Text>
+    <Box
+      display="grid"
+      gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
+      gap="6.4rem"
+      minHeight="35rem"
+      p={['2rem', '3.2rem']}
+      width={1}
+    >
+      <Box overflow="hidden">
+        <Box minHeight="9.28rem">
+          <Text heading="h2" m={0}>
+            {t('veyfi:manage-tab.extend-section.header')}
+          </Text>
+          <Text mt="2.4rem">{t('veyfi:manage-tab.extend-section.desc-1')}</Text>
         </Box>
-        <Box>
-          <Box mt="0.8rem">
-            <Box display="flex" flexDirection={['column', 'column', 'row']} gap="1.6rem">
-              <AmountInput
-                label={t('veyfi:manage-tab.lock-period')}
-                amount={weeksToUnlock}
-                mt="1.6rem"
-                width={[1, 1, 1 / 2]}
-                disabled
-              />
-              <AmountInput
-                label={t('veyfi:manage-tab.increase-period')}
-                amount={lockTime}
-                onAmountChange={setLockTime}
-                maxAmount={toBN(MAX_LOCK_TIME).minus(weeksToUnlock).toString()}
-                disabled={!hasDeposits}
-                message="min 1"
-                mt={['0rem', '0rem', '1.6rem']}
-                width={[1, 1, 1 / 2]}
-              />
-            </Box>
-            <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="1.6rem">
-              <AmountInput
-                label={t('veyfi:manage-tab.total')}
-                amount={extendResultAmount}
-                loading={getExpectedTransactionOutcomeStatus.loading}
-                mt="1.6rem"
-                width={[1, 1, 1 / 2]}
-                disabled
-              />
-              <Button
-                onClick={executeExtendLockTime}
-                isLoading={extendLockTimeStatus.loading}
-                success={extendLockTimeStatus.executed && !extendLockTimeStatus.error}
-                disabled={
-                  isMounting ||
-                  !isValidLockTime ||
-                  isDebounceLockTimePending ||
-                  getExpectedTransactionOutcomeStatus.loading ||
-                  !getExpectedTransactionOutcomeStatus.executed ||
-                  extendLockTimeStatus.loading
-                }
-                filled
-                rounded={false}
-                width={[1, 1, 1 / 2]}
-                height="4rem"
-                mt={['0rem', '0rem', '3.8rem']}
-              >
-                Extend
-              </Button>
-            </Box>
-            {extendError && (
-              <Box mt="1.6rem">
-                <TxError errorType="warning" errorTitle={extendError} />
-              </Box>
-            )}
+
+        <Box display="flex" flexDirection={['column', 'column', 'row']} gap="2.4rem" mt="2.4rem">
+          <AmountInput
+            label={t('veyfi:manage-tab.lock-period')}
+            amount={weeksToUnlock}
+            width={[1, 1, 1 / 2]}
+            disabled
+          />
+          <AmountInput
+            label={t('veyfi:manage-tab.increase-period')}
+            amount={lockTime}
+            onAmountChange={setLockTime}
+            maxAmount={toBN(MAX_LOCK_TIME).minus(weeksToUnlock).toString()}
+            disabled={!hasDeposits}
+            message="min 1"
+            width={[1, 1, 1 / 2]}
+          />
+        </Box>
+        <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="2.4rem" mt="1.2rem">
+          <AmountInput
+            label={t('veyfi:manage-tab.total')}
+            amount={extendResultAmount}
+            loading={getExpectedTransactionOutcomeStatus.loading}
+            width={[1, 1, 1 / 2]}
+            disabled
+          />
+          <Button
+            onClick={executeExtendLockTime}
+            isLoading={extendLockTimeStatus.loading}
+            success={extendLockTimeStatus.executed && !extendLockTimeStatus.error}
+            disabled={
+              isMounting ||
+              !isValidLockTime ||
+              isDebounceLockTimePending ||
+              getExpectedTransactionOutcomeStatus.loading ||
+              !getExpectedTransactionOutcomeStatus.executed ||
+              extendLockTimeStatus.loading
+            }
+            filled
+            rounded={false}
+            width={[1, 1, 1 / 2]}
+            height="4rem"
+            mt={['0rem', '0rem', '2rem']}
+          >
+            Extend
+          </Button>
+        </Box>
+        {extendError && (
+          <Box mt={['3.2rem', '3.6rem']}>
+            <TxError errorType="warning" errorTitle={extendError} />
           </Box>
-        </Box>
+        )}
       </Box>
-      <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="7.2rem" mt="6.4rem">
-        <Box>
-          <Text heading="h2">{t('veyfi:manage-tab.exit-section.header')}</Text>
+      <Box mt={['-3.2rem', '0rem']}>
+        <Box minHeight="9.28rem">
+          <Text heading="h2" m={0}>
+            {t('veyfi:manage-tab.exit-section.header')}
+          </Text>
+          <Text mt="2.4rem">{t('veyfi:manage-tab.exit-section.desc-1')}</Text>
         </Box>
-        <Box>
+        <Box mt="2.4rem">
           <Box mt="0.8rem">
-            <Box display="flex" flexDirection={['column', 'column', 'row']} gap="1.6rem">
+            <Box display="flex" flexDirection={['column', 'column', 'row']} gap="2.4rem">
               <AmountInput
                 label={t('veyfi:manage-tab.balance')}
                 amount={humanize('amount', votingEscrow?.DEPOSIT.userBalance, votingEscrow?.decimals)}
-                mt="1.6rem"
                 width={[1, 1, 1 / 2]}
                 disabled
               />
               <AmountInput
                 label={t('veyfi:manage-tab.lock-time')}
                 amount={weeksToUnlock}
-                mt={['0rem', '0rem', '1.6rem']}
                 width={[1, 1, 1 / 2]}
                 disabled
               />
             </Box>
-            <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="1.6rem">
+            <Box
+              display="flex"
+              flexDirection={['column', 'column', 'row']}
+              alignItems="center"
+              gap="2.4rem"
+              mt="3.2rem"
+            >
               <AmountInput
                 label={t('veyfi:manage-tab.expected')}
                 amount={humanize('amount', exitResultAmount, votingEscrow?.token.decimals)}
                 message={`Penalty: ${format('percent', votingEscrow?.earlyExitPenaltyRatio?.toString(), 2)}`}
-                mt="1.6rem"
                 width={[1, 1, 1 / 2]}
                 disabled
               />
@@ -193,13 +200,12 @@ export const ManageLockTab = () => {
                 rounded={false}
                 width={[1, 1, 1 / 2]}
                 height="4rem"
-                mt={['0rem', '0rem', '1.8rem']}
               >
                 Exit
               </Button>
             </Box>
             {exitError && (
-              <Box mt="1.6rem">
+              <Box mt="3.2rem">
                 <TxError errorType="warning" errorTitle={exitError} />
               </Box>
             )}

@@ -30,7 +30,7 @@ export const VotingEscrowPage = () => {
     { id: 'lock', label: 'Lock YFI', Component: <LockTab /> },
     { id: 'manage', label: 'Manage lock', Component: <ManageLockTab /> },
     // { id: 'exit', label: 'Early exit', Component: <EarlyExitTab /> },
-    { id: 'claim', label: 'Claim YFI', Component: <ClaimUnlockedTab /> },
+    { id: 'claim', label: 'Claim', Component: <ClaimUnlockedTab /> },
     // { id: '', label: 'Claim rewards', Component: <ClaimRewardsTab /> },
     // { id: '', label: 'Stake / Unstake', Component: <GaugesTab /> },
     // { id: '', label: 'Vote for gauge', Component: <p>{'Vote'}</p> },

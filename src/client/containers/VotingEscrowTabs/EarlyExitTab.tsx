@@ -42,7 +42,7 @@ export const EarlyExitTab = () => {
       display="grid"
       gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
       minHeight="35rem"
-      p={['1.6rem', '1.6rem', '2.4rem']}
+      p={['2rem', '3.2rem']}
       width={1}
     >
       <Box>
@@ -51,7 +51,7 @@ export const EarlyExitTab = () => {
       </Box>
       <Box>
         <Box mt="0.8rem">
-          <Box display="flex" flexDirection={['column', 'column', 'row']} gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'column', 'row']} gap="2.4rem">
             <AmountInput
               label="veYFI you have"
               amount={humanize('amount', votingEscrow?.DEPOSIT.userBalance, votingEscrow?.decimals)}
@@ -67,7 +67,7 @@ export const EarlyExitTab = () => {
               disabled
             />
           </Box>
-          <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="2.4rem">
             <AmountInput
               label="YFI you get"
               amount={humanize('amount', expectedTokens, votingEscrow?.token.decimals)}

@@ -24,7 +24,7 @@ const MIN_LOCK_AMOUNT = '1';
 
 const Bullet = styled.li`
   list-style-type: disc;
-  margin-left: 2.4rem;
+  margin-left: -1rem;
 `;
 
 export const LockTab = () => {
@@ -192,92 +192,76 @@ export const LockTab = () => {
       display="grid"
       gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
       minHeight="35rem"
-      gap="7.2rem"
-      p={['1.6rem', '1.6rem', '2.4rem']}
+      gap="6.4rem"
+      p={['2rem', '3.2rem']}
       width={1}
     >
       <Box>
-        <Text heading="h2">{t('veyfi:lock-tab.lock-section.header')}</Text>
-        <Text mt="1.6rem">{t('veyfi:lock-tab.lock-section.desc-1')}</Text>
+        <Text heading="h2" m={0}>
+          {t('veyfi:lock-tab.lock-section.header')}
+        </Text>
+        <Text mt="2.4rem">{t('veyfi:lock-tab.lock-section.desc-1')}</Text>
         <br />
         <Text>{t('veyfi:lock-tab.lock-section.desc-2')}</Text>
-        <br />
         <ul>
           <Bullet>{t('veyfi:lock-tab.lock-section.bullet-1')}</Bullet>
           <Bullet>{t('veyfi:lock-tab.lock-section.bullet-2')}</Bullet>
           <Bullet>{t('veyfi:lock-tab.lock-section.bullet-3')}</Bullet>
         </ul>
       </Box>
-      <Box>
-        <Box mt="0.8rem">
-          <Text heading="h3">{t('veyfi:lock-tab.locking')}</Text>
-          <Box display="flex" flexDirection={['column', 'column', 'row']} gap="1.6rem">
-            <AmountInput
-              label={`${votingEscrow?.token.symbol ?? 'YFI'}`}
-              amount={lockAmount}
-              onAmountChange={setLockAmount}
-              maxAmount={votingEscrow ? toUnit(votingEscrow.token.balance, votingEscrow.token.decimals) : '0'}
-              message={`Available: ${humanize(
-                'amount',
-                votingEscrow?.token.balance,
-                votingEscrow?.token.decimals,
-                4
-              )} ${votingEscrow?.token.symbol ?? 'YFI'}`}
-              mt="1.6rem"
-              width={[1, 1, 1 / 2]}
-            />
-            <AmountInput
-              label={t('veyfi:lock-tab.lock-period')}
-              amount={lockTime}
-              onAmountChange={setLockTime}
-              maxAmount={MAX_LOCK_TIME}
-              disabled={hasLockedAmount}
-              message="min 1"
-              mt={['0rem', '0rem', '1.6rem']}
-              width={[1, 1, 1 / 2]}
-            />
-          </Box>
-          <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="1.6rem">
-            <AmountInput
-              label={t('veyfi:lock-tab.total')}
-              amount={resultAmount}
-              loading={getExpectedTransactionOutcomeStatus.loading}
-              mt="1.6rem"
-              width={[1, 1, 1 / 2]}
-              disabled
-            />
-            <Button
-              onClick={txAction.onAction}
-              disabled={txAction.disabled || txAction.status}
-              isLoading={txAction.status}
-              success={
-                (lockStatus.executed && !lockStatus.error) ||
-                (increaseLockAmountStatus.executed && !increaseLockAmountStatus.error)
-              }
-              filled
-              rounded={false}
-              width={[1, 1, 1 / 2]}
-              height="4rem"
-              mt={['0rem', '0rem', '3.8rem']}
-            >
-              {txAction.label}
-            </Button>
-          </Box>
-
-          {error && (
-            <Box mt="1.6rem">
-              <TxError errorType="warning" errorTitle={error} />
-            </Box>
-          )}
+      <Box mt={['-4rem', '5.6rem']}>
+        <Box display="flex" flexDirection={['column', 'column', 'row']} gap="2.4rem">
+          <AmountInput
+            label={`${votingEscrow?.token.symbol ?? 'YFI'}`}
+            amount={lockAmount}
+            onAmountChange={setLockAmount}
+            maxAmount={votingEscrow ? toUnit(votingEscrow.token.balance, votingEscrow.token.decimals) : '0'}
+            message={`Available: ${humanize('amount', votingEscrow?.token.balance, votingEscrow?.token.decimals, 4)} ${
+              votingEscrow?.token.symbol ?? 'YFI'
+            }`}
+            width={[1, 1, 1 / 2]}
+          />
+          <AmountInput
+            label={t('veyfi:lock-tab.lock-period')}
+            amount={lockTime}
+            onAmountChange={setLockTime}
+            maxAmount={MAX_LOCK_TIME}
+            disabled={hasLockedAmount}
+            message="min 1"
+            width={[1, 1, 1 / 2]}
+          />
         </Box>
-        {/* TODO: add once functionality gets added */}
-        {/* <Box mt="2.4rem">
-          <Text heading="h3">Auto-re-lock</Text>
-          <Box display="flex" alignItems="center" justifyContent="space-between" width={1 / 2} pr="0.8rem" mt="1.6rem">
-            <Text>Enabled</Text>
-            <ToggleButton selected={false} setSelected={() => {}} />
+        <Box display="flex" flexDirection={['column', 'column', 'row']} gap="2.4rem" mt="3.2rem">
+          <AmountInput
+            label={t('veyfi:lock-tab.total')}
+            amount={resultAmount}
+            loading={getExpectedTransactionOutcomeStatus.loading}
+            width={[1, 1, 1 / 2]}
+            disabled
+          />
+          <Button
+            onClick={txAction.onAction}
+            disabled={txAction.disabled || txAction.status}
+            isLoading={txAction.status}
+            success={
+              (lockStatus.executed && !lockStatus.error) ||
+              (increaseLockAmountStatus.executed && !increaseLockAmountStatus.error)
+            }
+            filled
+            rounded={false}
+            width={[1, 1, 1 / 2]}
+            height="4rem"
+            mt={['0rem', '0rem', '2.2rem']}
+          >
+            {txAction.label}
+          </Button>
+        </Box>
+
+        {error && (
+          <Box mt="3.2rem">
+            <TxError errorType="warning" errorTitle={error} />
           </Box>
-        </Box> */}
+        )}
       </Box>
     </Box>
   );

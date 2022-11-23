@@ -34,7 +34,7 @@ export const MintTab = () => {
       display="grid"
       gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
       minHeight="35rem"
-      p={['1.6rem', '1.6rem', '2.4rem']}
+      p={['2rem', '3.2rem']}
       width={1}
     >
       <Box>
@@ -44,7 +44,7 @@ export const MintTab = () => {
       <Box>
         <Box mt="0.8rem">
           <Text heading="h3">Mint</Text>
-          <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="1.6rem">
+          <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="2.4rem">
             <AmountInput
               label={`${votingEscrow?.token.symbol ?? 'YFI'}`}
               amount={amount}

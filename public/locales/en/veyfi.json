@@ -15,11 +15,11 @@
   "manage-tab": {
     "extend-section": {
       "desc-1": "Want to lock for longer? Extend your lock period to increase your gauge boost weight.",
-      "desc-2": "Or you can exit early by paying a penalty based on lock duration.",
       "header": "Extend or exit lock"
     },
     "exit-section": {
-      "header": "Exit"
+      "desc-1": "Or you can exit early by paying a penalty based on lock duration.",
+      "header": "Early exit"
     },
     "lock-period": "Current lock period (weeks)",
     "increase-period": "Increase lock period (weeks)",

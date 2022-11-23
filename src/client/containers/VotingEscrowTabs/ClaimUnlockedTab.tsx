@@ -34,43 +34,45 @@ export const ClaimUnlockedTab = () => {
       display="grid"
       gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
       minHeight="35rem"
-      p={['1.6rem', '1.6rem', '2.4rem']}
+      gap="6.4rem"
+      p={['2rem', '3.2rem']}
       width={1}
     >
-      <Box>
-        <Text heading="h2">Claim YFI (expired lock)</Text>
-      </Box>
-      <Box>
-        <Box mt="0.8rem">
-          <Text heading="h3">Claiming</Text>
-          <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="1.6rem">
-            <AmountInput
-              label="Unlocked YFI"
-              amount={humanize('amount', unlockedAmount, votingEscrow?.decimals)}
-              mt="1.6rem"
-              width={[1, 1, 1 / 2]}
-              disabled
-            />
-            <Button
-              onClick={executeWithdrawUnlocked}
-              isLoading={withdrawUnlockedStatus.loading}
-              success={withdrawUnlockedStatus.executed && !withdrawUnlockedStatus.error}
-              disabled={!hasUnlockedAmount || withdrawUnlockedStatus.loading}
-              filled
-              rounded={false}
-              width={[1, 1, 1 / 2]}
-              height="4rem"
-              mt={['0rem', '0rem', '3.8rem']}
-            >
-              Claim
-            </Button>
-          </Box>
-          {error && (
-            <Box mt="1.6rem">
-              <TxError errorType="warning" errorTitle={error} />
-            </Box>
-          )}
+      <Box overflow="hidden">
+        <Box>
+          <Text heading="h2" m={0}>
+            Claim expired lock
+          </Text>
+          <Text mt="2.4rem">Claim your YFI from expired veYFI lock.</Text>
         </Box>
+      </Box>
+      <Box mt={['-4rem', '5rem']}>
+        <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="2.4rem">
+          <AmountInput
+            label="Unlocked YFI"
+            amount={humanize('amount', unlockedAmount, votingEscrow?.decimals)}
+            width={[1, 1, 1 / 2]}
+            disabled
+          />
+          <Button
+            onClick={executeWithdrawUnlocked}
+            isLoading={withdrawUnlockedStatus.loading}
+            success={withdrawUnlockedStatus.executed && !withdrawUnlockedStatus.error}
+            disabled={!hasUnlockedAmount || withdrawUnlockedStatus.loading}
+            filled
+            rounded={false}
+            width={[1, 1, 1 / 2]}
+            height="4rem"
+            mt={['0rem', '0rem', '2.2rem']}
+          >
+            Claim
+          </Button>
+        </Box>
+        {error && (
+          <Box mt="3.2rem">
+            <TxError errorType="warning" errorTitle={error} />
+          </Box>
+        )}
       </Box>
     </Box>
   );
