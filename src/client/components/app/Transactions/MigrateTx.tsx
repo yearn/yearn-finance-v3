@@ -113,6 +113,7 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
   };
 
   const approve = async () => {
+    if (!selectedVault.migrationContract) return;
     await dispatch(
       VaultsActions.approveMigrate({
         vaultFromAddress: selectedVault.address,
@@ -122,12 +123,13 @@ export const MigrateTx: FC<MigrateTxProps> = ({ header, onClose }) => {
   };
 
   const migrate = async () => {
+    if (!selectedVault.migrationContract || !selectedVault.migrationTargetVault) return;
     try {
       await dispatchAndUnwrap(
         VaultsActions.migrateVault({
           vaultFromAddress: selectedVault.address,
-          vaultToAddress: selectedVault.migrationTargetVault!,
-          migrationContractAddress: selectedVault.migrationContract!,
+          vaultToAddress: selectedVault.migrationTargetVault,
+          migrationContractAddress: selectedVault.migrationContract,
         })
       );
       setTxCompleted(true);

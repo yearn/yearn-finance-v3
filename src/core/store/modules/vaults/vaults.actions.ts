@@ -24,7 +24,6 @@ import {
   validateMigrateVaultAllowance,
   parseError,
 } from '@utils';
-import { getConfig } from '@config';
 
 import { TokensActions } from '../tokens/tokens.actions';
 
@@ -436,15 +435,14 @@ const withdrawVault = createAsyncThunk<
   }
 );
 
-const approveMigrate = createAsyncThunk<
-  void,
-  { vaultFromAddress: string; migrationContractAddress?: string },
-  ThunkAPI
->('vaults/approveMigrate', async ({ vaultFromAddress, migrationContractAddress }, { dispatch }) => {
-  const spenderAddress = migrationContractAddress ?? getConfig().CONTRACT_ADDRESSES.trustedVaultMigrator;
-  const result = await dispatch(TokensActions.approve({ tokenAddress: vaultFromAddress, spenderAddress }));
-  unwrapResult(result);
-});
+const approveMigrate = createAsyncThunk<void, { vaultFromAddress: string; migrationContractAddress: string }, ThunkAPI>(
+  'vaults/approveMigrate',
+  async ({ vaultFromAddress, migrationContractAddress }, { dispatch }) => {
+    const spenderAddress = migrationContractAddress;
+    const result = await dispatch(TokensActions.approve({ tokenAddress: vaultFromAddress, spenderAddress }));
+    unwrapResult(result);
+  }
+);
 
 const getDepositAllowance = createAsyncThunk<
   TokenAllowance,
@@ -522,8 +520,7 @@ const migrateVault = createAsyncThunk<
   'vaults/migrateVault',
   async ({ vaultFromAddress, vaultToAddress, migrationContractAddress }, { extra, getState, dispatch }) => {
     const { network, wallet, vaults, tokens, app } = getState();
-    const { services, config } = extra;
-    const { trustedVaultMigrator } = config.CONTRACT_ADDRESSES;
+    const { services } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
@@ -537,7 +534,6 @@ const migrateVault = createAsyncThunk<
     const vaultData = vaults.vaultsMap[vaultFromAddress];
     const userDepositPositionData = vaults.user.userVaultsPositionsMap[vaultFromAddress].DEPOSIT;
     const tokenAllowancesMap = tokens.user.userTokensAllowancesMap[vaultFromAddress] ?? {};
-    const migrationContractAddressToUse = migrationContractAddress ?? trustedVaultMigrator;
 
     // TODO: ADD VALIDATION FOR VALID MIGRATABLE VAULTS AND WITH BALANCE
 
@@ -546,7 +542,7 @@ const migrateVault = createAsyncThunk<
       vaultAddress: vaultFromAddress,
       vaultDecimals: vaultData.decimals,
       vaultAllowancesMap: tokenAllowancesMap,
-      migrationContractAddress: migrationContractAddressToUse,
+      migrationContractAddress,
     });
 
     const error = allowanceError;
@@ -558,7 +554,7 @@ const migrateVault = createAsyncThunk<
       accountAddress: userAddress,
       vaultFromAddress,
       vaultToAddress,
-      migrationContractAddress: migrationContractAddressToUse,
+      migrationContractAddress,
     });
 
     const notificationsEnabled = app.servicesEnabled.notifications;
