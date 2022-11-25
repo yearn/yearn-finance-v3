@@ -200,6 +200,7 @@ export const LockTab = () => {
             message={`Available: ${humanize('amount', votingEscrow?.token.balance, votingEscrow?.token.decimals, 4)} ${
               votingEscrow?.token.symbol ?? 'YFI'
             }`}
+            error={lockAmountError}
             width={[1, 1, 1 / 2]}
           />
           <AmountInput
@@ -209,6 +210,7 @@ export const LockTab = () => {
             maxAmount={MAX_LOCK_TIME}
             disabled={hasLockedAmount}
             message="min 1"
+            error={lockTimeError}
             width={[1, 1, 1 / 2]}
           />
         </Box>

@@ -107,6 +107,7 @@ export const ManageLockTab = () => {
             onAmountChange={setLockTime}
             maxAmount={toBN(MAX_LOCK_TIME).minus(weeksToUnlock).toString()}
             disabled={!hasDeposits}
+            error={lockTimeError}
             message="min 1"
             width={[1, 1, 1 / 2]}
           />

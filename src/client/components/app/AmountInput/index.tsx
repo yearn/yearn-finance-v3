@@ -75,8 +75,9 @@ const StyledLoading = styled(SpinnerLoading)`
   font-size: 1rem;
 `;
 
-const StyledCaption = styled(Text)`
-  color: ${({ theme }) => theme.colors.input?.placeholder || theme.colors.textsVariant};
+const StyledCaption = styled(Text)<{ error?: boolean }>`
+  color: ${({ theme, error }) =>
+    error ? theme.alerts.warning.color : theme.colors.input?.placeholder || theme.colors.textsVariant};
   font-size: 1.2rem;
   line-height: 1.6rem;
   margin-top: 0.4rem;
@@ -90,7 +91,7 @@ export interface AmountInputProps extends BoxProps {
   label?: string;
   placeholder?: string;
   message?: string;
-  error?: boolean;
+  error?: string;
   disabled?: boolean;
   loading?: boolean;
 }
@@ -121,7 +122,7 @@ export const AmountInput = ({
           onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
           placeholder={loading ? '' : placeholder ?? '0'}
           readOnly={disabled}
-          error={error}
+          error={!!error}
           type="number"
           aria-label={label}
         />
@@ -132,7 +133,8 @@ export const AmountInput = ({
           </MaxButton>
         )}
       </InputContainer>
-      {message && <StyledCaption>{message}</StyledCaption>}
+      {message && !error && <StyledCaption>{message}</StyledCaption>}
+      {error && <StyledCaption error>{error}</StyledCaption>}
     </Box>
   );
 };
