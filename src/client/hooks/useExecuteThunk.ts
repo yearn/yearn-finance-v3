@@ -41,6 +41,7 @@ export const useExecuteThunk = <T1, T2>(
       setExecuted(true);
       return thunkResult;
     } catch (error: any) {
+      console.error(error.message);
       setResult(undefined);
       setError(error.message ?? 'Unknown error');
       setIsLoading(false);

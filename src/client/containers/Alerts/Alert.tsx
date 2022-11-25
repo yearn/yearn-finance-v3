@@ -7,6 +7,7 @@ import { Box, Icon, CloseIcon, WarningIcon } from '@components/common';
 import { AlertTypes } from '@types';
 
 const StyledAlert = styled.div<{ type: AlertTypes }>`
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -15,11 +16,8 @@ const StyledAlert = styled.div<{ type: AlertTypes }>`
   padding: 1.2rem 3.2rem 1.2rem 1.6rem;
   position: relative;
   pointer-events: all;
-  z-index: 1;
   width: 28rem;
-  max-width: 100%;
-  max-height: 100%;
-  position: relative;
+  z-index: 1;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.16);
   transform: translate3d(0, 0, 0);
 
@@ -42,6 +40,16 @@ const StyledAlert = styled.div<{ type: AlertTypes }>`
     }
     return `background: ${background}; color: ${color}; fill: ${color}`;
   }}
+`;
+
+const Message = styled(Box)`
+  width: 100%;
+  max-height: 6.4rem;
+  margin-left: 1.6rem;
+  white-space: wrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  overflow-y: auto;
 `;
 
 const CloseAlert = styled.div`
@@ -86,7 +94,7 @@ export const Alert: FC<AlertProps> = ({ className, onClose, children, id, type, 
         </Box>
       )}
       {closeButton}
-      <Box ml="1.6rem">{children}</Box>
+      <Message>{children}</Message>
     </StyledAlert>
   );
 };
