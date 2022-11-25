@@ -1,11 +1,13 @@
 import { useAppSelector, useExecuteThunk } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
-import { AmountInput, TxError } from '@components/app';
+import { AlertsActions, VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
+import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { humanize, toBN, getTimeUntil, toWeeks, format } from '@utils';
 
 export const EarlyExitTab = () => {
-  const [withdrawLocked, withdrawLockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawLocked);
+  const [openAlert] = useExecuteThunk(AlertsActions.openAlert);
+  const displayWarning = (error: any) => openAlert({ message: error.message, type: 'warning' });
+  const [withdrawLocked, withdrawLockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawLocked, displayWarning);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const hasLockedAmount =
@@ -18,8 +20,6 @@ export const EarlyExitTab = () => {
         .times(toBN(1).minus(votingEscrow?.earlyExitPenaltyRatio ?? 0))
         .toString()
     : '0';
-
-  const error = withdrawLockedStatus.error;
 
   const executeWithdrawLocked = async () => {
     if (!votingEscrow) return;
@@ -82,11 +82,6 @@ export const EarlyExitTab = () => {
               Exit
             </Button>
           </Box>
-          {error && (
-            <Box mt="1.6rem">
-              <TxError errorType="warning" errorTitle={error} />
-            </Box>
-          )}
         </Box>
       </Box>
     </Box>

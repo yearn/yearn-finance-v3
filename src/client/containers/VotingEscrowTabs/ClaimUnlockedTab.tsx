@@ -1,17 +1,20 @@
 import { useAppSelector, useExecuteThunk } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
-import { AmountInput, TxError } from '@components/app';
+import { AlertsActions, VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
+import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { humanize, toBN } from '@utils';
 
 export const ClaimUnlockedTab = () => {
-  const [withdrawUnlocked, withdrawUnlockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawUnlocked);
+  const [openAlert] = useExecuteThunk(AlertsActions.openAlert);
+  const displayWarning = (error: any) => openAlert({ message: error.message, type: 'warning' });
+  const [withdrawUnlocked, withdrawUnlockedStatus] = useExecuteThunk(
+    VotingEscrowsActions.withdrawUnlocked,
+    displayWarning
+  );
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const unlockedAmount = !votingEscrow?.unlockDate ? votingEscrow?.DEPOSIT.userDeposited : '0';
   const hasUnlockedAmount = toBN(unlockedAmount).gt(0);
-
-  const error = withdrawUnlockedStatus.error;
 
   const executeWithdrawUnlocked = async () => {
     if (!votingEscrow) return;
@@ -60,11 +63,6 @@ export const ClaimUnlockedTab = () => {
             Claim
           </Button>
         </Box>
-        {error && (
-          <Box mt="3.2rem">
-            <TxError errorType="warning" errorTitle={error} />
-          </Box>
-        )}
       </Box>
     </Box>
   );

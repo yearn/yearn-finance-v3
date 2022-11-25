@@ -1,17 +1,17 @@
 import { useState } from 'react';
 
 import { useAppSelector, useExecuteThunk } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
-import { AmountInput, TxError } from '@components/app';
+import { AlertsActions, VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
+import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { humanize } from '@utils';
 
 export const MintTab = () => {
   const [amount, setAmount] = useState('');
-  const [mint, mintStatus] = useExecuteThunk(VotingEscrowsActions.mint);
+  const [openAlert] = useExecuteThunk(AlertsActions.openAlert);
+  const displayWarning = (error: any) => openAlert({ message: error.message, type: 'warning' });
+  const [mint, mintStatus] = useExecuteThunk(VotingEscrowsActions.mint, displayWarning);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
-
-  const error = mintStatus.error;
 
   const executeMint = async () => {
     if (!votingEscrow) return;
@@ -63,11 +63,6 @@ export const MintTab = () => {
               Mint
             </Button>
           </Box>
-          {error && (
-            <Box mt="1.6rem">
-              <TxError errorType="warning" errorTitle={error} />
-            </Box>
-          )}
         </Box>
       </Box>
     </Box>

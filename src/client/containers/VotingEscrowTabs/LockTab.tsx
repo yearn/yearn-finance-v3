@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppTranslation, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
-import { AmountInput, TxError } from '@components/app';
+import { AlertsActions, VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
+import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { humanize, toBN, toUnit, toWei, validateAllowance, validateAmount, toWeeks, getTimeUntil } from '@utils';
 
@@ -23,13 +23,19 @@ export const LockTab = () => {
   const [debouncedLockAmount, isDebounceLockAmountPending] = useDebounce(lockAmount, 500);
   const [lockTime, setLockTime] = useState('');
   const [debouncedLockTime, isDebounceLockTimePending] = useDebounce(lockTime, 500);
+  const [openAlert] = useExecuteThunk(AlertsActions.openAlert);
+  const displayWarning = (error: any) => openAlert({ message: error.message, type: 'warning' });
   const [getLockAllowance, getLockAllowanceStatus, allowance] = useExecuteThunk(VotingEscrowsActions.getLockAllowance);
   const [getExpectedTransactionOutcome, getExpectedTransactionOutcomeStatus, transactionOutcome] = useExecuteThunk(
-    VotingEscrowsActions.getExpectedTransactionOutcome
+    VotingEscrowsActions.getExpectedTransactionOutcome,
+    displayWarning
   );
-  const [approveLock, approveLockStatus] = useExecuteThunk(VotingEscrowsActions.approveLock);
-  const [lock, lockStatus] = useExecuteThunk(VotingEscrowsActions.lock);
-  const [increaseLockAmount, increaseLockAmountStatus] = useExecuteThunk(VotingEscrowsActions.increaseLockAmount);
+  const [approveLock, approveLockStatus] = useExecuteThunk(VotingEscrowsActions.approveLock, displayWarning);
+  const [lock, lockStatus] = useExecuteThunk(VotingEscrowsActions.lock, displayWarning);
+  const [increaseLockAmount, increaseLockAmountStatus] = useExecuteThunk(
+    VotingEscrowsActions.increaseLockAmount,
+    displayWarning
+  );
   const isWalletConnected = useAppSelector(WalletSelectors.selectWalletIsConnected);
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
@@ -95,12 +101,6 @@ export const LockTab = () => {
   });
 
   const inputError = lockAmountError || lockTimeError;
-  const error =
-    inputError ||
-    getExpectedTransactionOutcomeStatus.error ||
-    approveLockStatus.error ||
-    lockStatus.error ||
-    increaseLockAmountStatus.error;
 
   const executeApprove = () => {
     if (!votingEscrow) return;
@@ -237,12 +237,6 @@ export const LockTab = () => {
             {txAction.label}
           </Button>
         </Box>
-
-        {error && (
-          <Box mt="3.2rem">
-            <TxError errorType="warning" errorTitle={error} />
-          </Box>
-        )}
       </Box>
     </Box>
   );

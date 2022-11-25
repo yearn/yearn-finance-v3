@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
 import { useAppSelector, useAppTranslation, useDebounce, useExecuteThunk, useIsMounting } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
-import { AmountInput, TxError } from '@components/app';
+import { AlertsActions, VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
+import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
 import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks, humanize, format } from '@utils';
 
@@ -14,10 +14,13 @@ export const ManageLockTab = () => {
   const isMounting = useIsMounting();
   const [lockTime, setLockTime] = useState('');
   const [debouncedLockTime, isDebounceLockTimePending] = useDebounce(lockTime, 500);
-  const [extendLockTime, extendLockTimeStatus] = useExecuteThunk(VotingEscrowsActions.extendLockTime);
-  const [withdrawLocked, withdrawLockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawLocked);
+  const [openAlert] = useExecuteThunk(AlertsActions.openAlert);
+  const displayWarning = (error: any) => openAlert({ message: error.message, type: 'warning' });
+  const [extendLockTime, extendLockTimeStatus] = useExecuteThunk(VotingEscrowsActions.extendLockTime, displayWarning);
+  const [withdrawLocked, withdrawLockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawLocked, displayWarning);
   const [getExpectedTransactionOutcome, getExpectedTransactionOutcomeStatus, transactionOutcome] = useExecuteThunk(
-    VotingEscrowsActions.getExpectedTransactionOutcome
+    VotingEscrowsActions.getExpectedTransactionOutcome,
+    displayWarning
   );
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
@@ -56,8 +59,6 @@ export const ManageLockTab = () => {
   });
 
   const inputError = lockTimeError;
-  const extendError = inputError || getExpectedTransactionOutcomeStatus.error || extendLockTimeStatus.error;
-  const exitError = withdrawLockedStatus.error;
 
   const executeExtendLockTime = () => {
     if (!votingEscrow) return;
@@ -139,11 +140,6 @@ export const ManageLockTab = () => {
             Extend
           </Button>
         </Box>
-        {extendError && (
-          <Box mt={['3.2rem', '3.6rem']}>
-            <TxError errorType="warning" errorTitle={extendError} />
-          </Box>
-        )}
       </Box>
       <Box mt={['-3.2rem', '0rem']}>
         <Box minHeight="9.28rem">
@@ -195,11 +191,6 @@ export const ManageLockTab = () => {
                 Exit
               </Button>
             </Box>
-            {exitError && (
-              <Box mt="3.2rem">
-                <TxError errorType="warning" errorTitle={exitError} />
-              </Box>
-            )}
           </Box>
         </Box>
       </Box>
