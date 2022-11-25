@@ -49,6 +49,13 @@ const lightNew = {
 const lightNewTheme: DefaultTheme = {
   ...sharedTheme,
   globalFont: '"Aeonik", sans-serif',
+  alerts: {
+    ...sharedTheme.alerts,
+    warning: {
+      background: '#FFEEA9',
+      color: '#EA5204',
+    },
+  },
   colors: {
     logo: lightNew.colors.primary,
 
@@ -123,8 +130,8 @@ const lightNewTheme: DefaultTheme = {
         color: '#FF0000',
       },
       warning: {
-        backgroundColor: '#FFF9D9',
-        color: '#FF8A00',
+        backgroundColor: '#FFEEA9',
+        color: '#EA5204',
       },
       success: '#A8C300',
       text: lightNew.colors.icons.variant,

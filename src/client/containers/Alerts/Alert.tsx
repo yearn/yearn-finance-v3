@@ -3,21 +3,24 @@ import styled from 'styled-components';
 
 import { useAppDispatch } from '@hooks';
 import { AlertsActions } from '@store';
-import { Icon, CloseIcon } from '@components/common';
+import { Box, Icon, CloseIcon, WarningIcon } from '@components/common';
 import { AlertTypes } from '@types';
 
 const StyledAlert = styled.div<{ type: AlertTypes }>`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   overflow: hidden;
   overflow-y: auto;
-  padding: 1.3rem;
+  padding: 1.2rem 3.2rem 1.2rem 1.6rem;
   position: relative;
   pointer-events: all;
   z-index: 1;
-  width: 27rem;
+  width: 28rem;
   max-width: 100%;
   max-height: 100%;
   position: relative;
-  border-radius: ${({ theme }) => theme.globalRadius};
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.16);
   transform: translate3d(0, 0, 0);
 
   ${({ type, theme }) => {
@@ -42,10 +45,10 @@ const StyledAlert = styled.div<{ type: AlertTypes }>`
 `;
 
 const CloseAlert = styled.div`
-  padding: 0.5rem;
+  padding: 1rem;
   position: absolute;
-  right: 0.5rem;
-  top: 0.5rem;
+  right: 0rem;
+  top: 0rem;
   cursor: pointer;
   transition: opacity 200ms ease-in-out;
 
@@ -55,7 +58,6 @@ const CloseAlert = styled.div`
 `;
 
 const StyledIcon = styled(Icon)`
-  width: 1.2rem;
   fill: inherit;
 `;
 
@@ -72,14 +74,19 @@ export const Alert: FC<AlertProps> = ({ className, onClose, children, id, type, 
 
   const closeButton = (
     <CloseAlert onClick={closeAlert}>
-      <StyledIcon Component={CloseIcon} />
+      <StyledIcon Component={CloseIcon} height="1rem" width="1rem" />
     </CloseAlert>
   );
 
   return (
     <StyledAlert className={className} id={`alert-${id}`} type={type} {...props}>
+      {type === 'warning' && (
+        <Box height={22} width={22}>
+          <StyledIcon Component={WarningIcon} size="2.2rem" />
+        </Box>
+      )}
       {closeButton}
-      {children}
+      <Box ml="1.6rem">{children}</Box>
     </StyledAlert>
   );
 };
