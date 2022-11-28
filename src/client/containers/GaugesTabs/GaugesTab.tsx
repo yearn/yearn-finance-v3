@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { keyBy } from 'lodash';
 
 import { useAppDispatch, useAppSelector } from '@hooks';
