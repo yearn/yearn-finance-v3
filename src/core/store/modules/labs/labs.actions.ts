@@ -213,7 +213,7 @@ const deposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const labData = labs.labsMap[labAddress];
     const tokenData = tokens.tokensMap[tokenAddress];
@@ -331,7 +331,7 @@ const withdraw = createAsyncThunk<void, WithdrawProps, ThunkAPI>(
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const labData = labs.labsMap[labAddress];
     const userLabData = labs.user.userLabsPositionsMap[labAddress]?.DEPOSIT;
@@ -511,7 +511,7 @@ const yveCrvDeposit = createAsyncThunk<void, DepositProps, ThunkAPI>(
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const tokenData = getState().tokens.tokensMap[tokenAddress];
     const decimals = toBN(tokenData.decimals);
@@ -553,7 +553,7 @@ const yveCrvClaimReward = createAsyncThunk<void, void, ThunkAPI>(
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     // TODO validations.
 
@@ -598,7 +598,7 @@ const yveCrvReinvest = createAsyncThunk<void, void, ThunkAPI>(
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const tokenData = getState().tokens.tokensMap[THREECRV];
     const tokenAllowancesMap = getState().tokens.user.userTokensAllowancesMap[THREECRV];

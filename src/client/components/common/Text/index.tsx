@@ -10,7 +10,11 @@ const h1Mixin = css`
   font-weight: bold;
 `;
 
-const h2Mixin = h1Mixin;
+const h2Mixin = css`
+  font-size: 2.4rem;
+  line-height: 3.2rem;
+  font-weight: bold;
+`;
 
 const h3Mixin = css`
   font-weight: bold;

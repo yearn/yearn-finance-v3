@@ -188,7 +188,7 @@ const stake = createAsyncThunk<
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const token = tokens.tokensMap[tokenAddress];
     const tx = await gaugeService.stake({
@@ -228,7 +228,7 @@ const unstake = createAsyncThunk<void, { tokenAddress: Address; gaugeAddress: Ad
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const token = tokens.tokensMap[tokenAddress];
     const tx = await gaugeService.unstake({
@@ -267,7 +267,7 @@ const claimRewards = createAsyncThunk<void, { tokenAddress: Address; gaugeAddres
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const tx = await gaugeService.claimRewards({
       network: network.current,
@@ -304,7 +304,7 @@ const claimAllRewards = createAsyncThunk<void, { tokenAddress: Address }, ThunkA
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const tx = await gaugeService.claimAllRewards({
       network: network.current,

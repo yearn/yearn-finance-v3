@@ -10,6 +10,7 @@ import { Routes } from '@routes';
 import { Themable } from '@containers';
 
 import '@assets/fonts/RobotoFont.css';
+import '@assets/fonts/AeonikFont.css';
 
 const GlobalStyle = createGlobalStyle`
   html, body {

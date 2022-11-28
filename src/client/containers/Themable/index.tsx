@@ -7,7 +7,7 @@ import { getConfig } from '@config';
 
 export const Themable: FC = ({ children }) => {
   const { USE_VEYFI_ROUTES } = getConfig();
-  const currentTheme = useAppSelector(({ theme }) => (USE_VEYFI_ROUTES ? 'light' : theme.current));
+  const currentTheme = useAppSelector(({ theme }) => (USE_VEYFI_ROUTES ? 'light-new' : theme.current));
   const previousTheme = usePrevious(currentTheme);
   const theme = getTheme(currentTheme);
 

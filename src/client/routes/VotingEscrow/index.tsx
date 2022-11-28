@@ -1,60 +1,103 @@
-import { Card } from '@yearn-finance/web-lib';
+import { useState } from 'react';
+import styled from 'styled-components';
 
 import { useAppSelector } from '@hooks';
 import { VotingEscrowsSelectors } from '@store';
-import { Box } from '@components/common';
-import { ViewContainer, SummaryCard, Amount } from '@components/app';
+import { Box, Text, Tabs, Tab, TabPanel } from '@components/common';
+import { ViewContainer, Amount } from '@components/app';
 import { LockTab, ManageLockTab, ClaimUnlockedTab, MintTab } from '@containers';
 import { humanize } from '@utils';
 import { getConfig } from '@config';
 
+const TabsContainer = styled(Box)`
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.surface};
+`;
+
+const StyledValue = styled(Text)`
+  color: ${({ theme }) => theme.colors.titles};
+  font-size: 3.2rem;
+  line-height: 4rem;
+  font-weight: bold;
+`;
+
 export const VotingEscrowPage = () => {
   const { ALLOW_DEV_MODE } = getConfig();
+  const [selectedTab, setSelectedTab] = useState('lock');
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const tabs = [
-    { label: 'Lock YFI', children: <LockTab /> },
-    { label: 'Manage lock', children: <ManageLockTab /> },
-    // { label: 'Early exit', children: <EarlyExitTab /> },
-    { label: 'Claim YFI', children: <ClaimUnlockedTab /> },
-    // { label: 'Claim rewards', children: <ClaimRewardsTab /> },
-    // { label: 'Stake / Unstake', children: <GaugesTab /> },
-    // { label: 'Vote for gauge', children: <p>{'Vote'}</p> },
+    { id: 'lock', label: 'Lock YFI', Component: <LockTab /> },
+    { id: 'manage', label: 'Manage lock', Component: <ManageLockTab /> },
+    // { id: 'exit', label: 'Early exit', Component: <EarlyExitTab /> },
+    { id: 'claim', label: 'Claim', Component: <ClaimUnlockedTab /> },
+    // { id: '', label: 'Claim rewards', Component: <ClaimRewardsTab /> },
+    // { id: '', label: 'Stake / Unstake', Component: <GaugesTab /> },
+    // { id: '', label: 'Vote for gauge', Component: <p>{'Vote'}</p> },
   ];
 
-  if (ALLOW_DEV_MODE) tabs.push({ label: 'Mint', children: <MintTab /> });
+  if (ALLOW_DEV_MODE) tabs.push({ id: 'mint', label: 'Mint', Component: <MintTab /> });
 
   return (
     <ViewContainer>
-      <SummaryCard
-        header="Overview"
-        items={[
-          {
-            header: 'Total Locked YFI',
-            Component: (
-              <Amount value={humanize('amount', votingEscrow?.balance, votingEscrow?.token.decimals, 4)} decimals={8} />
-            ),
-          },
-          {
-            header: 'Your Locked YFI',
-            Component: (
-              <Amount
-                value={humanize('amount', votingEscrow?.DEPOSIT.userDeposited, votingEscrow?.token.decimals, 4)}
-                decimals={8}
-              />
-            ),
-          },
-          {
-            header: 'Expiration for the lock',
-            Component: <div>{votingEscrow?.unlockDate?.toLocaleDateString() ?? '-'}</div>,
-          },
-        ]}
-        cardSize="small"
-      />
-
-      <Box width={1}>
-        <Card.Tabs tabs={tabs} />
+      <Box center width={1} mt="8.8rem">
+        <Text heading="h1" fontSize="8.8rem" lineHeight="10.8rem">
+          veYFI
+        </Text>
       </Box>
+
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="center"
+        alignItems="center"
+        flexWrap="wrap"
+        width={1}
+        gap="5.6rem"
+        mt="5.6rem"
+        mb="5.6rem"
+      >
+        <Box center>
+          <StyledValue>
+            <Amount value={humanize('amount', votingEscrow?.balance, votingEscrow?.token.decimals, 4)} decimals={8} />
+          </StyledValue>
+          <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
+            Total Locked YFI
+          </Text>
+        </Box>
+        <Box center>
+          <StyledValue>
+            <Amount
+              value={humanize('amount', votingEscrow?.DEPOSIT.userDeposited, votingEscrow?.token.decimals, 4)}
+              decimals={8}
+            />
+          </StyledValue>
+          <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
+            Your Locked YFI
+          </Text>
+        </Box>
+        <Box center>
+          <StyledValue>
+            <div>{votingEscrow?.unlockDate?.toLocaleDateString() ?? '-'}</div>
+          </StyledValue>
+          <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
+            Expiration for the lock
+          </Text>
+        </Box>
+      </Box>
+
+      <TabsContainer>
+        <Tabs value={selectedTab} onChange={(id) => setSelectedTab(id)}>
+          {tabs.map(({ id, label }) => (
+            <Tab value={id}>{label}</Tab>
+          ))}
+        </Tabs>
+        {tabs.map(({ id, Component }) => (
+          <TabPanel value={id} tabValue={selectedTab}>
+            {Component}
+          </TabPanel>
+        ))}
+      </TabsContainer>
     </ViewContainer>
   );
 };

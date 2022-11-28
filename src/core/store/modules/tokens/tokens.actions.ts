@@ -118,7 +118,7 @@ const approve = createAsyncThunk<
     currentNetwork: defaultNetwork,
     walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
   });
-  if (networkError) throw networkError;
+  if (networkError) throw new Error(networkError);
 
   const tx = await tokenService.approve({
     network: network.current,

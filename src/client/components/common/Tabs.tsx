@@ -14,12 +14,15 @@ const StyledTabs = styled.div`
   --tabs-color: ${({ theme }) => theme.colors.texts};
 
   display: flex;
-  height: 8rem;
+  align-items: center;
+  justify-content: center;
+  height: 5.6rem;
   font-size: 2rem;
   font-weight: 400;
   text-align: center;
   background: transparent;
   color: var(--tabs-color);
+  border-bottom: 2px solid ${({ theme }) => theme.colors.surfaceVariant};
   overflow: hidden;
   user-select: none;
 
@@ -53,22 +56,21 @@ const StyledTab = styled.div<{ selected?: boolean }>`
   align-items: center;
   justify-content: center;
   height: 100%;
-  flex: 1;
   font-size: inherit;
   font-weight: inherit;
   text-align: inherit;
   text-transform: inherit;
   border-radius: inherit;
-  border-bottom: 2px solid var(--tabs-color);
   background: inherit;
   cursor: pointer;
+  margin: 0 2rem;
 
   ${({ selected }) =>
     selected &&
     `
     background: var(--tabs-selected-bg);
     color: var(--tabs-selected-color);
-    border-color: var(--tabs-selected-color);
+    border-bottom: 3px solid var(--tabs-selected-color);
     font-weight: 700;
     cursor: default;
   `};

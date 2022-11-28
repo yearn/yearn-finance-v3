@@ -11,16 +11,15 @@ const InputContainer = styled.div`
 `;
 
 const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
-  height: 5.6rem;
-  padding: 1.6rem;
-  padding-right: 6.8rem;
+  height: 4rem;
+  padding: 0.8rem;
+  padding-right: 6rem;
   font-size: 1.6rem;
   font-weight: 400;
   background: ${({ theme }) => theme.colors.background};
   outline: none;
   border: none;
   border-width: 0px;
-  border-radius: ${({ theme }) => theme.globalRadius};
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
   font-family: inherit;
   appearance: textfield;
@@ -33,11 +32,10 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   ${({ readOnly, theme }) =>
     readOnly &&
     `
-    padding: 1.6rem;
-    border: 1px solid ${theme.colors.input?.placeholder || theme.colors.textsVariant};
-    color: ${theme.colors.input?.placeholder || theme.colors.textsVariant};
+    padding: 0.8rem;
     cursor: default;
-    background: transparent;
+    background: ${theme.colors.surfaceVariant};
+    color: ${theme.colors.input?.placeholder || theme.colors.textsVariant};
 
     &::placeholder {
       color: ${theme.colors.input?.placeholder || theme.colors.textsVariant};
@@ -64,10 +62,9 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
 
 const MaxButton = styled(Button)`
   position: absolute;
-  right: 1.6rem;
-  border-radius: ${({ theme }) => theme.globalRadius};
-  border-width: 1px;
-  margin-left: 0.5rem;
+  right: 0.8rem;
+  border-radius: 0;
+  margin-left: 0.8rem;
   height: 2.4rem;
   font-size: 1.2rem;
   z-index: 1;
@@ -78,8 +75,9 @@ const StyledLoading = styled(SpinnerLoading)`
   font-size: 1rem;
 `;
 
-const StyledCaption = styled(Text)`
-  color: ${({ theme }) => theme.colors.input?.placeholder || theme.colors.textsVariant};
+const StyledCaption = styled(Text)<{ error?: boolean }>`
+  color: ${({ theme, error }) =>
+    error ? theme.alerts.warning.color : theme.colors.input?.placeholder || theme.colors.textsVariant};
   font-size: 1.2rem;
   line-height: 1.6rem;
   margin-top: 0.4rem;
@@ -93,7 +91,7 @@ export interface AmountInputProps extends BoxProps {
   label?: string;
   placeholder?: string;
   message?: string;
-  error?: boolean;
+  error?: string;
   disabled?: boolean;
   loading?: boolean;
 }
@@ -124,18 +122,19 @@ export const AmountInput = ({
           onChange={onAmountChange ? (e) => onAmountChange(e.target.value) : undefined}
           placeholder={loading ? '' : placeholder ?? '0'}
           readOnly={disabled}
-          error={error}
+          error={!!error}
           type="number"
           aria-label={label}
         />
         {loading && <StyledLoading />}
         {maxAmount && !disabled && (
-          <MaxButton outline onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
+          <MaxButton filled onClick={onAmountChange ? () => onAmountChange(maxAmount) : undefined}>
             {maxLabel}
           </MaxButton>
         )}
       </InputContainer>
-      {message && <StyledCaption>{message}</StyledCaption>}
+      {message && !error && <StyledCaption>{message}</StyledCaption>}
+      {error && <StyledCaption error>{error}</StyledCaption>}
     </Box>
   );
 };

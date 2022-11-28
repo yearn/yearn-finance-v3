@@ -1,25 +1,20 @@
 import { useAppSelector, useExecuteThunk } from '@hooks';
-import { VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
-import { AmountInput, TxError } from '@components/app';
+import { AlertsActions, VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
+import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { humanize, toBN, validateNetwork } from '@utils';
-import { getConfig } from '@config';
+import { humanize, toBN } from '@utils';
 
 export const ClaimUnlockedTab = () => {
-  const { NETWORK } = getConfig();
-  const [withdrawUnlocked, withdrawUnlockedStatus] = useExecuteThunk(VotingEscrowsActions.withdrawUnlocked);
-  const walletNetwork = useAppSelector(WalletSelectors.selectWalletNetwork);
+  const [openAlert] = useExecuteThunk(AlertsActions.openAlert);
+  const displayWarning = (error: any) => openAlert({ message: error.message, type: 'warning' });
+  const [withdrawUnlocked, withdrawUnlockedStatus] = useExecuteThunk(
+    VotingEscrowsActions.withdrawUnlocked,
+    displayWarning
+  );
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const unlockedAmount = !votingEscrow?.unlockDate ? votingEscrow?.DEPOSIT.userDeposited : '0';
   const hasUnlockedAmount = toBN(unlockedAmount).gt(0);
-
-  const { error: networkError } = validateNetwork({
-    currentNetwork: NETWORK,
-    walletNetwork,
-  });
-
-  const error = networkError || withdrawUnlockedStatus.error;
 
   const executeWithdrawUnlocked = async () => {
     if (!votingEscrow) return;
@@ -30,39 +25,43 @@ export const ClaimUnlockedTab = () => {
   };
 
   return (
-    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))" minHeight="35rem">
-      <Box>
-        <Text heading="h2">Claim YFI (expired lock)</Text>
+    <Box
+      display="grid"
+      gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
+      minHeight="35rem"
+      gap="6.4rem"
+      p={['2rem', '3.2rem']}
+      width={1}
+    >
+      <Box overflow="hidden">
+        <Box>
+          <Text heading="h2" m={0}>
+            Claim expired lock
+          </Text>
+          <Text mt="2.4rem">Claim your YFI from expired veYFI lock.</Text>
+        </Box>
       </Box>
-      <Box>
-        <Box mt="0.8rem">
-          <Text heading="h3">Claiming</Text>
-          <Box display="flex" flexDirection={['column', 'row']} alignItems="center" gap="1.6rem">
-            <AmountInput
-              label="Unlocked YFI"
-              amount={humanize('amount', unlockedAmount, votingEscrow?.decimals)}
-              mt="1.6rem"
-              width={[1, 1 / 2]}
-              disabled
-            />
-            <Button
-              onClick={executeWithdrawUnlocked}
-              isLoading={withdrawUnlockedStatus.loading}
-              success={withdrawUnlockedStatus.executed && !withdrawUnlockedStatus.error}
-              disabled={!hasUnlockedAmount || withdrawUnlockedStatus.loading}
-              filled
-              width={[1, 1 / 2]}
-              height="5.6rem"
-              mt={['0rem', '4.4rem']}
-            >
-              Claim
-            </Button>
-          </Box>
-          {error && (
-            <Box mt="1.6rem">
-              <TxError errorType="warning" errorTitle={error} />
-            </Box>
-          )}
+      <Box mt={['-4rem', '5rem']}>
+        <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="2.4rem">
+          <AmountInput
+            label="Unlocked YFI"
+            amount={humanize('amount', unlockedAmount, votingEscrow?.decimals)}
+            width={[1, 1, 1 / 2]}
+            disabled
+          />
+          <Button
+            onClick={executeWithdrawUnlocked}
+            isLoading={withdrawUnlockedStatus.loading}
+            success={withdrawUnlockedStatus.executed && !withdrawUnlockedStatus.error}
+            disabled={!hasUnlockedAmount || withdrawUnlockedStatus.loading}
+            filled
+            rounded={false}
+            width={[1, 1, 1 / 2]}
+            height="4rem"
+            mt={['0rem', '0rem', '2.2rem']}
+          >
+            Claim
+          </Button>
         </Box>
       </Box>
     </Box>
