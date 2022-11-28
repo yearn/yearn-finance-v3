@@ -1,0 +1,21 @@
+name: rebase veyfi-master to master
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  rebase:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: git
+      run: |
+        git checkout veyfi-master
+        git rebase -Xours master
+        git push origin veyfi-master --force
