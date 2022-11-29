@@ -107,10 +107,12 @@ export class VaultServiceImpl implements VaultService {
       targetTokenAddress,
       gasless,
     } = props;
+    const { NETWORK_SETTINGS } = this.config;
+    const currentNetworkSettings = NETWORK_SETTINGS[network];
     const DEFAULT_SLIPPAGE_SIMULATION = 0.99;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
-    if (network !== 'mainnet') {
+    if (!currentNetworkSettings.simulationsEnabled) {
       const tokenAddress = transactionType === 'DEPOSIT' ? sourceTokenAddress : targetTokenAddress;
       const priceUsdc = await yearn.tokens.priceUsdc(tokenAddress);
       const tokens = await yearn.vaults.tokens();

@@ -28,7 +28,10 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
 
-      const zapsDisabled = (!servicesEnabled.zaps && assetData.metadata.zapInWith) || currentNetwork !== 'mainnet';
+      const { NETWORK_SETTINGS } = getConfig();
+      const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
+      const zapsDisabled =
+        (!servicesEnabled.zaps && assetData.metadata.zapInWith) || !currentNetworkSettings.zapsEnabled;
       const mainVaultTokenAddress = zapsDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const depositTokenAddresses = [mainVaultTokenAddress];
       if (!zapsDisabled) {
@@ -62,13 +65,19 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
       const assetData = vaultsMap[assetAddress] ? vaultsMap[assetAddress] : labsMap[assetAddress];
       if (!assetData) return [];
 
-      const zapsDisabled = (!servicesEnabled.zaps && assetData.metadata.zapOutWith) || currentNetwork !== 'mainnet';
+      const { NETWORK_SETTINGS } = getConfig();
+      const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
+      const zapsDisabled =
+        (!servicesEnabled.zaps && assetData.metadata.zapOutWith) || !currentNetworkSettings.zapsEnabled;
       const mainVaultTokenAddress = zapsDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const withdrawTokenAddresses = [mainVaultTokenAddress];
       if (!zapsDisabled) {
-        const { ZAP_OUT_TOKENS } = getConfig();
         if (assetData.token !== mainVaultTokenAddress) withdrawTokenAddresses.push(assetData.token);
-        withdrawTokenAddresses.push(...ZAP_OUT_TOKENS.filter((address) => !withdrawTokenAddresses.includes(address)));
+        withdrawTokenAddresses.push(
+          ...Object.values(tokensMap)
+            .filter(({ address, supported }) => !withdrawTokenAddresses.includes(address) && supported.portalsZapOut)
+            .map(({ address }) => address)
+        );
       }
 
       const tokens = withdrawTokenAddresses

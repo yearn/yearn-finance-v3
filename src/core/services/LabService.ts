@@ -25,17 +25,6 @@ import backscratcherAbi from './contracts/backscratcher.json';
 import y3CrvBackZapperAbi from './contracts/y3CrvBackZapper.json';
 import yvBoostAbi from './contracts/yvBoost.json';
 
-/**
- * Annual Percentage Yield composite of a particular backscratcher vault coming from api.yearn.finance.
- */
-interface BackscracherApyComposite {
-  currentBoost: number;
-  boostedApy: number;
-  totalApy: number;
-  poolApy: number;
-  baseApy: number;
-}
-
 export class LabServiceImpl implements LabService {
   private transactionService: TransactionService;
   private yearnSdk: YearnSdk;
@@ -104,28 +93,7 @@ export class LabServiceImpl implements LabService {
           pricePerShare: toBN('1')
             .times(10 ** backscratcherData.decimals)
             .toFixed(0),
-          apy: backscratcherData.apy
-            ? {
-                ...backscratcherData.apy,
-                composite: backscratcherData.apy.composite
-                  ? {
-                      ...backscratcherData.apy.composite,
-                      boost:
-                        backscratcherData.apy.composite.boost ||
-                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).currentBoost,
-                      pool_apy:
-                        backscratcherData.apy.composite.pool_apy ||
-                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).poolApy,
-                      boosted_apr:
-                        backscratcherData.apy.composite.boosted_apr ||
-                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).boostedApy,
-                      base_apr:
-                        backscratcherData.apy.composite.base_apr ||
-                        (backscratcherData.apy.composite as unknown as BackscracherApyComposite).baseApy,
-                    }
-                  : null,
-              }
-            : undefined,
+          apy: undefined, // NOTE: vault deprecated and will no longer be harvested
           displayName: backscratcherData.name,
           displayIcon: `${ASSETS_ICON_URL}${YVECRV}/logo-128.png`,
           defaultDisplayToken: CRV,
@@ -168,6 +136,7 @@ export class LabServiceImpl implements LabService {
         underlyingTokenBalance,
         metadata: {
           ...yvBoostVaultDynamic.metadata,
+          apy: undefined, // NOTE: vault deprecated and will no longer be harvested
           displayIcon: `${ASSETS_ICON_URL}${address}/logo-128.png`,
           allowZapIn: true,
           allowZapOut: true,

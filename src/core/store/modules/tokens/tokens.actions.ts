@@ -1,6 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
+import { isNativeToken } from '@utils';
 import { TokenDynamicData, Token, Balance, Integer } from '@types';
 
 /* -------------------------------------------------------------------------- */
@@ -72,8 +73,7 @@ const getTokenAllowance = createAsyncThunk<
     throw new Error('WALLET NOT CONNECTED');
   }
 
-  const { ETH } = extra.config.CONTRACT_ADDRESSES;
-  if (tokenAddress === ETH) return { allowance: extra.config.MAX_UINT256 };
+  if (isNativeToken(tokenAddress)) return { allowance: extra.config.MAX_UINT256 };
 
   const { tokenService } = extra.services;
   const allowance = await tokenService.getTokenAllowance({

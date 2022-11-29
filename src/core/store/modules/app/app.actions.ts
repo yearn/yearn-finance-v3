@@ -84,7 +84,7 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
         await dispatch(VaultsActions.getVaults({ addresses })).then(({ payload }: any) => {
           const vaults: Vault[] = payload.vaultsData;
           const vault = vaults.pop();
-          if (vault && vault.metadata.migrationTargetVault)
+          if (vault && vault.metadata.migrationAvailable && vault.metadata.migrationTargetVault)
             dispatch(VaultsActions.getVaults({ addresses: [vault.metadata.migrationTargetVault] }));
         });
         break;

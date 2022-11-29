@@ -38,6 +38,12 @@ const StyledRecommendationsCard = styled(RecommendationsCard)``;
 
 const StyledSliderCard = styled(SliderCard)``;
 
+const MigrationWarningCard = styled(SliderCard)`
+  background: ${({ theme }) => theme.alerts.warning.background};
+  color: ${({ theme }) => theme.alerts.warning.color};
+  border: 2px solid ${({ theme }) => theme.alerts.warning.background};
+`;
+
 const OpportunitiesCard = styled(DetailCard)`
   @media ${device.tablet} {
     .col-name {
@@ -146,14 +152,6 @@ export const Labs = () => {
           <ActionButtons
             actions={[
               {
-                name: t('components.transaction.lock'),
-                handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherLockTx' }));
-                },
-                disabled: !walletIsConnected,
-              },
-              {
                 name: t('components.transaction.claim'),
                 handler: () => {
                   dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
@@ -162,28 +160,20 @@ export const Labs = () => {
                 disabled: !walletIsConnected,
               },
               {
-                name: t('components.transaction.reinvest'),
+                name: t('components.transaction.migrate'),
                 handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'backscratcherReinvestTx' }));
+                  window.location.href = 'https://y.finance';
                 },
-                disabled: !walletIsConnected,
+                external: true,
               },
             ]}
+            alert={t('labs:migrate-warning')}
           />
         );
       case YVBOOST:
         return (
           <ActionButtons
             actions={[
-              {
-                name: t('components.transaction.deposit'),
-                handler: () => {
-                  dispatch(LabsActions.setSelectedLabAddress({ labAddress }));
-                  dispatch(ModalsActions.openModal({ modalName: 'labDepositTx' }));
-                },
-                disabled: !walletIsConnected,
-              },
               {
                 name: t('components.transaction.withdraw'),
                 handler: () => {
@@ -192,7 +182,15 @@ export const Labs = () => {
                 },
                 disabled: !walletIsConnected,
               },
+              {
+                name: t('components.transaction.migrate'),
+                handler: () => {
+                  window.location.href = 'https://y.finance';
+                },
+                external: true,
+              },
             ]}
+            alert={t('labs:migrate-warning')}
           />
         );
       default:
@@ -247,6 +245,17 @@ export const Labs = () => {
               <p>{t('labs:risks-card.desc-1')}</p>
               <p>{t('labs:risks-card.desc-2')}</p>
               <p>{t('labs:risks-card.desc-3')}</p>
+            </Text>
+          }
+        />
+      )}
+
+      {!opportunitiesLoading && currentNetworkSettings.labsEnabled && holdings.length > 0 && (
+        <MigrationWarningCard
+          header={t('labs:migrate-card.header')}
+          Component={
+            <Text>
+              <p>{t('labs:migrate-card.desc-1')}</p>
             </Text>
           }
         />

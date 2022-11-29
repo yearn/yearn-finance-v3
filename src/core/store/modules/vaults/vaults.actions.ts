@@ -24,7 +24,6 @@ import {
   validateMigrateVaultAllowance,
   parseError,
 } from '@utils';
-import { getConfig } from '@config';
 
 import { TokensActions } from '../tokens/tokens.actions';
 
@@ -243,12 +242,16 @@ const approveWithdraw = createAsyncThunk<
   }
 );
 
-const signZapOut = createAsyncThunk<{ signature: string }, { vaultAddress: string; amount: BigNumber }, ThunkAPI>(
+const signZapOut = createAsyncThunk<
+  { signature: string },
+  { vaultAddress: string; tokenAddress: string; amount: BigNumber },
+  ThunkAPI
+>(
   'vaults/signZapOut',
-  async ({ vaultAddress, amount }, { getState, extra }) => {
+  async ({ vaultAddress, tokenAddress, amount }, { getState, extra }) => {
     const { network, wallet, vaults, tokens } = getState();
     const { vaultService } = extra.services;
-    const { CONTRACT_ADDRESSES, MAX_UINT256 } = extra.config;
+    const { MAX_UINT256 } = extra.config;
 
     const deadline = '0';
 
@@ -274,11 +277,18 @@ const signZapOut = createAsyncThunk<{ signature: string }, { vaultAddress: strin
           pricePerShare: vaultData.metadata.pricePerShare,
         });
 
+    const tokenAllowance = await vaultService.getWithdrawAllowance({
+      network: network.current,
+      vaultAddress,
+      tokenAddress,
+      accountAddress,
+    });
+
     const signature = await vaultService.signPermit({
       network: network.current,
       accountAddress,
       vaultAddress,
-      spenderAddress: CONTRACT_ADDRESSES.zapOut,
+      spenderAddress: tokenAllowance.spender,
       amount: amountOfShares,
       deadline,
     });
@@ -532,15 +542,14 @@ const gaslessWithdraw = createAsyncThunk<
   }
 );
 
-const approveMigrate = createAsyncThunk<
-  void,
-  { vaultFromAddress: string; migrationContractAddress?: string },
-  ThunkAPI
->('vaults/approveMigrate', async ({ vaultFromAddress, migrationContractAddress }, { dispatch }) => {
-  const spenderAddress = migrationContractAddress ?? getConfig().CONTRACT_ADDRESSES.trustedVaultMigrator;
-  const result = await dispatch(TokensActions.approve({ tokenAddress: vaultFromAddress, spenderAddress }));
-  unwrapResult(result);
-});
+const approveMigrate = createAsyncThunk<void, { vaultFromAddress: string; migrationContractAddress: string }, ThunkAPI>(
+  'vaults/approveMigrate',
+  async ({ vaultFromAddress, migrationContractAddress }, { dispatch }) => {
+    const spenderAddress = migrationContractAddress;
+    const result = await dispatch(TokensActions.approve({ tokenAddress: vaultFromAddress, spenderAddress }));
+    unwrapResult(result);
+  }
+);
 
 const getDepositAllowance = createAsyncThunk<
   TokenAllowance,
@@ -622,8 +631,7 @@ const migrateVault = createAsyncThunk<
   'vaults/migrateVault',
   async ({ vaultFromAddress, vaultToAddress, migrationContractAddress }, { extra, getState, dispatch }) => {
     const { network, wallet, vaults, tokens, app } = getState();
-    const { services, config } = extra;
-    const { trustedVaultMigrator } = config.CONTRACT_ADDRESSES;
+    const { services } = extra;
 
     const userAddress = wallet.selectedAddress;
     if (!userAddress) throw new Error('WALLET NOT CONNECTED');
@@ -637,7 +645,6 @@ const migrateVault = createAsyncThunk<
     const vaultData = vaults.vaultsMap[vaultFromAddress];
     const userDepositPositionData = vaults.user.userVaultsPositionsMap[vaultFromAddress].DEPOSIT;
     const tokenAllowancesMap = tokens.user.userTokensAllowancesMap[vaultFromAddress] ?? {};
-    const migrationContractAddressToUse = migrationContractAddress ?? trustedVaultMigrator;
 
     // TODO: ADD VALIDATION FOR VALID MIGRATABLE VAULTS AND WITH BALANCE
 
@@ -646,7 +653,7 @@ const migrateVault = createAsyncThunk<
       vaultAddress: vaultFromAddress,
       vaultDecimals: vaultData.decimals,
       vaultAllowancesMap: tokenAllowancesMap,
-      migrationContractAddress: migrationContractAddressToUse,
+      migrationContractAddress,
     });
 
     const error = allowanceError;
@@ -658,7 +665,7 @@ const migrateVault = createAsyncThunk<
       accountAddress: userAddress,
       vaultFromAddress,
       vaultToAddress,
-      migrationContractAddress: migrationContractAddressToUse,
+      migrationContractAddress,
     });
 
     const notificationsEnabled = app.servicesEnabled.notifications;

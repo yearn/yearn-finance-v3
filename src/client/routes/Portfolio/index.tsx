@@ -107,7 +107,7 @@ export const Portfolio = () => {
 
   const appStatus = useAppSelector(AppSelectors.selectAppStatus);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
-  const zapsEnabled = servicesEnabled.zaps && currentNetwork === 'mainnet';
+  const zapsEnabled = servicesEnabled.zaps && currentNetworkSettings.zapsEnabled;
   const tokensListStatus = useAppSelector(TokensSelectors.selectWalletTokensStatus);
   const generalLoading = (appStatus.loading || tokensListStatus.loading || isMounting) && !activeModal;
   const userTokensLoading = generalLoading && !userTokens.length;
@@ -160,7 +160,7 @@ export const Portfolio = () => {
       {
         name: t('components.transaction.deposit'),
         handler: () => actionHandler('invest', tokenAddress),
-        disabled: !walletIsConnected || !(isZapable || vaultsUnderlyingTokens.includes(tokenAddress)),
+        disabled: !walletIsConnected || !((isZapable && zapsEnabled) || vaultsUnderlyingTokens.includes(tokenAddress)),
       },
     ];
   };

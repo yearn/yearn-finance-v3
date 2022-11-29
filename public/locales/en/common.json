@@ -166,7 +166,8 @@
     "settings": "Settings",
     "vault": "Vaults",
     "vaults": "Vaults",
-    "wallet": "Wallet"
+    "wallet": "Wallet",
+    "ycrv": "yCRV"
   },
   "themes": {
     "classic": "Classic v2",

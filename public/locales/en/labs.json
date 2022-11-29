@@ -1,4 +1,8 @@
 {
+  "migrate-card": {
+    "desc-1": "yveCRV and yvBOOST are no longer supported and do not earn yield. But there's good news, you can easily migrate to our new and improved tokens for the best CRV yields in DeFi.",
+    "header": "Attn: Migrate to supercharge your yield with yCRV"
+  },
   "no-labs-card": {
     "header": "No Labs yet on {{network}}",
     "text": "Check back later for some new experiments."
@@ -8,5 +12,6 @@
     "desc-2": "As with all Yearn products, you are responsible for educating yourself on the details, and for actively managing your holdings.",
     "desc-3": "Welcome to the Lab, but proceed with caution, anon.",
     "header": "These are not risks for ants"
-  }
+  },
+  "migrate-warning": "Please migrate to yCRV. This vault will no longer generate yield"
 }

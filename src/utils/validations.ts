@@ -4,6 +4,7 @@ import { AllowancesMap, Network } from '@types';
 import { getConfig } from '@config';
 
 import { toBN, formatPercent } from './format';
+import { isNativeToken } from './contracts';
 
 interface ValidateVaultDepositProps {
   sellTokenAmount: BigNumber;
@@ -216,8 +217,8 @@ export function basicValidateAllowance(props: BasicValidateAllowanceProps): Vali
   const { tokenAddress, tokenAmount, tokenDecimals, rawAllowance } = props;
   const ONE_UNIT = toBN('10').pow(tokenDecimals);
   const amountInWei = tokenAmount.multipliedBy(ONE_UNIT);
-  const isETH = tokenAddress === getConfig().ETHEREUM_ADDRESS;
-  if (isETH) return { approved: true };
+
+  if (isNativeToken(tokenAddress)) return { approved: true };
 
   const allowance = toBN(rawAllowance);
 

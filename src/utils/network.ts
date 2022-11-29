@@ -13,6 +13,8 @@ export const getNetworkId = (network: Network): number => {
       return 4;
     case 'kovan':
       return 42;
+    case 'optimism':
+      return 10;
     case 'fantom':
       return 250;
     case 'arbitrum':
@@ -34,6 +36,8 @@ export const getNetwork = (networkId: number | string): Network => {
       return 'rinkeby';
     case '42':
       return 'kovan';
+    case '10':
+      return 'optimism';
     case '250':
       return 'fantom';
     case '42161':
@@ -45,17 +49,8 @@ export const getNetwork = (networkId: number | string): Network => {
 };
 
 export const getNetworkRpc = (network: Network): string => {
-  const { WEB3_PROVIDER_HTTPS, FANTOM_PROVIDER_HTTPS, ARBITRUM_PROVIDER_HTTPS } = getConfig();
-  switch (network) {
-    case 'mainnet':
-      return WEB3_PROVIDER_HTTPS;
-    case 'fantom':
-      return FANTOM_PROVIDER_HTTPS;
-    case 'arbitrum':
-      return ARBITRUM_PROVIDER_HTTPS;
-    default:
-      throw Error('Unknown Network');
-  }
+  const { RPC_URL } = getConfig();
+  return RPC_URL[network];
 };
 
 export const getProviderType = (network: Network): ProviderType => {
@@ -66,6 +61,8 @@ export const getProviderType = (network: Network): ProviderType => {
       return 'fantom';
     case 'arbitrum':
       return 'arbitrum';
+    case 'optimism':
+      return 'optimism';
     default:
       throw Error('Unknown Network');
   }
