@@ -4,6 +4,7 @@ import {
   TransactionService,
   ExecuteTransactionProps,
   HandleTransactionProps,
+  HandleOrderProps,
   TransactionResponse,
   GasService,
   GasFees,
@@ -176,6 +177,48 @@ export class TransactionServiceImpl implements TransactionService {
           eventCode: 'txFailedCustom',
           type: 'error',
           message: 'Your transaction has failed',
+        });
+      }
+
+      throw error;
+    }
+  };
+
+  public handleOrder = async ({
+    network,
+    orderId,
+    useExternalService = true,
+    renderNotification = true,
+  }: HandleOrderProps): Promise<void> => {
+    let updateNotification: UpdateNotification | undefined;
+
+    if (renderNotification) {
+      const { update } = notify.notification({
+        eventCode: 'txSentCustom',
+        type: 'pending',
+        message: 'Your order has been sent',
+      });
+      updateNotification = update;
+    }
+
+    try {
+      const yearn = this.yearnSdk.getInstanceOf(network);
+      await yearn.services.cowSwap.waitForOrderToFill({ orderId });
+
+      if (updateNotification) {
+        updateNotification({
+          eventCode: 'txConfirmedCustom',
+          type: 'success',
+          message: 'Your order was filled successfully',
+        });
+      }
+      return;
+    } catch (error: any) {
+      if (updateNotification) {
+        updateNotification({
+          eventCode: 'txFailedCustom',
+          type: 'error',
+          message: 'Your order has failed',
         });
       }
 

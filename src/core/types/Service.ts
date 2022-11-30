@@ -288,6 +288,7 @@ export interface ReinvestProps {
 export interface TransactionService {
   execute: (props: ExecuteTransactionProps) => Promise<TransactionResponse>;
   handleTransaction: (props: HandleTransactionProps) => Promise<TransactionReceipt>;
+  handleOrder: (props: HandleOrderProps) => Promise<void>;
 }
 
 export interface ExecuteTransactionProps {
@@ -300,6 +301,13 @@ export interface ExecuteTransactionProps {
 }
 export interface HandleTransactionProps {
   tx: TransactionResponse;
+  network: Network;
+  useExternalService?: boolean;
+  renderNotification?: boolean;
+}
+
+export interface HandleOrderProps {
+  orderId: string;
   network: Network;
   useExternalService?: boolean;
   renderNotification?: boolean;

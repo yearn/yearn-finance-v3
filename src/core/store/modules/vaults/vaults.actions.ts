@@ -473,8 +473,8 @@ const gaslessDeposit = createAsyncThunk<
     });
     if (networkError) throw networkError;
 
-    const { vaultService } = services;
-    const tx = await vaultService.gaslessDeposit({
+    const { vaultService, transactionService } = services;
+    const orderId = await vaultService.gaslessDeposit({
       network: network.current,
       accountAddress,
       vaultAddress,
@@ -483,12 +483,16 @@ const gaslessDeposit = createAsyncThunk<
       tokenAmount,
       feeAmount,
     });
+    await transactionService.handleOrder({
+      orderId,
+      network: network.current,
+    });
 
-    // dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-    // dispatch(getUserVaultsSummary());
-    // dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
-    // dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
-    // dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
+    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+    dispatch(getUserVaultsSummary());
+    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+    dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
   },
   {
     serializeError: parseError,
@@ -520,8 +524,8 @@ const gaslessWithdraw = createAsyncThunk<
     });
     if (networkError) throw networkError;
 
-    const { vaultService } = services;
-    const tx = await vaultService.gaslessWithdraw({
+    const { vaultService, transactionService } = services;
+    const orderId = await vaultService.gaslessWithdraw({
       network: network.current,
       accountAddress,
       vaultAddress,
@@ -530,12 +534,16 @@ const gaslessWithdraw = createAsyncThunk<
       tokenAmount,
       feeAmount,
     });
+    await transactionService.handleOrder({
+      orderId,
+      network: network.current,
+    });
 
-    // dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
-    // dispatch(getUserVaultsSummary());
-    // dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
-    // dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
-    // dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
+    dispatch(getVaultsDynamic({ addresses: [vaultAddress] }));
+    dispatch(getUserVaultsSummary());
+    dispatch(getUserVaultsPositions({ vaultAddresses: [vaultAddress] }));
+    dispatch(getUserVaultsMetadata({ vaultsAddresses: [vaultAddress] }));
+    dispatch(TokensActions.getUserTokens({ addresses: [tokenAddress, vaultAddress] }));
   },
   {
     serializeError: parseError,
