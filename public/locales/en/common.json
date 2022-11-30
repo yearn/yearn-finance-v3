@@ -67,7 +67,7 @@
       "claim": "Claim",
       "controls": {
         "gasless": "Gasless by signature",
-        "gasless-info": "Powered by CowSwap"
+        "gasless-info": "Powered by CoW Protocol"
       },
       "deposit": "Deposit",
       "fees": {
