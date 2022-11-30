@@ -98,7 +98,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   }, [selectedTargetTokenAddress, selectedVault]);
 
   useEffect(() => {
-    if (!selectedVault || !walletIsConnected) return;
+    if (!selectedVault || !selectedTargetTokenAddress || !walletIsConnected) return;
     const fetchAllowance = async () => {
       setIsFetchingAllowance(true);
       setSpenderAddress('');
