@@ -193,7 +193,7 @@ export const Vaults = () => {
     const searchableKeys = ['name', 'displayName', 'token.symbol', 'token.name'];
     const filteredVaults = filterData(opportunities, searchableKeys, search);
     setFilteredVaults(filteredVaults);
-    window.history.replaceState(null, '', `vaults${search ? `?search=${search}` : ''}`);
+    window.history.replaceState(null, '', `#/vaults${search ? `?search=${search}` : ''}`);
   }, [opportunities, search]);
 
   const depositHandler = (vaultAddress: string) => {
