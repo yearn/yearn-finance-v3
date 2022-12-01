@@ -1,6 +1,6 @@
 import * as awilix from 'awilix';
 
-import { BlocknativeWalletImpl } from '@frameworks/blocknative';
+import { BlocknativeWalletImpl, Web3OnboardWalletImpl } from '@frameworks/blocknative';
 import { EthersWeb3ProviderImpl } from '@frameworks/ethers';
 import { YearnSdkImpl } from '@frameworks/yearnSdk';
 import {
@@ -14,6 +14,7 @@ import {
 } from '@services';
 import { getConfig } from '@config';
 import { DIContainer, ContextContainer, ServiceContainer, ConfigContainer } from '@types';
+import { isLedgerLive } from '@src/utils';
 
 export class Container implements DIContainer {
   private container: awilix.AwilixContainer;
@@ -29,8 +30,11 @@ export class Container implements DIContainer {
   }
 
   private registerContext() {
+    const wallet = isLedgerLive()
+      ? awilix.asClass(BlocknativeWalletImpl).singleton()
+      : awilix.asClass(Web3OnboardWalletImpl).singleton();
     this.container.register({
-      wallet: awilix.asClass(BlocknativeWalletImpl).singleton(),
+      wallet,
       web3Provider: awilix.asClass(EthersWeb3ProviderImpl).singleton(),
       yearnSdk: awilix.asClass(YearnSdkImpl).singleton(),
     });
