@@ -56,14 +56,16 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
     if (!wallet.isCreated) {
       const customSubscriptions: Subscriptions = {
         wallet: async (wallet) => {
-          web3Provider.register('wallet', getEthersProvider(wallet.provider));
-          const providerType = getProviderType(network);
-          const sdkInstance = yearnSdk.getInstanceOf(network);
-          sdkInstance.context.setProvider({
-            read: web3Provider.getInstanceOf(providerType),
-            write: web3Provider.getInstanceOf('wallet'),
-          });
-          if (wallet.name === 'Unstoppable' && wallet.instance?.user) {
+          if (wallet && wallet.provider) {
+            web3Provider.register('wallet', getEthersProvider(wallet.provider));
+            const providerType = getProviderType(network);
+            const sdkInstance = yearnSdk.getInstanceOf(network);
+            sdkInstance.context.setProvider({
+              read: web3Provider.getInstanceOf(providerType),
+              write: web3Provider.getInstanceOf('wallet'),
+            });
+          }
+          if (wallet && wallet.name === 'Unstoppable' && wallet.instance?.user) {
             const user = await wallet.instance.user();
             dispatch(ensChange({ ens: user.sub }));
           }

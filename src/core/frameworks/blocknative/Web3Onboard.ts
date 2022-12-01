@@ -1,6 +1,17 @@
+import { getAddress } from '@ethersproject/address';
 import Onboard, { OnboardAPI } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
-import { getAddress } from '@ethersproject/address';
+import walletConnectModule from '@web3-onboard/walletconnect';
+import ledgerModule from '@web3-onboard/ledger';
+import trezorModule from '@web3-onboard/trezor';
+import coinbaseWalletModule from '@web3-onboard/coinbase';
+import portisModule from '@web3-onboard/portis';
+import fortmaticModule from '@web3-onboard/fortmatic';
+import torusModule from '@web3-onboard/torus';
+import mewWalletModule from '@web3-onboard/mew-wallet';
+import gnosisModule from '@web3-onboard/gnosis';
+import keystoneModule from '@web3-onboard/keystone';
+import uauthModule from '@web3-onboard/uauth';
 
 import { getConfig } from '@config';
 import { YearnLogo, YearnLogoFull } from '@src/client/assets/images';
@@ -34,16 +45,55 @@ export class Web3OnboardWalletImpl implements Wallet {
   }
 
   public create(_network: Network, subscriptions: Subscriptions, theme?: Theme): boolean {
-    const { SUPPORTED_NETWORKS, NETWORK_SETTINGS, BLOCKNATIVE_KEY } = getConfig();
+    const {
+      SUPPORTED_NETWORKS,
+      NETWORK_SETTINGS,
+      BLOCKNATIVE_KEY,
+      PORTIS_KEY,
+      FORTMATIC_KEY,
+      UNSTOPPABLE_DOMAINS_ID,
+      HOST,
+    } = getConfig();
 
     const injected = injectedModule();
+    const walletConnect = walletConnectModule();
+    const ledger = ledgerModule();
+    const trezor = trezorModule({
+      email: 'aaron@blocknative.com',
+      appUrl: 'https://reactdemo.blocknative.com',
+    });
+    const coinbaseWalletSdk = coinbaseWalletModule();
+    const portis = portisModule({ apiKey: PORTIS_KEY ?? '' });
+    const fortmatic = fortmaticModule({ apiKey: FORTMATIC_KEY ?? '' });
+    const torus = torusModule();
+    const mewWallet = mewWalletModule();
+    const gnosis = gnosisModule();
+    const keystone = keystoneModule();
+    const uauth = uauthModule({
+      clientID: UNSTOPPABLE_DOMAINS_ID ?? '',
+      redirectUri: HOST,
+      scope: 'openid wallet',
+    });
 
     // NOTE: needed because of https://github.com/MetaMask/metamask-extension/issues/3133
     injectMetamaskProvider();
 
     this.onboard = Onboard({
       apiKey: BLOCKNATIVE_KEY,
-      wallets: [injected],
+      wallets: [
+        injected,
+        walletConnect,
+        ledger,
+        trezor,
+        coinbaseWalletSdk,
+        portis,
+        fortmatic,
+        torus,
+        mewWallet,
+        gnosis,
+        keystone,
+        uauth,
+      ],
       chains: SUPPORTED_NETWORKS.map((network) => {
         const { networkId, name, nativeCurrency } = NETWORK_SETTINGS[network];
         return {
@@ -122,8 +172,11 @@ export class Web3OnboardWalletImpl implements Wallet {
     const networkSettings = NETWORK_SETTINGS[network];
     const networkId = networkSettings.networkId;
 
-    if (this.onboard) {
+    const isConnected = await this.isConnected;
+    if (this.onboard && isConnected) {
       this.onboard.setChain({ chainId: `0x${networkId.toString(16)}` });
+    } else {
+      return false;
     }
 
     return true;
