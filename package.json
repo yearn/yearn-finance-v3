@@ -46,6 +46,8 @@
     "@types/styled-components": "5.1.12",
     "@types/styled-system": "5.1.13",
     "@uauth/bnc-onboard": "^2.2.0",
+    "@web3-onboard/core": "^2.10.1",
+    "@web3-onboard/injected-wallets": "^2.4.0",
     "@yearn-finance/web-lib": "0.13.28",
     "@yfi/sdk": "3.0.0-alpha.7",
     "awilix": "7.0.2",
