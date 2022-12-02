@@ -1,13 +1,13 @@
 @font-face {
-  font-family: 'Aeonik';
-  src: url('Aeonik/Aeonik-Bold.otf') format('opentype');
+  font-family: Aeonik;
+  src: url('./Aeonik/Aeonik-Bold.otf') format('opentype');
   font-style: normal;
   font-weight: 700;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('Aeonik/Aeonik-Regular.otf') format('opentype');
+  font-family: Aeonik;
+  src: url('./Aeonik/Aeonik-Regular.otf') format('opentype');
   font-style: normal;
   font-weight: 400;
 }
