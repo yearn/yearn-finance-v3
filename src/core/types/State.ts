@@ -130,7 +130,6 @@ export interface WalletState {
   selectedAddress: string | undefined;
   addressEnsName: string | undefined;
   networkVersion: number | undefined;
-  balance: string | undefined;
   name: string | undefined;
   isConnected: boolean;
   isLoading: boolean;
