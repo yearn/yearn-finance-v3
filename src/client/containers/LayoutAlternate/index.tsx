@@ -31,7 +31,6 @@ const StyledLayout = styled.div`
 
 const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean; padBottom?: boolean }>`
   display: grid;
-  grid-gap: ${({ theme }) => theme.layoutPadding};
   grid-template-rows: auto 1fr auto;
   width: 100%;
   max-width: ${({ theme }) => theme.globalMaxWidth};
