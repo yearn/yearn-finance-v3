@@ -7,7 +7,7 @@ type HeadingType = 'h1' | 'h2' | 'h3';
 
 const h1Mixin = css`
   font-size: 2.4rem;
-  font-weight: bold;
+  font-weight: 500;
 `;
 
 const h2Mixin = css`
