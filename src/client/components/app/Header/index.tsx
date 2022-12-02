@@ -42,7 +42,14 @@ export const Header = ({ walletAddress, addressEnsName, onWalletClick }: HeaderP
     : t('components.connect-button.connect');
 
   return (
-    <Box display="flex" flexDirection="row" justifyContent="end" alignItems="center" minHeight="3.2rem">
+    <Box
+      position="relative"
+      display="flex"
+      flexDirection="row"
+      justifyContent="end"
+      alignItems="center"
+      minHeight="3.2rem"
+    >
       <LogoContainer>
         <LogoFilled />
       </LogoContainer>
