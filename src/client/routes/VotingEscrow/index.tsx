@@ -41,7 +41,7 @@ export const VotingEscrowPage = () => {
   return (
     <ViewContainer>
       <Box center width={1} mt="8.8rem">
-        <Text heading="h1" fontSize="8.8rem" lineHeight="10.8rem">
+        <Text heading="h1" fontSize="8.8rem" lineHeight="10.4rem" m={0}>
           veYFI
         </Text>
       </Box>
