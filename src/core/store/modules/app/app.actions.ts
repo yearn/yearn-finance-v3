@@ -65,7 +65,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   } else if (wallet.name && wallet.name !== 'Iframe') {
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
-  dispatch(checkExternalServicesStatus());
+  // dispatch(checkExternalServicesStatus());
 
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
@@ -144,6 +144,7 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
 /*                                  Services                                  */
 /* -------------------------------------------------------------------------- */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const checkExternalServicesStatus = createAsyncThunk<void, void, ThunkAPI>(
   'app/checkExternalServicesStatus',
   async (_arg, { dispatch, extra }) => {
