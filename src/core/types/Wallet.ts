@@ -4,10 +4,9 @@ import { Theme, Language } from './Settings';
 export interface Wallet {
   selectedAddress: string | undefined;
   networkVersion: number | undefined;
-  balance: string | undefined;
   name: string | undefined;
   provider: any | undefined;
-  isCreated: Promise<boolean> | boolean;
+  isCreated: boolean;
   isConnected: Promise<boolean> | boolean;
   create: (
     network: Network,
@@ -22,9 +21,8 @@ export interface Wallet {
 }
 
 export interface Subscriptions {
-  address?: (address: string) => void;
-  network?: (networkId: number) => void;
-  balance?: (balance: string) => void;
-  wallet?: (wallet: any) => void;
-  ens?: (ens: any) => void;
+  address?: (address: string | undefined) => void;
+  network?: (networkId: number | undefined) => void;
+  wallet?: (wallet: any | undefined) => void;
+  ens?: (ens: any | undefined) => void;
 }
