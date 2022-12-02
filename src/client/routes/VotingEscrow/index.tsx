@@ -89,11 +89,13 @@ export const VotingEscrowPage = () => {
       <TabsContainer>
         <Tabs value={selectedTab} onChange={(id) => setSelectedTab(id)}>
           {tabs.map(({ id, label }) => (
-            <Tab value={id}>{label}</Tab>
+            <Tab key={`tab-label-${id}`} value={id}>
+              {label}
+            </Tab>
           ))}
         </Tabs>
         {tabs.map(({ id, Component }) => (
-          <TabPanel value={id} tabValue={selectedTab}>
+          <TabPanel key={`tab-panel-${id}`} value={id} tabValue={selectedTab}>
             {Component}
           </TabPanel>
         ))}
