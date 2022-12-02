@@ -20,7 +20,7 @@ const h3Mixin = css`
   font-weight: bold;
 `;
 
-const StyledDiv = styled.p<StyledSystemProps & { ellipsis?: boolean; heading?: HeadingType }>`
+const StyledDiv = styled.div<StyledSystemProps & { ellipsis?: boolean; heading?: HeadingType }>`
   color: ${({ heading, theme }) => (heading ? theme.colors.titles : null)};
   ${({ heading }) => heading === 'h1' && h1Mixin}
   ${({ heading }) => heading === 'h2' && h2Mixin}
