@@ -59,7 +59,6 @@
     "@web3-onboard/trezor": "^2.3.2",
     "@web3-onboard/uauth": "^2.0.0",
     "@web3-onboard/walletconnect": "^2.2.0",
-    "@yearn-finance/web-lib": "^0.16.3",
     "@yfi/sdk": "3.0.0-alpha.7",
     "awilix": "7.0.2",
     "axios": "0.21.2",
@@ -71,7 +70,7 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.0.0",
     "ethers": "5.4.5",
-    "framer-motion": "^7.6.7",
+    "framer-motion": "^7.6.18",
     "husky": "5.2.0",
     "i18next": "21.6.16",
     "i18next-browser-languagedetector": "6.1.4",
@@ -99,9 +98,6 @@
   "devDependencies": {
     "babel-plugin-styled-components": "2.0.7",
     "locize-cli": "7.10.1"
-  },
-  "resolutions": {
-    "framer-motion": "4.1.17"
   },
   "eslintConfig": {
     "extends": [

@@ -11,6 +11,7 @@ export * from './List';
 export * from './Logo';
 export * from './Markdown';
 export * from './Modal';
+export * from './Motion';
 export * from './SearchInput';
 export * from './SeparatorLine';
 export * from './Sidemenu';
