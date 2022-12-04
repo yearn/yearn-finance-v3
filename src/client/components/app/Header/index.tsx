@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { useAppTranslation } from '@hooks';
-import { Box } from '@components/common';
+import { Box, Link } from '@components/common';
 import { ReactComponent as LogoFilled } from '@assets/images/yearn-logo-filled.svg';
 
 const StyledButton = styled.button`
@@ -15,7 +15,24 @@ const StyledButton = styled.button`
   font-family: inherit;
   user-select: none;
   font-size: 1.2rem;
+  padding: 0.1rem 1.2rem;
   transition: filter 200ms ease-in-out;
+  color: ${({ theme }) => theme.colors.primary};
+
+  :hover {
+    color: ${({ theme }) => theme.colors.texts};
+  }
+`;
+
+const StyledLink = styled(Link)<{ selected?: boolean }>`
+  font-size: 1.2rem;
+  padding: 0.1rem 1.2rem;
+  color: ${({ theme }) => theme.colors.primary} !important;
+  font-weight: ${({ selected }) => (selected ? 'bold' : 'normal')};
+
+  :hover {
+    color: ${({ theme }) => theme.colors.texts} !important;
+  }
 `;
 
 const LogoContainer = styled(Box)`
@@ -46,13 +63,22 @@ export const Header = ({ walletAddress, addressEnsName, onWalletClick }: HeaderP
       position="relative"
       display="flex"
       flexDirection="row"
-      justifyContent="end"
+      justifyContent="space-between"
       alignItems="center"
       minHeight="3.2rem"
     >
       <LogoContainer>
         <LogoFilled />
       </LogoContainer>
+
+      <Box>
+        <StyledLink selected to="/">
+          Main
+        </StyledLink>
+        <StyledLink external to="https://docs.yearn.finance/contributing/governance/veyfi">
+          Docs
+        </StyledLink>
+      </Box>
 
       <Box display="flex" flexDirection="row" justifyContent="end" alignItems="center">
         <StyledButton onClick={() => onWalletClick && onWalletClick()}>{walletIdentity}</StyledButton>
