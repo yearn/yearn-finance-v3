@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import { Layout, LayoutAlternate } from '@containers';
-import { getConfig } from '@config';
+import { isVeYfiEnv } from '@utils';
 
 import { Portfolio } from './Portfolio';
 import { VaultDetail } from './VaultDetail';
@@ -40,27 +40,27 @@ const routesMap = [
 ];
 
 export const Routes = () => {
-  const { USE_VEYFI_ROUTES } = getConfig();
-  const isVeYfiDomain = window.location.hostname.split('.')[0] === 'veyfi' || USE_VEYFI_ROUTES;
+  const isVeYfi = isVeYfiEnv();
+
   return (
     <Router basename="/#">
       <Switch>
         <Route exact path="/health" component={Health} />
 
-        {isVeYfiDomain && (
+        {isVeYfi && (
           <Route>
             <LayoutAlternate>
               <Switch>
-                <Route exact path="/veyfi" component={VotingEscrowPage} />
+                <Route exact path="/" component={VotingEscrowPage} />
                 <Route path="*">
-                  <Redirect to="/veyfi" />
+                  <Redirect to="/" />
                 </Route>
               </Switch>
             </LayoutAlternate>
           </Route>
         )}
 
-        {!isVeYfiDomain && (
+        {!isVeYfi && (
           <Route>
             <Layout>
               <Switch>

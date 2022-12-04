@@ -48,7 +48,7 @@ export const LayoutAlternate: FC = ({ children }) => {
   const previousAddress = usePrevious(selectedAddress);
   const previousNetwork = usePrevious(currentNetwork);
 
-  const path = location.pathname.toLowerCase().split('/')[1] as Route;
+  const path = (location.pathname.toLowerCase().split('/')[1] || 'veyfi') as Route;
   const assetAddress: string | undefined = location.pathname.split('/')[2];
 
   useEffect(() => {
