@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector, usePrevious } from '@hooks';
 import { Modals, Alerts } from '@containers';
 import { Header } from '@components/app';
 import { device } from '@themes/default';
+import { isVeYfiEnv } from '@utils';
 import { Network, Route } from '@types';
 
 const StyledLayout = styled.div`
@@ -67,6 +68,7 @@ export const LayoutAlternate: FC = ({ children }) => {
   }, [selectedAddress]);
 
   useEffect(() => {
+    if (isVeYfiEnv() && previousNetwork) return;
     if (activeModal) dispatch(ModalsActions.closeModal());
     if (previousNetwork) dispatch(AppActions.clearAppData());
     if (selectedAddress) dispatch(AppActions.clearUserAppData());
