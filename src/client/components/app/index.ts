@@ -7,6 +7,7 @@ export * from './DetailCard';
 export * from './Footer';
 export * from './Header';
 export * from './SliderCard';
+export * from './Meta';
 export * from './Navbar';
 export * from './Navigation';
 export * from './NoWalletCard';

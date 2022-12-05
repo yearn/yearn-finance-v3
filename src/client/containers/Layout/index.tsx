@@ -17,13 +17,14 @@ import {
   PartnerSelectors,
 } from '@store';
 import { useAppTranslation, useAppDispatch, useAppSelector, useWindowDimensions, usePrevious } from '@hooks';
-import { Navigation, Navbar, Footer } from '@components/app';
+import { Navigation, Navbar, Footer, Meta } from '@components/app';
 import { Modals, Alerts } from '@containers';
 import { getConfig } from '@config';
 import { Network, Route } from '@types';
 import { device } from '@themes/default';
 import { isInIframe, isCoinbaseApp } from '@utils';
 import { VeYfiIcon } from '@components/common';
+import { YearnOg } from '@assets/images';
 
 const contentSeparation = '1.6rem';
 
@@ -175,6 +176,12 @@ export const Layout: FC<LayoutProps> = ({ children, hideNavigation, hideFooter, 
 
   return (
     <StyledLayout>
+      <Meta
+        title="Yearn Finance"
+        description={`Put your digital assets to work and receive the best risk-adjusted yields in DeFi.`}
+        url="https://yearn.finance"
+        image={YearnOg}
+      />
       <Alerts />
       <Modals />
       {!hideNavigation && <Navigation hideOptionalLinks={hideOptionalLinks} />}
