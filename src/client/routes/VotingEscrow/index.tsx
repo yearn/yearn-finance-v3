@@ -5,9 +5,8 @@ import { useAppSelector } from '@hooks';
 import { VotingEscrowsSelectors } from '@store';
 import { Box, Text, Tabs, Tab, TabPanel, AnimatePresence, motion } from '@components/common';
 import { ViewContainer, Amount } from '@components/app';
-import { LockTab, ManageLockTab, ClaimUnlockedTab, MintTab } from '@containers';
+import { LockTab, ManageLockTab, ClaimUnlockedTab } from '@containers';
 import { humanize } from '@utils';
-import { getConfig } from '@config';
 
 const variants = {
   initial: { y: 10, opacity: 0 },
@@ -28,7 +27,6 @@ const StyledValue = styled(Text)`
 `;
 
 export const VotingEscrowPage = () => {
-  const { ALLOW_DEV_MODE } = getConfig();
   const [selectedTab, setSelectedTab] = useState('lock');
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
@@ -41,8 +39,6 @@ export const VotingEscrowPage = () => {
     // { id: '', label: 'Stake / Unstake', Component: <GaugesTab /> },
     // { id: '', label: 'Vote for gauge', Component: <p>{'Vote'}</p> },
   ];
-
-  if (ALLOW_DEV_MODE) tabs.push({ id: 'mint', label: 'Mint', Component: <MintTab /> });
 
   return (
     <motion.div initial={'initial'} animate={'enter'} transition={{ duration: 1 }} variants={variants}>
