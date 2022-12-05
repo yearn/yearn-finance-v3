@@ -49,6 +49,7 @@ const lightNew = {
 const lightNewTheme: DefaultTheme = {
   ...sharedTheme,
   globalFont: 'Aeonik, sans-serif',
+  globalFontAlt: 'Aeonik Mono, sans-serif',
   alerts: {
     ...sharedTheme.alerts,
     warning: {

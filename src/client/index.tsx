@@ -11,6 +11,7 @@ import { Themable } from '@containers';
 
 import '@assets/fonts/RobotoFont.css';
 import '@assets/fonts/AeonikFont.css';
+import '@assets/fonts/AeonikMonoFont.css';
 
 const GlobalStyle = createGlobalStyle`
   html, body {

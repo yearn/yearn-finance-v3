@@ -21,7 +21,7 @@ const StyledInput = styled.input<{ readOnly?: boolean; error?: boolean }>`
   border: none;
   border-width: 0px;
   color: ${({ theme }) => theme.colors.txModalColors.textContrast};
-  font-family: inherit;
+  font-family: ${({ theme }) => theme.globalFontAlt};
   appearance: textfield;
   width: 100%;
 

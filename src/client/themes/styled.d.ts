@@ -25,6 +25,7 @@ declare module 'styled-components' {
     };
     devices: Devices;
     globalFont: string;
+    globalFontAlt: string;
     globalMaxWidth: string;
     globalRadius: string;
 
