@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ThunkAPI } from '@frameworks/redux';
-import { getNetwork, isNativeToken, validateNetwork } from '@utils';
+import { getNetwork, isNativeToken, validateNetwork, isVeYfiEnv } from '@utils';
 import { TokenDynamicData, Token, Balance, Integer } from '@types';
 
 /* -------------------------------------------------------------------------- */
@@ -29,8 +29,8 @@ const getTokens = createAsyncThunk<{ tokensData: Token[] }, string | undefined, 
   async (_arg, { getState, extra }) => {
     const { network } = getState();
     const { tokenService } = extra.services;
-    const { NETWORK, USE_VEYFI_ROUTES } = extra.config;
-    const defaultNetwork = USE_VEYFI_ROUTES ? NETWORK : network.current;
+    const { NETWORK } = extra.config;
+    const defaultNetwork = isVeYfiEnv() ? NETWORK : network.current;
     const tokensData: Token[] = await tokenService.getSupportedTokens({
       network: defaultNetwork,
     });
@@ -45,8 +45,8 @@ const getTokensDynamicData = createAsyncThunk<
 >('tokens/getTokensDynamic', async ({ addresses }, { getState, extra }) => {
   const { network } = getState();
   const { tokenService } = extra.services;
-  const { NETWORK, USE_VEYFI_ROUTES } = extra.config;
-  const defaultNetwork = USE_VEYFI_ROUTES ? NETWORK : network.current;
+  const { NETWORK } = extra.config;
+  const defaultNetwork = isVeYfiEnv() ? NETWORK : network.current;
   const tokensDynamicData = await tokenService.getTokensDynamicData({ network: defaultNetwork, addresses });
   return { tokensDynamicData };
 });
@@ -55,8 +55,8 @@ const getUserTokens = createAsyncThunk<{ userTokens: Balance[] }, { addresses?: 
   'tokens/getUserTokens',
   async ({ addresses }, { extra, getState }) => {
     const { network, wallet } = getState();
-    const { NETWORK, USE_VEYFI_ROUTES } = extra.config;
-    const defaultNetwork = USE_VEYFI_ROUTES ? NETWORK : network.current;
+    const { NETWORK } = extra.config;
+    const defaultNetwork = isVeYfiEnv() ? NETWORK : network.current;
 
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
@@ -77,8 +77,8 @@ const getTokenAllowance = createAsyncThunk<
   ThunkAPI
 >('tokens/getTokenAllowance', async ({ tokenAddress, spenderAddress }, { extra, getState }) => {
   const { network, wallet } = getState();
-  const { NETWORK, USE_VEYFI_ROUTES } = extra.config;
-  const defaultNetwork = USE_VEYFI_ROUTES ? NETWORK : network.current;
+  const { NETWORK } = extra.config;
+  const defaultNetwork = isVeYfiEnv() ? NETWORK : network.current;
 
   const accountAddress = wallet.selectedAddress;
   if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
@@ -107,8 +107,8 @@ const approve = createAsyncThunk<
 >('tokens/approve', async ({ tokenAddress, spenderAddress, amountToApprove }, { extra, getState }) => {
   const { network, wallet, app } = getState();
   const { tokenService, transactionService } = extra.services;
-  const { NETWORK, USE_VEYFI_ROUTES } = extra.config;
-  const defaultNetwork = USE_VEYFI_ROUTES ? NETWORK : network.current;
+  const { NETWORK } = extra.config;
+  const defaultNetwork = isVeYfiEnv() ? NETWORK : network.current;
   const amount = amountToApprove ?? extra.config.MAX_UINT256;
 
   const accountAddress = wallet.selectedAddress;
