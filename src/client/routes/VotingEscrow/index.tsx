@@ -85,7 +85,7 @@ export const VotingEscrowPage = () => {
           </Box>
           <Box center>
             <StyledValue>
-              <div>{votingEscrow?.unlockDate?.toLocaleDateString() ?? '-'}</div>
+              <div>{votingEscrow?.unlockDate?.toLocaleDateString().replaceAll('/', '.') ?? '-'}</div>
             </StyledValue>
             <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
               Expiration for the lock
