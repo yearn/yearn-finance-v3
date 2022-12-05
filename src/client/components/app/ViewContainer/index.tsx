@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-const StyledViewContainer = styled.main<{ noGap?: boolean }>`
+const StyledViewContainer = styled.main<{ noGap?: boolean; noOverflow?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -9,11 +9,12 @@ const StyledViewContainer = styled.main<{ noGap?: boolean }>`
   max-width: ${({ theme }) => theme.globalMaxWidth};
   flex: 1;
   overflow: hidden;
-  overflow-y: auto;
+  overflow-y: ${({ noOverflow }) => (noOverflow ? 'hidden' : 'auto')}; ;
 `;
 
 interface ViewContainerProps {
   noGap?: boolean;
+  noOverflow?: boolean;
 }
 
 export const ViewContainer: FC<ViewContainerProps> = ({ children, ...props }) => {

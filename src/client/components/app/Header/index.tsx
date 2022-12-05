@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useAppTranslation } from '@hooks';
 import { Box, Link } from '@components/common';
 import { ReactComponent as LogoFilled } from '@assets/images/yearn-logo-filled.svg';
+import { transitionCss } from '@utils';
 
 const StyledButton = styled.button`
   display: flex;
@@ -18,6 +19,7 @@ const StyledButton = styled.button`
   padding: 0.1rem 1.2rem;
   transition: filter 200ms ease-in-out;
   color: ${({ theme }) => theme.colors.primary};
+  ${transitionCss}
 
   :hover {
     color: ${({ theme }) => theme.colors.texts};
@@ -29,6 +31,7 @@ const StyledLink = styled(Link)<{ selected?: boolean }>`
   padding: 0.1rem 1.2rem;
   color: ${({ theme }) => theme.colors.primary} !important;
   font-weight: ${({ selected }) => (selected ? 'bold' : 'normal')};
+  ${transitionCss}
 
   :hover {
     color: ${({ theme }) => theme.colors.texts} !important;

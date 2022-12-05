@@ -1,6 +1,10 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
+import { transitionCss } from '@utils';
+
+import { Box } from './Box';
+import { motion } from './Motion';
 import { styledSystem, StyledSystemProps } from './styledSystem';
 
 export interface TabsProps extends StyledSystemProps {
@@ -53,6 +57,7 @@ export const Tabs: FC<TabsProps> = ({ value, onChange, children, ...props }) => 
 
 const StyledTab = styled.div<{ selected?: boolean }>`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
@@ -64,13 +69,13 @@ const StyledTab = styled.div<{ selected?: boolean }>`
   background: inherit;
   cursor: pointer;
   margin: 0 2rem;
+  ${transitionCss}
 
   ${({ selected }) =>
     selected &&
     `
     background: var(--tabs-selected-bg);
     color: var(--tabs-selected-color);
-    border-bottom: 3px solid var(--tabs-selected-color);
     font-weight: 700;
     cursor: default;
   `};
@@ -78,8 +83,19 @@ const StyledTab = styled.div<{ selected?: boolean }>`
   ${styledSystem}
 `;
 
+const StyledLine = styled(motion.div)<{ transparent?: boolean }>`
+  width: 100%;
+  border-bottom: 3px solid var(--tabs-selected-color);
+  ${({ transparent }) =>
+    transparent &&
+    `
+    border-bottom: 3px solid transparent;
+  `};
+`;
+
 export interface TabProps extends StyledSystemProps {
   value?: number | string;
+  label?: string;
   selected?: boolean;
   disabled?: boolean;
   onChange?: (value: any) => void;
@@ -94,7 +110,11 @@ export const Tab: FC<TabProps> = ({ value, selected, onChange, children, ...prop
 
   return (
     <StyledTab key={value} selected={selected} onClick={handleClick} {...props}>
-      {children}
+      <Box center flexGrow={1}>
+        {children}
+      </Box>
+      {!selected && <StyledLine transparent />}
+      {selected && <StyledLine layoutId="tab-label-underline" />}
     </StyledTab>
   );
 };
