@@ -14,11 +14,10 @@ import {
 } from '@store';
 import { useAppDispatch, useAppSelector, usePrevious } from '@hooks';
 import { Modals, Alerts } from '@containers';
-import { Header, Meta } from '@components/app';
+import { Header } from '@components/app';
 import { device } from '@themes/default';
 import { isVeYfiEnv } from '@utils';
 import { Network, Route } from '@types';
-import { VeYfiOg } from '@assets/images';
 
 const StyledLayout = styled.div`
   display: flex;
@@ -100,12 +99,6 @@ export const LayoutAlternate: FC = ({ children }) => {
 
   return (
     <StyledLayout>
-      <Meta
-        title="Yearn Finance | veYFI"
-        description={`YFI evolved`}
-        url="https://vote.yearn.finance"
-        image={VeYfiOg}
-      />
       <Alerts />
       <Modals />
 
