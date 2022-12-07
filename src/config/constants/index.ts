@@ -143,7 +143,7 @@ export const getConstants = memoize((): Constants => {
     SLIPPAGE_OPTIONS: [0.01, 0.02, 0.03],
     DEFAULT_SLIPPAGE: 0.01,
     IRON_BANK_MAX_RATIO: 0.8,
-    DEFAULT_THEME: 'system-prefs',
+    DEFAULT_THEME: 'light',
     AVAILABLE_THEMES: ['system-prefs', 'light', 'dark', 'cyberpunk', 'classic'],
     AVAILABLE_CUSTOM_THEMES: ['explorer'],
     DEFAULT_ALERT_TIMEOUT: 3000,
