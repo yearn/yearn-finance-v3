@@ -41,6 +41,15 @@ module.exports = {
       ],
     },
     configure: (webpackConfig, { env, paths }) => {
+      // Webpack build issue with ledger package
+      // https://github.com/LedgerHQ/ledger-live/issues/763
+      webpackConfig.resolve = {
+        ...webpackConfig.resolve,
+        alias: {
+          ...webpackConfig.resolve.alias,
+          '@ledgerhq/devices/hid-framing': '@ledgerhq/devices/lib/hid-framing',
+        },
+      };
       if (isProd) webpackConfig.output.crossOriginLoading = 'anonymous';
       return webpackConfig;
     },

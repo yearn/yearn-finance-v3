@@ -47,6 +47,24 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
   }
 
+  :root {
+    --onboard-font-size-1: 4.8rem;
+    --onboard-font-size-2: 3.6rem;
+    --onboard-font-size-3: 2.4rem;
+    --onboard-font-size-4: 2rem;
+    --onboard-font-size-5: 1.6rem;
+    --onboard-font-size-6: 1.4rem;
+    --onboard-font-size-7: 1.2rem;
+
+    --onboard-spacing-1: 4.8rem;
+    --onboard-spacing-2: 3.2rem;
+    --onboard-spacing-3: 2.4rem;
+    --onboard-spacing-4: 1.6rem;
+    --onboard-spacing-5: 0.8rem;
+
+    --onboard-modal-z-index: ${(props) => props.theme.zindex.onboardModal};
+  }
+
   a {
     text-decoration: none;
     &:visited {
