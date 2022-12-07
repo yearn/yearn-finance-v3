@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
-import { useAppTranslation } from '@hooks';
-import { Text, Tooltip, Icon, InfoIcon, ToggleButton } from '@components/common';
+import { useAppTranslation, useToggler } from '@hooks';
+import { Text, Icon, InfoIcon, ToggleButton, Markdown } from '@components/common';
+
+import { TxInformation } from '../Transactions';
 
 const Container = styled.div`
   display: flex;
@@ -37,6 +39,7 @@ interface TransactionControlsProps {
 
 export const TransactionControls = ({ allowGasless, isGasless, onToggleGasless }: TransactionControlsProps) => {
   const { t } = useAppTranslation('common');
+  const { isOpen, open, close } = useToggler({ opened: false });
 
   const showControls = !!allowGasless;
 
@@ -44,15 +47,13 @@ export const TransactionControls = ({ allowGasless, isGasless, onToggleGasless }
 
   return (
     <Container>
+      <TxInformation title={t('components.transaction.controls.gasless')} isOpen={isOpen} onClose={close}>
+        <Markdown>{t('components.transaction.controls.gasless-info')}</Markdown>
+      </TxInformation>
       <Row>
         <Text display="flex" justifyContent="center" alignItems="center">
           {t('components.transaction.controls.gasless')}
-          <Tooltip
-            placement="bottom"
-            tooltipComponent={<Text fontSize="1.2rem">{t('components.transaction.controls.gasless-info')}</Text>}
-          >
-            <StyledIcon Component={InfoIcon} size="1.5rem" />
-          </Tooltip>
+          <StyledIcon Component={InfoIcon} size="1.5rem" onClick={open} />
         </Text>
         <ToggleButton
           selected={!!isGasless}
