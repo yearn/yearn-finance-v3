@@ -15,10 +15,15 @@ import {
 import { getProviderType } from '@utils';
 import { getContract } from '@frameworks/ethers';
 
+const openLink = (link: string) => {
+  window.open(link, '_blank');
+};
+
 export class TransactionServiceImpl implements TransactionService {
   private yearnSdk: YearnSdk;
   private gasService: GasService;
   private web3Provider: Web3Provider;
+  private EXPLORER_URL = 'https://explorer.cow.fi/orders';
 
   constructor({
     gasService,
@@ -196,7 +201,8 @@ export class TransactionServiceImpl implements TransactionService {
       const { update } = notify.notification({
         eventCode: 'txSentCustom',
         type: 'pending',
-        message: 'Your order has been sent',
+        message: 'Your order has been sent. View order 🖱️',
+        onclick: () => openLink(`${this.EXPLORER_URL}/${orderId}`),
       });
       updateNotification = update;
     }
@@ -209,7 +215,8 @@ export class TransactionServiceImpl implements TransactionService {
         updateNotification({
           eventCode: 'txConfirmedCustom',
           type: 'success',
-          message: 'Your order was filled successfully',
+          message: 'Your order was filled successfully. View order 🖱️',
+          onclick: () => openLink(`${this.EXPLORER_URL}/${orderId}`),
         });
       }
       return;
@@ -218,7 +225,8 @@ export class TransactionServiceImpl implements TransactionService {
         updateNotification({
           eventCode: 'txFailedCustom',
           type: 'error',
-          message: 'Your order has failed',
+          message: 'Your order has failed. View order 🖱️',
+          onclick: () => openLink(`${this.EXPLORER_URL}/${orderId}`),
         });
       }
 
