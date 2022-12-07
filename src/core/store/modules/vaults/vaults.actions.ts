@@ -203,7 +203,7 @@ const approveDeposit = createAsyncThunk<
 
     await transactionService.handleTransaction({ tx, network: network.current });
 
-    await dispatch(getDepositAllowance({ tokenAddress, vaultAddress }));
+    await dispatch(getDepositAllowance({ tokenAddress, vaultAddress, gasless }));
   },
   {
     serializeError: parseError,
@@ -235,7 +235,7 @@ const approveWithdraw = createAsyncThunk<
 
     await transactionService.handleTransaction({ tx, network: network.current });
 
-    await dispatch(getWithdrawAllowance({ tokenAddress, vaultAddress }));
+    await dispatch(getWithdrawAllowance({ tokenAddress, vaultAddress, gasless }));
   },
   {
     serializeError: parseError,
