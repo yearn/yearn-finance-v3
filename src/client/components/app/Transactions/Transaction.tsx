@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { formatAmount, normalizeAmount, toBN } from '@utils';
 import { useAppTranslation } from '@hooks';
 
+import { TransactionControls } from '../TransactionControls';
 import { TransactionFees } from '../TransactionFees';
 
 import { TxActionButton, TxActions } from './components/TxActions';
@@ -60,6 +61,9 @@ interface TransactionProps {
   targetStatus: Status;
   actions: Action[];
   zapService?: string;
+  allowGasless?: boolean;
+  isGasless?: boolean;
+  onToggleGasless?: (state: boolean) => void;
   loadingText?: string;
   onClose?: () => void;
 }
@@ -94,6 +98,9 @@ export const Transaction: FC<TransactionProps> = (props) => {
     targetStatus,
     actions,
     zapService,
+    allowGasless,
+    isGasless,
+    onToggleGasless,
     loadingText,
     onClose,
   } = props;
@@ -158,6 +165,8 @@ export const Transaction: FC<TransactionProps> = (props) => {
       />
 
       <TransactionFees zapService={zapService} />
+
+      <TransactionControls allowGasless={allowGasless} isGasless={isGasless} onToggleGasless={onToggleGasless} />
 
       {generalStatus.error && <TxError errorType="warning" errorTitle={generalStatus.error} />}
 

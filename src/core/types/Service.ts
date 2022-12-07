@@ -51,9 +51,11 @@ export interface VaultService {
   signPermit: (props: SignPermitProps) => Promise<string>;
   deposit: (props: DepositProps) => Promise<TransactionResponse>;
   withdraw: (props: WithdrawProps) => Promise<TransactionResponse>;
+  gaslessDeposit: (props: GaslessDepositProps) => Promise<string>;
+  gaslessWithdraw: (props: GaslessWithdrawProps) => Promise<string>;
   migrate: (props: MigrateProps) => Promise<TransactionResponse>;
   approveDeposit: (props: ApproveDepositProps) => Promise<TransactionResponse>;
-  approveZapOut: (props: ApproveZapOutProps) => Promise<TransactionResponse>;
+  approveWithdraw: (props: ApproveWithdrawProps) => Promise<TransactionResponse>;
   getDepositAllowance: (props: GetDepositAllowanceProps) => Promise<TokenAllowance>;
   getWithdrawAllowance: (props: GetWithdrawAllowanceProps) => Promise<TokenAllowance>;
 }
@@ -93,6 +95,7 @@ export interface GetExpectedTransactionOutcomeProps {
   sourceTokenAmount: Wei;
   targetTokenAddress: Address;
   slippageTolerance?: number;
+  gasless?: boolean;
 }
 
 export interface SignPermitProps {
@@ -121,6 +124,26 @@ export interface WithdrawProps {
   amountOfShares: Wei;
   slippageTolerance?: number;
   signature?: string;
+}
+
+export interface GaslessDepositProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  vaultAddress: Address;
+  tokenAmount: Wei;
+  vaultAmount: Wei;
+  feeAmount: Wei;
+}
+
+export interface GaslessWithdrawProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  vaultAddress: Address;
+  tokenAmount: Wei;
+  vaultAmount: Wei;
+  feeAmount: Wei;
 }
 
 export interface MigrateProps {
@@ -168,14 +191,16 @@ export interface ApproveDepositProps {
   tokenAddress: Address;
   amount: Wei;
   vaultAddress: string;
+  gasless?: boolean;
 }
 
-export interface ApproveZapOutProps {
+export interface ApproveWithdrawProps {
   network: Network;
   amount: Wei;
   accountAddress: string;
   tokenAddress: string;
   vaultAddress: string;
+  gasless?: boolean;
 }
 
 export interface GetDepositAllowanceProps {
@@ -183,6 +208,7 @@ export interface GetDepositAllowanceProps {
   accountAddress: string;
   tokenAddress: string;
   vaultAddress: string;
+  gasless?: boolean;
 }
 
 export interface GetWithdrawAllowanceProps {
@@ -190,6 +216,7 @@ export interface GetWithdrawAllowanceProps {
   accountAddress: string;
   tokenAddress: string;
   vaultAddress: string;
+  gasless?: boolean;
 }
 
 export interface ApproveProps {
@@ -261,6 +288,7 @@ export interface ReinvestProps {
 export interface TransactionService {
   execute: (props: ExecuteTransactionProps) => Promise<TransactionResponse>;
   handleTransaction: (props: HandleTransactionProps) => Promise<TransactionReceipt>;
+  handleOrder: (props: HandleOrderProps) => Promise<void>;
 }
 
 export interface ExecuteTransactionProps {
@@ -273,6 +301,13 @@ export interface ExecuteTransactionProps {
 }
 export interface HandleTransactionProps {
   tx: TransactionResponse;
+  network: Network;
+  useExternalService?: boolean;
+  renderNotification?: boolean;
+}
+
+export interface HandleOrderProps {
+  orderId: string;
   network: Network;
   useExternalService?: boolean;
   renderNotification?: boolean;

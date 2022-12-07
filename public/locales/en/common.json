@@ -65,6 +65,10 @@
         "total-borrow-limit-used": "Total borrow limit used"
       },
       "claim": "Claim",
+      "controls": {
+        "gasless": "Gasless by signature",
+        "gasless-info": "**Gasless transactions** let you deposit and withdraw to and from vaults without spending your precious ETH, taking fees directly from the token used to transact.\n\nYou will receive _at least_ the amount of tokens detailed in transaction outcome.\n\nGasless transactions are powered by [CoW Protocol](https://cow.fi/)."
+      },
       "deposit": "Deposit",
       "fees": {
         "powered-by": "Zaps powered by Portals.fi",

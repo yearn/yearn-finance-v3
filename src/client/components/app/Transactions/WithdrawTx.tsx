@@ -45,6 +45,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const [txCompleted, setTxCompleted] = useState(false);
   const [spenderAddress, setSpenderAddress] = useState('');
   const [isFetchingAllowance, setIsFetchingAllowance] = useState(false);
+  const [isGasless, setIsGasless] = useState(false);
   const servicesEnabled = useAppSelector(AppSelectors.selectServicesEnabled);
   const simulationsEnabled = servicesEnabled.simulations;
   const zapsEnabled = servicesEnabled.zaps;
@@ -64,6 +65,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const expectedTxOutcome = useAppSelector(VaultsSelectors.selectExpectedTxOutcome);
   const expectedTxOutcomeStatus = useAppSelector(VaultsSelectors.selectExpectedTxOutcomeStatus);
   const actionsStatus = useAppSelector(VaultsSelectors.selectSelectedVaultActionsStatusMap);
+  const allowGasless = selectedVault?.token.address === selectedTargetTokenAddress && currentNetwork === 'mainnet';
 
   // TODO Fix logic for vault details
   const yvTokenAmount = selectedVault
@@ -96,7 +98,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   }, [selectedTargetTokenAddress, selectedVault]);
 
   useEffect(() => {
-    if (!selectedVault || !walletIsConnected) return;
+    if (!selectedVault || !selectedTargetTokenAddress || !walletIsConnected) return;
     const fetchAllowance = async () => {
       setIsFetchingAllowance(true);
       setSpenderAddress('');
@@ -104,13 +106,14 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
         VaultsActions.getWithdrawAllowance({
           vaultAddress: selectedVault.address,
           tokenAddress: selectedTargetTokenAddress,
+          gasless: allowGasless && isGasless,
         })
       );
       setSpenderAddress(allowance.spender);
       setIsFetchingAllowance(false);
     };
     fetchAllowance();
-  }, [selectedVault?.address, selectedTargetTokenAddress, walletIsConnected]);
+  }, [selectedVault?.address, selectedTargetTokenAddress, walletIsConnected, isGasless]);
 
   useEffect(() => {
     if (!selectedVault) return;
@@ -126,11 +129,12 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
           sourceTokenAddress: selectedVault.address,
           sourceTokenAmount: yvTokenAmount,
           targetTokenAddress: selectedTargetTokenAddress,
+          gasless: allowGasless && isGasless,
         })
       );
     }
     dispatch(TokensActions.getTokensDynamicData({ addresses: [selectedVault.token.address] }));
-  }, [debouncedAmount]);
+  }, [debouncedAmount, isGasless]);
 
   if (!selectedVault || !selectedTargetToken || !targetTokensOptions) {
     return null;
@@ -156,6 +160,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const { error: slippageError } = validateSlippage({
     slippageTolerance: selectedSlippage,
     expectedSlippage: expectedTxOutcome?.slippage,
+    gasless: allowGasless && isGasless,
   });
 
   const { error: networkError } = validateNetwork({
@@ -194,7 +199,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const targetStatus = {
     error:
       expectedTxOutcomeStatus.error ||
-      actionsStatus.approveZapOut.error ||
+      actionsStatus.approveWithdraw.error ||
       actionsStatus.withdraw.error ||
       slippageError,
     loading: expectedTxOutcomeStatus.loading || isDebouncePending,
@@ -231,7 +236,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const approve = async () => {
     try {
-      if (signedApprovalsEnabled && !isWethToEthZap) {
+      if (!(allowGasless && isGasless) && signedApprovalsEnabled && !isWethToEthZap) {
         const signResult = await dispatchAndUnwrap(
           VaultsActions.signZapOut({
             vaultAddress: selectedVault.address,
@@ -242,7 +247,11 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
         setSignature(signResult.signature);
       } else {
         await dispatch(
-          VaultsActions.approveZapOut({ vaultAddress: selectedVault.address, tokenAddress: selectedTargetTokenAddress })
+          VaultsActions.approveWithdraw({
+            vaultAddress: selectedVault.address,
+            tokenAddress: selectedTargetTokenAddress,
+            gasless: allowGasless && isGasless,
+          })
         );
       }
     } catch (error) {}
@@ -250,15 +259,27 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
 
   const withdraw = async () => {
     try {
-      await dispatchAndUnwrap(
-        VaultsActions.withdrawVault({
-          vaultAddress: selectedVault.address,
-          amount: willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount),
-          targetTokenAddress: selectedTargetTokenAddress,
-          slippageTolerance: selectedSlippage,
-          signature,
-        })
-      );
+      if (allowGasless && isGasless) {
+        await dispatchAndUnwrap(
+          VaultsActions.gaslessWithdraw({
+            vaultAddress: selectedVault.address,
+            tokenAddress: selectedTargetTokenAddress,
+            vaultAmount: expectedTxOutcome?.sourceTokenAmount ?? '',
+            tokenAmount: expectedTxOutcome?.targetTokenAmount ?? '',
+            feeAmount: expectedTxOutcome?.sourceTokenAmountFee ?? '',
+          })
+        );
+      } else {
+        await dispatchAndUnwrap(
+          VaultsActions.withdrawVault({
+            vaultAddress: selectedVault.address,
+            amount: willWithdrawAll ? toBN(MAX_UINT256) : toBN(amount),
+            targetTokenAddress: selectedTargetTokenAddress,
+            slippageTolerance: selectedSlippage,
+            signature,
+          })
+        );
+      }
       setTxCompleted(true);
     } catch (error) {}
   };
@@ -266,11 +287,11 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const txActions = [
     {
       label:
-        signedApprovalsEnabled && !isWethToEthZap
+        !(allowGasless && isGasless) && signedApprovalsEnabled && !isWethToEthZap
           ? t('components.transaction.sign')
           : t('components.transaction.approve'),
       onAction: approve,
-      status: actionsStatus.approveZapOut,
+      status: actionsStatus.approveWithdraw,
       disabled: isApproved || isFetchingAllowance,
     },
     {
@@ -304,6 +325,9 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       targetStatus={targetStatus}
       actions={txActions}
       zapService={zapService}
+      allowGasless={allowGasless}
+      isGasless={isGasless}
+      onToggleGasless={setIsGasless}
       loadingText={loadingText}
       onClose={onClose}
     />

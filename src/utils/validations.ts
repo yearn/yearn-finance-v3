@@ -31,6 +31,7 @@ interface ValidateVaultWithdrawAllowanceProps {
   yvTokenAllowancesMap: AllowancesMap;
   spenderAddress: string;
   signature?: string;
+  gasless?: boolean;
 }
 
 export interface ValidateMigrateVaultAllowanceProps {
@@ -102,10 +103,11 @@ export function validateVaultWithdrawAllowance(props: ValidateVaultWithdrawAllow
     yvTokenAllowancesMap,
     spenderAddress,
     signature,
+    gasless,
   } = props;
   const isZapOut = targetTokenAddress !== underlyingTokenAddress;
 
-  if (!isZapOut || signature) return { approved: true };
+  if ((isZapOut && !gasless) || signature) return { approved: true };
 
   return validateAllowance({
     tokenAddress: yvTokenAddress,
@@ -264,12 +266,13 @@ export function basicValidateAmount(props: BasicValidateAmountProps): Validation
 export interface ValidateSlippageProps {
   slippageTolerance?: number;
   expectedSlippage?: number;
+  gasless?: boolean;
 }
 
 export function validateSlippage(props: ValidateSlippageProps): ValidationResponse {
-  const { slippageTolerance, expectedSlippage } = props;
+  const { slippageTolerance, expectedSlippage, gasless } = props;
 
-  if (slippageTolerance === undefined || expectedSlippage === undefined) return {};
+  if (slippageTolerance === undefined || expectedSlippage === undefined || gasless) return {};
 
   const isOverSlippageTolerance = toBN(expectedSlippage).gt(slippageTolerance);
   if (isOverSlippageTolerance) {

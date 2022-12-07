@@ -266,7 +266,7 @@ const approveWithdraw = createAsyncThunk<void, { labAddress: string; tokenAddres
     const accountAddress = wallet.selectedAddress;
     if (!accountAddress) throw new Error('WALLET NOT CONNECTED');
 
-    const tx = await vaultService.approveZapOut({
+    const tx = await vaultService.approveWithdraw({
       network: network.current,
       accountAddress,
       amount,

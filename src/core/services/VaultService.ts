@@ -24,10 +24,12 @@ import {
   TransactionService,
   Config,
   ApproveDepositProps,
-  ApproveZapOutProps,
+  ApproveWithdrawProps,
   GetDepositAllowanceProps,
   GetWithdrawAllowanceProps,
   TokenAllowance,
+  GaslessDepositProps,
+  GaslessWithdrawProps,
 } from '@types';
 
 import v2VaultAbi from './contracts/v2Vault.json';
@@ -96,8 +98,15 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async getExpectedTransactionOutcome(props: GetExpectedTransactionOutcomeProps): Promise<TransactionOutcome> {
-    const { network, transactionType, accountAddress, sourceTokenAddress, sourceTokenAmount, targetTokenAddress } =
-      props;
+    const {
+      network,
+      transactionType,
+      accountAddress,
+      sourceTokenAddress,
+      sourceTokenAmount,
+      targetTokenAddress,
+      gasless,
+    } = props;
     const { NETWORK_SETTINGS } = this.config;
     const currentNetworkSettings = NETWORK_SETTINGS[network];
     const DEFAULT_SLIPPAGE_SIMULATION = 0.99;
@@ -137,31 +146,15 @@ export class VaultServiceImpl implements VaultService {
       };
     }
 
-    let expectedOutcome: TransactionOutcome;
-    switch (transactionType) {
-      case 'DEPOSIT':
-        expectedOutcome = await yearn.simulation._deposit(
-          targetTokenAddress,
-          sourceTokenAddress,
-          sourceTokenAmount,
-          accountAddress,
-          { slippage: DEFAULT_SLIPPAGE_SIMULATION }
-        );
-        break;
-      case 'WITHDRAW':
-        expectedOutcome = await yearn.simulation._withdraw(
-          sourceTokenAddress,
-          targetTokenAddress,
-          sourceTokenAmount,
-          accountAddress,
-          { slippage: DEFAULT_SLIPPAGE_SIMULATION }
-        );
-        break;
-      default:
-        throw new Error(`getExpectedTransactionOutcome for '${transactionType}' not defined`);
-    }
-
-    console.log({ expectedOutcome });
+    const expectedOutcome: TransactionOutcome = await yearn.vaults.getExpectedTransactionOutcome({
+      transactionType,
+      sourceTokenAddress,
+      targetTokenAddress,
+      sourceTokenAmount,
+      accountAddress,
+      slippageTolerance: DEFAULT_SLIPPAGE_SIMULATION,
+      gasless,
+    });
 
     return expectedOutcome;
   }
@@ -242,6 +235,32 @@ export class VaultServiceImpl implements VaultService {
     });
   }
 
+  public async gaslessDeposit(props: GaslessDepositProps): Promise<string> {
+    const { network, accountAddress, tokenAddress, vaultAddress, tokenAmount, vaultAmount, feeAmount } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.vaults.gaslessDeposit({
+      vaultAddress,
+      tokenAddress,
+      tokenAmount,
+      vaultAmount,
+      feeAmount,
+      accountAddress,
+    });
+  }
+
+  public async gaslessWithdraw(props: GaslessWithdrawProps): Promise<string> {
+    const { network, accountAddress, tokenAddress, vaultAddress, tokenAmount, vaultAmount, feeAmount } = props;
+    const yearn = this.yearnSdk.getInstanceOf(network);
+    return await yearn.vaults.gaslessWithdraw({
+      vaultAddress,
+      tokenAddress,
+      tokenAmount,
+      vaultAmount,
+      feeAmount,
+      accountAddress,
+    });
+  }
+
   public async migrate(props: MigrateProps): Promise<TransactionResponse> {
     const { network, vaultFromAddress, vaultToAddress, migrationContractAddress } = props;
     const { triCryptoVaultMigrator } = this.config.CONTRACT_ADDRESSES;
@@ -267,17 +286,17 @@ export class VaultServiceImpl implements VaultService {
   }
 
   public async approveDeposit(props: ApproveDepositProps): Promise<TransactionResponse> {
-    const { network, tokenAddress, amount, accountAddress, vaultAddress } = props;
+    const { network, tokenAddress, amount, accountAddress, vaultAddress, gasless } = props;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
-    return yearn.vaults.approveDeposit(accountAddress, vaultAddress, tokenAddress, amount);
+    return yearn.vaults.approveDeposit(accountAddress, vaultAddress, tokenAddress, amount, gasless);
   }
 
-  public async approveZapOut(props: ApproveZapOutProps): Promise<TransactionResponse> {
-    const { network, vaultAddress, tokenAddress, accountAddress, amount } = props;
+  public async approveWithdraw(props: ApproveWithdrawProps): Promise<TransactionResponse> {
+    const { network, vaultAddress, tokenAddress, accountAddress, amount, gasless } = props;
     const yearn = this.yearnSdk.getInstanceOf(network);
 
-    return yearn.vaults.approveWithdraw(accountAddress, vaultAddress, tokenAddress, amount);
+    return yearn.vaults.approveWithdraw(accountAddress, vaultAddress, tokenAddress, amount, gasless);
   }
 
   public async getDepositAllowance({
@@ -285,9 +304,10 @@ export class VaultServiceImpl implements VaultService {
     vaultAddress,
     tokenAddress,
     accountAddress,
+    gasless,
   }: GetDepositAllowanceProps): Promise<TokenAllowance> {
     const yearn = this.yearnSdk.getInstanceOf(network);
-    return await yearn.vaults.getDepositAllowance(accountAddress, vaultAddress, tokenAddress);
+    return await yearn.vaults.getDepositAllowance(accountAddress, vaultAddress, tokenAddress, gasless);
   }
 
   public async getWithdrawAllowance({
@@ -295,8 +315,9 @@ export class VaultServiceImpl implements VaultService {
     vaultAddress,
     tokenAddress,
     accountAddress,
+    gasless,
   }: GetWithdrawAllowanceProps): Promise<TokenAllowance> {
     const yearn = this.yearnSdk.getInstanceOf(network);
-    return await yearn.vaults.getWithdrawAllowance(accountAddress, vaultAddress, tokenAddress);
+    return await yearn.vaults.getWithdrawAllowance(accountAddress, vaultAddress, tokenAddress, gasless);
   }
 }
