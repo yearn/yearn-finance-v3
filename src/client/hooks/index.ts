@@ -5,6 +5,7 @@ export * from './useDebounce';
 export * from './useExecute';
 export * from './useExecuteThunk';
 export * from './useIsMounting';
+export * from './useLoadingProgress';
 export * from './usePrevious';
 export * from './useQueryParams';
 export * from './useToggler';

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import { useAppSelector } from '@hooks';
+import { useAppSelector, useLoadingProgress } from '@hooks';
 import { VotingEscrowsSelectors } from '@store';
 import { Box, Text, Tabs, Tab, TabPanel, PageProgressBar, AnimatePresence, motion } from '@components/common';
 import { ViewContainer, Amount } from '@components/app';
@@ -30,11 +30,12 @@ export const VotingEscrowPage = () => {
   const [selectedTab, setSelectedTab] = useState('lock');
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
   const votingEscrowStatusMap = useAppSelector(VotingEscrowsSelectors.selectVotingEscrowsStatusMap);
-  const isLoading =
-    votingEscrowStatusMap.initiateVotingEscrows.loading ||
-    votingEscrowStatusMap.getVotingEscrows.loading ||
-    votingEscrowStatusMap.user.getUserVotingEscrowsPositions.loading ||
-    votingEscrowStatusMap.user.getUserVotingEscrowsMetadata.loading;
+  const [isLoading, loadingProgress] = useLoadingProgress([
+    votingEscrowStatusMap.initiateVotingEscrows.loading,
+    votingEscrowStatusMap.getVotingEscrows.loading,
+    votingEscrowStatusMap.user.getUserVotingEscrowsPositions.loading,
+    votingEscrowStatusMap.user.getUserVotingEscrowsMetadata.loading,
+  ]);
 
   const tabs = [
     { id: 'lock', label: 'Lock YFI', Component: <LockTab /> },
@@ -48,7 +49,7 @@ export const VotingEscrowPage = () => {
 
   return (
     <>
-      <PageProgressBar isLoading={isLoading} />
+      <PageProgressBar isLoading={isLoading} loadingProgress={loadingProgress} />
       <motion.div initial={'initial'} animate={'enter'} transition={{ duration: 1 }} variants={variants}>
         <ViewContainer noGap noOverflow>
           <Box center width={1} mt="8.8rem">

@@ -89,7 +89,6 @@ const StyledButton = styled.button<{
 
   ${(props) =>
     props.success &&
-    !props.disabled &&
     `
     background-color: ${props.theme.colors.txModalColors.success};
   `}
