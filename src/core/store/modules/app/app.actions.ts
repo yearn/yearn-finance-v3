@@ -127,8 +127,8 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
         dispatch(LabsActions.getUserLabsPositions({}));
         break;
       case 'veyfi':
-        await dispatch(VotingEscrowsActions.getUserVotingEscrowsPositions({ addresses }));
-        await dispatch(VotingEscrowsActions.getUserVotingEscrowsMetadata({ addresses }));
+        dispatch(VotingEscrowsActions.getUserVotingEscrowsPositions({ addresses }));
+        dispatch(VotingEscrowsActions.getUserVotingEscrowsMetadata({ addresses }));
         break;
     }
   },

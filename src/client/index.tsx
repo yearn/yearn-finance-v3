@@ -65,6 +65,32 @@ const GlobalStyle = createGlobalStyle`
     --onboard-spacing-5: 0.8rem;
 
     --onboard-modal-z-index: ${(props) => props.theme.zindex.onboardModal};
+
+    #nprogress {
+      pointer-events: none;
+      
+      .bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0.4rem;
+        background-color: ${(props) => props.theme.colors.primary};
+        z-index: ${(props) => props.theme.zindex.alerts};;
+      }
+
+      .spinner {
+        position: fixed;
+        display: block;
+        top: 1.6rem;
+        right: 1.6rem;
+        z-index: ${(props) => props.theme.zindex.alerts};;
+      }
+
+      .spinner-icon {
+        display: hidden;
+      }
+    }
   }
 
   a {

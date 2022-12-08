@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useAppSelector } from '@hooks';
 import { VotingEscrowsSelectors } from '@store';
-import { Box, Text, Tabs, Tab, TabPanel, AnimatePresence, motion } from '@components/common';
+import { Box, Text, Tabs, Tab, TabPanel, PageProgressBar, AnimatePresence, motion } from '@components/common';
 import { ViewContainer, Amount } from '@components/app';
 import { LockTab, ManageLockTab, ClaimUnlockedTab } from '@containers';
 import { humanize } from '@utils';
@@ -29,6 +29,12 @@ const StyledValue = styled(Text)`
 export const VotingEscrowPage = () => {
   const [selectedTab, setSelectedTab] = useState('lock');
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
+  const votingEscrowStatusMap = useAppSelector(VotingEscrowsSelectors.selectVotingEscrowsStatusMap);
+  const isLoading =
+    votingEscrowStatusMap.initiateVotingEscrows.loading ||
+    votingEscrowStatusMap.getVotingEscrows.loading ||
+    votingEscrowStatusMap.user.getUserVotingEscrowsPositions.loading ||
+    votingEscrowStatusMap.user.getUserVotingEscrowsMetadata.loading;
 
   const tabs = [
     { id: 'lock', label: 'Lock YFI', Component: <LockTab /> },
@@ -41,82 +47,88 @@ export const VotingEscrowPage = () => {
   ];
 
   return (
-    <motion.div initial={'initial'} animate={'enter'} transition={{ duration: 1 }} variants={variants}>
-      <ViewContainer noGap noOverflow>
-        <Box center width={1} mt="8.8rem">
-          <Text heading="h1" fontSize="8.8rem" lineHeight="10.4rem" m={0}>
-            veYFI
-          </Text>
-        </Box>
+    <>
+      <PageProgressBar isLoading={isLoading} />
+      <motion.div initial={'initial'} animate={'enter'} transition={{ duration: 1 }} variants={variants}>
+        <ViewContainer noGap noOverflow>
+          <Box center width={1} mt="8.8rem">
+            <Text heading="h1" fontSize="8.8rem" lineHeight="10.4rem" m={0}>
+              veYFI
+            </Text>
+          </Box>
 
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="center"
-          alignItems="center"
-          flexWrap="wrap"
-          width={1}
-          gap="5.6rem"
-          mt="5.6rem"
-          mb="5.6rem"
-        >
-          <Box center>
-            <StyledValue>
-              <Amount value={humanize('amount', votingEscrow?.balance, votingEscrow?.token.decimals, 4)} decimals={8} />
-            </StyledValue>
-            <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
-              Total Locked YFI
-            </Text>
-          </Box>
-          <Box center>
-            <StyledValue>
-              <Amount
-                value={humanize('amount', votingEscrow?.DEPOSIT.userDeposited, votingEscrow?.token.decimals, 4)}
-                decimals={8}
-              />
-            </StyledValue>
-            <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
-              Your Locked YFI
-            </Text>
-          </Box>
-          <Box center>
-            <StyledValue>
-              <Text fontFamily="Aeonik Mono">
-                {votingEscrow?.unlockDate?.toLocaleDateString().replaceAll('/', '.') ?? '-'}
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="center"
+            flexWrap="wrap"
+            width={1}
+            gap="5.6rem"
+            mt="5.6rem"
+            mb="5.6rem"
+          >
+            <Box center>
+              <StyledValue>
+                <Amount
+                  value={humanize('amount', votingEscrow?.balance, votingEscrow?.token.decimals, 4)}
+                  decimals={8}
+                />
+              </StyledValue>
+              <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
+                Total Locked YFI
               </Text>
-            </StyledValue>
-            <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
-              Expiration for the lock
-            </Text>
+            </Box>
+            <Box center>
+              <StyledValue>
+                <Amount
+                  value={humanize('amount', votingEscrow?.DEPOSIT.userDeposited, votingEscrow?.token.decimals, 4)}
+                  decimals={8}
+                />
+              </StyledValue>
+              <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
+                Your Locked YFI
+              </Text>
+            </Box>
+            <Box center>
+              <StyledValue>
+                <Text fontFamily="Aeonik Mono">
+                  {votingEscrow?.unlockDate?.toLocaleDateString().replaceAll('/', '.') ?? '-'}
+                </Text>
+              </StyledValue>
+              <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
+                Expiration for the lock
+              </Text>
+            </Box>
           </Box>
-        </Box>
 
-        <TabsContainer>
-          <Tabs value={selectedTab} onChange={(id) => setSelectedTab(id)}>
-            {tabs.map(({ id, label }) => (
-              <Tab key={`tab-label-${id}`} value={id}>
-                {label}
-              </Tab>
-            ))}
-          </Tabs>
-          <AnimatePresence exitBeforeEnter>
-            <motion.div
-              key={selectedTab}
-              initial={'initial'}
-              animate={'enter'}
-              exit={'exit'}
-              variants={variants}
-              transition={{ duration: 0.15 }}
-            >
-              {tabs.map(({ id, Component }) => (
-                <TabPanel key={`tab-panel-${id}`} value={id} tabValue={selectedTab}>
-                  {Component}
-                </TabPanel>
+          <TabsContainer>
+            <Tabs value={selectedTab} onChange={(id) => setSelectedTab(id)}>
+              {tabs.map(({ id, label }) => (
+                <Tab key={`tab-label-${id}`} value={id}>
+                  {label}
+                </Tab>
               ))}
-            </motion.div>
-          </AnimatePresence>
-        </TabsContainer>
-      </ViewContainer>
-    </motion.div>
+            </Tabs>
+            <AnimatePresence exitBeforeEnter>
+              <motion.div
+                key={selectedTab}
+                initial={'initial'}
+                animate={'enter'}
+                exit={'exit'}
+                variants={variants}
+                transition={{ duration: 0.15 }}
+              >
+                {tabs.map(({ id, Component }) => (
+                  <TabPanel key={`tab-panel-${id}`} value={id} tabValue={selectedTab}>
+                    {Component}
+                  </TabPanel>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          </TabsContainer>
+        </ViewContainer>
+      </motion.div>
+    </>
   );
 };

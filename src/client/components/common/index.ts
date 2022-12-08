@@ -12,6 +12,7 @@ export * from './Logo';
 export * from './Markdown';
 export * from './Modal';
 export * from './Motion';
+export * from './PageProgressBar';
 export * from './SearchInput';
 export * from './SeparatorLine';
 export * from './Sidemenu';

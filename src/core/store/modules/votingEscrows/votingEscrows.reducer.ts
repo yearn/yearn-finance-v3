@@ -118,6 +118,8 @@ const votingEscrowsReducer = createReducer(votingEscrowsInitialState, (builder) 
       if (!requestedAddresses.length && !positions.length) {
         state.user.userVotingEscrowsPositionsMap = {};
       }
+
+      state.statusMap.user.getUserVotingEscrowsPositions = {};
     })
     .addCase(getUserVotingEscrowsPositions.rejected, (state, { error }) => {
       state.statusMap.user.getUserVotingEscrowsPositions = { error: error.message };
