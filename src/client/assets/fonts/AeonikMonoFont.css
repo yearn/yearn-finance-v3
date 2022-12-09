@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'Aeonik Mono';
+  src: url('AeonikMono/AeonikMono-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Aeonik Mono';
+  src: url('AeonikMono/AeonikMono-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+}

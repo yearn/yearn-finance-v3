@@ -6,6 +6,8 @@ import {
   VaultService,
   TokenService,
   LabService,
+  VotingEscrowService,
+  GaugeService,
   GasService,
   TransactionService,
   SubscriptionService,
@@ -23,11 +25,14 @@ export interface ContextContainer {
   web3Provider: Web3Provider;
   yearnSdk: YearnSdk;
 }
+
 export interface ServiceContainer {
   userService: UserService;
   vaultService: VaultService;
   tokenService: TokenService;
   labService: LabService;
+  votingEscrowService: VotingEscrowService;
+  gaugeService: GaugeService;
   gasService: GasService;
   transactionService: TransactionService;
   subscriptionService: SubscriptionService;

@@ -5,6 +5,10 @@ export const useIsMounting = () => {
 
   useEffect(() => {
     isMounting.current = false;
+
+    return () => {
+      isMounting.current = false;
+    };
   }, []);
 
   return isMounting.current;

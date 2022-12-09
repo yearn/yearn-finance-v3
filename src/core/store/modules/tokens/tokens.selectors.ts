@@ -9,6 +9,8 @@ const selectTokensState = (state: RootState) => state.tokens;
 const selectTokensMap = (state: RootState) => state.tokens.tokensMap;
 const selectSelectedTokenAddress = (state: RootState) => state.tokens.selectedTokenAddress;
 const selectTokensUser = (state: RootState) => state.tokens.user;
+const selectUserTokensMap = (state: RootState) => state.tokens.user.userTokensMap;
+const selectUserTokensAllowancesMap = (state: RootState) => state.tokens.user.userTokensAllowancesMap;
 const selectUserTokensStatusMap = (state: RootState) => state.tokens.statusMap;
 const selectGetTokensStatus = (state: RootState) => state.tokens.statusMap.getTokens;
 const selectGetUserTokensStatus = (state: RootState) => state.tokens.statusMap.user.getUserTokens;
@@ -91,6 +93,8 @@ export const TokensSelectors = {
   selectTokensMap,
   selectSelectedTokenAddress,
   selectTokensUser,
+  selectUserTokensMap,
+  selectUserTokensAllowancesMap,
   selectUserTokensStatusMap,
   selectUserTokens,
   selectSummaryData,

@@ -20,6 +20,13 @@ import {
   EarningsDayData,
   StrategyMetadata,
   TokenAllowance,
+  VotingEscrow,
+  VotingEscrowDynamic,
+  VotingEscrowUserMetadata,
+  VotingEscrowTransactionType,
+  Gauge,
+  GaugeDynamic,
+  GaugeUserMetadata,
 } from '@yfi/sdk';
 
 import { Network } from './Blockchain';
@@ -101,4 +108,11 @@ export type {
   TokenAllowance,
   ZapInType,
   ZapOutType,
+  VotingEscrow,
+  VotingEscrowDynamic,
+  VotingEscrowUserMetadata,
+  VotingEscrowTransactionType,
+  Gauge,
+  GaugeDynamic,
+  GaugeUserMetadata,
 };

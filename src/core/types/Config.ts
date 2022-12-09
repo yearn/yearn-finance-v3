@@ -10,6 +10,7 @@ export interface Env {
   NETWORK: Network;
   USE_MAINNET_FORK: boolean;
   USE_SDK_MOCK: boolean;
+  USE_VEYFI_ROUTES: boolean;
   ALLOW_DEV_MODE: boolean;
   ETHEREUM_PROVIDER_HTTPS: string | undefined;
   FANTOM_PROVIDER_HTTPS: string | undefined;

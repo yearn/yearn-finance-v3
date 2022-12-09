@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import CountUp from 'react-countup';
+import styled from 'styled-components';
 
 import { Text, TextProps } from '@components/common';
 import { normalizeAmount, USDC_DECIMALS } from '@utils';
+
+const StyledText = styled(Text)`
+  font-family: ${({ theme }) => theme.globalFontAlt};
+`;
 
 export interface AmountProps extends TextProps {
   value: number | string;
@@ -72,8 +77,8 @@ export const Amount = ({
   }
 
   return (
-    <Text {...props}>
+    <StyledText {...props}>
       <CountUp start={initialAmount} end={amount} preserveValue duration={2.5} decimal="." separator="," {...format} />
-    </Text>
+    </StyledText>
   );
 };

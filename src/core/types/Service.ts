@@ -20,6 +20,14 @@ import {
   Overrides,
   Network,
   TokenAllowance,
+  VotingEscrow,
+  VotingEscrowDynamic,
+  VotingEscrowUserMetadata,
+  VotingEscrowTransactionType,
+  Gauge,
+  GaugeDynamic,
+  GaugeUserMetadata,
+  Weeks,
 } from '@types';
 
 // *************** USER ***************
@@ -252,6 +260,189 @@ export interface ClaimProps {
 }
 
 export interface ReinvestProps {
+  network: Network;
+  accountAddress: Address;
+}
+
+// *************** VOTING ESCROW ***************
+export interface VotingEscrowService {
+  getSupportedVotingEscrows: (props: GetSupportedVotingEscrowsProps) => Promise<VotingEscrow[]>;
+  getVotingEscrowsDynamicData: (props: GetVotingEscrowsDynamicDataProps) => Promise<VotingEscrowDynamic[]>;
+  getUserVotingEscrowsPositions: (props: GetUserVotingEscrowsPositionsProps) => Promise<Position[]>;
+  getUserVotingEscrowsMetadata: (props: GetUserVotingEscrowsMetadataProps) => Promise<VotingEscrowUserMetadata[]>;
+  getExpectedTransactionOutcome: (props: GetVotingEscrowExpectedTransactionOutcomeProps) => Promise<TransactionOutcome>;
+  getLockAllowance: (props: GetLockAllowanceProps) => Promise<TokenAllowance>;
+  approveLock: (props: ApproveLockProps) => Promise<TransactionResponse>;
+  lock: (props: VotingEscrowLockProps) => Promise<TransactionResponse>;
+  increaseLockAmount: (props: IncreaseLockAmountProps) => Promise<TransactionResponse>;
+  extendLockTime: (props: ExtendLockTimeProps) => Promise<TransactionResponse>;
+  withdrawLocked: (props: WithdrawLockedProps) => Promise<TransactionResponse>;
+  withdrawUnlocked: (props: WithdrawUnlockedProps) => Promise<TransactionResponse>;
+  mint: (props: MintProps) => Promise<TransactionResponse>;
+}
+
+export interface GetSupportedVotingEscrowsProps {
+  network: Network;
+  addresses?: Address[];
+}
+
+export interface GetVotingEscrowsDynamicDataProps {
+  network: Network;
+  addresses?: Address[];
+}
+
+export interface GetUserVotingEscrowsPositionsProps {
+  network: Network;
+  accountAddress: Address;
+  addresses?: Address[];
+}
+
+export interface GetUserVotingEscrowsMetadataProps {
+  network: Network;
+  accountAddress: Address;
+  addresses?: Address[];
+}
+
+export interface GetVotingEscrowExpectedTransactionOutcomeProps {
+  network: Network;
+  accountAddress: Address;
+  transactionType: VotingEscrowTransactionType;
+  tokenAddress: Address;
+  votingEscrowAddress: Address;
+  amount?: Wei;
+  time?: Weeks;
+}
+
+export interface GetLockAllowanceProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  votingEscrowAddress: Address;
+}
+
+export interface ApproveLockProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  votingEscrowAddress: Address;
+  amount: Wei;
+}
+
+export interface VotingEscrowLockProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  votingEscrowAddress: Address;
+  amount: Wei;
+  time: Weeks;
+}
+
+export interface IncreaseLockAmountProps {
+  network: Network;
+  accountAddress: Address;
+  votingEscrowAddress: Address;
+  amount: Wei;
+}
+
+export interface ExtendLockTimeProps {
+  network: Network;
+  accountAddress: Address;
+  votingEscrowAddress: Address;
+  time: Weeks;
+}
+
+export interface WithdrawLockedProps {
+  network: Network;
+  accountAddress: Address;
+  votingEscrowAddress: Address;
+}
+
+export interface WithdrawUnlockedProps {
+  network: Network;
+  accountAddress: Address;
+  votingEscrowAddress: Address;
+}
+
+export interface MintProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  amount: Wei;
+}
+
+// *************** GAUGE ***************
+export interface GaugeService {
+  getSupportedGauges: (props: GetSupportedGaugesProps) => Promise<Gauge[]>;
+  getGaugesDynamicData: (props: GetGaugesDynamicDataProps) => Promise<GaugeDynamic[]>;
+  getUserGaugesPositions: (props: GetUserGaugesPositionsProps) => Promise<Position[]>;
+  getUserGaugesMetadata: (props: GetUserGaugesMetadataProps) => Promise<GaugeUserMetadata[]>;
+  getStakeAllowance: (props: GetStakeAllowanceProps) => Promise<TokenAllowance>;
+  approveStake: (props: ApproveStakeProps) => Promise<TransactionResponse>;
+  stake: (props: GaugeStakeProps) => Promise<TransactionResponse>;
+  unstake: (props: GaugeUnstakeProps) => Promise<TransactionResponse>;
+  claimRewards: (props: ClaimRewardsProps) => Promise<TransactionResponse>;
+  claimAllRewards: (props: ClaimAllRewardsProps) => Promise<TransactionResponse>;
+}
+
+export interface GetSupportedGaugesProps {
+  network: Network;
+  addresses?: Address[];
+}
+
+export interface GetGaugesDynamicDataProps {
+  network: Network;
+  addresses?: Address[];
+}
+
+export interface GetUserGaugesPositionsProps {
+  network: Network;
+  accountAddress: Address;
+  addresses?: Address[];
+}
+
+export interface GetUserGaugesMetadataProps {
+  network: Network;
+  accountAddress: Address;
+  addresses?: Address[];
+}
+
+export interface GetStakeAllowanceProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  gaugeAddress: Address;
+}
+
+export interface ApproveStakeProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  gaugeAddress: Address;
+  amount: Wei;
+}
+
+export interface GaugeStakeProps {
+  network: Network;
+  accountAddress: Address;
+  tokenAddress: Address;
+  gaugeAddress: Address;
+  amount: Wei;
+}
+
+export interface GaugeUnstakeProps {
+  network: Network;
+  accountAddress: Address;
+  gaugeAddress: Address;
+  amount: Wei;
+}
+
+export interface ClaimRewardsProps {
+  network: Network;
+  accountAddress: Address;
+  gaugeAddress: Address;
+}
+
+export interface ClaimAllRewardsProps {
   network: Network;
   accountAddress: Address;
 }
