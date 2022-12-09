@@ -1,6 +1,6 @@
 import * as awilix from 'awilix';
 
-import { BlocknativeWalletImpl } from '@frameworks/blocknative';
+import { BlocknativeWalletImpl, Web3OnboardWalletImpl } from '@frameworks/blocknative';
 import { EthersWeb3ProviderImpl } from '@frameworks/ethers';
 import { YearnSdkImpl } from '@frameworks/yearnSdk';
 import {
@@ -9,11 +9,14 @@ import {
   VaultServiceImpl,
   LabServiceImpl,
   GasServiceImpl,
+  VotingEscrowServiceImpl,
+  GaugeServiceImpl,
   TransactionServiceImpl,
   SubscriptionServiceImpl,
 } from '@services';
 import { getConfig } from '@config';
 import { DIContainer, ContextContainer, ServiceContainer, ConfigContainer } from '@types';
+import { isLedgerLive } from '@src/utils';
 
 export class Container implements DIContainer {
   private container: awilix.AwilixContainer;
@@ -29,8 +32,11 @@ export class Container implements DIContainer {
   }
 
   private registerContext() {
+    const wallet = isLedgerLive()
+      ? awilix.asClass(BlocknativeWalletImpl).singleton()
+      : awilix.asClass(Web3OnboardWalletImpl).singleton();
     this.container.register({
-      wallet: awilix.asClass(BlocknativeWalletImpl).singleton(),
+      wallet,
       web3Provider: awilix.asClass(EthersWeb3ProviderImpl).singleton(),
       yearnSdk: awilix.asClass(YearnSdkImpl).singleton(),
     });
@@ -42,6 +48,8 @@ export class Container implements DIContainer {
       userService: awilix.asClass(UserServiceImpl),
       vaultService: awilix.asClass(VaultServiceImpl),
       labService: awilix.asClass(LabServiceImpl),
+      votingEscrowService: awilix.asClass(VotingEscrowServiceImpl),
+      gaugeService: awilix.asClass(GaugeServiceImpl),
       gasService: awilix.asClass(GasServiceImpl),
       transactionService: awilix.asClass(TransactionServiceImpl),
       subscriptionService: awilix.asClass(SubscriptionServiceImpl),
@@ -68,6 +76,8 @@ export class Container implements DIContainer {
       userService: this.container.cradle.userService,
       vaultService: this.container.cradle.vaultService,
       labService: this.container.cradle.labService,
+      votingEscrowService: this.container.cradle.votingEscrowService,
+      gaugeService: this.container.cradle.gaugeService,
       gasService: this.container.cradle.gasService,
       transactionService: this.container.cradle.transactionService,
       subscriptionService: this.container.cradle.subscriptionService,

@@ -249,7 +249,7 @@ const signZapOut = createAsyncThunk<
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const vaultData = vaults.vaultsMap[vaultAddress];
     const tokenData = tokens.tokensMap[vaultData.tokenId];
@@ -313,7 +313,7 @@ const depositVault = createAsyncThunk<
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const vaultData = vaults.vaultsMap[vaultAddress];
     const tokenData = tokens.tokensMap[tokenAddress];
@@ -384,7 +384,7 @@ const withdrawVault = createAsyncThunk<
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const vaultData = vaults.vaultsMap[vaultAddress];
     const tokenData = tokens.tokensMap[vaultData.tokenId];
@@ -529,7 +529,7 @@ const migrateVault = createAsyncThunk<
       currentNetwork: network.current,
       walletNetwork: wallet.networkVersion ? getNetwork(wallet.networkVersion) : undefined,
     });
-    if (networkError) throw networkError;
+    if (networkError) throw new Error(networkError);
 
     const vaultData = vaults.vaultsMap[vaultFromAddress];
     const userDepositPositionData = vaults.user.userVaultsPositionsMap[vaultFromAddress].DEPOSIT;

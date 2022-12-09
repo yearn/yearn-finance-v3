@@ -7,30 +7,25 @@ import { isValidAddress, getProviderType, getNetwork } from '@utils';
 
 import { NetworkActions } from '../network/network.actions';
 
-const walletChange = createAction<{ walletName: string }>('wallet/walletChange');
-const addressChange = createAction<{ address: string }>('wallet/addressChange');
-const networkChange = createAction<{ network: number }>('wallet/networkChange');
-const balanceChange = createAction<{ balance: string }>('wallet/balanceChange');
+const walletChange = createAction<{ walletName: string | undefined }>('wallet/walletChange');
+const addressChange = createAction<{ address: string | undefined }>('wallet/addressChange');
+const networkChange = createAction<{ network: number | undefined }>('wallet/networkChange');
 const ensChange = createAction<{ ens: string | undefined }>('wallet/ensChange');
 
 const getSubscriptions = (dispatch: AppDispatch, customSubscriptions?: Subscriptions, wallet?: Wallet) => ({
-  wallet: (wallet: any) => {
+  wallet: (wallet: any | undefined) => {
     dispatch(walletChange({ walletName: wallet.name }));
     if (customSubscriptions && customSubscriptions.wallet) customSubscriptions.wallet(wallet);
   },
-  address: (address: string) => {
+  address: (address: string | undefined) => {
     dispatch(addressChange({ address }));
     if (customSubscriptions && customSubscriptions.address) customSubscriptions.address(address);
   },
-  network: (network: number) => {
+  network: (network: number | undefined) => {
     dispatch(networkChange({ network }));
     if (customSubscriptions && customSubscriptions.network) customSubscriptions.network(network);
   },
-  balance: (balance: string) => {
-    dispatch(balanceChange({ balance }));
-    if (customSubscriptions && customSubscriptions.balance) customSubscriptions.balance(balance);
-  },
-  ens: (ens: any) => {
+  ens: (ens: any | undefined) => {
     if (wallet?.name !== 'Unstoppable') dispatch(ensChange({ ens: ens?.name }));
     if (customSubscriptions && customSubscriptions.ens) customSubscriptions.ens(ens);
   },
@@ -61,14 +56,16 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
     if (!wallet.isCreated) {
       const customSubscriptions: Subscriptions = {
         wallet: async (wallet) => {
-          web3Provider.register('wallet', getEthersProvider(wallet.provider));
-          const providerType = getProviderType(network);
-          const sdkInstance = yearnSdk.getInstanceOf(network);
-          sdkInstance.context.setProvider({
-            read: web3Provider.getInstanceOf(providerType),
-            write: web3Provider.getInstanceOf('wallet'),
-          });
-          if (wallet.name === 'Unstoppable' && wallet.instance?.user) {
+          if (wallet && wallet.provider) {
+            web3Provider.register('wallet', getEthersProvider(wallet.provider));
+            const providerType = getProviderType(network);
+            const sdkInstance = yearnSdk.getInstanceOf(network);
+            sdkInstance.context.setProvider({
+              read: web3Provider.getInstanceOf(providerType),
+              write: web3Provider.getInstanceOf('wallet'),
+            });
+          }
+          if (wallet && wallet.name === 'Unstoppable' && wallet.instance?.user) {
             const user = await wallet.instance.user();
             dispatch(ensChange({ ens: user.sub }));
           }
@@ -85,7 +82,7 @@ const walletSelect = createAsyncThunk<{ isConnected: boolean }, WalletSelectProp
           );
           if (wallet.isConnected && supportedNetworkSettings) {
             web3Provider.register('wallet', getEthersProvider(wallet.provider as ExternalProvider));
-            const network = getNetwork(networkId);
+            const network = getNetwork(networkId ?? 0);
             const providerType = getProviderType(network);
             const sdkInstance = yearnSdk.getInstanceOf(network);
             sdkInstance.context.setProvider({
@@ -134,7 +131,6 @@ export const WalletActions = {
   walletChange,
   addressChange,
   networkChange,
-  balanceChange,
   ensChange,
   walletSelect,
   changeWalletTheme,

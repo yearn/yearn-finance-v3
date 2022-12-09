@@ -9,15 +9,13 @@ export const walletInitialState: WalletState = {
   selectedAddress: undefined,
   addressEnsName: undefined,
   networkVersion: undefined,
-  balance: undefined,
   name: undefined,
   isConnected: false,
   isLoading: false,
   error: undefined,
 };
 
-const { addressChange, balanceChange, networkChange, walletChange, ensChange, walletSelect, getAddressEnsName } =
-  WalletActions;
+const { addressChange, networkChange, walletChange, ensChange, walletSelect, getAddressEnsName } = WalletActions;
 
 const walletReducer = createReducer(walletInitialState, (builder) => {
   builder
@@ -29,9 +27,6 @@ const walletReducer = createReducer(walletInitialState, (builder) => {
     })
     .addCase(networkChange, (state, { payload: { network } }) => {
       state.networkVersion = network;
-    })
-    .addCase(balanceChange, (state, { payload: { balance } }) => {
-      state.balance = balance;
     })
     .addCase(ensChange, (state, { payload: { ens } }) => {
       state.addressEnsName = ens;

@@ -10,6 +10,8 @@ import { Routes } from '@routes';
 import { Themable } from '@containers';
 
 import '@assets/fonts/RobotoFont.css';
+import '@assets/fonts/AeonikFont.css';
+import '@assets/fonts/AeonikMonoFont.css';
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -45,6 +47,50 @@ const GlobalStyle = createGlobalStyle`
     flex-direction: column;
     height: 100%;
     width: 100%;
+  }
+
+  :root {
+    --onboard-font-size-1: 4.8rem;
+    --onboard-font-size-2: 3.6rem;
+    --onboard-font-size-3: 2.4rem;
+    --onboard-font-size-4: 2rem;
+    --onboard-font-size-5: 1.6rem;
+    --onboard-font-size-6: 1.4rem;
+    --onboard-font-size-7: 1.2rem;
+
+    --onboard-spacing-1: 4.8rem;
+    --onboard-spacing-2: 3.2rem;
+    --onboard-spacing-3: 2.4rem;
+    --onboard-spacing-4: 1.6rem;
+    --onboard-spacing-5: 0.8rem;
+
+    --onboard-modal-z-index: ${(props) => props.theme.zindex.onboardModal};
+
+    #nprogress {
+      pointer-events: none;
+      
+      .bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0.4rem;
+        background-color: ${(props) => props.theme.colors.primary};
+        z-index: ${(props) => props.theme.zindex.alerts};;
+      }
+
+      .spinner {
+        position: fixed;
+        display: block;
+        top: 1.6rem;
+        right: 1.6rem;
+        z-index: ${(props) => props.theme.zindex.alerts};;
+      }
+
+      .spinner-icon {
+        display: hidden;
+      }
+    }
   }
 
   a {

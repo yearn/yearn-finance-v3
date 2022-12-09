@@ -13,4 +13,6 @@ export type ModalName =
   | 'backscratcherReinvestTx'
   | 'labDepositTx'
   | 'labWithdrawTx'
-  | 'labStakeTx';
+  | 'labStakeTx'
+  | 'gaugeStakeTx'
+  | 'gaugeUnstakeTx';

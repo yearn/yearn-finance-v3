@@ -9,6 +9,7 @@ import { WalletActions } from '../wallet/wallet.actions';
 import { TokensActions } from '../tokens/tokens.actions';
 import { VaultsActions } from '../vaults/vaults.actions';
 import { LabsActions } from '../labs/labs.actions';
+import { VotingEscrowsActions } from '../votingEscrows/votingEscrows.actions';
 import { AlertsActions } from '../alerts/alerts.actions';
 import { NetworkActions } from '../network/network.actions';
 import { PartnerActions } from '../partner/partner.actions';
@@ -64,7 +65,7 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
   } else if (wallet.name && wallet.name !== 'Iframe') {
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
-  dispatch(checkExternalServicesStatus());
+  // dispatch(checkExternalServicesStatus());
 
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
@@ -90,6 +91,9 @@ const getAppData = createAsyncThunk<void, { network: Network; route: Route; addr
         break;
       case 'labs':
         await dispatch(LabsActions.initiateLabs());
+        break;
+      case 'veyfi':
+        await dispatch(VotingEscrowsActions.initiateVotingEscrows());
         break;
     }
   },
@@ -122,6 +126,10 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
       case 'labs':
         dispatch(LabsActions.getUserLabsPositions({}));
         break;
+      case 'veyfi':
+        dispatch(VotingEscrowsActions.getUserVotingEscrowsPositions({ addresses }));
+        dispatch(VotingEscrowsActions.getUserVotingEscrowsMetadata({ addresses }));
+        break;
     }
   },
   {
@@ -136,6 +144,7 @@ const getUserAppData = createAsyncThunk<void, { network: Network; route: Route; 
 /*                                  Services                                  */
 /* -------------------------------------------------------------------------- */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const checkExternalServicesStatus = createAsyncThunk<void, void, ThunkAPI>(
   'app/checkExternalServicesStatus',
   async (_arg, { dispatch, extra }) => {
