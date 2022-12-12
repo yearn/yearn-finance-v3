@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { formatAmount, normalizeAmount, toBN } from '@utils';
 import { useAppTranslation } from '@hooks';
+import { Unit } from '@types';
 
 import { TransactionControls } from '../TransactionControls';
 import { TransactionFees } from '../TransactionFees';
@@ -36,6 +37,13 @@ interface Asset {
   yield?: string;
 }
 
+interface GaslessInfo {
+  amount: Unit;
+  fee: Unit;
+  expected: Unit;
+  symbol: string;
+}
+
 interface TransactionProps {
   transactionLabel?: string;
   transactionCompleted: boolean;
@@ -64,6 +72,7 @@ interface TransactionProps {
   allowGasless?: boolean;
   isGasless?: boolean;
   onToggleGasless?: (state: boolean) => void;
+  gaslessInfo?: GaslessInfo;
   loadingText?: string;
   onClose?: () => void;
 }
@@ -101,6 +110,7 @@ export const Transaction: FC<TransactionProps> = (props) => {
     allowGasless,
     isGasless,
     onToggleGasless,
+    gaslessInfo,
     loadingText,
     onClose,
   } = props;
@@ -164,9 +174,9 @@ export const Transaction: FC<TransactionProps> = (props) => {
         displayGuidance={displayTargetGuidance}
       />
 
-      <TransactionFees zapService={zapService} />
-
       <TransactionControls allowGasless={allowGasless} isGasless={isGasless} onToggleGasless={onToggleGasless} />
+
+      <TransactionFees zapService={zapService} gaslessInfo={gaslessInfo} />
 
       {generalStatus.error && <TxError errorType="warning" errorTitle={generalStatus.error} />}
 

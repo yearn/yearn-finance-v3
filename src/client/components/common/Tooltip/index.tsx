@@ -29,6 +29,7 @@ const StyledTooltip = styled.div`
   stroke: currentColor;
   user-select: none;
   border-radius: ${({ theme }) => theme.globalRadius};
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.16);
   position: relative;
   font-size: 1.6rem;
   padding: 0.8rem;

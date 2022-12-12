@@ -28,6 +28,7 @@ import {
   validateNetwork,
   formatApy,
   validateAllowance,
+  toUnit,
 } from '@utils';
 import { getConfig } from '@config';
 
@@ -221,10 +222,6 @@ export const DepositTx: FC<DepositTxProps> = ({
   const expectedAmountValue = toBN(debouncedAmount).gt(0)
     ? normalizeAmount(expectedTxOutcome?.targetTokenAmountUsdc, USDC_DECIMALS)
     : '0';
-  // const expectedAmountStatus = {
-  //   error: expectedTxOutcomeStatus.error || error,
-  //   loading: expectedTxOutcomeStatus.loading || isDebouncePending,
-  // };
 
   const depositsDisabledError =
     selectedVault.depositsDisabled || selectedVault.hideIfNoDeposits ? 'Vault Deposits Disabled' : undefined;
@@ -248,6 +245,15 @@ export const DepositTx: FC<DepositTxProps> = ({
   const isEthToWethZap =
     selectedSellTokenAddress === CONTRACT_ADDRESSES.ETH && selectedVault.address === CONTRACT_ADDRESSES.YVWETH;
   const zapService = isZap && !isEthToWethZap ? selectedVault.zapInWith : undefined;
+  const gaslessInfo =
+    allowGasless && isGasless && expectedTxOutcome
+      ? {
+          amount: debouncedAmount,
+          fee: toUnit(expectedTxOutcome.sourceTokenAmountFee, selectedSellToken.decimals),
+          expected: toUnit(expectedTxOutcome.targetUnderlyingTokenAmount, selectedSellToken.decimals),
+          symbol: selectedSellToken.symbol,
+        }
+      : undefined;
 
   const onSelectedSellTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -365,6 +371,7 @@ export const DepositTx: FC<DepositTxProps> = ({
       allowGasless={allowGasless}
       isGasless={isGasless}
       onToggleGasless={setIsGasless}
+      gaslessInfo={gaslessInfo}
       loadingText={loadingText}
       onClose={onClose}
     />

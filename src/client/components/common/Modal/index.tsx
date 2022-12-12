@@ -34,7 +34,7 @@ const StyledModal = styled.div`
   width: 32rem;
   height: 32rem;
   max-width: 85%;
-  max-height: 85%;
+  max-height: 95%;
 `;
 
 export interface ModalProps {

@@ -213,6 +213,20 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
   const isWethToEthZap =
     selectedTargetTokenAddress === CONTRACT_ADDRESSES.ETH && selectedVault.address === CONTRACT_ADDRESSES.YVWETH;
   const zapService = isZap && !isWethToEthZap ? selectedVault.zapOutWith : undefined;
+  const feesInUnderlying = calculateUnderlyingAmount({
+    shareAmount: toUnit(expectedTxOutcome?.sourceTokenAmountFee, parseInt(selectedVault.decimals)),
+    pricePerShare: selectedVault.pricePerShare,
+    underlyingTokenDecimals: selectedVault.token.decimals.toString(),
+  });
+  const gaslessInfo =
+    allowGasless && isGasless && expectedTxOutcome
+      ? {
+          amount: debouncedAmount,
+          fee: toUnit(feesInUnderlying, selectedVault.token.decimals),
+          expected: toUnit(expectedTxOutcome.targetTokenAmount, selectedVault.token.decimals),
+          symbol: selectedVault.token.symbol,
+        }
+      : undefined;
 
   const onSelectedTargetTokenChange = (tokenAddress: string) => {
     setAmount('');
@@ -328,6 +342,7 @@ export const WithdrawTx: FC<WithdrawTxProps> = ({ header, onClose, children, ...
       allowGasless={allowGasless}
       isGasless={isGasless}
       onToggleGasless={setIsGasless}
+      gaslessInfo={gaslessInfo}
       loadingText={loadingText}
       onClose={onClose}
     />

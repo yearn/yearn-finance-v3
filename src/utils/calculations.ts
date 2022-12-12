@@ -12,7 +12,7 @@ interface CalculateSharesAmountProps {
 
 export function calculateSharesAmount(props: CalculateSharesAmountProps): Wei {
   const { amount, decimals, pricePerShare } = props;
-  if (amount.isNaN()) return '0';
+  if (amount.isNaN() || amount.eq(0)) return '0';
   const sharePrice = toUnit(pricePerShare, parseInt(decimals));
   const ONE_UNIT = toBN('10').pow(decimals);
   return amount.div(sharePrice).times(ONE_UNIT).toFixed(0);
@@ -27,7 +27,7 @@ interface CalculateUnderlyingAmountProps {
 export function calculateUnderlyingAmount(props: CalculateUnderlyingAmountProps): Wei {
   const { underlyingTokenDecimals, pricePerShare } = props;
   const amount = toBN(props.shareAmount);
-  if (amount.isNaN()) return '0';
+  if (amount.isNaN() || amount.eq(0)) return '0';
   const sharePrice = toUnit(pricePerShare, parseInt(underlyingTokenDecimals));
   const ONE_UNIT = toBN('10').pow(underlyingTokenDecimals);
   return amount.times(sharePrice).times(ONE_UNIT).toFixed(0);
