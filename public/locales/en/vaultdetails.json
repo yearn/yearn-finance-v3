@@ -6,7 +6,10 @@
   "overview-panel": {
     "about": "About",
     "apy": "APY",
+    "fees": "Vault Fees",
     "header": "Overview",
+    "management": "Management",
+    "performance": "Performance",
     "strategies": "Strategies",
     "total-assets": "Total assets",
     "type": "Type",
