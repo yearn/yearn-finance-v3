@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useAppSelector, useLoadingProgress } from '@hooks';
 import { VotingEscrowsSelectors } from '@store';
 import { Box, Text, Tabs, Tab, TabPanel, PageProgressBar, AnimatePresence, motion } from '@components/common';
-import { ViewContainer, Amount } from '@components/app';
+import { ViewContainer } from '@components/app';
 import { LockTab, ManageLockTab, ClaimUnlockedTab } from '@containers';
 import { humanize } from '@utils';
 
@@ -71,10 +71,11 @@ export const VotingEscrowPage = () => {
           >
             <Box center>
               <StyledValue>
-                <Amount
-                  value={humanize('amount', votingEscrow?.balance, votingEscrow?.token.decimals, 4)}
-                  decimals={8}
-                />
+                <Text fontFamily="Aeonik Mono">
+                  {humanize('amount', votingEscrow?.balance, votingEscrow?.token.decimals, 4) === '0'
+                    ? '0.0000'
+                    : humanize('amount', votingEscrow?.balance, votingEscrow?.token.decimals, 4)}
+                </Text>
               </StyledValue>
               <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
                 Total Locked YFI
@@ -82,10 +83,11 @@ export const VotingEscrowPage = () => {
             </Box>
             <Box center>
               <StyledValue>
-                <Amount
-                  value={humanize('amount', votingEscrow?.DEPOSIT.userDeposited, votingEscrow?.token.decimals, 4)}
-                  decimals={8}
-                />
+                <Text fontFamily="Aeonik Mono">
+                  {humanize('amount', votingEscrow?.DEPOSIT.userDeposited, votingEscrow?.token.decimals, 4) === '0'
+                    ? '0.0000'
+                    : humanize('amount', votingEscrow?.DEPOSIT.userDeposited, votingEscrow?.token.decimals, 4)}
+                </Text>
               </StyledValue>
               <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
                 Your Locked YFI
