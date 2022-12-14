@@ -2,7 +2,7 @@ import { useAppSelector, useExecuteThunk } from '@hooks';
 import { AlertsActions, VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { humanize, toBN } from '@utils';
+import { toBN, toUnit } from '@utils';
 
 export const ClaimUnlockedTab = () => {
   const [openAlert] = useExecuteThunk(AlertsActions.openAlert);
@@ -45,7 +45,7 @@ export const ClaimUnlockedTab = () => {
         <Box display="flex" flexDirection={['column', 'column', 'row']} alignItems="center" gap="2.4rem">
           <AmountInput
             label="Unlocked YFI"
-            amount={humanize('amount', unlockedAmount, votingEscrow?.decimals)}
+            amount={toUnit(unlockedAmount, votingEscrow?.decimals ?? 18)}
             width={[1, 1, 1 / 2]}
             disabled
           />
