@@ -11,6 +11,7 @@ const MAX_LOCK_TIME = '209'; // Weeks
 const MIN_LOCK_TIME = '1'; // Weeks
 const MIN_LOCK_AMOUNT = '1';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Bullet = styled.li`
   list-style-type: disc;
   margin-left: -1rem;
@@ -184,11 +185,11 @@ export const LockTab = () => {
         <Text mt="2.4rem">{t('veyfi:lock-tab.lock-section.desc-1')}</Text>
         <br />
         <Text>{t('veyfi:lock-tab.lock-section.desc-2')}</Text>
-        <ul>
+        {/* <ul>
           <Bullet>{t('veyfi:lock-tab.lock-section.bullet-1')}</Bullet>
           <Bullet>{t('veyfi:lock-tab.lock-section.bullet-2')}</Bullet>
           <Bullet>{t('veyfi:lock-tab.lock-section.bullet-3')}</Bullet>
-        </ul>
+        </ul> */}
       </Box>
       <Box mt={['-4rem', '5.6rem']}>
         <Box display="flex" flexDirection={['column', 'column', 'row']} gap="2.4rem">

@@ -1,12 +1,9 @@
 {
   "lock-tab": {
     "lock-section": {
-      "bullet-1": "Governance rights (including over gauge weights and how staking rewards are distributed across yVaults).",
-      "bullet-2": "Bought back YFI through boosted yield on yVault deposits and a share of all unearned gauge rewards.",
-      "bullet-3": "Early exit penalty fees. (When they exit early, you get paid).",
-      "desc-1": "Lock your YFI for veYFI. The longer you lock for, the more gauge boost weight you'll recieve. 'But ser, why lock?'",
-      "desc-2": "Locking YFI for veYFI gives you:",
-      "header": "YFI holders, time to Lock 'N Load"
+      "desc-1": "Lock your YFI for veYFI to take part in Yearn governance.",
+      "desc-2": "Please note, governance is currently the only use for veYFI until the full platform launches ‘soon’. Stay tuned anon.",
+      "header": "YFI holders, time to Lock' ‘N Load"
     },
     "lock-period": "Lock period (weeks)",
     "locking": "Locking",
