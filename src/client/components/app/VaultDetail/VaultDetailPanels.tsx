@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { Serie } from '@nivo/line';
 
-import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, isCustomApyType } from '@utils';
+import { formatApy, formatAmount, USDC_DECIMALS, humanize, formatUsd, formatPercent, isCustomApyType } from '@utils';
 import { AppContext } from '@context';
 import { useAppTranslation } from '@hooks';
 import { device } from '@themes/default';
@@ -112,17 +112,46 @@ const OverviewInfo = styled(Card)`
   }
 `;
 
-const OverviewStrategies = styled.div`
+const OverviewAbout = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overflow-y: auto;
+`;
+
+const StrategiesCard = styled(Card)`
   display: flex;
   flex-direction: column;
   flex: 1;
   overflow: hidden;
-  overflow-y: auto;
-  max-height: 23rem;
+`;
 
-  > *:not(:first-child) {
-    margin-top: ${({ theme }) => theme.card.padding};
-  }
+const OverviewStrategies = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overflow-y: auto;
+  margin-top: ${({ theme }) => theme.card.padding};
+  gap: ${({ theme }) => theme.layoutPadding};
+  max-height: 24rem;
+`;
+
+const OverviewFees = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: ${({ theme }) => theme.card.padding};
+  gap: ${({ theme }) => theme.layoutPadding};
+`;
+
+const FeeCard = styled(Card)`
+  padding: ${({ theme }) => theme.layoutPadding};
+  width: 100%;
+`;
+
+const FeeValue = styled(Text)`
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-top: 0.8rem;
 `;
 
 const StyledText = styled(Text)<{ accent?: boolean }>`
@@ -400,31 +429,30 @@ export const VaultDetailPanels = ({
             </TokenInfo>
           </OverviewTokenInfo>
 
-          <StyledCardHeader header={t('vaultdetails:overview-panel.about')} />
           {selectedVault.token.description && (
-            <OverviewInfo variant="background" cardSize="micro">
-              <StyledCardContent>
-                <Markdown>{selectedVault.token.description}</Markdown>
-              </StyledCardContent>
-            </OverviewInfo>
-          )}
-
-          {!!strategies?.length && (
             <>
-              <StyledCardHeader header={t('vaultdetails:overview-panel.strategies')} />
-
-              <OverviewStrategies>
-                {strategies.map((strategy) => (
-                  <OverviewInfo variant="background" cardSize="micro" key={strategy.address}>
-                    <StyledCardHeader subHeader={strategy.name} />
-                    <StyledCardContent>
-                      <Markdown>{strategy.description}</Markdown>
-                    </StyledCardContent>
-                  </OverviewInfo>
-                ))}
-              </OverviewStrategies>
+              <StyledCardHeader header={t('vaultdetails:overview-panel.about')} />
+              <OverviewAbout>
+                <OverviewInfo variant="background" cardSize="micro">
+                  <StyledCardContent>
+                    <Markdown>{selectedVault.token.description}</Markdown>
+                  </StyledCardContent>
+                </OverviewInfo>
+              </OverviewAbout>
             </>
           )}
+
+          <StyledCardHeader header={t('vaultdetails:overview-panel.fees')} />
+          <OverviewFees>
+            <FeeCard variant="background" cardSize="micro">
+              <Text>{t('vaultdetails:overview-panel.management')}</Text>
+              <FeeValue>{formatPercent(selectedVault.apyMetadata?.fees.management?.toString() ?? '0', 0)}</FeeValue>
+            </FeeCard>
+            <FeeCard variant="background" cardSize="micro">
+              <Text>{t('vaultdetails:overview-panel.performance')}</Text>
+              <FeeValue>{formatPercent(selectedVault.apyMetadata?.fees.performance?.toString() ?? '0', 0)}</FeeValue>
+            </FeeCard>
+          </OverviewFees>
         </VaultOverview>
 
         <VaultActions>
@@ -449,6 +477,24 @@ export const VaultDetailPanels = ({
           </StyledTabPanel>
         </VaultActions>
       </Row>
+
+      {!!strategies?.length && (
+        <Row>
+          <StrategiesCard>
+            <StyledCardHeader header={t('vaultdetails:overview-panel.strategies')} />
+            <OverviewStrategies>
+              {strategies.map((strategy) => (
+                <OverviewInfo variant="background" cardSize="micro" key={strategy.address}>
+                  <StyledCardHeader subHeader={strategy.name} />
+                  <StyledCardContent>
+                    <Markdown>{strategy.description}</Markdown>
+                  </StyledCardContent>
+                </OverviewInfo>
+              ))}
+            </OverviewStrategies>
+          </StrategiesCard>
+        </Row>
+      )}
 
       {chartDataVisible && (
         <VaultChart>
