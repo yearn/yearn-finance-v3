@@ -88,7 +88,7 @@ export const VotingEscrowPage = () => {
             <Box center>
               <StyledValue>
                 <Text fontFamily="Aeonik Mono">
-                  {votingEscrow?.unlockDate?.toLocaleDateString().replaceAll('/', '.') ?? '-'}
+                  {votingEscrow?.unlockDate?.toLocaleDateString('en-CA').replaceAll('-', '.') ?? '-'}
                 </Text>
               </StyledValue>
               <Text fontSize="1.2rem" lineHeight="1.6rem" mt=".8rem">
