@@ -4,7 +4,7 @@ import { useAppSelector, useAppTranslation, useDebounce, useExecuteThunk, useIsM
 import { AlertsActions, VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks, humanize, format } from '@utils';
+import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks, format } from '@utils';
 
 const MAX_LOCK_TIME = '209'; // Weeks
 const MIN_LOCK_TIME = '2'; // Weeks
@@ -154,7 +154,7 @@ export const ManageLockTab = () => {
             <Box display="flex" flexDirection={['column', 'column', 'row']} gap="2.4rem">
               <AmountInput
                 label={t('veyfi:manage-tab.balance')}
-                amount={humanize('amount', votingEscrow?.DEPOSIT.userBalance, votingEscrow?.decimals)}
+                amount={toUnit(votingEscrow?.DEPOSIT.userBalance, votingEscrow?.decimals ?? 18)}
                 width={[1, 1, 1 / 2]}
                 disabled
               />
@@ -174,7 +174,7 @@ export const ManageLockTab = () => {
             >
               <AmountInput
                 label={t('veyfi:manage-tab.expected')}
-                amount={humanize('amount', exitResultAmount, votingEscrow?.token.decimals)}
+                amount={toUnit(exitResultAmount, votingEscrow?.token.decimals ?? 18)}
                 message={`Penalty: ${format('percent', votingEscrow?.earlyExitPenaltyRatio?.toString(), 2)}`}
                 width={[1, 1, 1 / 2]}
                 disabled
