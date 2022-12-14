@@ -230,6 +230,29 @@ export const Vaults = () => {
     );
   };
 
+  const filters = [
+    {
+      label: 'All',
+      filterBy: () => true,
+    },
+    {
+      label: 'Yearn',
+      filterBy: (vault: VaultView) => !!vault.tags.isYearn,
+    },
+    {
+      label: 'Stable',
+      filterBy: (vault: VaultView) => !!vault.tags.isStable,
+    },
+    {
+      label: 'Curve',
+      filterBy: (vault: VaultView) => !!vault.tags.isCurve,
+    },
+    {
+      label: 'Balancer',
+      filterBy: (vault: VaultView) => !!vault.tags.isBalancer,
+    },
+  ];
+
   return (
     <ViewContainer>
       <StyledSliderCard
@@ -430,7 +453,7 @@ export const Vaults = () => {
                       <Text ellipsis>{displayName}</Text>
                     </>
                   ),
-                  width: '23rem',
+                  width: '30rem',
                   sortable: true,
                   className: 'col-name',
                 },
@@ -498,6 +521,7 @@ export const Vaults = () => {
               searching={opportunities.length > filteredVaults.length}
               filterLabel="Show 0% APY"
               filterBy={filterVaults}
+              filters={filters}
               onAction={({ address }) => history.push(`/vault/${address}`)}
               initialSortBy="vaultBalanceUsdc"
               wrap

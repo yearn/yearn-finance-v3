@@ -40,8 +40,17 @@ export interface GeneralVaultView {
   migrationAvailable: boolean;
   migrationContract?: Address;
   migrationTargetVault?: Address;
+  tags: VaultTags;
   token: TokenView;
   DEPOSIT: PositionView;
+}
+
+export interface VaultTags {
+  isYearn?: boolean;
+  isStable?: boolean;
+  isCurve?: boolean;
+  isBalancer?: boolean;
+  isAutomated?: boolean;
 }
 
 export interface VaultDynamicData {
