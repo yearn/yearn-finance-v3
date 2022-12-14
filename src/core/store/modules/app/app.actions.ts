@@ -66,6 +66,8 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
   // dispatch(checkExternalServicesStatus());
+  // Temporarily disable simulations until proxy is fixed
+  dispatch(disableService({ service: 'simulations' }));
 
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
