@@ -5719,10 +5719,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@yfi/sdk@3.0.0-alpha.9":
-  version "3.0.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-3.0.0-alpha.9.tgz#da7efd0a35bf2655d3da42f3b3830de844ed236b"
-  integrity sha512-zRqAG11n7AUyZFbN2CyFJ69e0ReuDVifABbQ/j5SwmWpGkUJ21u7V8WBJSfgxyexGEdbisAMkcniVF5lpe/UTA==
+"@yfi/sdk@3.0.0-alpha.10":
+  version "3.0.0-alpha.10"
+  resolved "https://registry.yarnpkg.com/@yfi/sdk/-/sdk-3.0.0-alpha.10.tgz#e9abe6cd68876aa4b4b3672d06afe25fb8d1d6fd"
+  integrity sha512-+F92vUaCP+PY3zld7MOrO34cyRzpUgpBYp5YwYNOANQ5qXuRUBKGhV/UVH6eLw/IQeTi5RmmkMaJJT/1Agcq1Q==
   dependencies:
     "@cowprotocol/cow-sdk" "1.0.0-RC.5"
     bignumber.js "9.0.1"

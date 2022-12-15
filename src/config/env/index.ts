@@ -26,6 +26,7 @@ export const getEnv = memoize((): Env => {
     REACT_APP_UNSTOPPABLE_DOMAINS_ID,
     REACT_APP_ZAPPER_API_KEY,
     REACT_APP_YEARN_SUBGRAPH_KEY,
+    REACT_APP_TENDERLY_API_KEY,
   } = process.env;
 
   const isProd = NODE_ENV === 'production';
@@ -53,5 +54,6 @@ export const getEnv = memoize((): Env => {
     UNSTOPPABLE_DOMAINS_ID: REACT_APP_UNSTOPPABLE_DOMAINS_ID || undefined,
     ZAPPER_API_KEY: REACT_APP_ZAPPER_API_KEY || undefined,
     YEARN_SUBGRAPH_KEY: REACT_APP_YEARN_SUBGRAPH_KEY || undefined,
+    TENDERLY_API_KEY: REACT_APP_TENDERLY_API_KEY || undefined,
   };
 });
