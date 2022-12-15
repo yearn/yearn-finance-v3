@@ -7,7 +7,7 @@ export class YearnSdkImpl implements YearnSdk {
   private instances: Map<Network, Yearn<SdkNetwork>> = new Map<Network, Yearn<SdkNetwork>>();
 
   constructor({ web3Provider, config }: { web3Provider: Web3Provider; config: Config }) {
-    const { SUPPORTED_NETWORKS, CONTRACT_ADDRESSES, YEARN_SUBGRAPH_KEY, ZAPPER_API_KEY } = config;
+    const { SUPPORTED_NETWORKS, CONTRACT_ADDRESSES, YEARN_SUBGRAPH_KEY, ZAPPER_API_KEY, TENDERLY_API_KEY } = config;
 
     const isLedger = isLedgerLive();
     SUPPORTED_NETWORKS.forEach((network) => {
@@ -17,6 +17,12 @@ export class YearnSdkImpl implements YearnSdk {
       const sdkInstance = new Yearn(networkId, {
         provider,
         zapper: ZAPPER_API_KEY,
+        ...(TENDERLY_API_KEY && {
+          simulation: {
+            apiUrl: 'https://api.tenderly.co/api/v1/account/yearn/project/yearn-web',
+            apiKey: TENDERLY_API_KEY,
+          },
+        }),
         partnerId: isLedger && networkId === 1 ? CONTRACT_ADDRESSES.LEDGER_PARTNER_ID : undefined,
         ...(YEARN_SUBGRAPH_KEY && {
           subgraph: {
