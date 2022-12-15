@@ -26,6 +26,7 @@ export interface Env {
   UNSTOPPABLE_DOMAINS_ID: string | undefined;
   ZAPPER_API_KEY: string | undefined;
   YEARN_SUBGRAPH_KEY: string | undefined;
+  TENDERLY_API_KEY: string | undefined;
 }
 
 export interface Constants {
