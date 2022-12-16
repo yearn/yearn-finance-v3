@@ -66,8 +66,6 @@ const initApp = createAsyncThunk<void, void, ThunkAPI>('app/initApp', async (_ar
     await dispatch(WalletActions.walletSelect({ walletName: wallet.name, network: network.current }));
   }
   // dispatch(checkExternalServicesStatus());
-  // NOTE: temporarily disable tenderly simulations until service is up
-  dispatch(disableService({ service: 'simulations' }));
 
   // TODO use when sdk ready
   // dispatch(initSubscriptions());
