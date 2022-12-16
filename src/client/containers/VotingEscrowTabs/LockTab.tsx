@@ -5,7 +5,19 @@ import { useAppSelector, useAppTranslation, useDebounce, useExecuteThunk, useIsM
 import { AlertsActions, VotingEscrowsActions, VotingEscrowsSelectors, WalletSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { humanize, toBN, toUnit, toWei, validateAllowance, validateAmount, toWeeks, getTimeUntil } from '@utils';
+import {
+  humanize,
+  toBN,
+  toUnit,
+  toWei,
+  validateAllowance,
+  validateAmount,
+  toWeeks,
+  getTimeUntil,
+  fromWeeks,
+  toTime,
+  toSeconds,
+} from '@utils';
 
 const MAX_LOCK_TIME = '209'; // Weeks
 const MIN_LOCK_TIME = '1'; // Weeks
@@ -42,6 +54,9 @@ export const LockTab = () => {
 
   const hasLockedAmount = toBN(votingEscrow?.DEPOSIT.userDeposited).gt(0);
   const willLock = !!debouncedLockAmount;
+  const unlockTime = toBN(Date.now())
+    .plus(fromWeeks(toTime(debouncedLockTime)))
+    .toNumber();
   const resultAmount =
     hasLockedAmount && !willLock && votingEscrow
       ? toUnit(votingEscrow?.DEPOSIT.userBalance, votingEscrow.decimals)
@@ -73,9 +88,9 @@ export const LockTab = () => {
       tokenAddress: votingEscrow.token.address,
       votingEscrowAddress: votingEscrow.address,
       amount: debouncedLockAmount,
-      time: hasLockedAmount ? undefined : toBN(debouncedLockTime).toNumber(),
+      time: hasLockedAmount ? undefined : toSeconds(unlockTime),
     });
-  }, [debouncedLockAmount, debouncedLockTime, votingEscrow?.token]);
+  }, [debouncedLockAmount, debouncedLockTime, votingEscrow?.token.address]);
 
   useEffect(() => {
     if (!votingEscrow || !hasLockedAmount || willLock) return;
@@ -117,7 +132,7 @@ export const LockTab = () => {
       tokenAddress: votingEscrow.token.address,
       votingEscrowAddress: votingEscrow.address,
       amount: lockAmount,
-      time: parseInt(lockTime),
+      time: toSeconds(unlockTime),
     });
   };
 

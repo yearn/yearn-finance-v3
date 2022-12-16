@@ -11,7 +11,7 @@ import {
   VotingEscrowDynamic,
   VotingEscrowTransactionType,
   VotingEscrowUserMetadata,
-  Weeks,
+  Seconds,
 } from '@types';
 import { getNetwork, validateNetwork, parseError, toWei } from '@utils';
 
@@ -117,7 +117,7 @@ const getExpectedTransactionOutcome = createAsyncThunk<
     tokenAddress: Address;
     votingEscrowAddress: Address;
     amount?: Unit;
-    time?: Weeks;
+    time?: Seconds;
   },
   ThunkAPI
 >(
@@ -237,7 +237,7 @@ const lock = createAsyncThunk<
     tokenAddress: Address;
     votingEscrowAddress: Address;
     amount: Unit;
-    time: Weeks;
+    time: Seconds;
   },
   ThunkAPI
 >(
@@ -337,7 +337,7 @@ const extendLockTime = createAsyncThunk<
   {
     tokenAddress: Address;
     votingEscrowAddress: Address;
-    time: Weeks;
+    time: Seconds;
   },
   ThunkAPI
 >(
