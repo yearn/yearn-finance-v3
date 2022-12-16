@@ -130,6 +130,18 @@ const lightTheme: DefaultTheme = {
       text: light.colors.icons.variant,
       textContrast: light.colors.titles,
     },
+
+    button: {
+      disabled: {
+        borderColor: light.colors.disabled,
+        backgroundColor: light.colors.surface,
+        color: light.colors.button.disabled.text,
+      },
+    },
+
+    input: {
+      placeholder: '#7F8DA9',
+    },
   },
 };
 

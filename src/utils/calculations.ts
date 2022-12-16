@@ -1,8 +1,9 @@
 import BigNumber from 'bignumber.js';
 
-import { GeneralLabView, SummaryData, Unit, Wei } from '@types';
+import { GeneralLabView, Milliseconds, Seconds, SummaryData, Unit, Wei } from '@types';
 
 import { toBN, toUnit } from './format';
+import { roundToWeek, toSeconds, YEAR } from './time';
 
 interface CalculateSharesAmountProps {
   decimals: string;
@@ -50,4 +51,13 @@ export function computeSummaryData(labs: Pick<GeneralLabView, 'apyData' | 'DEPOS
     totalEarnings: totalEarnings.toString(),
     estYearlyYield: totalDeposits.isZero() ? '0' : totalEarnings.div(totalDeposits).toString(),
   };
+}
+
+const MAX_LOCK: Seconds = toSeconds(roundToWeek(YEAR * 4));
+
+export function getVotingPower(lockAmount: Wei, unlockTime: Milliseconds): Wei {
+  const duration = toSeconds(roundToWeek(unlockTime)) - toSeconds(Date.now());
+  if (duration <= 0) return '0';
+  if (duration >= MAX_LOCK) return lockAmount;
+  return toBN(lockAmount).div(MAX_LOCK).decimalPlaces(0, 1).times(duration).toString();
 }

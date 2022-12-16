@@ -193,7 +193,7 @@ export const Vaults = () => {
     const searchableKeys = ['name', 'displayName', 'token.symbol', 'token.name'];
     const filteredVaults = filterData(opportunities, searchableKeys, search);
     setFilteredVaults(filteredVaults);
-    window.history.replaceState(null, '', `vaults${search ? `?search=${search}` : ''}`);
+    window.history.replaceState(null, '', `#/vaults${search ? `?search=${search}` : ''}`);
   }, [opportunities, search]);
 
   const depositHandler = (vaultAddress: string) => {
@@ -229,6 +229,30 @@ export const Vaults = () => {
       vault.address === CONTRACT_ADDRESSES.YVYFI
     );
   };
+
+  const filters = [
+    {
+      label: 'All',
+      filterBy: () => true,
+    },
+    {
+      label: 'Yearn',
+      filterBy: (vault: VaultView) => !!vault.tags.isYearn,
+    },
+    // NOTE: Removed filter until cache is fixed
+    // {
+    //   label: 'Stable',
+    //   filterBy: (vault: VaultView) => !!vault.tags.isStable,
+    // },
+    {
+      label: 'Curve',
+      filterBy: (vault: VaultView) => !!vault.tags.isCurve,
+    },
+    {
+      label: 'Balancer',
+      filterBy: (vault: VaultView) => !!vault.tags.isBalancer,
+    },
+  ];
 
   return (
     <ViewContainer>
@@ -430,7 +454,7 @@ export const Vaults = () => {
                       <Text ellipsis>{displayName}</Text>
                     </>
                   ),
-                  width: '23rem',
+                  width: '30rem',
                   sortable: true,
                   className: 'col-name',
                 },
@@ -498,8 +522,9 @@ export const Vaults = () => {
               searching={opportunities.length > filteredVaults.length}
               filterLabel="Show 0% APY"
               filterBy={filterVaults}
+              filters={filters}
               onAction={({ address }) => history.push(`/vault/${address}`)}
-              initialSortBy="apy"
+              initialSortBy="vaultBalanceUsdc"
               wrap
             />
           )}

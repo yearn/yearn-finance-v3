@@ -77,8 +77,44 @@ const StyledCardHeader = styled(CardHeader)`
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
   grid-gap: 1.2rem;
+`;
+
+const StyledFilters = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 2.4rem;
+  grid-gap: 0.4rem;
+  width: 100%;
+  padding: 0 ${({ theme }) => theme.card.padding};
+`;
+
+const StyledFilterButton = styled.button<{ active?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 1.4rem;
+  background: ${({ active, theme }) => (active ? theme.colors.primary : theme.colors.background)};
+  color: ${({ active, theme }) => (active ? theme.colors.background : theme.colors.primary)};
+  border: none;
+  border-radius: 99rem;
+  cursor: pointer;
+  user-select: none;
+  height: 2.4rem;
+  min-width: 4.8rem;
+  margin-top: 0.8rem;
+  padding: 0 1.2rem;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    filter: contrast(90%);
+  }
 `;
 
 const StyledCard = styled(Card)`
@@ -92,6 +128,11 @@ const SectionContent = styled.div`
   grid-gap: 1.2rem;
   align-items: center;
 `;
+
+interface Filter<T> {
+  label: string;
+  filterBy: (item: T) => boolean;
+}
 
 interface Metadata<T> {
   key: Extract<keyof T, string>;
@@ -119,6 +160,7 @@ interface DetailCardProps<T> {
   onAction?: (item: T) => void;
   filterBy?: (item: T) => boolean;
   filterLabel?: string;
+  filters?: Filter<T>[];
 }
 
 export const DetailCard = <T,>({
@@ -133,14 +175,20 @@ export const DetailCard = <T,>({
   onAction,
   filterBy,
   filterLabel,
+  filters,
   ...props
 }: DetailCardProps<T>) => {
   const [sortedData, setSortedData] = useState(initialSortBy ? sort(data, initialSortBy) : data);
   const [sortedBy, setSortedBy] = useState(initialSortBy);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [filterToggle, setFilterToggle] = useState(filterBy ? false : true);
-  const filteredData = filterBy ? sortedData.filter(filterBy) : sortedData;
-  const displayData = filterToggle ? sortedData : filteredData;
+  const [activeFilterIndex, setActiveFilterIndex] = useState<number | undefined>(filters ? 0 : undefined);
+  let filteredData =
+    !!filters?.length && activeFilterIndex !== undefined
+      ? sortedData.filter(filters[activeFilterIndex].filterBy)
+      : sortedData;
+  filteredData = filterBy && !filterToggle ? filteredData.filter(filterBy) : filteredData;
+  const displayData = filteredData;
 
   const handleSort = (key: Extract<keyof T, string>) => {
     if (sortedBy === key) {
@@ -180,7 +228,14 @@ export const DetailCard = <T,>({
           {SearchBar}
         </SectionContent>
       </StyledCardHeader>
-
+      <StyledFilters>
+        {!!filters &&
+          filters.map((filter, i) => (
+            <StyledFilterButton active={activeFilterIndex === i} onClick={() => setActiveFilterIndex(i)}>
+              {filter.label}
+            </StyledFilterButton>
+          ))}
+      </StyledFilters>
       {!!displayData.length && (
         <CardContent>
           {metadata.map(
@@ -199,7 +254,6 @@ export const DetailCard = <T,>({
           )}
         </CardContent>
       )}
-
       {displayData.map((item, i) => (
         <StyledCardContent
           key={`content-${i}`}
@@ -229,7 +283,6 @@ export const DetailCard = <T,>({
           )}
         </StyledCardContent>
       ))}
-
       {!displayData.length && <CardEmptyList searching={searching} />}
     </StyledCard>
   );

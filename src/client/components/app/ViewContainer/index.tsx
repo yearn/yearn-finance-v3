@@ -1,17 +1,22 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-const StyledViewContainer = styled.main`
+const StyledViewContainer = styled.main<{ noGap?: boolean; noOverflow?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: ${({ theme }) => theme.layoutPadding};
+  gap: ${({ noGap, theme }) => (noGap ? '0' : theme.layoutPadding)};
   max-width: ${({ theme }) => theme.globalMaxWidth};
   flex: 1;
   overflow: hidden;
-  overflow-y: auto;
+  overflow-y: ${({ noOverflow }) => (noOverflow ? 'hidden' : 'auto')}; ;
 `;
 
-export const ViewContainer: FC = ({ children, ...props }) => {
+interface ViewContainerProps {
+  noGap?: boolean;
+  noOverflow?: boolean;
+}
+
+export const ViewContainer: FC<ViewContainerProps> = ({ children, ...props }) => {
   return <StyledViewContainer {...props}>{children}</StyledViewContainer>;
 };

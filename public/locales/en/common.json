@@ -73,6 +73,7 @@
         "wido-zap-fee": "0.3%",
         "zaps": "Zap fee"
       },
+      "from-gauge": "From Gauge",
       "from-iron-bank": "From Iron Bank",
       "from-vault": "From vault",
       "from-wallet": "From wallet",
@@ -102,6 +103,7 @@
         "yield": "APY",
         "you-have": "You have"
       },
+      "unstake": "Unstake",
       "wallet-balance": "Wallet Balance",
       "withdraw": "Withdraw",
       "zap-guidance": {
@@ -165,6 +167,7 @@
     "settings": "Settings",
     "vault": "Vaults",
     "vaults": "Vaults",
+    "veyfi": "veYFI",
     "wallet": "Wallet",
     "ycrv": "yCRV"
   },

@@ -19,8 +19,14 @@ export const getEthersDefaultProvider = (
   return ethers.getDefaultProvider(network, options);
 };
 
-export const getJsonRpcProvider = (url: RpcUrl) => {
-  return new ethers.providers.JsonRpcProvider({ url, timeout: 500000 });
+export const getJsonRpcProvider = (rpcUrl: RpcUrl) => {
+  const { username, password, href } = new URL(rpcUrl);
+  return new ethers.providers.JsonRpcProvider({
+    url: href,
+    user: username || undefined,
+    password: password || undefined,
+    timeout: 500000,
+  });
 };
 
 export const getEthersProvider = (provider: ethers.providers.ExternalProvider) => {

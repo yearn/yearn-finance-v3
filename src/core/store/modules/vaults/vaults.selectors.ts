@@ -15,7 +15,7 @@ import {
   Address,
   GeneralVaultView,
 } from '@types';
-import { toBN } from '@utils';
+import { isValidAddress, isZeroAddress, toBN } from '@utils';
 
 import { createToken } from '../tokens/tokens.selectors';
 
@@ -248,6 +248,11 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
   const vaultAddress = vaultData.address;
   const currentAllowance = tokenAllowancesMap[vaultAddress] ?? '0';
 
+  const nameContains = (strings: string[]) =>
+    !!strings.find(
+      (str) => vaultData.name.toLowerCase().includes(str) || vaultData.metadata.displayName.toLowerCase().includes(str)
+    );
+
   return {
     address: vaultData.address,
     name: vaultData.name,
@@ -276,9 +281,23 @@ function createVault(props: CreateVaultProps): GeneralVaultView {
     allowZapOut: !!vaultData.metadata.allowZapOut,
     zapInWith: vaultData.metadata.zapInWith,
     zapOutWith: vaultData.metadata.zapOutWith,
-    migrationAvailable: vaultData.metadata.migrationAvailable,
+    migrationAvailable:
+      vaultData.metadata.migrationAvailable &&
+      !isZeroAddress(vaultData.metadata.migrationContract) &&
+      isValidAddress(vaultData.metadata.migrationContract) &&
+      !isZeroAddress(vaultData.metadata.migrationTargetVault) &&
+      isValidAddress(vaultData.metadata.migrationTargetVault),
     migrationContract: vaultData.metadata.migrationContract,
     migrationTargetVault: vaultData.metadata.migrationTargetVault,
+    tags: {
+      isYearn: nameContains(['yearn', 'yfi']),
+      isStable: ['usd', 'eur', 'aud', 'chf', 'krw', 'gbp', 'jpy'].includes(
+        vaultData.metadata.classification?.stableBaseAsset?.toLowerCase() ?? ''
+      ),
+      isCurve: nameContains(['curve', 'crv']),
+      isBalancer: nameContains(['balancer', 'bal']),
+      isAutomated: vaultData.metadata.classification?.isAutomated,
+    },
     DEPOSIT: {
       userBalance: userVaultPositionsMap?.DEPOSIT?.balance ?? '0',
       userDeposited: userVaultPositionsMap?.DEPOSIT?.underlyingTokenBalance.amount ?? '0',

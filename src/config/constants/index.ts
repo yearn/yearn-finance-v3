@@ -5,9 +5,11 @@ import { getEnv } from '@config/env';
 import { encode } from '@src/utils';
 
 const ADDRESSES = {
+  ZERO: '0x0000000000000000000000000000000000000000',
   NATIVE: '0x0000000000000000000000000000000000000000',
   ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
   WETH: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+  YVWETH: '0xa258C4606Ca8206D8aA700cE2143D7db854D168c',
   DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
   USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   USDT: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
@@ -78,8 +80,8 @@ const NETWORK_SETTINGS: NetworkSettings = {
       symbol: 'ETH',
       decimals: 18,
     },
-    simulationsEnabled: false,
-    zapsEnabled: false,
+    simulationsEnabled: true,
+    zapsEnabled: true,
     labsEnabled: false,
     ironBankEnabled: false,
     earningsEnabled: false,
@@ -97,8 +99,8 @@ const NETWORK_SETTINGS: NetworkSettings = {
       symbol: 'ETH',
       decimals: 18,
     },
-    simulationsEnabled: false,
-    zapsEnabled: false,
+    simulationsEnabled: true,
+    zapsEnabled: true,
     labsEnabled: false,
     ironBankEnabled: false,
     earningsEnabled: true,
@@ -109,7 +111,14 @@ const NETWORK_SETTINGS: NetworkSettings = {
 };
 
 export const getConstants = memoize((): Constants => {
-  const { ALCHEMY_API_KEY, ZAPPER_API_KEY } = getEnv();
+  const {
+    ALCHEMY_API_KEY,
+    ZAPPER_API_KEY,
+    ETHEREUM_PROVIDER_HTTPS,
+    FANTOM_PROVIDER_HTTPS,
+    ARBITRUM_PROVIDER_HTTPS,
+    OPTIMISM_PROVIDER_HTTPS,
+  } = getEnv();
   return {
     STATE_VERSION: 1,
     MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
@@ -117,16 +126,16 @@ export const getConstants = memoize((): Constants => {
     YEARN_ALERTS_API: 'http://yearn-alerts-balancer-2019386215.us-east-1.elb.amazonaws.com',
     SUPPORTED_NETWORKS: ['mainnet', 'fantom', 'arbitrum', 'optimism'],
     NETWORK_SETTINGS,
-    WEB3_PROVIDER_HTTPS: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-    WEB3_PROVIDER_WSS: `wss://eth-mainnet.ws.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-    FANTOM_PROVIDER_HTTPS: 'https://rpc.ftm.tools',
-    ARBITRUM_PROVIDER_HTTPS: 'https://arb1.arbitrum.io/rpc',
-    OPTIMISM_PROVIDER_HTTPS: 'https://mainnet.optimism.io',
+    RPC_URL: {
+      mainnet: ETHEREUM_PROVIDER_HTTPS ?? `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+      fantom: FANTOM_PROVIDER_HTTPS ?? NETWORK_SETTINGS['fantom'].rpcUrl,
+      arbitrum: ARBITRUM_PROVIDER_HTTPS ?? NETWORK_SETTINGS['arbitrum'].rpcUrl,
+      optimism: OPTIMISM_PROVIDER_HTTPS ?? NETWORK_SETTINGS['optimism'].rpcUrl,
+    },
     CONTRACT_ADDRESSES: {
       zapIn: '0xc2C171bD6FC3B5885b589ed8b4d135F31085e973',
       zapOut: '0x70ed999E2849A3C85EB4a6288B90c7ecA7b807F4',
       y3CrvBackZapper: '0x579422A1C774470cA623329C69f27cC3bEB935a1',
-      trustedVaultMigrator: '0x1824df8D751704FA10FA371d62A37f9B8772ab90',
       triCryptoVaultMigrator: '0xC306a5ef4B990A7F2b3bC2680E022E6a84D75fC1',
       ...ADDRESSES,
       ...PARTNERS,
@@ -137,7 +146,7 @@ export const getConstants = memoize((): Constants => {
     DEFAULT_THEME: 'system-prefs',
     AVAILABLE_THEMES: ['system-prefs', 'light', 'dark', 'cyberpunk', 'classic'],
     AVAILABLE_CUSTOM_THEMES: ['explorer'],
-    DEFAULT_ALERT_TIMEOUT: 3000,
+    DEFAULT_ALERT_TIMEOUT: 5000,
     DEFAULT_LANG: 'en',
     SUPPORTED_LANGS: ['en', 'es', 'ja', 'zh'],
     DUST_AMOUNT_USD: '10000000',

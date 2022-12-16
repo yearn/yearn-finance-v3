@@ -25,6 +25,10 @@ const StyledNavbarActions = styled.div`
   }
 `;
 
+const StyledLogo = styled.div`
+  margin-right: 1.6rem;
+`;
+
 const StyledText = styled.h1<{ toneDown?: boolean }>`
   display: inline-flex;
   font-size: 2.4rem;
@@ -85,6 +89,7 @@ const getNetworkIcon = (network: Network) => {
 
 interface NavbarProps {
   className?: string;
+  logo?: React.ReactElement;
   title?: string;
   titleLink?: string;
   subTitle?: string;
@@ -101,6 +106,7 @@ interface NavbarProps {
 
 export const Navbar = ({
   className,
+  logo,
   title,
   titleLink,
   subTitle,
@@ -136,6 +142,7 @@ export const Navbar = ({
     <StyledNavbar className={className}>
       {title && (
         <>
+          {logo && <StyledLogo>{logo}</StyledLogo>}
           <StyledText toneDown={secondTitleEnabled}>
             {titleLink ? <StyledLink to={titleLink}>{titleText}</StyledLink> : titleText}
           </StyledText>

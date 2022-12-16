@@ -3,9 +3,10 @@ import { ThemeProvider } from 'styled-components';
 
 import { useAppSelector, usePrevious } from '@hooks';
 import { getTheme } from '@themes';
+import { isVeYfiEnv } from '@utils';
 
 export const Themable: FC = ({ children }) => {
-  const currentTheme = useAppSelector(({ theme }) => theme.current);
+  const currentTheme = useAppSelector(({ theme }) => (isVeYfiEnv() ? 'light-new' : theme.current));
   const previousTheme = usePrevious(currentTheme);
   const theme = getTheme(currentTheme);
 

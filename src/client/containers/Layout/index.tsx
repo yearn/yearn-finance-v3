@@ -23,6 +23,7 @@ import { getConfig } from '@config';
 import { Network, Route } from '@types';
 import { device } from '@themes/default';
 import { isInIframe, isCoinbaseApp } from '@utils';
+import { VeYfiIcon } from '@components/common';
 
 const contentSeparation = '1.6rem';
 
@@ -63,7 +64,7 @@ const StyledLayout = styled.div`
   `}
 `;
 
-const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean }>`
+const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean; padBottom?: boolean }>`
   display: grid;
   grid-gap: ${({ theme }) => theme.layoutPadding};
   grid-template-rows: auto 1fr auto;
@@ -84,10 +85,16 @@ const Content = styled.div<{ collapsedSidebar?: boolean; useTabbar?: boolean }>`
   }};
 
   // NOTE if we are using tabbar mobile
-  padding-bottom: ${(props) => props.useTabbar && `calc(${props.theme.tabbar.height} + ${contentSeparation})`};
+  padding-bottom: ${(props) => props.padBottom && `calc(${props.theme.tabbar.height} + ${contentSeparation})`};
 `;
 
-export const Layout: FC = ({ children }) => {
+interface LayoutProps {
+  hideNavigation?: boolean;
+  hideFooter?: boolean;
+  showLogo?: boolean;
+}
+
+export const Layout: FC<LayoutProps> = ({ children, hideNavigation, hideFooter, showLogo }) => {
   const { t } = useAppTranslation('common');
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -170,10 +177,15 @@ export const Layout: FC = ({ children }) => {
     <StyledLayout>
       <Alerts />
       <Modals />
-      <Navigation hideOptionalLinks={hideOptionalLinks} />
+      {!hideNavigation && <Navigation hideOptionalLinks={hideOptionalLinks} />}
 
-      <Content collapsedSidebar={collapsedSidebar} useTabbar={isMobile}>
+      <Content
+        collapsedSidebar={collapsedSidebar || hideNavigation}
+        useTabbar={isMobile || hideNavigation}
+        padBottom={isMobile && !hideNavigation}
+      >
         <Navbar
+          logo={showLogo ? <VeYfiIcon /> : undefined}
           title={t(`navigation.${path}`)}
           titleLink={titleLink}
           subTitle={vaultName}
@@ -190,7 +202,7 @@ export const Layout: FC = ({ children }) => {
 
         {children}
 
-        <Footer />
+        {!hideFooter && <Footer />}
       </Content>
     </StyledLayout>
   );

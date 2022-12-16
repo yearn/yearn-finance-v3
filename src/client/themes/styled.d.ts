@@ -25,6 +25,7 @@ declare module 'styled-components' {
     };
     devices: Devices;
     globalFont: string;
+    globalFontAlt: string;
     globalMaxWidth: string;
     globalRadius: string;
 
@@ -163,6 +164,18 @@ declare module 'styled-components' {
         success: string;
         text: string;
         textContrast: string;
+      };
+
+      button?: {
+        disabled: {
+          borderColor: string;
+          backgroundColor: string;
+          color: string;
+        };
+      };
+
+      input?: {
+        placeholder: string;
       };
     };
   }

@@ -16,11 +16,13 @@ const StyledAlerts = styled(TransitionGroup)`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  justify-content: flex-start;
+  justify-content: flex-end;
   pointer-events: none;
   z-index: ${({ theme }) => theme.zindex.alerts};
   gap: 1rem;
-  padding: 2rem;
+  padding: 1.6rem;
+  font-size: 1.2rem;
+  line-height: 1.6rem;
 
   .slideBottom-enter {
     opacity: 0;

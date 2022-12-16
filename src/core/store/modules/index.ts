@@ -53,6 +53,14 @@ import { UserSelectors } from './user/user.selectors';
 import partnerReducer, { partnerInitialState } from './partner/partner.reducer';
 import { PartnerActions } from './partner/partner.actions';
 import { PartnerSelectors } from './partner/partner.selectors';
+// Voting Escrows State
+import votingEscrowsReducer, { votingEscrowsInitialState } from './votingEscrows/votingEscrows.reducer';
+import { VotingEscrowsActions } from './votingEscrows/votingEscrows.actions';
+import { VotingEscrowsSelectors } from './votingEscrows/votingEscrows.selectors';
+// Gauges State
+import gaugesReducer, { gaugesInitialState } from './gauges/gauges.reducer';
+import { GaugesActions } from './gauges/gauges.actions';
+import { GaugesSelectors } from './gauges/gauges.selectors';
 
 const rootReducer: Reducer<RootState> = combineReducers({
   app: appReducer,
@@ -68,6 +76,8 @@ const rootReducer: Reducer<RootState> = combineReducers({
   settings: settingsReducer,
   user: userReducer,
   partner: partnerReducer,
+  votingEscrows: votingEscrowsReducer,
+  gauges: gaugesReducer,
 });
 
 export default rootReducer;
@@ -87,6 +97,8 @@ export {
   SettingsActions,
   UserActions,
   PartnerActions,
+  VotingEscrowsActions,
+  GaugesActions,
 };
 
 // Selectors
@@ -103,6 +115,8 @@ export {
   LabsSelectors,
   UserSelectors,
   PartnerSelectors,
+  VotingEscrowsSelectors,
+  GaugesSelectors,
 };
 
 // initialState
@@ -120,4 +134,6 @@ export {
   settingsInitialState,
   userInitialState,
   partnerInitialState,
+  votingEscrowsInitialState,
+  gaugesInitialState,
 };
