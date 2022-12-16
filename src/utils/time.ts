@@ -6,7 +6,7 @@ export const WEEK: Milliseconds = DAY * 7;
 export const YEAR: Milliseconds = DAY * 365;
 
 export function toTime(time: number | string | undefined): Milliseconds {
-  return Number(time ?? 0);
+  return Number(time || 0);
 }
 
 export function toMilliseconds(time?: Seconds): Milliseconds {
@@ -21,11 +21,15 @@ export function toWeeks(time?: Milliseconds): Weeks {
   return Math.floor(toTime(time) / WEEK);
 }
 
+export function fromWeeks(time?: Weeks): Milliseconds {
+  return toTime(time) * WEEK;
+}
+
 export function getTimeUntil(time?: Milliseconds): Milliseconds {
   const duration = toTime(time) - Date.now();
   return duration < 0 ? 0 : duration;
 }
 
-export function roundToWeek(time?: Seconds): Milliseconds {
+export function roundToWeek(time?: Milliseconds): Milliseconds {
   return Math.floor(toTime(time) / WEEK) * WEEK;
 }

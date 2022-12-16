@@ -1,6 +1,6 @@
 {
   "name": "yearn-finance-v3",
-  "version": "1.5.15",
+  "version": "1.5.16",
   "private": true,
   "scripts": {
     "start": "craco start",
@@ -61,7 +61,7 @@
     "@web3-onboard/trezor": "^2.3.2",
     "@web3-onboard/uauth": "^2.0.0",
     "@web3-onboard/walletconnect": "^2.2.0",
-    "@yfi/sdk": "3.0.0-alpha.10",
+    "@yfi/sdk": "3.0.0-alpha.11",
     "awilix": "7.0.2",
     "axios": "0.21.2",
     "bignumber.js": "9.0.2",
