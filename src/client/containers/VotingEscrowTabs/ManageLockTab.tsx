@@ -107,7 +107,9 @@ export const ManageLockTab = () => {
             label={t('veyfi:manage-tab.increase-period')}
             amount={lockTime}
             onAmountChange={setLockTime}
-            maxAmount={toBN(MAX_LOCK_TIME).minus(weeksToUnlock).toString()}
+            maxAmount={
+              toBN(MAX_LOCK_TIME).minus(weeksToUnlock).gt(0) ? toBN(MAX_LOCK_TIME).minus(weeksToUnlock).toString() : '0'
+            }
             disabled={!hasDeposits}
             error={lockTimeError}
             message="min 1"
