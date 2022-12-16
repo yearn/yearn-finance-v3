@@ -4,10 +4,10 @@ import { useAppSelector, useAppTranslation, useDebounce, useExecuteThunk, useIsM
 import { AlertsActions, VotingEscrowsActions, VotingEscrowsSelectors } from '@store';
 import { AmountInput } from '@components/app';
 import { Box, Text, Button } from '@components/common';
-import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks, format } from '@utils';
+import { toBN, toUnit, validateAmount, getTimeUntil, toWeeks, format, fromWeeks, toTime, toSeconds } from '@utils';
 
 const MAX_LOCK_TIME = '209'; // Weeks
-const MIN_LOCK_TIME = '2'; // Weeks
+const MIN_LOCK_TIME = '1'; // Weeks
 
 export const ManageLockTab = () => {
   const { t } = useAppTranslation(['common', 'veyfi']);
@@ -25,9 +25,11 @@ export const ManageLockTab = () => {
   const votingEscrow = useAppSelector(VotingEscrowsSelectors.selectSelectedVotingEscrow);
 
   const willExtendLock = toBN(debouncedLockTime).gt(0);
-  const weeksToUnlock = votingEscrow?.unlockDate
-    ? toWeeks(getTimeUntil(votingEscrow.unlockDate.getTime())).toString()
-    : '0';
+  const timeToUnlock = votingEscrow?.unlockDate ? getTimeUntil(votingEscrow.unlockDate.getTime()) : undefined;
+  const weeksToUnlock = timeToUnlock ? toWeeks(timeToUnlock).toString() : '0';
+  const newUnlockTime = toBN(votingEscrow?.unlockDate?.getTime())
+    .plus(fromWeeks(toTime(debouncedLockTime)))
+    .toNumber();
   const extendResultAmount =
     !willExtendLock && votingEscrow
       ? toUnit(votingEscrow?.DEPOSIT.userBalance, votingEscrow.decimals)
@@ -49,7 +51,7 @@ export const ManageLockTab = () => {
       transactionType: 'EXTEND',
       tokenAddress: votingEscrow.token.address,
       votingEscrowAddress: votingEscrow.address,
-      time: toBN(debouncedLockTime).plus(weeksToUnlock).toNumber(),
+      time: toSeconds(newUnlockTime),
     });
   }, [debouncedLockTime]);
 
@@ -65,7 +67,7 @@ export const ManageLockTab = () => {
     extendLockTime({
       tokenAddress: votingEscrow.token.address,
       votingEscrowAddress: votingEscrow.address,
-      time: toBN(lockTime).plus(weeksToUnlock).toNumber(),
+      time: toSeconds(newUnlockTime),
     });
   };
 
