@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import NProgress from 'nprogress';
 
-NProgress.configure({ trickleSpeed: 100 });
+NProgress.configure({ trickleSpeed: 150 });
 
 interface PageProgressBarProps {
   isLoading?: boolean;
