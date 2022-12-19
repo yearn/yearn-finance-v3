@@ -239,11 +239,10 @@ export const Vaults = () => {
       label: 'Yearn',
       filterBy: (vault: VaultView) => !!vault.tags.isYearn,
     },
-    // NOTE: Removed filter until cache is fixed
-    // {
-    //   label: 'Stable',
-    //   filterBy: (vault: VaultView) => !!vault.tags.isStable,
-    // },
+    {
+      label: 'Stable',
+      filterBy: (vault: VaultView) => !!vault.tags.isStable,
+    },
     {
       label: 'Curve',
       filterBy: (vault: VaultView) => !!vault.tags.isCurve,
