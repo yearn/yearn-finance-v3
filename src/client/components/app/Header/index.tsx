@@ -75,8 +75,11 @@ export const Header = ({ walletAddress, addressEnsName, onWalletClick }: HeaderP
       </LogoContainer>
 
       <Box>
+        <StyledLink external to="https://yearn.finance" target="_self">
+          Home
+        </StyledLink>
         <StyledLink selected to="/">
-          Main
+          veYFI
         </StyledLink>
         <StyledLink external to="https://docs.yearn.finance/contributing/governance/veyfi">
           Docs

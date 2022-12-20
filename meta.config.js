@@ -27,7 +27,7 @@ module.exports = {
         title,
         meta: getMetaConfig({
           title,
-          description: 'YFI evolved',
+          description: 'Stake your YFI to receive rewards and boost gauges',
           url: 'https://vote.yearn.finance',
           image: 'https://yearn.finance/veyfi-og.png',
         }),
