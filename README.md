@@ -2,6 +2,9 @@
 
 <img src="https://img.shields.io/badge/dynamic/json.svg?style=plastic&color=2096F3&label=locize&query=%24.translatedPercentage&url=https://api.locize.app/badgedata/1c6d6900-5989-49fe-b221-0001423041d2&suffix=%+translated&link=https://www.locize.com" />
 
+> **Note**
+> This version of the frontend has been deprecated in favor of https://github.com/yearn/yearn.fi but can still be accessed [here](https://v3.yearn.finance)
+
 ## Contributing
 
 Code style follows prettier conventions (`yarn prettier`). Commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) spec.
