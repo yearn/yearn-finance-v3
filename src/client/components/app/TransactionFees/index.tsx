@@ -47,12 +47,26 @@ export const TransactionFees = ({ zapService }: TransactionFeesProps) => {
           {t('components.transaction.fees.zaps')}
           <Tooltip
             placement="bottom"
-            tooltipComponent={<Text fontSize="1.2rem">{t('components.transaction.fees.powered-by')}</Text>}
+            tooltipComponent={
+              <Text fontSize="1.2rem">
+                {t(
+                  zapService?.includes('portals')
+                    ? 'components.transaction.fees.powered-by-portals'
+                    : 'components.transaction.fees.powered-by-wido'
+                )}
+              </Text>
+            }
           >
             <StyledIcon Component={InfoIcon} size="1.5rem" />
           </Tooltip>
         </Text>
-        <Text>0.3%</Text>
+        <Text>
+          {t(
+            zapService?.includes('portals')
+              ? 'components.transaction.fees.portals-zap-fee'
+              : 'components.transaction.fees.wido-zap-fee'
+          )}
+        </Text>
       </Row>
     </Container>
   );

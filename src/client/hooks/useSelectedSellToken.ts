@@ -1,7 +1,5 @@
-import { keyBy } from 'lodash';
-
 import { useAppSelector } from '@hooks';
-import { selectDepositTokenOptionsByAsset } from '@store';
+import { selectDepositTokenOptionsByAsset, TokensSelectors } from '@store';
 import { GeneralLabView, GeneralVaultView, TokenView } from '@types';
 
 interface SelectedSellTokenProps {
@@ -20,11 +18,11 @@ export const useSelectedSellToken = ({
   selectedVaultOrLab,
   allowTokenSelect,
 }: SelectedSellTokenProps): SelectedSellToken => {
+  const tokenSelectorFilter = useAppSelector(TokensSelectors.selectToken);
   const depositTokenOptionsByAsset = useAppSelector(selectDepositTokenOptionsByAsset);
   const sellTokensOptions = depositTokenOptionsByAsset(selectedVaultOrLab?.address);
-  const sellTokensOptionsMap = keyBy(sellTokensOptions, 'address');
   let selectedSellToken: TokenView | undefined = selectedSellTokenAddress
-    ? sellTokensOptionsMap[selectedSellTokenAddress]
+    ? tokenSelectorFilter(selectedSellTokenAddress ?? '')
     : undefined;
 
   const sourceAssetOptions = selectedSellToken && allowTokenSelect === false ? [selectedSellToken] : sellTokensOptions;

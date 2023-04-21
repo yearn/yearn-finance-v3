@@ -30,6 +30,7 @@ import {
   validateAllowance,
 } from '@utils';
 import { getConfig } from '@config';
+import { TokenView } from '@src/core/types';
 
 import { Transaction } from './Transaction';
 
@@ -101,7 +102,9 @@ export const DepositTx: FC<DepositTxProps> = ({
         (vault) =>
           vault.token.address === selectedSellTokenAddress || vault.defaultDisplayToken === selectedSellTokenAddress
       );
-      const vaultsWithZapIn = vaults.filter((vault) => vault.allowZapIn);
+      const vaultsWithZapIn = vaults.filter(
+        (vault) => vault.allowZapIn && selectedSellToken?.supported[vault.zapInWith as keyof TokenView['supported']]
+      );
       const highestYieldingVault = vaultsWithZapIn.reduce(
         (prev, current) => (parseFloat(prev.apyData) > parseFloat(current.apyData) ? prev : current),
         vaultsWithZapIn[0]

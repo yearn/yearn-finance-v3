@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { memoize } from 'lodash';
+import { ZapOutWith } from '@yfi/sdk';
 
 import { toBN } from '@utils';
 import { getConfig } from '@config';
@@ -49,7 +50,8 @@ export const selectDepositTokenOptionsByAsset = createSelector(
       return tokens.filter(
         (token) =>
           (token.supported[assetData.metadata.zapInWith as keyof TokenView['supported']] &&
-            toBN(token.balance).gt(0)) ||
+            toBN(token.balance).gt(0) &&
+            token.address !== assetData.address) ||
           token.address === mainVaultTokenAddress
       );
     })
@@ -68,14 +70,17 @@ export const selectWithdrawTokenOptionsByAsset = createSelector(
       const { NETWORK_SETTINGS } = getConfig();
       const currentNetworkSettings = NETWORK_SETTINGS[currentNetwork];
       const zapsDisabled =
-        (!servicesEnabled.zaps && assetData.metadata.zapOutWith) || !currentNetworkSettings.zapsEnabled;
+        !servicesEnabled.zaps || !assetData.metadata.zapOutWith || !currentNetworkSettings.zapsEnabled;
       const mainVaultTokenAddress = zapsDisabled ? assetData.token : assetData.metadata.defaultDisplayToken;
       const withdrawTokenAddresses = [mainVaultTokenAddress];
       if (!zapsDisabled) {
         if (assetData.token !== mainVaultTokenAddress) withdrawTokenAddresses.push(assetData.token);
         withdrawTokenAddresses.push(
           ...Object.values(tokensMap)
-            .filter(({ address, supported }) => !withdrawTokenAddresses.includes(address) && supported.portalsZapOut)
+            .filter(
+              ({ address, supported }) =>
+                !withdrawTokenAddresses.includes(address) && supported[assetData.metadata.zapOutWith as ZapOutWith]
+            )
             .map(({ address }) => address)
         );
       }

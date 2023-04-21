@@ -67,7 +67,10 @@
       "claim": "Claim",
       "deposit": "Deposit",
       "fees": {
-        "powered-by": "Zaps powered by Portals.fi",
+        "powered-by-portals": "Zaps powered by Portals.fi",
+        "powered-by-wido": "Zaps powered by joinwido.com",
+        "portals-zap-fee": "0.3%",
+        "wido-zap-fee": "0.3%",
         "zaps": "Zap fee"
       },
       "from-gauge": "From Gauge",
