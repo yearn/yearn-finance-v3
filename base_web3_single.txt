@@ -1,0 +1,290 @@
+BASE L2 WEB3 STARTER (SOLIDITY + HARDHAT + FRONTEND)
+=====================================================
+
+This TXT contains a minimal, self‑contained starter to build on **Base** (L2 by Coinbase).
+
+It includes:
+- 1 simple smart contract (Solidity)
+- Hardhat config targeting Base + Base Sepolia
+- A deploy script
+- A minimal frontend (HTML + JS with ethers v6)
+
+You can copy/paste each block into your repo files.
+
+--------------------------------------------------
+1. SMART CONTRACT (Counter on Base)
+--------------------------------------------------
+
+File: contracts/BaseCounter.sol
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+/// @title Simple counter contract for Base L2
+contract BaseCounter {
+    uint256 public value;
+    address public owner;
+
+    event Increment(address indexed caller, uint256 newValue);
+    event Decrement(address indexed caller, uint256 newValue);
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not owner");
+        _;
+    }
+
+    constructor(uint256 _initialValue) {
+        value = _initialValue;
+        owner = msg.sender;
+    }
+
+    function increment(uint256 _amount) external {
+        value += _amount;
+        emit Increment(msg.sender, value);
+    }
+
+    function decrement(uint256 _amount) external {
+        require(_amount <= value, "Underflow");
+        value -= _amount;
+        emit Decrement(msg.sender, value);
+    }
+
+    function setOwner(address _newOwner) external onlyOwner {
+        require(_newOwner != address(0), "Zero address");
+        owner = _newOwner;
+    }
+}
+```
+
+--------------------------------------------------
+2. HARDHAT CONFIG (Base + Base Sepolia)
+--------------------------------------------------
+
+File: hardhat.config.js
+
+```js
+require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
+
+/**
+ * You MUST set PRIVATE_KEY in a .env file:
+ * PRIVATE_KEY=0xyourprivatekey...
+ */
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
+
+module.exports = {
+  solidity: "0.8.20",
+  networks: {
+    base: {
+      url: "https://mainnet.base.org",
+      chainId: 8453,
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : []
+    },
+    baseSepolia: {
+      url: "https://sepolia.base.org",
+      chainId: 84532,
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : []
+    }
+  }
+};
+```
+
+--------------------------------------------------
+3. DEPLOY SCRIPT (Hardhat)
+--------------------------------------------------
+
+File: scripts/deploy_base_counter.js
+
+```js
+const hre = require("hardhat");
+
+async function main() {
+  const initialValue = 0;
+
+  const Factory = await hre.ethers.getContractFactory("BaseCounter");
+  const counter = await Factory.deploy(initialValue);
+
+  await counter.waitForDeployment();
+
+  const address = await counter.getAddress();
+  console.log("BaseCounter deployed to:", address);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+```
+
+Usage examples:
+
+```bash
+# Install deps
+npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox dotenv
+
+# Compile
+npx hardhat compile
+
+# Deploy on Base Sepolia testnet
+npx hardhat run scripts/deploy_base_counter.js --network baseSepolia
+
+# Later, deploy on Base mainnet
+npx hardhat run scripts/deploy_base_counter.js --network base
+```
+
+--------------------------------------------------
+4. SIMPLE FRONTEND (HTML + JS + ethers v6)
+--------------------------------------------------
+
+This frontend:
+- connects to MetaMask
+- switches the user to Base mainnet if needed
+- reads the counter value
+- sends a transaction to increment the counter
+
+Replace `YOUR_CONTRACT_ADDRESS_HERE` with the deployed address.
+
+File: frontend/index.html
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>BaseCounter dApp (Base L2)</title>
+</head>
+<body>
+  <h1>BaseCounter dApp</h1>
+
+  <button id="connect">Connect Wallet</button>
+  <p>Account: <span id="account">Not connected</span></p>
+
+  <p>Current value: <span id="value">0</span></p>
+
+  <input id="amount" type="number" value="1" min="1" />
+  <button id="increment">Increment</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.0/dist/ethers.umd.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
+```
+
+File: frontend/app.js
+
+```js
+// REPLACE with your deployed contract address on Base:
+const CONTRACT_ADDRESS = "0xYOUR_CONTRACT_ADDRESS_HERE";
+
+// Minimal ABI to interact with BaseCounter
+const CONTRACT_ABI = [
+  "function value() view returns (uint256)",
+  "function increment(uint256 _amount) external",
+];
+
+let provider;
+let signer;
+let contract;
+
+async function connectWallet() {
+  if (!window.ethereum) {
+    alert("No wallet found. Install MetaMask or a compatible wallet.");
+    return;
+  }
+
+  await window.ethereum.request({ method: "eth_requestAccounts" });
+
+  provider = new ethers.BrowserProvider(window.ethereum);
+  signer = await provider.getSigner();
+  const account = await signer.getAddress();
+  document.getElementById("account").textContent = account;
+
+  await switchToBaseMainnet();
+
+  contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+  await updateValue();
+}
+
+async function switchToBaseMainnet() {
+  const baseChainIdHex = "0x2105"; // 8453 in hex
+
+  const currentChainId = await window.ethereum.request({
+    method: "eth_chainId",
+  });
+
+  if (currentChainId === baseChainIdHex) {
+    return;
+  }
+
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: baseChainIdHex }],
+    });
+  } catch (error) {
+    if (error.code === 4902) {
+      // Chain not added in the wallet yet
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: baseChainIdHex,
+            chainName: "Base Mainnet",
+            nativeCurrency: {
+              name: "Ether",
+              symbol: "ETH",
+              decimals: 18,
+            },
+            rpcUrls: ["https://mainnet.base.org"],
+            blockExplorerUrls: ["https://basescan.org"],
+          },
+        ],
+      });
+    } else {
+      console.error("Failed to switch chain:", error);
+    }
+  }
+}
+
+async function updateValue() {
+  if (!contract) return;
+  const current = await contract.value();
+  document.getElementById("value").textContent = current.toString();
+}
+
+async function increment() {
+  if (!contract) {
+    alert("Connect your wallet first.");
+    return;
+  }
+
+  const input = document.getElementById("amount");
+  const amount = input.value || "1";
+
+  try {
+    const tx = await contract.increment(ethers.toBigInt(amount));
+    await tx.wait();
+    await updateValue();
+  } catch (e) {
+    console.error(e);
+    alert("Transaction failed. Check console for details.");
+  }
+}
+
+document.getElementById("connect").addEventListener("click", connectWallet);
+document.getElementById("increment").addEventListener("click", increment);
+```
+
+--------------------------------------------------
+5. QUICK SUMMARY
+--------------------------------------------------
+
+- This TXT is a ready‑to‑use Web3 starter for the **Base** blockchain.
+- You get: Solidity contract + Hardhat setup + deploy script + minimal frontend.
+- Just:
+  1. Create a new folder
+  2. Copy/paste the files
+  3. Install dependencies
+  4. Deploy to Base or Base Sepolia
+  5. Plug the deployed address into the frontend and open `frontend/index.html` in a browser with MetaMask.
